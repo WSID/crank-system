@@ -1,0 +1,6 @@
+<SECTION>
+<TITLE>더미 섹션</TITLE>
+<FILE>crankdummy</FILE>
+crank_dummy_do
+</SECTION>
+
