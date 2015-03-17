@@ -1,0 +1,25 @@
+# Korean translations for crank-system package
+# crank-system 패키지에 대한 한국어 번역문.
+# Copyright (C) 2015 THE crank-system'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the crank-system package.
+# WSID <jongsome@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: crank-system 0.0\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=glib&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-03-18 07:50+0900\n"
+"PO-Revision-Date: 2015-03-18 02:50+0900\n"
+"Last-Translator: WSID <jongsome@gmail.com>\n"
+"Language-Team: Korean\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../crankdummy/crankdummy.c:58
+#, c-format
+msgid "I'm here!"
+msgstr "저는 여기 있어요!"

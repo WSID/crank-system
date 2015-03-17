@@ -18,9 +18,10 @@
  */
 
 #include <glib.h>
-
+#include <glib/gi18n.h>
 
 #include "crankdummy.h"
+#include "config.h"
 
 /**
  * SECTION:crankdummy
@@ -36,9 +37,17 @@
  */
 
 /**
+ * crank_dummy_init:
+ */
+void
+crank_dummy_init (void)
+{
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+}
+
+/**
  * crank_dummy_do:
  * 아무런 일을 하지 않습니다.
- *
  * @input: 입력 값입니다.
  *
  * Returns: 숫자 4입니다.
@@ -46,5 +55,6 @@
 gint
 crank_dummy_do (int input)
 {
+  g_print (_("I'm here!"));
 	return 4;
 }

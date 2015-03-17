@@ -5,18 +5,37 @@
 lib_LTLIBRARIES = \
 		libcrankdummy.la
 
+bin_PROGRAMS = \
+		crankdummyexec
+
 include_HEADERS = \
 		crankdummy.h
 
 # crankdummy.la
 libcrankdummy_la_CFLAGS = \
-		$(CRANK_DUMMY_CFLAGS)
+		$(CRANK_DUMMY_CFLAGS) \
+		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
+		-DLOCALEDIR=\"$(localedir)\"
 
 libcrankdummy_la_LIBADD = \
 		$(CRANK_DUMMY_LIBS)
 
 libcrankdummy_la_SOURCES = \
 		crankdummy.c
+
+# crankdummyexec
+crankdummyexec_CFLAGS= \
+		$(CRANK_DUMMY_CFLAGS) \
+		-I $(srcdir) \
+		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
+		-DLOCALEDIR=\"$(localedir)\"
+
+crankdummyexec_LDADD= \
+		$(CRANK_DUMMY_LIBS) \
+		libcrankdummy.la
+
+crankdummyexec_SOURCES= \
+		crankdummyexec.c
 
 
 # Introspection 파일

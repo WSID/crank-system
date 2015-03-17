@@ -24,6 +24,8 @@
 
 G_BEGIN_DECLS
 
+void      crank_dummy_init      (void             );
+
 gint      crank_dummy_do        (gint   input     );
 
 G_END_DECLS

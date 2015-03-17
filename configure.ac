@@ -8,11 +8,13 @@ AC_INIT([crank-system], [0.0], [jongsome@gmail.com])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR(m4)
 
-AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES
+AM_INIT_AUTOMAKE([subdir-objects])
 
 LT_INIT
 
+IT_PROG_INTLTOOL([0.35.0])
+AC_SUBST(GETTEXT_PACKAGE, crank)
 # 기타 빌드 시스템 설정
 # 테스트 케이스
 GLIB_TESTS
@@ -42,4 +44,5 @@ AC_OUTPUT([
 		crankdummy/Makefile
 		tests/Makefile
 		docs/Makefile
+		po/Makefile.in
 ])
