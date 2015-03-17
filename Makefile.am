@@ -1,5 +1,7 @@
 ACLOCAL_AMFLAGS=-I m4
 
+DISTCHECK_CONFIGURE_FLAGS= --enable-introspection
+
 SUBDIRS=crankdummy tests docs
 
 EXTRA_DIST= \

@@ -14,13 +14,18 @@ AM_SILENT_RULES
 LT_INIT
 
 # 기타 빌드 시스템 설정
+# 테스트 케이스
 GLIB_TESTS
 
+# GTK-Doc
 m4_ifdef([GTK_DOC_CHECK], [
 GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 ],[
 AM_CONDITIONAL([ENABLE_GTK_DOC], false)
 ])
+
+# GObject Introspection
+GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 
 # 기본 프로그램 설정
