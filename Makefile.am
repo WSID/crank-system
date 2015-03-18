@@ -1,8 +1,13 @@
 ACLOCAL_AMFLAGS=-I m4
 
-DISTCHECK_CONFIGURE_FLAGS= --enable-introspection
+DISTCHECK_CONFIGURE_FLAGS= --enable-introspection --enable-gtk-doc
 
-SUBDIRS=crankdummy tests docs po
+SUBDIRS= \
+		crankdummy \
+		crankbase \
+		tests \
+		docs \
+		po
 
 EXTRA_DIST= \
 		glib-tap.mk \
