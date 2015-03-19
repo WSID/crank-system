@@ -16,8 +16,13 @@
   <chapter>
     <title>더미 섹션</title>
         <xi:include href="xml/crankdummy.xml"/>
-
   </chapter>
+  
+  <chapter>
+    <title>기반 지원</title>
+        <xi:include href="xml/crankbasemacro.xml"/>
+  </chapter>
+  
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>

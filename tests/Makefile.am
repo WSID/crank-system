@@ -3,7 +3,9 @@
 include ../glib-tap.mk
 
 # 대상 목록
-test_programs=test_dummy
+test_programs= \
+		test_dummy \
+		test_base_macro
 
 
 # test_dummy
@@ -17,3 +19,16 @@ test_dummy_LDADD= \
 
 test_dummy_SOURCES= \
 		test_dummy.c
+
+
+# test_base_macro
+test_base_macro_CFLAGS= \
+		$(CRANK_BASE_CFLAGS) \
+		-I $(top_srcdir)/crankbase
+
+test_base_macro_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_base_macro_SOURCES= \
+		test_base_macro.c

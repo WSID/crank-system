@@ -5,7 +5,10 @@ lib_LTLIBRARIES = \
 		libcrankbase.la
 
 include_HEADERS = \
-		crankbase.h
+		crankbase.h \
+		crankbasemacro.h
+
+
 
 # crankbase.la
 libcrankbase_la_CFLAGS = \
@@ -16,7 +19,7 @@ libcrankbase_la_CFLAGS = \
 libcrankbase_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
 
-libcrankbase_la_SOURCES =
+libcrankbase_la_SOURCES=
 
 
 
@@ -33,7 +36,7 @@ CrankBase-0.0.gir: libcrankbase.la
 
 CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS)
 CrankBase_0_0_gir_LIBS= libcrankbase.la
-CrankBase_0_0_gir_FILES= $(libcrankdummy_la_SOURCES) crankbase.h
+CrankBase_0_0_gir_FILES= $(libcrankdummy_la_SOURCES) $(include_HEADERS)
 INTROSPECTION_GIRS+= CrankBase-0.0.gir
 
 girdir = $(datadir)/gir-1.0
