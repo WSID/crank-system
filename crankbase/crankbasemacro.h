@@ -20,6 +20,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _CRANKBASE_INSIDE
+#error crankbasemacro.h cannot be included directly.
+#endif
+
 /**
  * SECTION:crankbasemacro
  * @short_description: Crank System Macro 모음

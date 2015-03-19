@@ -1,6 +1,3 @@
-#ifndef CRANKBASE_H
-#define CRANKBASE_H
-
 /* Copyright (C) 2015, WSID   */
 
 /* This file is part of Crank System.
@@ -20,11 +17,51 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _CRANKBASE_INSIDE
+#include <glib.h>
 
-#include "crankbasemacro.h"
-#include "crankfuncholder.h"
+#include "crankbase.h"
 
-#undef _CRANKBASE_INSIDE
 
-#endif /* CRANKBASE_H */
+gboolean  subject_function (gint a, gint b);
+
+
+void  test_func_holder_new (void);
+
+
+gint
+main (gint   argc,
+      gchar *argv[])
+{
+  g_test_init (&argc, &argv, NULL);
+
+  g_test_add_func ("/wsid/crank/base/funcholder",
+      test_func_holder_new);
+
+  g_test_run ();
+
+  return 0;
+}
+
+
+
+gboolean
+subject_function (gint a, gint b)
+{
+  return (a % b) == 0;
+}
+
+
+
+void
+test_func_holder_new (void)
+{
+  
+  CrankFuncHolder* holder = crank_func_holder_new (
+      G_CALLBACK(subject_function), NULL,
+      G_TYPE_BOOLEAN,
+      G_TYPE_INT,
+      G_TYPE_INT);
+  
+  crank_func_holder_free (holder);
+  
+}

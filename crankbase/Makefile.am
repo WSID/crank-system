@@ -6,7 +6,8 @@ lib_LTLIBRARIES = \
 
 include_HEADERS = \
 		crankbase.h \
-		crankbasemacro.h
+		crankbasemacro.h \
+		crankfuncholder.h
 
 
 
@@ -19,7 +20,8 @@ libcrankbase_la_CFLAGS = \
 libcrankbase_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
 
-libcrankbase_la_SOURCES=
+libcrankbase_la_SOURCES= \
+		crankfuncholder.c
 
 
 
@@ -34,9 +36,12 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 CrankBase-0.0.gir: libcrankbase.la
 
+CrankBase_0_0_gir_PACKAGES= glib-2.0 gobject-2.0
+CrankBase_0_0_gir_SCANNERFLAGS= --symbol-prefix="crank"
 CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS)
 CrankBase_0_0_gir_LIBS= libcrankbase.la
-CrankBase_0_0_gir_FILES= $(libcrankdummy_la_SOURCES) $(include_HEADERS)
+CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(include_HEADERS)
+
 INTROSPECTION_GIRS+= CrankBase-0.0.gir
 
 girdir = $(datadir)/gir-1.0

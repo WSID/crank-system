@@ -1,9 +1,4 @@
 <SECTION>
-<FILE>crankbase</FILE>
-CRANKBASE_INSIDE
-</SECTION>
-
-<SECTION>
 <FILE>crankbasemacro</FILE>
 CRANK_FOREACH_VALIST_BEGIN
 CRANK_FOREACH_VALIST_END
@@ -15,5 +10,12 @@ CRANK_FOREACH_VARARG_END
 <FILE>crankdummy</FILE>
 crank_dummy_init
 crank_dummy_do
+</SECTION>
+
+<SECTION>
+<FILE>crankfuncholder</FILE>
+crank_func_holder_new
+crank_func_holder_free
+CrankFuncHolder
 </SECTION>
 

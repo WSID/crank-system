@@ -55,7 +55,9 @@ HFILE_GLOB= \
 		$(top_srcdir)/crankdummy/*.h \
 		$(top_srcdir)/crankbase/*.h
 CFILE_GLOB=$ \
-		$(top_srcdir)/crankdummy/*.c
+		$(top_srcdir)/crankdummy/*.c \
+		$(top_srcdir)/crankbase/*.c
+		
 
 # Extra header to include when scanning, which are not under DOC_SOURCE_DIR
 # e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h

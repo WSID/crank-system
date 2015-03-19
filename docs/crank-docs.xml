@@ -21,6 +21,7 @@
   <chapter>
     <title>기반 지원</title>
         <xi:include href="xml/crankbasemacro.xml"/>
+        <xi:include href="xml/crankfuncholder.xml"/>
   </chapter>
   
   <chapter id="object-tree">
