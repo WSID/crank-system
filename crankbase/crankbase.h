@@ -20,10 +20,10 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define CRANKBASE_INSIDE
+#define _CRANKBASE_INSIDE
 
 #include "crankbasemacro.h"
 
-#undef CRANKBASE_INSIDE
+#undef _CRANKBASE_INSIDE
 
 #endif /* CRANKBASE_H */
