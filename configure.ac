@@ -35,14 +35,12 @@ PKG_PROG_PKG_CONFIG
 AC_PROG_CC
 
 # Crank Dummy 설정
-PKG_CHECK_MODULES([CRANK_DUMMY], [glib-2.0])
 PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
 
 
 # 출력합니다.
 AC_OUTPUT([
 		Makefile
-		crankdummy/Makefile
 		crankbase/Makefile
 		tests/Makefile
 		docs/Makefile

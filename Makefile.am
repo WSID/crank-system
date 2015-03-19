@@ -3,7 +3,6 @@ ACLOCAL_AMFLAGS=-I m4
 DISTCHECK_CONFIGURE_FLAGS= --enable-introspection --enable-gtk-doc
 
 SUBDIRS= \
-		crankdummy \
 		crankbase \
 		tests \
 		docs \

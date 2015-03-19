@@ -7,20 +7,6 @@ test_programs= \
 		test_base_macro \
 		test_func_holder
 
-
-# test_dummy
-test_dummy_CFLAGS= \
-		$(CRANK_DUMMY_CFLAGS) \
-		-I $(top_srcdir)/crankdummy
-
-test_dummy_LDADD= \
-		$(CRANK_DUMMY_LIBS) \
-		$(top_builddir)/crankdummy/libcrankdummy.la
-
-test_dummy_SOURCES= \
-		test_dummy.c
-
-
 # test_base_macro
 test_base_macro_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \

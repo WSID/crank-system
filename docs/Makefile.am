@@ -23,7 +23,6 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 # for inline comments documenting functions and macros.
 # e.g. DOC_SOURCE_DIR=$(top_srcdir)/gtk $(top_srcdir)/gdk
 DOC_SOURCE_DIR= \
-		$(top_srcdir)/crankdummy \
 		$(top_srcdir)/crankbase
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
@@ -52,10 +51,8 @@ FIXXREF_OPTIONS=
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
 # e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
 HFILE_GLOB= \
-		$(top_srcdir)/crankdummy/*.h \
 		$(top_srcdir)/crankbase/*.h
 CFILE_GLOB=$ \
-		$(top_srcdir)/crankdummy/*.c \
 		$(top_srcdir)/crankbase/*.c
 		
 
