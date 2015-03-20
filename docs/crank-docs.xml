@@ -12,11 +12,6 @@
       추후 기능이 추가될 예정입니다.
     </releaseinfo>
   </bookinfo>
-
-  <chapter>
-    <title>더미 섹션</title>
-        <xi:include href="xml/crankdummy.xml"/>
-  </chapter>
   
   <chapter>
     <title>기반 지원</title>

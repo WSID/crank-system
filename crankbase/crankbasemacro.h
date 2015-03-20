@@ -30,6 +30,44 @@
  * @title: Crank System 기본 매크로
  * @stability: Unstable
  * @include: crankbase.h
+ *
+ * 이 섹션에서는 Crank System 에서 쓰이는 보조적인 매크로들을 정의합니다.
+ *
+ * 현재 Crank System은 다음의 매크로를 제공합니다.
+ *
+ * - 간편한 반복작업
+ *
+ * # 간편한 반복작업
+ *
+ * 특정 목록이나 배열에 대해 반복 작업을 수행해야 하는 일이 잦습니다. 이때, loop를
+ * 보다 간편하게 작성할 수 있도록 도움을 줍니다. 
+ *
+ * 짧은 loop로 확장되는 매크로가 있는 반면 (예: #CRANK_FOREACH_VALIST_DO), 긴
+ * loop를 구성할 때 처음과 끝을 표시하는 매크로도 있습니다.
+ *
+ * <example>
+ *   <title>가변인자로 들어온 #gint들을 더합니다.</title>
+ *   <programlisting language="C">
+ *		gint sum (gint first, ...) {
+ *			gint result = first;
+ *			CRANK_FOREACH_VARARG_BEGIN (first, gint, element, 0)
+ *				result += element;
+ *			CRANK_FOREACH_VARARG_END
+ *			return result;
+ *		}
+ *   </programlisting>
+ * </example>
+ 
+ * <example>
+ *   <title>가변인자로 들어온 #gint들을 더합니다.</title>
+ *   <programlisting language="C">
+ *		gint sum (gint first, ...) {
+ *			gint result = first;
+ *			CRANK_FOREACH_VARARG_DO (first, gint, element, 0, {result += element;})
+ *			return result;
+ *		}
+ *   </programlisting>
+ * </example>
  */
 
 #include <stdarg.h>
@@ -45,17 +83,23 @@ G_BEGIN_DECLS
  *
  * 배열을 g_memdup()을 사용하여 복사합니다.
  *
- * Returns: (transfer container): 복사된 배열입니다. 사용 후 g_free()를 사용하여야 합니다. 
+ * Returns: (transfer container): 복사된 배열입니다. 사용 후 g_free()로 해제하여야
+ *  합니다.
  */
 #define CRANK_ARRAY_DUP(a, G, l) ((G*)g_memdup ((a), l * sizeof (G)))
 
 
+
 /**
  * CRANK_FOREACH_ARRAY_BEGIN:
- * @a: 내용을 열람할 array
- * @G: 내용의 형 (type)입니다.
- * @e: 내용의 이름입니다.
- * @l: 내용의 길이입니다.
+ * @a: (array length=l): 각 항목에 대해 loop를 반복할 배열
+ * @G: 각 항목의 형 (type)입니다.
+ * @e: 각 항목의 이름입니다.
+ * @l: @a의 길이입니다.
+ *
+ * 배열의 각 항목에 대해 반복하는 loop를 구성합니다.
+ *
+ * #CRANK_FOREACH_ARRAY_END로 끝을 표시합니다.
  */
 #define CRANK_FOREACH_ARRAY_BEGIN(a, G, e, l) \
 	{   int _crank_macro_i; \
@@ -71,18 +115,39 @@ G_BEGIN_DECLS
 	} }
 
 /**
+ * CRANK_FOREACH_ARRAY_DO:
+ * @a: (array length=l): 각 항목에 대해 loop를 반복할 배열
+ * @G: 각 항목의 형 (type)입니다.
+ * @e: 각 항목의 이름입니다.
+ * @l: @a의 길이입니다.
+ * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ *
+ * 배열에 각 항목에 대해 @BLOCK을 수행합니다.
+ */
+#define CRANK_FOREACH_ARRAY_DO(a, G, e, l, BLOCK) \
+	CRANK_FOREACH_ARRAY_BEGIN (a, G, e, l) \
+		BLOCK \
+	CRANK_FOREACH_ARRAY_END
+
+
+
+/**
  * CRANK_FOREACH_VALIST_BEGIN:
- * @va: 내용을 열람할 va_list
- * @G: 내용의 형 (type) 입니다.
- * @e: 내용의 이름입니다.
+ * @va: 각 항목에 대해 loop를 반복할 va_list
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 항목의 이름입니다.
  * @f: 마지막을 표시하는 값입니다.
  *
- * 주어진 va_list의 각각에 대해 loop를 시작합니다.
+ * 주어진 <structname>va_list</structname>의 각각에 항목에 대해 반복하는 loop를
+ * 구성합니다.
+ *
+ * #CRANK_FOREACH_VALIST_END로 끝을 표시합니다.
  */
 #define CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
     do { \
       G e = va_arg (va, G); \
       if (e == f) break;
+
 
 /**
  * CRANK_FOREACH_VALIST_END:
@@ -92,18 +157,23 @@ G_BEGIN_DECLS
 #define CRANK_FOREACH_VALIST_END \
     } while (TRUE);
 
+
 /**
  * CRANK_FOREACH_VALIST_DO:
- * @va: va_list입니다.
- * @G: 타입
- * @e: 변수
- * @f: 마지막
- * @BLOCK: 실행 코드
+ * @va: 각 항목에 대해 loop를 반복할 va_list
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 항목의 이름입니다.
+ * @f: 마지막을 표시하는 값입니다.
+ * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ *
+ * 주어진 <structname>va_list</structname>의 각각 항목에 대해 @BLOCK을 수행합니다.
  */
 #define CRANK_FOREACH_VALIST_DO(va, G, e, f, BLOCK) \
 	CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
 		BLOCK \
 	CRANK_FOREACH_VALIST_END
+
+
 
 
 /**
@@ -113,7 +183,9 @@ G_BEGIN_DECLS
  * @e: 내용의 이름입니다.
  * @f: 마지막을 표시하는 값입니다.
  *
- * 함수에 주어진 가변 인자 각각에 대해 loop를 시작합니다.
+ * 함수에 주어진 가변 인자 각각에 대해 반복하는 loop를 구성합니다.
+ *
+ * #CRANK_FOREACH_VARARG_END로 끝을 지정합니다.
  */
 #define CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
     { \
@@ -131,6 +203,17 @@ G_BEGIN_DECLS
       va_end (_crank_macro_varargs); \
     }
 
+
+/**
+ * CRANK_FOREACH_VARARG_DO:
+ * @param_list: 현재 함수의 마지막 고정 인자 이름입니다.
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 항목의 이름입니다.
+ * @f: 마지막을 표시하는 값입니다.
+ * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ *
+ * 현재 함수의 가변 인자의 각각 항목에 대해 @BLOCK을 수행합니다.
+ */
 #define CRANK_FOREACH_VARARG_DO(param_last, G, e, f, BLOCK) \
 	CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
 		BLOCK \

@@ -36,6 +36,9 @@
  */
 
 // 내부 전용 함수
+static void			_transform_crank_func_type_string (	const GValue* value_ftype,
+														GValue* value_string	);
+
 static ffi_type*   _crank_func_type_ffit_from_gtype (   const GType type);
 static ffi_type**  _crank_func_type_ffits_from_gtypes ( const GType* types,
      													const guint ntypes);
@@ -59,8 +62,17 @@ struct _CrankFuncType {
 	uint	  _refc;
 };
 
-G_DEFINE_BOXED_TYPE (CrankFuncType, crank_func_type, crank_func_type_ref, crank_func_type_unref);
-
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+        CrankFuncType,
+        crank_func_type,
+        crank_func_type_ref,
+        crank_func_type_unref,
+        {
+			g_value_register_transform_func (
+			        g_define_type_id,
+			        G_TYPE_STRING,
+			        _transform_crank_func_type_string);
+		} );
 
 /**
  * crank_func_type_new:
@@ -154,7 +166,7 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 /**
  * crank_func_type_new_with_types:
  * @return_type: 함수의 반환형입니다.
- * @param_types: 함수가 받아들이는 인자 형입니다.
+ * @param_types: (array length=nparam_types): 함수가 받아들이는 인자 형입니다.
  * @nparam_types: @param_types의 길이입니다.
  * 
  * 새로운 #CrankFuncType을 만듭니다.
@@ -200,10 +212,14 @@ crank_func_type_new_with_types (
 	return ftype;
 }
 
+
+
 /**
  * crank_func_type_ref:
  * @ftype: 참조를 증가시킬 #CrankFuncType
- * 
+ *
+ * #CrankFuncType의 참조를 1 증가시킵니다. 
+ *
  * Returns: 참조가 증가된 @ftype
  */
 CrankFuncType*
@@ -216,6 +232,8 @@ crank_func_type_ref (CrankFuncType* ftype)
 /**
  * crank_func_type_unref:
  * @ftype: 참조를 감소시킬 #CrankFuncType
+ *
+ * #CrankFuncType의 참조를 1 감소시킵니다. 레퍼런스 카운트가 0이되면 자원이 해제됩니다.
  */
 void
 crank_func_type_unref (CrankFuncType* ftype)
@@ -227,9 +245,119 @@ crank_func_type_unref (CrankFuncType* ftype)
 	}
 }
 
+
+
+/**
+ * crank_func_type_hash:
+ * @v: (type CrankFuncType): 해시 값을 얻을 #CrankFuncType
+ *
+ * #CrankFuncType을 #GHashTable 등에 키 값으로 사용할 경우 이 함수를 사용할 수
+ * 있습니다.
+ * 
+ * Returns: 해시 값입니다.
+ */
+guint
+crank_func_type_hash (gconstpointer v)
+{
+	CrankFuncType* ftype;
+	guint hash;
+	guint i;
+
+	ftype = (CrankFuncType*)v;
+	hash = 0;
+
+	hash += g_direct_hash ((gconstpointer) ftype->return_type);
+
+	for (i = 0; i < ftype->nparam_types; i++) 
+		hash += g_direct_hash ((gconstpointer) ftype->param_types[i]);
+
+	hash += g_direct_hash ((gconstpointer) ftype->nparam_types);
+	return hash;
+}
+
+/**
+ * crank_func_type_equal:
+ * @a: (type CrankFuncType): 비교할 #CrankFuncType
+ * @b: (type CrankFuncType): 비교할 #CrankFuncType
+ *
+ * #CrankFuncType을 #GHashTable 등에 키 값으로 사용할 경우 이 함수를 사용할 수
+ * 있습니다.
+ * 
+ * Returns: 두 타입이 같은지를 알려줍니다.
+ */
+gboolean
+crank_func_type_equal (gconstpointer a, gconstpointer b) {
+	CrankFuncType* ftype_a;
+	CrankFuncType* ftype_b;
+	guint i;
+
+	ftype_a = (CrankFuncType*)a;
+	ftype_b = (CrankFuncType*)b;
+
+	if (ftype_a->return_type != ftype_b->return_type) return FALSE;
+
+	if (ftype_a->nparam_types != ftype_b->nparam_types) return FALSE;
+	for (i = 0; i < ftype_a->nparam_types; i++)
+		if (ftype_a->param_types[i] != ftype_b->param_types[i]) return FALSE;
+	
+
+	return TRUE;
+}
+
+/**
+ * crank_func_type_to_string:
+ * @ftype: 문자열로 변환할 #CrankFuncType
+ * 
+ * #CrankFuncType을 문자열로 변환합니다. 형식은 다음과 같습니다.
+ * 
+ * <programlisting>
+ * RTYPE (PARAM, PARAM)
+ * </programlisting>
+ *
+ * 만일 형식 gchar* (*)(gint, gint)를 나타내는 경우 다음으로 표현됩니다.
+ * 
+ * <programlisting>
+ * guchararray (gint, gint)
+ * </programlisting>
+ * 
+ * Returns: (transfer full): 문자열입니다. 사용이 끝난 후 g_free()로 해제해야 합니다.
+ */
+gchar*
+crank_func_type_to_string (const CrankFuncType* ftype) {
+	GString*	result;
+	gchar*		result_str;
+	guint		i;
+
+	result = g_string_new (NULL);
+
+	g_string_append (result, g_type_name (ftype->return_type));
+	g_string_append (result, " (");
+
+	if (ftype->nparam_types != 0)
+	    g_string_append (result, g_type_name (ftype->param_types[0]));
+	
+	for (i = 1; i < ftype->nparam_types; i++) {
+		g_string_append (result, ", ");
+		g_string_append (result, g_type_name(ftype->param_types[i]));
+	}
+	
+	g_string_append_c (result, ')');
+
+	result_str = result->str;
+
+	g_string_free (result, FALSE);
+	
+	return result_str;
+}
+
+
+
+
 /**
  * crank_func_type_get_return_type:
  * @ftype: 반환형을 조회할 #CrankFuncType
+ *
+ * 반환형을 조회합니다.
  * 
  * Returns: 함수 반환 형입니다.
  */
@@ -242,7 +370,9 @@ crank_func_type_get_return_type (const CrankFuncType* ftype) {
  * crank_func_type_get_param_type:
  * @ftype: 인자 형을 조회할 #CrankFuncType
  * @index: 인자의 위치입니다.
- * 
+ *
+ * @index번째 인자의 형을 조회합니다. 
+ *
  * Returns: 함수 반환 형입니다. 부적절한 @index에 대해 %G_TYPE_NONE을 반환합니다.
  */
 GType
@@ -256,6 +386,8 @@ crank_func_type_get_param_type (const CrankFuncType* ftype,
  * crank_func_type_get_nparam_types:
  * @ftype: 인자의 개수를 조회할 #CrankFuncType
  * 
+ * 인자의 갯수를 조회합니다.
+ *
  * Returns: 인자의 개수입니다.
  */
 guint
@@ -269,7 +401,9 @@ crank_func_type_get_nparam_types (const CrankFuncType* ftype)
  * @ftype: 인자의 형을 조회할 #CrankFuncType
  * @length: 인자의 형의 갯수입니다.
  * 
- * Returns: 인자 형의 배열입니다.
+ * 인자 형을 배열로 조회합니다.
+ *
+ * Returns: (transfer container): 인자 형의 배열입니다. 사용후 g_free()로 해제합니다.
  */
 GType*
 crank_func_type_get_param_types (const CrankFuncType* ftype,
@@ -280,6 +414,20 @@ crank_func_type_get_param_types (const CrankFuncType* ftype,
 	return CRANK_ARRAY_DUP (ftype->param_types, GType, ftype->nparam_types);
 }
 
+
+
+
+static void
+_transform_crank_func_type_string (	const GValue* value_ftype,
+									GValue* value_string	)
+{
+	CrankFuncType* ftype;
+
+	ftype = g_value_get_boxed (value_ftype);
+	g_value_take_string (value_string, crank_func_type_to_string (ftype));
+}
+
+
 /*
  * _crank_func_type_ffit_from_gtype:
  * @type: ffi_type을 얻을 #GType
@@ -289,7 +437,7 @@ crank_func_type_get_param_types (const CrankFuncType* ftype,
  * 
  * Returns: (transfer none): ffi_type입니다.
  */
-ffi_type*
+static ffi_type*
 _crank_func_type_ffit_from_gtype (const GType type) {
 	switch (type) {
 		case G_TYPE_INVALID:
@@ -348,7 +496,7 @@ _crank_func_type_ffit_from_gtype (const GType type) {
  * 
  * Returns: (transfer container): ffi_type의 배열입니다. 사용이 끝나면 g_free()로 해제해야 합니다.
  */
-ffi_type**
+static ffi_type**
 _crank_func_type_ffits_from_gtypes (const GType* types,
 									const guint ntypes)
 {
@@ -362,6 +510,9 @@ _crank_func_type_ffits_from_gtypes (const GType* types,
 
 	return ffits;
 }
+
+
+
 
 
 /**

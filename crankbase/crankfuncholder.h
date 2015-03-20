@@ -58,6 +58,11 @@ CrankFuncType*  crank_func_type_new_with_types (
 CrankFuncType*  crank_func_type_ref (CrankFuncType* ftype);
 void			crank_func_type_unref (CrankFuncType* ftype);
 
+guint			crank_func_type_hash (gconstpointer v);
+gboolean		crank_func_type_equal (gconstpointer a, gconstpointer b);
+gchar*			crank_func_type_to_string (const CrankFuncType* ftype);
+
+
 GType			crank_func_type_get_return_type (const CrankFuncType* ftype);
 GType			crank_func_type_get_param_type (const CrankFuncType* ftype,
     											const guint index);
