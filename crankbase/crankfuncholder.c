@@ -65,7 +65,7 @@ G_DEFINE_BOXED_TYPE (CrankFuncType, crank_func_type, crank_func_type_ref, crank_
 /**
  * crank_func_type_new:
  * @return_type: 함수의 반환형입니다.
- * @...: 함수의 인자형 들입니다. G_TYPE_NONE으로 끝을 표시합니다.
+ * @...: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
  * 새로운 #CrankFuncType을 만듭니다.
  * 
@@ -88,7 +88,7 @@ crank_func_type_new (const GType return_type, ...)
 /**
  * crank_func_type_new_va:
  * @return_type: 함수의 반환형입니다.
- * @varargs: 함수의 인자형 들입니다. G_TYPE_NONE으로 끝을 표시합니다.
+ * @varargs: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
  * 새로운 #CrankFuncType을 만듭니다.
  * 
@@ -159,7 +159,7 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
  * 
  * 새로운 #CrankFuncType을 만듭니다.
  * 
- * Returns: (transfer full): 새로운 CrankFuncType입니다.
+ * Returns: (transfer full): 새로운 #CrankFuncType입니다.
  */
 CrankFuncType*
 crank_func_type_new_with_types (
@@ -243,7 +243,7 @@ crank_func_type_get_return_type (const CrankFuncType* ftype) {
  * @ftype: 인자 형을 조회할 #CrankFuncType
  * @index: 인자의 위치입니다.
  * 
- * Returns: 함수 반환 형입니다. 부적절한 @index에 대해 G_TYPE_NONE을 반환합니다.
+ * Returns: 함수 반환 형입니다. 부적절한 @index에 대해 %G_TYPE_NONE을 반환합니다.
  */
 GType
 crank_func_type_get_param_type (const CrankFuncType* ftype,
@@ -397,7 +397,6 @@ G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder, crank_func_holder_copy,
  * @...: @callback이 받아들이는 인자 목록
  *
  * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
- *
  */
 CrankFuncHolder*
 crank_func_holder_new (const GCallback callback,
