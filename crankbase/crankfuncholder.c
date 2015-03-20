@@ -75,6 +75,29 @@ CrankFuncType*
 crank_func_type_new (const GType return_type, ...)
 {
 	CrankFuncType*  ftype;
+	va_list			varargs;
+
+	va_start (varargs, return_type);
+	ftype = crank_func_type_new_va (return_type, varargs);
+	va_end (varargs);
+
+	return ftype;
+}
+
+
+/**
+ * crank_func_type_new_va:
+ * @return_type: 함수의 반환형입니다.
+ * @varargs: 함수의 인자형 들입니다. G_TYPE_NONE으로 끝을 표시합니다.
+ * 
+ * 새로운 #CrankFuncType을 만듭니다.
+ * 
+ * Returns: (transfer full): 새로운 CrankFuncType입니다.
+ */
+CrankFuncType*
+crank_func_type_new_va (const GType return_type, va_list varargs)
+{
+	CrankFuncType*  ftype;
 	guint			param_types_alloc;
 	guint			i;
 	ffi_status		func_type_ffi_status;
@@ -89,7 +112,7 @@ crank_func_type_new (const GType return_type, ...)
 	ftype->param_types = NULL;
 	ftype->nparam_types = 0;
 
-	CRANK_FOREACH_VARARG_BEGIN (return_type, GType, varargs_type, G_TYPE_NONE)
+	CRANK_FOREACH_VALIST_BEGIN (varargs, GType, varargs_type, G_TYPE_NONE)
 
 		if (param_types_alloc <= ftype->nparam_types) {
 			param_types_alloc = (param_types_alloc == 0) ?
@@ -102,7 +125,7 @@ crank_func_type_new (const GType return_type, ...)
 		ftype->param_types[ftype->nparam_types] = varargs_type;
 		ftype->nparam_types++;
 
-	CRANK_FOREACH_VARARG_END
+	CRANK_FOREACH_VALIST_END
 
 	ftype->param_types = g_renew (GType, ftype->param_types, ftype->nparam_types);
 
@@ -126,6 +149,7 @@ crank_func_type_new (const GType return_type, ...)
 
 	return ftype;
 }
+
 
 /**
  * crank_func_type_new_with_types:
@@ -376,7 +400,7 @@ G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder, crank_func_holder_copy,
  *
  */
 CrankFuncHolder*
-(crank_func_holder_new) (const GCallback callback,
+crank_func_holder_new (const GCallback callback,
                             const gpointer userdata,
                             const GDestroyNotify userdata_destroy,
                             const GType return_type,

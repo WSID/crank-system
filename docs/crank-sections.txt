@@ -16,6 +16,7 @@ CRANK_FOREACH_VARARG_END
 CrankFuncHolder
 CrankFuncType
 crank_func_type_new
+crank_func_type_new_va
 crank_func_type_new_with_types
 crank_func_type_ref
 crank_func_type_unref

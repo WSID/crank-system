@@ -45,6 +45,11 @@ CrankFuncType*  crank_func_type_new (
         ...);
 
 G_GNUC_MALLOC
+CrankFuncType*  crank_func_type_new_va (
+        const GType return_type,
+        va_list varargs);
+
+G_GNUC_MALLOC
 CrankFuncType*  crank_func_type_new_with_types (
         const GType return_type,
         const GType* param_types,
