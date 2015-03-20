@@ -1,5 +1,10 @@
 <SECTION>
 <FILE>crankbasemacro</FILE>
+CRANK_ARRAY_DUP
+CRANK_FOREACH_VALIST_DO
+CRANK_FOREACH_VARARG_DO
+CRANK_FOREACH_ARRAY_BEGIN
+CRANK_FOREACH_ARRAY_END
 CRANK_FOREACH_VALIST_BEGIN
 CRANK_FOREACH_VALIST_END
 CRANK_FOREACH_VARARG_BEGIN
@@ -7,15 +12,25 @@ CRANK_FOREACH_VARARG_END
 </SECTION>
 
 <SECTION>
-<FILE>crankdummy</FILE>
-crank_dummy_init
-crank_dummy_do
-</SECTION>
-
-<SECTION>
 <FILE>crankfuncholder</FILE>
-crank_func_holder_new
-crank_func_holder_free
 CrankFuncHolder
+CrankFuncType
+crank_func_type_new
+crank_func_type_new_with_types
+crank_func_type_ref
+crank_func_type_unref
+crank_func_type_get_nparam_types
+crank_func_type_get_param_type
+crank_func_type_get_param_types
+crank_func_type_get_return_type
+crank_func_holder_new
+crank_func_holder_new_with_type
+crank_func_holder_copy
+crank_func_holder_free
+<SUBSECTION Standard>
+CRANK_TYPE_FUNC_HOLDER
+CRANK_TYPE_FUNC_TYPE
+crank_func_holder_get_type
+crank_func_type_get_type
 </SECTION>
 

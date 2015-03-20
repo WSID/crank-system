@@ -25,7 +25,8 @@
 gboolean  subject_function (gint a, gint b);
 
 
-void  test_func_holder_new (void);
+void	test_func_type_new (void);
+void	test_func_holder_new (void);
 
 
 gint
@@ -33,6 +34,9 @@ main (gint   argc,
       gchar *argv[])
 {
   g_test_init (&argc, &argv, NULL);
+	
+  g_test_add_func ("/wsid/crank/base/functype",
+      test_func_type_new);
 
   g_test_add_func ("/wsid/crank/base/funcholder",
       test_func_holder_new);
@@ -53,6 +57,36 @@ subject_function (gint a, gint b)
 
 
 void
+test_func_type_new (void)
+{
+	GType*  param_types;
+	guint   param_length;
+  
+	CrankFuncType* ftype = crank_func_type_new (
+		G_TYPE_BOOLEAN,
+		G_TYPE_INT,
+		G_TYPE_CHAR,
+		G_TYPE_NONE);
+
+	g_assert (G_TYPE_BOOLEAN == crank_func_type_get_return_type (ftype));
+	g_assert (G_TYPE_INT == crank_func_type_get_param_type (ftype, 0));
+	g_assert (G_TYPE_CHAR == crank_func_type_get_param_type (ftype, 1));
+	g_assert (G_TYPE_NONE == crank_func_type_get_param_type (ftype, 2));
+
+	g_assert (2 == crank_func_type_get_nparam_types (ftype));
+
+	// Tests crank_func_type_get_param_types ()
+	param_types = crank_func_type_get_param_types(ftype, &param_length);
+
+	g_assert_cmpuint (2, ==, param_length);
+	g_assert (G_TYPE_INT == param_types[0]);
+	g_assert (G_TYPE_CHAR == param_types[1]);
+
+	crank_func_type_unref (ftype);
+  
+}
+
+void
 test_func_holder_new (void)
 {
   
@@ -60,7 +94,8 @@ test_func_holder_new (void)
       G_CALLBACK(subject_function), NULL,
       G_TYPE_BOOLEAN,
       G_TYPE_INT,
-      G_TYPE_INT);
+      G_TYPE_INT,
+      G_TYPE_NONE);
   
   crank_func_holder_free (holder);
   

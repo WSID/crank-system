@@ -27,11 +27,15 @@
 
 gint  subject_function_FOREACH_VALIST (gint a, ...);
 gint  subject_function_FOREACH_VARARG (gint a, ...);
+gint  subject_function_FOREACH_VALIST_DO (gint a, ...);
+gint  subject_function_FOREACH_VARARG_DO (gint a, ...);
 
 
-
-void  test_macro_FOREACH_VALIST (void);
-void  test_macro_FOREACH_VARARG (void);
+void	test_macro_ARRAY_DUP (void);
+void	test_macro_FOREACH_VALIST (void);
+void	test_macro_FOREACH_VARARG (void);
+void	test_macro_FOREACH_VALIST_DO (void);
+void	test_macro_FOREACH_VARARG_DO (void);
 
 
 
@@ -39,18 +43,28 @@ gint
 main (gint   argc,
       gchar *argv[])
 {
-  g_test_init (&argc, &argv, NULL);
+	g_test_init (&argc, &argv, NULL);
 
-  g_test_add_func ("/wsid/crank/base/macro/foreach/valist",
-      test_macro_FOREACH_VALIST);
-      
-  g_test_add_func ("/wsid/crank/base/macro/foreach/vararg",
-      test_macro_FOREACH_VARARG);
+	g_test_add_func ("/wsid/crank/base/macro/arraydup",
+		test_macro_ARRAY_DUP);
 
-  g_test_run ();
+	g_test_add_func ("/wsid/crank/base/macro/foreach/valist",
+		test_macro_FOREACH_VALIST);
 
-  return 0;
+	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg",
+		test_macro_FOREACH_VARARG);
+	
+	g_test_add_func ("/wsid/crank/base/macro/foreach/valist_do",
+		test_macro_FOREACH_VALIST_DO);
+
+	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg_do",
+		test_macro_FOREACH_VARARG_DO);
+
+	g_test_run ();
+
+	return 0;
 }
+
 
 
 
@@ -84,6 +98,46 @@ subject_function_FOREACH_VARARG (gint a, ...)
 }
 
 
+gint
+subject_function_FOREACH_VALIST_DO (gint a, ...)
+{
+  va_list vararg;
+  gint    result;
+  
+  va_start (vararg, a);
+  
+  result = a;
+  CRANK_FOREACH_VALIST_DO (vararg, gint, e, 0, {result += e;})
+  
+  return result;
+}
+
+
+gint
+subject_function_FOREACH_VARARG_DO (gint a, ...)
+{
+  gint result = a;
+  
+  CRANK_FOREACH_VARARG_DO (a, gint, e, 0, {result += e;})
+  
+  return result;
+}
+
+
+void
+test_macro_ARRAY_DUP (void)
+{
+	guint subject[4] = {1, 9, 9, 8};
+
+	guint* subject_dup = CRANK_ARRAY_DUP (subject, guint, 4);
+
+	g_assert_cmpint (subject[0], ==, subject_dup[0]);
+	g_assert_cmpint (subject[1], ==, subject_dup[1]);
+	g_assert_cmpint (subject[2], ==, subject_dup[2]);
+	g_assert_cmpint (subject[3], ==, subject_dup[3]);
+
+	g_free (subject_dup);
+}
 
 void
 test_macro_FOREACH_VALIST (void)
@@ -95,4 +149,16 @@ void
 test_macro_FOREACH_VARARG (void)
 {
   g_assert_cmpint (subject_function_FOREACH_VARARG (2, 4, 8, 1, 0), ==, 15);
+}
+
+void
+test_macro_FOREACH_VALIST_DO (void)
+{
+  g_assert_cmpint (subject_function_FOREACH_VALIST_DO (18, 3, 7, 2, 4, 0), ==, 34);
+}
+
+void
+test_macro_FOREACH_VARARG_DO (void)
+{
+  g_assert_cmpint (subject_function_FOREACH_VARARG_DO (9, 6, 3, 0), ==, 18);
 }

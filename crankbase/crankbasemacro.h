@@ -38,6 +38,39 @@
 G_BEGIN_DECLS
 
 /**
+ * CRANK_ARRAY_DUP:
+ * @a: 배열입니다.
+ * @G: 배열의 구성형입니다.
+ * @l: 배열의 길이입니다.
+ *
+ * 배열을 g_memdup()을 사용하여 복사합니다.
+ *
+ * Returns: (transfer container): 복사된 배열입니다. 사용 후 g_free()를 사용하여야 합니다. 
+ */
+#define CRANK_ARRAY_DUP(a, G, l) ((G*)g_memdup ((a), l * sizeof (G)))
+
+
+/**
+ * CRANK_FOREACH_ARRAY_BEGIN:
+ * @a: 내용을 열람할 array
+ * @G: 내용의 형 (type)입니다.
+ * @e: 내용의 이름입니다.
+ * @l: 내용의 길이입니다.
+ */
+#define CRANK_FOREACH_ARRAY_BEGIN(a, G, e, l) \
+	{   int _crank_macro_i; \
+		for (_crank_macro_i = 0; _crank_macro_i < l; _crank_macro_i++) { \
+		G e = a[_crank_macro_i];
+
+/**
+ * CRANK_FOREACH_ARRAY_END:
+ * 
+ * %CRANK_FOREACH_ARRAY_BEGIN의 끝을 표시합니다.
+ */
+#define CRANK_FOREACH_ARRAY_END \
+	} }
+
+/**
  * CRANK_FOREACH_VALIST_BEGIN:
  * @va: 내용을 열람할 va_list
  * @G: 내용의 형 (type) 입니다.
@@ -58,6 +91,19 @@ G_BEGIN_DECLS
  */
 #define CRANK_FOREACH_VALIST_END \
     } while (TRUE);
+
+/**
+ * CRANK_FOREACH_VALIST_DO:
+ * @va: va_list입니다.
+ * @G: 타입
+ * @e: 변수
+ * @f: 마지막
+ * @BLOCK: 실행 코드
+ */
+#define CRANK_FOREACH_VALIST_DO(va, G, e, f, BLOCK) \
+	CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
+		BLOCK \
+	CRANK_FOREACH_VALIST_END
 
 
 /**
@@ -84,6 +130,11 @@ G_BEGIN_DECLS
       CRANK_FOREACH_VALIST_END \
       va_end (_crank_macro_varargs); \
     }
+
+#define CRANK_FOREACH_VARARG_DO(param_last, G, e, f, BLOCK) \
+	CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
+		BLOCK \
+	CRANK_FOREACH_VARARG_END
 
 G_END_DECLS
 

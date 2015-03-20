@@ -29,28 +29,78 @@
 
 G_BEGIN_DECLS
 
-struct _CrankFuncHolder;
-typedef struct _CrankFuncHolder CrankFuncHolder;
 
-#define crank_func_holder_new(callback, userdata, ...) \
-    crank_func_holder_new_rawc (callback, userdata, __VA_ARGS__, G_TYPE_NONE)
+struct _CrankFuncType;
+typedef struct _CrankFuncType CrankFuncType;
+
+#define CRANK_TYPE_FUNC_TYPE (crank_func_type_get_type ())
+
+GType crank_func_type_get_type (void);
+
 
 
 G_GNUC_MALLOC
-CrankFuncHolder*  crank_func_holder_new_rawc (const GCallback callback,
-                                              const gpointer useradata,
-                                              const GType return_type,
-                                              ... );
+CrankFuncType*  crank_func_type_new (
+        const GType return_type,
+        ...);
 
-/*
-GClosure  crank_func_closure_new_with_type (GCallback callback,
-											gpointer userdata,
-											GType return_type,
-											GType* param_type,
-											uint   nparam_type);
-*/
+G_GNUC_MALLOC
+CrankFuncType*  crank_func_type_new_with_types (
+        const GType return_type,
+        const GType* param_types,
+        const guint nparam_types);
+
+CrankFuncType*  crank_func_type_ref (CrankFuncType* ftype);
+void			crank_func_type_unref (CrankFuncType* ftype);
+
+GType			crank_func_type_get_return_type (const CrankFuncType* ftype);
+GType			crank_func_type_get_param_type (const CrankFuncType* ftype,
+    											const guint index);
+guint			crank_func_type_get_nparam_types (const CrankFuncType* ftype);
+GType*			crank_func_type_get_param_types (const CrankFuncType* ftype,
+    											guint* length);
+
+
+
+
+
+struct _CrankFuncHolder;
+typedef struct _CrankFuncHolder CrankFuncHolder;
+
+
+
+#define CRANK_TYPE_FUNC_HOLDER (crank_func_holder_get_type ())
+
+GType crank_func_holder_get_type (void);
+
+
+
+G_GNUC_MALLOC
+CrankFuncHolder*  crank_func_holder_new (
+	    const GCallback callback,
+		const gpointer userdata,
+		const GDestroyNotify userdata_destroy,
+		const GType return_type,
+		... );
+
+G_GNUC_MALLOC
+CrankFuncHolder*  crank_func_holder_new_with_type (const GCallback callback,
+											const gpointer userdata,
+                                            const GDestroyNotify userdata_destroy,
+											const GType return_type,
+											const GType* param_types,
+											const uint   nparam_types);
+
+
+
+// 복사자, 해제자입니다.
+
+CrankFuncHolder*  crank_func_holder_copy (const CrankFuncHolder* holder);
 
 void  crank_func_holder_free (CrankFuncHolder*  holder);
+
+
+
 
 //gboolean  crank_func_closure_check_type (GType *types,
 //                                         uint   ntypes);
