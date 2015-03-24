@@ -45,6 +45,13 @@ void	test_func_type_hash (void);
 void	test_func_type_equal (void);
 void	test_func_type_to_string (void);
 
+void	test_func_type_compatible_to (void);
+void	test_func_type_compatible_to_param_size (void);
+
+void	test_func_type_arg_match_exactually (void);
+void	test_func_type_arg_match (void);
+void	test_func_type_arg_match_transformable (void);
+
 void	test_func_holder_new (void);
 
 
@@ -68,6 +75,21 @@ main (gint   argc,
 	
 	g_test_add_func ("/wsid/crank/base/functype/tostring",
           test_func_type_to_string);
+	
+	g_test_add_func ("/wsid/crank/base/functype/compatible/basic",
+          test_func_type_compatible_to);
+	
+	g_test_add_func ("/wsid/crank/base/functype/compatible/paramsize",
+          test_func_type_compatible_to_param_size);
+	
+	g_test_add_func ("/wsid/crank/base/functype/argmatch/exactually",
+          test_func_type_arg_match_exactually);
+          
+	g_test_add_func ("/wsid/crank/base/functype/argmatch/normal",
+          test_func_type_arg_match);
+          
+	g_test_add_func ("/wsid/crank/base/functype/argmatch/transformable",
+          test_func_type_arg_match_transformable);
 
   g_test_add_func ("/wsid/crank/base/funcholder",
       test_func_holder_new);
@@ -180,6 +202,9 @@ test_func_type_hash (void)
 	hash_b = crank_func_type_hash (ftype_b);
 
 	g_assert_cmpuint (hash_a, ==, hash_b);
+	
+	crank_func_type_unref (ftype_a);
+	crank_func_type_unref (ftype_b);
 }
 
 void
@@ -202,6 +227,9 @@ test_func_type_equal (void)
 	ftype_b = crank_func_type_new_with_types (r_type, p_types, 2);
 
 	g_assert (crank_func_type_equal (ftype_a, ftype_b));
+	
+	crank_func_type_unref (ftype_a);
+	crank_func_type_unref (ftype_b);
 }
 
 void
@@ -215,12 +243,128 @@ test_func_type_to_string (void)
     		G_TYPE_NONE );
 	
 	g_assert_cmpstr ("gboolean (gint, gchar)", ==, crank_func_type_to_string (ftype));
+
+	crank_func_type_unref (ftype);
+}
+
+
+void
+test_func_type_compatible_to (void)
+{
+	CrankFuncType* ftype_from;
+	CrankFuncType* ftype_to;
+
+	ftype_from = crank_func_type_new (
+        G_TYPE_BINDING,
+        G_TYPE_OBJECT,
+        G_TYPE_NONE);
+
+	ftype_to = crank_func_type_new (
+        G_TYPE_OBJECT,
+        G_TYPE_BINDING,
+        G_TYPE_NONE);
+
+	g_assert (crank_func_type_compatible_to (ftype_from, ftype_to));
+
+	crank_func_type_unref (ftype_from);
+	crank_func_type_unref (ftype_to);
+}
+
+void
+test_func_type_compatible_to_param_size (void)
+{
+	CrankFuncType* ftype_from;
+	CrankFuncType* ftype_to;
+
+	ftype_from = crank_func_type_new (
+        G_TYPE_BOOLEAN,
+        G_TYPE_INT,
+        G_TYPE_NONE);
+
+	ftype_to = crank_func_type_new (
+	        G_TYPE_BOOLEAN,
+	        G_TYPE_INT,
+	        G_TYPE_INT,
+	        G_TYPE_NONE);
+
+	g_assert (crank_func_type_compatible_to (ftype_from, ftype_to));
+
+	crank_func_type_unref (ftype_from);
+	crank_func_type_unref (ftype_to);
+}
+
+void
+test_func_type_arg_match_exactually (void)
+{
+	CrankFuncType* ftype;
+	GType types_a[] = {G_TYPE_INT, G_TYPE_FLOAT};
+	GType types_b[] = {G_TYPE_INT, G_TYPE_DOUBLE};
+	GType types_c[] = {G_TYPE_INT};
+	GType types_d[] = {G_TYPE_INT, G_TYPE_FLOAT, G_TYPE_BOOLEAN};
+
+	ftype = crank_func_type_new (
+        G_TYPE_BOOLEAN,
+        G_TYPE_INT,
+        G_TYPE_FLOAT,
+        G_TYPE_NONE);
+
+	g_assert (crank_func_type_arg_match_exactually (ftype, types_a, 2));
+	g_assert (! crank_func_type_arg_match_exactually (ftype, types_b, 2));
+	g_assert (! crank_func_type_arg_match_exactually (ftype, types_c, 1));
+	g_assert (! crank_func_type_arg_match_exactually (ftype, types_d, 3));
+
+	crank_func_type_unref (ftype);
+}
+
+void
+test_func_type_arg_match (void)
+{
+	CrankFuncType* ftype;
+	GType types_a[] = {G_TYPE_OBJECT, G_TYPE_INT};
+	GType types_b[] = {G_TYPE_INT, G_TYPE_DOUBLE};
+	GType types_c[] = {G_TYPE_BINDING, G_TYPE_INT};
+
+	ftype = crank_func_type_new (
+        G_TYPE_BOOLEAN,
+        G_TYPE_OBJECT,
+        G_TYPE_INT,
+        G_TYPE_NONE);
+
+	g_assert (crank_func_type_arg_match (ftype, types_a, 2));
+	g_assert (! crank_func_type_arg_match (ftype, types_b, 2));
+	g_assert (crank_func_type_arg_match (ftype, types_c, 2));
+
+	crank_func_type_unref (ftype);
+}
+
+
+void
+test_func_type_arg_match_transformable (void)
+{
+	CrankFuncType* ftype;
+	GType types_a[] = {G_TYPE_OBJECT, G_TYPE_INT};
+	GType types_b[] = {G_TYPE_OBJECT, G_TYPE_DOUBLE};
+	GType types_c[] = {G_TYPE_BINDING, G_TYPE_FLOAT};
+	GType types_d[] = {G_TYPE_STRING, G_TYPE_FLOAT};
+
+	ftype = crank_func_type_new (
+        G_TYPE_BOOLEAN,
+        G_TYPE_OBJECT,
+        G_TYPE_INT,
+        G_TYPE_NONE);
+
+	g_assert (crank_func_type_arg_match_transformable (ftype, types_a, 2));
+	g_assert (crank_func_type_arg_match_transformable (ftype, types_b, 2));
+	g_assert (crank_func_type_arg_match_transformable (ftype, types_c, 2));
+	g_assert (! crank_func_type_arg_match_transformable (ftype, types_d, 2));
+
+	crank_func_type_unref (ftype);
 }
 
 void
 test_func_holder_new (void)
 {
-  
+  /*
   CrankFuncHolder* holder = crank_func_holder_new (
       G_CALLBACK(subject_function), NULL,
       G_TYPE_BOOLEAN,
@@ -229,5 +373,5 @@ test_func_holder_new (void)
       G_TYPE_NONE);
   
   crank_func_holder_free (holder);
-  
+  */
 }

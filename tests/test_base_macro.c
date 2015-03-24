@@ -32,6 +32,7 @@ gint  subject_function_FOREACH_VARARG_DO (gint a, ...);
 
 
 void	test_macro_ARRAY_DUP (void);
+void	test_macro_ARRAY_CMP (void);
 void	test_macro_FOREACH_VALIST (void);
 void	test_macro_FOREACH_VARARG (void);
 void	test_macro_FOREACH_VALIST_DO (void);
@@ -47,6 +48,9 @@ main (gint   argc,
 
 	g_test_add_func ("/wsid/crank/base/macro/arraydup",
 		test_macro_ARRAY_DUP);
+		
+	g_test_add_func ("/wsid/crank/base/macro/arraycmp",
+		test_macro_ARRAY_CMP);
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/valist",
 		test_macro_FOREACH_VALIST);
@@ -137,6 +141,17 @@ test_macro_ARRAY_DUP (void)
 	g_assert_cmpint (subject[3], ==, subject_dup[3]);
 
 	g_free (subject_dup);
+}
+
+void
+test_macro_ARRAY_CMP (void)
+{
+	guint subject_a[4] = {1, 9, 9, 8};
+	guint subject_b[4] = {1, 4, 0, 5};
+
+	g_assert (CRANK_ARRAY_CMP (subject_a, subject_b, guint, 4) > 0);
+
+	g_assert (CRANK_ARRAY_CMP (subject_a, subject_a, guint, 4) == 0);
 }
 
 void

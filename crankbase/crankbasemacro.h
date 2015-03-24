@@ -88,6 +88,16 @@ G_BEGIN_DECLS
  */
 #define CRANK_ARRAY_DUP(a, G, l) ((G*)g_memdup ((a), l * sizeof (G)))
 
+/**
+ * CRANK_ARRAY_CMP:
+ * @a: 배열입니다.
+ * @b: 배열입니다.
+ * @G: 배열의 구성형입니다.
+ * @n: 배열의 갯수입니다.
+ *
+ * Returns: (type gint): 비교 결과입니다.
+ */
+#define CRANK_ARRAY_CMP(a, b, G, n) (memcmp((a), (b), (n) * sizeof (G)))
 
 
 /**
@@ -206,7 +216,7 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_VARARG_DO:
- * @param_list: 현재 함수의 마지막 고정 인자 이름입니다.
+ * @param_last: 현재 함수의 마지막 고정 인자 이름입니다.
  * @G: 각 항목의 형 (type) 입니다.
  * @e: 항목의 이름입니다.
  * @f: 마지막을 표시하는 값입니다.

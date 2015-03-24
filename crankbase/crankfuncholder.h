@@ -29,7 +29,6 @@
 
 G_BEGIN_DECLS
 
-
 struct _CrankFuncType;
 typedef struct _CrankFuncType CrankFuncType;
 
@@ -70,6 +69,21 @@ guint			crank_func_type_get_nparam_types (const CrankFuncType* ftype);
 GType*			crank_func_type_get_param_types (const CrankFuncType* ftype,
     											guint* length);
 
+gboolean		crank_func_type_compatible_to  (const CrankFuncType* from,
+    											const CrankFuncType* to);
+
+
+gboolean		crank_func_type_arg_match_exactually (	const CrankFuncType* ftype,
+														const GType*		 args,
+														const uint			 arg_length	);
+
+gboolean		crank_func_type_arg_match (	const CrankFuncType* ftype,
+											const GType*		 args,
+											const guint			 arg_length	);
+
+gboolean		crank_func_type_arg_match_transformable (	const CrankFuncType* ftype,
+															const GType*		 args,
+															const guint			 arg_length	);
 
 
 
@@ -78,36 +92,8 @@ struct _CrankFuncHolder;
 typedef struct _CrankFuncHolder CrankFuncHolder;
 
 
-
-#define CRANK_TYPE_FUNC_HOLDER (crank_func_holder_get_type ())
-
-GType crank_func_holder_get_type (void);
-
-
-
-G_GNUC_MALLOC
-CrankFuncHolder*  crank_func_holder_new (
-	    const GCallback callback,
-		const gpointer userdata,
-		const GDestroyNotify userdata_destroy,
-		const GType return_type,
-		... );
-
-G_GNUC_MALLOC
-CrankFuncHolder*  crank_func_holder_new_with_type (const GCallback callback,
-											const gpointer userdata,
-                                            const GDestroyNotify userdata_destroy,
-											const GType return_type,
-											const GType* param_types,
-											const uint   nparam_types);
-
-
-
-// 복사자, 해제자입니다.
-
-CrankFuncHolder*  crank_func_holder_copy (const CrankFuncHolder* holder);
-
-void  crank_func_holder_free (CrankFuncHolder*  holder);
+//G_GNUC_MALLOC
+//CrankFuncHolder*  crank_func_holder_new ();
 
 
 

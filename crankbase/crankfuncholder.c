@@ -55,10 +55,7 @@ struct _CrankFuncType {
 	GType   return_type;
 	GType*  param_types;
 	uint    nparam_types;
-
-	ffi_type**		param_types_ffi;
-	ffi_cif			func_type_ffi;
-
+	
 	uint	  _refc;
 };
 
@@ -141,22 +138,6 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 
 	ftype->param_types = g_renew (GType, ftype->param_types, ftype->nparam_types);
 
-	
-	// param_types_ffi를 생성합니다.
-	ftype->param_types_ffi =
-		_crank_func_type_ffits_from_gtypes (ftype->param_types, ftype->nparam_types);
-
-	// func_type_ffi를 생성합니다.
-	func_type_ffi_status = ffi_prep_cif (&ftype->func_type_ffi,
-	        FFI_DEFAULT_ABI,
-	        ftype->nparam_types,
-	        _crank_func_type_ffit_from_gtype (ftype->return_type),
-	        ftype->param_types_ffi  );
-
-	if (func_type_ffi_status != FFI_OK) {
-		g_warning ("ffi_cif preparation failed!");
-	}
-	
 	ftype->_refc = 1;
 
 	return ftype;
@@ -192,21 +173,6 @@ crank_func_type_new_with_types (
 	ftype->nparam_types = nparam_types;
 	ftype->param_types = CRANK_ARRAY_DUP (param_types, GType, nparam_types);
 	
-	// param_types_ffi를 생성합니다.
-	ftype->param_types_ffi =
-		_crank_func_type_ffits_from_gtypes (ftype->param_types, ftype->nparam_types);
-
-	// func_type_ffi를 생성합니다.
-	func_type_ffi_status = ffi_prep_cif (&ftype->func_type_ffi,
-	        FFI_DEFAULT_ABI,
-	        ftype->nparam_types,
-	        _crank_func_type_ffit_from_gtype (ftype->return_type),
-	        ftype->param_types_ffi  );
-
-	if (func_type_ffi_status != FFI_OK) {
-		g_warning ("ffi_cif preparation failed!");
-	}
-	
 	ftype->_refc = 1;
 
 	return ftype;
@@ -240,7 +206,6 @@ crank_func_type_unref (CrankFuncType* ftype)
 {
 	if (g_atomic_int_dec_and_test(&ftype->_refc)) {
 		g_free (ftype->param_types);
-		g_free (ftype->param_types_ffi);
 		g_free (ftype);
 	}
 }
@@ -415,6 +380,117 @@ crank_func_type_get_param_types (const CrankFuncType* ftype,
 }
 
 
+/**
+ * crank_func_type_compatible_to:
+ * @from: 비교될 원 함수 형입니다.
+ * @to: 비교할 함수 형입니다.
+ * 
+ * 두 형을 비교하여 @from이 @to에 대입될 수 있는지 확인합니다.
+ * 
+ * 이는 다음과 같습니다.
+ * 
+ * - @from의 반환형은 @to의 반환형의 하위 종류입니다.
+ * - @from의 인자 수는 @to의 인자 수보다 적거나 같습니다.
+ * - @to의 각 인자 형은 @from의 인자 형의 하위 종류입니다.
+ * 
+ * 간단히 is-a 관계라고 생각하면 됩니다.
+ * 
+ * Returns: @to가 @from에 대입될 수 있는 경우 %TRUE입니다.
+ */
+gboolean
+crank_func_type_compatible_to  (	const CrankFuncType* from,
+    								const CrankFuncType* to		)
+{
+	guint i;
+	guint i_end;
+
+	if (	(! g_type_is_a (from->return_type, to->return_type)) ||
+	        (to->nparam_types < from->nparam_types)				)
+		return FALSE;
+	
+	i_end = from->nparam_types;
+
+	for (i = 0; i < i_end; i++) {
+		if (! g_type_is_a (to->param_types[i], from->param_types[i]))
+			return FALSE;
+	}
+	return TRUE;	
+}
+	
+
+/**
+ * crank_func_type_arg_match_exactually:
+ * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
+ * @args: (array length=arg_length): 인자 목록입니다.
+ * @arg_length: @args의 길이입니다.
+ *
+ * 주어진 인자 타입 목록과 비교하여, 정확히 일치하는지 확인합니다.
+ *
+ * Returns: 정확히 일치하는지 입니다.
+ */
+gboolean
+crank_func_type_arg_match_exactually (	const CrankFuncType* ftype,
+										const GType*		 args,
+										const uint			 arg_length	)
+{
+	if (ftype->nparam_types != arg_length) return FALSE;
+	
+	return (CRANK_ARRAY_CMP (ftype->param_types, args, GType, arg_length) == 0);
+}
+
+/**
+ * crank_func_type_arg_match:
+ * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
+ * @args: (array length=arg_length): 인자 목록입니다.
+ * @arg_length: @args의 길이입니다.
+ *
+ * 주어진 인자 타입 목록과 비교하여, 해당 타입들이 사용 가능한지 확인합니다..
+ *
+ * Returns: 해당 타입을 사용할 수 있는지 입니다.
+ */
+gboolean
+crank_func_type_arg_match (	const CrankFuncType* ftype,
+							const GType*		 args,
+							const guint			 arg_length	)
+{
+	gint i;
+	
+	if (ftype->nparam_types != arg_length) return FALSE;
+	
+	for (i = 0; i < arg_length; i ++) {
+		if (! g_type_is_a (args[i], ftype->param_types[i]))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_func_type_arg_match_transformable:
+ * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
+ * @args: (array length=arg_length): 인자 목록입니다.
+ * @arg_length: @args의 길이입니다.
+ *
+ * 주어진 인자 타입 목록과 비교하여, 해당 타입들을 변환을 통해서라도 사용 가능한지
+ * 확인합니다. 
+ *
+ * Returns: 해당 타입을 사용할 수 있는지 입니다.
+ */
+gboolean
+crank_func_type_arg_match_transformable (	const CrankFuncType* ftype,
+											const GType*		 args,
+											const guint			 arg_length	)
+{
+	gint i;
+	
+	if (ftype->nparam_types != arg_length) return FALSE;
+	
+	for (i = 0; i < arg_length; i ++) {
+		if (! g_value_type_transformable (args[i], ftype->param_types[i]))
+			return FALSE;
+	}
+	return TRUE;
+}
+
 
 
 static void
@@ -428,88 +504,7 @@ _transform_crank_func_type_string (	const GValue* value_ftype,
 }
 
 
-/*
- * _crank_func_type_ffit_from_gtype:
- * @type: ffi_type을 얻을 #GType
- * 
- * GType에 해당하는 기본 ffi_type을 얻습니다. 구조체나 공유체를 함수로 넘길 일이
- * 없으므로 이에 대한 처리는 하지 않습니다.
- * 
- * Returns: (transfer none): ffi_type입니다.
- */
-static ffi_type*
-_crank_func_type_ffit_from_gtype (const GType type) {
-	switch (type) {
-		case G_TYPE_INVALID:
-			return NULL;
-		case G_TYPE_NONE:
-			return &ffi_type_void;
-		case G_TYPE_CHAR:
-			return &ffi_type_schar;
-		case G_TYPE_UCHAR:
-			return &ffi_type_uchar;
-		case G_TYPE_BOOLEAN:
-			return &ffi_type_sint;
-		case G_TYPE_INT:
-			return &ffi_type_sint;
-		case G_TYPE_UINT:
-			return &ffi_type_uint;
-		case G_TYPE_LONG:
-			return &ffi_type_slong;
-		case G_TYPE_ULONG:
-			return &ffi_type_ulong;
-		case G_TYPE_INT64:
-			return &ffi_type_sint64;
-		case G_TYPE_UINT64:
-			return &ffi_type_uint64;
-		case G_TYPE_ENUM:
-		case G_TYPE_FLAGS:
-			return &ffi_type_sint;
-		case G_TYPE_FLOAT:
-			return &ffi_type_float;
-		case G_TYPE_DOUBLE:
-			return &ffi_type_double;
-		case G_TYPE_POINTER:
-		case G_TYPE_STRING:
-		case G_TYPE_BOXED:
-		case G_TYPE_PARAM:
-		case G_TYPE_OBJECT:
-		case G_TYPE_VARIANT:
-		case G_TYPE_INTERFACE:
-			return &ffi_type_pointer;
-		default:
-			if (type == G_TYPE_GTYPE)
-				return &ffi_type_ulong;
-			else if (G_TYPE_IS_ENUM(type) || G_TYPE_IS_FLAGS(type))
-				return &ffi_type_sint;
-			
-			else return &ffi_type_pointer;
-	}
-}
 
-/*
- * _crank_func_type_ffits_from_gtypes:
- * @types: (array length=ntypes): ffi_type 배열을 얻을 #GType입니다.
- * @ntypes: types의 길이입니다.
- * 
- * ffi_type의 배열을 생성합니다.
- * 
- * Returns: (transfer container): ffi_type의 배열입니다. 사용이 끝나면 g_free()로 해제해야 합니다.
- */
-static ffi_type**
-_crank_func_type_ffits_from_gtypes (const GType* types,
-									const guint ntypes)
-{
-	ffi_type** ffits;
-	uint i;
-	
-	ffits = g_new(ffi_type*, ntypes);
-
-	for (i = 0; i < ntypes; i++)
-		ffits[i] = _crank_func_type_ffit_from_gtype (types[i]);
-
-	return ffits;
-}
 
 
 
@@ -523,135 +518,7 @@ _crank_func_type_ffits_from_gtypes (const GType* types,
  * 일반적으로 프로그램에서 쓰이지 않고, Crank System에서 내부적으로 사용합니다.
  */
 struct _CrankFuncHolder {
-	GCallback		function;
-	void* 			userdata;
-	GDestroyNotify  userdata_destroy;
+	GClosure parent_instance;
 	
-	gboolean  is_value_function;
-
-
-	GType   return_type;
-	GType*  param_types;
-	uint    nparam_types;
+	// TODO: GClosure 그래프 : 타입에 해당하는 GClusure를 저장하고 조회해야 합니다.
 };
-
-G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder, crank_func_holder_copy, crank_func_holder_free)
-
-
-
-/**
- * crank_func_holder_new:
- * @callback: (scope notified): 콜백 함수입니다.
- * @userdata: (closure): @callback이 가지고 있는 추가적인 내용입니다.
- * @userdata_destroy: @userdata을 해제할 함수입니다.
- * @return_type: @callback이 반환하는 종류
- * @...: @callback이 받아들이는 인자 목록
- *
- * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
- */
-CrankFuncHolder*
-crank_func_holder_new (const GCallback callback,
-                            const gpointer userdata,
-                            const GDestroyNotify userdata_destroy,
-                            const GType return_type,
-                            ... )
-{
-	CrankFuncHolder*  holder;
-
-	uint              param_types_alloc;
-
-	holder = g_new (CrankFuncHolder, 1);
-
-	holder->function = callback;
-	holder->userdata = userdata;
-	holder->userdata_destroy = userdata_destroy;
-
-	holder->is_value_function = FALSE;
-
-	holder->return_type = return_type;
-
-	// Read varargs
-	param_types_alloc = 0;
-	holder->param_types = NULL;
-	holder->nparam_types = 0;
-
-	CRANK_FOREACH_VARARG_BEGIN (return_type, GType, varargs_type, G_TYPE_NONE)
-
-		if (param_types_alloc <= holder->nparam_types) {
-			param_types_alloc = (param_types_alloc == 0) ?
-				1 :
-				param_types_alloc << 1;
-			
-			holder->param_types = g_renew (GType, holder->param_types, param_types_alloc);
-		}
-	
-		holder->param_types[holder->nparam_types] = varargs_type;
-		holder->nparam_types++;
-
-	CRANK_FOREACH_VARARG_END
-
-	holder->param_types = g_renew (GType, holder->param_types, holder->nparam_types);
-
-	return holder;
-}
-
-/**
- * crank_func_holder_new_with_type:
- * @callback: (scope notified): 추가할 콜백 함수입니다.
- * @userdata: (closure): @callback이 가지고 있는 추가적인 함수입니다.
- * @userdata_destroy: @userdata을 해제할 함수입니다.
- * @return_type: @callback이 반환하는 종류
- * @param_types: (array length=nparam_types) (allow-none): @callback이 받아들이는 인자 목록
- * @nparam_types: @param_types의 갯수
- *
- * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
- *
- */
-CrankFuncHolder*
-crank_func_holder_new_with_type (const GCallback callback,
-                                 const gpointer userdata,
-                                 const GDestroyNotify userdata_destroy,
-                                 const GType return_type,
-                                 const GType* param_types,
-                                 const uint nparam_types)
-{
-	CrankFuncHolder*  holder;
-
-	uint              param_types_alloc;
-
-	holder = g_new (CrankFuncHolder, 1);
-
-	holder->function = callback;
-	holder->userdata = userdata;
-	holder->userdata_destroy = userdata_destroy;
-	holder->is_value_function = FALSE;
-
-	holder->return_type = return_type;
-
-	holder->param_types = g_memdup (param_types, nparam_types * sizeof (GType));
-	holder->nparam_types = nparam_types;
-
-	return holder;
-}
-
-CrankFuncHolder*
-crank_func_holder_copy (const CrankFuncHolder* holder)
-{
-  return crank_func_holder_new_with_type (
-  		holder->function,
-  		holder->userdata,
-  		holder->userdata_destroy,
-  		holder->return_type,
-  		holder->param_types,
-  		holder->nparam_types);
-}
-
-/**
- * crank_func_holder_free:
- * @holder: 메모리 해제할 #CrankFuncHolder입니다.
- */
-void
-crank_func_holder_free (CrankFuncHolder* holder) {
-  g_free (holder->param_types);
-  g_free (holder);
-}
