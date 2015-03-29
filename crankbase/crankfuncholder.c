@@ -18,8 +18,6 @@
  */
 #define _CRANKBASE_INSIDE
 
-#include <ffi.h>
-
 #include <stdarg.h>
 #include <glib.h>
 #include <glib-object.h>
@@ -35,17 +33,11 @@
  * @include: crankbase.h
  */
 
+
+
 // 내부 전용 함수
 static void			_transform_crank_func_type_string (	const GValue* value_ftype,
 														GValue* value_string	);
-
-static ffi_type*   _crank_func_type_ffit_from_gtype (   const GType type);
-static ffi_type**  _crank_func_type_ffits_from_gtypes ( const GType* types,
-     													const guint ntypes);
-
-
-
-
 /**
  * CrankFuncType:
  * 
@@ -70,6 +62,10 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
 			        G_TYPE_STRING,
 			        _transform_crank_func_type_string);
 		} );
+
+
+
+
 
 /**
  * crank_func_type_new:
@@ -109,7 +105,6 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 	CrankFuncType*  ftype;
 	guint			param_types_alloc;
 	guint			i;
-	ffi_status		func_type_ffi_status;
 	
 	// return_type을 채워 넣습니다.
 	ftype = g_new(CrankFuncType, 1);
@@ -162,7 +157,6 @@ crank_func_type_new_with_types (
 {
 	CrankFuncType*  ftype;
 	guint			i;
-	ffi_status		func_type_ffi_status;
 	
 	// return_type을 채워 넣습니다.
 	ftype = g_new(CrankFuncType, 1);
@@ -368,7 +362,7 @@ crank_func_type_get_nparam_types (const CrankFuncType* ftype)
  * 
  * 인자 형을 배열로 조회합니다.
  *
- * Returns: (transfer container): 인자 형의 배열입니다. 사용후 g_free()로 해제합니다.
+ * Returns: (array length=length) (transfer container): 인자 형의 배열입니다. 사용후 g_free()로 해제합니다.
  */
 GType*
 crank_func_type_get_param_types (const CrankFuncType* ftype,

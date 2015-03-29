@@ -1,5 +1,5 @@
-#ifndef CRANKFUNCCLOSURE_H
-#define CRANKFUNCCLOSURE_H
+#ifndef CRANKFUNCHOLDER_H
+#define CRANKFUNCHOLDER_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -105,4 +105,4 @@ typedef struct _CrankFuncHolder CrankFuncHolder;
 
 G_END_DECLS
 
-#endif /* CRANKFUNCCLOSURE_H */
+#endif /* CRANKFUNCHOLDER_H */
