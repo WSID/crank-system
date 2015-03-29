@@ -34,8 +34,41 @@ GOBJECT_INTROSPECTION_CHECK([1.30.0])
 PKG_PROG_PKG_CONFIG
 AC_PROG_CC
 
-# Crank Dummy 설정
+# 모듈 설정
 PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
+
+
+
+# Introspection Test for Python
+AC_ARG_ENABLE(test-python,
+		  AS_HELP_STRING([--enable-test-python[=@<:@no/auto/yes@:>@]],
+		                 [gir에 대해 python 검사를 수행합니다.]),
+		  , 
+		  [enable_test_python=auto])
+
+AC_MSG_CHECKING([test-python 확인 진행중])
+
+AS_CASE([$enable_test_python],
+	[no],
+		[test_python="no"],
+		
+	[yes],
+		[if test S$found_introspection != S"yes"
+			then AC_MSG_ERROR([Introspection feature is required for python test])
+		 fi
+		 AM_PATH_PYTHON([],[test_python="yes"], [AC_MSG_ERROR([Python is not found!])])	],
+		 
+	[auto],
+		[if test S$found_introspection == S"yes"
+			then AM_PATH_PYTHON([],[test_python="yes"], [test_python="no"])
+		 fi	],
+		 
+	[AC_MSG_ERROR([--enable-test-python은 yes/no/auto 옵션으로만 주세요.])	]	)
+
+AC_MSG_RESULT([$test_python])
+AM_CONDITIONAL([TEST_PYTHON], [test S$test_python == S"yes"])
+
+
 
 
 # 출력합니다.
@@ -43,6 +76,7 @@ AC_OUTPUT([
 		Makefile
 		crankbase/Makefile
 		tests/Makefile
+		tests_python/Makefile
 		docs/Makefile
 		po/Makefile.in
 ])

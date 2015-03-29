@@ -8,6 +8,12 @@ SUBDIRS= \
 		docs \
 		po
 
+if TEST_PYTHON
+SUBDIRS+= tests_python
+endif
+
+
+
 EXTRA_DIST= \
 		glib-tap.mk \
 		tap-driver.sh \
