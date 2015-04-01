@@ -1,4 +1,24 @@
-private static const GLib.Type[] g_type_pool;
+/* Copyright (C) 2015, WSID   */
+
+/* This file is part of Crank System.
+ *
+ *  Crank System is free software: you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation, either
+ *  version 3 of the License, or (at your option) any later version.
+ *
+ *  Crank System is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with Crank System.
+ *  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+private static GLib.Type[] g_type_pool;
 
 private GLib.Type rand_g_type () {
 	return g_type_pool [ GLib.Test.rand_int_range (0, 9) ];
@@ -21,7 +41,7 @@ private void func_type_new () {
 	
 	assert (2 == ftype.nparam_types);
 	
-	GLib.Type[] param_types = ftypes.param_types;
+	GLib.Type[] param_types = ftype.param_types;
 	
 	assert (2 == param_types.length);
 	assert (typeof (int) == param_types[0]);
@@ -40,7 +60,7 @@ private void func_type_new_with_types () {
 	
 	assert (2 == ftype.nparam_types);
 	
-	GLib.Type[] param_types = ftypes.param_types;
+	GLib.Type[] param_types = ftype.param_types;
 	
 	assert (2 == param_types.length);
 	assert (typeof (int) == param_types[0]);
@@ -125,7 +145,7 @@ private void func_type_arg_match_exactually () {
 private void func_type_arg_match () {
 	GLib.Type types_a[] = {typeof (GLib.Object), typeof (int)};
 	GLib.Type types_b[] = {typeof (int), typeof (double)};
-	GLib.Type types_c[] = {typeof (bool), typeof (int)};
+	GLib.Type types_c[] = {typeof (GLib.Binding), typeof (int)};
 	
 	Crank.FuncType ftype = new Crank.FuncType (
 			typeof (bool),

@@ -59,12 +59,12 @@ typelib_DATA= $(INTROSPECTION_GIRS:.gir=.typelib)
 if ENABLE_VAPIGEN
 -include $(VAPIGEN_MAKEFILE)
 
-crank-base-0.0.vapi: CrankBase-0.0.gir
+crank-base-0.0.vapi: CrankBase-0.0.gir CrankBase-0.0.metadata crankbase-custom.vala
 
 VAPIGEN_VAPIS= crank-base-0.0.vapi
 
 crank_base_0_0_vapi_METADATADIRS= $(srcdir)
-crank_base_0_0_vapi_FILES= CrankBase-0.0.gir
+crank_base_0_0_vapi_FILES= CrankBase-0.0.gir crankbase-custom.vala
 
 vapidir= $(datadir)/vala/vapi
 vapi_DATA= $(VAPIGEN_VAPIS)
