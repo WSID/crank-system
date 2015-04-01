@@ -39,6 +39,8 @@ PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
 
 
 
+
+
 # Introspection Test for Python
 AC_ARG_ENABLE(test-python,
 		  AS_HELP_STRING([--enable-test-python[=@<:@no/auto/yes@:>@]],
@@ -70,6 +72,11 @@ AM_CONDITIONAL([TEST_PYTHON], [test S$test_python == S"yes"])
 
 
 
+# Test for vapigen to build .vapi file
+VAPIGEN_CHECK()
+AS_IF([test S"$enable_vala" = S"yes"],
+		[AM_PROG_VALAC])
+
 
 # 출력합니다.
 AC_OUTPUT([
@@ -77,6 +84,9 @@ AC_OUTPUT([
 		crankbase/Makefile
 		tests/Makefile
 		tests_python/Makefile
+		tests_vala/Makefile
 		docs/Makefile
 		po/Makefile.in
+		
+		crank-base-0.0.pc
 ])

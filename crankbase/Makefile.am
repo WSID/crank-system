@@ -38,7 +38,6 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 CrankBase-0.0.gir: libcrankbase.la
 
-CrankBase_0_0_gir_PACKAGES= glib-2.0 gobject-2.0
 CrankBase_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
 		--identifier-prefix="Crank"
@@ -53,6 +52,23 @@ gir_DATA = $(INTROSPECTION_GIRS)
 
 typelibdir= $(libdir)/girepository-1.0
 typelib_DATA= $(INTROSPECTION_GIRS:.gir=.typelib)
+
+
+
+# Vapigen 파일
+if ENABLE_VAPIGEN
+-include $(VAPIGEN_MAKEFILE)
+
+crank-base-0.0.vapi: CrankBase-0.0.gir
+
+VAPIGEN_VAPIS= crank-base-0.0.vapi
+
+crank_base_0_0_vapi_METADATADIRS= $(srcdir)
+crank_base_0_0_vapi_FILES= CrankBase-0.0.gir
+
+vapidir= $(datadir)/vala/vapi
+vapi_DATA= $(VAPIGEN_VAPIS)
+endif
 
 CLEANFILES = $(gir_DATA) $(typelib_DATA)
 

@@ -12,6 +12,13 @@ if TEST_PYTHON
 SUBDIRS+= tests_python
 endif
 
+if ENABLE_VAPIGEN
+SUBDIRS+= tests_vala
+endif
+
+pkgconfigdir= $(libdir)/pkgconfig
+pkgconfig_DATA= \
+		crank-base-0.0.pc
 
 
 EXTRA_DIST= \
