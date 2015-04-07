@@ -30,11 +30,13 @@
 G_BEGIN_DECLS
 
 typedef struct _CrankSingular				CrankSingular;
+typedef struct _CrankSingularPrivate		CrankSingularPrivate;
 typedef struct _CrankSingularClass			CrankSingularClass;
 typedef struct _CrankSingularClassPrivate	CrankSingularClassPrivate;
 
 struct _CrankSingular {
-	GObject			parent_instance;
+	GObject					parent_instance;
+	CrankSingularPrivate*	priv;
 };
 
 struct _CrankSingularClass {
@@ -57,16 +59,13 @@ struct _CrankSingularClass {
 
 GType crank_singular_get_type (void);
 
+CrankSingular*	crank_singular_type_get			(GType	type);
+CrankSingular*	crank_singular_type_peek 		(GType	type);
 
-CrankSingular*	crank_singular_type_try_get	(GType	type);
-void			crank_singular_type_setup	(GType	type, ...);
-gboolean		crank_singular_type_teardown	(GType	type);
+CrankSingular*	crank_singular_class_get		(CrankSingularClass*	c);
+CrankSingular*	crank_singular_class_peek		(CrankSingularClass*	c);
 
-CrankSingular*	crank_singular_class_get		(CrankSingularClass*	c, ...);
-CrankSingular*	crank_singular_class_try_get	(CrankSingularClass*	c);
-void			crank_singular_class_setup		(CrankSingularClass*	c, ...);
-gboolean		crank_singular_class_teardown	(CrankSingularClass*	c);
-
+gboolean		crank_singular_is_new (CrankSingular*			self);
 
 G_END_DECLS
 
