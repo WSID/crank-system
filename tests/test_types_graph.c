@@ -23,17 +23,39 @@
 
 
 void	test_types_graph_new (void);
+void	test_types_graph_get (void);
+
+void	test_types_graph_has (void);
+void	test_types_graph_lookup (void);
+void	test_types_graph_lookup_types (void);
+void	test_types_graph_lookup_full (void);
+void	test_types_graph_remove (void);
 
 
 gint
 main (gint   argc,
       gchar *argv[])
 {
-  g_test_init (&argc, &argv, NULL);
+	g_test_init (&argc, &argv, NULL);
 
-  g_test_run ();
+	g_test_add_func ("/wsid/crank/base/types_graph/new",
+			test_types_graph_new);
+	g_test_add_func ("/wsid/crank/base/types_graph/get",
+			test_types_graph_get);
+	g_test_add_func ("/wsid/crank/base/types_graph/has",
+			test_types_graph_has);
+	g_test_add_func ("/wsid/crank/base/types_graph/lookup/basic",
+			test_types_graph_lookup);
+	g_test_add_func ("/wsid/crank/base/types_graph/lookup/types",
+			test_types_graph_lookup_types);
+	g_test_add_func ("/wsid/crank/base/types_graph/lookup/full",
+			test_types_graph_lookup_full);
+	g_test_add_func ("/wsid/crank/base/types_graph/remove",
+			test_types_graph_remove);
 
-  return 0;
+	g_test_run ();
+
+	return 0;
 }
 
 
