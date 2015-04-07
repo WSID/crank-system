@@ -7,6 +7,7 @@ lib_LTLIBRARIES = \
 include_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
+		cranksingular.h \
 		cranktypesgraph.h \
 		crankfuncholder.h
 
@@ -22,6 +23,7 @@ libcrankbase_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
 
 libcrankbase_la_SOURCES= \
+		cranksingular.c \
 		cranktypesgraph.c \
 		crankfuncholder.c
 
@@ -40,7 +42,8 @@ CrankBase-0.0.gir: libcrankbase.la
 
 CrankBase_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
-		--identifier-prefix="Crank"
+		--identifier-prefix="Crank" -v -v -v
+		
 CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS)
 CrankBase_0_0_gir_LIBS= libcrankbase.la
 CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(include_HEADERS)
