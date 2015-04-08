@@ -41,9 +41,6 @@ GType crank_types_graph_get_type (void);
 G_GNUC_MALLOC
 CrankTypesGraph*	crank_types_graph_new (void);
 
-G_GNUC_MALLOC
-CrankTypesGraph*	crank_types_graph_new_full (GDestroyNotify value_destroy);
-
 CrankTypesGraph*	crank_types_graph_ref (			CrankTypesGraph*	graph	);
 
 void				crank_types_graph_unref (		CrankTypesGraph*	graph	);
@@ -52,33 +49,36 @@ void				crank_types_graph_unref (		CrankTypesGraph*	graph	);
 void				crank_types_graph_set (			CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length,
-													gconstpointer		value	);
+													const GValue*		value	);
 
-gconstpointer		crank_types_graph_get (			CrankTypesGraph*	graph,
+gboolean			crank_types_graph_get (			CrankTypesGraph*	graph,
 													const GType*		key,
-													const guint			key_length	);
+													const guint			key_length,
+													GValue*				value	);
 
 gboolean			crank_types_graph_has (			CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length	);
 
-gconstpointer		crank_types_graph_lookup (		CrankTypesGraph*	graph,
+gboolean			crank_types_graph_lookup (		CrankTypesGraph*	graph,
 													const GType*		key,
-													const guint			key_length	);
+													const guint			key_length,
+													GValue*				value	);
 
 const GType*		crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length	);
 
-gboolean			crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
+gboolean			crank_types_graph_lookup_full (	CrankTypesGraph*	self,
 													const GType*		key,
 													const guint			key_length,
 													const GType**		key_orig,
-													gpointer*			value	);
+													GValue*				value	);
 
 gboolean			crank_types_graph_remove (		CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length	);
+
 
 G_END_DECLS
 

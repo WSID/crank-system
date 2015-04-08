@@ -35,27 +35,352 @@
 
 typedef struct _CrankTypesNode CrankTypesNode;
 typedef struct _CrankTypesRoot CrankTypesRoot;
+typedef struct _CrankTypesNodeAdd CrankTypesNodeAdd;
 
+static
+gboolean			crank_types_is_a (				const GType*	types_a,
+													const GType*	types_b,
+													const guint		types_length	);
+
+static G_GNUC_MALLOC
+CrankTypesNode*		crank_types_node_new (			const GType*	types,
+													const guint		ntypes	);
+													
+static inline
+CrankTypesNode*		crank_types_node_ref (			CrankTypesNode* node	);
+
+static inline
+void				crank_types_node_unref (		CrankTypesNode* node	);
+
+static
+gboolean			crank_types_node_add (			CrankTypesNode* parent,
+													CrankTypesNode* node	);
+static
+CrankTypesNode*		crank_types_node_get (			CrankTypesNode* parent,
+													const GType*	key,
+													const guint		key_length	);
+static
+CrankTypesNode*		crank_types_node_lookup (		CrankTypesNode* parent,
+													const GType*	key,
+													const guint		key_length	);
+													
+
+static G_GNUC_MALLOC
+CrankTypesRoot*		crank_types_root_new (			const guint		ntypes	);
+
+static
+void				crank_types_root_free (			CrankTypesRoot* root	);
+
+static
+void				crank_types_root_add (			CrankTypesRoot* parent,
+													CrankTypesNode* node	);
+static
+CrankTypesNode*		crank_types_root_get (			CrankTypesRoot* parent,
+													const GType*	key,
+													const guint		key_length	);
+static
+CrankTypesNode*		crank_types_root_lookup (		CrankTypesRoot* parent,
+													const GType*	key,
+													const guint		key_length	);
+													
+static
+void				crank_types_root_remove (		CrankTypesRoot*	parent,
+													CrankTypesNode* node		);
 
 
 struct _CrankTypesNode {
 	GType*				types;
 	guint				ntypes;
-
-	CrankTypesNode**	type_parent;
-	CrankTypesNode**	type_children;
-	CrankTypesNode**	type_prev;
-	CrankTypesNode**	type_next;
 	
-	gpointer	data;
+	guint				types_depth;
+
+	GPtrArray*			parent_nodes;
+	GPtrArray*			child_nodes;
+	
+	GValue				value;
+	
+	guint				_refc;
 };
 
 struct _CrankTypesRoot {
 	guint				ntypes;
 	
-	CrankTypesNode**	root_nodes;
+	GPtrArray*			child_nodes;
 };
 
+
+static gboolean
+crank_types_is_a	(	const GType*	types,
+						const GType*	types_is_a,
+						const guint		types_length	)
+{
+	guint i;
+	
+	for (i = 0; i < types_length; i++) {
+		if (! g_type_is_a(types[i], types_is_a[i])) return FALSE;
+	}
+	return TRUE;
+}
+
+static CrankTypesNode*
+crank_types_node_new (	const GType* types, const guint ntypes )
+{
+	CrankTypesNode* node = g_new (CrankTypesNode, 1);
+	
+	node->types = CRANK_ARRAY_DUP (types, GType, ntypes);
+	node->ntypes = ntypes;
+	
+	node->types_depth = 0;
+	CRANK_FOREACH_ARRAY_DO(node->types, GType, type, node->ntypes, {
+		node->types_depth += g_type_depth (type);	})
+		
+	node->parent_nodes = g_ptr_array_new ();
+	node->child_nodes = g_ptr_array_new_with_free_func (
+			(GDestroyNotify)crank_types_node_unref);
+	
+	memset (&node->value, 0, sizeof(GValue));
+	
+	node->_refc = 0;
+	
+	return node;
+}
+
+static inline CrankTypesNode*
+crank_types_node_ref (	CrankTypesNode* node	)
+{
+	g_atomic_int_inc(&node->_refc);
+}
+
+static inline void
+crank_types_node_unref ( CrankTypesNode* node	)
+{
+	if (g_atomic_int_dec_and_test(&node->_refc)) {
+		g_value_unset (&node->value);
+	
+		g_ptr_array_free (node->parent_nodes, TRUE);
+		g_ptr_array_free (node->child_nodes, TRUE);
+	
+		g_free (node->types);
+	
+		g_free (node);
+	}
+}
+
+static gboolean
+crank_types_node_add (	CrankTypesNode* parent,
+						CrankTypesNode*	node	)
+{
+	if (parent == node) return TRUE;
+
+	if (crank_types_is_a (node->types, parent->types, node->ntypes)) {
+		gboolean has_parent_node = FALSE;
+	
+		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+				parent->child_nodes->len)
+		
+			if (crank_types_node_add ((CrankTypesNode*)sub, node))
+				has_parent_node = TRUE;
+	
+		CRANK_FOREACH_ARRAY_END
+		
+		if (! has_parent_node) {
+			// 부모와 연결합니다.
+			g_ptr_array_add (node->parent_nodes, parent);
+			g_ptr_array_add (parent->child_nodes, node);
+			
+			// 그리고 하위에 해당하는 항목들은 다시 잇습니다.
+			CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+					parent->child_nodes->len)
+		
+				CrankTypesNode* sub_node = (CrankTypesNode*) sub;
+				if (crank_types_is_a(sub_node->types, node->types, node->ntypes)) {
+					g_ptr_array_remove (sub_node->parent_nodes, parent);
+					g_ptr_array_remove (parent->child_nodes, sub_node);
+					
+					g_ptr_array_add (sub_node->parent_nodes, node);
+					g_ptr_array_add (node->child_nodes, sub_node);
+				}
+	
+			CRANK_FOREACH_ARRAY_END
+		}
+		
+		return TRUE;
+	}
+	
+	else return FALSE;
+}
+
+static CrankTypesNode*
+crank_types_node_get (	CrankTypesNode* parent,
+						const GType*	key,
+						const guint		key_length	)
+{
+	CrankTypesNode*	result;
+
+	if (CRANK_ARRAY_CMP (parent->types, key, GType, key_length) == 0) {
+		return parent;
+	}
+	
+	else if (crank_types_is_a (key, parent->types, key_length)) {
+	
+		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+				parent->child_nodes->len)
+		
+			result = crank_types_node_get ((CrankTypesNode*)sub, key, key_length);
+			
+			if (result != NULL) return result;
+	
+		CRANK_FOREACH_ARRAY_END
+	}
+	
+	return NULL;
+}
+
+static CrankTypesNode*
+crank_types_node_lookup (	CrankTypesNode* parent,
+							const GType*	key,
+							const guint		key_length	)
+{
+	CrankTypesNode*	result;
+
+	if (CRANK_ARRAY_CMP (parent->types, key, GType, key_length) == 0) {
+		return parent;
+	}
+	
+	else if (crank_types_is_a (key, parent->types, key_length)) {
+	
+		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+				parent->child_nodes->len)
+		
+			result = crank_types_node_lookup ((CrankTypesNode*)sub, key, key_length);
+			
+			if (result != NULL) return result;
+	
+		CRANK_FOREACH_ARRAY_END
+		
+		return parent;
+	}
+	
+	return NULL;
+}
+
+static CrankTypesRoot*
+crank_types_root_new (	const guint ntypes )
+{
+	CrankTypesRoot* root = g_new (CrankTypesRoot, 1);
+	
+	root->ntypes = ntypes;
+	root->child_nodes = g_ptr_array_new_with_free_func (
+			(GDestroyNotify)crank_types_node_unref);
+	
+	return root;
+}
+
+void
+crank_types_root_free ( CrankTypesRoot* root )
+{
+	g_ptr_array_free (root->child_nodes, TRUE);
+	
+	g_free (root);
+}
+
+void
+crank_types_root_add ( 	CrankTypesRoot* root,
+						CrankTypesNode* node 	)
+{
+	gboolean has_parent_node = FALSE;
+	
+	CRANK_FOREACH_ARRAY_BEGIN (root->child_nodes->pdata, gpointer, sub,
+			root->child_nodes->len)
+		
+		if (crank_types_node_add ((CrankTypesNode*)sub, node))
+			has_parent_node = TRUE;
+	
+	CRANK_FOREACH_ARRAY_END
+	
+	if (! has_parent_node) g_ptr_array_add (root->child_nodes, node);
+}
+
+
+static CrankTypesNode*
+crank_types_root_get (	CrankTypesRoot* parent,
+						const GType*	key,
+						const guint		key_length	)
+{
+	CrankTypesNode*	result = NULL;
+	
+	CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+			parent->child_nodes->len)
+	
+		result = crank_types_node_get ((CrankTypesNode*)sub, key, key_length);
+		
+		if (result != NULL) return result;
+
+	CRANK_FOREACH_ARRAY_END
+	
+	return NULL;
+}
+
+static CrankTypesNode*
+crank_types_root_lookup (	CrankTypesRoot* parent,
+							const GType*	key,
+							const guint		key_length	)
+{
+	CrankTypesNode*	result = NULL;
+	
+	CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
+			parent->child_nodes->len)
+	
+		result = crank_types_node_lookup ((CrankTypesNode*)sub, key, key_length);
+		
+		if (result != NULL) return result;
+
+	CRANK_FOREACH_ARRAY_END
+	
+	return NULL;
+}
+
+static void
+crank_types_root_remove (	CrankTypesRoot*	root,
+							CrankTypesNode*	node	)
+{
+	gboolean is_node_root;
+
+	is_node_root = (node->parent_nodes->len == 0);
+	
+	crank_types_node_ref (node);
+	
+	// 먼저 하위 노드로부터 연결을 끊습니다.
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, subnode)
+		g_ptr_array_remove (subnode->parent_nodes, node);
+		
+		if (subnode->parent_nodes->len == 0) {
+		
+			if (! is_node_root) {
+				CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->parent_nodes, CrankTypesNode*, pnode)
+					g_ptr_array_add (pnode->child_nodes, subnode);
+					g_ptr_array_add (subnode->parent_nodes, pnode);
+				CRANK_FOREACH_G_PTR_ARRAY_END
+			}
+			
+			else {
+				g_ptr_array_add (root->child_nodes, subnode);
+			}
+			
+		}
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	if (! is_node_root) {
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->parent_nodes, CrankTypesNode*, pnode)
+			g_ptr_array_remove (pnode->child_nodes, node);
+		CRANK_FOREACH_G_PTR_ARRAY_END
+	}
+	else {
+		g_ptr_array_remove (root->child_nodes, node);
+	}
+	
+	crank_types_node_unref (node);
+}
 
 /**
  * CrankTypesGraph:
@@ -71,10 +396,17 @@ struct _CrankTypesGraph {
 	guint 	_refc;
 };
 
+static
+CrankTypesRoot*		_crank_types_graph_get_root (		CrankTypesGraph*	graph,
+														const guint			key_length	);
+
+
 G_DEFINE_BOXED_TYPE (CrankTypesGraph,
 		crank_types_graph,
 		crank_types_graph_ref,
 		crank_types_graph_unref)
+
+
 
 
 
@@ -88,27 +420,10 @@ G_DEFINE_BOXED_TYPE (CrankTypesGraph,
 CrankTypesGraph*
 crank_types_graph_new (void)
 {
-	return crank_types_graph_new_full (NULL);
-}
-
-
-/**
- * crank_types_graph_new:
- * @value_destroy: 값이 제거되거나 그래프가 해제될 때 값을 해제할 함수입니다.
- *
- * 새로운 타입 그래프를 생성합니다.
- *
- * Returns: (transfer full): 생성된 #CrankTypesGraph입니다.
- */
-CrankTypesGraph*
-crank_types_graph_new_full (GDestroyNotify value_destroy)
-{
 	CrankTypesGraph*	graph = g_new (CrankTypesGraph, 1);
 	
-	graph->roots = g_new (CrankTypesRoot*, 4);
+	graph->roots = g_new0 (CrankTypesRoot*, 4);
 	graph->nroots = 4;
-	
-	graph->value_destroy = value_destroy;
 	
 	graph->_refc = 1;
 	
@@ -145,58 +460,183 @@ crank_types_graph_unref (CrankTypesGraph*	graph)
 	}
 }
 
-
+/**
+ * crank_types_graph_set:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 값을 설정하고자 하는 키입니다.
+ * @key_length: 값을 설정하고자 하는 키의 길이입니다.
+ * @value: 값입니다.
+ *
+ * 타입 그래프에서 값을 설정합니다.
+ */
 void
 crank_types_graph_set ( CrankTypesGraph*	graph,
 						const GType*		key,
 						const guint			key_length,
-						gconstpointer		value	)
+						const GValue*		value	)
 {
-	// do nothing for now
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_get (root, key, key_length);
+	
+	if (node == NULL) {
+		node = crank_types_node_new (key, key_length);
+				
+		crank_types_root_add (root, node);
+	}
+	g_value_init (&node->value, G_VALUE_TYPE(value));
+	g_value_copy(value, &node->value);
 }
 
-gconstpointer
+/**
+ * crank_types_graph_get:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 값을 얻고자 하는 키입니다.
+ * @key_length: 값을 얻고자 하는 키의 길이입니다.
+ * @value: (out): 값이 저장되는 곳입니다.
+ *
+ * 타입 그래프에서 값을 얻어옵니다.
+ *
+ * Returns: (skip): 해당 키가 존재하지 않으면 %FALSE입니다.
+ */
+gboolean
 crank_types_graph_get ( CrankTypesGraph*	graph,
 						const GType*		key,
-						const guint			key_length	)
+						const guint			key_length,
+						GValue*				value	)
 {
-	return NULL;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_get (root, key, key_length);
+	
+	if (node == NULL) return FALSE;
+	
+	g_message ("Copy value");
+	g_value_copy(&node->value, value);
+	g_message ("Copy value done");
+	return TRUE;
 }
 
+/**
+ * crank_types_graph_has:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ *
+ * 타입 그래프에서 해당 키가 존재하는지 확인합니다.
+ *
+ * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ */
 gboolean
 crank_types_graph_has (	CrankTypesGraph*	graph,
 						const GType*		key,
 						const guint			key_length	)
 {
-	return FALSE;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_get (root, key, key_length);
+	
+	return node != NULL;
 }
 
-gconstpointer
+/**
+ * crank_types_graph_lookup:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 값을 얻습니다. 키가 정확히 같지 않더라도, 다음
+ * 기준을 만족한다면, 해당 값을 얻게 됩니다.
+ *
+ * - 이미 존재하는 키 중에서 주어진 키의 각 원소와 is-a 관계를 가지는 경우
+ *
+ * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ */
+gboolean
 crank_types_graph_lookup (	CrankTypesGraph*	graph,
 							const GType*		key,
-							const guint			key_length	)
+							const guint			key_length,
+							GValue*				value	)
 {
-	return NULL;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_lookup (root, key, key_length);
+	
+	if (node != NULL) g_value_copy (&node->value, value);
+	
+	return node != NULL;
 }
 
+
+/**
+ * crank_types_graph_lookup_types:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 원래 키를 얻습니다.
+ *
+ * Returns: (array length=key_length): 해당 @key에 대응되는 원래 키입니다.
+ */
 const GType*
 crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 								const GType*		key,
 								const guint			key_length	)
 {
-	return NULL;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_lookup (root, key, key_length);
+	
+	return (node != NULL) ? node->types : NULL;
 }
 
+/**
+ * crank_types_graph_lookup_full:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @key_orig: (out) (array length=key_length): 키의 원래 키입니다.
+ * @value: 값입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 원래 키와 값을 얻습니다.
+ *
+ * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ */
 gboolean
 crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 								const GType*		key,
 								const guint			key_length,
 								const GType**		key_orig,
-								gpointer*			value	)
+								GValue*				value	)
 {
-	*key_orig = NULL;
-	*value = NULL;
-	return FALSE;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_lookup (root, key, key_length);
+	
+	if (node != NULL) {
+		g_value_copy (&node->value, value);
+		*key_orig = node->types;
+	}
+	
+	return node != NULL;
 }
 
 gboolean
@@ -204,5 +644,44 @@ crank_types_graph_remove (	CrankTypesGraph*	graph,
 							const GType*		key,
 							const guint			key_length	)
 {
-	return FALSE;
+	CrankTypesRoot* root;
+	CrankTypesNode*	node;
+	
+	root = _crank_types_graph_get_root (graph, key_length);
+	
+	node = crank_types_root_get (root, key, key_length);
+	
+	if (node != NULL) {
+		crank_types_root_remove (root, node);
+	}
+	
+	return node != NULL;
+}
+
+
+
+
+
+static CrankTypesRoot*
+_crank_types_graph_get_root (	CrankTypesGraph*	graph,
+								const guint			key_length	)
+{
+	guint	i;
+	guint	root_len;
+	
+	root_len = graph->nroots;
+
+	if (graph->nroots < key_length) {
+		while (graph->nroots < key_length) {
+			graph->nroots = graph->nroots >> 1;
+		}
+		graph->roots = g_renew (CrankTypesRoot*, graph->roots, graph->nroots);
+		for (i = root_len; i < graph->nroots; i++)
+			graph->roots[i] = NULL;
+	}
+	
+	if (graph->roots[key_length] == NULL)
+		graph->roots[key_length] = crank_types_root_new (key_length);
+	
+	return graph->roots[key_length];
 }
