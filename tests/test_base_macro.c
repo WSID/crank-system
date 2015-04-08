@@ -33,10 +33,16 @@ gint  subject_function_FOREACH_VARARG_DO (gint a, ...);
 
 void	test_macro_ARRAY_DUP (void);
 void	test_macro_ARRAY_CMP (void);
+
+void	test_macro_FOREACH_ARRAY (void);
 void	test_macro_FOREACH_VALIST (void);
 void	test_macro_FOREACH_VARARG (void);
+void	test_macro_FOREACH_G_PTR_ARRAY (void);
+
+void	test_macro_FOREACH_ARRAY_DO (void);
 void	test_macro_FOREACH_VALIST_DO (void);
 void	test_macro_FOREACH_VARARG_DO (void);
+void	test_macro_FOREACH_G_PTR_ARRAY_DO (void);
 
 
 
@@ -51,18 +57,34 @@ main (gint   argc,
 		
 	g_test_add_func ("/wsid/crank/base/macro/arraycmp",
 		test_macro_ARRAY_CMP);
+		
+		
+		
+	g_test_add_func ("/wsid/crank/base/macro/foreach/array",
+		test_macro_FOREACH_ARRAY);
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/valist",
 		test_macro_FOREACH_VALIST);
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg",
 		test_macro_FOREACH_VARARG);
+		
+		
+		
+	g_test_add_func ("/wsid/crank/base/macro/foreach/g_ptr_array",
+		test_macro_FOREACH_G_PTR_ARRAY);
+
+	g_test_add_func ("/wsid/crank/base/macro/foreach/array_do",
+		test_macro_FOREACH_ARRAY_DO);
 	
 	g_test_add_func ("/wsid/crank/base/macro/foreach/valist_do",
 		test_macro_FOREACH_VALIST_DO);
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg_do",
 		test_macro_FOREACH_VARARG_DO);
+
+	g_test_add_func ("/wsid/crank/base/macro/foreach/g_ptr_array_do",
+		test_macro_FOREACH_G_PTR_ARRAY_DO);
 
 	g_test_run ();
 
@@ -155,6 +177,19 @@ test_macro_ARRAY_CMP (void)
 }
 
 void
+test_macro_FOREACH_ARRAY (void)
+{
+	gint	subject[7] = {1, 1, 2, 3, 5, 8, 13};
+	gint	sum = 0;
+	
+	CRANK_FOREACH_ARRAY_BEGIN(subject, gint, e, 7)
+		sum += e;
+	CRANK_FOREACH_ARRAY_END
+	
+	g_assert_cmpint (sum, ==, 33);
+}
+
+void
 test_macro_FOREACH_VALIST (void)
 {
   g_assert_cmpint (subject_function_FOREACH_VALIST (3, 2, 5, 1, 0), ==, 11);
@@ -167,6 +202,41 @@ test_macro_FOREACH_VARARG (void)
 }
 
 void
+test_macro_FOREACH_G_PTR_ARRAY (void)
+{
+	// 일단 포인터 형에 정수를 담습니다.
+	GPtrArray* subject;
+	gint sum;
+	
+	subject = g_ptr_array_new ();
+	sum = 0;
+	
+	g_ptr_array_add(subject, GINT_TO_POINTER(2));
+	g_ptr_array_add(subject, GINT_TO_POINTER(3));
+	g_ptr_array_add(subject, GINT_TO_POINTER(5));
+	g_ptr_array_add(subject, GINT_TO_POINTER(7));
+	g_ptr_array_add(subject, GINT_TO_POINTER(11));
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(subject, gpointer, e)
+		sum += GPOINTER_TO_INT(e);
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	g_assert_cmpint (sum, ==, 28);
+}
+
+
+void
+test_macro_FOREACH_ARRAY_DO (void)
+{
+	gint	subject[7] = {1, 1, 2, 3, 5, 8, 13};
+	gint	sum = 0;
+	
+	CRANK_FOREACH_ARRAY_DO (subject, gint, e, 7, {sum += e;})
+	
+	g_assert_cmpint (sum, ==, 33);
+}
+
+void
 test_macro_FOREACH_VALIST_DO (void)
 {
   g_assert_cmpint (subject_function_FOREACH_VALIST_DO (18, 3, 7, 2, 4, 0), ==, 34);
@@ -176,4 +246,25 @@ void
 test_macro_FOREACH_VARARG_DO (void)
 {
   g_assert_cmpint (subject_function_FOREACH_VARARG_DO (9, 6, 3, 0), ==, 18);
+}
+
+void
+test_macro_FOREACH_G_PTR_ARRAY_DO (void)
+{
+	// 일단 포인터 형에 정수를 담습니다.
+	GPtrArray* subject;
+	gint sum;
+	
+	subject = g_ptr_array_new ();
+	sum = 0;
+	
+	g_ptr_array_add(subject, GINT_TO_POINTER(2));
+	g_ptr_array_add(subject, GINT_TO_POINTER(3));
+	g_ptr_array_add(subject, GINT_TO_POINTER(5));
+	g_ptr_array_add(subject, GINT_TO_POINTER(7));
+	g_ptr_array_add(subject, GINT_TO_POINTER(11));
+	
+	CRANK_FOREACH_G_PTR_ARRAY_DO(subject, gpointer, e, {sum += GPOINTER_TO_INT(e);})
+	
+	g_assert_cmpint (sum, ==, 28);
 }

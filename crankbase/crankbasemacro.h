@@ -70,6 +70,7 @@
  * </example>
  */
 
+#include <string.h>
 #include <stdarg.h>
 #include <glib.h>
 
@@ -229,6 +230,40 @@ G_BEGIN_DECLS
 		BLOCK \
 	CRANK_FOREACH_VARARG_END
 
+/**
+ * CRANK_FOREACH_G_PTR_ARRAY_BEGIN:
+ * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
+ * @G: 타입 이름입니다.
+ * @e: 반복 변수 이름입니다.
+ *
+ * 주어진 #GPtrArray의 각 항목에 대해 루프를 수행합니다.
+ *
+ * 루프의 끝은 %CRANK_FOREACH_ARRAY_END로 지정합니다.
+ */
+#define CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
+	CRANK_FOREACH_ARRAY_BEGIN((arr)->pdata, gpointer, _crank_macro_ptr, (arr)->len) \
+	G e = (G) _crank_macro_ptr;
+
+/**
+ * CRANK_FOREACH_G_PTR_ARRAY_END:
+ * %CRANK_FOREACH_G_PTR_ARRAY_BEGIN으로 시작된 루프의 끝을 지정합니다.
+ */
+#define CRANK_FOREACH_G_PTR_ARRAY_END \
+	CRANK_FOREACH_ARRAY_END
+
+/**
+ * CRANK_FOREACH_G_PTR_ARRAY_DO:
+ * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
+ * @G: 타입 이름입니다.
+ * @e: 반복 변수 이름입니다.
+ * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ *
+ * 주어진 #GPtrArray의 각 항목에 대해 주어진 코드를 실행합니다.
+ */
+#define CRANK_FOREACH_G_PTR_ARRAY_DO(arr, G, e, BLOCK) \
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
+		BLOCK \
+	CRANK_FOREACH_G_PTR_ARRAY_END
 G_END_DECLS
 
 #endif /* CRANKBASEMACRO_H */
