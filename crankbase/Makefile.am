@@ -42,8 +42,9 @@ CrankBase-0.0.gir: libcrankbase.la
 
 CrankBase_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
-		--identifier-prefix="Crank" -v -v -v
+		--identifier-prefix="Crank"
 		
+CrankBase_0_0_gir_INCLUDES= GObject-2.0
 CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS)
 CrankBase_0_0_gir_LIBS= libcrankbase.la
 CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(include_HEADERS)

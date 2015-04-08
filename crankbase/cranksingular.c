@@ -103,6 +103,8 @@ crank_singular_class_init	(	CrankSingularClass*	c	)
 			CrankSingularClassPrivate	);
 	
 	g_mutex_init (&c->priv->construct_mutex);
+	c->priv->instance = NULL;
+	c->priv->construct_mutex_locked = FALSE;
 }
 
 
@@ -249,7 +251,7 @@ crank_singular_type_peek (	GType	type	)
  *
  * 자동으로 생성되어야 하는 경우, crank_singular_class_new()를 사용해야 합니다.
  *
- * Returns: (allow-none) (transfer full): #CrankSingular 타입
+ * Returns: (allow-none) (transfer full): #CrankSingular
  */
 CrankSingular*
 crank_singular_class_get (		CrankSingularClass*		c	)
@@ -263,7 +265,7 @@ crank_singular_class_get (		CrankSingularClass*		c	)
  *
  * 클래스에서 가지고 있는 #CrankSingular를 얻습니다. 참조를 가져오지 않습니다.
  *
- * Returns: (allow-none) (transfer none): #CrankSingular 타입
+ * Returns: (allow-none) (transfer none): #CrankSingular
  */
 CrankSingular*
 crank_singular_class_peek (	CrankSingularClass*		c	)

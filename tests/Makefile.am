@@ -17,19 +17,12 @@ test_programs= \
 		test_func_holder \
 		test_singular
 
-# test_base_macro
 test_base_macro_CFLAGS= $(TEST_BASE_CFLAGS)
 test_base_macro_LDADD= $(TEST_BASE_LDADD)
 
-
-
-# test_func_holder
 test_types_graph_CFLAGS= $(TEST_BASE_CFLAGS)
 test_types_graph_LDADD= $(TEST_BASE_LDADD)
 
-		
-
-# test_func_holder
 test_func_holder_CFLAGS= $(TEST_BASE_CFLAGS)
 test_func_holder_LDADD= $(TEST_BASE_LDADD)
 
