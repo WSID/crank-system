@@ -30,6 +30,44 @@
  * @title: CrankTypesGraph
  * @stability: Unstable
  * @include: crankbase.h
+ *
+ * 타입 그래프는 여러 타입의 배열을 상관관계에 따라 그래프화 하여 이어 놓은 것
+ * 입니다.
+ * 이 자료 구조는 #CrankFuncHolder에서 인자들의 타입에 따라 호출을 적절한 함수로
+ * 넘기기 위한 것입니다.
+ *
+ *
+ * # 타입 배열에 대한 is-a 관계
+ *
+ * <programlisting>
+ *    A
+ *     - B
+ *     - C
+ *       - D
+ *       - E
+ * </programlisting>
+ *
+ * 타입 A, B, C, D, E가 위의 상속 관계를 가질 경우, 예를 들어, 두 클래스간
+ * is-a 관계는 다음과 같습니다.
+ *
+ * - E is a A
+ * - C is a A
+ * - B is not a D ...
+ *
+ * 타입 배열간 is-a 관계는 두 개의 규칙을 만족하면 성립합니다.
+ *
+ * - 두 배열의 길이가 같을 것
+ * - 각각의 원소가 서로 대응되는 원소에 대해 is-a 관계를 가질 것
+ *
+ *    예를 들면, [a, b] is a [c, d]가 되기 위해서는 a is a c, b is a d가 되어야
+ *    합니다.
+ *
+ * 따라서 이 예에서는 다음의 관계가 성립합니다.
+ *
+ * - [A] is not a [A, A]
+ * - [D, E] is a [A, C]
+ * - [C, E] is not a [E, C]
+ * ...
  */
 
 
@@ -496,9 +534,10 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 값을 얻고자 하는 키입니다.
  * @key_length: 값을 얻고자 하는 키의 길이입니다.
- * @value: (out): 값이 저장되는 곳입니다.
+ * @value: 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
- * 타입 그래프에서 값을 얻어옵니다.
+ * 타입 그래프에서 주어진 키에 정확하게 맞는 값을 얻어옵니다. 만일 is-a 관계로
+ * 조회해야 할 경우, crank_types_graph_lookup()으로 조회해야 합니다.
  *
  * Returns: (skip): 해당 키가 존재하지 않으면 %FALSE입니다.
  */
@@ -553,6 +592,7 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 조회하고자 하는 키입니다.
  * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @value: 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
  * 타입 그래프에서 키에 해당하는 값을 얻습니다. 키가 정확히 같지 않더라도, 다음
  * 기준을 만족한다면, 해당 값을 얻게 됩니다.
@@ -639,6 +679,18 @@ crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 	return node != NULL;
 }
 
+/**
+ * crank_types_graph_remove:
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 제거하고자 하는 키입니다.
+ * @key_length: 제거하고자 하는 키의 길이입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 원래 키와 값을 얻습니다. 키의 is-a 관계는 고려
+ * 되지 않습니다. is-a 관계로 제거해야 할 경우, crank_types_graph_lookup_types()
+ * 을 통해 해당 키를 얻고 그 키로 제거해야 합니다.
+ *
+ * Returns: 해당 키가 존재하여, 제거되었으면 %TRUE입니다.
+ */
 gboolean
 crank_types_graph_remove (	CrankTypesGraph*	graph,
 							const GType*		key,

@@ -11,7 +11,48 @@ CRANK_FOREACH_VALIST_DO
 CRANK_FOREACH_VARARG_BEGIN
 CRANK_FOREACH_VARARG_END
 CRANK_FOREACH_VARARG_DO
+CRANK_FOREACH_G_PTR_ARRAY_BEGIN
+CRANK_FOREACH_G_PTR_ARRAY_DO
+CRANK_FOREACH_G_PTR_ARRAY_END
 </SECTION>
+
+<SECTION>
+<FILE>cranksingular</FILE>
+CrankSingular
+CrankSingularClass
+crank_singular_has
+crank_singular_get
+crank_singular_peek
+<SUBSECTION Standard>
+CRANK_IS_SINGULAR
+CRANK_IS_SINGULAR_CLASS
+CRANK_SINGULAR
+CRANK_SINGULAR_CLASS
+CRANK_SINGULAR_GET_CLASS
+CRANK_TYPE_SINGULAR
+crank_singular_get_type
+CrankSingularPrivate
+CrankSingularClassPrivate
+</SECTION>
+
+<SECTION>
+<FILE>cranktypesgraph</FILE>
+crank_types_graph_new
+crank_types_graph_ref
+crank_types_graph_unref
+crank_types_graph_set
+crank_types_graph_get
+crank_types_graph_has
+crank_types_graph_lookup
+crank_types_graph_lookup_types
+crank_types_graph_lookup_full
+crank_types_graph_remove
+CrankTypesGraph
+<SUBSECTION Standard>
+CRANK_TYPE_TYPES_GRAPH
+crank_types_graph_get_type
+</SECTION>
+
 
 <SECTION>
 <FILE>crankfuncholder</FILE>
@@ -39,5 +80,7 @@ crank_func_type_arg_match
 crank_func_type_arg_match_transformable
 <SUBSECTION>
 CrankFuncHolder
+<SUBSECTION Standard>
+CRANK_TYPE_FUNC_TYPE
+crank_func_type_get_type
 </SECTION>
-

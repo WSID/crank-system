@@ -21,16 +21,17 @@
 
 #include "crankbase.h"
 
+//////// 시험에 사용될 클래스입니다. ///////////////////////////////////////////
 
 enum TestSubjectProps {
 	DUMMY,
 	TEST_SUBJECT_PROPS_INT_ITEM,
-	TEST_SUBJECT_PROPS_SECOND_RUN
+	TEST_SUBJECT_PROPS_FIRST_CONSTRUCT_TIMES
 };
 
 typedef struct _TestSubjectPrivate {
 	gint				int_item;
-	gboolean			second_run;
+	gint				first_construct_times;
 } TestSubjectPrivate;
 
 typedef struct _TestSubject {
@@ -43,7 +44,8 @@ typedef struct _TestSubjectClass {
 } TestSubjectClass;
 
 
-/* Test Subject class */
+//////// 타입 매크로
+
 #define TEST_TYPE_SUBJECT	(test_subject_get_type())
 #define TEST_SUBJECT(i)		(G_TYPE_CHECK_INSTANCE_CAST((i), TEST_TYPE_SUBJECT, TestSubject))
 #define TEST_IS_SUBJECT(i)	(G_TYPE_CHECK_INSTANCE_TYPE((i), TEST_TYPE_SUBJECT))
@@ -52,31 +54,13 @@ typedef struct _TestSubjectClass {
 #define TEST_SUBJECT_GET_CLASS(i)	(G_TYPE_INSTANCE_GET_CLASS((i), TEST_TYPE_SUBJECT, TestSubjectClass))
 
 
+//////// 시험에 사용될 클래스 구현 /////////////////////////////////////////////
+
 G_DEFINE_TYPE_WITH_CODE(TestSubject, test_subject, CRANK_TYPE_SINGULAR, {
 	G_ADD_PRIVATE(TestSubject);
 })
 
-static GObject*
-test_subject_g_object_constructor (	GType					type,
-									guint					n_construct_props,
-									GObjectConstructParam*	construct_props		)
-{
-	GObject*		self_g_object;
-	CrankSingular*	self_crank_singular;
-	TestSubject*	self;
-	
-	GObjectClass*	c_g_object;
-	
-	c_g_object = G_OBJECT_CLASS( g_type_class_peek_parent( g_type_class_peek(type) ) );
-	
-	self_g_object = c_g_object->constructor (type, n_construct_props, construct_props);
-	self_crank_singular = CRANK_SINGULAR(self_g_object);
-	self = TEST_SUBJECT(self_crank_singular);
-	
-	self->priv->second_run = ! (crank_singular_is_new (self_crank_singular));
-	
-	return self_g_object;
-}
+//////// GObject 가상 함수들
 
 static void
 test_subject_set_property (	GObject*		self_gobject,
@@ -85,7 +69,7 @@ test_subject_set_property (	GObject*		self_gobject,
 							GParamSpec*		pspec			)
 {
 	TestSubject*	self;
-	
+
 	self = TEST_SUBJECT(self_gobject);
 
 	switch (prop_id) {
@@ -98,7 +82,6 @@ test_subject_set_property (	GObject*		self_gobject,
 	}
 }
 
-
 static void
 test_subject_get_property (	GObject*	self_gobject,
 							guint		prop_id,
@@ -106,39 +89,57 @@ test_subject_get_property (	GObject*	self_gobject,
 							GParamSpec*	pspec			)
 {
 	TestSubject*	self;
-	
+
 	self = TEST_SUBJECT(self_gobject);
 
 	switch (prop_id) {
 		case TEST_SUBJECT_PROPS_INT_ITEM:
 			g_value_set_int (value, self->priv->int_item);
 			break;
-		
-		case TEST_SUBJECT_PROPS_SECOND_RUN:
-			g_value_set_boolean (value, self->priv->second_run);
+
+		case TEST_SUBJECT_PROPS_FIRST_CONSTRUCT_TIMES:
+			g_value_set_int (value, self->priv->first_construct_times);
 			break;
-			
+
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID(self_gobject, prop_id, pspec);
 	}
 }
 
+//////// CrankSingular 함수들
+
+static void
+test_subject_first_construct (	CrankSingular*			self_crank_singular,
+								guint					n_construct_props,
+								GObjectConstructParam	construct_props		)
+{
+	TestSubject* self = TEST_SUBJECT (self_crank_singular);
+	
+	g_usleep (1000); // 0.01초도 흔들기 충분하다.
+	
+	self->priv->first_construct_times++;
+}
+
+
+//////// GTypeInstance 함수들
 
 static void
 test_subject_init (TestSubject* i) {
 	i->priv = G_TYPE_INSTANCE_GET_PRIVATE (i, TEST_TYPE_SUBJECT, TestSubjectPrivate);
+	
+	i->priv->first_construct_times = 0;
 }
 
 static void
 test_subject_class_init (TestSubjectClass* c) {
-	GObjectClass* c_g_object;
-	
+	GObjectClass* 		c_g_object;
+	CrankSingularClass*	c_crank_singular;
+
 	c_g_object = G_OBJECT_CLASS(c);
-	
-	c_g_object->constructor = test_subject_g_object_constructor;
+
 	c_g_object->set_property = test_subject_set_property;
 	c_g_object->get_property = test_subject_get_property;
-	
+
 	g_object_class_install_property (c_g_object,
 			TEST_SUBJECT_PROPS_INT_ITEM,
 			g_param_spec_int (	"int-item",
@@ -148,17 +149,22 @@ test_subject_class_init (TestSubjectClass* c) {
 								G_PARAM_STATIC_STRINGS |
 								G_PARAM_READWRITE |
 								G_PARAM_CONSTRUCT	)	);
-								
+
 	g_object_class_install_property (c_g_object,
-			TEST_SUBJECT_PROPS_SECOND_RUN,
-			g_param_spec_boolean (	"second-run",
-									"Second run",
-									"Item to see is_new() is working!",
+			TEST_SUBJECT_PROPS_FIRST_CONSTRUCT_TIMES,
+			g_param_spec_boolean (	"first-construct-times",
+									"First Construct times",
+									"Item to see first_construct() is working!",
 									FALSE,
 									G_PARAM_STATIC_STRINGS |
 									G_PARAM_READABLE	)	);
+
+	c_crank_singular = CRANK_SINGULAR_CLASS(c);
+	
+	c_crank_singular->first_construct = test_subject_first_construct;
 }
 
+//////// 외부 공개 함수들
 
 gint
 test_subject_get_int_item (TestSubject*	subject)
@@ -174,9 +180,9 @@ test_subject_set_int_item (TestSubject*	subject, gint int_item)
 
 
 gint
-test_subject_get_second_run (TestSubject*	subject)
+test_subject_get_first_construct_times (TestSubject*	subject)
 {
-	return subject->priv->second_run;
+	return subject->priv->first_construct_times;
 }
 
 
@@ -189,9 +195,15 @@ test_subject_new (gint	int_item) {
 
 
 
-void		test_singular_new		(void);
-void		test_singular_type_get	(void);
-void		test_singular_is_new	(void);
+//////// 테스트 케이스 /////////////////////////////////////////////////////////
+
+void		test_singular_new				(void);
+void		test_singular_has				(void);
+void		test_singular_get				(void);
+void		test_singular_first_construct	(void);
+void		test_singular_thread_construct	(void);
+
+TestSubject*	test_singular_thread_construct_func (gpointer userdata);
 
 
 gint
@@ -199,15 +211,21 @@ main (gint   argc,
       gchar *argv[])
 {
 	g_test_init (&argc, &argv, NULL);
-	
+
 	g_test_add_func ("/wsid/crank/base/singular/new",
 			test_singular_new);
 			
-	g_test_add_func ("/wsid/crank/base/singular/type_get",
-			test_singular_type_get);
+	g_test_add_func ("/wsid/crank/base/singular/has",
+			test_singular_has);
 
-	g_test_add_func ("/wsid/crank/base/singular/is_new",
-			test_singular_is_new);
+	g_test_add_func ("/wsid/crank/base/singular/get",
+			test_singular_get);
+			
+	g_test_add_func ("/wsid/crank/base/singular/first_construct",
+			test_singular_first_construct);
+
+	g_test_add_func ("/wsid/crank/base/singular/thread_construct",
+			test_singular_thread_construct);
 			
 	g_test_run ();
 
@@ -219,59 +237,118 @@ test_singular_new (void)
 {
 	TestSubject*	singular_a;
 	TestSubject*	singular_b;
-	
+
 	if (g_test_subprocess()) {
 		singular_a = test_subject_new (1);
 		singular_b = test_subject_new (2);
-	
+
 		g_assert (singular_a == singular_b);
 		g_assert_cmpint (test_subject_get_int_item (singular_b), ==, 1);
+
+		return;
+	}
+
+	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_passed ();
+}
+
+void
+test_singular_has (void)
+{
+	TestSubject*	singular;
+	
+	if (g_test_subprocess()) {
+		g_assert_false (crank_singular_has (TEST_TYPE_SUBJECT));
+		
+		singular = test_subject_new (10);
+		
+		g_assert_true (crank_singular_has (TEST_TYPE_SUBJECT));
 		
 		return;
 	}
 	
 	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_passed ();
 }
 
 void
-test_singular_type_get (void)
+test_singular_get (void)
 {
 	TestSubject*	singular_a;
 	TestSubject*	singular_b;
-	
+
 	if (g_test_subprocess()) {
-		singular_a = TEST_SUBJECT(crank_singular_type_get (TEST_TYPE_SUBJECT));
-	
+		singular_a = (TestSubject*) crank_singular_get (TEST_TYPE_SUBJECT);
+
 		g_assert_null (singular_a);
-	
+
 		singular_b = test_subject_new (3);
-		singular_a = TEST_SUBJECT(crank_singular_type_get (TEST_TYPE_SUBJECT));
-	
+		singular_a = TEST_SUBJECT(crank_singular_get (TEST_TYPE_SUBJECT));
+
 		g_assert_nonnull (singular_a);
 		g_assert_cmpint (test_subject_get_int_item (singular_a), ==, 3);
 		return;
 	}
-	
+
 	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_passed ();
 }
 
 void
-test_singular_is_new (void)
+test_singular_first_construct (void)
 {
 	TestSubject*	singular_a;
 	TestSubject*	singular_b;
-	
+
 	if (g_test_subprocess()) {
 		singular_a = test_subject_new (7);
-	
-		g_assert_false (test_subject_get_second_run(singular_a));
-	
+
+		g_assert_cmpint (test_subject_get_first_construct_times (singular_a), ==, 1);
+
 		singular_b = test_subject_new (3);
-		
-		g_assert_true (test_subject_get_second_run(singular_a));
+
+		g_assert_cmpint (test_subject_get_first_construct_times (singular_a), ==, 1);
 		return;
 	}
-	
+
 	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_passed ();
 }
 
+void
+test_singular_thread_construct (void)
+{
+	if (g_test_subprocess()) {
+		TestSubject**	singulars;
+		GThread**		threads;
+		gint			n = 100;
+		
+		singulars = g_new (TestSubject*, n);
+		threads = g_new (GThread*, n);
+		
+		gint			i;
+		
+		for (i = 0; i < n; i++) {
+			threads[i] = g_thread_new (NULL, test_singular_thread_construct_func, NULL);
+		}
+		
+		for (i = 0; i < n; i++) {
+			singulars[i] = TEST_SUBJECT (g_thread_join (threads[i]));
+		}
+		
+		for (i = 0; i < n - 1; i++) {
+			g_assert (singulars[i] == singulars[i + 1]);
+		}
+		
+		return;
+	}
+
+	g_test_trap_subprocess (NULL, 0, 0);
+	g_test_trap_assert_passed ();
+}
+
+TestSubject*
+test_singular_thread_construct_func (gpointer userdata)
+{
+	return test_subject_new (0);
+}

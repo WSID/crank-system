@@ -35,8 +35,14 @@
  *
  * 현재 Crank System은 다음의 매크로를 제공합니다.
  *
+ * - 배열 작업
  * - 간편한 반복작업
  *
+ *
+ * # 배열 작업
+ *
+ * 배열에 대한 작업을 간소하게 하기 위한 소정의 매크로를 제공합니다.
+ * 
  * # 간편한 반복작업
  *
  * 특정 목록이나 배열에 대해 반복 작업을 수행해야 하는 일이 잦습니다. 이때, loop를
@@ -95,6 +101,8 @@ G_BEGIN_DECLS
  * @b: 배열입니다.
  * @G: 배열의 구성형입니다.
  * @n: 배열의 갯수입니다.
+ *
+ * 같은 크기의 배열을 <function>memcmp</function>을 이용하여 비교합니다.
  *
  * Returns: (type gint): 비교 결과입니다.
  */
@@ -190,8 +198,8 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_VARARG_BEGIN:
  * @param_last: 마지막 고정인자 이름입니다.
- * @G: 내용의 형 (type) 입니다.
- * @e: 내용의 이름입니다.
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 각 항목의 이름입니다.
  * @f: 마지막을 표시하는 값입니다.
  *
  * 함수에 주어진 가변 인자 각각에 대해 반복하는 loop를 구성합니다.
@@ -219,7 +227,7 @@ G_BEGIN_DECLS
  * CRANK_FOREACH_VARARG_DO:
  * @param_last: 현재 함수의 마지막 고정 인자 이름입니다.
  * @G: 각 항목의 형 (type) 입니다.
- * @e: 항목의 이름입니다.
+ * @e: 각 항목의 이름입니다.
  * @f: 마지막을 표시하는 값입니다.
  * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
  *
@@ -233,8 +241,8 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_BEGIN:
  * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
- * @G: 타입 이름입니다.
- * @e: 반복 변수 이름입니다.
+ * @G: 각 항목의 형(type)입니다.
+ * @e: 각 항목의 이름입니다.
  *
  * 주어진 #GPtrArray의 각 항목에 대해 루프를 수행합니다.
  *
@@ -246,6 +254,7 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_END:
+ *
  * %CRANK_FOREACH_G_PTR_ARRAY_BEGIN으로 시작된 루프의 끝을 지정합니다.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_END \
@@ -254,8 +263,8 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_DO:
  * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
- * @G: 타입 이름입니다.
- * @e: 반복 변수 이름입니다.
+ * @G: 각 항목의 형(type)입니다.
+ * @e: 각 항목의 이름입니다.
  * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
  *
  * 주어진 #GPtrArray의 각 항목에 대해 주어진 코드를 실행합니다.
@@ -264,6 +273,7 @@ G_BEGIN_DECLS
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
 		BLOCK \
 	CRANK_FOREACH_G_PTR_ARRAY_END
+
 G_END_DECLS
 
 #endif /* CRANKBASEMACRO_H */
