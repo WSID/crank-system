@@ -30,7 +30,6 @@
 G_BEGIN_DECLS
 
 typedef struct _CrankSingular				CrankSingular;
-typedef struct _CrankSingularPrivate		CrankSingularPrivate;
 typedef struct _CrankSingularClass			CrankSingularClass;
 typedef struct _CrankSingularClassPrivate	CrankSingularClassPrivate;
 
@@ -43,11 +42,6 @@ typedef struct _CrankSingularClassPrivate	CrankSingularClassPrivate;
  * 이 클래스가 제공하는 기능의 특성상, 클래스 구조체에서 대부분의 기능을
  * 제공합니다.
  */
-struct _CrankSingular {
-	/*< private >*/
-	GObject					parent_instance;
-};
-
 
 /**
  * CrankSingularClass:
@@ -70,18 +64,7 @@ struct _CrankSingularClass {
 
 
 #define CRANK_TYPE_SINGULAR		(crank_singular_get_type())
-#define CRANK_SINGULAR(i)	\
-		(G_TYPE_CHECK_INSTANCE_CAST((i), CRANK_TYPE_SINGULAR, CrankSingular))
-#define CRANK_IS_SINGULAR(i)\
-		(G_TYPE_CHECK_INSTANCE_TYPE((i), CRANK_TYPE_SINGULAR))
-#define CRANK_SINGULAR_CLASS(c)	\
-		(G_TYPE_CHECK_CLASS_CAST((c), CRANK_TYPE_SINGULAR, CrankSingularClass))
-#define CRANK_IS_SINGULAR_CLASS(c) \
-		(G_TYPE_CHECK_CLASS_TYPE((c), CRANK_TYPE_SINGULAR))
-#define CRANK_SINGULAR_GET_CLASS(i) \
-		(G_TYPE_INSTANCE_GET_CLASS((i), CRANK_TYPE_SINGULAR, CrankSingularClass))
-
-GType crank_singular_get_type (void);
+G_DECLARE_DERIVABLE_TYPE (CrankSingular, crank_singular, CRANK, SINGULAR, GObject);
 
 gboolean		crank_singular_has			(GType	type);
 CrankSingular*	crank_singular_get			(GType	type);

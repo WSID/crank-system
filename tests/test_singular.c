@@ -34,24 +34,15 @@ typedef struct _TestSubjectPrivate {
 	gint				first_construct_times;
 } TestSubjectPrivate;
 
-typedef struct _TestSubject {
-	CrankSingular		parent_instance;
-	TestSubjectPrivate*	priv;
-} TestSubject;
-
-typedef struct _TestSubjectClass {
+struct _TestSubjectClass {
 	CrankSingularClass	parent_class;
-} TestSubjectClass;
+};
 
 
 //////// 타입 매크로
-
-#define TEST_TYPE_SUBJECT	(test_subject_get_type())
-#define TEST_SUBJECT(i)		(G_TYPE_CHECK_INSTANCE_CAST((i), TEST_TYPE_SUBJECT, TestSubject))
-#define TEST_IS_SUBJECT(i)	(G_TYPE_CHECK_INSTANCE_TYPE((i), TEST_TYPE_SUBJECT))
-#define TEST_SUBJECT_CLASS(c)		(G_TYPE_CHECK_CLASS_CAST((c), TEST_TYPE_SUBJECT, TestSubjectClass))
-#define TEST_IS_SUBJECT_CLASS(c)	(G_TYPE_CHECK_CLASS_TYPE((c), TEST_TYPE_SUBJECT))
-#define TEST_SUBJECT_GET_CLASS(i)	(G_TYPE_INSTANCE_GET_CLASS((i), TEST_TYPE_SUBJECT, TestSubjectClass))
+#define TEST_TYPE_SUBJECT (test_subject_get_type ())
+G_DECLARE_DERIVABLE_TYPE(TestSubject, test_subject, TEST, SUBJECT, CrankSingular)
+	
 
 
 //////// 시험에 사용될 클래스 구현 /////////////////////////////////////////////
@@ -68,13 +59,15 @@ test_subject_set_property (	GObject*		self_gobject,
 							const GValue*	value,
 							GParamSpec*		pspec			)
 {
-	TestSubject*	self;
+	TestSubject*		self;
+	TestSubjectPrivate*	priv;
 
 	self = TEST_SUBJECT(self_gobject);
+	priv = test_subject_get_instance_private (self);
 
 	switch (prop_id) {
 		case TEST_SUBJECT_PROPS_INT_ITEM:
-			self->priv->int_item = g_value_get_int (value);
+			priv->int_item = g_value_get_int (value);
 			break;
 			
 		default:
@@ -88,17 +81,19 @@ test_subject_get_property (	GObject*	self_gobject,
 							GValue*		value,
 							GParamSpec*	pspec			)
 {
-	TestSubject*	self;
+	TestSubject*		self;
+	TestSubjectPrivate*	priv;
 
 	self = TEST_SUBJECT(self_gobject);
+	priv = test_subject_get_instance_private (self);
 
 	switch (prop_id) {
 		case TEST_SUBJECT_PROPS_INT_ITEM:
-			g_value_set_int (value, self->priv->int_item);
+			g_value_set_int (value, priv->int_item);
 			break;
 
 		case TEST_SUBJECT_PROPS_FIRST_CONSTRUCT_TIMES:
-			g_value_set_int (value, self->priv->first_construct_times);
+			g_value_set_int (value, priv->first_construct_times);
 			break;
 
 		default:
@@ -109,15 +104,14 @@ test_subject_get_property (	GObject*	self_gobject,
 //////// CrankSingular 함수들
 
 static void
-test_subject_first_construct (	CrankSingular*			self_crank_singular,
-								guint					n_construct_props,
-								GObjectConstructParam	construct_props		)
+test_subject_first_construct (	CrankSingular*			self_crank_singular	)
 {
-	TestSubject* self = TEST_SUBJECT (self_crank_singular);
+	TestSubject* 		self = TEST_SUBJECT (self_crank_singular);
+	TestSubjectPrivate*	priv = test_subject_get_instance_private (self);
 	
 	g_usleep (1000); // 0.01초도 흔들기 충분하다.
 	
-	self->priv->first_construct_times++;
+	priv->first_construct_times++;
 }
 
 
@@ -125,9 +119,9 @@ test_subject_first_construct (	CrankSingular*			self_crank_singular,
 
 static void
 test_subject_init (TestSubject* i) {
-	i->priv = G_TYPE_INSTANCE_GET_PRIVATE (i, TEST_TYPE_SUBJECT, TestSubjectPrivate);
+	TestSubjectPrivate*	priv = test_subject_get_instance_private (i);
 	
-	i->priv->first_construct_times = 0;
+	priv->first_construct_times = 0;
 }
 
 static void
@@ -169,20 +163,20 @@ test_subject_class_init (TestSubjectClass* c) {
 gint
 test_subject_get_int_item (TestSubject*	subject)
 {
-	return subject->priv->int_item;
+	return G_PRIVATE_FIELD(TestSubject, subject, gint, int_item);
 }
 
 void
 test_subject_set_int_item (TestSubject*	subject, gint int_item)
 {
-	subject->priv->int_item = int_item;
+	G_PRIVATE_FIELD(TestSubject, subject, gint, int_item) = int_item;
 }
 
 
 gint
 test_subject_get_first_construct_times (TestSubject*	subject)
 {
-	return subject->priv->first_construct_times;
+	return G_PRIVATE_FIELD(TestSubject, subject, gint, first_construct_times);
 }
 
 
@@ -203,7 +197,7 @@ void		test_singular_get				(void);
 void		test_singular_first_construct	(void);
 void		test_singular_thread_construct	(void);
 
-TestSubject*	test_singular_thread_construct_func (gpointer userdata);
+gpointer	test_singular_thread_construct_func (gpointer userdata);
 
 
 gint
@@ -347,7 +341,7 @@ test_singular_thread_construct (void)
 	g_test_trap_assert_passed ();
 }
 
-TestSubject*
+gpointer
 test_singular_thread_construct_func (gpointer userdata)
 {
 	return test_subject_new (0);
