@@ -75,6 +75,10 @@ typedef struct _CrankTypesNode CrankTypesNode;
 typedef struct _CrankTypesRoot CrankTypesRoot;
 typedef struct _CrankTypesNodeAdd CrankTypesNodeAdd;
 
+static G_GNUC_MALLOC
+gchar*				crank_typestring (				const GType*	types,
+													const guint		types_length	);
+
 static
 gboolean			crank_types_is_a (				const GType*	types_a,
 													const GType*	types_b,
@@ -89,6 +93,9 @@ CrankTypesNode*		crank_types_node_ref (			CrankTypesNode* node	);
 
 static inline
 void				crank_types_node_unref (		CrankTypesNode* node	);
+													
+static G_GNUC_MALLOC
+gchar*				crank_types_node_typestring (	CrankTypesNode*	node	);
 
 static
 gboolean			crank_types_node_add (			CrankTypesNode* parent,
@@ -147,6 +154,27 @@ struct _CrankTypesRoot {
 };
 
 
+static G_GNUC_MALLOC gchar*
+crank_typestring	(	const GType*	types,
+						const guint		types_length	)
+{
+	GString*	str_builder;
+	gchar*		str;
+		
+	// We can guarantee that we have at least 1 type in node->types.
+	str_builder = g_string_new (g_type_name (types[0]));
+	
+	CRANK_FOREACH_ARRAY_BEGIN ((types + 1), GType, type, types_length - 1)
+		g_string_append (str_builder, ", ");
+		g_string_append (str_builder, g_type_name (type));
+	CRANK_FOREACH_ARRAY_END
+	
+	str = str_builder->str;
+	g_string_free (str_builder, FALSE);
+	
+	return str;
+}
+
 static gboolean
 crank_types_is_a	(	const GType*	types,
 						const GType*	types_is_a,
@@ -204,42 +232,45 @@ crank_types_node_unref ( CrankTypesNode* node	)
 	}
 }
 
+static G_GNUC_MALLOC gchar*
+crank_types_node_typestring (	CrankTypesNode*	node	)
+{
+	return crank_typestring (node->types, node->ntypes);
+}
+
 static gboolean
 crank_types_node_add (	CrankTypesNode* parent,
 						CrankTypesNode*	node	)
 {
-	if (parent == node) return TRUE;
-
+	// 먼저 하위 노드에 속하는지 확인합니다.
 	if (crank_types_is_a (node->types, parent->types, node->ntypes)) {
-		gboolean has_parent_node = FALSE;
+		gboolean add_to_subnode = FALSE;
 	
-		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-				parent->child_nodes->len)
+		// 자손과 연결되는지 확인합니다.
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+			if (crank_types_node_add (sub, node)) {
+				add_to_subnode = TRUE;
+				break;
+			}
+		CRANK_FOREACH_G_PTR_ARRAY_END
 		
-			if (crank_types_node_add ((CrankTypesNode*)sub, node))
-				has_parent_node = TRUE;
-	
-		CRANK_FOREACH_ARRAY_END
+		// 부모와 연결합니다.
+		if (! add_to_subnode) {
+			// node의 하위에 해당하는 항목들은 node에 연결합니다..
+			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
 		
-		if (! has_parent_node) {
-			// 부모와 연결합니다.
-			g_ptr_array_add (node->parent_nodes, parent);
-			g_ptr_array_add (parent->child_nodes, node);
-			
-			// 그리고 하위에 해당하는 항목들은 다시 잇습니다.
-			CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-					parent->child_nodes->len)
-		
-				CrankTypesNode* sub_node = (CrankTypesNode*) sub;
-				if (crank_types_is_a(sub_node->types, node->types, node->ntypes)) {
-					g_ptr_array_remove (sub_node->parent_nodes, parent);
-					g_ptr_array_remove (parent->child_nodes, sub_node);
+				if (crank_types_is_a(sub->types, node->types, node->ntypes)) {
+					g_ptr_array_remove (sub->parent_nodes, parent);
+					g_ptr_array_remove (parent->child_nodes, sub);
 					
-					g_ptr_array_add (sub_node->parent_nodes, node);
-					g_ptr_array_add (node->child_nodes, sub_node);
+					g_ptr_array_add (sub->parent_nodes, node);
+					g_ptr_array_add (node->child_nodes, sub);
 				}
 	
-			CRANK_FOREACH_ARRAY_END
+			CRANK_FOREACH_G_PTR_ARRAY_END
+			
+			g_ptr_array_add (node->parent_nodes, parent);
+			g_ptr_array_add (parent->child_nodes, node);
 		}
 		
 		return TRUE;
@@ -259,15 +290,10 @@ crank_types_node_get (	CrankTypesNode* parent,
 		return parent;
 	}
 	
-	else if (crank_types_is_a (key, parent->types, key_length)) {
-	
-		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-				parent->child_nodes->len)
-		
-			result = crank_types_node_get ((CrankTypesNode*)sub, key, key_length);
-			
+	else if (crank_types_is_a (key, parent->types, key_length)) {	
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+			result = crank_types_node_get (sub, key, key_length);
 			if (result != NULL) return result;
-	
 		CRANK_FOREACH_ARRAY_END
 	}
 	
@@ -287,13 +313,9 @@ crank_types_node_lookup (	CrankTypesNode* parent,
 	
 	else if (crank_types_is_a (key, parent->types, key_length)) {
 	
-		CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-				parent->child_nodes->len)
-		
-			result = crank_types_node_lookup ((CrankTypesNode*)sub, key, key_length);
-			
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+			result = crank_types_node_lookup (sub, key, key_length);
 			if (result != NULL) return result;
-	
 		CRANK_FOREACH_ARRAY_END
 		
 		return parent;
@@ -336,7 +358,9 @@ crank_types_root_add ( 	CrankTypesRoot* root,
 	
 	CRANK_FOREACH_ARRAY_END
 	
-	if (! has_parent_node) g_ptr_array_add (root->child_nodes, node);
+	if (! has_parent_node) {
+		g_ptr_array_add (root->child_nodes, node);
+	}
 }
 
 
@@ -347,13 +371,9 @@ crank_types_root_get (	CrankTypesRoot* parent,
 {
 	CrankTypesNode*	result = NULL;
 	
-	CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-			parent->child_nodes->len)
-	
-		result = crank_types_node_get ((CrankTypesNode*)sub, key, key_length);
-		
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+		result = crank_types_node_get (sub, key, key_length);
 		if (result != NULL) return result;
-
 	CRANK_FOREACH_ARRAY_END
 	
 	return NULL;
@@ -365,14 +385,13 @@ crank_types_root_lookup (	CrankTypesRoot* parent,
 							const guint		key_length	)
 {
 	CrankTypesNode*	result = NULL;
-	
-	CRANK_FOREACH_ARRAY_BEGIN (parent->child_nodes->pdata, gpointer, sub,
-			parent->child_nodes->len)
-	
-		result = crank_types_node_lookup ((CrankTypesNode*)sub, key, key_length);
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+		result = crank_types_node_lookup (sub, key, key_length);
 		
-		if (result != NULL) return result;
-
+		if (result != NULL) {
+					
+			return result;
+		}
 	CRANK_FOREACH_ARRAY_END
 	
 	return NULL;
@@ -556,9 +575,7 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 	
 	if (node == NULL) return FALSE;
 	
-	g_message ("Copy value");
 	g_value_copy(&node->value, value);
-	g_message ("Copy value done");
 	return TRUE;
 }
 
