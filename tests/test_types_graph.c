@@ -29,14 +29,34 @@ static GType key1_d[1];
 static GType key1_e[1];
 static GType key1_x[1];
 
-static GType key2[2];
+static GType key2_aa[2]; // <
+static GType key2_ab[2];
+static GType key2_ad[2]; // <
+static GType key2_ae[2]; // <
+static GType key2_bc[2];
+static GType key2_ca[2];
+static GType key2_ce[2];
+static GType key2_ea[2]; // <
+static GType key2_ed[2]; // <
 
-
-static GType key2_x[2];
-static GType key2_y[2];
+static GType key2_ax[2];
+static GType key2_xa[2];
 
 //////// Test Subjects Types ///////////////////////////////////////////////////
 
+/*
+ * TEST_DEFINE_TEST_TYPE:
+ * @Type: 테스트용 타입의 CamelCase
+ * @type: 테스트용 타입의 lower_case
+ * @NS: 테스트용 타입의 이름 공간 - 보통 TEST
+ * @T: 테스트용 타입의 이름 - 보통 알파벳
+ * @parent: 부모 타입의 CamelCase
+ * @parent_GTYPE: 부모 타입의 GType
+ * 
+ * private 변수가 없는 타입을 간편하게 정의합니다.
+ *
+ * 오로지 테스트만을 위한 타입을 정의할 때 사용합니다.
+ */
 #define TEST_DEFINE_TEST_TYPE(Type, type, NS, T, parent, parent_GTYPE) \
 		typedef struct _##Type##Class { \
 			parent##Class	parent_class; \
@@ -157,14 +177,32 @@ test_init_types_graph (void)
 	key1_e[0] = TEST_TYPE_E;
 	key1_x[0] = TEST_TYPE_X;
 	
-	key2[0] = TEST_TYPE_A;
-	key2[1] = TEST_TYPE_A;
-
-
-	key2_x[0] = G_TYPE_INT;
-	key2_x[1] = G_TYPE_INT;
-	key2_y[0] = TEST_TYPE_A;
-	key2_y[1] = TEST_TYPE_D;
+	key2_aa[0] = TEST_TYPE_A;
+	key2_aa[1] = TEST_TYPE_A;
+	key2_ab[0] = TEST_TYPE_A;
+	key2_ab[1] = TEST_TYPE_B;
+	key2_ad[0] = TEST_TYPE_A;
+	key2_ad[1] = TEST_TYPE_D;
+	key2_ae[0] = TEST_TYPE_A;
+	key2_ae[1] = TEST_TYPE_E;
+	
+	key2_bc[0] = TEST_TYPE_B;
+	key2_bc[1] = TEST_TYPE_C;
+	
+	key2_ca[0] = TEST_TYPE_C;
+	key2_ca[1] = TEST_TYPE_A;
+	key2_ce[0] = TEST_TYPE_C;
+	key2_ce[1] = TEST_TYPE_E;
+	
+	key2_ea[0] = TEST_TYPE_E;
+	key2_ea[1] = TEST_TYPE_A;
+	key2_ed[0] = TEST_TYPE_E;
+	key2_ed[1] = TEST_TYPE_D;
+	
+	key2_ax[0] = TEST_TYPE_A;
+	key2_ax[1] = TEST_TYPE_X;
+	key2_xa[0] = TEST_TYPE_X;
+	key2_xa[1] = TEST_TYPE_A;
 }
 
 
@@ -203,8 +241,20 @@ test_types_graph_setup (	CrankTypesGraph**	graph_ptr,
 	g_value_set_string (&value, "value for E");
 	crank_types_graph_set (*graph_ptr, key1_e, 1, &value);
 	
-	g_value_set_string (&value, "value for GObject, GObject");
-	crank_types_graph_set (*graph_ptr, key2, 2, &value);
+	g_value_set_string (&value, "value for AA");
+	crank_types_graph_set (*graph_ptr, key2_aa, 2, &value);
+	
+	g_value_set_string (&value, "value for AD");
+	crank_types_graph_set (*graph_ptr, key2_ad, 2, &value);
+	
+	g_value_set_string (&value, "value for AE");
+	crank_types_graph_set (*graph_ptr, key2_ae, 2, &value);
+	
+	g_value_set_string (&value, "value for EA");
+	crank_types_graph_set (*graph_ptr, key2_ea, 2, &value);
+	
+	g_value_set_string (&value, "value for ED");
+	crank_types_graph_set (*graph_ptr, key2_ed, 2, &value);
 }
 
 void
@@ -254,14 +304,32 @@ test_types_graph_get (	CrankTypesGraph**	fixture,
 	
 	
 	// Test for 2
-	g_assert (crank_types_graph_get(graph, key2, 2, &value));
-	g_assert_cmpstr (
-			g_value_get_string (&value), ==,
-			"value for GObject, GObject");
+	g_assert (crank_types_graph_get(graph, key2_aa, 2, &value));
+	g_assert_cmpstr ( g_value_get_string (&value), ==, "value for AA");
 	
+	g_assert (! crank_types_graph_get(graph, key2_ab, 2, &value));
 	
-	g_assert_false (crank_types_graph_get (graph, key2_x, 2, &value));
-	g_assert_false (crank_types_graph_get (graph, key2_y, 2, &value));
+	g_assert (crank_types_graph_get(graph, key2_ad, 2, &value));
+	g_assert_cmpstr ( g_value_get_string (&value), ==, "value for AD");
+	
+	g_assert (crank_types_graph_get(graph, key2_ae, 2, &value));
+	g_assert_cmpstr ( g_value_get_string (&value), ==, "value for AE");
+	
+	g_assert (! crank_types_graph_get(graph, key2_bc, 2, &value));
+	
+	g_assert (! crank_types_graph_get(graph, key2_ca, 2, &value));
+	
+	g_assert (! crank_types_graph_get(graph, key2_ce, 2, &value));
+	
+	g_assert (crank_types_graph_get(graph, key2_ea, 2, &value));
+	g_assert_cmpstr ( g_value_get_string (&value), ==, "value for EA");
+	
+	g_assert (crank_types_graph_get(graph, key2_ed, 2, &value));
+	g_assert_cmpstr ( g_value_get_string (&value), ==, "value for ED");
+	
+	g_assert (! crank_types_graph_get(graph, key2_ax, 2, &value));
+	
+	g_assert (! crank_types_graph_get(graph, key2_xa, 2, &value));
 }
 
 void
@@ -281,9 +349,17 @@ test_types_graph_has (	CrankTypesGraph**	fixture,
 	g_assert_true (crank_types_graph_has (graph, key1_e, 1));
 	g_assert_false (crank_types_graph_has (graph, key1_x, 1));
 	
-	g_assert_true (crank_types_graph_has (graph, key2, 2));
-	g_assert_false (crank_types_graph_has (graph, key2_x, 2));
-	g_assert_false (crank_types_graph_has (graph, key2_y, 2));
+	g_assert_true (crank_types_graph_has (graph, key2_aa, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_ab, 2));
+	g_assert_true (crank_types_graph_has (graph, key2_ad, 2));
+	g_assert_true (crank_types_graph_has (graph, key2_ae, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_bc, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_ca, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_ce, 2));
+	g_assert_true (crank_types_graph_has (graph, key2_ea, 2));
+	g_assert_true (crank_types_graph_has (graph, key2_ed, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_ax, 2));
+	g_assert_false (crank_types_graph_has (graph, key2_xa, 2));
 }
 
 void
@@ -314,17 +390,39 @@ test_types_graph_lookup (	CrankTypesGraph**	fixture,
 	
 	g_assert (! crank_types_graph_lookup(graph, key1_x, 1, &value));
 			
-	g_assert (crank_types_graph_lookup(graph, key2, 2, &value));
-	g_assert_cmpstr(
-			g_value_get_string (&value), ==,
-			"value for GObject, GObject");
 			
-	g_assert_false (crank_types_graph_lookup (graph, key2_x, 2, &value));
+			
+	g_assert (crank_types_graph_lookup(graph, key2_aa, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AA");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ab, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AA");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ad, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AD");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ae, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AE");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_bc, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AA");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ca, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AA");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ce, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for AE");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ea, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for EA");
+			
+	g_assert (crank_types_graph_lookup(graph, key2_ed, 2, &value));
+	g_assert_cmpstr( g_value_get_string (&value), ==, "value for ED");
 	
-	g_assert (crank_types_graph_lookup(graph, key2_y, 2, &value));
-	g_assert_cmpstr(
-			g_value_get_string (&value), ==,
-			"value for GObject, GObject");
+			
+	g_assert (! crank_types_graph_lookup(graph, key2_xa, 2, &value));
+			
+	g_assert (! crank_types_graph_lookup(graph, key2_ax, 2, &value));
 }
 
 void
@@ -338,9 +436,17 @@ test_types_graph_lookup_types (	CrankTypesGraph**	fixture,
 	const GType*	lookup_key1_e;
 	const GType*	lookup_key1_x;
 	
-	const GType*	lookup_key2;
-	const GType*	lookup_key2_x;
-	const GType*	lookup_key2_y;
+	const GType*	lookup_key2_aa;
+	const GType*	lookup_key2_ab;
+	const GType*	lookup_key2_ad;
+	const GType*	lookup_key2_ae;
+	const GType*	lookup_key2_bc;
+	const GType*	lookup_key2_ca;
+	const GType*	lookup_key2_ce;
+	const GType*	lookup_key2_ea;
+	const GType*	lookup_key2_ed;
+	const GType*	lookup_key2_xa;
+	const GType*	lookup_key2_ax;
 	
 
 	CrankTypesGraph* graph = *(CrankTypesGraph**) fixture;
@@ -352,9 +458,17 @@ test_types_graph_lookup_types (	CrankTypesGraph**	fixture,
 	lookup_key1_e = crank_types_graph_lookup_types (graph, key1_e, 1);
 	lookup_key1_x = crank_types_graph_lookup_types (graph, key1_x, 1);
 	
- 	lookup_key2 = crank_types_graph_lookup_types (graph, key2, 2);
-	lookup_key2_x = crank_types_graph_lookup_types (graph, key2_x, 2);
-	lookup_key2_y = crank_types_graph_lookup_types (graph, key2_y, 2);
+ 	lookup_key2_aa = crank_types_graph_lookup_types (graph, key2_aa, 2);
+ 	lookup_key2_ab = crank_types_graph_lookup_types (graph, key2_ab, 2);
+ 	lookup_key2_ad = crank_types_graph_lookup_types (graph, key2_ad, 2);
+ 	lookup_key2_ae = crank_types_graph_lookup_types (graph, key2_ae, 2);
+ 	lookup_key2_bc = crank_types_graph_lookup_types (graph, key2_bc, 2);
+ 	lookup_key2_ca = crank_types_graph_lookup_types (graph, key2_ca, 2);
+ 	lookup_key2_ce = crank_types_graph_lookup_types (graph, key2_ce, 2);
+ 	lookup_key2_ea = crank_types_graph_lookup_types (graph, key2_ea, 2);
+ 	lookup_key2_ed = crank_types_graph_lookup_types (graph, key2_ed, 2);
+ 	lookup_key2_xa = crank_types_graph_lookup_types (graph, key2_xa, 2);
+ 	lookup_key2_ax = crank_types_graph_lookup_types (graph, key2_ax, 2);
 	
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_a, key1_a, GType, 1) == 0);
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_b, key1_a, GType, 1) == 0);
@@ -363,26 +477,41 @@ test_types_graph_lookup_types (	CrankTypesGraph**	fixture,
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_e, key1_e, GType, 1) == 0);
 	g_assert_null (lookup_key1_x);
 	
-	
-	g_assert_true (CRANK_ARRAY_CMP (lookup_key2, key2, GType, 2) == 0);
-	g_assert_null (lookup_key2_x);
-	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_y, key2, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_aa, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ab, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ad, key2_ad, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ae, key2_ae, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_bc, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ca, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ce, key2_ae, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ea, key2_ea, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ed, key2_ed, GType, 2) == 0);
+	g_assert_null (lookup_key2_xa);
+	g_assert_null (lookup_key2_ax);
 }
 
 void
 test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 								gconstpointer		userdata	)
 {
-	const GType*	lookup_key1_a;
-	const GType*	lookup_key1_b;
-	const GType*	lookup_key1_c;
-	const GType*	lookup_key1_d;
-	const GType*	lookup_key1_e;
-	const GType*	lookup_key1_x;
+	const GType*	lookup_key1_a = NULL;
+	const GType*	lookup_key1_b = NULL;
+	const GType*	lookup_key1_c = NULL;
+	const GType*	lookup_key1_d = NULL;
+	const GType*	lookup_key1_e = NULL;
+	const GType*	lookup_key1_x = NULL;
 	
-	const GType*	lookup_key2;
-	const GType*	lookup_key2_x;
-	const GType*	lookup_key2_y;
+	const GType*	lookup_key2_aa = NULL;
+	const GType*	lookup_key2_ab = NULL;
+	const GType*	lookup_key2_ad = NULL;
+	const GType*	lookup_key2_ae = NULL;
+	const GType*	lookup_key2_bc = NULL;
+	const GType*	lookup_key2_ca = NULL;
+	const GType*	lookup_key2_ce = NULL;
+	const GType*	lookup_key2_ea = NULL;
+	const GType*	lookup_key2_ed = NULL;
+	const GType*	lookup_key2_xa = NULL;
+	const GType*	lookup_key2_ax = NULL;
 	
 	CrankTypesGraph* graph = * (CrankTypesGraph**) fixture;
 	
@@ -405,21 +534,39 @@ test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 	g_assert_true (crank_types_graph_lookup_full (graph, key1_e, 1, &lookup_key1_e, &value));
 	g_assert_cmpstr (g_value_get_string(&value), ==, "value for E");
 	
-	g_assert_true (crank_types_graph_lookup_full (graph, key1_x, 1, &lookup_key1_x, &value));
+	g_assert_false (crank_types_graph_lookup_full (graph, key1_x, 1, &lookup_key1_x, &value));
 			
-			
-	g_assert_true (crank_types_graph_lookup_full (graph, key2, 2, &lookup_key2, &value));
-	g_assert_cmpstr (
-			g_value_get_string(&value), ==,
-			"value for GObject, GObject");
 	
-	g_assert_false (crank_types_graph_lookup_full (graph, key2_x, 2, &lookup_key2_x, &value));
 	
-	g_assert_true (crank_types_graph_lookup_full (graph, key2_y, 2, &lookup_key2_y, &value));
-	g_assert_cmpstr (
-			g_value_get_string(&value), ==,
-			"value for GObject, GObject");
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_aa, 2, &lookup_key2_aa, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AA");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ab, 2, &lookup_key2_ab, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AA");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ad, 2, &lookup_key2_ad, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AD");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ae, 2, &lookup_key2_ae, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AE");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_bc, 2, &lookup_key2_bc, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AA");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ca, 2, &lookup_key2_ca, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AA");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ce, 2, &lookup_key2_ce, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for AE");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ea, 2, &lookup_key2_ea, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for EA");
+	
+	g_assert_true (crank_types_graph_lookup_full (graph, key2_ed, 2, &lookup_key2_ed, &value));
+	g_assert_cmpstr (g_value_get_string(&value), ==, "value for ED");
 			
+	g_assert_false (crank_types_graph_lookup_full (graph, key2_ax, 2, &lookup_key2_ax, &value));
+	g_assert_false (crank_types_graph_lookup_full (graph, key2_xa, 2, &lookup_key2_xa, &value));
 	
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_a, key1_a, GType, 1) == 0);
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_b, key1_a, GType, 1) == 0);
@@ -428,8 +575,17 @@ test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 	g_assert (CRANK_ARRAY_CMP (lookup_key1_e, key1_e, GType, 1) == 0);
 	g_assert_null (lookup_key1_x);
 	
-	g_assert_true (CRANK_ARRAY_CMP (lookup_key2, key2, GType, 2) == 0);
-	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_y, key2, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_aa, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ab, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ad, key2_ad, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ae, key2_ae, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_bc, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ca, key2_aa, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ce, key2_ae, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ea, key2_ea, GType, 2) == 0);
+	g_assert_true (CRANK_ARRAY_CMP (lookup_key2_ed, key2_ed, GType, 2) == 0);
+	g_assert_null (lookup_key2_xa);
+	g_assert_null (lookup_key2_ax);
 }
 
 void
@@ -441,11 +597,20 @@ test_types_graph_remove (	CrankTypesGraph**	fixture,
 	g_assert_false (crank_types_graph_remove (graph, key1_b, 1));	
 	g_assert_false (crank_types_graph_remove (graph, key1_c, 1));
 	g_assert_false (crank_types_graph_remove (graph, key1_x, 1));
-	g_assert_false (crank_types_graph_remove (graph, key2_x, 2));
-	g_assert_false (crank_types_graph_remove (graph, key2_y, 2));
-	
 	g_assert_true (crank_types_graph_remove (graph, key1_d, 1));
 	g_assert_true (crank_types_graph_remove (graph, key1_a, 1));
 	g_assert_true (crank_types_graph_remove (graph, key1_e, 1));
-	g_assert_true (crank_types_graph_remove (graph, key2, 2));
+	
+	g_assert_true (crank_types_graph_remove (graph, key2_aa, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_ab, 2));
+	g_assert_true (crank_types_graph_remove (graph, key2_ad, 2));
+	g_assert_true (crank_types_graph_remove (graph, key2_ae, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_bc, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_ca, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_ce, 2));
+	g_assert_true (crank_types_graph_remove (graph, key2_ea, 2));
+	g_assert_true (crank_types_graph_remove (graph, key2_ed, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_ax, 2));
+	g_assert_false (crank_types_graph_remove (graph, key2_xa, 2));
+	
 }
