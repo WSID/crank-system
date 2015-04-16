@@ -470,7 +470,7 @@ G_DEFINE_BOXED_TYPE (CrankTypesGraph,
 
 
 /**
- * crank_types_graph_new:
+ * crank_types_graph_new: (constructor)
  *
  * 새로운 타입 그래프를 생성합니다.
  *
