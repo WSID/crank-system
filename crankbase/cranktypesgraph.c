@@ -215,6 +215,7 @@ static inline CrankTypesNode*
 crank_types_node_ref (	CrankTypesNode* node	)
 {
 	g_atomic_int_inc(&node->_refc);
+	return node;
 }
 
 static inline void
@@ -264,13 +265,15 @@ crank_types_node_add (	CrankTypesNode* parent,
 					g_ptr_array_remove (parent->child_nodes, sub);
 					
 					g_ptr_array_add (sub->parent_nodes, node);
-					g_ptr_array_add (node->child_nodes, sub);
+					g_ptr_array_add (node->child_nodes,
+						crank_types_node_ref (sub));
 				}
 	
 			CRANK_FOREACH_G_PTR_ARRAY_END
 			
 			g_ptr_array_add (node->parent_nodes, parent);
-			g_ptr_array_add (parent->child_nodes, node);
+			g_ptr_array_add (parent->child_nodes,
+					crank_types_node_ref (node));
 		}
 		
 		return TRUE;
@@ -359,7 +362,7 @@ crank_types_root_add ( 	CrankTypesRoot* root,
 	CRANK_FOREACH_ARRAY_END
 	
 	if (! has_parent_node) {
-		g_ptr_array_add (root->child_nodes, node);
+		g_ptr_array_add (root->child_nodes, crank_types_node_ref (node));
 	}
 }
 
@@ -406,7 +409,7 @@ crank_types_root_remove (	CrankTypesRoot*	root,
 	is_node_root = (node->parent_nodes->len == 0);
 	
 	crank_types_node_ref (node);
-	
+				
 	// 먼저 하위 노드로부터 연결을 끊습니다.
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, subnode)
 		g_ptr_array_remove (subnode->parent_nodes, node);
@@ -427,6 +430,7 @@ crank_types_root_remove (	CrankTypesRoot*	root,
 		}
 	CRANK_FOREACH_G_PTR_ARRAY_END
 	
+			
 	if (! is_node_root) {
 		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->parent_nodes, CrankTypesNode*, pnode)
 			g_ptr_array_remove (pnode->child_nodes, node);
@@ -435,8 +439,6 @@ crank_types_root_remove (	CrankTypesRoot*	root,
 	else {
 		g_ptr_array_remove (root->child_nodes, node);
 	}
-	
-	crank_types_node_unref (node);
 }
 
 /**
@@ -512,6 +514,10 @@ void
 crank_types_graph_unref (CrankTypesGraph*	graph)
 {
 	if (g_atomic_int_dec_and_test (& (graph->_refc)) ) {
+		CRANK_FOREACH_ARRAY_BEGIN (graph->roots, CrankTypesRoot*, root, graph->nroots)
+			if (root != NULL) crank_types_root_free (root);
+		CRANK_FOREACH_ARRAY_END
+	
 		g_free (graph->roots);
 		g_free (graph);
 	}
@@ -544,6 +550,9 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 				
 		crank_types_root_add (root, node);
 	}
+	
+	if (G_IS_VALUE (&node->value)) g_value_unset (&node->value);
+	
 	g_value_init (&node->value, G_VALUE_TYPE(value));
 	g_value_copy(value, &node->value);
 }
@@ -553,12 +562,13 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 값을 얻고자 하는 키입니다.
  * @key_length: 값을 얻고자 하는 키의 길이입니다.
- * @value: 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
+ * @value: (inout): 값이 저장되는 곳입니다.
+ *    해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
  * 타입 그래프에서 주어진 키에 정확하게 맞는 값을 얻어옵니다. 만일 is-a 관계로
  * 조회해야 할 경우, crank_types_graph_lookup()으로 조회해야 합니다.
  *
- * Returns: (skip): 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
  */
 gboolean
 crank_types_graph_get ( CrankTypesGraph*	graph,
@@ -573,10 +583,12 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 	
 	node = crank_types_root_get (root, key, key_length);
 	
-	if (node == NULL) return FALSE;
 	
-	g_value_copy(&node->value, value);
-	return TRUE;
+	if (node != NULL) {
+		if (G_IS_VALUE (&node->value)) g_value_copy(&node->value, value);
+		return TRUE;
+	}
+	return FALSE;
 }
 
 /**
@@ -609,7 +621,7 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 조회하고자 하는 키입니다.
  * @key_length: 조회하고자 하는 키의 길이입니다.
- * @value: 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
+ * @value: (inout): 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
  * 타입 그래프에서 키에 해당하는 값을 얻습니다. 키가 정확히 같지 않더라도, 다음
  * 기준을 만족한다면, 해당 값을 얻게 됩니다.
