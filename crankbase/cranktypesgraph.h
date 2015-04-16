@@ -72,13 +72,26 @@ const GType*		crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 gboolean			crank_types_graph_lookup_full (	CrankTypesGraph*	self,
 													const GType*		key,
 													const guint			key_length,
-													const GType**		key_orig,
+													GType**				key_orig,
 													GValue*				value	);
 
 gboolean			crank_types_graph_remove (		CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length	);
 
+
+const GType*		crank_types_graph_gir_lookup_types (CrankTypesGraph*	graph,
+													const GType*		key,
+													const guint			key_length,
+													guint*				ret_length	);
+
+gboolean			crank_types_graph_gir_lookup_full (	CrankTypesGraph*	self,
+													const GType*		key,
+													const guint			key_length,
+													GType**		key_orig,
+													guint*				ret_length,
+													GValue*				value	);
+													
 
 G_END_DECLS
 

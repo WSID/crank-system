@@ -562,7 +562,7 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 값을 얻고자 하는 키입니다.
  * @key_length: 값을 얻고자 하는 키의 길이입니다.
- * @value: (inout): 값이 저장되는 곳입니다.
+ * @value: 값이 저장되는 곳입니다.
  *    해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
  * 타입 그래프에서 주어진 키에 정확하게 맞는 값을 얻어옵니다. 만일 is-a 관계로
@@ -585,7 +585,7 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 	
 	
 	if (node != NULL) {
-		if (G_IS_VALUE (&node->value)) g_value_copy(&node->value, value);
+		g_value_copy(&node->value, value);
 		return TRUE;
 	}
 	return FALSE;
@@ -621,7 +621,8 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 조회하고자 하는 키입니다.
  * @key_length: 조회하고자 하는 키의 길이입니다.
- * @value: (inout): 값이 저장되는 곳입니다. 해당 값의 타입으로 초기화 되어 있어야 합니다.
+ * @value: 값이 저장되는 곳입니다.
+ *    해당 값의 타입으로 초기화 되어 있어야 합니다.
  *
  * 타입 그래프에서 키에 해당하는 값을 얻습니다. 키가 정확히 같지 않더라도, 다음
  * 기준을 만족한다면, 해당 값을 얻게 됩니다.
@@ -643,8 +644,10 @@ crank_types_graph_lookup (	CrankTypesGraph*	graph,
 	
 	node = crank_types_root_lookup (root, key, key_length);
 	
-	if (node != NULL) g_value_copy (&node->value, value);
-	
+	if (node != NULL) {
+		g_value_copy(&node->value, value);
+		return TRUE;
+	}
 	return node != NULL;
 }
 
@@ -679,7 +682,7 @@ crank_types_graph_lookup_types (CrankTypesGraph*	graph,
  * @graph: 타입 그래프입니다.
  * @key: (array length=key_length): 조회하고자 하는 키입니다.
  * @key_length: 조회하고자 하는 키의 길이입니다.
- * @key_orig: (out) (array length=key_length): 키의 원래 키입니다.
+ * @key_orig: (out) (array length=key_length) (transfer none): 키의 원래 키입니다.
  * @value: 값입니다.
  *
  * 타입 그래프에서 키에 해당하는 원래 키와 값을 얻습니다.
@@ -690,7 +693,7 @@ gboolean
 crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 								const GType*		key,
 								const guint			key_length,
-								const GType**		key_orig,
+								GType**				key_orig,
 								GValue*				value	)
 {
 	CrankTypesRoot* root;
@@ -741,6 +744,51 @@ crank_types_graph_remove (	CrankTypesGraph*	graph,
 
 
 
+/**
+ * crank_types_graph_gir_lookup_types: (rename-to crank_types_graph_lookup_types)
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @ret_length: @key_length의 값을 복사할 위치입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 원래 키를 얻습니다.
+ *
+ * Returns: (array length=ret_length): 해당 @key에 대응되는 원래 키입니다.
+ */
+const GType*
+crank_types_graph_gir_lookup_types (CrankTypesGraph*	graph,
+									const GType*		key,
+									const guint			key_length,
+									guint*				ret_length	)
+{
+	*ret_length = key_length;
+	return crank_types_graph_lookup_types (graph, key, key_length);
+}
+
+/**
+ * crank_types_graph_gir_lookup_full: (rename-to crank_types_graph_lookup_full)
+ * @graph: 타입 그래프입니다.
+ * @key: (array length=key_length): 조회하고자 하는 키입니다.
+ * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @key_orig: (out) (array length=ret_length) (transfer none): 키의 원래 키입니다.
+ * @ret_length: (out): @key_length의 값이 복사될 위치입니다.
+ * @value: 값입니다.
+ *
+ * 타입 그래프에서 키에 해당하는 원래 키와 값을 얻습니다.
+ *
+ * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ */
+gboolean
+crank_types_graph_gir_lookup_full (	CrankTypesGraph*	graph,
+									const GType*		key,
+									const guint			key_length,
+									GType**				key_orig,
+									guint*				ret_length,
+									GValue*				value		)
+{
+	*ret_length = key_length;
+	return crank_types_graph_lookup_full (graph, key, key_length, key_orig, value);
+}
 
 
 static CrankTypesRoot*
