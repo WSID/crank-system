@@ -6,7 +6,8 @@ include ../glib-tap.mk
 # 대상 목록
 test_programs= \
 		test_func_holder \
-		test_singular
+		test_singular \
+		test_types_graph
 
 # test_func_holder
 test_func_holder_VALAFLAGS= \
@@ -39,3 +40,19 @@ test_singular_LDADD= \
 
 test_singular_SOURCES= \
 		test_singular.vala
+
+
+test_types_graph_VALAFLAGS= \
+		--pkg=crank-base-0.0 \
+		--vapidir=$(top_builddir)/crankbase
+
+test_types_graph_CFLAGS= \
+		$(CRANK_BASE_CFLAGS) \
+		-I $(top_srcdir)/crankbase
+
+test_types_graph_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_types_graph_SOURCES= \
+		test_types_graph.vala
