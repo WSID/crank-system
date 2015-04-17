@@ -95,7 +95,78 @@ TEST_DEFINE_TEST_TYPE(TestE, test_e, TEST, E, TestA, TEST_TYPE_A);
 #define TEST_TYPE_X	(test_x_get_type ())
 TEST_DEFINE_TEST_TYPE(TestX, test_x, TEST, X, GObject, G_TYPE_OBJECT);
 
+//////// Type for Test Subject datas ///////////////////////////////////////////
 
+typedef struct _TestBoxed {
+	gint		dummy;
+} TestBoxed;
+
+G_GNUC_MALLOC static TestBoxed*
+test_boxed_new (void)
+{
+	return g_new0 (TestBoxed, 1);
+}
+
+G_GNUC_MALLOC static TestBoxed*
+test_boxed_copy (TestBoxed* boxed)
+{
+	TestBoxed* copy = g_new (TestBoxed, 1);
+	
+	copy->dummy = boxed->dummy;
+	
+	return copy;
+}
+
+#define TEST_TYPE_BOXED (test_boxed_get_type ())
+G_DEFINE_BOXED_TYPE (TestBoxed, test_boxed, test_boxed_copy, g_free)
+
+
+
+typedef enum _TestEnum {
+	TEST_ENUM_A,
+	TEST_ENUM_B
+} TestEnum;
+
+static const struct GEnumValue _test_enum_values = {
+	{TEST_ENUM_A, "A", "test a"},
+	{TEST_ENUM_B, "B", "test b"},
+	{NULL, NULL, NULL}
+}
+
+#define TEST_TYPE_ENUM (test_enum_get_type ())
+volatile GType test_enum_get_type ()
+{
+	static GType	type = 0;
+	
+	if (G_UNLIKELY (type == 0))
+		type = g_enum_register_static ("TestEnum", _test_enum_values);
+	
+	return type;
+}
+
+
+
+typedef enum _TestFlags {
+	TEST_FLAGS_A = 1 << 0,
+	TEST_FLAGS_B = 1 << 1
+} TestFlags;
+
+static const struct GFlagsValue _test_flags_values = {
+	{TEST_FLAGS_A, "A", "test a"},
+	{TEST_FLAGS_B, "B", "test b"},
+	{NULL, NULL, NULL}
+}
+
+#define TEST_TYPE_FLAGS (test_flags_get_type ())
+volatile GType test_flags_get_type ()
+{
+	static GType	type = 0;
+	
+	if (G_UNLIKELY (type == 0))
+		type = g_flags_register_static ("TestFlags", _test_flags_values);
+	
+	return type;
+}
 //////// Test Cases ////////////////////////////////////////////////////////////
 
 typedef void	(*TestTypeGraphFunc) (	CrankTypesGraph**	fixture,
@@ -134,6 +205,7 @@ void	test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 void	test_types_graph_remove (	CrankTypesGraph**	fixture,
 									gconstpointer		userdata	);
 
+void	test_types_graph_getset_types (void);
 
 gint
 main (gint   argc,
@@ -613,4 +685,127 @@ test_types_graph_remove (	CrankTypesGraph**	fixture,
 	g_assert_false (crank_types_graph_remove (graph, key2_ax, 2));
 	g_assert_false (crank_types_graph_remove (graph, key2_xa, 2));
 	
+}
+
+void
+test_types_graph_getset_types (void)
+{
+	CrankTypesGraph* graph = crank_types_graph_new ();
+	
+	GType	type_boolean =	G_TYPE_BOOLEAN;
+	GType	type_schar =	G_TYPE_CHAR;
+	GType	type_uchar =	G_TYPE_UCHAR;
+	GType	type_int =		G_TYPE_INT;
+	GType	type_long =		G_TYPE_LONG;
+	GType	type_int64 =	G_TYPE_INT64;
+	GType	type_uint =		G_TYPE_UINT;
+	GType	type_ulong =	G_TYPE_ULONG;
+	GType	type_uint64 =	G_TYPE_UINT64;
+	GType	type_enum =		G_TYPE_ENUM;
+	GType	type_flags =	G_TYPE_FLAGS;
+	GType	type_float =	G_TYPE_FLOAT;
+	GType	type_double=	G_TYPE_DOUBLE;
+	GType	type_gtype =	G_TYPE_GTYPE;
+	GType	type_string =	G_TYPE_STRING;
+	GType	type_boxed =	G_TYPE_BOXED;
+	GType	type_object =	G_TYPE_OBJECT;
+	GType	type_param =	G_TYPE_PARAM;
+	GType	type_pointer =	G_TYPE_POINTER;
+	GType	type_variant =	G_TYPE_VARIANT;
+	
+	
+	TestBoxed*			boxed = test_boxed_new ();
+	GObject*			object = g_object_new (G_TYPE_OBJECT, NULL);
+	GObject*			instance = g_object_new (G_TYPE_OBJECT, NULL);
+	
+	GParamSpec*			param_spec = g_param_spec_int ("int-spec", "Integer Spec",
+			"An integer GParamSpec",
+			0, 128, 64,
+			G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+	
+	GVariant*			variant = g_variant_new_boolean (TRUE);
+	
+	boxed->dummy = 32;
+	
+	
+	
+	crank_types_graph_set_boolean (graph, &type_boolean, 1, TRUE);
+	
+	crank_types_graph_set_schar (graph, &type_schar, 1, 'U');
+	
+	crank_types_graph_set_uchar (graph, &type_uchar, 1, 'I');
+	
+	// 전 우주 모든것의 숫자적 표현 값 ["은하를 여행하는 히치하이커를 위한 가이드"]
+	crank_types_graph_set_int (graph, &type_int, 1, 42);
+	
+	// 완전수
+	crank_types_graph_set_long (graph, &type_long, 1, 33550336);
+	
+	// 메르센 소수 M(61) - int64/uint64 만큼 큰 범위에서만 표현 가능
+	crank_types_graph_set_int64 (graph, &type_int64, 1, 2305843009213693951);
+	
+	// 25번째 피보나치 수
+	crank_types_graph_set_uint (graph, &type_uint, 1, 75025);
+	
+	crank_types_graph_set_ulong (graph, &type_ulong, 1, 142592);
+	
+	// 20! (20의 팩토리얼 = 1 * 2 * 3... * 19 * 20)
+	crank_types_graph_set_uint64 (graph, &type_uint64, 1, 2432902008176640000);
+	
+	// 원주율 (소수점 5자리까지)
+	crank_types_graph_set_float (graph, &type_float, 1, 3.14159f);
+	
+	// 자연상수 e (소수점 10자리까지)
+	crank_types_graph_set_double (graph, &type_double, 1, 2.7182818284);
+	
+	crank_types_graph_set_type (graph, &type_gtype, 1, G_TYPE_GTYPE);
+	
+	crank_types_graph_set_enum (graph, &type_enum, 1, TEST_ENUM_B);
+	
+	crank_types_graph_set_flags (graph, &type_flags, 1, TEST_FLAGS_A | TEST_FLAGS_B);
+	
+	// 영화 Jerry Maguire [1996년]에 나온 명대사
+	crank_types_graph_set_string (graph, &type_string, 1, "Show me the money");
+	
+	crank_types_graph_set_boxed (graph, &type_boxed, 1, boxed);
+	
+	crank_types_graph_set_param (graph, &type_param, 1, param_spec);
+	
+	crank_types_graph_set_object (graph, &type_object, 1, object);
+	
+	crank_types_graph_set_instance (graph, type_instance, 2, instance);
+	
+	crank_types_graph_set_pointer (graph, &type_pointer, 1, &type_boolean);
+	
+	crank_types_graph_set_variant (graph, &type_variant, 1, variant);
+	
+	
+	g_assert (crank_types_graph_get_boolean (graph, &type_boolean, 1) == TRUE);
+	g_assert_cmpint (crank_types_graph_get_schar (graph, &type_boolean, 1), ==, 'U');
+	g_assert_cmpuint (crank_types_graph_get_uchar (graph, &type_boolean, 1), ==, 'I');
+	g_assert_cmpint (crank_types_graph_get_int (graph, &type_boolean, 1), ==, 42);
+	g_assert_cmpint (crank_types_graph_get_long (graph, &type_boolean, 1), ==, 33550336);
+	g_assert_cmpint (crank_types_graph_get_int64 (graph, &type_boolean, 1), ==, 2305843009213693951);
+	g_assert_cmpuint (crank_types_graph_get_uint (graph, &type_boolean, 1), ==, 75025);
+	g_assert_cmpuint (crank_types_graph_get_ulong (graph, &type_boolean, 1), ==, 142592);
+	g_assert_cmpuint (crank_types_graph_get_uint64 (graph, &type_boolean, 1), ==, 2432902008176640000);
+	g_assert_cmpfloat (crank_types_graph_get_float (graph, &type_boolean, 1), ==, 3.14159f);
+	g_assert_cmpfloat (crank_types_graph_get_double (graph, &type_double, 1), ==, 2.7182818284);
+	g_assert (crank_types_graph_get_type (graph, &type_double, 1) == G_TYPE_GTYPE);
+	g_assert_cmphex (crank_types_graph_get_enum (graph, &type_double, 1), ==, TEST_ENUM_B);
+	g_assert_cmphex (crank_types_graph_get_flags (graph, &type_double, 1), ==, (TEST_FLAGS_A | TEST_FLAGS_B));
+	g_assert_cmpstr (crank_types_graph_get_string (graph, &type_double, 1), ==, "Show me the money");
+	g_assert_cmpint (crank_types_graph_get_boxed (graph, &type_double, 1).dummy, ==, 32);
+	g_assert_cmphex (crank_types_graph_get_param (graph, &type_double, 1), ==, param_spec);
+	g_assert_cmphex (crank_types_graph_get_object (graph, &type_double, 1), ==, object);
+	g_assert_cmphex (crank_types_graph_get_pointer (graph, &type_double, 1), ==, &type_boolean );
+	g_assert (g_variant_get_boolean (crank_types_graph_get_variant (graph, &type_double, 1)) == TRUE);
+	
+	crank_types_graph_unref (graph);
+	
+	g_variant_unref (variant);
+	g_param_spec_unref (param_spec);
+	g_object_unref (instance);
+	g_object_unref (object);
+	g_free (boxed);
 }
