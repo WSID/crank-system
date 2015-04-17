@@ -790,6 +790,128 @@ crank_types_graph_gir_lookup_full (	CrankTypesGraph*	graph,
 	return crank_types_graph_lookup_full (graph, key, key_length, key_orig, value);
 }
 
+/**
+ * crank_types_graph_get_key_lengths:
+ * @graph: 타입 그래프입니다.
+ *
+ * 타입 그래프에서 키의 길이들을 모두 구합니다.
+ *
+ * 예를 들면, ([int], [float], [int, float])에 대해서 1과 2를 반환합니다.
+ *
+ * Returns: (element-type gint) (transfer container): 키의 길이들입니다.
+ */
+GList*
+crank_types_graph_get_key_lengths ( CrankTypesGraph*	graph )
+{
+	GList*	lengths = NULL;
+	gint	i;
+	
+	for (i = 0; i < graph->nroots; i++) {
+		if (graph->roots[i] != NULL) lengths = g_list_append (lengths, GINT_TO_POINTER(i));
+	}
+	return lengths;
+}
+
+
+/**
+ * crank_types_graph_get_keys_by_length: (skip):
+ * @graph: 타입 그래프입니다.
+ * @length: 키들의 길이입니다.
+ *
+ * 타입 그래프에서 주어진 길이에 해당하는 키들을 모두 구합니다.
+ *
+ * Returns: (element-type GType*) (transfer container): 키들입니다.
+ */
+GList*
+crank_types_graph_get_keys_by_length (	CrankTypesGraph*	graph,
+										const guint			length	)
+{
+	GList*	keys = NULL;
+	GQueue*		queue;
+	GHashTable*	set;
+	CrankTypesRoot*	root;
+	
+	queue = g_queue_new ();
+	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	
+	if (graph->nroots <= length) return NULL;
+	
+	root = graph->roots[length];
+	if (root == NULL) return NULL;
+	
+	// broad-first iteration을 수행합니다.
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (root->child_nodes, CrankTypesNode*, node)
+		g_queue_push_tail (queue, node);
+		g_hash_table_add (set, node);
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	while (! g_queue_is_empty (queue)) {
+		CrankTypesNode* node = (CrankTypesNode*) g_queue_pop_head (queue);
+		
+		keys = g_list_append (keys, node->types);
+		
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, child)
+			if (! g_hash_table_contains (set, child)) {
+				g_queue_push_tail (queue, child);
+				g_hash_table_add (set, child);
+			}
+		CRANK_FOREACH_G_PTR_ARRAY_END
+	}
+	
+	return keys;
+}
+
+
+
+/**
+ * crank_types_graph_get_values_by_length:
+ * @graph: 타입 그래프입니다.
+ * @length: 키들의 길이입니다.
+ *
+ * 타입 그래프에서 주어진 길이에 해당하는 키에 대응하는 값들을 모두 구합니다.
+ *
+ * Returns: (element-type GValue) (transfer container): 값들입니다.
+ */
+GList*
+crank_types_graph_get_values_by_length (	CrankTypesGraph*	graph,
+											const guint			length	)
+{
+	GList*	values = NULL;
+	GQueue*		queue;
+	GHashTable*	set;
+	CrankTypesRoot*	root;
+	
+	queue = g_queue_new ();
+	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	
+	if (graph->nroots <= length) return NULL;
+	
+	root = graph->roots[length];
+	if (root == NULL) return NULL;
+	
+	// broad-first iteration을 수행합니다.
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (root->child_nodes, CrankTypesNode*, node)
+		g_queue_push_tail (queue, node);
+		g_hash_table_add (set, node);
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	while (! g_queue_is_empty (queue)) {
+		CrankTypesNode* node = (CrankTypesNode*) g_queue_pop_head (queue);
+		
+		values = g_list_append (values, &node->value);
+		
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, child)
+			if (! g_hash_table_contains (set, child)) {
+				g_queue_push_tail (queue, child);
+				g_hash_table_add (set, child);
+			}
+		CRANK_FOREACH_G_PTR_ARRAY_END
+	}
+	
+	return values;
+}
 
 static CrankTypesRoot*
 _crank_types_graph_get_root (	CrankTypesGraph*	graph,

@@ -112,27 +112,36 @@ void	test_add_types_graph (		const gchar*		test_path,
 
 
 
-void	test_types_graph_setup (	CrankTypesGraph**	graph_ptr,
-                                	gconstpointer		userdata	);
-void	test_types_graph_teardown (	CrankTypesGraph**	graph_ptr,
-                                   	gconstpointer		userdata	);
+void	test_types_graph_setup (		CrankTypesGraph**	graph_ptr,
+                                		gconstpointer		userdata	);
+void	test_types_graph_teardown (		CrankTypesGraph**	graph_ptr,
+                                 	  	gconstpointer		userdata	);
 
 
 void	test_types_graph_new (void);
 
-void	test_types_graph_get (		CrankTypesGraph**	fixture,
-                              		gconstpointer	userdata	);
-void	test_types_graph_has (		CrankTypesGraph**	fixture,
-									gconstpointer		userdata	);
+void	test_types_graph_get (			CrankTypesGraph**	fixture,
+                              			gconstpointer	userdata	);
+void	test_types_graph_has (			CrankTypesGraph**	fixture,
+										gconstpointer		userdata	);
 									
-void	test_types_graph_lookup (	CrankTypesGraph**	fixture,
-									gconstpointer		userdata	);
+void	test_types_graph_lookup (		CrankTypesGraph**	fixture,
+										gconstpointer		userdata	);
 void	test_types_graph_lookup_types (	CrankTypesGraph**	fixture,
 										gconstpointer		userdata	);
 void	test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 										gconstpointer		userdata	);
-void	test_types_graph_remove (	CrankTypesGraph**	fixture,
-									gconstpointer		userdata	);
+void	test_types_graph_remove (		CrankTypesGraph**	fixture,
+										gconstpointer		userdata	);
+
+void	test_types_graph_get_key_lengths (	CrankTypesGraph**	fixture,
+											gconstpointer		userdata	);
+											
+void	test_types_graph_get_keys (		CrankTypesGraph**	fixture,
+										gconstpointer		userdata	);
+
+void	test_types_graph_get_values (	CrankTypesGraph**	fixture,
+										gconstpointer		userdata	);
 
 
 gint
@@ -160,6 +169,14 @@ main (gint   argc,
 	test_add_types_graph ("/wsid/crank/base/types_graph/remove",
 			NULL,	test_types_graph_remove);
 
+	test_add_types_graph ("/wsid/crank/base/types_graph/get_key_lengths",
+			NULL,	test_types_graph_get_key_lengths);
+			
+	test_add_types_graph ("/wsid/crank/base/types_graph/get_keys",
+			NULL,	test_types_graph_get_keys);
+			
+	test_add_types_graph ("/wsid/crank/base/types_graph/get_values",
+			NULL,	test_types_graph_get_values);
 	g_test_run ();
 
 	return 0;
@@ -613,4 +630,83 @@ test_types_graph_remove (	CrankTypesGraph**	fixture,
 	g_assert_false (crank_types_graph_remove (graph, key2_ax, 2));
 	g_assert_false (crank_types_graph_remove (graph, key2_xa, 2));
 	
+}
+
+gint
+test_cmp_key1 (gconstpointer a, gconstpointer b)
+{
+	return CRANK_ARRAY_CMP (a, b, GType, 1);
+}
+
+gint
+test_cmp_key2 (gconstpointer a, gconstpointer b)
+{
+	return CRANK_ARRAY_CMP (a, b, GType, 2);
+}
+
+void
+test_types_graph_get_key_lengths (	CrankTypesGraph**	fixture,
+									gconstpointer		userdata	)
+{
+	CrankTypesGraph* graph = * (CrankTypesGraph**) fixture;
+	
+	GList*	key_lengths = crank_types_graph_get_key_lengths (graph);
+	
+	g_assert_cmpint (g_list_length (key_lengths), ==, 2);
+	g_assert_nonnull (g_list_find (key_lengths, GINT_TO_POINTER(1)));
+	g_assert_nonnull (g_list_find (key_lengths, GINT_TO_POINTER(2)));
+}
+
+void
+test_types_graph_get_keys (	CrankTypesGraph**	fixture,
+							gconstpointer		userdata	)
+{
+	CrankTypesGraph* graph = * (CrankTypesGraph**) fixture;
+	
+	GList*	keys_1 = crank_types_graph_get_keys_by_length (graph, 1);
+	GList*	keys_2 = crank_types_graph_get_keys_by_length (graph, 2);
+
+	g_assert_cmpint (g_list_length (keys_1), ==, 3);
+	g_assert_nonnull (g_list_find_custom (keys_1, key1_a, test_cmp_key1));
+	g_assert_nonnull (g_list_find_custom (keys_1, key1_d, test_cmp_key1));
+	g_assert_nonnull (g_list_find_custom (keys_1, key1_e, test_cmp_key1));
+	
+	
+	g_assert_cmpint (g_list_length (keys_2), ==, 5);
+	g_assert_nonnull (g_list_find_custom (keys_2, key2_aa, test_cmp_key2));
+	g_assert_nonnull (g_list_find_custom (keys_2, key2_ad, test_cmp_key2));
+	g_assert_nonnull (g_list_find_custom (keys_2, key2_ae, test_cmp_key2));
+	g_assert_nonnull (g_list_find_custom (keys_2, key2_ea, test_cmp_key2));
+	g_assert_nonnull (g_list_find_custom (keys_2, key2_ed, test_cmp_key2));
+	
+	g_list_free (keys_1);
+	g_list_free (keys_2);
+}
+
+gint
+test_cmp_value_str (gconstpointer a, gconstpointer b)
+{
+	return g_strcmp0 (g_value_get_string((GValue*)a), (gchar*)b);
+}
+
+void
+test_types_graph_get_values (	CrankTypesGraph**	fixture,
+								gconstpointer		userdata	)
+{
+	CrankTypesGraph* graph = * (CrankTypesGraph**) fixture;
+	
+	GList* values_1 = crank_types_graph_get_values_by_length (graph, 1);
+	GList* values_2 = crank_types_graph_get_values_by_length (graph, 2);
+	
+	g_assert_cmpint (g_list_length (values_1), ==, 3);
+	g_assert_nonnull (g_list_find_custom (values_1, "value for A", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_1, "value for D", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_1, "value for E", test_cmp_value_str));
+	
+	g_assert_cmpint (g_list_length (values_2), ==, 5);
+	g_assert_nonnull (g_list_find_custom (values_2, "value for AA", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_2, "value for AD", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_2, "value for AD", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_2, "value for EA", test_cmp_value_str));
+	g_assert_nonnull (g_list_find_custom (values_2, "value for ED", test_cmp_value_str));
 }

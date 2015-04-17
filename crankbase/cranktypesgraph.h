@@ -91,7 +91,14 @@ gboolean			crank_types_graph_gir_lookup_full (	CrankTypesGraph*	self,
 													GType**		key_orig,
 													guint*				ret_length,
 													GValue*				value	);
-													
+
+GList*				crank_types_graph_get_key_lengths (	CrankTypesGraph*	self );
+
+GList*				crank_types_graph_get_keys_by_length (	CrankTypesGraph*	self,
+													const guint			length		);
+
+GList*				crank_types_graph_get_values_by_length ( CrankTypesGraph*	self,
+													const guint			length		);
 
 G_END_DECLS
 
