@@ -54,32 +54,33 @@ CrankFuncType*  crank_func_type_new_with_types (
         const GType* param_types,
         const guint nparam_types);
 
-CrankFuncType*  crank_func_type_ref (CrankFuncType* ftype);
-void			crank_func_type_unref (CrankFuncType* ftype);
+CrankFuncType*  crank_func_type_ref (				CrankFuncType*			ftype);
+void			crank_func_type_unref (				CrankFuncType*			ftype);
 
-guint			crank_func_type_hash (gconstpointer v);
-gboolean		crank_func_type_equal (gconstpointer a, gconstpointer b);
-gchar*			crank_func_type_to_string (const CrankFuncType* ftype);
+guint			crank_func_type_hash (				gconstpointer			v);
+gboolean		crank_func_type_equal (				gconstpointer			a,
+								 					gconstpointer			b);
+gchar*			crank_func_type_to_string (			const CrankFuncType*	ftype);
 
 
-GType			crank_func_type_get_return_type (const CrankFuncType* ftype);
-GType			crank_func_type_get_param_type (const CrankFuncType* ftype,
-    											const guint index);
-guint			crank_func_type_get_nparam_types (const CrankFuncType* ftype);
-GType*			crank_func_type_get_param_types (const CrankFuncType* ftype,
-    											guint* length);
+GType			crank_func_type_get_return_type (	const CrankFuncType*	ftype);
+GType			crank_func_type_get_param_type (	const CrankFuncType*	ftype,
+    												const guint 			index);
+guint			crank_func_type_get_nparam_types (	const CrankFuncType*	ftype);
+GType*			crank_func_type_get_param_types (	const CrankFuncType*	ftype,
+    												guint*					length);
 
-gboolean		crank_func_type_compatible_to  (const CrankFuncType* from,
-    											const CrankFuncType* to);
+gboolean		crank_func_type_compatible_to  (	const CrankFuncType*	from,
+    												const CrankFuncType*	to);
 
 
 gboolean		crank_func_type_arg_match_exactually (	const CrankFuncType* ftype,
 														const GType*		 args,
 														const uint			 arg_length	);
 
-gboolean		crank_func_type_arg_match (	const CrankFuncType* ftype,
-											const GType*		 args,
-											const guint			 arg_length	);
+gboolean		crank_func_type_arg_match (			const CrankFuncType* 	ftype,
+													const GType*		 	args,
+													const guint			 	arg_length	);
 
 gboolean		crank_func_type_arg_match_transformable (	const CrankFuncType* ftype,
 															const GType*		 args,
@@ -92,8 +93,13 @@ struct _CrankFuncHolder;
 typedef struct _CrankFuncHolder CrankFuncHolder;
 
 
-//G_GNUC_MALLOC
-//CrankFuncHolder*  crank_func_holder_new ();
+G_GNUC_MALLOC
+CrankFuncHolder*	crank_func_holder_new (			const gchar*	name	);
+
+G_GNUC_MALLOC
+CrankFuncHolder*	crank_func_holder_new_quark (	const GQuark	name	);
+
+
 
 
 
@@ -102,6 +108,11 @@ typedef struct _CrankFuncHolder CrankFuncHolder;
 //                                         uint   ntypes);
 
 //gboolean  crank_func_closure_check (GValue *values, uint nvalues);
+
+
+
+struct _CrankFuncBook;
+typedef struct _CrankFuncBook CrankFuncBook;
 
 G_END_DECLS
 

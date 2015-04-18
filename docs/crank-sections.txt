@@ -47,7 +47,13 @@ crank_types_graph_lookup
 crank_types_graph_lookup_types
 crank_types_graph_lookup_full
 crank_types_graph_remove
+crank_types_graph_get_key_lengths
+crank_types_graph_get_keys_by_length
+crank_types_graph_get_values_by_length
 CrankTypesGraph
+<SUBSECTION>
+crank_types_graph_gir_lookup_types
+crank_types_graph_gir_lookup_full
 <SUBSECTION Standard>
 CRANK_TYPE_TYPES_GRAPH
 crank_types_graph_get_type
@@ -80,6 +86,11 @@ crank_func_type_arg_match
 crank_func_type_arg_match_transformable
 <SUBSECTION>
 CrankFuncHolder
+<SUBSECTION>
+crank_func_holder_new
+crank_func_holder_new_quark
+<SUBSECTION>
+CrankFuncBook
 <SUBSECTION Standard>
 CRANK_TYPE_FUNC_TYPE
 crank_func_type_get_type

@@ -34,23 +34,6 @@ typedef struct _CrankSingularClass			CrankSingularClass;
 typedef struct _CrankSingularClassPrivate	CrankSingularClassPrivate;
 
 
-/**
- * CrankSingular:
- *
- * 이 구조체는 어떠한 추가적인 정보도 포함하고 있지 않습니다.
- *
- * 이 클래스가 제공하는 기능의 특성상, 클래스 구조체에서 대부분의 기능을
- * 제공합니다.
- */
-
-/**
- * CrankSingularClass:
- * @first_construct: 객체가 생성될때 사용됩니다. 이미 객체가 존재할 경우
- * 호출되지 않습니다.
- *
- * 이 구조체는 클래스 구조체입니다.
- *
- */
 struct _CrankSingularClass {
 	/*< private >*/
 	GObjectClass				parent_class;

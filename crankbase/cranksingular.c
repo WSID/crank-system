@@ -51,22 +51,22 @@
  *
  * <example>
  *   <title>Python에서 first_construct 오버라이드</title>
- *   <programlisting language="python">
+ *   |[<!-- language="python" -->
  *		class SomeSingular (CrankBase.Singular):
  *			def do_first_construct (self):
  *				# 여기서 작업을 수행하면 됩니다.
  *				pass
- *    </programlisting>
+ *   ]|
  * </example>
  * <example>
  *   <title>Vala에서 first_construct 오버라이드</title>
- *   <programlisting language="Vala">
+ *   |[<!-- language="vala" -->
  *		public class SomeSingular: Crank.Singular {
  *			public override void first_construct() {
  *				// 여기서 작업을 수행하면 됩니다.
  *			}
  *		}
- *   </programlisting>
+ *   ]|
  * </example>
  * # 스레드 안전성
  *
@@ -105,6 +105,23 @@
  * 좋습니다.
  */
 
+/**
+ * CrankSingular:
+ *
+ * 이 구조체는 어떠한 추가적인 정보도 포함하고 있지 않습니다.
+ *
+ * 이 클래스가 제공하는 기능의 특성상, 클래스 구조체에서 대부분의 기능을
+ * 제공합니다.
+ */
+
+/**
+ * CrankSingularClass:
+ * @first_construct: 객체가 생성될때 사용됩니다. 이미 객체가 존재할 경우
+ * 호출되지 않습니다.
+ *
+ * 이 구조체는 클래스 구조체입니다.
+ *
+ */
 
 //////// 내부 선언부 ///////////////////////////////////////////////////////////
 
@@ -291,7 +308,7 @@ crank_singular_has (	GType	type	)
 {
 	CrankSingularClass*		c;
 	
-	g_return_val_if_fail ( g_type_is_a (type, CRANK_TYPE_SINGULAR), NULL);
+	g_return_val_if_fail ( g_type_is_a (type, CRANK_TYPE_SINGULAR), FALSE);
 	
 	c = (CrankSingularClass*) g_type_class_peek (type);
 	
@@ -308,7 +325,7 @@ crank_singular_has (	GType	type	)
  * 자동으로 생성해야 하는 경우 g_object_new()를 사용해야 합니다. g_object_new()
  * 는 #CrankSingular가 존재하는 경우 해당 객체를 반환합니다.
  *
- * Returns: (allow-none) (transfer full): 해당 타입의 인스턴스이거나, 없으면 NULL
+ * Returns: (nullable) (transfer full): 해당 타입의 인스턴스이거나, 없으면 %NULL
  */
 CrankSingular*
 crank_singular_get (	GType	type	)
@@ -330,7 +347,7 @@ crank_singular_get (	GType	type	)
  * 이미 생성된 #CrankSingular를 얻습니다. crank_singular_get()와 다른 것은
  * 참조를 가져오지 않는 것입니다.
  *
- * Returns: (allow-none) (transfer none): 해당 타입의 인스턴스이거나, 없으면 NULL
+ * Returns: (nullable) (transfer none): 해당 타입의 인스턴스이거나, 없으면 %NULL
  */
 CrankSingular*
 crank_singular_peek (	GType	type	)

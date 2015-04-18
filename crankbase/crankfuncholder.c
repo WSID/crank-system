@@ -23,14 +23,20 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "cranktypesgraph.h"
 #include "crankfuncholder.h"
 
 /**
  * SECTION: crankfuncholder
- * @short_description: 함수와 타입을 저장하는 자료 구조
+ * @short_description: 함수를 타입에 따라 저장합니다.
  * @title: CrankFuncHolder
  * @stability: Unstable
  * @include: crankbase.h
+ *
+ * #CrankFuncHolder는 함수들을 보관하고 형에 따른 호출을 돕는 역할을 하며,
+ * #CrankFuncBook은 #CrankFuncHolder들을 이름에 따라 모으는 역할을 수행합니다.
+ *
+ * 자세한 셜멍은 해당 구조체에 대한 설명을 보기 바랍니다.
  */
 
 
@@ -230,7 +236,7 @@ crank_func_type_hash (gconstpointer v)
 	for (i = 0; i < ftype->nparam_types; i++) 
 		hash += g_direct_hash ((gconstpointer) ftype->param_types[i]);
 
-	hash += g_direct_hash ((gconstpointer) ftype->nparam_types);
+	hash += g_direct_hash (GINT_TO_POINTER(ftype->nparam_types));
 	return hash;
 }
 
@@ -501,18 +507,159 @@ _transform_crank_func_type_string (	const GValue* value_ftype,
 
 
 
+void		crank_func_holder_finalize (			gpointer		userdata,
+													GClosure*		closure		);
 
+GType		crank_func_holder_get_actual_type (	const GValue*	value);
 
+void		crank_func_holder_marshal (			GClosure*		closure,
+													GValue*			return_value,
+													guint			n_param_values,
+													const GValue*	param_values,
+													gpointer		invocation_hint,
+													gpointer		marshal_data	);
 
 /**
  * CrankFuncHolder:
  * 
- * 함수와 인자의 형을 모두 저장하는 홀더입니다.
+ * 이 구조체는 여러개의 함수들을 #GClosure의 형태로서 보관하고 있으며, 인자 형에
+ * 맞는 함수를 얻거나, 호출하기도 합니다.
  *
- * 일반적으로 프로그램에서 쓰이지 않고, Crank System에서 내부적으로 사용합니다.
+ * g_closure_invoke()를 이 구조체를 사용하는 경우, 인자의 각 type에 따라, 해당되는
+ * #GClosure로 인자들이 전달됩니다.
  */
 struct _CrankFuncHolder {
-	GClosure parent_instance;
+	GClosure 			parent_instance;
 	
-	// TODO: GClosure 그래프 : 타입에 해당하는 GClusure를 저장하고 조회해야 합니다.
+	GQuark				name;
+
+	CrankTypesGraph*	types_graph;
+};
+
+/**
+ * crank_func_holder_new:
+ * @name: Holder의 이름입니다.
+ *
+ * 주어진 이름으로 #CrankFuncHolder를 생성합니다.
+ * 이 이름은 #CrankFuncBook에서 사용됩니다.
+ *
+ * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
+ */
+G_GNUC_MALLOC CrankFuncHolder*
+crank_func_holder_new (	const gchar*	name	)
+{
+	GQuark qname = g_quark_from_string (name);
+
+	return crank_func_holder_new_quark (qname);
+}
+
+
+/**
+ * crank_func_holder_new_quark:
+ * @name: Holder의 이름입니다.
+ *
+ * 주어진 이름으로 #CrankFuncHolder를 생성합니다.
+ * 이 이름은 #CrankFuncBook에서 사용됩니다.
+ *
+ * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
+ */
+G_GNUC_MALLOC CrankFuncHolder*
+crank_func_holder_new_quark (	const GQuark	name	)
+{
+	GClosure*			holder_g_closure =
+		g_closure_new_simple (sizeof (CrankFuncHolder), NULL);
+
+	CrankFuncHolder* 	holder =
+		(CrankFuncHolder*) holder_g_closure;
+
+	holder->name = name;
+	holder->types_graph = crank_types_graph_new ();
+
+	g_closure_add_finalize_notifier (holder_g_closure, NULL,
+			crank_func_holder_finalize);
+
+	g_closure_set_marshal (holder_g_closure, crank_func_holder_marshal);
+	return holder;
+}
+
+
+
+void
+crank_func_holder_finalize (	gpointer	data,
+								GClosure*	closure	)
+{
+	CrankFuncHolder*	holder = (CrankFuncHolder*) closure;
+	crank_types_graph_unref (holder->types_graph);
+}
+
+GType
+crank_func_holder_get_actual_type (const GValue*		value)
+{
+	GType value_type;
+	GType actual_type;
+
+	value_type = G_VALUE_TYPE(value);
+	actual_type = value_type;
+
+	if (G_TYPE_IS_DERIVABLE (value_type) | G_TYPE_IS_DEEP_DERIVABLE (value_type)) {
+		if (g_type_is_a (value_type, G_TYPE_OBJECT))
+			actual_type = G_OBJECT_TYPE (g_value_get_object(value));
+		else if (g_type_is_a (value_type, G_TYPE_PARAM))
+			actual_type = G_PARAM_SPEC_TYPE (g_value_get_param (value));
+	}
+	return actual_type;
+}
+
+void
+crank_func_holder_marshal (	GClosure*		closure,
+								GValue*			return_value,
+								guint			n_param_values,
+								const GValue*	param_values,
+								gpointer		invocation_hint,
+								gpointer		marshal_data		)
+{
+	// 1. 먼저 타입 그래프에서 적당한 GClosure를 찾습니다.
+	CrankFuncHolder* holder = (CrankFuncHolder*) closure;
+	GValue				subclosure_value = G_VALUE_INIT;
+	GClosure*			subclosure;
+
+	GType*	types = g_new(GType, n_param_values);
+
+	gint i;
+	for (i = 0; i < n_param_values; i++)
+		types[i] = crank_func_holder_get_actual_type (param_values+ i);
+
+	g_value_init (&subclosure_value, G_TYPE_CLOSURE);
+
+	// 2. 찾고 나면 호출합니다.
+	if (crank_types_graph_lookup(holder->types_graph, types, n_param_values, & subclosure_value)) {
+		subclosure = g_value_get_boxed (&subclosure_value);
+
+		g_closure_invoke (subclosure, return_value, n_param_values, param_values, invocation_hint);
+	}
+
+	g_free (types);
+}
+
+
+
+
+/**
+ * CrankFuncBook:
+ *
+ * 여러개의 #CrankFuncHolder를 이름에 따라 가지고 있습니다. 일반적으로 여러개의
+ * 연관된 #CrankFuncHolder를 묶는데 사용됩니다.
+ *
+ * 각 #CrankFuncHolder는 #GQuark에 연관되어 있습니다.
+ *
+ * g_closure_invoke()를 이 구조체에 사용하는 경우, 첫번째 인자는 #CrankFuncHolder
+ * 의 이름으로 해석되며, 나머지 인자들은 그 이름에 해당하는 #CrankFuncHolder로
+ * 전달 됩니다.
+ */
+struct _CrankFuncBook {
+	GClosure			parent_instance;
+
+	GQuark				name;
+
+	GHashTable*			func_holders;
 };

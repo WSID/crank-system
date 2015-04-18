@@ -69,7 +69,7 @@ const GType*		crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length	);
 
-gboolean			crank_types_graph_lookup_full (	CrankTypesGraph*	self,
+gboolean			crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length,
 													GType**				key_orig,
@@ -85,19 +85,19 @@ const GType*		crank_types_graph_gir_lookup_types (CrankTypesGraph*	graph,
 													const guint			key_length,
 													guint*				ret_length	);
 
-gboolean			crank_types_graph_gir_lookup_full (	CrankTypesGraph*	self,
+gboolean			crank_types_graph_gir_lookup_full (	CrankTypesGraph*	graph,
 													const GType*		key,
 													const guint			key_length,
 													GType**		key_orig,
 													guint*				ret_length,
 													GValue*				value	);
 
-GList*				crank_types_graph_get_key_lengths (	CrankTypesGraph*	self );
+GList*				crank_types_graph_get_key_lengths (	CrankTypesGraph*	graph );
 
-GList*				crank_types_graph_get_keys_by_length (	CrankTypesGraph*	self,
+GList*				crank_types_graph_get_keys_by_length (	CrankTypesGraph*	graph,
 													const guint			length		);
 
-GList*				crank_types_graph_get_values_by_length ( CrankTypesGraph*	self,
+GList*				crank_types_graph_get_values_by_length ( CrankTypesGraph*	graph,
 													const guint			length		);
 
 G_END_DECLS
