@@ -22,8 +22,10 @@
 #include "crankbase.h"
 
 static
-void		test_value_overwrite	(void);
+void		test_value_overwrite		(void);
 
+static
+void		test_value_overwrite_value	(void);
 
 gint
 main (gint argc, gchar** argv)
@@ -32,6 +34,8 @@ main (gint argc, gchar** argv)
 
   	g_test_add_func ("/wsid/crank/base/value/overwrite",
 					test_value_overwrite);
+  	g_test_add_func ("/wsid/crank/base/value/overwrite_value",
+					test_value_overwrite_value);
 
   	g_test_run ();
 
@@ -40,6 +44,27 @@ main (gint argc, gchar** argv)
 
 static void
 test_value_overwrite (void)
+{
+	GValue	value_a = G_VALUE_INIT;
+  	GValue	value_b = G_VALUE_INIT;
+
+  	g_value_init (&value_b, G_TYPE_BOOLEAN);
+
+  	g_value_set_boolean (&value_b, TRUE);
+  	crank_value_overwrite (&value_a, &value_b);
+
+  	g_assert_true (g_value_get_boolean (&value_a));
+
+  	g_value_unset (&value_b);
+  	g_value_init (&value_b, G_TYPE_INT);
+  	g_value_set_int (&value_b, 42);
+  	crank_value_overwrite (&value_a, &value_b);
+
+  	g_assert_cmpint (g_value_get_int (&value_a), ==, 42);
+}
+
+static void
+test_value_overwrite_value (void)
 {
   	GValue value = G_VALUE_INIT;
   	GObject* obj = g_object_new (G_TYPE_OBJECT, NULL);
