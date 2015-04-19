@@ -22,6 +22,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankvalue.h"
 #include "cranktypesgraph.h"
 
 /**
@@ -636,11 +637,7 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 		node = crank_types_node_new (key, key_length);
 		crank_types_root_add (root, node);
 	}
-	
-	if (G_IS_VALUE (&node->value)) g_value_unset (&node->value);
-	
-	g_value_init (&node->value, G_VALUE_TYPE(value));
-	g_value_copy(value, &node->value);
+  	crank_value_overwrite (&node->value, value);
 }
 
 /**
