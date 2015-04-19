@@ -10,4 +10,3 @@ TypesGraph.lookup_types skip
 TypesGraph.lookup_full skip
 TypesGraph.gir_lookup_types name="lookup_types"
 TypesGraph.gir_lookup_full name="lookup_full"
-

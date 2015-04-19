@@ -173,7 +173,6 @@ private void func_type_arg_match_transformable () {
 }
 
 
-
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	

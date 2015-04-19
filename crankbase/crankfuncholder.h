@@ -92,16 +92,41 @@ gboolean		crank_func_type_arg_match_transformable (	const CrankFuncType* ftype,
 struct _CrankFuncHolder;
 typedef struct _CrankFuncHolder CrankFuncHolder;
 
+#define	CRANK_TYPE_FUNC_HOLDER	(crank_func_holder_get_type())
+GType				crank_func_holder_get_type (void);
+
 
 G_GNUC_MALLOC
-CrankFuncHolder*	crank_func_holder_new (			const gchar*	name	);
+CrankFuncHolder*	crank_func_holder_new (			const gchar*		name	);
 
 G_GNUC_MALLOC
-CrankFuncHolder*	crank_func_holder_new_quark (	const GQuark	name	);
+CrankFuncHolder*	crank_func_holder_new_quark (	const GQuark		name	);
+
+
+CrankFuncHolder*	crank_func_holder_ref (			CrankFuncHolder*	holder	);
+
+void				crank_func_holder_unref (		CrankFuncHolder*	holder	);
 
 
 
+void				crank_func_holder_set (			CrankFuncHolder*	holder,
+							   						const GType*		types,
+							   						const guint			ntypes,
+							   						GClosure*			closure	);
 
+GClosure*			crank_func_holder_get (			CrankFuncHolder*	holder,
+                                   					const GType*		types,
+                                   					const guint      	ntypes);
+
+GClosure*			crank_func_holder_lookup (		CrankFuncHolder*	holder,
+									  				const GType*		types,
+									  				const guint			ntypes	);
+
+gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
+						                      		GValue*				return_value,
+						                      		const guint      	narg_values,
+						                      		const GValue*   	arg_values,
+						                      		gpointer         	invocation_hint);
 
 
 //gboolean  crank_func_closure_check_type (GType *types,

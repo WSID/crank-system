@@ -84,14 +84,27 @@ crank_func_type_compatible_to
 crank_func_type_arg_match_exactually
 crank_func_type_arg_match
 crank_func_type_arg_match_transformable
+<SUBSECTION Standard>
+CRANK_TYPE_FUNC_TYPE
+crank_func_type_get_type
+
 <SUBSECTION>
 CrankFuncHolder
 <SUBSECTION>
 crank_func_holder_new
 crank_func_holder_new_quark
 <SUBSECTION>
-CrankFuncBook
+crank_func_holder_ref
+crank_func_holder_unref
+<SUBSECTION>
+crank_func_holder_set
+crank_func_holder_get
+crank_func_holder_lookup
+crank_func_holder_invoke
 <SUBSECTION Standard>
-CRANK_TYPE_FUNC_TYPE
-crank_func_type_get_type
+CRANK_TYPE_FUNC_HOLDER
+crank_func_holder_get_type
+
+<SUBSECTION>
+CrankFuncBook
 </SECTION>

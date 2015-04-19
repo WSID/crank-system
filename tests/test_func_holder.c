@@ -17,6 +17,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
 #include <glib.h>
 
 #include "crankbase.h"
@@ -35,8 +36,19 @@ static  GType   _crank_test_rand_g_type_pool[9] = {
 
 GType	   _crank_test_rand_g_type (void);
 
-gboolean  subject_function (gint a, gint b);
+typedef struct _FixtureFuncHolder {
+  	CrankFuncHolder*	holder;
+  	GType				types_int[2];
+  	GType				types_float[2];
+  	GType				types_string[2];
+  	GClosure*			closure_int;
+  	GClosure*			closure_float;
+  	GClosure*			closure_string;
+} FixtureFuncHolder;
 
+gint	subject_function_int (const gint a, const gint b);
+gfloat	subject_function_float (const gfloat a, const gfloat b);
+gchar*	subject_function_string (const gchar* a, const gchar* b);
 
 void	test_func_type_new (void);
 void	test_func_type_new_with_types (void);
@@ -52,7 +64,15 @@ void	test_func_type_arg_match_exactually (void);
 void	test_func_type_arg_match (void);
 void	test_func_type_arg_match_transformable (void);
 
-void	test_func_holder_new (void);
+void	test_func_holder_setup (	FixtureFuncHolder* 	fixture,
+							 		gpointer			userdata	);
+void	test_func_holder_teardown (	FixtureFuncHolder*	fixture,
+                                	gpointer          	userdata	);
+
+void	test_func_holder_get (		FixtureFuncHolder*	fixture,
+						   			gpointer			userdata	);
+void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
+							  		gpointer			userdata	);
 
 
 gint
@@ -91,8 +111,19 @@ main (gint   argc,
 	g_test_add_func ("/wsid/crank/base/functype/argmatch/transformable",
           test_func_type_arg_match_transformable);
 
-  g_test_add_func ("/wsid/crank/base/funcholder",
-      test_func_holder_new);
+	g_test_add ("/wsid/crank/base/funcholder/get",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_get,
+			test_func_holder_teardown);
+
+	g_test_add ("/wsid/crank/base/funcholder/invoke",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_invoke,
+			test_func_holder_teardown);
 
   g_test_run ();
 
@@ -111,10 +142,39 @@ _crank_test_rand_g_type (void)
 
 
 
-gboolean
-subject_function (gint a, gint b)
+gint
+subject_function_int (const gint a, const gint b)
 {
-  return (a % b) == 0;
+  	g_test_message ("invoked int function (%d, %d)", a, b);
+  	return a + b;
+}
+
+gfloat
+subject_function_float (const gfloat a, const gfloat b)
+{
+  	g_test_message ("invoked float function (%f, %f)", a, b);
+  	return a + b;
+}
+
+gchar*
+subject_function_string (const gchar* a, const gchar* b)
+{
+	guint 	a_len;
+  	guint 	b_len;
+
+  	gchar*	result;
+
+  	g_test_message ("invoked string function (%s, %s)", a, b);
+  	a_len = strlen (a);
+  	b_len = strlen (b);
+
+  	result = g_new (gchar, a_len + b_len + 1);
+
+  	memcpy (result, a, a_len);
+  	memcpy (result + a_len, b, b_len);
+  	result[a_len + b_len] = '\0';
+
+  	return result;
 }
 
 
@@ -362,16 +422,105 @@ test_func_type_arg_match_transformable (void)
 }
 
 void
-test_func_holder_new (void)
+test_func_holder_setup (	FixtureFuncHolder* 	fixture,
+							gpointer			userdata	)
 {
-  /*
-  CrankFuncHolder* holder = crank_func_holder_new (
-      G_CALLBACK(subject_function), NULL,
-      G_TYPE_BOOLEAN,
-      G_TYPE_INT,
-      G_TYPE_INT,
-      G_TYPE_NONE);
+  	fixture->holder =	crank_func_holder_new ("test-holder");
+
+  	fixture->types_int[0] = G_TYPE_INT;
+  	fixture->types_int[1] = G_TYPE_INT;
+
+  	fixture->types_float[0] = G_TYPE_FLOAT;
+  	fixture->types_float[1] = G_TYPE_FLOAT;
+
+  	fixture->types_string[0] = G_TYPE_STRING;
+  	fixture->types_string[1] = G_TYPE_STRING;
+
+  	fixture->closure_int = 		g_cclosure_new (
+  			(GCallback)subject_function_int, NULL, NULL);
+
+  	fixture->closure_float = 	g_cclosure_new (
+  			(GCallback)subject_function_float, NULL, NULL);
   
-  crank_func_holder_free (holder);
-  */
+  	fixture->closure_string = 	g_cclosure_new (
+  			(GCallback)subject_function_string, NULL, NULL);
+
+  	g_closure_set_marshal (fixture->closure_int, g_cclosure_marshal_generic);
+  	g_closure_set_marshal (fixture->closure_float, g_cclosure_marshal_generic);
+  	g_closure_set_marshal (fixture->closure_string, g_cclosure_marshal_generic);
+
+  	crank_func_holder_set (fixture->holder, fixture->types_int, 2, fixture->closure_int);
+  	crank_func_holder_set (fixture->holder, fixture->types_float, 2, fixture->closure_float);
+  	crank_func_holder_set (fixture->holder, fixture->types_string, 2, fixture->closure_string);
+}
+
+void
+test_func_holder_teardown (	FixtureFuncHolder*	fixture,
+						   	gpointer			userdata	)
+{
+	crank_func_holder_unref (fixture->holder);
+  	g_closure_unref (fixture->closure_int);
+  	g_closure_unref (fixture->closure_float);
+  	g_closure_unref (fixture->closure_string);
+}
+
+void
+test_func_holder_get (	FixtureFuncHolder*	fixture,
+					  	gpointer			userdata	)
+{
+  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_int, 2) ==
+			 	fixture->closure_int);
+  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_float, 2) ==
+			 	fixture->closure_float);
+  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_string, 2) ==
+			 	fixture->closure_string);
+}
+
+void
+test_func_holder_invoke (	FixtureFuncHolder*	fixture,
+						 	gpointer			userdata	)
+{
+  	GValue				value_result = G_VALUE_INIT;
+  	GValue				value_arg[2] = {G_VALUE_INIT, G_VALUE_INIT};
+
+  	g_value_init (&value_result, G_TYPE_INT);
+  	g_value_init (value_arg, G_TYPE_INT);
+  	g_value_init (value_arg + 1, G_TYPE_INT);
+
+  	g_value_set_int (value_arg, 3);
+  	g_value_set_int (value_arg + 1, 5);
+
+  	crank_func_holder_invoke (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpint (g_value_get_int (&value_result), ==, 8);
+
+  	g_value_unset (&value_result);
+  	g_value_unset (value_arg);
+  	g_value_unset (value_arg + 1);
+
+  	g_value_init (&value_result, G_TYPE_FLOAT);
+  	g_value_init (value_arg, G_TYPE_FLOAT);
+  	g_value_init (value_arg + 1, G_TYPE_FLOAT);
+
+  	g_value_set_float (value_arg, 27.81f);
+  	g_value_set_float (value_arg + 1, 22.19f);
+
+  	crank_func_holder_invoke (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpfloat (g_value_get_float (&value_result), ==, 50.00f);
+
+  	g_value_unset (&value_result);
+  	g_value_unset (value_arg);
+  	g_value_unset (value_arg + 1);
+
+  	g_value_init (&value_result, G_TYPE_STRING);
+  	g_value_init (value_arg, G_TYPE_STRING);
+  	g_value_init (value_arg + 1, G_TYPE_STRING);
+
+  	g_value_set_string (value_arg, "This cake ");
+  	g_value_set_string (value_arg + 1, "is a lie!");
+
+  	crank_func_holder_invoke (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
 }
