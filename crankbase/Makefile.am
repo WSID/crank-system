@@ -7,6 +7,7 @@ lib_LTLIBRARIES = \
 include_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
+		crankvalue.h \
 		cranksingular.h \
 		cranktypesgraph.h \
 		crankfuncholder.h
@@ -24,6 +25,7 @@ libcrankbase_la_LIBADD = \
 
 libcrankbase_la_SOURCES= \
 		cranksingular.c \
+		crankvalue.c \
 		cranktypesgraph.c \
 		crankfuncholder.c
 

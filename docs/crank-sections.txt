@@ -17,6 +17,18 @@ CRANK_FOREACH_G_PTR_ARRAY_END
 </SECTION>
 
 <SECTION>
+<FILE>crankvalue</FILE>
+crank_value_overwrite_init
+crank_value_overwrite
+crank_value_overwrite_boolean
+crank_value_overwrite_int
+crank_value_overwrite_string
+crank_value_overwrite_object
+crank_value_overwrite_boxed
+crank_value_overwrite_pointer
+</SECTION>
+
+<SECTION>
 <FILE>cranksingular</FILE>
 CrankSingular
 CrankSingularClass

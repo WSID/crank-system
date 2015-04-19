@@ -13,12 +13,16 @@ TEST_BASE_LDADD= \
 # 대상 목록
 test_programs= \
 		test_base_macro \
+		test_value \
 		test_types_graph \
 		test_func_holder \
 		test_singular
 
 test_base_macro_CFLAGS= $(TEST_BASE_CFLAGS)
 test_base_macro_LDADD= $(TEST_BASE_LDADD)
+
+test_value_CFLAGS= $(TEST_BASE_CFLAGS)
+test_value_LDADD= $(TEST_BASE_LDADD)
 
 test_types_graph_CFLAGS= $(TEST_BASE_CFLAGS)
 test_types_graph_LDADD= $(TEST_BASE_LDADD)
