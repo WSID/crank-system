@@ -120,9 +120,10 @@ CrankTypesNode*		crank_types_node_get (			CrankTypesNode* parent,
 													const GType*	key,
 													const guint		key_length	);
 static
-CrankTypesNode*		crank_types_node_lookup (		CrankTypesNode* parent,
+gboolean			crank_types_node_lookup (		CrankTypesNode* parent,
 													const GType*	key,
-													const guint		key_length	);
+													const guint		key_length,
+										  			GList**			lookup_list	);
 													
 static inline
 void				crank_types_node_parent (		CrankTypesNode* parent,
@@ -148,7 +149,7 @@ CrankTypesNode*		crank_types_root_get (			CrankTypesRoot* parent,
 													const GType*	key,
 													const guint		key_length	);
 static
-CrankTypesNode*		crank_types_root_lookup (		CrankTypesRoot* parent,
+GList*				crank_types_root_lookup (		CrankTypesRoot* parent,
 													const GType*	key,
 													const guint		key_length	);
 													
@@ -300,7 +301,6 @@ crank_types_node_add (	CrankTypesNode* parent,
 		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
 			if (crank_types_node_add (sub, node)) {
 				add_to_subnode = TRUE;
-				break;
 			}
 		CRANK_FOREACH_G_PTR_ARRAY_END
 		
@@ -346,28 +346,38 @@ crank_types_node_get (	CrankTypesNode* parent,
 	return NULL;
 }
 
-static CrankTypesNode*
+static gboolean
 crank_types_node_lookup (	CrankTypesNode* parent,
 							const GType*	key,
-							const guint		key_length	)
+							const guint		key_length,
+						 	GList**			lookup_list	)
 {
-	CrankTypesNode*	result;
-
 	if (CRANK_ARRAY_CMP (parent->types, key, GType, key_length) == 0) {
-		return parent;
+		if (g_list_find(*lookup_list, parent) == NULL) {
+			*lookup_list = g_list_prepend (*lookup_list, parent);
+			return TRUE;
+		}
 	}
-	
+
 	else if (crank_types_is_a (key, parent->types, key_length)) {
-	
+		gboolean	list_added = FALSE;
+
 		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
-			result = crank_types_node_lookup (sub, key, key_length);
-			if (result != NULL) return result;
+			list_added =
+					list_added ||
+					crank_types_node_lookup (sub, key, key_length, lookup_list);
 		CRANK_FOREACH_ARRAY_END
 		
-		return parent;
+		if (list_added) return TRUE;
+		else {
+			if (g_list_find(*lookup_list, parent) == NULL) {
+				*lookup_list = g_list_prepend (*lookup_list, parent);
+				return TRUE;
+			}
+		}
 	}
 	
-	return NULL;
+	return FALSE;
 }
 
 static inline void
@@ -439,22 +449,17 @@ crank_types_root_get (	CrankTypesRoot* parent,
 	return NULL;
 }
 
-static CrankTypesNode*
+static GList*
 crank_types_root_lookup (	CrankTypesRoot* parent,
 							const GType*	key,
 							const guint		key_length	)
 {
-	CrankTypesNode*	result = NULL;
+	GList*	result = NULL;
+
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
-		result = crank_types_node_lookup (sub, key, key_length);
-		
-		if (result != NULL) {
-					
-			return result;
-		}
+		crank_types_node_lookup (sub, key, key_length, &result);
 	CRANK_FOREACH_ARRAY_END
-	
-	return NULL;
+	return result;
 }
 
 static void
@@ -522,6 +527,11 @@ static
 CrankTypesRoot*		crank_types_graph_get_root (		CrankTypesGraph*	graph,
 														const guint			key_length	);
 
+static
+CrankTypesNode*		crank_types_graph_lookup_node (		CrankTypesGraph*	graph,
+														const GType*		key,
+														const guint			key_length	);
+
 
 
 
@@ -554,6 +564,38 @@ crank_types_graph_get_root (	CrankTypesGraph*	graph,
 	return graph->roots[key_length];
 }
 
+static CrankTypesNode*
+crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
+							  	const GType*		key,
+							  	const guint			key_length	)
+{
+	// For future, more way to pick one from candidates.
+	//TODO: 픽 방식을 정할 수 있도록 합니다.
+	
+	CrankTypesRoot* root;
+	CrankTypesNode*	node = NULL;
+  	GList*			lookup_list;
+
+	root = crank_types_graph_get_root (graph, key_length);
+	lookup_list = crank_types_root_lookup (root, key, key_length);
+
+  	if (lookup_list != NULL) {
+		GList* i;
+	  	guint	depth_max = 0;
+	 	guint	depth;
+
+	  	for (i = lookup_list; i != NULL; i = i->next) {
+	  		depth = ((CrankTypesNode*) i->data)->types_depth;
+	  		
+	  		if (depth_max < depth) {
+				depth_max = depth;
+		  		node = (CrankTypesNode*)i->data;
+			}
+		}
+	}
+	
+  	return node;
+}
 
 //////// 외부 공개 함수들
 
@@ -716,11 +758,8 @@ crank_types_graph_lookup (	CrankTypesGraph*	graph,
 							const guint			key_length,
 							GValue*				value	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
-	
-	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_lookup (root, key, key_length);
+	CrankTypesNode*	node = crank_types_graph_lookup_node (
+			graph, key, key_length );
 	
 	if (node != NULL) {
 		g_value_copy(&node->value, value);
@@ -748,11 +787,8 @@ crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 								const GType*		key,
 								const guint			key_length	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
-	
-	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_lookup (root, key, key_length);
+	CrankTypesNode*	node = crank_types_graph_lookup_node (
+			graph, key, key_length );
 	
 	return (node != NULL) ? node->types : NULL;
 }
@@ -776,11 +812,8 @@ crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 								GType**				key_orig,
 								GValue*				value	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
-	
-	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_lookup (root, key, key_length);
+	CrankTypesNode* node = crank_types_graph_lookup_node (
+			graph, key, key_length );
 	
 	if (node != NULL) {
 		g_value_copy (&node->value, value);
