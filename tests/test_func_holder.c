@@ -65,14 +65,16 @@ void	test_func_type_arg_match (void);
 void	test_func_type_arg_match_transformable (void);
 
 void	test_func_holder_setup (	FixtureFuncHolder* 	fixture,
-							 		gpointer			userdata	);
+							 		gconstpointer			userdata	);
 void	test_func_holder_teardown (	FixtureFuncHolder*	fixture,
-                                	gpointer          	userdata	);
+                                	gconstpointer          	userdata	);
+
+void	test_func_holder_setget_name (void);
 
 void	test_func_holder_get (		FixtureFuncHolder*	fixture,
-						   			gpointer			userdata	);
+						   			gconstpointer			userdata	);
 void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
-							  		gpointer			userdata	);
+							  		gconstpointer			userdata	);
 
 
 gint
@@ -110,6 +112,9 @@ main (gint   argc,
           
 	g_test_add_func ("/wsid/crank/base/functype/argmatch/transformable",
           test_func_type_arg_match_transformable);
+    
+    g_test_add_func ("/wsid/crank/base/funcholder/setget_name",
+    		test_func_holder_setget_name);
 
 	g_test_add ("/wsid/crank/base/funcholder/get",
 			FixtureFuncHolder,
@@ -422,8 +427,30 @@ test_func_type_arg_match_transformable (void)
 }
 
 void
+test_func_holder_setget_name	(void)
+{
+	GQuark				holder_name = g_quark_from_string ("test-holder");
+	CrankFuncHolder*	holder = crank_func_holder_new ("test-holder");
+	
+	g_assert_cmpstr (crank_func_holder_get_name (holder), ==, "test-holder");
+	g_assert (crank_func_holder_get_qname (holder) == holder_name);
+	
+	holder_name = g_quark_from_string ("another-name");
+	crank_func_holder_set_name (holder, "another-name");
+	
+	g_assert_cmpstr (crank_func_holder_get_name (holder), ==, "another-name");
+	g_assert (crank_func_holder_get_qname (holder) == holder_name);
+	
+	holder_name = g_quark_from_string ("last-chance");
+	crank_func_holder_set_qname (holder, holder_name);
+	
+	g_assert_cmpstr (crank_func_holder_get_name (holder), ==, "last-chance");
+	g_assert (crank_func_holder_get_qname (holder) == holder_name);
+}
+
+void
 test_func_holder_setup (	FixtureFuncHolder* 	fixture,
-							gpointer			userdata	)
+							gconstpointer		userdata	)
 {
   	fixture->holder =	crank_func_holder_new ("test-holder");
 
@@ -456,7 +483,7 @@ test_func_holder_setup (	FixtureFuncHolder* 	fixture,
 
 void
 test_func_holder_teardown (	FixtureFuncHolder*	fixture,
-						   	gpointer			userdata	)
+						   	gconstpointer		userdata	)
 {
 	crank_func_holder_unref (fixture->holder);
   	g_closure_unref (fixture->closure_int);
@@ -466,7 +493,7 @@ test_func_holder_teardown (	FixtureFuncHolder*	fixture,
 
 void
 test_func_holder_get (	FixtureFuncHolder*	fixture,
-					  	gpointer			userdata	)
+					  	gconstpointer		userdata	)
 {
   	g_assert (crank_func_holder_get (fixture->holder, fixture->types_int, 2) ==
 			 	fixture->closure_int);
@@ -478,7 +505,7 @@ test_func_holder_get (	FixtureFuncHolder*	fixture,
 
 void
 test_func_holder_invoke (	FixtureFuncHolder*	fixture,
-						 	gpointer			userdata	)
+						 	gconstpointer		userdata	)
 {
   	GValue				value_result = G_VALUE_INIT;
   	GValue				value_arg[2] = {G_VALUE_INIT, G_VALUE_INIT};
