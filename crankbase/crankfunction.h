@@ -237,6 +237,17 @@ typedef gpointer	(*CrankFunc7)		(	gpointer	arg1,
 #define CRANK_FUNC_VALA_JOIN_SPLIT_OWNED(fp, userdata, destroy, userdata_out, destroy_out)	\
 		(*(userdata_out)=(userdata), *(destroy_out)=(destroy), (fp))
 
+/**
+ * CRANK_VALA_GENERIC_UNOWNED: (skip)
+ * @t: #GType입니다.
+ * @copy: 복사 함수입니다.
+ * @destroy: 해제 함수입니다.
+ *
+ * 이 매크로는 복사 함수가 비어있는지 확인하여, 주어진 타입이 비소유 타입인지
+ * 판별합니다.
+ */
+#define CRANK_VALA_GENERIC_UNOWNED(t, copy, destroy) (copy == NULL)
+
 G_END_DECLS
 
 #endif //CRANKFUNCTION_H

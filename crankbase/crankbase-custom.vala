@@ -310,6 +310,8 @@ namespace Crank {
 				out unowned U							userdata,
 				out GLib.DestroyNotify					destroy	);
 
+	[CCode (cname="CRANK_VALA_GENERIC_UNOWNED")]
+	public bool	generic_unowned <G> ();
 
 
 	public class FuncType {

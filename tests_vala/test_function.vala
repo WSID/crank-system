@@ -110,6 +110,14 @@ test_func_split () {
 	assert (subject == 63);
 }
 
+private void
+test_generic_unowned () {
+	assert (  Crank.generic_unowned<int> ());
+	assert (! Crank.generic_unowned<float?> ());
+	assert (  Crank.generic_unowned<unowned string> ());
+	assert (! Crank.generic_unowned<string> ());
+}
+
 
 
 int main (string[] args) {
@@ -120,6 +128,9 @@ int main (string[] args) {
 	
 	GLib.Test.add_func ("/wsid/crank/base/function/split",
 			test_func_split);
+	
+	GLib.Test.add_func ("/wsid/crank/base/generic/unowned",
+			test_generic_unowned);
 	
 	GLib.Test.run ();
 	
