@@ -1,0 +1,4 @@
+crank_singular_get_type
+crank_types_graph_get_type
+crank_func_type_get_type
+crank_func_holder_get_type

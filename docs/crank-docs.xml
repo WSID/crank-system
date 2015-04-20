@@ -7,19 +7,26 @@
 <book id="index">
   <bookinfo>
     <title>Crank System 참조 문서</title>
+    <subtitle>Crank System - 게임 개발 지원 라이브러리</subtitle>
+    <edition>0.0.1 - Just a barebone!</edition>
+    <copyright>
+    	<year>2015</year>
+    	<holder>WSID</holder>
+    </copyright>
     <releaseinfo>
-      이 버전의 Crank System은 사용 불가능 버전입니다.
-      추후 기능이 추가될 예정입니다.
+      Crank System은 게임을 만들기 위한 기본적인 토대를 제공할 예정입니다.
+      현재 버전은 완성된 버전이 아니며, 기반 지원 기능이 개발중입니다.
     </releaseinfo>
   </bookinfo>
   
   <chapter>
-    <title>기반 지원</title>
-        <xi:include href="xml/crankbasemacro.xml"/>
-    	<xi:include href="xml/crankvalue.xml"/>
-        <xi:include href="xml/cranksingular.xml"/>
-        <xi:include href="xml/cranktypesgraph.xml"/>
-        <xi:include href="xml/crankfuncholder.xml"/>
+  	<title>Crank Base - 기반 지원</title>
+    <xi:include href="xml/crankbasemacro.xml"/>
+	<xi:include href="xml/crankvalue.xml"/>
+    <xi:include href="xml/cranksingular.xml"/>
+    <xi:include href="xml/cranktypesgraph.xml"/>
+    <xi:include href="xml/crankfuncholder.xml"/>
+    <xi:include href="crank-chapter-base.xml"/>
   </chapter>
   
   <chapter id="object-tree">

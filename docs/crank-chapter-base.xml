@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<section>
+	<para>타입과 관련된 작업을 보조하거나, 기본적인 자료구조를 제공하는 등의 기반이
+	되는 작업들을 수행합니다. </para>
+	<para>타입에 맞는 함수를 등록하여 하는 역할</para>
+	<para>벡터 및 행렬 자료형</para>
+</section>
