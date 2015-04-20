@@ -75,6 +75,9 @@ void	test_func_holder_get (		FixtureFuncHolder*	fixture,
 						   			gconstpointer			userdata	);
 void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
 							  		gconstpointer			userdata	);
+							  		
+void	test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
+							 				gconstpointer		userdata	);
 
 
 gint
@@ -127,6 +130,13 @@ main (gint   argc,
 			FixtureFuncHolder,
 			NULL,
 			test_func_holder_setup,
+			test_func_holder_invoke,
+			test_func_holder_teardown);
+	
+	g_test_add ("/wsid/crank/base/funcholder/setfunc",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup_set_func,
 			test_func_holder_invoke,
 			test_func_holder_teardown);
 
@@ -550,4 +560,38 @@ test_func_holder_invoke (	FixtureFuncHolder*	fixture,
   	crank_func_holder_invoke (fixture->holder, &value_result, 2, value_arg, NULL);
 
   	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
+}
+
+void
+test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
+									gconstpointer		userdata	)
+{
+  	fixture->holder =	crank_func_holder_new ("test-holder");
+
+  	fixture->types_int[0] = G_TYPE_INT;
+  	fixture->types_int[1] = G_TYPE_INT;
+
+  	fixture->types_float[0] = G_TYPE_FLOAT;
+  	fixture->types_float[1] = G_TYPE_FLOAT;
+
+  	fixture->types_string[0] = G_TYPE_STRING;
+  	fixture->types_string[1] = G_TYPE_STRING;
+
+  	fixture->closure_int = 		g_cclosure_new (
+  			(GCallback)subject_function_int, NULL, NULL);
+
+  	fixture->closure_float = 	g_cclosure_new (
+  			(GCallback)subject_function_float, NULL, NULL);
+  
+  	fixture->closure_string = 	g_cclosure_new (
+  			(GCallback)subject_function_string, NULL, NULL);
+
+  	crank_func_holder_set_func (fixture->holder, fixture->types_int, 2,
+  			subject_function_int, NULL, NULL, NULL);
+  			
+  	crank_func_holder_set_func (fixture->holder, fixture->types_float, 2,
+  			subject_function_float, NULL, NULL, NULL);
+  			
+  	crank_func_holder_set_func (fixture->holder, fixture->types_string, 2,
+  			subject_function_string, NULL, NULL, NULL);
 }

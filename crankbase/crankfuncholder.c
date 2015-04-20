@@ -680,6 +680,7 @@ crank_func_holder_set_qname (	CrankFuncHolder*	holder,
 {
 	holder->name = name;
 }
+
 /**
  * crank_func_holder_set:
  * @holder: 함수를 설정할 CrankFuncHolder
@@ -707,6 +708,44 @@ crank_func_holder_set (	CrankFuncHolder*	holder,
 
   	g_value_unset (&value);
 }
+
+
+/**
+ * crank_func_holder_set_func:
+ * @holder: 함수를 설정할 CrankFuncHolder
+ * @types: (array length=ntypes): 함수의 인자 형들입니다.
+ * @ntypes: @types의 길이입니다.
+ * @func: 설정할 함수입니다.
+ * @userdata: 추가 데이터입니다.
+ * @userdata_destroy: @userdata를 해제할 함수입니다.
+ * @marshal: (skip) (nullable): 추가적인 #GClosureMarshal 입니다. NULL을 전달가능합니다.
+ *
+ * 주어진 인자 형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
+ * 위해 작성되었습니다.
+ *
+ * @marshal에 %NULL을 전달하면, g_cclosure_marshal_generic()을 사용합니다.
+ *
+ */
+void
+crank_func_holder_set_func (	CrankFuncHolder*	holder,
+							   	const GType*		types,
+							   	const guint			ntypes,
+							   	GCallback			func,
+							   	gpointer			userdata,
+							   	GDestroyNotify		userdata_destroy,
+							   	GClosureMarshal		marshal	)
+{
+	GClosure*		closure =
+			g_cclosure_new (func, userdata, (GClosureNotify)userdata_destroy);
+			
+	g_closure_set_marshal (closure,
+			(marshal != NULL) ? marshal : g_cclosure_marshal_generic);
+	
+	crank_func_holder_set (holder, types, ntypes, closure);
+	
+	g_closure_unref (closure);
+}
+
 
 /**
  * crank_func_holder_get:
@@ -824,5 +863,174 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
  */
 struct _CrankFuncBook {
 	GQuark				name;
-	GHashTable*			func_holders;
+	GHashTable*			func_holders;	// GQuark -> CrankFuncHolder
+	
+	guint				_refc;
 };
+
+G_DEFINE_BOXED_TYPE(CrankFuncBook, crank_func_book,
+		crank_func_book_ref,
+		crank_func_book_unref);
+
+
+//////// 외부 공개 함수
+
+CrankFuncBook*
+crank_func_book_new (void) {
+	return crank_func_book_new_with_qname (0);
+}
+
+CrankFuncBook*
+crank_func_book_new_with_name (	const gchar*	name	)
+{
+	return crank_func_book_new_with_qname (g_quark_from_string(name));
+}
+
+CrankFuncBook*
+crank_func_book_new_with_qname (	const GQuark	name	)
+{
+	CrankFuncBook* book = g_new (CrankFuncBook, 1);
+	
+	book->name = name;
+	book->func_holders = g_hash_table_new_full (
+			g_direct_hash,	g_direct_equal,
+			NULL,			crank_func_holder_unref	);
+	book->_refc = 1;
+}
+
+CrankFuncBook*
+crank_func_book_ref (	CrankFuncBook*		book	)
+{
+	g_atomic_int_inc(&book->_refc);
+	return book;
+}
+
+void
+crank_func_book_unref (	CrankFuncBook*		book	)
+{
+	if (g_atomic_int_dec_and_test(&book->_refc)) {
+		g_hash_table_unref (book->func_holders);
+		g_free (book);
+	}
+}
+
+void
+crank_func_book_set_name (	CrankFuncBook*		book,
+							const gchar*		name	)
+{
+	book->name = g_quark_from_string (name);
+}
+
+const gchar*
+crank_func_book_get_name (	CrankFuncBook*		book	)
+{
+	return g_quark_to_string (book->name);
+}
+
+void
+crank_func_book_set_qname (	CrankFuncBook*		book,
+							const GQuark		name	)
+{
+	book->name = name;
+}
+
+GQuark
+crank_func_book_get_qname (	CrankFuncBook*		book	)
+{
+	return book->name;
+}
+
+
+void
+crank_func_book_add (	CrankFuncBook*		book,
+						CrankFuncHolder*	holder	)
+{
+	g_hash_table_insert (book->func_holders, holder->name, holder);
+}
+
+CrankFuncHolder*
+crank_func_book_get (	CrankFuncBook*		book,
+						const gchar*		name	)
+{
+	GQuark	qname = g_quark_try_string (name);
+	
+	if (qname == 0) return NULL;
+	
+	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders, qname);
+}
+
+CrankFuncHolder*
+crank_func_book_getq (	CrankFuncBook*		book,
+						const GQuark		name	)
+{
+	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders, name);
+}
+
+gboolean
+crank_func_book_remove_by_name (CrankFuncBook*		book,
+								const gchar*		name	)
+{
+	GQuark	qname = g_quark_try_string (name);
+	
+	if (qname != 0) return g_hash_table_remove (book->func_holders, qname);
+	return FALSE;
+}
+
+gboolean
+crank_func_book_remove(	CrankFuncBook*		book,
+						CrankFuncHolder*	holder	)
+{
+	CrankFuncHolder* holder_actual =
+			g_hash_table_lookup (book->func_holders, holder->name);
+	
+	if (holder == holder_actual) {
+		g_hash_table_remove (book->func_holders, holder->name);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+void
+crank_func_book_add_closure (	CrankFuncBook*		book,
+								const gchar*		name,
+								const GType*		types,
+								const guint			ntypes,
+								GClosure*			closure	)
+{
+	CrankFuncHolder* holder = crank_func_book_get (book, name);
+	
+	if (holder != NULL)
+		crank_func_holder_set (holder, types, ntypes, closure);
+}
+
+gboolean
+crank_func_book_invoke (	CrankFuncBook*		book,
+							const gchar*		name,
+							GValue*				return_value,
+							const guint			narg_values,
+							const GValue*		arg_values,
+							gpointer			invocation_hint	)
+{
+	CrankFuncHolder* holder = crank_func_book_get (book, name);
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke (holder, return_value, narg_values, arg_values, invocation_hint);
+	}
+	return FALSE;
+}
+													
+gboolean
+crank_func_book_invoke_quark (	CrankFuncBook*		book,
+								const GQuark		name,
+								GValue*				return_value,
+								const guint			narg_values,
+								const GValue*		arg_values,
+								gpointer			invocation_hint	)
+{
+	CrankFuncHolder* holder = g_hash_table_lookup (book->func_holders, name);
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke (holder, return_value, narg_values, arg_values, invocation_hint);
+	}
+	return FALSE;
+}

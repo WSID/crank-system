@@ -123,6 +123,14 @@ void				crank_func_holder_set (			CrankFuncHolder*	holder,
 							   						const GType*		types,
 							   						const guint			ntypes,
 							   						GClosure*			closure	);
+							   						
+void				crank_func_holder_set_func (	CrankFuncHolder*	holder,
+							   						const GType*		types,
+							   						const guint			ntypes,
+							   						GCallback			func,
+							   						gpointer			userdata,
+							   						GDestroyNotify		userdata_destroy,
+							   						GClosureMarshal		marshal	);
 
 GClosure*			crank_func_holder_get (			CrankFuncHolder*	holder,
                                    					const GType*		types,
@@ -158,6 +166,9 @@ CrankFuncBook*		crank_func_book_new_with_name (	const gchar*		name	);
 
 CrankFuncBook*		crank_func_book_new_with_qname (const GQuark		name	);
 
+CrankFuncBook*		crank_func_book_ref (			CrankFuncBook*		book	);
+
+void				crank_func_book_unref (			CrankFuncBook*		book	);
 
 void				crank_func_book_set_name (		CrankFuncBook*		book,
 													const gchar*		name	);
@@ -173,28 +184,33 @@ GQuark				crank_func_book_get_qname (		CrankFuncBook*		book	);
 void				crank_func_book_add (			CrankFuncBook*		book,
 													CrankFuncHolder*	holder	);
 
-void				crank_func_book_get (			CrankFuncBook*		book,
+CrankFuncHolder*	crank_func_book_get (			CrankFuncBook*		book,
 													const gchar*		name	);
 
-void				crank_func_book_remove_by_name (CrankFuncBook*		book,
+CrankFuncHolder*	crank_func_book_getq (			CrankFuncBook*		book,
+													const GQuark		name	);
+
+gboolean			crank_func_book_remove_by_name (CrankFuncBook*		book,
 													const gchar*		name	);
 
-void				crank_func_book_remove(			CrankFuncBook*	book,
+gboolean			crank_func_book_remove(			CrankFuncBook*	book,
 													CrankFuncHolder*	holder	);
 
 
 void				crank_func_book_add_closure (	CrankFuncBook*		book,
 													const gchar*		name,
+													const GType*		types,
+													const guint			ntypes,
 													GClosure*			closure	);
 
-void				crank_func_book_invoke (		CrankFuncBook*		book,
+gboolean			crank_func_book_invoke (		CrankFuncBook*		book,
 													const gchar*		name,
 													GValue*				return_value,
 													const guint			narg_values,
 													const GValue*		arg_values,
 													gpointer			invocation_hint	);
 													
-void				crank_func_book_invoke_quark (	CrankFuncBook*		book,
+gboolean			crank_func_book_invoke_quark (	CrankFuncBook*		book,
 													const GQuark		name,
 													GValue*				return_value,
 													const guint			narg_values,

@@ -115,6 +115,7 @@ crank_func_holder_set_qname
 crank_func_holder_get_qname
 <SUBSECTION>
 crank_func_holder_set
+crank_func_holder_set_func
 crank_func_holder_get
 crank_func_holder_lookup
 crank_func_holder_invoke
