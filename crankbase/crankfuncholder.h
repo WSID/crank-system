@@ -108,6 +108,16 @@ CrankFuncHolder*	crank_func_holder_ref (			CrankFuncHolder*	holder	);
 void				crank_func_holder_unref (		CrankFuncHolder*	holder	);
 
 
+void				crank_func_holder_set_name (	CrankFuncHolder*	holder,
+													const gchar*		name	);
+
+const gchar*		crank_func_holder_get_name (	CrankFuncHolder*	holder	);
+
+void				crank_func_holder_set_qname (	CrankFuncHolder*	holder,
+													const GQuark		name	);
+
+GQuark				crank_func_holder_get_qname (	CrankFuncHolder*	holder	);
+
 
 void				crank_func_holder_set (			CrankFuncHolder*	holder,
 							   						const GType*		types,

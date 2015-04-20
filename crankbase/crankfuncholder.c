@@ -507,12 +507,7 @@ _transform_crank_func_type_string (	const GValue* value_ftype,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder,
-		crank_func_holder_ref,
-		crank_func_holder_unref)
-
-
-GType		crank_func_holder_get_actual_type (	const GValue*	value);
+//////// CrankFuncHolder ///////////////////////////////////////////////////////
 
 /**
  * CrankFuncHolder:
@@ -529,6 +524,15 @@ struct _CrankFuncHolder {
 
   	guint				_refc;
 };
+
+G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder,
+		crank_func_holder_ref,
+		crank_func_holder_unref)
+
+
+GType		crank_func_holder_get_actual_type (	const GValue*	value);
+
+
 
 //////// 내부 전용 함수들
 
@@ -620,6 +624,62 @@ crank_func_holder_unref (	CrankFuncHolder*	holder	)
 	}
 }
 
+/**
+ * crank_func_holder_get_name:
+ * @holder: 이름을 얻을 CrankFuncHolder
+ *
+ * #CrankFuncHolder의 이름을 얻습니다.
+ *
+ * Returns: 이 구조체의 이름입니다.
+ */
+const gchar*
+crank_func_holder_get_name (	CrankFuncHolder*	holder	)
+{
+	return g_quark_to_string (holder->name);
+}
+
+/**
+ * crank_func_holder_set_name:
+ * @holder: 이름을 설정할 CrankFuncHolder
+ * @name: 설정할 이름
+ *
+ * #CrankFuncHolder의 이름을 설정합니다.
+ */
+void
+crank_func_holder_set_name (	CrankFuncHolder*	holder,
+								const gchar*		name	)
+{
+	holder->name = g_quark_from_string (name);
+}
+
+
+/**
+ * crank_func_holder_get_qname:
+ * @holder: 이름을 얻을 CrankFuncHolder
+ *
+ * #CrankFuncHolder의 이름을 #GQuark로 얻습니다.
+ *
+ * Returns: 이 구조체의 이름입니다.
+ */
+GQuark
+crank_func_holder_get_qname (	CrankFuncHolder*	holder	)
+{
+	return holder->name;
+}
+
+/**
+ * crank_func_holder_set_qname:
+ * @holder: 이름을 설정할 CrankFuncHolder
+ * @name: 설정할 이름
+ *
+ * #CrankFuncHolder의 이름을 #GQuark로 설정합니다.
+ */
+void
+crank_func_holder_set_qname (	CrankFuncHolder*	holder,
+								const GQuark		name	)
+{
+	holder->name = name;
+}
 /**
  * crank_func_holder_set:
  * @holder: 함수를 설정할 CrankFuncHolder
@@ -763,9 +823,6 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
  * 전달 됩니다.
  */
 struct _CrankFuncBook {
-	GClosure			parent_instance;
-
 	GQuark				name;
-
 	GHashTable*			func_holders;
 };

@@ -109,6 +109,11 @@ crank_func_holder_new_quark
 crank_func_holder_ref
 crank_func_holder_unref
 <SUBSECTION>
+crank_func_holder_set_name
+crank_func_holder_get_name
+crank_func_holder_set_qname
+crank_func_holder_get_qname
+<SUBSECTION>
 crank_func_holder_set
 crank_func_holder_get
 crank_func_holder_lookup
