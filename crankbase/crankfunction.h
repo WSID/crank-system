@@ -38,15 +38,6 @@
 G_BEGIN_DECLS
 
 /**
- * CrankCallback: (skip)
- * @userdata: (closure): 더미입니다.
- *
- * 이는 실질적인 함수 형으로 사용되기 보다는 임의의 함수를 받아들일수 있는
- * 인자를 표시하는 목적으로 사용됩니다.
- */
-typedef void		(*CrankCallback) (	gpointer	userdata	);
-
-/**
  * CRANK_VALA_FUNC_GET_POINTER: (skip)
  * @fp:	함수 포인터입니다.
  * @userdata: 함수에 추가적으로 전달할 데이터입니다.
