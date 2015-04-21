@@ -42,7 +42,7 @@
 
 /**
  * crank_value_overwrite_init: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @type: 설정할 타입입니다.
  *
  * 값을 초기화하고 기타 자원들을 해제한 후, 해당 @type으로 초기화합니다.
@@ -58,7 +58,7 @@ crank_value_overwrite_init	(	GValue*		value,
 
 /**
  * crank_value_overwrite: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @from: @value의 값으로 설정할 GValue입니다.
  *
  * @value의 값을 @from의 값으로 설정합니다.
@@ -73,7 +73,7 @@ crank_value_overwrite (	GValue*			value,
 
 /**
  * crank_value_overwrite_boolean: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @bool_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 #gboolean의 값으로 설정합니다.
@@ -88,7 +88,7 @@ crank_value_overwrite_boolean (	GValue*			value,
 
 /**
  * crank_value_overwrite_int: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @int_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 #gint의 값으로 설정합니다.
@@ -103,7 +103,7 @@ crank_value_overwrite_int (	GValue*			value,
 
 /**
  * crank_value_overwrite_string: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @str_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 문자열로 설정합니다.
@@ -118,7 +118,7 @@ crank_value_overwrite_string (	GValue*			value,
 
 /**
  * crank_value_overwrite_object: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @obj_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 #GObject로 설정합니다.
@@ -133,7 +133,7 @@ crank_value_overwrite_object (	GValue*		value,
 
 /**
  * crank_value_overwrite_boxed: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @value_type: @value에 설정할 타입입니다.
  * @boxed_value: @value에 설정할 값입니다.
  *
@@ -153,7 +153,7 @@ crank_value_overwrite_boxed (	GValue*		value,
 
 /**
  * crank_value_overwrite_pointer: (skip)
- * @value: (out caller-allocate): 설정할 GValue입니다.
+ * @value: (out caller-allocates): 설정할 GValue입니다.
  * @pointer_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 @pointer_value로 설정합니다.
