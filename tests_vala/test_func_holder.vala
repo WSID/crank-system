@@ -173,6 +173,52 @@ private void func_type_arg_match_transformable () {
 }
 
 
+private int	subject_function_int (int a, int b) {
+	return a + b;
+}
+
+private float subject_function_float (float a, float b) {
+	return a + b;
+}
+
+private string subject_function_string (string a, string b) {
+	return a + b;
+}
+
+private Crank.FuncHolder func_holder_create () {
+	Crank.FuncHolder holder = new Crank.FuncHolder ("test-holder");
+	
+	holder.set_func ({typeof(int), typeof(int)},
+			(Crank.Callback)subject_function_int);
+			
+	holder.set_func ({typeof(float), typeof(float)},
+			(Crank.Callback)subject_function_float);
+			
+	holder.set_func ({typeof(string), typeof(string)},
+			(Crank.Callback)subject_function_string);
+	
+	return holder;
+}
+
+private void func_holder_invoke () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	assert (holder.invoke (ref value, {2, 3}));
+	assert (value.get_int () == 5);
+	
+	value = GLib.Value (typeof (float));
+	
+	assert (holder.invoke (ref value, {4.5f, 6.5f}));
+	assert (value.get_float () == 11.0f);
+	
+	value = GLib.Value (typeof (string));
+	
+	assert (holder.invoke (ref value, {"Daddy ", "long leg"}));
+	assert (value.get_string () == "Daddy long leg");
+}
+
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	
@@ -217,6 +263,9 @@ int main (string[] args) {
 			
 	GLib.Test.add_func ("/wsid/crank/base/functype/argmatch/transformable",
 			func_type_arg_match_transformable	);
+	
+	GLib.Test.add_func ("/wsid/crank/base/holder/invoke",
+			func_holder_invoke	);
 	
 	GLib.Test.run ();
 	

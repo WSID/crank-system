@@ -23,6 +23,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankfunction.h"
 #include "cranktypesgraph.h"
 #include "crankfuncholder.h"
 
@@ -711,14 +712,14 @@ crank_func_holder_set (	CrankFuncHolder*	holder,
 
 
 /**
- * crank_func_holder_set_func:
+ * crank_func_holder_set_func: (skip)
  * @holder: 함수를 설정할 CrankFuncHolder
  * @types: (array length=ntypes): 함수의 인자 형들입니다.
  * @ntypes: @types의 길이입니다.
  * @func: 설정할 함수입니다.
  * @userdata: 추가 데이터입니다.
  * @userdata_destroy: @userdata를 해제할 함수입니다.
- * @marshal: (skip) (nullable): 추가적인 #GClosureMarshal 입니다. NULL을 전달가능합니다.
+ * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다. NULL을 전달가능합니다.
  *
  * 주어진 인자 형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
  * 위해 작성되었습니다.
@@ -844,6 +845,31 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 	g_free (types);
 
   	return (closure != NULL);
+}
+
+/**
+ * crank_func_holder_vala_set_func: (skip)
+ * @holder: 함수를 설정할 CrankFuncHolder
+ * @types: (array length=ntypes): 함수의 인자 형들입니다.
+ * @ntypes: @types의 길이입니다.
+ * @func: 설정할 함수입니다.
+ * @userdata: 추가 데이터입니다.
+ * @userdata_destroy: @userdata를 해제할 함수입니다.
+ *
+ * 주어진 인자 형에 주어진 함수를 설정합니다. Vala에서 set_func... 함수들을 구성
+ * 하는데 사용합니다.
+ */
+void
+crank_func_holder_vala_set_func (	CrankFuncHolder*	holder,
+							   	const GType*		types,
+							   	const guint			ntypes,
+							   	CrankCallback		func,
+							   	gpointer			userdata,
+							   	GDestroyNotify		userdata_destroy	)
+{
+	crank_func_holder_set_func (	holder,
+									types, ntypes,
+									(GCallback)func, userdata, userdata_destroy, NULL);
 }
 
 

@@ -146,6 +146,13 @@ gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		const GValue*   	arg_values,
 						                      		gpointer         	invocation_hint);
 
+void				crank_func_holder_vala_set_func(CrankFuncHolder*	holder,
+							   						const GType*		types,
+							   						const guint			ntypes,
+							   						CrankCallback		func,
+							   						gpointer			userdata,
+							   						GDestroyNotify		userdata_destroy);
+
 
 //gboolean  crank_func_closure_check_type (GType *types,
 //                                         uint   ntypes);

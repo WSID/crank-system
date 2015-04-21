@@ -17,6 +17,11 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
+[CCode (has_target=false)]
+private delegate int	SubjectFuncTypeR (int* userdata);
+
+private delegate int	SubjectFuncType ();
+
 private int
 subject_int_0 (int* userdata) {
 	int prev = *userdata;
@@ -25,54 +30,16 @@ subject_int_0 (int* userdata) {
 	return prev;
 }
 
-private int
-subject_int_1 (int arg1, int* userdata) {
-	int prev = *userdata;
-	
-	*userdata = prev + arg1;
-	
-	return prev;
-}
-
-private int
-subject_int_2 (int arg1, int arg2, int* userdata) {
-	int prev = *userdata;
-	
-	*userdata = prev + arg1 * arg2;
-	
-	return prev;
-}
-
-
 
 private void
 test_func_join () {
 	int subject = 41;
 	
-	Crank.Func0<int>	func_join_0 =
-		Crank.func_0_join <int, int*> (subject_int_0, &subject);
+	SubjectFuncType	func =
+		(SubjectFuncType) Crank.func_join ((GLib.Callback)subject_int_0, &subject);
 	
-	assert (func_join_0 () == 41);
+	assert (func () == 41);
 	assert (subject == 42);
-	
-
-	subject = 15;
-	
-	Crank.Func1<int, int>	func_join_1 =
-		Crank.func_1_join <int, int, int*> (subject_int_1, &subject);
-	
-	assert (func_join_1 (45) == 15);
-	assert (subject == 60);
-	
-	
-	subject = 6;
-
-	Crank.Func2<int, int, int>	func_join_2 =
-		Crank.func_2_join <int, int, int, int*> (subject_int_2, &subject);
-	
-	assert (func_join_2 (12, 5) == 6);
-	assert (subject == 66);
-	
 }
 
 
@@ -80,34 +47,17 @@ private void
 test_func_split () {
 	int subject = 42;
 	
-	Crank.Func0<int>	func_split_0 = ()=> {
+	SubjectFuncType		func_join = () => {
 			subject = subject * 2;
 			return subject;
 	};
 	
-	void*						func_split_r_0_userdata;
-	Crank.RFunc0<int, void*>	func_split_r_0 =
-		Crank.func_0_split <int, void*>	(func_split_0, out func_split_r_0_userdata);
+	void*				func_userdata;
+	SubjectFuncTypeR	func =
+		(SubjectFuncTypeR) Crank.func_split ((Crank.Callback)func_join, out func_userdata);
 	
-	assert (func_split_r_0 (func_split_r_0_userdata) == 84);
+	assert (func (func_userdata) == 84);
 	assert (subject == 84);
-	
-	subject = 7;
-	
-	
-	
-	Crank.Func1<int, int>	func_split_1 = (a)=> {
-			subject = subject * a;
-			return subject;
-	};
-	
-	void*							func_split_r_1_userdata;
-	Crank.RFunc1<int, int, void*>	func_split_r_1 =
-		Crank.func_1_split <int, int, void*> (
-				func_split_1, out func_split_r_1_userdata);
-	
-	assert (func_split_r_1 (9, func_split_r_1_userdata) == 63);
-	assert (subject == 63);
 }
 
 private void

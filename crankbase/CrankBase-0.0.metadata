@@ -1,5 +1,7 @@
 * cheader_filename="crankbase.h"
 
+//////// TypesGraph ////////////////////////////////////////////////////////////
+
 // Fixes GValue processing
 TypesGraph.get.value ref
 TypesGraph.lookup.value ref
@@ -10,3 +12,8 @@ TypesGraph.lookup_types skip
 TypesGraph.lookup_full skip
 TypesGraph.gir_lookup_types name="lookup_types"
 TypesGraph.gir_lookup_full name="lookup_full"
+
+//////// FuncHolder ////////////////////////////////////////////////////////////
+FuncHolder.set_func skip
+FuncHolder.invoke.return_value ref
+FuncHolder.invoke.invocation_hint default=null
