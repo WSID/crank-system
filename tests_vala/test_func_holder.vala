@@ -200,6 +200,32 @@ private Crank.FuncHolder func_holder_create () {
 	return holder;
 }
 
+private void func_holder_name () {
+	Crank.FuncHolder holder = new Crank.FuncHolder ("test-holder");
+	
+	assert (holder.name == "test-holder");
+	assert (holder.qname == GLib.Quark.from_string ("test-holder"));
+	
+	holder.name = "another-holder";
+	
+	assert (holder.name == "another-holder");
+	assert (holder.qname == GLib.Quark.from_string ("another-holder"));
+	
+	holder.qname = GLib.Quark.from_string("my-holder");
+	
+	assert (holder.name == "my-holder");
+	assert (holder.qname == GLib.Quark.from_string ("my-holder"));
+}
+
+private void func_holder_remove () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	assert (  holder.remove ({typeof(int), typeof(int)}));
+	assert (  holder.remove ({typeof(float), typeof(float)}));
+	assert (! holder.remove ({typeof(int), typeof(int)}));
+	assert (  holder.remove ({typeof(string), typeof(string)}));
+}
+
 private void func_holder_invoke () {
 	Crank.FuncHolder holder = func_holder_create ();
 	
@@ -264,8 +290,14 @@ int main (string[] args) {
 	GLib.Test.add_func ("/wsid/crank/base/functype/argmatch/transformable",
 			func_type_arg_match_transformable	);
 	
+	GLib.Test.add_func ("/wsid/crank/base/holder/name",
+			func_holder_name	);
+			
 	GLib.Test.add_func ("/wsid/crank/base/holder/invoke",
 			func_holder_invoke	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/remove",
+			func_holder_remove	);
 	
 	GLib.Test.run ();
 	

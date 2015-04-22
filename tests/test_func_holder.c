@@ -65,16 +65,20 @@ void	test_func_type_arg_match (void);
 void	test_func_type_arg_match_transformable (void);
 
 void	test_func_holder_setup (	FixtureFuncHolder* 	fixture,
-							 		gconstpointer			userdata	);
+							 		gconstpointer		userdata	);
 void	test_func_holder_teardown (	FixtureFuncHolder*	fixture,
-                                	gconstpointer          	userdata	);
+                                	gconstpointer       userdata	);
 
 void	test_func_holder_setget_name (void);
 
 void	test_func_holder_get (		FixtureFuncHolder*	fixture,
-						   			gconstpointer			userdata	);
+						   			gconstpointer		userdata	);
+						   			
+void	test_func_holder_remove (	FixtureFuncHolder*	fixture,
+							  		gconstpointer		userdata	);
+							  		
 void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
-							  		gconstpointer			userdata	);
+							  		gconstpointer		userdata	);
 							  		
 void	test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 							 				gconstpointer		userdata	);
@@ -124,6 +128,13 @@ main (gint   argc,
 			NULL,
 			test_func_holder_setup,
 			test_func_holder_get,
+			test_func_holder_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcholder/remove",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_remove,
 			test_func_holder_teardown);
 
 	g_test_add ("/wsid/crank/base/funcholder/invoke",
@@ -511,6 +522,16 @@ test_func_holder_get (	FixtureFuncHolder*	fixture,
 			 	fixture->closure_float);
   	g_assert (crank_func_holder_get (fixture->holder, fixture->types_string, 2) ==
 			 	fixture->closure_string);
+}
+
+void
+test_func_holder_remove (	FixtureFuncHolder*	fixture,
+					  		gconstpointer		userdata	)
+{
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_int, 2));
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_float, 2));
+  	g_assert (! crank_func_holder_remove (fixture->holder, fixture->types_int, 2));
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_string, 2));
 }
 
 void

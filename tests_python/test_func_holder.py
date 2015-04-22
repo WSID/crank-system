@@ -113,6 +113,13 @@ class TestFuncHolder (unittest.TestCase):
 
 	def tearDown (self):
 		self.holder = None;
+	
+	def test_name (self):
+		self.assertEqual (self.holder.get_name (), "test-holder");
+		
+		self.holder.set_name ("another-holder");
+		
+		self.assertEqual (self.holder.get_name (), "another-holder");
 
 	def test_get (self):
 		closure_int = self.holder.get ([int, int])
@@ -131,6 +138,12 @@ class TestFuncHolder (unittest.TestCase):
 		closure_string.invoke (value, ["asdf", "qwer"], None)
 		self.assertEqual (value.get_string (), "asdfqwer")
 
+
+	def test_remove (self):
+		assert (self.holder.remove ([int, int]))
+		assert (self.holder.remove ([float, float]))
+		assert (self.holder.remove ([str, str]))
+		assert (not self.holder.remove ([float, float]))
 
 	def test_invoke(self):
 		value = GObject.Value (value_type=int)

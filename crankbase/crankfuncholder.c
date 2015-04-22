@@ -807,6 +807,26 @@ crank_func_holder_lookup (	CrankFuncHolder*	holder,
   	return closure;
 }
 
+
+/**
+ * crank_func_holder_remove:
+ * @holder: 함수를 제거할 CrankFuncHolder
+ * @types: (array length=ntypes): 함수의 인자 형 들입니다.
+ * @ntypes: @types의 길이입니다.
+ *
+ * 주어진 인자 형에 등록된 함수를 제거합니다. 함수형의 is-a 관계는 고려되지
+ * 않습니다.
+ *
+ * Returns: 해당 함수가 제거되었는지.
+ */
+gboolean
+crank_func_holder_remove ( CrankFuncHolder*	holder,
+					   	const GType*		types,
+					   	const guint			ntypes	)
+{
+	return crank_types_graph_remove (holder->types_graph, types, ntypes);
+}
+
 /**
  * crank_func_holder_invoke:
  * @holder: 호출할 CrankFuncHolder입니다.

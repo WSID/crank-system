@@ -146,11 +146,15 @@ void				crank_func_holder_set_func (	CrankFuncHolder*	holder,
 
 GClosure*			crank_func_holder_get (			CrankFuncHolder*	holder,
                                    					const GType*		types,
-                                   					const guint      	ntypes);
+                                   					const guint      	ntypes	);
 
 GClosure*			crank_func_holder_lookup (		CrankFuncHolder*	holder,
 									  				const GType*		types,
 									  				const guint			ntypes	);
+
+gboolean			crank_func_holder_remove (		CrankFuncHolder*	holder,
+													const GType*		types,
+													const guint			ntypes	);
 
 gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		GValue*				return_value,
