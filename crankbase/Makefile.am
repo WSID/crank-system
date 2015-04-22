@@ -7,7 +7,7 @@ lib_LTLIBRARIES = \
 include_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
-		crankfunction.h \
+		crankvala.h \
 		crankvalue.h \
 		cranksingular.h \
 		cranktypesgraph.h \
