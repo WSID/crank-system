@@ -17,6 +17,15 @@ CRANK_FOREACH_G_PTR_ARRAY_END
 </SECTION>
 
 <SECTION>
+<FILE>crankvala</FILE>
+CRANK_VALA_FUNC_GET_POINTER
+CRANK_VALA_FUNC_GET_USERDATA
+CRANK_VALA_FUNC_JOIN_SPLIT
+CRANK_VALA_FUNC_JOIN_SPLIT_OWNED
+CRANK_VALA_GENERIC_UNOWNED
+</SECTION>
+
+<SECTION>
 <FILE>crankvalue</FILE>
 crank_value_overwrite_init
 crank_value_overwrite
@@ -74,6 +83,9 @@ crank_types_graph_get_type
 
 <SECTION>
 <FILE>crankfuncholder</FILE>
+<SUBSECTION>
+CrankCallback
+
 <SUBSECTION>
 CrankFuncType
 crank_func_type_new

@@ -25,14 +25,53 @@
 #endif
 
 /**
- * SECTION:crankfunction
- * @short_description: Crank System 함수 타입 및 매크로입니다.
- * @title: Crank System 함수 타입 및 매크로
+ * SECTION:crankvala
+ * @short_description: Vala 지원 유틸리티 모음.
+ * @title: Vala 지원 유틸리티 모음.
  * @stability: Unstable
  * @include: crankbase.h
  *
  * 이 함수들과 매크로들은 Vala에서 C 중심적인 함수들을 사용할 수 있도록 보조하는
  * 역할을 합니다.
+ *
+ * # 함수 유틸리티
+ *
+ * Vala에서는 함수를 userdata와 묶어서 저장합니다. 그러나 이 userdata는 숨겨저
+ * 있으며, 프로그래머가 Vala내에서 임의로 빼오는 것은 여러 트릭 등을 사용해야
+ * 하며, C에서 정의된 매크로보다 비효율적입니다.
+ *
+ * 이러한 작업을 단순화하기 위해 여러 매크로를 제공하고 있습니다.
+ *
+ * * delegate형 변수에서 함수 포인터와 데이터를 조회
+ * * has_target=false인 delegate형과 userdata를 has_target=true인 delegate형으로
+ *   합치기.
+ * * has_target=true인 delegate형을 has_target=false인 delegate형과 userdata로 분리
+ *
+ * 매크로와 Vala의 한계로 인하여, 이러한 함수들을 사용할 경우 해당 형으로 수동으로
+ * Cast 해야 합니다.
+ *
+ * |[ <-- language="vala" --!>
+ *    delegate int UserOperation (int a, int b);
+ *    delegate int UserOperationR (int a, int b, void* userdata);
+ *
+ *    ....
+ *    public int my_operation (int a, int b, void* userdata) {
+ *        int c = (int) userdata;
+ *        return a * b + c;
+ *    }
+ *
+ *    ....
+ *    public void do_something () {
+ *        ....
+ *        UserOperation op = (UserOperation) func_join (
+ *                (GLib.Callback) my_operation, (void*) 32);
+ *    }
+ * ]|
+ *
+ * # 제네릭스 유틸리티
+ *
+ * Vala에서는 제네릭스를 처리할 때, 제네릭스 처리를 위한 추가 인자를 첨부합니다.
+ * 이때, 이 함수들은 이 인자들에 작용하여 유용한 값을 얻을 수 있습니다.
  */
 
 G_BEGIN_DECLS
@@ -42,12 +81,16 @@ G_BEGIN_DECLS
  * @fp:	함수 포인터입니다.
  * @userdata: 함수에 추가적으로 전달할 데이터입니다.
  *
- * 함수 포인터를 GCallback으로 얻습니다.
+ * 함수 포인터를 #GCallback으로 얻습니다.
  * Vala에서 사용하기 위해 정의 되었습니다.
  *
- * Returns: (type GCallback): 함수 포인터를 GCallback으로 얻습니다.
+ * |[ <-- language="vala" --!>
+ *    GLib.Callback fp = Crank.func_get_pointer ((Crank.Callback)some_func);
+ * ]|
+ *
+ * Returns: (type GCallback): 함수 포인터를 #GCallback으로 얻습니다.
  */
-#define CRANK_VALA_FUNC_GET_POINTER(fp, userdata)	(fp)
+#define CRANK_VALA_FUNC_GET_POINTER(fp, userdata)	((GCallback)(fp))
 
 /**
  * CRANK_VALA_FUNC_GET_USERDATA: (skip)
@@ -57,9 +100,13 @@ G_BEGIN_DECLS
  * 함수에 추가적으로 전달할 데이터를 void* 형으로 얻습니다.
  * Vala에서 사용하기 위해 정의 되었습니다.
  *
+ * |[ <-- language="vala" --!>
+ *    void* userdata = Crank.func_get_userdata ((Crank.Callback)some_func);
+ * ]|
+ *
  * Returns: 함수에 추가적으로 전달할 데이터를 void*형으로 얻습니다.
  */
-#define CRANK_VALA_FUNC_GET_USERDATA(fp, userdata)	(userdata)
+#define CRANK_VALA_FUNC_GET_USERDATA(fp, userdata)	((void*)(userdata))
 
 
 /**
@@ -70,6 +117,15 @@ G_BEGIN_DECLS
  *
  * 이 매크로는 Vala에서 delegate 형에서 @userdata를 분리하거나 합치는 역할을
  * 합니다.
+ *
+ * |[ <-- language="vala" --!>
+ *    UserOperation op = (UserOperation) func_join (
+ *            (GLib.Callback)op_raw, userdata);
+ *
+ *    void* raw_userdata;
+ *    UserOperationR raw = (UserOperationR) func_split (
+ *            (Crank.Callback)op, out raw_userdata);
+ * ]|
  *
  * Returns: @fp입니다.
  */
@@ -100,11 +156,15 @@ G_BEGIN_DECLS
  *
  * 이 매크로는 복사 함수가 비어있는지 확인하여, 주어진 타입이 비소유 타입인지
  * 판별합니다.
+ *
+ * |[ <-- language="vala" --!>
+ *    assert ( Crank.generic_unowned <unowned string> () );
+ *    assert ( ! Crank.generic_unowned <string> () );
+ *    assert ( Crank.generic_unowned <int> () );
+ * ]|
  */
 #define CRANK_VALA_GENERIC_UNOWNED(t, copy, destroy) (copy == NULL)
 
-
-#define CRANK_VALA_CLOSURE_NEW(fp, userdata, destroy) (g_cclosure_new (fp, userdata, (GDestroyNotify)destroy))
 
 G_END_DECLS
 
