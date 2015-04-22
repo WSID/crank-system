@@ -14,6 +14,5 @@ TypesGraph.gir_lookup_types name="lookup_types"
 TypesGraph.gir_lookup_full name="lookup_full"
 
 //////// FuncHolder ////////////////////////////////////////////////////////////
-FuncHolder.set_func skip
 FuncHolder.invoke.return_value ref
 FuncHolder.invoke.invocation_hint default=null

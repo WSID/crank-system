@@ -731,7 +731,7 @@ void
 crank_func_holder_set_func (	CrankFuncHolder*	holder,
 							   	const GType*		types,
 							   	const guint			ntypes,
-							   	GCallback			func,
+							   	CrankCallback		func,
 							   	gpointer			userdata,
 							   	GDestroyNotify		userdata_destroy,
 							   	GClosureMarshal		marshal	)

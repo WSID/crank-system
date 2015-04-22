@@ -33,6 +33,8 @@ G_BEGIN_DECLS
  * CrankCallback: (skip)
  * @userdata: (closure): 더미입니다.
  *
+ * @userdata를 받아들이는 임이의 함수를 상징합니다.
+ *
  * 이는 실질적인 함수 형으로 사용되기 보다는 임의의 함수를 받아들일수 있는
  * 인자를 표시하는 목적으로 사용됩니다.
  */
@@ -137,7 +139,7 @@ void				crank_func_holder_set (			CrankFuncHolder*	holder,
 void				crank_func_holder_set_func (	CrankFuncHolder*	holder,
 							   						const GType*		types,
 							   						const guint			ntypes,
-							   						GCallback			func,
+							   						CrankCallback		func,
 							   						gpointer			userdata,
 							   						GDestroyNotify		userdata_destroy,
 							   						GClosureMarshal		marshal	);

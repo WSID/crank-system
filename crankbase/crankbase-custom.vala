@@ -74,9 +74,16 @@ namespace Crank {
 	}
 	
 	public class FuncHolder {
-		
-		[CCode (cname="crank_func_holder_vala_set_func")]
-		public void	set_func (	GLib.Type[]				types,
-								owned Crank.Callback	func	);
+		public string			name				{	get;set;	}
+		public GLib.Quark		qname				{	get;set;	}
+	
+		public void set_func (	GLib.Type[] 			types,
+								owned Crank.Callback 	func,
+								GLib.ClosureMarshal? 	marshal=null	);
+	}
+	
+	public class FuncBook {
+		public string?			name				{	set;	}
+		public GLib.Quark		qname				{	set;	}
 	}
 }
