@@ -5,27 +5,27 @@ include ../glib-tap.mk
 
 # 대상 목록
 test_programs= \
-		test_function \
+		test_vala \
 		test_func_holder \
 		test_singular \
 		test_types_graph
 
 
 # test_func_holder
-test_function_VALAFLAGS= \
+test_vala_VALAFLAGS= \
 		--pkg=crank-base-0.0 \
 		--vapidir=$(top_builddir)/crankbase
 
-test_function_CFLAGS= \
+test_vala_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
 		-I $(top_srcdir)/crankbase
 
-test_function_LDADD= \
+test_vala_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
 
-test_function_SOURCES= \
-		test_function.vala
+test_vala_SOURCES= \
+		test_vala.vala
 
 
 # test_func_holder
