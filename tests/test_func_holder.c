@@ -41,6 +41,9 @@ typedef struct _FixtureFuncHolder {
   	GType				types_int[2];
   	GType				types_float[2];
   	GType				types_string[2];
+  	CrankFuncType*		ftype_int;
+  	CrankFuncType*		ftype_float;
+  	CrankFuncType*		ftype_string;
   	GClosure*			closure_int;
   	GClosure*			closure_float;
   	GClosure*			closure_string;
@@ -74,8 +77,17 @@ void	test_func_holder_setget_name (void);
 void	test_func_holder_get (		FixtureFuncHolder*	fixture,
 						   			gconstpointer		userdata	);
 						   			
+void	test_func_holder_get_by_param_types (		FixtureFuncHolder*	fixture,
+						   							gconstpointer		userdata	);
+						   			
 void	test_func_holder_remove (	FixtureFuncHolder*	fixture,
 							  		gconstpointer		userdata	);
+							  		
+void	test_func_holder_remove_by_param_types (	FixtureFuncHolder*	fixture,
+							  						gconstpointer		userdata	);
+							  		
+void	test_func_holder_lookup_return_type (	FixtureFuncHolder*	fixture,
+							  					gconstpointer		userdata	);
 							  		
 void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
 							  		gconstpointer		userdata	);
@@ -130,13 +142,34 @@ main (gint   argc,
 			test_func_holder_get,
 			test_func_holder_teardown);
 			
+	g_test_add ("/wsid/crank/base/funcholder/get_by_param_types",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_get_by_param_types,
+			test_func_holder_teardown);
+			
 	g_test_add ("/wsid/crank/base/funcholder/remove",
 			FixtureFuncHolder,
 			NULL,
 			test_func_holder_setup,
 			test_func_holder_remove,
 			test_func_holder_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcholder/remove_by_param_types",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_remove_by_param_types,
+			test_func_holder_teardown);
 
+	g_test_add ("/wsid/crank/base/funcholder/lookup_return_type",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_lookup_return_type,
+			test_func_holder_teardown);
+			
 	g_test_add ("/wsid/crank/base/funcholder/invoke",
 			FixtureFuncHolder,
 			NULL,
@@ -483,6 +516,15 @@ test_func_holder_setup (	FixtureFuncHolder* 	fixture,
 
   	fixture->types_string[0] = G_TYPE_STRING;
   	fixture->types_string[1] = G_TYPE_STRING;
+  	
+  	fixture->ftype_int = crank_func_type_new_with_types (
+  			G_TYPE_INT, fixture->types_int, 2	);
+  			
+  	fixture->ftype_float = crank_func_type_new_with_types (
+  			G_TYPE_FLOAT, fixture->types_float, 2	);
+  			
+  	fixture->ftype_string = crank_func_type_new_with_types (
+  			G_TYPE_STRING, fixture->types_string, 2	);
 
   	fixture->closure_int = 		g_cclosure_new (
   			(GCallback)subject_function_int, NULL, NULL);
@@ -497,9 +539,9 @@ test_func_holder_setup (	FixtureFuncHolder* 	fixture,
   	g_closure_set_marshal (fixture->closure_float, g_cclosure_marshal_generic);
   	g_closure_set_marshal (fixture->closure_string, g_cclosure_marshal_generic);
 
-  	crank_func_holder_set (fixture->holder, fixture->types_int, 2, fixture->closure_int);
-  	crank_func_holder_set (fixture->holder, fixture->types_float, 2, fixture->closure_float);
-  	crank_func_holder_set (fixture->holder, fixture->types_string, 2, fixture->closure_string);
+  	crank_func_holder_set (fixture->holder, fixture->ftype_int, fixture->closure_int);
+  	crank_func_holder_set (fixture->holder, fixture->ftype_float, fixture->closure_float);
+  	crank_func_holder_set (fixture->holder, fixture->ftype_string, fixture->closure_string);
 }
 
 void
@@ -507,6 +549,9 @@ test_func_holder_teardown (	FixtureFuncHolder*	fixture,
 						   	gconstpointer		userdata	)
 {
 	crank_func_holder_unref (fixture->holder);
+	crank_func_type_unref (fixture->ftype_int);
+	crank_func_type_unref (fixture->ftype_float);
+	crank_func_type_unref (fixture->ftype_string);
   	g_closure_unref (fixture->closure_int);
   	g_closure_unref (fixture->closure_float);
   	g_closure_unref (fixture->closure_string);
@@ -516,22 +561,72 @@ void
 test_func_holder_get (	FixtureFuncHolder*	fixture,
 					  	gconstpointer		userdata	)
 {
-  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_int, 2) ==
-			 	fixture->closure_int);
-  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_float, 2) ==
-			 	fixture->closure_float);
-  	g_assert (crank_func_holder_get (fixture->holder, fixture->types_string, 2) ==
-			 	fixture->closure_string);
+	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_int)
+				==
+				fixture->closure_int);
+				
+	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_float)
+				==
+				fixture->closure_float);
+				
+	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_string)
+				==
+				fixture->closure_string);
+}
+
+void
+test_func_holder_get_by_param_types (	FixtureFuncHolder*	fixture,
+					  					gconstpointer		userdata	)
+{
+  	g_assert (
+  			crank_func_holder_get_by_param_types (
+  					fixture->holder, fixture->types_int, 2)
+  			==
+			fixture->closure_int	);
+	
+  	g_assert (
+  			crank_func_holder_get_by_param_types (
+  					fixture->holder, fixture->types_float, 2)
+  			==
+			fixture->closure_float	);
+
+  	g_assert (
+  			crank_func_holder_get_by_param_types (
+  					fixture->holder, fixture->types_string, 2)
+  			==
+			fixture->closure_string	);
 }
 
 void
 test_func_holder_remove (	FixtureFuncHolder*	fixture,
 					  		gconstpointer		userdata	)
 {
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_int, 2));
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_float, 2));
-  	g_assert (! crank_func_holder_remove (fixture->holder, fixture->types_int, 2));
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->types_string, 2));
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_int));
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_float));
+  	g_assert (! crank_func_holder_remove (fixture->holder, fixture->ftype_int));
+  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_string));
+}
+
+void
+test_func_holder_remove_by_param_types (	FixtureFuncHolder*	fixture,
+					  						gconstpointer		userdata	)
+{
+  	g_assert (crank_func_holder_remove_by_param_types (fixture->holder, fixture->types_int, 2));
+  	g_assert (crank_func_holder_remove_by_param_types (fixture->holder, fixture->types_float, 2));
+  	g_assert (! crank_func_holder_remove_by_param_types (fixture->holder, fixture->types_int, 2));
+  	g_assert (crank_func_holder_remove_by_param_types (fixture->holder, fixture->types_string, 2));
+}
+
+void
+test_func_holder_lookup_return_type (	FixtureFuncHolder*	fixture,
+										gconstpointer		userdata	)
+{
+	g_assert (crank_func_holder_lookup_return_type (fixture->holder, fixture->types_int, 2)
+			== G_TYPE_INT);
+	g_assert (crank_func_holder_lookup_return_type (fixture->holder, fixture->types_float, 2)
+			== G_TYPE_FLOAT);
+	g_assert (crank_func_holder_lookup_return_type (fixture->holder, fixture->types_string, 2)
+			== G_TYPE_STRING);
 }
 
 void
@@ -597,6 +692,15 @@ test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 
   	fixture->types_string[0] = G_TYPE_STRING;
   	fixture->types_string[1] = G_TYPE_STRING;
+  	
+  	fixture->ftype_int = crank_func_type_new_with_types (
+  			G_TYPE_INT, fixture->types_int, 2	);
+  			
+  	fixture->ftype_float = crank_func_type_new_with_types (
+  			G_TYPE_FLOAT, fixture->types_float, 2	);
+  			
+  	fixture->ftype_string = crank_func_type_new_with_types (
+  			G_TYPE_STRING, fixture->types_string, 2	);
 
   	fixture->closure_int = 		g_cclosure_new (
   			(GCallback)subject_function_int, NULL, NULL);
@@ -607,12 +711,12 @@ test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
   	fixture->closure_string = 	g_cclosure_new (
   			(GCallback)subject_function_string, NULL, NULL);
 
-  	crank_func_holder_set_func (fixture->holder, fixture->types_int, 2,
+  	crank_func_holder_set_func (fixture->holder, fixture->ftype_int,
   			subject_function_int, NULL, NULL, NULL);
   			
-  	crank_func_holder_set_func (fixture->holder, fixture->types_float, 2,
+  	crank_func_holder_set_func (fixture->holder, fixture->ftype_float,
   			subject_function_float, NULL, NULL, NULL);
   			
-  	crank_func_holder_set_func (fixture->holder, fixture->types_string, 2,
+  	crank_func_holder_set_func (fixture->holder, fixture->ftype_string,
   			subject_function_string, NULL, NULL, NULL);
 }

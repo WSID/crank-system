@@ -132,43 +132,46 @@ GQuark				crank_func_holder_get_qname (	CrankFuncHolder*	holder	);
 
 
 void				crank_func_holder_set (			CrankFuncHolder*	holder,
-							   						const GType*		types,
-							   						const guint			ntypes,
+													CrankFuncType*		ftype,
 							   						GClosure*			closure	);
 							   						
 void				crank_func_holder_set_func (	CrankFuncHolder*	holder,
-							   						const GType*		types,
-							   						const guint			ntypes,
+													CrankFuncType*		ftype,
 							   						CrankCallback		func,
 							   						gpointer			userdata,
 							   						GDestroyNotify		userdata_destroy,
 							   						GClosureMarshal		marshal	);
 
 GClosure*			crank_func_holder_get (			CrankFuncHolder*	holder,
-                                   					const GType*		types,
-                                   					const guint      	ntypes	);
+													CrankFuncType*		ftype	);
+
+GClosure*			crank_func_holder_get_by_param_types (	CrankFuncHolder*	holder,
+													const GType*		param_types,
+													const guint			nparam_types	);
 
 GClosure*			crank_func_holder_lookup (		CrankFuncHolder*	holder,
-									  				const GType*		types,
-									  				const guint			ntypes	);
+													CrankFuncType*		ftype	);
+	
+GClosure*			crank_func_holder_lookup_by_param_types (	CrankFuncHolder*	holder,
+													const GType*		param_types,
+													const guint			nparam_types	);
+	
+GType				crank_func_holder_lookup_return_type (	CrankFuncHolder*	holder,
+													const GType*		param_types,
+													const guint			nparam_types	);
 
 gboolean			crank_func_holder_remove (		CrankFuncHolder*	holder,
-													const GType*		types,
-													const guint			ntypes	);
+													CrankFuncType*		ftype	);
+
+gboolean			crank_func_holder_remove_by_param_types (		CrankFuncHolder*	holder,
+													const GType*		param_types,
+													const guint			nparam_types	);
 
 gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		GValue*				return_value,
 						                      		const guint      	narg_values,
 						                      		const GValue*   	arg_values,
 						                      		gpointer         	invocation_hint);
-
-void				crank_func_holder_vala_set_func(CrankFuncHolder*	holder,
-							   						const GType*		types,
-							   						const guint			ntypes,
-							   						CrankCallback		func,
-							   						gpointer			userdata,
-							   						GDestroyNotify		userdata_destroy);
-
 
 //gboolean  crank_func_closure_check_type (GType *types,
 //                                         uint   ntypes);
@@ -222,8 +225,7 @@ gboolean			crank_func_book_remove(			CrankFuncBook*	book,
 
 void				crank_func_book_add_closure (	CrankFuncBook*		book,
 													const gchar*		name,
-													const GType*		types,
-													const guint			ntypes,
+													CrankFuncType*		ftype,
 													GClosure*			closure	);
 
 gboolean			crank_func_book_invoke (		CrankFuncBook*		book,

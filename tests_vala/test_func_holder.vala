@@ -188,13 +188,16 @@ private string subject_function_string (string a, string b) {
 private Crank.FuncHolder func_holder_create () {
 	Crank.FuncHolder holder = new Crank.FuncHolder ("test-holder");
 	
-	holder.set_func ({typeof(int), typeof(int)},
+	holder.set_func (
+			new Crank.FuncType (typeof (int), typeof (int), typeof (int)),
 			(Crank.Callback)subject_function_int);
 			
-	holder.set_func ({typeof(float), typeof(float)},
+	holder.set_func (
+			new Crank.FuncType (typeof (float), typeof (float), typeof (float)),
 			(Crank.Callback)subject_function_float);
 			
-	holder.set_func ({typeof(string), typeof(string)},
+	holder.set_func (
+			new Crank.FuncType (typeof (string), typeof (string), typeof (string)),
 			(Crank.Callback)subject_function_string);
 	
 	return holder;
@@ -220,10 +223,10 @@ private void func_holder_name () {
 private void func_holder_remove () {
 	Crank.FuncHolder holder = func_holder_create ();
 	
-	assert (  holder.remove ({typeof(int), typeof(int)}));
-	assert (  holder.remove ({typeof(float), typeof(float)}));
-	assert (! holder.remove ({typeof(int), typeof(int)}));
-	assert (  holder.remove ({typeof(string), typeof(string)}));
+	assert (  holder.remove_by_param_types ({typeof(int), typeof(int)}));
+	assert (  holder.remove_by_param_types ({typeof(float), typeof(float)}));
+	assert (! holder.remove_by_param_types ({typeof(int), typeof(int)}));
+	assert (  holder.remove_by_param_types ({typeof(string), typeof(string)}));
 }
 
 private void func_holder_invoke () {

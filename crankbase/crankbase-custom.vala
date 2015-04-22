@@ -77,7 +77,7 @@ namespace Crank {
 		public string			name				{	get;set;	}
 		public GLib.Quark		qname				{	get;set;	}
 	
-		public void set_func (	GLib.Type[] 			types,
+		public void set_func (	Crank.FuncType 			types,
 								owned Crank.Callback 	func,
 								GLib.ClosureMarshal? 	marshal=null	);
 	}

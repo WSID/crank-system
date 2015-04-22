@@ -74,7 +74,7 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
 
 
 /**
- * crank_func_type_new:
+ * crank_func_type_new: (constructor):
  * @return_type: 함수의 반환형입니다.
  * @...: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
@@ -97,7 +97,7 @@ crank_func_type_new (const GType return_type, ...)
 
 
 /**
- * crank_func_type_new_va:
+ * crank_func_type_new_va: (constructor):
  * @return_type: 함수의 반환형입니다.
  * @varargs: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
@@ -146,7 +146,7 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 
 
 /**
- * crank_func_type_new_with_types:
+ * crank_func_type_new_with_types: (constructor):
  * @return_type: 함수의 반환형입니다.
  * @param_types: (array length=nparam_types): 함수가 받아들이는 인자 형입니다.
  * @nparam_types: @param_types의 길이입니다.
@@ -505,6 +505,51 @@ _transform_crank_func_type_string (	const GValue* value_ftype,
 
 
 
+//////// CrankFuncHolderData ///////////////////////////////////////////////////
+typedef struct _CrankFuncHolderData {
+	CrankFuncType*		ftype;
+	GClosure*			closure;
+} CrankFuncHolderData;
+
+G_GNUC_MALLOC
+static CrankFuncHolderData*	crank_func_holder_data_new (	CrankFuncType*	type,
+															GClosure* 		closure	);
+G_GNUC_MALLOC
+static CrankFuncHolderData*	crank_func_holder_data_copy (	CrankFuncHolderData*	data);
+
+static void					crank_func_holder_data_free (	CrankFuncHolderData*	data);
+
+#define CRANK_TYPE_FUNC_HOLDER_DATA (crank_func_holder_data_get_type())
+G_DEFINE_BOXED_TYPE(CrankFuncHolderData, crank_func_holder_data,
+		crank_func_holder_data_copy, crank_func_holder_data_free);
+
+
+G_GNUC_MALLOC static CrankFuncHolderData*
+crank_func_holder_data_new (	CrankFuncType*	ftype,
+								GClosure*		closure	)
+{
+	CrankFuncHolderData*	data = g_new (CrankFuncHolderData, 1);
+	
+	data->ftype = crank_func_type_ref (ftype);
+	data->closure = g_closure_ref (closure);
+	
+	return data;
+}
+
+G_GNUC_MALLOC static CrankFuncHolderData*
+crank_func_holder_data_copy (	CrankFuncHolderData*	data	)
+{
+	return crank_func_holder_data_new (data->ftype, data->closure);
+}
+
+static void
+crank_func_holder_data_free (	CrankFuncHolderData*	data	)
+{
+	crank_func_type_unref (data->ftype);
+	g_closure_unref (data->closure);
+	
+	g_free (data);
+}
 
 
 //////// CrankFuncHolder ///////////////////////////////////////////////////////
@@ -521,6 +566,8 @@ _transform_crank_func_type_string (	const GValue* value_ftype,
 struct _CrankFuncHolder {
 	GQuark				name;
 	CrankTypesGraph*	types_graph;
+	
+	GHashTable*			table_ftype_data;	//<CrankFuncType*, CrankFuncHolderData>
 
   	guint				_refc;
 };
@@ -530,11 +577,106 @@ G_DEFINE_BOXED_TYPE (CrankFuncHolder, crank_func_holder,
 		crank_func_holder_unref)
 
 
+CrankFuncHolderData*	crank_func_holder_get_data_by_param_types (CrankFuncHolder*		holder,
+											const GType*		param_types,
+											const guint			nparam_types	);
+											
+CrankFuncHolderData*	crank_func_holder_get_data (CrankFuncHolder*		holder,
+											CrankFuncType*		ftype	);
+											
+CrankFuncHolderData*	crank_func_holder_lookup_data_by_param_types (CrankFuncHolder*		holder,
+											const GType*		param_types,
+											const guint			nparam_types	);
+											
+CrankFuncHolderData*	crank_func_holder_lookup_data (CrankFuncHolder*		holder,
+											CrankFuncType*		ftype	);
+
 GType		crank_func_holder_get_actual_type (	const GValue*	value);
 
 
 
 //////// 내부 전용 함수들
+
+CrankFuncHolderData*
+crank_func_holder_get_data_by_param_types (	CrankFuncHolder*		holder,
+											const GType*		param_types,
+											const guint			nparam_types	)
+{
+	GValue		value = G_VALUE_INIT;
+	
+	g_value_init (&value, G_TYPE_POINTER);
+	
+	if (crank_types_graph_get (holder->types_graph, param_types, nparam_types, &value)) {
+		CrankFuncHolderData* result =
+			(CrankFuncHolderData*) g_value_get_pointer (&value);
+			
+		g_value_unset (&value);
+		
+		return result;
+	}
+	else {
+		return NULL;
+	}
+}
+
+CrankFuncHolderData*
+crank_func_holder_get_data (	CrankFuncHolder*	holder,
+								CrankFuncType*		ftype	)
+{
+	return g_hash_table_lookup (holder->table_ftype_data, ftype);
+}
+
+
+
+CrankFuncHolderData*
+crank_func_holder_lookup_data_by_param_types (	CrankFuncHolder*		holder,
+												const GType*		param_types,
+												const guint			nparam_types	)
+{
+	GValue		value = G_VALUE_INIT;
+	
+	g_value_init (&value, G_TYPE_POINTER);
+	
+	if (crank_types_graph_lookup (holder->types_graph, param_types, nparam_types, &value)) {
+		CrankFuncHolderData* result =
+			(CrankFuncHolderData*) g_value_get_pointer (&value);
+		
+		g_value_unset (&value);
+		
+		return result;
+	}
+	else {
+		return NULL;
+	}
+}
+
+CrankFuncHolderData*
+crank_func_holder_lookup_data (	CrankFuncHolder*	holder,
+								CrankFuncType*		ftype	)
+{
+	CrankFuncHolderData*	data;
+	
+	guint					nparam_types;
+	GType*					param_types;
+	
+	data = g_hash_table_lookup (holder->table_ftype_data, ftype);
+	
+	if (data != NULL) return data;
+	
+	param_types = crank_func_type_get_param_types (ftype, &nparam_types);
+	
+	data = crank_func_holder_lookup_data_by_param_types (holder, param_types, nparam_types);
+	
+	if (data != NULL) {
+		GType	rtype_self =crank_func_type_get_return_type (data->ftype);
+		GType	rtype_in =	crank_func_type_get_return_type (ftype);
+		
+		if (g_type_is_a (rtype_self, rtype_in)) return data;
+	}
+	else {
+		return NULL;
+	}
+}
 
 GType
 crank_func_holder_get_actual_type (const GValue*		value)
@@ -553,6 +695,7 @@ crank_func_holder_get_actual_type (const GValue*		value)
 	}
 	return actual_type;
 }
+
 
 
 //////// 외부 공개 함수들
@@ -588,6 +731,13 @@ crank_func_holder_new_quark (	const GQuark	name	)
 
 	holder->name = name;
 	holder->types_graph = crank_types_graph_new ();
+	
+	holder->table_ftype_data = g_hash_table_new_full (
+			crank_func_type_hash,
+			crank_func_type_equal,
+			NULL,
+			crank_func_holder_data_free);
+	
 	holder->_refc = 1;
 
 	return holder;
@@ -620,6 +770,7 @@ crank_func_holder_unref (	CrankFuncHolder*	holder	)
 {
 	if (g_atomic_int_dec_and_test (&holder->_refc)) {
 		crank_types_graph_unref (holder->types_graph);
+		g_hash_table_unref (holder->table_ftype_data);
 		g_free (holder);
 	}
 }
@@ -684,64 +835,80 @@ crank_func_holder_set_qname (	CrankFuncHolder*	holder,
 /**
  * crank_func_holder_set:
  * @holder: 함수를 설정할 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형들입니다.
- * @ntypes: @types의 길이입니다.
+ * @ftype: 함수형입니다.
  * @closure: 설정할 함수입니다.
  *
- * 주어진 인자 형에 주어진 함수를 설정합니다. crank_func_holder_invoke() 호출시,
+ * 주어진 함수형에 주어진 함수를 설정합니다. crank_func_holder_invoke() 호출시,
  * 해당 타입의 함수가 호출됩니다.
  *
+ * Note:
+ * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
+ * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
  */
 void
 crank_func_holder_set (	CrankFuncHolder*	holder,
-					   	const GType*		types,
-					   	const guint			ntypes,
+						CrankFuncType*		ftype,
 					   	GClosure*			closure	)
 {
-	GValue		value = G_VALUE_INIT;
+	CrankFuncHolderData*	data;
+	GValue					value = G_VALUE_INIT;
+	
+	GType*					types;
+	guint					ntypes;
+	
+	
+	types = crank_func_type_get_param_types (ftype, &ntypes);
+	
+	data = crank_func_holder_get_data_by_param_types (holder, ftype, ntypes);
+	
+	if (data != NULL) {
+		g_hash_table_remove (holder->table_ftype_data, data->ftype);
+	}
 
-  	g_value_init (&value, G_TYPE_CLOSURE);
 
-  	g_value_set_boxed (&value, closure);
-
+	data = crank_func_holder_data_new (ftype, closure);
+  	g_value_init (&value, G_TYPE_POINTER);
+  	g_value_set_pointer (&value, data);
+  	
 	crank_types_graph_set (holder->types_graph, types, ntypes, &value);
+	g_hash_table_insert (holder->table_ftype_data, ftype, data);
 
   	g_value_unset (&value);
 }
 
-
 /**
  * crank_func_holder_set_func: (skip)
  * @holder: 함수를 설정할 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형들입니다.
- * @ntypes: @types의 길이입니다.
+ * @ftype: 함수형입니다.
  * @func: 설정할 함수입니다.
  * @userdata: 추가 데이터입니다.
  * @userdata_destroy: @userdata를 해제할 함수입니다.
- * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다. NULL을 전달가능합니다.
+ * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다.
  *
- * 주어진 인자 형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
+ * 주어진 함수형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
  * 위해 작성되었습니다.
  *
  * @marshal에 %NULL을 전달하면, g_cclosure_marshal_generic()을 사용합니다.
  *
+ * Note:
+ * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
+ * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
  */
 void
 crank_func_holder_set_func (	CrankFuncHolder*	holder,
-							   	const GType*		types,
-							   	const guint			ntypes,
+								CrankFuncType*		ftype,
 							   	CrankCallback		func,
 							   	gpointer			userdata,
 							   	GDestroyNotify		userdata_destroy,
 							   	GClosureMarshal		marshal	)
 {
 	GClosure*		closure =
-			g_cclosure_new (func, userdata, (GClosureNotify)userdata_destroy);
+			g_cclosure_new ((GCallback)func, userdata, (GClosureNotify)userdata_destroy);
 			
 	g_closure_set_marshal (closure,
 			(marshal != NULL) ? marshal : g_cclosure_marshal_generic);
 	
-	crank_func_holder_set (holder, types, ntypes, closure);
+	crank_func_holder_set (holder, ftype, closure);
 	
 	g_closure_unref (closure);
 }
@@ -750,38 +917,52 @@ crank_func_holder_set_func (	CrankFuncHolder*	holder,
 /**
  * crank_func_holder_get:
  * @holder: 함수를 얻을 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형 들입니다.
- * @ntypes: @types의 길이입니다.
+ * @ftype: 함수형입니다.
  *
- * 주어진 인자 형에 등록된 함수를 얻습니다. 함수형의 is-a 관계는 고려되지
+ * 주어진 함수형에 등록된 함수를 얻습니다. 함수형의 is-a 관계는 고려되지
  * 않습니다.
+ *
+ * Returns: (nullable) (transfer none): 해당 함수형에 등록된 함수입니다.
+ */
+GClosure*
+crank_func_holder_get ( CrankFuncHolder*	holder,
+					   	CrankFuncType*		ftype	)
+{
+  	CrankFuncHolderData*	data;
+  	
+  	data = crank_func_holder_get_data (holder, ftype);
+  	
+  	return (data != NULL) ? data->closure : NULL;
+}
+
+/**
+ * crank_func_holder_get_by_param_types:
+ * @holder: 함수를 얻을 CrankFuncHolder
+ * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
+ * @nparam_types: @param_types의 길이입니다.
+ *
+ * 주어진 함수의 반환형에 상관 없이 인자 형에 등록된 함수를 얻습니다. 인자 형의
+ * is-a 관계는 고려되지 않습니다.
  *
  * Returns: (nullable) (transfer none): 해당 인자형에 등록된 함수입니다.
  */
 GClosure*
-crank_func_holder_get ( CrankFuncHolder*	holder,
-					   	const GType*		types,
-					   	const guint			ntypes	)
+crank_func_holder_get_by_param_types ( 	CrankFuncHolder*	holder,
+										const GType*		param_types,
+										const guint			nparam_types	)
 {
-  	GValue		value = G_VALUE_INIT;
-  	GClosure*	closure;
-
-  	g_value_init (&value, G_TYPE_CLOSURE);
-
-  	crank_types_graph_get (holder->types_graph, types, ntypes, &value);
-
-  	closure = (GClosure*) g_value_get_boxed (&value);
-
-  	g_value_unset (&value);
-
-  	return closure;
+  	CrankFuncHolderData*	data;
+  	
+  	data = crank_func_holder_get_data_by_param_types (holder, param_types, nparam_types);
+  	
+  	return (data != NULL) ? data->closure : NULL;
 }
+
 
 /**
  * crank_func_holder_lookup:
  * @holder: 함수를 얻을 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형 들입니다.
- * @ntypes: @types의 길이입니다.
+ * @ftype: 함수형입니다.
  *
  * 주어진 인자 형에 대응될 수 있는 함수를 얻습니다. 예를 들어 (#GBinding,
  * #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
@@ -790,29 +971,99 @@ crank_func_holder_get ( CrankFuncHolder*	holder,
  */
 GClosure*
 crank_func_holder_lookup (	CrankFuncHolder*	holder,
-						  	const GType*		types,
-						  	const guint			ntypes	)
+							CrankFuncType*		ftype	)
 {
-  	GValue		value = G_VALUE_INIT;
-  	GClosure*	closure;
-
-  	g_value_init (&value, G_TYPE_CLOSURE);
-
-  	crank_types_graph_lookup (holder->types_graph, types, ntypes, &value);
-
-  	closure = (GClosure*) g_value_get_boxed (&value);
-
-  	g_value_unset (&value);
-
-  	return closure;
+	CrankFuncHolderData*	data;
+	
+	data = crank_func_holder_lookup_data (holder, ftype);
+	
+	return (data != NULL) ? data->closure : NULL;
 }
 
+/**
+ * crank_func_holder_lookup_by_param_types:
+ * @holder: 함수를 얻을 CrankFuncHolder
+ * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
+ * @nparam_types: @param_types의 길이입니다.
+ *
+ * 반환형에 상관하지 않고 주어진 인자 형에 대응될 수 있는 함수를 얻습니다.
+ * 예를 들어 (#GBinding, #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
+ *
+ * Returns: (nullable) (transfer none): 해당 인자형에 대응될 수 있는 함수입니다.
+ */
+GClosure*
+crank_func_holder_lookup_by_param_types (	CrankFuncHolder*	holder,
+							const GType*		param_types,
+							const guint			nparam_types	)
+{
+	CrankFuncHolderData*	data;
+	
+	data = crank_func_holder_lookup_data_by_param_types (holder,
+			param_types, nparam_types);
+	
+	return (data != NULL) ? data->closure : NULL;
+}
+
+/**
+ * crank_func_holder_lookup_return_type:
+ * @holder: 함수를 얻을 CrankFuncHolder
+ * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
+ * @nparam_types: @param_types의 길이입니다.
+ *
+ * 주어진 인자 형에 대응될 수 있는 함수의 반환형을 얻습니다.
+ * 예를 들어 (#GBinding, #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
+ *
+ * Returns: 함수의 반환형입니다. 만일 존재하지 않으면, %G_TYPE_INVALID
+ */
+GType
+crank_func_holder_lookup_return_type (	CrankFuncHolder*	holder,
+										const GType*		param_types,
+										const guint			nparam_types	)
+{
+	CrankFuncHolderData*	data;
+	
+	data = crank_func_holder_lookup_data_by_param_types (holder,
+			param_types, nparam_types);
+	
+	return (data != NULL) ? crank_func_type_get_return_type (data->ftype) : G_TYPE_INVALID;
+}
 
 /**
  * crank_func_holder_remove:
  * @holder: 함수를 제거할 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형 들입니다.
- * @ntypes: @types의 길이입니다.
+ * @ftype: 제거할 함수형입니다.
+ *
+ * 주어진 함수형에 등록된 함수를 제거합니다. 함수형의 is-a 관계는 고려되지
+ * 않습니다.
+ *
+ * Returns: 해당 함수가 제거되었는지.
+ */
+gboolean
+crank_func_holder_remove (	CrankFuncHolder*	holder,
+							CrankFuncType*		ftype	)
+{
+  	CrankFuncHolderData*	data;
+  	
+  	data = g_hash_table_lookup(holder->table_ftype_data, ftype);
+  	
+  	if (data != NULL) {
+  		GType*		param_types;
+  		guint		nparam_types;
+  		
+  		param_types = crank_func_type_get_param_types (ftype, &nparam_types);
+  		
+  		crank_types_graph_remove (holder->types_graph, param_types, nparam_types);
+  		g_hash_table_remove (holder->table_ftype_data, ftype);
+  		return TRUE;
+  	}
+  	else return FALSE;
+}
+
+/**
+ * crank_func_holder_remove_by_param_types:
+ * @holder: 함수를 제거할 CrankFuncHolder
+ * @param_types: (array length=nparam_types): 함수의 인자형입니다.
+ * @nparam_types: @param_types의 길이입니다.
  *
  * 주어진 인자 형에 등록된 함수를 제거합니다. 함수형의 is-a 관계는 고려되지
  * 않습니다.
@@ -820,11 +1071,19 @@ crank_func_holder_lookup (	CrankFuncHolder*	holder,
  * Returns: 해당 함수가 제거되었는지.
  */
 gboolean
-crank_func_holder_remove ( CrankFuncHolder*	holder,
-					   	const GType*		types,
-					   	const guint			ntypes	)
+crank_func_holder_remove_by_param_types (	CrankFuncHolder*	holder,
+											const GType*		param_types,
+											const guint			nparam_types	)
 {
-	return crank_types_graph_remove (holder->types_graph, types, ntypes);
+	CrankFuncHolderData*	data;
+	
+	data = crank_func_holder_get_data_by_param_types (holder, param_types, nparam_types);
+	
+	if (data == NULL) return FALSE;
+	
+	crank_types_graph_remove (holder->types_graph, param_types, nparam_types);
+	g_hash_table_remove (holder->table_ftype_data, data->ftype);
+	return TRUE;
 }
 
 /**
@@ -856,7 +1115,7 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 	for (i = 0; i < narg_values; i++)
 		types[i] = crank_func_holder_get_actual_type (arg_values + i);
 
-  	closure = crank_func_holder_lookup (holder, types, narg_values);
+  	closure = crank_func_holder_lookup_by_param_types (holder, types, narg_values);
 	// 2. 찾고 나면 호출합니다.
 	if (closure != NULL)
 		g_closure_invoke (closure, return_value, narg_values, arg_values, invocation_hint);
@@ -865,32 +1124,6 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 
   	return (closure != NULL);
 }
-
-/**
- * crank_func_holder_vala_set_func: (skip)
- * @holder: 함수를 설정할 CrankFuncHolder
- * @types: (array length=ntypes): 함수의 인자 형들입니다.
- * @ntypes: @types의 길이입니다.
- * @func: 설정할 함수입니다.
- * @userdata: 추가 데이터입니다.
- * @userdata_destroy: @userdata를 해제할 함수입니다.
- *
- * 주어진 인자 형에 주어진 함수를 설정합니다. Vala에서 set_func... 함수들을 구성
- * 하는데 사용합니다.
- */
-void
-crank_func_holder_vala_set_func (	CrankFuncHolder*	holder,
-							   	const GType*		types,
-							   	const guint			ntypes,
-							   	CrankCallback		func,
-							   	gpointer			userdata,
-							   	GDestroyNotify		userdata_destroy	)
-{
-	crank_func_holder_set_func (	holder,
-									types, ntypes,
-									(GCallback)func, userdata, userdata_destroy, NULL);
-}
-
 
 //////// CrankFuncBook /////////////////////////////////////////////////////////
 
@@ -939,7 +1172,7 @@ crank_func_book_new_with_qname (	const GQuark	name	)
 	book->name = name;
 	book->func_holders = g_hash_table_new_full (
 			g_direct_hash,	g_direct_equal,
-			NULL,			crank_func_holder_unref	);
+			NULL,			(GDestroyNotify)crank_func_holder_unref	);
 	book->_refc = 1;
 }
 
@@ -1038,14 +1271,13 @@ crank_func_book_remove(	CrankFuncBook*		book,
 void
 crank_func_book_add_closure (	CrankFuncBook*		book,
 								const gchar*		name,
-								const GType*		types,
-								const guint			ntypes,
+								CrankFuncType*		ftype,
 								GClosure*			closure	)
 {
 	CrankFuncHolder* holder = crank_func_book_get (book, name);
 	
 	if (holder != NULL)
-		crank_func_holder_set (holder, types, ntypes, closure);
+		crank_func_holder_set (holder, ftype, closure);
 }
 
 gboolean

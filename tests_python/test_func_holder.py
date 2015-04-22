@@ -107,9 +107,16 @@ class TestFuncType(unittest.TestCase):
 class TestFuncHolder (unittest.TestCase):
 	def setUp (self):
 		self.holder = CrankBase.FuncHolder ("test-holder")
-		self.holder.set ([int, int], lambda x,y: x+y)
-		self.holder.set ([float, float], lambda x,y: x*y)
-		self.holder.set ([str, str], lambda x,y: str(x)+str(y))
+		
+		self.ftype_int = CrankBase.FuncType.new_with_types(int, [int, int])
+		self.ftype_float = CrankBase.FuncType.new_with_types(float, [float, float])
+		self.ftype_string = CrankBase.FuncType.new_with_types(str, [str, str])
+		
+		self.holder.set (self.ftype_int,	lambda x,y: x+y)
+		
+		self.holder.set (self.ftype_float,	lambda x,y: x*y)
+		
+		self.holder.set (self.ftype_string,	lambda x,y: str(x)+str(y))
 
 	def tearDown (self):
 		self.holder = None;
@@ -122,9 +129,26 @@ class TestFuncHolder (unittest.TestCase):
 		self.assertEqual (self.holder.get_name (), "another-holder");
 
 	def test_get (self):
-		closure_int = self.holder.get ([int, int])
-		closure_float = self.holder.get ([float, float])
-		closure_string = self.holder.get ([str, str])
+		closure_int = self.holder.get (self.ftype_int)
+		closure_float = self.holder.get (self.ftype_float)
+		closure_string = self.holder.get (self.ftype_string)
+
+		value = GObject.Value (value_type=int)
+		closure_int.invoke (value, [2, 6], None)
+		self.assertEqual (value.get_int (), 8)
+
+		value = GObject.Value (value_type=float)
+		closure_float.invoke (value, [6, 2.5], None)
+		self.assertEqual (value.get_double (), 15.0)
+
+		value = GObject.Value (value_type=str)
+		closure_string.invoke (value, ["asdf", "qwer"], None)
+		self.assertEqual (value.get_string (), "asdfqwer")
+		
+	def test_get_by_param_types (self):
+		closure_int = self.holder.get_by_param_types ([int, int])
+		closure_float = self.holder.get_by_param_types ([float, float])
+		closure_string = self.holder.get_by_param_types ([str, str])
 
 		value = GObject.Value (value_type=int)
 		closure_int.invoke (value, [2, 6], None)
@@ -138,12 +162,17 @@ class TestFuncHolder (unittest.TestCase):
 		closure_string.invoke (value, ["asdf", "qwer"], None)
 		self.assertEqual (value.get_string (), "asdfqwer")
 
-
 	def test_remove (self):
-		assert (self.holder.remove ([int, int]))
-		assert (self.holder.remove ([float, float]))
-		assert (self.holder.remove ([str, str]))
-		assert (not self.holder.remove ([float, float]))
+		assert (self.holder.remove (self.ftype_int))
+		assert (self.holder.remove (self.ftype_float))
+		assert (self.holder.remove (self.ftype_string))
+		assert (not self.holder.remove (self.ftype_int))
+
+	def test_remove_by_param_types (self):
+		assert (self.holder.remove_by_param_types ([int, int]))
+		assert (self.holder.remove_by_param_types ([float, float]))
+		assert (self.holder.remove_by_param_types ([str, str]))
+		assert (not self.holder.remove_by_param_types ([float, float]))
 
 	def test_invoke(self):
 		value = GObject.Value (value_type=int)
