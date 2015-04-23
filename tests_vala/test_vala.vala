@@ -69,6 +69,17 @@ test_generic_unowned () {
 }
 
 
+private void
+test_create_closure () {
+	SubjectFuncType func = () => 733;
+	GLib.Closure closure = Crank.create_closure ((Crank.Callback)func);
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	Crank.closure_invoke (closure, ref value, {1}, null);
+	
+	assert (value.get_int () == 733);
+}
+
 
 int main (string[] args) {
 	GLib.Test.init (ref args);
@@ -82,6 +93,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/wsid/crank/base/generic/unowned",
 			test_generic_unowned);
 	
+	GLib.Test.add_func ("/wsid/crank/base/closure",
+			test_create_closure);
+			
 	GLib.Test.run ();
 	
 	return 0;

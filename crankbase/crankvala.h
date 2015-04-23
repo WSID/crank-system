@@ -24,6 +24,11 @@
 #error crankbasemacro.h cannot be included directly.
 #endif
 
+#include <glib.h>
+#include <glib-object.h>
+
+#include "crankfuncholder.h"
+
 /**
  * SECTION:crankvala
  * @short_description: Vala 지원 유틸리티 모음.
@@ -165,6 +170,11 @@ G_BEGIN_DECLS
  */
 #define CRANK_VALA_GENERIC_UNOWNED(t, copy, destroy) (copy == NULL)
 
+
+GClosure*		crank_vala_create_closure (	CrankCallback	callback,
+											gpointer		userdata,
+											GDestroyNotify	destroy,
+											GClosureMarshal	marshal);
 
 G_END_DECLS
 

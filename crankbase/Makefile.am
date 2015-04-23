@@ -26,6 +26,7 @@ libcrankbase_la_LIBADD = \
 
 libcrankbase_la_SOURCES= \
 		cranksingular.c \
+		crankvala.c \
 		crankvalue.c \
 		cranktypesgraph.c \
 		crankfuncholder.c

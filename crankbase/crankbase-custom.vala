@@ -61,6 +61,16 @@ namespace Crank {
 	[CCode (cname="CRANK_VALA_GENERIC_UNOWNED")]
 	public bool	generic_unowned <G> ();
 	
+	[CCode (cname="crank_vala_create_closure")]
+	public GLib.Closure	create_closure (	owned Crank.Callback callback,
+											GLib.ClosureMarshal? marshal = null	);
+	
+	[CCode (cname="g_closure_invoke")]
+	public void closure_invoke (	GLib.Closure	closure,
+									ref GLib.Value?	return_value,
+										[CCode (array_length_pos=2.5)]
+									GLib.Value[]	param_types,
+									void*			invocation_hint = null);
 	
 	
 
