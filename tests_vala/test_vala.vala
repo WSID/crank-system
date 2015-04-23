@@ -75,7 +75,7 @@ test_create_closure () {
 	GLib.Closure closure = Crank.create_closure ((Crank.Callback)func);
 	GLib.Value value = GLib.Value (typeof (int));
 	
-	Crank.closure_invoke (closure, ref value, {1}, null);
+	Crank.closure_invoke (closure, ref value, {(void*)null}, null);
 	
 	assert (value.get_int () == 733);
 }

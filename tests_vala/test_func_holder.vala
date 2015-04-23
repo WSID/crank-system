@@ -206,6 +206,56 @@ private Crank.FuncHolder func_holder_create () {
 	return holder;
 }
 
+private void func_holder_get () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	Crank.FuncType ftype_int = new Crank.FuncType (typeof (int),
+			typeof (int), typeof (int));
+	Crank.FuncType ftype_float = new Crank.FuncType (typeof (float),
+			typeof (float), typeof (float));
+	Crank.FuncType ftype_string = new Crank.FuncType (typeof (string),
+			typeof (string), typeof (string));
+	
+	GLib.Closure closure_int = holder.get (ftype_int);
+	GLib.Closure closure_float = holder.get (ftype_float);
+	GLib.Closure closure_string = holder.get (ftype_string);
+	
+	GLib.Value value_int	= GLib.Value (typeof(int));
+	GLib.Value value_float	= GLib.Value (typeof(float));
+	GLib.Value value_string = GLib.Value (typeof(string));
+	
+	Crank.closure_invoke (closure_int, ref value_int, {2, 4});
+	assert (value_int.get_int () == 6);
+	
+	Crank.closure_invoke (closure_float, ref value_float, {3.2f, 6.8f});
+	assert (value_float.get_float () == 10.0f);
+	
+	Crank.closure_invoke (closure_string, ref value_string, {"Piece", "Cake"});
+	assert (value_string.get_string () == "PieceCake");
+}
+
+
+private void func_holder_get_by_param_types () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	GLib.Closure closure_int = holder.get_by_param_types ({typeof(int), typeof(int)});
+	GLib.Closure closure_float = holder.get_by_param_types ({typeof(float), typeof(float)});
+	GLib.Closure closure_string = holder.get_by_param_types ({typeof (string), typeof (string)});
+	
+	GLib.Value value_int	= GLib.Value (typeof(int));
+	GLib.Value value_float	= GLib.Value (typeof(float));
+	GLib.Value value_string = GLib.Value (typeof(string));
+	
+	Crank.closure_invoke (closure_int, ref value_int, {2, 4});
+	assert (value_int.get_int () == 6);
+	
+	Crank.closure_invoke (closure_float, ref value_float, {3.2f, 6.8f});
+	assert (value_float.get_float () == 10.0f);
+	
+	Crank.closure_invoke (closure_string, ref value_string, {"Piece", "Cake"});
+	assert (value_string.get_string () == "PieceCake");
+}
+
 private void func_holder_name () {
 	Crank.FuncHolder holder = new Crank.FuncHolder ("test-holder");
 	
@@ -331,6 +381,12 @@ int main (string[] args) {
 	
 	GLib.Test.add_func ("/wsid/crank/base/holder/name",
 			func_holder_name	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/get",
+			func_holder_get	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/get_by_param_type",
+			func_holder_get_by_param_types	);
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/lookup_return_type",
 			func_holder_lookup_type	);
