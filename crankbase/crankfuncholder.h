@@ -173,11 +173,6 @@ gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		const GValue*   	arg_values,
 						                      		gpointer         	invocation_hint);
 
-//gboolean  crank_func_closure_check_type (GType *types,
-//                                         uint   ntypes);
-
-//gboolean  crank_func_closure_check (GValue *values, uint nvalues);
-
 
 
 struct _CrankFuncBook;
