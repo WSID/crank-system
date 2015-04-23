@@ -173,6 +173,7 @@ private void func_type_arg_match_transformable () {
 }
 
 
+
 private int	subject_function_int (int a, int b) {
 	return a + b;
 }
@@ -184,6 +185,8 @@ private float subject_function_float (float a, float b) {
 private string subject_function_string (string a, string b) {
 	return a + b;
 }
+
+
 
 private Crank.FuncHolder func_holder_create () {
 	Crank.FuncHolder holder = new Crank.FuncHolder ("test-holder");
@@ -223,10 +226,43 @@ private void func_holder_name () {
 private void func_holder_remove () {
 	Crank.FuncHolder holder = func_holder_create ();
 	
+	Crank.FuncType ftype_int = new Crank.FuncType (typeof (int),
+			typeof (int), typeof (int));
+	Crank.FuncType ftype_float = new Crank.FuncType (typeof (float),
+			typeof (float), typeof (float));
+	Crank.FuncType ftype_string = new Crank.FuncType (typeof (string),
+			typeof (string), typeof (string));
+	
+	assert (  holder.remove (ftype_int));
+	assert (  holder.remove (ftype_float));
+	assert (! holder.remove (ftype_int));
+	assert (  holder.remove (ftype_string));
+}
+
+private void func_holder_remove_by_param_types () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
 	assert (  holder.remove_by_param_types ({typeof(int), typeof(int)}));
 	assert (  holder.remove_by_param_types ({typeof(float), typeof(float)}));
 	assert (! holder.remove_by_param_types ({typeof(int), typeof(int)}));
 	assert (  holder.remove_by_param_types ({typeof(string), typeof(string)}));
+}
+
+
+private void func_holder_lookup_type () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	assert (	holder.lookup_return_type ({typeof (int), typeof (int)})
+				==
+				typeof (int)	);
+	
+	assert (	holder.lookup_return_type ({typeof (float), typeof (float)})
+				==
+				typeof (float)	);
+				
+	assert (	holder.lookup_return_type ({typeof (string), typeof (string)})
+				==
+				typeof (string)	);
 }
 
 private void func_holder_invoke () {
@@ -296,8 +332,14 @@ int main (string[] args) {
 	GLib.Test.add_func ("/wsid/crank/base/holder/name",
 			func_holder_name	);
 			
+	GLib.Test.add_func ("/wsid/crank/base/holder/lookup_return_type",
+			func_holder_lookup_type	);
+			
 	GLib.Test.add_func ("/wsid/crank/base/holder/invoke",
 			func_holder_invoke	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/remove_by_param_types",
+			func_holder_remove_by_param_types	);
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/remove",
 			func_holder_remove	);

@@ -173,6 +173,14 @@ class TestFuncHolder (unittest.TestCase):
 		assert (self.holder.remove_by_param_types ([float, float]))
 		assert (self.holder.remove_by_param_types ([str, str]))
 		assert (not self.holder.remove_by_param_types ([float, float]))
+		
+	def test_lookup_return_type (self):
+		self.assertEqual (self.holder.lookup_return_type ([int, int]),
+							GObject.GType (int));
+		self.assertEqual (self.holder.lookup_return_type ([float, float]),
+							GObject.GType (float));
+		self.assertEqual (self.holder.lookup_return_type ([str, str]),
+							GObject.GType (str));
 
 	def test_invoke(self):
 		value = GObject.Value (value_type=int)

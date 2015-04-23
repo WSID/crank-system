@@ -67,10 +67,14 @@ void	test_func_type_arg_match_exactually (void);
 void	test_func_type_arg_match (void);
 void	test_func_type_arg_match_transformable (void);
 
+
+
 void	test_func_holder_setup (	FixtureFuncHolder* 	fixture,
 							 		gconstpointer		userdata	);
 void	test_func_holder_teardown (	FixtureFuncHolder*	fixture,
                                 	gconstpointer       userdata	);
+
+
 
 void	test_func_holder_setget_name (void);
 
@@ -561,17 +565,36 @@ void
 test_func_holder_get (	FixtureFuncHolder*	fixture,
 					  	gconstpointer		userdata	)
 {
-	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_int)
+	CrankFuncType*	ftype_int = crank_func_type_new (	G_TYPE_INT,
+			G_TYPE_INT,
+			G_TYPE_INT,
+			G_TYPE_NONE	);
+	
+	CrankFuncType*	ftype_float = crank_func_type_new (	G_TYPE_FLOAT,
+			G_TYPE_FLOAT,
+			G_TYPE_FLOAT,
+			G_TYPE_NONE	);
+			
+	CrankFuncType*	ftype_string = crank_func_type_new (	G_TYPE_STRING,
+			G_TYPE_STRING,
+			G_TYPE_STRING,
+			G_TYPE_NONE	);
+	
+	g_assert ( crank_func_holder_get (fixture->holder, ftype_int)
 				==
 				fixture->closure_int);
 				
-	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_float)
+	g_assert ( crank_func_holder_get (fixture->holder, ftype_float)
 				==
 				fixture->closure_float);
 				
-	g_assert ( crank_func_holder_get (fixture->holder, fixture->ftype_string)
+	g_assert ( crank_func_holder_get (fixture->holder, ftype_string)
 				==
 				fixture->closure_string);
+	
+	crank_func_type_unref (ftype_int);
+	crank_func_type_unref (ftype_float);
+	crank_func_type_unref (ftype_string);
 }
 
 void
@@ -601,10 +624,29 @@ void
 test_func_holder_remove (	FixtureFuncHolder*	fixture,
 					  		gconstpointer		userdata	)
 {
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_int));
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_float));
-  	g_assert (! crank_func_holder_remove (fixture->holder, fixture->ftype_int));
-  	g_assert (crank_func_holder_remove (fixture->holder, fixture->ftype_string));
+	CrankFuncType*	ftype_int = crank_func_type_new (	G_TYPE_INT,
+			G_TYPE_INT,
+			G_TYPE_INT,
+			G_TYPE_NONE	);
+	
+	CrankFuncType*	ftype_float = crank_func_type_new (	G_TYPE_FLOAT,
+			G_TYPE_FLOAT,
+			G_TYPE_FLOAT,
+			G_TYPE_NONE	);
+			
+	CrankFuncType*	ftype_string = crank_func_type_new (	G_TYPE_STRING,
+			G_TYPE_STRING,
+			G_TYPE_STRING,
+			G_TYPE_NONE	);
+			
+  	g_assert (crank_func_holder_remove (fixture->holder, ftype_int));
+  	g_assert (crank_func_holder_remove (fixture->holder, ftype_float));
+  	g_assert (! crank_func_holder_remove (fixture->holder, ftype_int));
+  	g_assert (crank_func_holder_remove (fixture->holder, ftype_string));
+  	
+	crank_func_type_unref (ftype_int);
+	crank_func_type_unref (ftype_float);
+	crank_func_type_unref (ftype_string);
 }
 
 void
