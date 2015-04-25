@@ -23,6 +23,7 @@
 #define _CRANKBASE_INSIDE
 
 #include "crankbasemacro.h"
+#include "crankstring.h"
 #include "crankvala.h"
 #include "crankvalue.h"
 #include "cranksingular.h"

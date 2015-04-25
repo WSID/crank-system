@@ -26,6 +26,17 @@ CRANK_VALA_GENERIC_UNOWNED
 </SECTION>
 
 <SECTION>
+<FILE>crankstring</FILE>
+crank_str_read_space
+crank_str_read_word
+crank_str_scan_char
+crank_str_scan_word
+crank_str_check_char
+crank_str_check_chars
+crank_str_check_chars_str
+</SECTION>
+
+<SECTION>
 <FILE>crankvalue</FILE>
 crank_value_overwrite_init
 crank_value_overwrite
