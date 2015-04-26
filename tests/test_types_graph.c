@@ -511,24 +511,24 @@ void
 test_types_graph_lookup_full (	CrankTypesGraph**	fixture,
 								gconstpointer		userdata	)
 {
-	const GType*	lookup_key1_a = NULL;
-	const GType*	lookup_key1_b = NULL;
-	const GType*	lookup_key1_c = NULL;
-	const GType*	lookup_key1_d = NULL;
-	const GType*	lookup_key1_e = NULL;
-	const GType*	lookup_key1_x = NULL;
+	GType*	lookup_key1_a = NULL;
+	GType*	lookup_key1_b = NULL;
+	GType*	lookup_key1_c = NULL;
+	GType*	lookup_key1_d = NULL;
+	GType*	lookup_key1_e = NULL;
+	GType*	lookup_key1_x = NULL;
 	
-	const GType*	lookup_key2_aa = NULL;
-	const GType*	lookup_key2_ab = NULL;
-	const GType*	lookup_key2_ad = NULL;
-	const GType*	lookup_key2_ae = NULL;
-	const GType*	lookup_key2_bc = NULL;
-	const GType*	lookup_key2_ca = NULL;
-	const GType*	lookup_key2_ce = NULL;
-	const GType*	lookup_key2_ea = NULL;
-	const GType*	lookup_key2_ed = NULL;
-	const GType*	lookup_key2_xa = NULL;
-	const GType*	lookup_key2_ax = NULL;
+	GType*	lookup_key2_aa = NULL;
+	GType*	lookup_key2_ab = NULL;
+	GType*	lookup_key2_ad = NULL;
+	GType*	lookup_key2_ae = NULL;
+	GType*	lookup_key2_bc = NULL;
+	GType*	lookup_key2_ca = NULL;
+	GType*	lookup_key2_ce = NULL;
+	GType*	lookup_key2_ea = NULL;
+	GType*	lookup_key2_ed = NULL;
+	GType*	lookup_key2_xa = NULL;
+	GType*	lookup_key2_ax = NULL;
 	
 	CrankTypesGraph* graph = * (CrankTypesGraph**) fixture;
 	

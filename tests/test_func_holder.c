@@ -754,11 +754,11 @@ test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
   			(GCallback)subject_function_string, NULL, NULL);
 
   	crank_func_holder_set_func (fixture->holder, fixture->ftype_int,
-  			subject_function_int, NULL, NULL, NULL);
+  			(CrankCallback)subject_function_int, NULL, NULL, NULL);
   			
   	crank_func_holder_set_func (fixture->holder, fixture->ftype_float,
-  			subject_function_float, NULL, NULL, NULL);
+  			(CrankCallback)subject_function_float, NULL, NULL, NULL);
   			
   	crank_func_holder_set_func (fixture->holder, fixture->ftype_string,
-  			subject_function_string, NULL, NULL, NULL);
+  			(CrankCallback)subject_function_string, NULL, NULL, NULL);
 }

@@ -50,11 +50,11 @@ static void			_transform_crank_func_type_string (	const GValue* value_ftype,
  * 함수의 반환형과 인자의 형을 저장합니다.
  */
 struct _CrankFuncType {
-	GType   return_type;
-	GType*  param_types;
-	uint    nparam_types;
+	GType	return_type;
+	GType*	param_types;
+	guint	nparam_types;
 	
-	uint	  _refc;
+	guint	_refc;
 };
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
@@ -74,7 +74,7 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
 
 
 /**
- * crank_func_type_new: (constructor):
+ * crank_func_type_new:
  * @return_type: 함수의 반환형입니다.
  * @...: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
@@ -97,7 +97,7 @@ crank_func_type_new (const GType return_type, ...)
 
 
 /**
- * crank_func_type_new_va: (constructor):
+ * crank_func_type_new_va:
  * @return_type: 함수의 반환형입니다.
  * @varargs: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
  * 
@@ -123,18 +123,11 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 	ftype->nparam_types = 0;
 
 	CRANK_FOREACH_VALIST_BEGIN (varargs, GType, varargs_type, G_TYPE_NONE)
-
-		if (param_types_alloc <= ftype->nparam_types) {
-			param_types_alloc = (param_types_alloc == 0) ?
-				1 :
-				param_types_alloc << 1;
-			
-			ftype->param_types = g_renew (GType, ftype->param_types, param_types_alloc);
-		}
-	
-		ftype->param_types[ftype->nparam_types] = varargs_type;
-		ftype->nparam_types++;
-
+		CRANK_ARRAY_ADD (GType,
+						ftype->param_types,
+						ftype->nparam_types,
+						param_types_alloc,
+						varargs_type);
 	CRANK_FOREACH_VALIST_END
 
 	ftype->param_types = g_renew (GType, ftype->param_types, ftype->nparam_types);
@@ -146,7 +139,7 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 
 
 /**
- * crank_func_type_new_with_types: (constructor):
+ * crank_func_type_new_with_types:
  * @return_type: 함수의 반환형입니다.
  * @param_types: (array length=nparam_types): 함수가 받아들이는 인자 형입니다.
  * @nparam_types: @param_types의 길이입니다.
@@ -275,15 +268,15 @@ crank_func_type_equal (gconstpointer a, gconstpointer b) {
  * 
  * #CrankFuncType을 문자열로 변환합니다. 형식은 다음과 같습니다.
  * 
- * <programlisting>
+ * |[
  * RTYPE (PARAM, PARAM)
- * </programlisting>
+ * ]|
  *
  * 만일 형식 gchar* (*)(gint, gint)를 나타내는 경우 다음으로 표현됩니다.
  * 
- * <programlisting>
+ * |[
  * guchararray (gint, gint)
- * </programlisting>
+ * ]|
  * 
  * Returns: (transfer full): 문자열입니다. 사용이 끝난 후 g_free()로 해제해야 합니다.
  */
@@ -736,7 +729,7 @@ crank_func_holder_new_quark (	const GQuark	name	)
 			crank_func_type_hash,
 			crank_func_type_equal,
 			NULL,
-			crank_func_holder_data_free);
+			(GDestroyNotify) crank_func_holder_data_free);
 	
 	holder->_refc = 1;
 
@@ -859,7 +852,7 @@ crank_func_holder_set (	CrankFuncHolder*	holder,
 	
 	types = crank_func_type_get_param_types (ftype, &ntypes);
 	
-	data = crank_func_holder_get_data_by_param_types (holder, ftype, ntypes);
+	data = crank_func_holder_get_data_by_param_types (holder, types, ntypes);
 	
 	if (data != NULL) {
 		g_hash_table_remove (holder->table_ftype_data, data->ftype);
@@ -1223,7 +1216,9 @@ void
 crank_func_book_add (	CrankFuncBook*		book,
 						CrankFuncHolder*	holder	)
 {
-	g_hash_table_insert (book->func_holders, holder->name, holder);
+	g_hash_table_insert (book->func_holders,
+			(gpointer)(gintptr)holder->name,
+			holder);
 }
 
 CrankFuncHolder*
@@ -1234,14 +1229,16 @@ crank_func_book_get (	CrankFuncBook*		book,
 	
 	if (qname == 0) return NULL;
 	
-	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders, qname);
+	return (CrankFuncHolder*) g_hash_table_lookup (book->func_holders,
+			(gpointer)(gintptr) qname);
 }
 
 CrankFuncHolder*
 crank_func_book_getq (	CrankFuncBook*		book,
 						const GQuark		name	)
 {
-	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders, name);
+	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders,
+			(gpointer)(gintptr) name);
 }
 
 gboolean
@@ -1250,7 +1247,8 @@ crank_func_book_remove_by_name (CrankFuncBook*		book,
 {
 	GQuark	qname = g_quark_try_string (name);
 	
-	if (qname != 0) return g_hash_table_remove (book->func_holders, qname);
+	if (qname != 0) return g_hash_table_remove (book->func_holders,
+			(gpointer)(gintptr) qname);
 	return FALSE;
 }
 
@@ -1304,7 +1302,8 @@ crank_func_book_invoke_quark (	CrankFuncBook*		book,
 								const GValue*		arg_values,
 								gpointer			invocation_hint	)
 {
-	CrankFuncHolder* holder = g_hash_table_lookup (book->func_holders, name);
+	CrankFuncHolder* holder = g_hash_table_lookup (book->func_holders,
+			(gpointer)(gintptr)name);
 	
 	if (holder != NULL) {
 		return crank_func_holder_invoke (holder, return_value, narg_values, arg_values, invocation_hint);
