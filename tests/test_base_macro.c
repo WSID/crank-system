@@ -33,6 +33,7 @@ gint  subject_function_FOREACH_VARARG_DO (gint a, ...);
 
 void	test_macro_ARRAY_DUP (void);
 void	test_macro_ARRAY_CMP (void);
+void	test_macro_ARRAY_ADD (void);
 
 void	test_macro_FOREACH_ARRAY (void);
 void	test_macro_FOREACH_VALIST (void);
@@ -57,6 +58,9 @@ main (gint   argc,
 		
 	g_test_add_func ("/wsid/crank/base/macro/arraycmp",
 		test_macro_ARRAY_CMP);
+		
+	g_test_add_func ("/wsid/crank/base/macro/arrayadd",
+		test_macro_ARRAY_ADD);
 		
 		
 		
@@ -187,6 +191,29 @@ test_macro_FOREACH_ARRAY (void)
 	CRANK_FOREACH_ARRAY_END
 	
 	g_assert_cmpint (sum, ==, 33);
+}
+
+void
+test_macro_ARRAY_ADD (void)
+{
+	gint*	subject = NULL;
+	guint	nsubject = 0;
+	guint	subject_alloc = 0;
+	
+	CRANK_ARRAY_ADD (gint, subject, nsubject, subject_alloc, 3);
+	CRANK_ARRAY_ADD (gint, subject, nsubject, subject_alloc, 8);
+	CRANK_ARRAY_ADD (gint, subject, nsubject, subject_alloc, 5);
+	CRANK_ARRAY_ADD (gint, subject, nsubject, subject_alloc, 2);
+	
+	g_assert_cmpint (subject[0], ==, 3);
+	g_assert_cmpint (subject[1], ==, 8);
+	g_assert_cmpint (subject[2], ==, 5);
+	g_assert_cmpint (subject[3], ==, 2);
+	
+	g_assert_cmpint (nsubject, ==, 4);
+	g_assert_cmpint (nsubject, <=, subject_alloc);
+	
+	g_free (subject);
 }
 
 void

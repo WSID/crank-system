@@ -108,6 +108,16 @@ G_BEGIN_DECLS
  */
 #define CRANK_ARRAY_CMP(a, b, G, n) (memcmp((a), (b), (n) * sizeof (G)))
 
+/**
+ * CRANK_ARRAY_ADD:
+ * @T: 타입입니다.
+ * @a: (array length=n) (type T): 값을 추가할 배열입니다.
+ * @n: 배열이 가지고 있는 항목의 개수입니다. (배열의 유효한 길이)
+ * @c: 배열이 할당된 길이입니다.
+ * @I: (type T): 배열에 추가될 항목입니다.
+ */
+#define CRANK_ARRAY_ADD(T, a, n, c, I) \
+	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
 
 /**
  * CRANK_FOREACH_ARRAY_BEGIN:
