@@ -28,6 +28,66 @@ private bool subject_function (int a, int b) {
 	return (a % b) == 0;
 }
 
+private int add_i_ii (int a, int b) {
+	return a + b;
+}
+
+private float add_f_ff (float a, float b) {
+	return a + b;
+}
+
+private int mul_i_ii (int a, int b) {
+	return a * b;
+}
+
+private float mul_f_ff (float a, float b) {
+	return a * b;
+}
+
+private int neg_i_i (int a) {
+	return -a;
+}
+
+private float neg_f_f (float a) {
+	return -a;
+}
+
+private enum TestFuncEnum {
+	ADD,
+	MUL,
+	NEG
+}
+
+private struct FixtureBook {
+	Crank.FuncBook book;
+	Crank.FuncHolder	holder_add;
+	Crank.FuncHolder	holder_mul;
+	Crank.FuncHolder	holder_neg;
+	
+	public FixtureBook () {
+		book = new Crank.FuncBook.with_name ("test-book");
+		holder_add = new Crank.FuncHolder ("add");
+		holder_mul = new Crank.FuncHolder ("mul");
+		holder_neg = new Crank.FuncHolder ("neg");
+		
+		book.set (TestFuncEnum.ADD, holder_add);
+		book.set (TestFuncEnum.MUL, holder_mul);
+		book.set (TestFuncEnum.NEG, holder_neg);
+		
+		var ftype_i_ii = new Crank.FuncType (typeof (int), typeof (int), typeof (int));
+		var ftype_f_ff = new Crank.FuncType (typeof (float), typeof (float), typeof (float));
+		var ftype_i_i = new Crank.FuncType (typeof (int), typeof (int));
+		var ftype_f_f = new Crank.FuncType (typeof (float), typeof (float));
+		
+		holder_add.set_func (ftype_i_ii, (Crank.Callback)add_i_ii);
+		holder_add.set_func (ftype_f_ff, (Crank.Callback)add_f_ff);
+		holder_mul.set_func (ftype_i_ii, (Crank.Callback)mul_i_ii);
+		holder_mul.set_func (ftype_f_ff, (Crank.Callback)mul_f_ff);
+		holder_neg.set_func (ftype_i_i, (Crank.Callback)neg_i_i);
+		holder_neg.set_func (ftype_f_f, (Crank.Callback)neg_f_f);
+	}
+}
+
 
 private void func_type_new () {
 	Crank.FuncType ftype = new Crank.FuncType (
@@ -334,6 +394,183 @@ private void func_holder_invoke () {
 	assert (value.get_string () == "Daddy long leg");
 }
 
+private void func_book_name () {
+	Crank.FuncBook book = new Crank.FuncBook.with_name ("test-book");
+	
+	assert (book.name == "test-book");
+	assert (book.qname == GLib.Quark.try_string ("test-book"));
+	
+	book.name = "another-book";
+	assert (book.name == "another-book");
+	assert (book.qname == GLib.Quark.try_string ("another-book"));
+	
+	book.qname = GLib.Quark.from_string ("necronomicon");
+	assert (book.name == "necronomicon");
+	assert (book.qname == GLib.Quark.try_string ("necronomicon"));
+}
+
+private void func_book_get () {
+	FixtureBook fix = FixtureBook ();
+	
+	assert (fix.book [TestFuncEnum.ADD] == fix.holder_add);
+	assert (fix.book [TestFuncEnum.MUL] == fix.holder_mul);
+	assert (fix.book [TestFuncEnum.NEG] == fix.holder_neg);
+}
+
+private void func_book_index_of () {
+	FixtureBook fix = FixtureBook ();
+	
+	assert (fix.book.index_of (fix.holder_add) == TestFuncEnum.ADD);
+	assert (fix.book.index_of (fix.holder_mul) == TestFuncEnum.MUL);
+	assert (fix.book.index_of (fix.holder_neg) == TestFuncEnum.NEG);
+}
+
+private void func_book_get_by_name () {
+	FixtureBook fix = FixtureBook ();
+	
+	assert (fix.book.get_by_name ("add") == fix.holder_add);
+	assert (fix.book.get_by_name ("mul") == fix.holder_mul);
+	assert (fix.book.get_by_name ("neg") == fix.holder_neg);
+}
+
+private void func_book_get_by_qname () {
+	FixtureBook fix = FixtureBook ();
+
+	assert (fix.book.get_by_qname (GLib.Quark.from_string ("add")) == fix.holder_add);
+	assert (fix.book.get_by_qname (GLib.Quark.from_string ("mul")) == fix.holder_mul);
+	assert (fix.book.get_by_qname (GLib.Quark.from_string ("neg")) == fix.holder_neg);
+}
+
+private void func_book_remove () {
+	FixtureBook fix = FixtureBook ();
+	
+	assert (fix.book.remove (TestFuncEnum.ADD));
+	assert (fix.book.remove (TestFuncEnum.MUL));
+	assert (fix.book.remove (TestFuncEnum.NEG));
+	assert (! fix.book.remove (TestFuncEnum.ADD));
+	
+	assert (fix.book[TestFuncEnum.ADD] == null);
+	assert (fix.book[TestFuncEnum.MUL] == null);
+	assert (fix.book[TestFuncEnum.NEG] == null);
+}
+
+private void func_book_remove_by_name () {
+	FixtureBook fix = FixtureBook ();
+	
+	assert (fix.book.remove_by_name ("add"));
+	assert (fix.book.remove_by_name ("mul"));
+	assert (fix.book.remove_by_name ("neg"));
+	assert (! fix.book.remove_by_name ("add"));
+	
+	assert (fix.book[TestFuncEnum.ADD] == null);
+	assert (fix.book[TestFuncEnum.MUL] == null);
+	assert (fix.book[TestFuncEnum.NEG] == null);
+}
+
+private void func_book_remove_by_qname () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Quark addq = GLib.Quark.from_string ("add");
+	GLib.Quark mulq = GLib.Quark.from_string ("mul");
+	GLib.Quark negq = GLib.Quark.from_string ("neg");
+	
+	
+	assert (fix.book.remove_by_qname (addq));
+	assert (fix.book.remove_by_qname (mulq));
+	assert (fix.book.remove_by_qname (negq));
+	assert (! fix.book.remove_by_qname (addq));
+	
+	assert (fix.book[TestFuncEnum.ADD] == null);
+	assert (fix.book[TestFuncEnum.MUL] == null);
+	assert (fix.book[TestFuncEnum.NEG] == null);
+}
+
+private void func_book_invoke () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	assert (fix.book.invoke (TestFuncEnum.ADD, ref value, {17, 19}));
+	assert (value.get_int () == 17 + 19);
+	
+	assert (fix.book.invoke (TestFuncEnum.MUL, ref value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke (TestFuncEnum.NEG, ref value, {32}));
+	assert (value.get_int () == -32 );
+	
+	
+	value = GLib.Value (typeof (float));
+	
+	assert (fix.book.invoke (TestFuncEnum.ADD, ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke (TestFuncEnum.MUL, ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke (TestFuncEnum.NEG, ref value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+private void func_book_invoke_name () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	assert (fix.book.invoke_name ("add", ref value, {17, 19}));
+	assert (value.get_int () == 	17 + 19);
+	
+	assert (fix.book.invoke_name ("mul", ref value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke_name ("neg", ref value, {32}));
+	assert (value.get_int () == -32 );
+	
+	
+	value = GLib.Value (typeof (float));
+	
+	assert (fix.book.invoke_name ("add", ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke_name ("mul", ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke_name ("neg", ref value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+private void func_book_invoke_qname () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Quark addq = GLib.Quark.try_string ("add");
+	GLib.Quark mulq = GLib.Quark.try_string ("mul");
+	GLib.Quark negq = GLib.Quark.try_string ("neg");
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	assert (fix.book.invoke_qname (addq, ref value, {17, 19}));
+	assert (value.get_int () == 	17 + 19);
+	
+	assert (fix.book.invoke_qname (mulq, ref value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke_qname (negq, ref value, {32}));
+	assert (value.get_int () == -32 );
+	
+	
+	value = GLib.Value (typeof (float));
+	
+	assert (fix.book.invoke_qname (addq, ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke_qname (mulq, ref value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke_qname (negq, ref value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	
@@ -399,6 +636,40 @@ int main (string[] args) {
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/remove",
 			func_holder_remove	);
+	
+	GLib.Test.add_func ("/crank/base/book/name",
+			func_book_name	);
+			
+	GLib.Test.add_func ("/crank/base/book/get",
+			func_book_get	);
+	
+	GLib.Test.add_func ("/crank/base/book/index_of",
+			func_book_index_of	);
+	
+	GLib.Test.add_func ("/crank/base/book/get_by_name",
+			func_book_get_by_name	);
+
+	GLib.Test.add_func ("/crank/base/book/get_by_qname",
+			func_book_get_by_qname	);
+	
+	GLib.Test.add_func ("/crank/base/book/remove",
+			func_book_remove	);
+			
+	GLib.Test.add_func ("/crank/base/book/remove_by_name",
+			func_book_remove_by_name	);
+			
+	GLib.Test.add_func ("/crank/base/book/remove_by_qname",
+			func_book_remove_by_qname	);
+	
+	GLib.Test.add_func ("/crank/base/book/invoke/index",
+			func_book_invoke	);
+
+	GLib.Test.add_func ("/crank/base/book/invoke/name",
+			func_book_invoke_name	);
+			
+	GLib.Test.add_func ("/crank/base/book/invoke/qname",
+			func_book_invoke_qname	);
+	
 	
 	GLib.Test.run ();
 	

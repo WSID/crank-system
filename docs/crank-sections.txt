@@ -153,5 +153,30 @@ CRANK_TYPE_FUNC_HOLDER
 crank_func_holder_get_type
 
 <SUBSECTION>
+crank_func_book_new
+crank_func_book_new_with_name
+crank_func_book_new_with_qname
+crank_func_book_ref
+crank_func_book_unref
+crank_func_book_set_name
+crank_func_book_set_qname
+crank_func_book_get_name
+crank_func_book_get_qname
+crank_func_book_get
+crank_func_book_get_by_name
+crank_func_book_get_by_qname
+crank_func_book_index_of
+crank_func_book_remove
+crank_func_book_remove_by_name
+crank_func_book_set
+crank_func_book_invoke
+crank_func_book_invoke_name
+crank_func_book_invoke_qname
+<SUBSECTION Standard>
+crank_func_book_get_type
+CRANK_TYPE_FUNC_BOOK
+
+<SUBSECTION>
 CrankFuncBook
 </SECTION>
+

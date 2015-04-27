@@ -67,7 +67,7 @@ namespace Crank {
 	
 	[CCode (cname="g_closure_invoke")]
 	public void closure_invoke (	GLib.Closure	closure,
-									ref GLib.Value?	return_value,
+									ref GLib.Value	return_value,
 										[CCode (array_length_pos=2.5)]
 									GLib.Value[]	param_types,
 									void*			invocation_hint = null);
@@ -93,7 +93,9 @@ namespace Crank {
 	}
 	
 	public class FuncBook {
-		public string?			name				{	set;	}
-		public GLib.Quark		qname				{	set;	}
+		public string?			name				{	get;set;	}
+		public GLib.Quark		qname				{	get;set;	}
+		
+		
 	}
 }

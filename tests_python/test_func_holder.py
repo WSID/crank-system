@@ -20,6 +20,7 @@
 
 import random
 import unittest
+import enum
 
 from gi.repository import GObject
 from gi.repository import CrankBase
@@ -176,11 +177,11 @@ class TestFuncHolder (unittest.TestCase):
 		
 	def test_lookup_return_type (self):
 		self.assertEqual (self.holder.lookup_return_type ([int, int]),
-							GObject.GType (int));
+							GObject.GType (int))
 		self.assertEqual (self.holder.lookup_return_type ([float, float]),
-							GObject.GType (float));
+							GObject.GType (float))
 		self.assertEqual (self.holder.lookup_return_type ([str, str]),
-							GObject.GType (str));
+							GObject.GType (str))
 
 	def test_invoke(self):
 		value = GObject.Value (value_type=int)
@@ -194,6 +195,134 @@ class TestFuncHolder (unittest.TestCase):
 		value = GObject.Value (value_type=str)
 		assert (self.holder.invoke (value, ["Take My ", "Money"], None))
 		self.assertEqual (value.get_string(), "Take My Money")
+
+class TestFuncBookEnum (enum.IntEnum):
+	add = 0
+	mul = 1
+	neg = 2
+
+class TestFuncBook (unittest.TestCase):
+	def setUp (self):
+		self.book = CrankBase.FuncBook.new_with_name ("test-book")
+		self.holder_add = CrankBase.FuncHolder ("add")
+		self.holder_mul = CrankBase.FuncHolder ("mul")
+		self.holder_neg = CrankBase.FuncHolder ("neg")
+		
+		self.book.set (TestFuncBookEnum.add, self.holder_add)
+		self.book.set (TestFuncBookEnum.mul, self.holder_mul)
+		self.book.set (TestFuncBookEnum.neg, self.holder_neg)
+		
+		ftype_i_ii = CrankBase.FuncType.new_with_types (int, [int, int])
+		ftype_f_ff = CrankBase.FuncType.new_with_types (float, [float, float])
+		
+		ftype_i_i = CrankBase.FuncType.new_with_types (int, [int])
+		ftype_f_f = CrankBase.FuncType.new_with_types (float, [float])
+		
+		adder = lambda x,y: x+y
+		muler = lambda x,y: x*y
+		neger = lambda x: -x
+		
+		self.holder_add.set (ftype_i_ii, adder)
+		self.holder_add.set (ftype_f_ff, adder)
+		
+		self.holder_mul.set (ftype_i_ii, muler)
+		self.holder_mul.set (ftype_f_ff, muler)
+		
+		self.holder_neg.set (ftype_i_i, neger)
+		self.holder_neg.set (ftype_f_f, neger)
+	
+	def test_get_name (self):
+		self.assertEqual (self.book.get_name (), "test-book")
+		
+		self.book.set_name ("necronomicon")		
+		self.assertEqual (self.book.get_name (), "necronomicon")
+	
+	def test_get (self):
+		self.assertEqual (self.book.get (TestFuncBookEnum.add), self.holder_add)
+		self.assertEqual (self.book.get (TestFuncBookEnum.mul), self.holder_mul)
+		self.assertEqual (self.book.get (TestFuncBookEnum.neg), self.holder_neg)	
+		
+	def test_index_of (self):
+		self.assertEqual (self.book.index_of (self.holder_add), TestFuncBookEnum.add)
+		self.assertEqual (self.book.index_of (self.holder_mul), TestFuncBookEnum.mul)
+		self.assertEqual (self.book.index_of (self.holder_neg), TestFuncBookEnum.neg)
+		
+	def test_get_by_name (self):
+		self.assertEqual (self.book.get_by_name ("add"), self.holder_add)
+		self.assertEqual (self.book.get_by_name ("mul"), self.holder_mul)
+		self.assertEqual (self.book.get_by_name ("neg"), self.holder_neg)
+	
+	def test_remove (self):
+		assert (self.book.remove (TestFuncBookEnum.add))
+		assert (self.book.remove (TestFuncBookEnum.mul))
+		assert (self.book.remove (TestFuncBookEnum.neg))
+		assert (not self.book.remove (TestFuncBookEnum.add))
+		
+		self.assertIsNone (self.book.get (TestFuncBookEnum.add))
+		self.assertIsNone (self.book.get (TestFuncBookEnum.mul))
+		self.assertIsNone (self.book.get (TestFuncBookEnum.neg))
+		
+	def test_remove_by_name (self):
+		assert (self.book.remove_by_name ("add"))
+		assert (self.book.remove_by_name ("mul"))
+		assert (self.book.remove_by_name ("neg"))
+		assert (not self.book.remove_by_name ("add"))
+		
+		self.assertIsNone (self.book.get (TestFuncBookEnum.add))
+		self.assertIsNone (self.book.get (TestFuncBookEnum.mul))
+		self.assertIsNone (self.book.get (TestFuncBookEnum.neg))
+	
+	def test_invoke (self):
+		ret = GObject.Value (value_type=int)
+		
+		assert (self.book.invoke (TestFuncBookEnum.add, ret, [13, 57], None))
+		self.assertEqual (ret.get_int (), 13 + 57)
+		
+		assert (self.book.invoke (TestFuncBookEnum.mul, ret, [13, 57], None))
+		self.assertEqual (ret.get_int (), 13 * 57)
+		
+		assert (self.book.invoke (TestFuncBookEnum.neg, ret, [42], None))
+		self.assertEqual (ret.get_int (), -42)
+		
+		
+		
+		ret = GObject.Value (value_type=float)
+		
+		assert (self.book.invoke (TestFuncBookEnum.add, ret, [13.0, 57.0], None))
+		self.assertEqual (ret.get_double (), 13.0 + 57.0)
+		
+		assert (self.book.invoke (TestFuncBookEnum.mul, ret, [13.0, 57.0], None))
+		self.assertEqual (ret.get_double (), 13.0 * 57.0)
+		
+		assert (self.book.invoke (TestFuncBookEnum.neg, ret, [74.0], None))
+		self.assertEqual (ret.get_double (), -74.0)
+		
+		
+		
+	def test_invoke_name (self):
+		ret = GObject.Value (value_type=int)
+		
+		assert (self.book.invoke_name ("add", ret, [13, 57], None))
+		self.assertEqual (ret.get_int (), 13 + 57)
+		
+		assert (self.book.invoke_name ("mul", ret, [13, 57], None))
+		self.assertEqual (ret.get_int (), 13 * 57)
+		
+		assert (self.book.invoke_name ("neg", ret, [42], None))
+		self.assertEqual (ret.get_int (), -42)
+		
+		
+		
+		ret = GObject.Value (value_type=float)
+		
+		assert (self.book.invoke_name ("add", ret, [13.0, 57.0], None))
+		self.assertEqual (ret.get_double (), 13.0 + 57.0)
+		
+		assert (self.book.invoke_name ("mul", ret, [13.0, 57.0], None))
+		self.assertEqual (ret.get_double (), 13.0 * 57.0)
+		
+		assert (self.book.invoke_name ("neg", ret, [74.0], None))
+		self.assertEqual (ret.get_double (), -74.0)
 
 if __name__ == '__main__':
 	random.seed ()

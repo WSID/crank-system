@@ -1134,7 +1134,9 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
  */
 struct _CrankFuncBook {
 	GQuark				name;
-	GHashTable*			func_holders;	// GQuark -> CrankFuncHolder
+	GPtrArray*			func_holders;
+	GHashTable*			table_index;		// CrankFuncHolder -> guint 
+	GHashTable*			table_name_holder;	// GQuark -> CrankFuncHolder
 	
 	guint				_refc;
 };
@@ -1146,29 +1148,70 @@ G_DEFINE_BOXED_TYPE(CrankFuncBook, crank_func_book,
 
 //////// 외부 공개 함수
 
+/**
+ * crank_func_book_new:
+ *
+ * 이름 없는 함수 책을 만듭니다.
+ *
+ * Returns: (transfer full): 새로운 함수 책입니다.
+ */
 CrankFuncBook*
 crank_func_book_new (void) {
 	return crank_func_book_new_with_qname (0);
 }
 
+/**
+ * crank_func_book_new_with_name:
+ * @name: (nullable): 함수 책의 이름입니다.
+ *
+ * 이름을 가진 함수 책을 만듭니다.
+ *
+ * Returns: (transfer full): 새로운 함수 책입니다.
+ */
 CrankFuncBook*
 crank_func_book_new_with_name (	const gchar*	name	)
 {
 	return crank_func_book_new_with_qname (g_quark_from_string(name));
 }
 
+/**
+ * crank_func_book_new_with_qname:
+ * @name: 함수 책의 이름입니다.
+ *
+ * 이름을 가진 함수 책을 만듭니다.
+ *
+ * Returns: (transfer full): 새로운 함수 책입니다.
+ */
 CrankFuncBook*
 crank_func_book_new_with_qname (	const GQuark	name	)
 {
 	CrankFuncBook* book = g_new (CrankFuncBook, 1);
 	
 	book->name = name;
-	book->func_holders = g_hash_table_new_full (
-			g_direct_hash,	g_direct_equal,
-			NULL,			(GDestroyNotify)crank_func_holder_unref	);
+	book->func_holders = g_ptr_array_new ();
+	
+	book->table_index = g_hash_table_new (
+			g_direct_hash,
+			g_direct_equal	);
+	
+	book->table_name_holder = g_hash_table_new (
+			g_direct_hash,
+			g_direct_equal	);
+	
 	book->_refc = 1;
+	return book;
 }
 
+
+
+/**
+ * crank_func_book_ref:
+ * @book: 함수 책입니다.
+ *
+ * 함수책의 래퍼런스 카운트를 1 증가시킵니다.
+ *
+ * Returns: (transfer full): 래퍼런스 카운트가 1 증가된 @book입니다.
+ */
 CrankFuncBook*
 crank_func_book_ref (	CrankFuncBook*		book	)
 {
@@ -1176,15 +1219,31 @@ crank_func_book_ref (	CrankFuncBook*		book	)
 	return book;
 }
 
+/**
+ * crank_func_book_unref:
+ * @book: 함수 책입니다.
+ *
+ * 함수책의 래퍼런스 카운트를 1 감소시킵니다. 래퍼런스 카운트가 0이 되면 함수
+ * 책은 해제됩니다.
+ */
 void
 crank_func_book_unref (	CrankFuncBook*		book	)
 {
 	if (g_atomic_int_dec_and_test(&book->_refc)) {
-		g_hash_table_unref (book->func_holders);
+		g_hash_table_unref (book->table_name_holder);
+		g_hash_table_unref (book->table_index);
+		g_ptr_array_unref (book->func_holders);
 		g_free (book);
 	}
 }
 
+/**
+ * crank_func_book_set_name:
+ * @book: 이름을 정할 함수 책입니다.
+ * @name: (nullable): 이름입니다.
+ *
+ * 함수 책의 이름을 정합니다.
+ */
 void
 crank_func_book_set_name (	CrankFuncBook*		book,
 							const gchar*		name	)
@@ -1192,12 +1251,29 @@ crank_func_book_set_name (	CrankFuncBook*		book,
 	book->name = g_quark_from_string (name);
 }
 
+/**
+ * crank_func_book_get_name:
+ * @book: 이름을 얻을 함수 책입니다.
+ *
+ * 함수 책의 이름을 얻습니다.
+ *
+ * Returns: (nullable): 함수책의 이름입니다.
+ */
 const gchar*
 crank_func_book_get_name (	CrankFuncBook*		book	)
 {
+	g_message ("get name: %ld: %s", (glong)book->name, g_quark_to_string(book->name));
 	return g_quark_to_string (book->name);
 }
 
+
+/**
+ * crank_func_book_set_qname:
+ * @book: 이름을 정할 함수 책입니다.
+ * @name: 이름입니다.
+ *
+ * 함수 책의 이름을 정합니다.
+ */
 void
 crank_func_book_set_qname (	CrankFuncBook*		book,
 							const GQuark		name	)
@@ -1205,6 +1281,14 @@ crank_func_book_set_qname (	CrankFuncBook*		book,
 	book->name = name;
 }
 
+/**
+ * crank_func_book_get_qname:
+ * @book: 이름을 얻을 함수 책입니다.
+ *
+ * 함수 책의 이름을 얻습니다.
+ *
+ * Returns: 함수책의 이름입니다.
+ */
 GQuark
 crank_func_book_get_qname (	CrankFuncBook*		book	)
 {
@@ -1212,101 +1296,304 @@ crank_func_book_get_qname (	CrankFuncBook*		book	)
 }
 
 
+/**
+ * crank_func_book_set:
+ * @book: 함수 홀더를 저장할 함수 책입니다.
+ * @index: 인덱스입니다.
+ * @holder: (nullable): 함수 홀더입니다.
+ *
+ * 함수 홀더를 지정된 인덱스에 설정합니다.
+ */
 void
-crank_func_book_add (	CrankFuncBook*		book,
+crank_func_book_set (	CrankFuncBook*		book,
+						const guint			index,
 						CrankFuncHolder*	holder	)
 {
-	g_hash_table_insert (book->func_holders,
-			(gpointer)(gintptr)holder->name,
-			holder);
+	g_hash_table_insert (book->table_name_holder,
+			GINT_TO_POINTER (holder->name),
+			holder									);
+	
+	g_hash_table_insert (book->table_index,
+			holder,
+			GINT_TO_POINTER (index)					);
+	
+	if (book->func_holders->len <= index) {
+		g_ptr_array_set_size (book->func_holders, index + 1);
+	}
+
+	
+	if (book->func_holders->pdata[index] != NULL)
+		crank_func_holder_unref (book->func_holders->pdata[index]);
+
+	book->func_holders->pdata[index] = crank_func_holder_ref (holder);
 }
 
+/**
+ * crank_func_book_get:
+ * @book: 함수 홀더를 얻을 함수 책입니다.
+ * @index: 함수 홀더의 인덱스입니다.
+ *
+ * 지정된 인덱스에 있는 함수 홀더를 얻습니다.
+ *
+ * Returns: (nullable): 해당 인덱스에 있는 함수 홀더입니다. 없으면 %NULL
+ */
 CrankFuncHolder*
 crank_func_book_get (	CrankFuncBook*		book,
-						const gchar*		name	)
+						const guint			index	)
+{
+	
+	if (index < (book->func_holders->len))
+		return book->func_holders->pdata[index];
+	
+	return NULL;
+}
+
+/**
+ * crank_func_book_index_of:
+ * @book: 함수 책입니다.
+ * @holder: 위치를 얻을 함수 홀더입니다.
+ *
+ * 주어진 함수 홀더의 인덱스를 얻습니다.
+ *
+ * Returns: 함수 홀더의 위치입니다. 존재하지 않을 경우 -1을 반환합니다.
+ */
+gint
+crank_func_book_index_of (	CrankFuncBook*		book,
+							CrankFuncHolder*	holder	)
+{
+	if (g_hash_table_contains (book->table_index, holder))
+		return GPOINTER_TO_INT (g_hash_table_lookup (book->table_index, holder));
+	return -1;
+}
+
+/**
+ * crank_func_book_get_by_name:
+ * @book: 함수 책입니다.
+ * @name: 찾고자 하는 함수 홀더의 이름입니다.
+ *
+ * 함수 홀더를 이름으로 찾습니다.
+ *
+ * Returns: (nullable): 해당 이름의 함수 홀더입니다. 만일 존재하지 않으면 %NULL.
+ */
+CrankFuncHolder*
+crank_func_book_get_by_name (	CrankFuncBook*	book,
+								const gchar*	name	)
 {
 	GQuark	qname = g_quark_try_string (name);
 	
 	if (qname == 0) return NULL;
 	
-	return (CrankFuncHolder*) g_hash_table_lookup (book->func_holders,
-			(gpointer)(gintptr) qname);
+	return g_hash_table_lookup (book->table_name_holder, GINT_TO_POINTER(qname));
 }
 
+/**
+ * crank_func_book_get_by_name:
+ * @book: 함수 책입니다.
+ * @name: 찾고자 하는 함수 홀더의 이름입니다.
+ *
+ * 함수 홀더를 이름으로 찾습니다.
+ *
+ * Returns: (nullable): 해당 이름의 함수 홀더입니다. 만일 존재하지 않으면 %NULL.
+ */
 CrankFuncHolder*
-crank_func_book_getq (	CrankFuncBook*		book,
-						const GQuark		name	)
+crank_func_book_get_by_qname (	CrankFuncBook*	book,
+								const GQuark	name	)
 {
-	return (CrankFuncHolder*)g_hash_table_lookup (book->func_holders,
-			(gpointer)(gintptr) name);
+	return g_hash_table_lookup (book->table_name_holder, GINT_TO_POINTER(name));
 }
 
+/**
+ * crank_func_book_remove:
+ * @book: 함수 책입니다.
+ * @index: 제거하고자 하는 인덱스입니다.
+ *
+ * 주어진 인덱스의 함수 홀더를 제거합니다.
+ *
+ * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ */
+gboolean
+crank_func_book_remove (	CrankFuncBook*	book,
+							const guint		index	)
+{
+	CrankFuncHolder* holder =
+		(CrankFuncHolder*) book->func_holders->pdata[index];
+	
+	if (holder != NULL) {
+		g_hash_table_remove (book->table_index, holder);
+		g_hash_table_remove (book->table_name_holder,
+			GINT_TO_POINTER (crank_func_holder_get_qname(holder))	);
+		
+		book->func_holders->pdata[index] = NULL;
+		
+		crank_func_holder_unref (holder);
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
+ * crank_func_book_remove_by_name:
+ * @book: 함수 책입니다.
+ * @name: 제거하고자 하는 이름입니다.
+ *
+ * 주어진 이름의 함수 홀더를 제거합니다.
+ *
+ * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ */
 gboolean
 crank_func_book_remove_by_name (CrankFuncBook*		book,
 								const gchar*		name	)
 {
 	GQuark	qname = g_quark_try_string (name);
 	
-	if (qname != 0) return g_hash_table_remove (book->func_holders,
-			(gpointer)(gintptr) qname);
-	return FALSE;
+	if (qname == 0) return FALSE;
+	
+	return crank_func_book_remove_by_qname (book, qname);
 }
 
+/**
+ * crank_func_book_remove_by_qname:
+ * @book: 함수 책입니다.
+ * @name: 제거하고자 하는 이름입니다.
+ *
+ * 주어진 이름의 함수 홀더를 제거합니다.
+ *
+ * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ */
 gboolean
-crank_func_book_remove(	CrankFuncBook*		book,
-						CrankFuncHolder*	holder	)
+crank_func_book_remove_by_qname (	CrankFuncBook*		book,
+									const GQuark		name	)
 {
-	CrankFuncHolder* holder_actual =
-			g_hash_table_lookup (book->func_holders, holder->name);
+	CrankFuncHolder*	holder;
+	guint				index;
 	
-	if (holder == holder_actual) {
-		g_hash_table_remove (book->func_holders, holder->name);
+	holder = g_hash_table_lookup (book->table_name_holder,
+			GINT_TO_POINTER (name)	);
+	
+	if (holder != NULL) {
+		index = GPOINTER_TO_INT (g_hash_table_lookup (book->table_index, holder));
+	
+		g_hash_table_remove (book->table_index, holder);
+		g_hash_table_remove (book->table_name_holder,
+			GINT_TO_POINTER (crank_func_holder_get_qname(holder))	);
+		
+		book->func_holders->pdata[index] = NULL;
+		
+		crank_func_holder_unref (holder);
 		return TRUE;
 	}
-	return FALSE;
-}
-
-void
-crank_func_book_add_closure (	CrankFuncBook*		book,
-								const gchar*		name,
-								CrankFuncType*		ftype,
-								GClosure*			closure	)
-{
-	CrankFuncHolder* holder = crank_func_book_get (book, name);
 	
-	if (holder != NULL)
-		crank_func_holder_set (holder, ftype, closure);
+	else return FALSE;
 }
 
+
+/**
+ * crank_func_book_invoke:
+ * @book: 함수 책입니다.
+ * @index: 인덱스입니다.
+ * @return_value: (optional): 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
 gboolean
 crank_func_book_invoke (	CrankFuncBook*		book,
-							const gchar*		name,
+							const guint			index,
 							GValue*				return_value,
 							const guint			narg_values,
 							const GValue*		arg_values,
 							gpointer			invocation_hint	)
 {
-	CrankFuncHolder* holder = crank_func_book_get (book, name);
+	CrankFuncHolder* holder =
+			(CrankFuncHolder*) book->func_holders->pdata[index];
 	
 	if (holder != NULL) {
-		return crank_func_holder_invoke (holder, return_value, narg_values, arg_values, invocation_hint);
+		return crank_func_holder_invoke (	holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
 	}
 	return FALSE;
 }
-													
+
+
+/**
+ * crank_func_book_invoke_name:
+ * @book: 함수 책입니다.
+ * @name: 이름입니다.
+ * @return_value: (optional): 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
 gboolean
-crank_func_book_invoke_quark (	CrankFuncBook*		book,
+crank_func_book_invoke_name (	CrankFuncBook*		book,
+								const gchar*		name,
+								GValue*				return_value,
+								const guint			narg_values,
+								const GValue*		arg_values,
+								gpointer			invocation_hint	)
+{
+	CrankFuncHolder*	holder;
+	GQuark				qname;
+	
+	qname = g_quark_try_string (name);
+	
+	if (qname == 0) return FALSE;
+	
+	
+	holder = (CrankFuncHolder*) g_hash_table_lookup (
+			book->table_name_holder,
+			GINT_TO_POINTER (qname)	);
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke (	holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
+	}
+	return FALSE;
+}
+
+
+/**
+ * crank_func_book_invoke_qname:
+ * @book: 함수 책입니다.
+ * @name: 이름입니다.
+ * @return_value: 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invoke_qname (	CrankFuncBook*		book,
 								const GQuark		name,
 								GValue*				return_value,
 								const guint			narg_values,
 								const GValue*		arg_values,
 								gpointer			invocation_hint	)
 {
-	CrankFuncHolder* holder = g_hash_table_lookup (book->func_holders,
-			(gpointer)(gintptr)name);
+	CrankFuncHolder*	holder = (CrankFuncHolder*) g_hash_table_lookup (
+			book->table_name_holder,
+			GINT_TO_POINTER (name)	);
 	
 	if (holder != NULL) {
-		return crank_func_holder_invoke (holder, return_value, narg_values, arg_values, invocation_hint);
+		return crank_func_holder_invoke (	holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
 	}
 	return FALSE;
 }

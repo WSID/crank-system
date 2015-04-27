@@ -53,6 +53,27 @@ gint	subject_function_int (const gint a, const gint b);
 gfloat	subject_function_float (const gfloat a, const gfloat b);
 gchar*	subject_function_string (const gchar* a, const gchar* b);
 
+gint	subject_mul_int		(const gint a,		const gint b);
+gfloat	subject_mul_float	(const gfloat a,	const gfloat b);
+
+gint	subject_neg_int		(const gint a);
+gfloat	subject_neg_float	(const gfloat a);
+
+enum FixtureFuncBookIndex {
+	FIXTURE_FUNC_ADD,
+	FIXTURE_FUNC_MUL,
+	FIXTURE_FUNC_NEG
+};
+
+typedef struct _FixtureFuncBook {
+	CrankFuncBook*		book;
+	
+	CrankFuncHolder*	holder_add;
+	CrankFuncHolder*	holder_mul;
+	CrankFuncHolder*	holder_neg;
+	
+} FixtureFuncBook;
+
 void	test_func_type_new (void);
 void	test_func_type_new_with_types (void);
 
@@ -99,6 +120,45 @@ void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
 void	test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 							 				gconstpointer		userdata	);
 
+
+
+void	test_func_book_setup (		FixtureFuncBook*	fixture,
+									gconstpointer		userdata	);
+
+void	test_func_book_teardown (	FixtureFuncBook*	fixture,
+									gconstpointer		userdata	);
+
+void	test_func_book_get_name	(void);
+
+void	test_func_book_get (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	);
+
+void	test_func_book_index_of (	FixtureFuncBook*	fixture,
+									gconstpointer		userdata	);
+
+void	test_func_book_get_by_name (	FixtureFuncBook*	fixture,
+										gconstpointer		userdata	);
+										
+void	test_func_book_get_by_qname (	FixtureFuncBook*	fixture,
+										gconstpointer		userdata	);
+										
+void	test_func_book_remove (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	);
+										
+void	test_func_book_remove_by_name (	FixtureFuncBook*	fixture,
+										gconstpointer		userdata	);
+										
+void	test_func_book_remove_by_qname (	FixtureFuncBook*	fixture,
+											gconstpointer		userdata	);
+								
+void	test_func_book_invoke (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	);
+								
+void	test_func_book_invoke_name (	FixtureFuncBook*	fixture,
+										gconstpointer		userdata	);
+
+void	test_func_book_invoke_qname (	FixtureFuncBook*	fixture,
+										gconstpointer		userdata	);
 
 gint
 main (gint   argc,
@@ -187,6 +247,79 @@ main (gint   argc,
 			test_func_holder_setup_set_func,
 			test_func_holder_invoke,
 			test_func_holder_teardown);
+			
+	g_test_add_func ("/wsid/crank/base/funcbook/getname",
+			test_func_book_get_name);
+
+	g_test_add ("/wsid/crank/base/funcbook/get",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_get,
+			test_func_book_teardown);
+
+	g_test_add ("/wsid/crank/base/funcbook/index_of",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_index_of,
+			test_func_book_teardown);
+
+	g_test_add ("/wsid/crank/base/funcbook/get_by_name",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_get_by_name,
+			test_func_book_teardown);
+
+	g_test_add ("/wsid/crank/base/funcbook/get_by_qname",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_get_by_qname,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/remove/index",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_remove,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/remove/name",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_remove_by_name,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/remove/qname",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_remove_by_qname,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/invoke/index",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_invoke,
+			test_func_book_teardown);
+
+	g_test_add ("/wsid/crank/base/funcbook/invoke/name",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_invoke_name,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/invoke/qname",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_invoke_qname,
+			test_func_book_teardown);
 
   g_test_run ();
 
@@ -238,6 +371,31 @@ subject_function_string (const gchar* a, const gchar* b)
   	result[a_len + b_len] = '\0';
 
   	return result;
+}
+
+gint
+subject_mul_int (const gint a, const gint b)
+{
+	return a * b;
+}
+
+gfloat
+subject_mul_float (const gfloat a, const gfloat b)
+{
+	return a * b;
+}
+
+
+gint
+subject_neg_int (const gint a)
+{
+	return -a;
+}
+
+gfloat
+subject_neg_float (const gfloat a)
+{
+	return -a;
 }
 
 
@@ -761,4 +919,381 @@ test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
   			
   	crank_func_holder_set_func (fixture->holder, fixture->ftype_string,
   			(CrankCallback)subject_function_string, NULL, NULL, NULL);
+}
+
+
+void
+test_func_book_setup (	FixtureFuncBook*	fixture,
+						gconstpointer		userdata	)
+{
+	CrankFuncType* ftype_i_ii;
+	CrankFuncType* ftype_f_ff;
+	
+	CrankFuncType* ftype_i_i;
+	CrankFuncType* ftype_f_f;
+
+	fixture->book = crank_func_book_new_with_name ("test-book");
+	
+	fixture->holder_add = crank_func_holder_new ("add");
+	fixture->holder_mul = crank_func_holder_new ("mul");
+	fixture->holder_neg = crank_func_holder_new ("neg");
+	
+	crank_func_book_set (fixture->book, FIXTURE_FUNC_ADD, fixture->holder_add);
+	crank_func_book_set (fixture->book, FIXTURE_FUNC_MUL, fixture->holder_mul);
+	crank_func_book_set (fixture->book, FIXTURE_FUNC_NEG, fixture->holder_neg);
+	
+	ftype_i_ii = crank_func_type_new (G_TYPE_INT,
+			G_TYPE_INT, G_TYPE_INT, 		G_TYPE_NONE );
+			
+	ftype_f_ff = crank_func_type_new (G_TYPE_FLOAT,
+			G_TYPE_FLOAT, G_TYPE_FLOAT, 		G_TYPE_NONE );
+			
+	ftype_i_i = crank_func_type_new (G_TYPE_INT,
+			G_TYPE_INT, 		G_TYPE_NONE );
+			
+	ftype_f_f = crank_func_type_new (G_TYPE_FLOAT,
+			G_TYPE_FLOAT, 		G_TYPE_NONE );
+	
+	crank_func_holder_set_func (fixture->holder_add, ftype_i_ii,
+			(CrankCallback) subject_function_int, NULL, NULL, NULL);
+			
+	crank_func_holder_set_func (fixture->holder_add, ftype_f_ff,
+			(CrankCallback) subject_function_float, NULL, NULL, NULL);
+			
+	crank_func_holder_set_func (fixture->holder_mul, ftype_i_ii,
+			(CrankCallback) subject_mul_int, NULL, NULL, NULL);
+			
+	crank_func_holder_set_func (fixture->holder_mul, ftype_f_ff,
+			(CrankCallback) subject_mul_float, NULL, NULL, NULL);
+	
+	crank_func_holder_set_func (fixture->holder_neg, ftype_i_i,
+			(CrankCallback) subject_neg_int, NULL, NULL, NULL);
+	
+	crank_func_holder_set_func (fixture->holder_neg, ftype_f_f,
+			(CrankCallback) subject_neg_float, NULL, NULL, NULL);
+
+	crank_func_type_unref (ftype_i_ii);
+	crank_func_type_unref (ftype_f_ff);
+	crank_func_type_unref (ftype_i_i);
+	crank_func_type_unref (ftype_f_f);
+}
+
+void
+test_func_book_teardown (	FixtureFuncBook*	fixture,
+							gconstpointer		userdata	)
+{
+	crank_func_holder_unref (fixture->holder_add);
+	crank_func_holder_unref (fixture->holder_mul);
+	crank_func_holder_unref (fixture->holder_neg);
+	
+	crank_func_book_unref (fixture->book);
+}
+
+void
+test_func_book_get_name (void)
+{
+	CrankFuncBook*	book = crank_func_book_new_with_name ("a-book");
+	
+	g_assert_cmpstr (crank_func_book_get_name (book), ==, "a-book");
+	g_assert_cmpint (crank_func_book_get_qname (book), ==, g_quark_from_string ("a-book"));
+	
+	
+	crank_func_book_set_name (book, "necronomicon");
+	
+	g_assert_cmpstr (crank_func_book_get_name (book), ==, "necronomicon");
+	g_assert_cmpint (crank_func_book_get_qname (book), ==, g_quark_from_string("necronomicon"));
+	
+	crank_func_book_unref (book);
+}
+
+void
+test_func_book_get (	FixtureFuncBook*	fixture,
+						gconstpointer		userdata	)
+{
+	g_assert (crank_func_book_get (fixture->book, FIXTURE_FUNC_ADD) == fixture->holder_add);
+	g_assert (crank_func_book_get (fixture->book, FIXTURE_FUNC_MUL) == fixture->holder_mul);
+	g_assert (crank_func_book_get (fixture->book, FIXTURE_FUNC_NEG) == fixture->holder_neg);
+}
+
+void
+test_func_book_index_of (	FixtureFuncBook*	fixture,
+							gconstpointer		userdata	)
+{
+	g_assert (crank_func_book_index_of (fixture->book, fixture->holder_add) == FIXTURE_FUNC_ADD);
+	g_assert (crank_func_book_index_of (fixture->book, fixture->holder_mul) == FIXTURE_FUNC_MUL);
+	g_assert (crank_func_book_index_of (fixture->book, fixture->holder_neg) == FIXTURE_FUNC_NEG);
+}
+
+void
+test_func_book_get_by_name (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	)
+{
+	g_assert (crank_func_book_get_by_name (fixture->book, "add") == fixture->holder_add);
+	g_assert (crank_func_book_get_by_name (fixture->book, "mul") == fixture->holder_mul);
+	g_assert (crank_func_book_get_by_name (fixture->book, "neg") == fixture->holder_neg);
+}
+
+void
+test_func_book_get_by_qname (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	)
+{
+	GQuark addq = g_quark_from_string ("add");
+	GQuark mulq = g_quark_from_string ("mul");
+	GQuark negq = g_quark_from_string ("neg");
+
+	g_assert (crank_func_book_get_by_qname (fixture->book, addq) == fixture->holder_add);
+	g_assert (crank_func_book_get_by_qname (fixture->book, mulq) == fixture->holder_mul);
+	g_assert (crank_func_book_get_by_qname (fixture->book, negq) == fixture->holder_neg);
+}
+
+void
+test_func_book_remove ( FixtureFuncBook* 	fixture,
+						gconstpointer		userdata	)
+{
+	g_assert (crank_func_book_remove (fixture->book, FIXTURE_FUNC_ADD));
+	g_assert (crank_func_book_remove (fixture->book, FIXTURE_FUNC_MUL));
+	g_assert (crank_func_book_remove (fixture->book, FIXTURE_FUNC_NEG));
+	g_assert (! crank_func_book_remove (fixture->book, FIXTURE_FUNC_ADD));
+	
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_ADD));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_MUL));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_NEG));
+}
+
+void
+test_func_book_remove_by_name ( FixtureFuncBook* 	fixture,
+								gconstpointer		userdata	)
+{
+	g_assert (crank_func_book_remove_by_name (fixture->book, "add"));
+	g_assert (crank_func_book_remove_by_name (fixture->book, "mul"));
+	g_assert (crank_func_book_remove_by_name (fixture->book, "neg"));
+	g_assert (! crank_func_book_remove_by_name (fixture->book, "add"));
+	
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_ADD));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_MUL));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_NEG));
+}
+
+void
+test_func_book_remove_by_qname ( 	FixtureFuncBook* 	fixture,
+									gconstpointer		userdata	)
+{
+	GQuark addq = g_quark_from_string ("add");
+	GQuark mulq = g_quark_from_string ("mul");
+	GQuark negq = g_quark_from_string ("neg");
+
+	g_assert (crank_func_book_remove_by_qname (fixture->book, addq));
+	g_assert (crank_func_book_remove_by_qname (fixture->book, mulq));
+	g_assert (crank_func_book_remove_by_qname (fixture->book, negq));
+	g_assert (! crank_func_book_remove_by_qname (fixture->book, addq));
+	
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_ADD));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_MUL));
+	g_assert_null (crank_func_book_get (fixture->book, FIXTURE_FUNC_NEG));
+}
+
+void
+test_func_book_invoke (	FixtureFuncBook*	fixture,
+						gconstpointer		userdata	)
+{
+	GValue	int_value = G_VALUE_INIT;
+	GValue	float_value = G_VALUE_INIT;
+	
+	GValue	arg_values[2] = {G_VALUE_INIT, G_VALUE_INIT};
+	
+	
+	g_value_init (&int_value, G_TYPE_INT);
+	g_value_init (&float_value, G_TYPE_FLOAT);
+	
+	g_value_init (arg_values + 0, G_TYPE_INT);
+	g_value_init (arg_values + 1, G_TYPE_INT);
+	g_value_set_int (arg_values + 0, 17);
+	g_value_set_int (arg_values + 1, 32);
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_ADD,
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 + 32);
+	
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_MUL,
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 * 32);
+	
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_NEG,
+			&int_value, 1, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, -17);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&int_value);
+	
+	
+	g_value_init (arg_values + 0, G_TYPE_FLOAT);
+	g_value_init (arg_values + 1, G_TYPE_FLOAT);
+	g_value_set_float (arg_values + 0, 2.4f);
+	g_value_set_float (arg_values + 1, 4.8f);
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_ADD,
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f + 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_MUL,
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f * 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke (fixture->book, FIXTURE_FUNC_NEG,
+			&float_value, 1, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, -2.4f);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&float_value);
+}
+
+
+void
+test_func_book_invoke_name (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	)
+{
+	GValue	int_value = G_VALUE_INIT;
+	GValue	float_value = G_VALUE_INIT;
+	
+	GValue	arg_values[2] = {G_VALUE_INIT, G_VALUE_INIT};
+	
+	
+	g_value_init (&int_value, G_TYPE_INT);
+	g_value_init (&float_value, G_TYPE_FLOAT);
+	
+	g_value_init (arg_values + 0, G_TYPE_INT);
+	g_value_init (arg_values + 1, G_TYPE_INT);
+	g_value_set_int (arg_values + 0, 17);
+	g_value_set_int (arg_values + 1, 32);
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "add",
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 + 32);
+	
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "mul",
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 * 32);
+	
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "neg",
+			&int_value, 1, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, -17);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&int_value);
+	
+	
+	g_value_init (arg_values + 0, G_TYPE_FLOAT);
+	g_value_init (arg_values + 1, G_TYPE_FLOAT);
+	g_value_set_float (arg_values + 0, 2.4f);
+	g_value_set_float (arg_values + 1, 4.8f);
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "add",
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f + 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "mul",
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f * 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke_name (fixture->book, "neg",
+			&float_value, 1, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, -2.4f);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&float_value);
+}
+
+
+void
+test_func_book_invoke_qname (	FixtureFuncBook*	fixture,
+								gconstpointer		userdata	)
+{
+	GValue	int_value = G_VALUE_INIT;
+	GValue	float_value = G_VALUE_INIT;
+	
+	GValue	arg_values[2] = {G_VALUE_INIT, G_VALUE_INIT};
+	
+	GQuark	addq = g_quark_from_string ("add");
+	GQuark	mulq = g_quark_from_string ("mul");
+	GQuark	negq = g_quark_from_string ("neg");
+	
+	g_value_init (&int_value, G_TYPE_INT);
+	g_value_init (&float_value, G_TYPE_FLOAT);
+	
+	g_value_init (arg_values + 0, G_TYPE_INT);
+	g_value_init (arg_values + 1, G_TYPE_INT);
+	g_value_set_int (arg_values + 0, 17);
+	g_value_set_int (arg_values + 1, 32);
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, addq,
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 + 32);
+	
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, mulq,
+			&int_value, 2, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 * 32);
+	
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, negq,
+			&int_value, 1, arg_values, NULL));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, -17);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&int_value);
+	
+	
+	g_value_init (arg_values + 0, G_TYPE_FLOAT);
+	g_value_init (arg_values + 1, G_TYPE_FLOAT);
+	g_value_set_float (arg_values + 0, 2.4f);
+	g_value_set_float (arg_values + 1, 4.8f);
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, addq,
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f + 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, mulq,
+			&float_value, 2, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, 2.4f * 4.8f);
+	
+	
+	g_assert (crank_func_book_invoke_qname (fixture->book, negq,
+			&float_value, 1, arg_values, NULL));
+	
+	g_assert_cmpfloat (g_value_get_float (&float_value), ==, -2.4f);
+	
+	g_value_unset (arg_values + 0);
+	g_value_unset (arg_values + 1);
+	g_value_unset (&float_value);
 }

@@ -16,3 +16,7 @@ TypesGraph.gir_lookup_full name="lookup_full"
 //////// FuncHolder ////////////////////////////////////////////////////////////
 FuncHolder.invoke.return_value ref
 FuncHolder.invoke.invocation_hint default=null
+
+//////// FuncBook //////////////////////////////////////////////////////////////
+FuncBook.invoke*.return_value ref
+FuncBook.invoke*.invocation_hint default=null
