@@ -18,5 +18,7 @@ FuncHolder.invoke.return_value ref
 FuncHolder.invoke*.invocation_hint default=null
 
 //////// FuncBook //////////////////////////////////////////////////////////////
-FuncBook.invoke*.return_value ref
+FuncBook.invoke.return_value ref
+FuncBook.invoke_name.return_value ref
+FuncBook.invoke_qname.return_value ref
 FuncBook.invoke*.invocation_hint default=null

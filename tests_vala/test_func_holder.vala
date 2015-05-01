@@ -586,6 +586,85 @@ private void func_book_invoke_qname () {
 }
 
 
+private void func_book_invoke_overwrite () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value;
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.ADD, out value, {17, 19}));
+	assert (value.get_int () == 17 + 19);
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.MUL, out value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.NEG, out value, {32}));
+	assert (value.get_int () == -32 );
+	
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.ADD, out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.MUL, out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke_overwrite (TestFuncEnum.NEG, out value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+private void func_book_invoke_overwrite_name () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value;
+	
+	assert (fix.book.invoke_overwrite_name ("add", out value, {17, 19}));
+	assert (value.get_int () == 	17 + 19);
+	
+	assert (fix.book.invoke_overwrite_name ("mul", out value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke_overwrite_name ("neg", out value, {32}));
+	assert (value.get_int () == -32 );
+	
+	assert (fix.book.invoke_overwrite_name ("add", out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke_overwrite_name ("mul", out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke_overwrite_name ("neg", out value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+private void func_book_invoke_overwrite_qname () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Quark addq = GLib.Quark.try_string ("add");
+	GLib.Quark mulq = GLib.Quark.try_string ("mul");
+	GLib.Quark negq = GLib.Quark.try_string ("neg");
+	
+	GLib.Value value;
+	
+	assert (fix.book.invoke_overwrite_qname (addq, out value, {17, 19}));
+	assert (value.get_int () == 	17 + 19);
+	
+	assert (fix.book.invoke_overwrite_qname (mulq, out value, {17, 19}));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invoke_overwrite_qname (negq, out value, {32}));
+	assert (value.get_int () == -32 );
+	
+	
+	assert (fix.book.invoke_overwrite_qname (addq, out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invoke_overwrite_qname (mulq, out value, {33.2f, 14.1f}));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invoke_overwrite_qname (negq, out value, {14.0f}));
+	assert (value.get_float () == -14.0f );
+}
+
+
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	
@@ -688,6 +767,14 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/book/invoke/qname",
 			func_book_invoke_qname	);
 	
+	GLib.Test.add_func ("/crank/base/book/invoke_overwrite/index",
+			func_book_invoke_overwrite	);
+
+	GLib.Test.add_func ("/crank/base/book/invoke_overwrite/name",
+			func_book_invoke_overwrite_name	);
+			
+	GLib.Test.add_func ("/crank/base/book/invoke_overwrite/qname",
+			func_book_invoke_overwrite_qname	);
 	
 	GLib.Test.run ();
 	

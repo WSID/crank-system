@@ -148,6 +148,7 @@ crank_func_holder_lookup_return_type
 crank_func_holder_remove
 crank_func_holder_remove_by_param_types
 crank_func_holder_invoke
+crank_func_holder_invoke_overwrite
 <SUBSECTION Standard>
 CRANK_TYPE_FUNC_HOLDER
 crank_func_holder_get_type
@@ -172,6 +173,9 @@ crank_func_book_set
 crank_func_book_invoke
 crank_func_book_invoke_name
 crank_func_book_invoke_qname
+crank_func_book_invoke_overwrite
+crank_func_book_invoke_overwrite_name
+crank_func_book_invoke_overwrite_qname
 <SUBSECTION Standard>
 crank_func_book_get_type
 CRANK_TYPE_FUNC_BOOK

@@ -23,6 +23,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankvalue.h"
 #include "cranktypesgraph.h"
 #include "crankfuncholder.h"
 
@@ -1640,6 +1641,120 @@ crank_func_book_invoke_qname (	CrankFuncBook*		book,
 	
 	if (holder != NULL) {
 		return crank_func_holder_invoke (	holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
+	}
+	return FALSE;
+}
+
+
+/**
+ * crank_func_book_invoke_overwrite:
+ * @book: 함수 책입니다.
+ * @index: 인덱스입니다.
+ * @return_value: (out): 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invoke_overwrite (	CrankFuncBook*		book,
+									const guint			index,
+									GValue*				return_value,
+									const guint			narg_values,
+									const GValue*		arg_values,
+									gpointer			invocation_hint	)
+{
+	CrankFuncHolder* holder =
+			(CrankFuncHolder*) book->func_holders->pdata[index];
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke_overwrite (
+				holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
+	}
+	return FALSE;
+}
+
+/**
+ * crank_func_book_invoke_overwrite_name:
+ * @book: 함수 책입니다.
+ * @name: 이름입니다.
+ * @return_value: (out) (optional): 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invoke_overwrite_name (	CrankFuncBook*		book,
+										const gchar*		name,
+										GValue*				return_value,
+										const guint			narg_values,
+										const GValue*		arg_values,
+										gpointer			invocation_hint	)
+{
+	CrankFuncHolder*	holder;
+	GQuark				qname;
+	
+	qname = g_quark_try_string (name);
+	
+	if (qname == 0) return FALSE;
+	
+	
+	holder = (CrankFuncHolder*) g_hash_table_lookup (
+			book->table_name_holder,
+			GINT_TO_POINTER (qname)	);
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke_overwrite (
+				holder,
+				return_value,
+				narg_values, arg_values,
+				invocation_hint);
+	}
+	return FALSE;
+}
+
+
+/**
+ * crank_func_book_invoke_overwrite_qname:
+ * @book: 함수 책입니다.
+ * @name: 이름입니다.
+ * @return_value: (out): 반환값이 저장될 GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ *
+ * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invoke_overwrite_qname (	CrankFuncBook*		book,
+								const GQuark		name,
+								GValue*				return_value,
+								const guint			narg_values,
+								const GValue*		arg_values,
+								gpointer			invocation_hint	)
+{
+	CrankFuncHolder*	holder = (CrankFuncHolder*) g_hash_table_lookup (
+			book->table_name_holder,
+			GINT_TO_POINTER (name)	);
+	
+	if (holder != NULL) {
+		return crank_func_holder_invoke_overwrite (
+				holder,
 				return_value,
 				narg_values, arg_values,
 				invocation_hint);

@@ -328,6 +328,58 @@ class TestFuncBook (unittest.TestCase):
 		
 		assert (self.book.invoke_name ("neg", ret, [74.0], None))
 		self.assertEqual (ret.get_double (), -74.0)
+	
+	
+	def test_invoke_overwrite (self):
+		self.assertEqual (
+				self.book.invoke_overwrite (TestFuncBookEnum.add, [13, 57], None),
+				(True, 13 + 57)	)
+		
+		self.assertEqual (
+				self.book.invoke_overwrite (TestFuncBookEnum.mul, [13, 57], None),
+				(True, 13 * 57)	)
+		
+		self.assertEqual (
+				self.book.invoke_overwrite (TestFuncBookEnum.neg, [42], None),
+				(True, -42)	)
+		
+		self.assertEqual (
+				self.book.invoke_overwrite (TestFuncBookEnum.add, [13.0, 57.0], None),
+				(True, 13.0 + 57.0)	)
+		
+		self.assertEqual (
+				self.book.invoke_overwrite (TestFuncBookEnum.mul, [13.0, 57.0], None),
+				(True, 13.0 * 57.0)	)
+				
+		self.assertEqual ( 
+				self.book.invoke_overwrite (TestFuncBookEnum.neg, [74.0], None),
+				(True, -74.0)	)
+	
+	def test_invoke_overwrite_name (self):
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("add", [13, 57], None),
+				(True, 13 + 57)	)
+
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("mul", [13, 57], None),
+				(True, 13 * 57)	)
+				
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("neg", [42], None),
+				(True, -42)	)
+
+		
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("add", [13.0, 57.0], None),
+				(True, 13.0 + 57.0)	)
+
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("mul", [13.0, 57.0], None),
+				(True, 13.0 * 57.0)	)
+				
+		self.assertEqual (
+				self.book.invoke_overwrite_name ("neg", [74.0], None),
+				(True, -74.0)	)
 
 if __name__ == '__main__':
 	random.seed ()

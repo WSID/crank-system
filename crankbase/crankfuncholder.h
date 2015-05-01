@@ -259,6 +259,30 @@ gboolean			crank_func_book_invoke_qname (	CrankFuncBook*		book,
 													const GValue*		arg_values,
 													gpointer			invocation_hint	);
 
+gboolean			crank_func_book_invoke_overwrite (
+													CrankFuncBook*		book,
+													const guint			index,
+													GValue*				return_value,
+													const guint			narg_values,
+													const GValue*		arg_values,
+													gpointer			invocation_hint	);
+
+gboolean			crank_func_book_invoke_overwrite_name (
+													CrankFuncBook*		book,
+													const gchar*		name,
+													GValue*				return_value,
+													const guint			narg_values,
+													const GValue*		arg_values,
+													gpointer			invocation_hint	);
+
+gboolean			crank_func_book_invoke_overwrite_qname (
+													CrankFuncBook*		book,
+													const GQuark		name,
+													GValue*				return_value,
+													const guint			narg_values,
+													const GValue*		arg_values,
+													gpointer			invocation_hint	);
+
 
 G_END_DECLS
 
