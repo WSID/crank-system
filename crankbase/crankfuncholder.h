@@ -173,6 +173,13 @@ gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		const GValue*   	arg_values,
 						                      		gpointer         	invocation_hint);
 
+gboolean			crank_func_holder_invoke_overwrite (
+													CrankFuncHolder*	holder,
+													GValue*				return_value,
+													const guint			narg_values,
+													const GValue*		arg_values,
+													gpointer			invocation_hint	);
+
 
 
 struct _CrankFuncBook;

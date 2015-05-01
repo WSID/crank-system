@@ -1118,6 +1118,55 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
   	return (closure != NULL);
 }
 
+/**
+ * crank_func_holder_invoke_overwrite:
+ * @holder: 호출할 CrankFuncHolder입니다.
+ * @return_value: (out): 반환될 결과가 저장될 #GValue입니다.
+ * @narg_values: @arg_values의 길이입니다.
+ * @arg_values: (array length=narg_values): 인자들이 저장된 GValue 배열입니다.
+ * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
+ *
+ * CrankFuncHolder에 저장된 함수중 주어진 @arg_values의 타입에 맞는 함수를
+ * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ *
+ * Returns: 함수가 호출된 경우 %TRUE
+ */
+gboolean
+crank_func_holder_invoke_overwrite (CrankFuncHolder*	holder,
+				                  GValue*			return_value,
+				                  const guint   	narg_values,
+				                  const GValue*		arg_values,
+				                  gpointer			invocation_hint)
+{
+	// 1. 먼저 타입 그래프에서 적당한 GClosure를 찾습니다.
+	CrankFuncHolderData* data;
+
+	GType*	types = g_new(GType, narg_values);
+
+	gint i;
+	for (i = 0; i < narg_values; i++)
+		types[i] = crank_func_holder_get_actual_type (arg_values + i);
+
+  	data = crank_func_holder_lookup_data_by_param_types (holder, types, narg_values);
+	// 2. 찾고 나면 호출합니다.
+	if (data != NULL) {
+		crank_value_overwrite_init (
+				return_value,
+				crank_func_type_get_return_type (data->ftype)	);
+										
+		g_closure_invoke (
+				data->closure,
+				return_value,
+				narg_values,
+				arg_values,
+				invocation_hint);
+	}
+	
+	g_free (types);
+
+  	return (data != NULL);
+}
+
 //////// CrankFuncBook /////////////////////////////////////////////////////////
 
 /**

@@ -117,6 +117,9 @@ void	test_func_holder_lookup_return_type (	FixtureFuncHolder*	fixture,
 void	test_func_holder_invoke (	FixtureFuncHolder*	fixture,
 							  		gconstpointer		userdata	);
 							  		
+void	test_func_holder_invoke_overwrite (	FixtureFuncHolder*	fixture,
+							  				gconstpointer		userdata	);
+							  		
 void	test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 							 				gconstpointer		userdata	);
 
@@ -239,6 +242,13 @@ main (gint   argc,
 			NULL,
 			test_func_holder_setup,
 			test_func_holder_invoke,
+			test_func_holder_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcholder/invoke_overwrite",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_invoke_overwrite,
 			test_func_holder_teardown);
 	
 	g_test_add ("/wsid/crank/base/funcholder/setfunc",
@@ -878,6 +888,50 @@ test_func_holder_invoke (	FixtureFuncHolder*	fixture,
   	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
 }
 
+
+void
+test_func_holder_invoke_overwrite (	FixtureFuncHolder*	fixture,
+						 	gconstpointer		userdata	)
+{
+  	GValue				value_result = G_VALUE_INIT;
+  	GValue				value_arg[2] = {G_VALUE_INIT, G_VALUE_INIT};
+
+  	g_value_init (value_arg, G_TYPE_INT);
+  	g_value_init (value_arg + 1, G_TYPE_INT);
+
+  	g_value_set_int (value_arg, 3);
+  	g_value_set_int (value_arg + 1, 5);
+
+  	crank_func_holder_invoke_overwrite (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpint (g_value_get_int (&value_result), ==, 8);
+
+  	g_value_unset (value_arg);
+  	g_value_unset (value_arg + 1);
+
+  	g_value_init (value_arg, G_TYPE_FLOAT);
+  	g_value_init (value_arg + 1, G_TYPE_FLOAT);
+
+  	g_value_set_float (value_arg, 27.81f);
+  	g_value_set_float (value_arg + 1, 22.19f);
+
+  	crank_func_holder_invoke_overwrite (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpfloat (g_value_get_float (&value_result), ==, 50.00f);
+
+  	g_value_unset (value_arg);
+  	g_value_unset (value_arg + 1);
+
+  	g_value_init (value_arg, G_TYPE_STRING);
+  	g_value_init (value_arg + 1, G_TYPE_STRING);
+
+  	g_value_set_string (value_arg, "This cake ");
+  	g_value_set_string (value_arg + 1, "is a lie!");
+
+  	crank_func_holder_invoke_overwrite (fixture->holder, &value_result, 2, value_arg, NULL);
+
+  	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
+}
 void
 test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 									gconstpointer		userdata	)

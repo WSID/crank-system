@@ -195,6 +195,11 @@ class TestFuncHolder (unittest.TestCase):
 		value = GObject.Value (value_type=str)
 		assert (self.holder.invoke (value, ["Take My ", "Money"], None))
 		self.assertEqual (value.get_string(), "Take My Money")
+		
+	def test_invoke_overwrite(self):
+		self.assertEqual (self.holder.invoke_overwrite ([2, 4], None), (True, 6))
+		self.assertEqual (self.holder.invoke_overwrite ([2.5, 4.0], None), (True, 10.0))
+		self.assertEqual (self.holder.invoke_overwrite (["Take My ", "Money"], None), (True, "Take My Money"))
 
 class TestFuncBookEnum (enum.IntEnum):
 	add = 0

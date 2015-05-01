@@ -394,6 +394,21 @@ private void func_holder_invoke () {
 	assert (value.get_string () == "Daddy long leg");
 }
 
+private void func_holder_invoke_overwrite () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	GLib.Value value;
+	
+	assert (holder.invoke_overwrite (out value, {2, 3}));
+	assert (value.get_int () == 5);
+	
+	assert (holder.invoke_overwrite (out value, {4.5f, 6.5f}));
+	assert (value.get_float () == 11.0f);
+	
+	assert (holder.invoke_overwrite (out value, {"Daddy ", "long leg"}));
+	assert (value.get_string () == "Daddy long leg");
+}
+
 private void func_book_name () {
 	Crank.FuncBook book = new Crank.FuncBook.with_name ("test-book");
 	
@@ -630,6 +645,9 @@ int main (string[] args) {
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/invoke",
 			func_holder_invoke	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/invoke_overwrite",
+			func_holder_invoke_overwrite	);
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/remove_by_param_types",
 			func_holder_remove_by_param_types	);
