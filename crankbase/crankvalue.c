@@ -38,6 +38,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbasemacro.h"
 #include "crankvalue.h"
 
 /**
@@ -164,4 +165,85 @@ crank_value_overwrite_pointer (	GValue*		value,
 {
 	crank_value_overwrite_init (value, G_TYPE_POINTER);
   	g_value_set_pointer (value, pointer_value);
+}
+
+
+/**
+ * crank_value_array_overwrite: (skip)
+ * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
+ * @narray: @array에 덮어쓸 #GValue의 개수입니다.
+ * @...: (type GValue): @array에 덮어쓸 #GValue입니다.
+ *
+ * 주어진 #GValue들을 배열위에 덮어씁니다.
+ * 함수의 입력으로 들어온 #GValue들을 배열로 전환할 때 사용합니다.
+ */
+void
+crank_value_array_overwrite (	GValue*		array,
+								gint		nitem,
+								...	)
+{
+	va_list		varargs;
+	
+	va_start (varargs, nitem);
+	
+	crank_value_array_overwrite_va (array, nitem, varargs);
+	
+	va_end (varargs);
+}
+
+
+/**
+ * crank_value_array_overwrite_va: (skip)
+ * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
+ * @nitem: @array에 덮어쓸 개수입니다.
+ * @varargs: (element-type GValue): @array에 덮어쓸 #GValue입니다.
+ *
+ * 주어진 #GValue들을 배열위에 덮어씁니다.
+ * 함수의 입력으로 들어온 #GValue들을 배열로 전환할 때 사용합니다.
+ */
+void
+crank_value_array_overwrite_va (GValue*		array,
+								gint		nitem,
+								va_list		varargs	)
+{
+	guint	i;
+	
+	for (i = 0; i < nitem; i++)
+		crank_value_overwrite (array + i, va_arg (varargs, GValue*));
+	
+	return index;
+}
+
+/**
+ * crank_value_array_overwrite_array: (skip)
+ * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
+ * @nitem: @array에 덮어쓸 개수입니다.
+ * @other: (array length=nitem): @array에 덮어 쓸 배열입니다.
+ *
+ * @other의 @nitem개의 내용을 @array에 덮어씁니다.
+ */
+void
+crank_value_array_overwrite_array ( GValue*	array,
+									gint	nitem,
+									GValue*	other	)
+{
+	guint	i;
+	
+	for (i = 0; i < nitem; i++) crank_value_overwrite (array + i, other + i);
+}
+
+/**
+ * crank_value_array_unset: (skip)
+ * @array: (array length=narray): 해제할 #GValue 입니다.
+ * @narray: @array의 길이입니다.
+ *
+ * 주어진 #GValue 배열을 해제합니다.
+ */
+void
+crank_value_array_unset (	GValue*	array,
+							guint	narray	)
+{
+	guint	i;
+	
+	for (i = 0; i < narray; i ++ )	g_value_unset (array + i);
 }

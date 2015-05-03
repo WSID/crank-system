@@ -54,6 +54,21 @@ void			crank_value_overwrite_boxed (	GValue*			value,
 void			crank_value_overwrite_pointer (	GValue*			value,
 									  			gpointer		pointer_value	);
 
+void			crank_value_array_overwrite (	GValue*		array,
+												gint		nitem,
+												...	);
+
+void			crank_value_array_overwrite_va (GValue*		array,
+												gint		nitem,
+												va_list		varargs	);
+
+void			crank_value_array_overwrite_array ( GValue*	array,
+												gint		nitem,
+												GValue*		other	);
+
+void			crank_value_array_unset (		GValue*		array,
+												guint		narray	);
+
 G_END_DECLS
 
 #endif //CRANKVALUE_H
