@@ -197,6 +197,20 @@ gboolean			crank_func_holder_invoke_overwrite (
 													const GValue*		arg_values,
 													gpointer			invocation_hint	);
 
+gboolean			crank_func_holder_invokev_overwrite (
+													CrankFuncHolder*	holder,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													guint				narg_values,
+													...	);
+
+gboolean			crank_func_holder_invoke_va_overwrite (
+													CrankFuncHolder*	holder,
+						                      		GValue*				return_value,
+						                      		gpointer			invocation_hint,
+						                      		guint				narg_values,
+						                      		va_list				varargs	);
+
 
 
 struct _CrankFuncBook;
@@ -309,6 +323,23 @@ gboolean			crank_func_book_invokev (		CrankFuncBook*		book,
 													...	);
 
 gboolean			crank_func_book_invoke_va (		CrankFuncBook*		book,
+													const guint			index,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													const guint			narg_values,
+													va_list				varargs	);
+
+
+gboolean			crank_func_book_invokev_overwrite (
+													CrankFuncBook*		book,
+													const guint			index,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													const guint			narg_values,
+													...	);
+
+gboolean			crank_func_book_invoke_va_overwrite (
+													CrankFuncBook*		book,
 													const guint			index,
 													GValue*				return_value,
 													gpointer			invocation_hint,

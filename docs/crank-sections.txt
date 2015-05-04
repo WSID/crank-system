@@ -155,6 +155,8 @@ crank_func_holder_invoke
 crank_func_holder_invoke_overwrite
 crank_func_holder_invokev
 crank_func_holder_invoke_va
+crank_func_holder_invokev_overwrite
+crank_func_holder_invoke_va_overwrite
 <SUBSECTION Standard>
 CRANK_TYPE_FUNC_HOLDER
 crank_func_holder_get_type
@@ -184,6 +186,8 @@ crank_func_book_invoke_overwrite_name
 crank_func_book_invoke_overwrite_qname
 crank_func_book_invokev
 crank_func_book_invoke_va
+crank_func_book_invokev_overwrite
+crank_func_book_invoke_va_overwrite
 <SUBSECTION Standard>
 crank_func_book_get_type
 CRANK_TYPE_FUNC_BOOK

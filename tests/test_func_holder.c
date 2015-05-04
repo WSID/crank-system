@@ -123,6 +123,9 @@ void	test_func_holder_invokev (	FixtureFuncHolder*	fixture,
 void	test_func_holder_invoke_overwrite (	FixtureFuncHolder*	fixture,
 							  				gconstpointer		userdata	);
 							  		
+void	test_func_holder_invokev_overwrite (	FixtureFuncHolder*	fixture,
+							  					gconstpointer		userdata	);
+							  		
 void	test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 							 				gconstpointer		userdata	);
 
@@ -177,6 +180,9 @@ void	test_func_book_invoke_overwrite_qname (	FixtureFuncBook*	fixture,
 								
 void	test_func_book_invokev (	FixtureFuncBook*	fixture,
 									gconstpointer		userdata	);
+								
+void	test_func_book_invokev_overwrite (	FixtureFuncBook*	fixture,
+											gconstpointer		userdata	);
 
 gint
 main (gint   argc,
@@ -272,6 +278,13 @@ main (gint   argc,
 			test_func_holder_setup,
 			test_func_holder_invoke_overwrite,
 			test_func_holder_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcholder/invokev_overwrite",
+			FixtureFuncHolder,
+			NULL,
+			test_func_holder_setup,
+			test_func_holder_invokev_overwrite,
+			test_func_holder_teardown);
 	
 	g_test_add ("/wsid/crank/base/funcholder/setfunc",
 			FixtureFuncHolder,
@@ -279,6 +292,7 @@ main (gint   argc,
 			test_func_holder_setup_set_func,
 			test_func_holder_invoke,
 			test_func_holder_teardown);
+			
 			
 	g_test_add_func ("/wsid/crank/base/funcbook/getname",
 			test_func_book_get_name);
@@ -380,6 +394,13 @@ main (gint   argc,
 			NULL,
 			test_func_book_setup,
 			test_func_book_invokev,
+			test_func_book_teardown);
+			
+	g_test_add ("/wsid/crank/base/funcbook/invokev_overwrite/index",
+			FixtureFuncBook,
+			NULL,
+			test_func_book_setup,
+			test_func_book_invokev_overwrite,
 			test_func_book_teardown);
 			
   g_test_run ();
@@ -1034,6 +1055,53 @@ test_func_holder_invoke_overwrite (	FixtureFuncHolder*	fixture,
 
   	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
 }
+
+
+void
+test_func_holder_invokev_overwrite (	FixtureFuncHolder*	fixture,
+						 				gconstpointer		userdata	)
+{
+  	GValue	value_result = G_VALUE_INIT;
+  	GValue	value_a = G_VALUE_INIT;
+  	GValue	value_b = G_VALUE_INIT;
+
+  	g_value_init (&value_a, G_TYPE_INT);
+  	g_value_init (&value_b, G_TYPE_INT);
+
+  	g_value_set_int (&value_a, 3);
+  	g_value_set_int (&value_b, 5);
+
+  	crank_func_holder_invokev_overwrite (fixture->holder, &value_result, NULL, 2, &value_a, &value_b);
+
+  	g_assert_cmpint (g_value_get_int (&value_result), ==, 8);
+
+  	g_value_unset (&value_a);
+  	g_value_unset (&value_b);
+
+  	g_value_init (&value_a, G_TYPE_FLOAT);
+  	g_value_init (&value_b, G_TYPE_FLOAT);
+
+  	g_value_set_float (&value_a, 27.81f);
+  	g_value_set_float (&value_b, 22.19f);
+
+  	crank_func_holder_invokev_overwrite (fixture->holder, &value_result, NULL, 2, &value_a, &value_b);
+
+  	g_assert_cmpfloat (g_value_get_float (&value_result), ==, 50.00f);
+
+  	g_value_unset (&value_a);
+  	g_value_unset (&value_b);
+
+  	g_value_init (&value_a, G_TYPE_STRING);
+  	g_value_init (&value_b, G_TYPE_STRING);
+
+  	g_value_set_string (&value_a, "This cake ");
+  	g_value_set_string (&value_b, "is a lie!");
+
+  	crank_func_holder_invokev_overwrite (fixture->holder, &value_result, NULL, 2, &value_a, &value_b);
+
+  	g_assert_cmpstr (g_value_get_string (&value_result), ==, "This cake is a lie!");
+}
+
 void
 test_func_holder_setup_set_func (	FixtureFuncHolder* 	fixture,
 									gconstpointer		userdata	)
@@ -1680,6 +1748,42 @@ test_func_book_invokev (	FixtureFuncBook*	fixture,
 	
 	
 	g_assert (crank_func_book_invokev (fixture->book, FIXTURE_FUNC_NEG,
+			&int_value, NULL, 1, &value_a));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, -17);
+	
+	g_value_unset (&value_a);
+	g_value_unset (&value_b);
+	g_value_unset (&int_value);
+}
+
+void
+test_func_book_invokev_overwrite (	FixtureFuncBook*	fixture,
+									gconstpointer		userdata	)
+{
+	GValue	int_value = G_VALUE_INIT;
+	
+	GValue	value_a = G_VALUE_INIT;
+	GValue	value_b = G_VALUE_INIT;
+	
+	g_value_init (&value_a, G_TYPE_INT);
+	g_value_init (&value_b, G_TYPE_INT);
+	g_value_set_int (&value_a, 17);
+	g_value_set_int (&value_b, 32);
+	
+	g_assert (crank_func_book_invokev_overwrite (fixture->book, FIXTURE_FUNC_ADD,
+			&int_value, NULL, 2, &value_a, &value_b));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 + 32);
+	
+	
+	g_assert (crank_func_book_invokev_overwrite (fixture->book, FIXTURE_FUNC_MUL,
+			&int_value, NULL, 2, &value_a, &value_b));
+	
+	g_assert_cmpint (g_value_get_int (&int_value), ==, 17 * 32);
+	
+	
+	g_assert (crank_func_book_invokev_overwrite (fixture->book, FIXTURE_FUNC_NEG,
 			&int_value, NULL, 1, &value_a));
 	
 	g_assert_cmpint (g_value_get_int (&int_value), ==, -17);

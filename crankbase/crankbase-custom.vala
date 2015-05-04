@@ -100,6 +100,18 @@ namespace Crank {
 								void*					invocation_hint,
 								uint					narg_values,
 								va_list					varargs	);
+								
+		public bool invokev_overwrite (
+								out GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								...	);
+		
+		public bool invoke_va_overwrite (
+								out GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								va_list					varargs	);
 	}
 	
 	public class FuncBook {
@@ -115,6 +127,20 @@ namespace Crank {
 		
 		public bool invoke_va (	uint					index,
 								ref GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								va_list					varargs	);
+		
+		public bool invokev_overwrite (
+								uint					index,
+								out GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								...	);
+		
+		public bool invoke_va_overwrite (	
+								uint					index,
+								out GLib.Value			return_value,
 								void*					invocation_hint,
 								uint					narg_values,
 								va_list					varargs	);

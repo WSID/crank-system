@@ -406,6 +406,19 @@ private void func_holder_invokev () {
 	assert (value.get_int () == 5);
 }
 
+private void func_holder_invokev_overwrite () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	GLib.Value value;
+	
+	GLib.Value value_a = 2;
+	GLib.Value value_b = 3;
+	
+	assert (holder.invokev_overwrite (out value, null, 2, value_a, value_b));
+	assert (value.get_int () == 5);
+}
+
+
 private void func_holder_invoke_overwrite () {
 	Crank.FuncHolder holder = func_holder_create ();
 	
@@ -706,6 +719,36 @@ private void func_book_invokev () {
 	assert (value.get_float () == 33.2f * 14.1f);
 	
 	assert (fix.book.invokev (TestFuncEnum.NEG, ref value, null, 1, value_b));
+	assert (value.get_float () == -14.1f );
+}
+
+private void func_book_invokev_overwrite () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value;
+	
+	GLib.Value value_a = 17;
+	GLib.Value value_b = 19;
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.ADD, out value, null, 2, value_a, value_b));
+	assert (value.get_int () == 17 + 19);
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.MUL, out value, null, 2, value_a, value_b));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.NEG, out value, null, 1, value_b));
+	assert (value.get_int () == -19 );
+	
+	value_a = 33.2f;
+	value_b = 14.1f;
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.ADD, out value, null, 2, value_a, value_b));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.MUL, out value, null, 2, value_a, value_b));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invokev_overwrite (TestFuncEnum.NEG, out value, null, 1, value_b));
 	assert (value.get_float () == -14.1f );
 }
 
