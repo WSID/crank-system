@@ -28,6 +28,7 @@
     <xi:include href="xml/cranksingular.xml"/>
     <xi:include href="xml/cranktypesgraph.xml"/>
     <xi:include href="xml/crankfuncholder.xml"/>
+    <xi:include href="xml/crankbasebook.xml"/>
     <xi:include href="crank-chapter-base.xml"/>
   </chapter>
   

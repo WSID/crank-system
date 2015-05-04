@@ -12,7 +12,8 @@ include_HEADERS = \
 		crankstring.h \
 		cranksingular.h \
 		cranktypesgraph.h \
-		crankfuncholder.h
+		crankfuncholder.h \
+		crankbasebook.h
 
 
 
@@ -31,7 +32,8 @@ libcrankbase_la_SOURCES= \
 		crankvalue.c \
 		crankstring.c \
 		cranktypesgraph.c \
-		crankfuncholder.c
+		crankfuncholder.c \
+		crankbasebook.c
 
 
 

@@ -196,3 +196,19 @@ CRANK_TYPE_FUNC_BOOK
 CrankFuncBook
 </SECTION>
 
+<SECTION>
+<FILE>crankbasebook</FILE>
+CRANK_BOOK_BASE
+crank_base_add
+crank_base_sub
+crank_base_mul
+crank_base_div
+crank_base_neg
+crank_base_inc
+crank_base_dec
+crank_base_lshift
+crank_base_rshift
+<SUBSECTION Private>
+crank_base_get_book
+</SECTION>
+

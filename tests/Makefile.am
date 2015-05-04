@@ -17,7 +17,8 @@ test_programs= \
 		test_value \
 		test_types_graph \
 		test_func_holder \
-		test_singular
+		test_singular \
+		test_base_book
 
 test_string_LDADD= $(TEST_BASE_LDADD)
 
@@ -31,3 +32,5 @@ test_func_holder_LDADD= $(TEST_BASE_LDADD)
 
 
 test_singular_LDADD= $(TEST_BASE_LDADD)
+
+test_base_book_LDADD= $(TEST_BASE_LDADD)

@@ -17,7 +17,8 @@ test_programs= \
 		test_string \
 		test_func_holder \
 		test_singular \
-		test_types_graph
+		test_types_graph \
+		test_base_book
 
 
 # test_func_holder
@@ -61,3 +62,11 @@ test_types_graph_LDADD= \
 
 test_types_graph_SOURCES= \
 		test_types_graph.vala
+
+
+test_base_book_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_base_book_SOURCES= \
+		test_base_book.vala
