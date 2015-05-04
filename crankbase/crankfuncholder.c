@@ -1142,7 +1142,21 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 
   	return (closure != NULL);
 }
-	
+
+
+/**
+ * crank_func_holder_invokev:
+ * @holder: 호출할 CrankFuncHolder입니다.
+ * @return_value: 반환될 결과가 저장될 #GValue입니다.
+ * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
+ * @narg_values: @...의 개수입니다.
+ * @...: 함수를 호출할 인자들입니다.
+ *
+ * CrankFuncHolder에 저장된 함수중 주어진 @...의 타입에 맞는 함수를
+ * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ *
+ * Returns: 함수가 호출된 경우 %TRUE
+ */
 gboolean
 crank_func_holder_invokev (	CrankFuncHolder*	holder,
 							GValue*				return_value,
@@ -1166,6 +1180,19 @@ crank_func_holder_invokev (	CrankFuncHolder*	holder,
 	return result;
 }
 
+/**
+ * crank_func_holder_invoke_va:
+ * @holder: 호출할 CrankFuncHolder입니다.
+ * @return_value: 반환될 결과가 저장될 #GValue입니다.
+ * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
+ * @narg_values: @varargs의 개수입니다.
+ * @varargs: 함수를 호출할 인자들입니다.
+ *
+ * CrankFuncHolder에 저장된 함수중 주어진 @varargs의 타입에 맞는 함수를
+ * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ *
+ * Returns: 함수가 호출된 경우 %TRUE
+ */
 gboolean
 crank_func_holder_invoke_va (	CrankFuncHolder*	holder,
 								GValue*				return_value,
@@ -1839,4 +1866,66 @@ crank_func_book_invoke_overwrite_qname (	CrankFuncBook*		book,
 				invocation_hint);
 	}
 	return FALSE;
+}
+
+
+/**
+ * crank_func_book_invokev:
+ * @book: 함수 책입니다.
+ * @index: 인덱스입니다.
+ * @return_value: (optional): 반환값이 저장될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @narg_values: @...의 길이입니다.
+ * @...: 함수를 호출할 인자들입니다.
+ *
+ * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invokev (		CrankFuncBook*		book,
+								const guint			index,
+								GValue*				return_value,
+								gpointer			invocation_hint,
+								const guint			narg_values,
+								...	)
+{
+	va_list varargs;
+	gboolean	result;
+	
+	va_start (varargs, narg_values);
+	
+	result = crank_func_book_invoke_va (book, index, return_value, invocation_hint, narg_values, varargs);
+	
+	va_end (varargs);
+	
+	return result;
+}
+
+
+/**
+ * crank_func_book_invoke_va:
+ * @book: 함수 책입니다.
+ * @index: 인덱스입니다.
+ * @return_value: (optional): 반환값이 저장될 GValue입니다.
+ * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @narg_values: @varargs의 길이입니다.
+ * @varargs: 함수를 호출할 인자들입니다.
+ *
+ * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ *
+ * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ */
+gboolean
+crank_func_book_invoke_va (		CrankFuncBook*		book,
+								const guint			index,
+								GValue*				return_value,
+								gpointer			invocation_hint,
+								const guint			narg_values,
+								va_list				varargs	)
+{
+	CrankFuncHolder* holder =
+			(CrankFuncHolder*) book->func_holders->pdata[index];
+	
+	return crank_func_holder_invoke_va (holder, return_value, invocation_hint, narg_values, varargs);
 }

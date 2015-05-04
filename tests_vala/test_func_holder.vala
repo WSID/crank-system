@@ -676,6 +676,39 @@ private void func_book_invoke_overwrite_qname () {
 	assert (value.get_float () == -14.0f );
 }
 
+private void func_book_invokev () {
+	FixtureBook fix = FixtureBook ();
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	GLib.Value value_a = 17;
+	GLib.Value value_b = 19;
+	
+	assert (fix.book.invokev (TestFuncEnum.ADD, ref value, null, 2, value_a, value_b));
+	assert (value.get_int () == 17 + 19);
+	
+	assert (fix.book.invokev (TestFuncEnum.MUL, ref value, null, 2, value_a, value_b));
+	assert (value.get_int () == 17 * 19);
+	
+	assert (fix.book.invokev (TestFuncEnum.NEG, ref value, null, 1, value_b));
+	assert (value.get_int () == -19 );
+	
+	
+	value = GLib.Value (typeof (float));
+	
+	value_a = 33.2f;
+	value_b = 14.1f;
+	
+	assert (fix.book.invokev (TestFuncEnum.ADD, ref value, null, 2, value_a, value_b));
+	assert (value.get_float () == 33.2f + 14.1f);
+	
+	assert (fix.book.invokev (TestFuncEnum.MUL, ref value, null, 2, value_a, value_b));
+	assert (value.get_float () == 33.2f * 14.1f);
+	
+	assert (fix.book.invokev (TestFuncEnum.NEG, ref value, null, 1, value_b));
+	assert (value.get_float () == -14.1f );
+}
+
 
 int main (string[] args) {
 	GLib.Test.init (ref args);
@@ -790,6 +823,9 @@ int main (string[] args) {
 			
 	GLib.Test.add_func ("/crank/base/book/invoke_overwrite/qname",
 			func_book_invoke_overwrite_qname	);
+	
+	GLib.Test.add_func ("/crank/base/book/invokev/index",
+			func_book_invokev	);
 	
 	GLib.Test.run ();
 	

@@ -107,5 +107,16 @@ namespace Crank {
 		public GLib.Quark		qname				{	get;set;	}
 		
 		
+		public bool invokev (	uint					index,
+								ref GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								...	);
+		
+		public bool invoke_va (	uint					index,
+								ref GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								va_list					varargs	);
 	}
 }

@@ -301,6 +301,20 @@ gboolean			crank_func_book_invoke_overwrite_qname (
 													gpointer			invocation_hint	);
 
 
+gboolean			crank_func_book_invokev (		CrankFuncBook*		book,
+													const guint			index,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													const guint			narg_values,
+													...	);
+
+gboolean			crank_func_book_invoke_va (		CrankFuncBook*		book,
+													const guint			index,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													const guint			narg_values,
+													va_list				varargs	);
+
 G_END_DECLS
 
 #endif /* CRANKFUNCHOLDER_H */
