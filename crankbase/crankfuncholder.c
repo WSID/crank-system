@@ -907,6 +907,30 @@ crank_func_holder_set_func (	CrankFuncHolder*	holder,
 	g_closure_unref (closure);
 }
 
+/**
+ * crank_func_holder_set_simple: (skip)
+ * @holder: 함수를 설정할 CrankFuncHolder
+ * @ftype: 함수형입니다.
+ * @func: 설정할 함수입니다.
+ * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다.
+ *
+ * 주어진 함수형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
+ * 위해 작성되었습니다.
+ *
+ * @marshal에 %NULL을 전달하면, g_cclosure_marshal_generic()을 사용합니다.
+ *
+ * Note:
+ * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
+ * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
+ */
+void
+crank_func_holder_set_simple (	CrankFuncHolder*	holder,
+								CrankFuncType*		ftype,
+							   	GCallback			func,
+							   	GClosureMarshal		marshal	)
+{
+	crank_func_holder_set_func (holder, ftype, func, NULL, NULL, marshal);
+}
 
 /**
  * crank_func_holder_get:
@@ -1118,6 +1142,61 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 
   	return (closure != NULL);
 }
+	
+gboolean
+crank_func_holder_invokev (	CrankFuncHolder*	holder,
+							GValue*				return_value,
+							gpointer			invocation_hint,
+							guint				narg_values,
+							...	)
+{
+	va_list		varargs;
+	gboolean	result;
+	
+	va_start (varargs, narg_values );
+	
+	result = crank_func_holder_invoke_va (	holder,
+											return_value,
+											invocation_hint,
+											narg_values,
+											varargs	);
+	
+	va_end (varargs);
+	
+	return result;
+}
+
+gboolean
+crank_func_holder_invoke_va (	CrankFuncHolder*	holder,
+								GValue*				return_value,
+								gpointer			invocation_hint,
+								guint				narg_values,
+								va_list				varargs	)
+{
+	GValue*		arg_values;
+	guint 		i;
+	
+	gboolean	result;
+	
+	arg_values = g_new0 (GValue, narg_values);
+	
+	crank_value_array_overwrite_va (arg_values, narg_values, varargs);
+	
+	result = crank_func_holder_invoke (
+			holder,
+			return_value,
+			narg_values,
+			arg_values,
+			invocation_hint );
+	
+	crank_value_array_unset (arg_values, narg_values);
+	
+	g_free (arg_values);
+	
+	return result;
+}
+
+
 
 /**
  * crank_func_holder_invoke_overwrite:

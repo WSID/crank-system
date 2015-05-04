@@ -90,6 +90,16 @@ namespace Crank {
 		public void set_func (	Crank.FuncType 			types,
 								owned Crank.Callback 	func,
 								GLib.ClosureMarshal? 	marshal=null	);
+		
+		public bool invokev (	ref GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								...	);
+		
+		public bool invoke_va (	ref GLib.Value			return_value,
+								void*					invocation_hint,
+								uint					narg_values,
+								va_list					varargs	);
 	}
 	
 	public class FuncBook {

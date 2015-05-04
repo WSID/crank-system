@@ -141,6 +141,11 @@ void				crank_func_holder_set_func (	CrankFuncHolder*	holder,
 							   						gpointer			userdata,
 							   						GDestroyNotify		userdata_destroy,
 							   						GClosureMarshal		marshal	);
+							   						
+void				crank_func_holder_set_simple (	CrankFuncHolder*	holder,
+													CrankFuncType*		ftype,
+							   						GCallback			func,
+							   						GClosureMarshal		marshal	);
 
 GClosure*			crank_func_holder_get (			CrankFuncHolder*	holder,
 													CrankFuncType*		ftype	);
@@ -172,6 +177,18 @@ gboolean			crank_func_holder_invoke (		CrankFuncHolder*	holder,
 						                      		const guint      	narg_values,
 						                      		const GValue*   	arg_values,
 						                      		gpointer         	invocation_hint);
+
+gboolean			crank_func_holder_invokev (		CrankFuncHolder*	holder,
+													GValue*				return_value,
+													gpointer			invocation_hint,
+													guint				narg_values,
+													...	);
+
+gboolean			crank_func_holder_invoke_va (	CrankFuncHolder*	holder,
+						                      		GValue*				return_value,
+						                      		gpointer			invocation_hint,
+						                      		guint				narg_values,
+						                      		va_list				varargs	);
 
 gboolean			crank_func_holder_invoke_overwrite (
 													CrankFuncHolder*	holder,

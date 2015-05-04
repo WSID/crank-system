@@ -394,6 +394,18 @@ private void func_holder_invoke () {
 	assert (value.get_string () == "Daddy long leg");
 }
 
+private void func_holder_invokev () {
+	Crank.FuncHolder holder = func_holder_create ();
+	
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	GLib.Value value_a = 2;
+	GLib.Value value_b = 3;
+	
+	assert (holder.invokev (ref value, null, 2, value_a, value_b));
+	assert (value.get_int () == 5);
+}
+
 private void func_holder_invoke_overwrite () {
 	Crank.FuncHolder holder = func_holder_create ();
 	
@@ -724,6 +736,9 @@ int main (string[] args) {
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/invoke",
 			func_holder_invoke	);
+			
+	GLib.Test.add_func ("/wsid/crank/base/holder/invokev",
+			func_holder_invokev	);
 			
 	GLib.Test.add_func ("/wsid/crank/base/holder/invoke_overwrite",
 			func_holder_invoke_overwrite	);
