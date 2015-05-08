@@ -24,6 +24,7 @@ CRANK_VALA_FUNC_GET_USERDATA
 CRANK_VALA_FUNC_JOIN_SPLIT
 CRANK_VALA_FUNC_JOIN_SPLIT_OWNED
 CRANK_VALA_GENERIC_UNOWNED
+crank_vala_create_closure
 </SECTION>
 
 <SECTION>
@@ -144,6 +145,7 @@ crank_func_holder_get_qname
 <SUBSECTION>
 crank_func_holder_set
 crank_func_holder_set_func
+crank_func_holder_set_simple
 crank_func_holder_get
 crank_func_holder_get_by_param_types
 crank_func_holder_lookup
@@ -177,6 +179,7 @@ crank_func_book_get_by_qname
 crank_func_book_index_of
 crank_func_book_remove
 crank_func_book_remove_by_name
+crank_func_book_remove_by_qname
 crank_func_book_set
 crank_func_book_invoke
 crank_func_book_invoke_name
@@ -208,6 +211,18 @@ crank_base_inc
 crank_base_dec
 crank_base_lshift
 crank_base_rshift
+crank_base_eq
+crank_base_geq
+crank_base_greater
+crank_base_leq
+crank_base_less
+crank_base_std_eq
+crank_base_std_geq
+crank_base_std_greater
+crank_base_std_leq
+crank_base_std_less
+crank_base_std_lshift
+crank_base_std_rshift
 <SUBSECTION Private>
 crank_base_get_book
 </SECTION>

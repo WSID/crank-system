@@ -29,7 +29,7 @@
 
 /**
  * SECTION: crankstring
- * @title: 문자열 조작 함수들
+ * @title: 문자열 조작 유틸리티
  * @short_description: 문자열 조작을 위한 유틸리티 함수들
  * @stability: Unstable
  * @include: crankbase.h
@@ -53,16 +53,16 @@
  *    이 함수들은 문자열을 주어진 위치에서 읽어들입니다. read 계열과 scan 계열은
  *    처리를 위해 gboolean을 반환하며, 실질적인 값은 out parameter를 통해 전달
  *    됩니다.
- *    <programlisting language="C">
- *        gboolean		read_[something] (	const gchar* str,
- *        									guint* pos,
- *        									something* stn [, 함수별 추가 항목]);
- *    </programlisting>
+ *    |[ <-- language="C" --!>
+ *        gboolean      read_[something] (  const gchar* str,
+ *                                          guint* pos,
+ *                                          something* stn [, 함수별 추가 항목]);
+ *    ]|
  *
  *    이에 다음과 같이 사용 가능합니다.
- *    |[ <!-- language="C" -->
+ *    |[ <-- language="C" --!>
  *        crank_str_read_space (str, &i, NULL);
- *        if (! crank_str_read_word (str, &i, &word_a)) return NULL;
+ *        if (! crank_str_read_word (str, &i, &amp;word_a)) return NULL;
  *        
  *        crank_str_read_space (str, &i, NULL);
  *        if (! crank_str_read_word (str, &i, &word_b)) {
@@ -77,14 +77,14 @@
  *    이 함수들은 문자열을 공백을 건너뛰고 읽어들입니다. 공백 처리를 생략하므로
  *    crank_str_read_space()를 생략할 수 있습니다. 다음의 형식으로 구성되어
  *    있습니다.
- *    <programlisting language="C">
- *        gboolean		scan_[something] (	const gchar* str,
- *        									guint* pos,
- *        									something* stn [, 함수별 추가 항목]);
- *    </programlisting>
+ *    |[ <-- language="C" --!>
+ *        gboolean      scan_[something] (  const gchar* str,
+ *                                          guint* pos,
+ *                                          something* stn [, 함수별 추가 항목]);
+ *    ]|
  *
  *    위 항목을 다음과 같이 사용할 수 있습니다.
- *    |[ <!-- language="C" -->
+ *    |[ <-- language="C" --!>
  *        if (! crank_str_scan_word (str, &i, &word_a)) return NULL;
  *
  *        if (! crank_str_scan_word (str, &i, &word_b)) {
@@ -100,18 +100,18 @@
  *    생략하며, 일부 여러개를 확인하는 함수들은 #gboolean외에 다른 값을 반환할
  *    수 있습니다.
  *    다음의 형식으로 이루어져 있습니다.
- *    <programlisting language="C">
- *        gboolean		check_[something] (	const gchar* str,
- *        									guint* pos,
- *        									something stn [, 함수별 추가 항목]);
+ *    |[ <-- language="C" --!>
+ *        gboolean      check_[something] ( const gchar* str,
+ *                                          guint* pos,
+ *                                          something stn [, 함수별 추가 항목]);
  *
- *        gint			check_[something]s (const gchar* str,
- *        									guint* pos,
- *        									something* stn,
- *        									guint nstn [, 함수별 추가 항목]);
+ *        gint          check_[something]s (const gchar* str,
+ *                                          guint* pos,
+ *                                          something* stn,
+ *                                          guint nstn [, 함수별 추가 항목]);
  *
  *        ....
- *    </programlisting>
+ *    ]|
  */
 
 /**

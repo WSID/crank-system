@@ -929,7 +929,7 @@ crank_func_holder_set_simple (	CrankFuncHolder*	holder,
 							   	GCallback			func,
 							   	GClosureMarshal		marshal	)
 {
-	crank_func_holder_set_func (holder, ftype, func, NULL, NULL, marshal);
+	crank_func_holder_set_func (holder, ftype, (CrankCallback)func, NULL, NULL, marshal);
 }
 
 /**
@@ -1623,7 +1623,7 @@ crank_func_book_get_by_name (	CrankFuncBook*	book,
 }
 
 /**
- * crank_func_book_get_by_name:
+ * crank_func_book_get_by_qname:
  * @book: 함수 책입니다.
  * @name: 찾고자 하는 함수 홀더의 이름입니다.
  *

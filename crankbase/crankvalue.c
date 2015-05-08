@@ -27,7 +27,12 @@
  * 이 섹션의 함수 목록은 #GValue을 취급하기 위한 함수들의 목록입니다.
  *
  * #GValue은 사용에 앞서 초기화를 해주어야 합니다. 이 함수들은 이러한 과정을
- * 수행하여, 번거로움을 감소시킵니다. *
+ * 수행하여, 번거로움을 감소시킵니다.
+ *
+ * Crank System은 두 부류의 함수를 제공합니다.
+ *
+ * * 단일의 #GValue를 조작하는 함수들.
+ * * #GValue의 C 배열을 조작하는 함수들.
  *
  * 이 함수들은 C/C++에서 사용하기 위해 만들어 졌습니다. Vala나 pyGObject등에서는
  * 각각 지원 기능이 있으므로 해당 기능을 사용하기 바랍니다.
@@ -171,7 +176,7 @@ crank_value_overwrite_pointer (	GValue*		value,
 /**
  * crank_value_array_overwrite: (skip)
  * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
- * @narray: @array에 덮어쓸 #GValue의 개수입니다.
+ * @nitem: @array에 덮어쓸 #GValue의 개수입니다.
  * @...: (type GValue): @array에 덮어쓸 #GValue입니다.
  *
  * 주어진 #GValue들을 배열위에 덮어씁니다.
@@ -196,7 +201,7 @@ crank_value_array_overwrite (	GValue*		array,
  * crank_value_array_overwrite_va: (skip)
  * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
  * @nitem: @array에 덮어쓸 개수입니다.
- * @varargs: (element-type GValue): @array에 덮어쓸 #GValue입니다.
+ * @varargs: @array에 덮어쓸 #GValue입니다.
  *
  * 주어진 #GValue들을 배열위에 덮어씁니다.
  * 함수의 입력으로 들어온 #GValue들을 배열로 전환할 때 사용합니다.
@@ -210,8 +215,6 @@ crank_value_array_overwrite_va (GValue*		array,
 	
 	for (i = 0; i < nitem; i++)
 		crank_value_overwrite (array + i, va_arg (varargs, GValue*));
-	
-	return index;
 }
 
 /**

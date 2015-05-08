@@ -5,8 +5,17 @@
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
 <section>
-	<para>타입과 관련된 작업을 보조하거나, 기본적인 자료구조를 제공하는 등의 기반이
-	되는 작업들을 수행합니다. </para>
-	<para>타입에 맞는 함수를 등록하여 하는 역할</para>
-	<para>벡터 및 행렬 자료형</para>
+	<section>
+		<title>개괄</title>
+		<para>Crank Base는 크게 2부분으로 나눌 수 있습니다.</para>
+		<itemizedlist>
+			<listitem>기본 유틸리티</listitem>
+			<listitem>함수를 타입에 따라 호출할 수 있는 함수 묶음 책</listitem>
+		</itemizedlist>
+	</section>
+	<section>
+		<title>기본 유틸리티</title>
+		<para>기본적인 동작들을 미리 구현해 놓은 모음입니다.</para>
+		<para>문자열 관련 함수, GValue 관련 함수들이 존재합니다.</para>
+	</section>
 </section>

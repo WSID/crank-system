@@ -26,8 +26,8 @@
 
 /**
  * SECTION:crankbasemacro
- * @short_description: Crank System Macro 모음
  * @title: Crank System 기본 매크로
+ * @short_description: 기본적인 동작들을 매크로로 정의합니다.
  * @stability: Unstable
  * @include: crankbase.h
  *
@@ -115,6 +115,9 @@ G_BEGIN_DECLS
  * @n: 배열이 가지고 있는 항목의 개수입니다. (배열의 유효한 길이)
  * @c: 배열이 할당된 길이입니다.
  * @I: (type T): 배열에 추가될 항목입니다.
+ *
+ * 배열에 항목을 추가합니다. 만일 배열의 개수가 할당량을 넘어가는 경우, 배열은
+ * g_renew()을 통해 재 할당됩니다.
  */
 #define CRANK_ARRAY_ADD(T, a, n, c, I) \
 	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
@@ -214,7 +217,7 @@ G_BEGIN_DECLS
  *
  * 함수에 주어진 가변 인자 각각에 대해 반복하는 loop를 구성합니다.
  *
- * #CRANK_FOREACH_VARARG_END로 끝을 지정합니다.
+ * %CRANK_FOREACH_VARARG_END로 끝을 지정합니다.
  */
 #define CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
     { \
