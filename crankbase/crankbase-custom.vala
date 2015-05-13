@@ -73,6 +73,139 @@ namespace Crank {
 									void*			invocation_hint = null);
 	
 	
+	
+	
+	public struct VecBool2 {
+		public bool	x;
+		public bool y;
+		
+		public VecBool2 		(bool x, bool y);
+		public VecBool2.arr		(bool arr[2]);
+		public VecBool2.valist	(va_list varargs);
+		
+		public bool			get (uint	index);
+		public void			set (uint	index, bool value);
+		
+		public VecBool2		and (VecBool2 b);
+		public VecBool2		or (VecBool2 b);
+		public VecBool2		xor (VecBool2 b);
+		
+		public VecBool2		not	();
+		
+		public bool			any { get; }
+		public bool			all { get; }
+		
+		public static bool	equal (VecBool2 a, VecBool2 b);
+		public static uint	hash (VecBool2 vec);
+		
+		[CCode (cname="crank_vec_bool2_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string on_true	= "true",
+										string on_false = "false" );
+	}
+	
+	public struct VecBool3 {
+		public bool	x;
+		public bool y;
+		public bool z;
+		
+		public VecBool3 		(bool x, bool y);
+		public VecBool3.arr		(bool arr[3]);
+		public VecBool3.valist	(va_list varargs);
+		
+		public bool			get (uint	index);
+		public void			set (uint	index, bool value);
+		
+		public VecBool3		and (VecBool3 b);
+		public VecBool3		or (VecBool3 b);
+		public VecBool3		xor (VecBool3 b);
+		
+		public VecBool3		not	();
+		
+		public bool			any { get; }
+		public bool			all { get; }
+		
+		public static bool	equal (VecBool3 a, VecBool3 b);
+		public static uint	hash (VecBool3 vec);
+		
+		[CCode (cname="crank_vec_bool3_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string on_true	= "true",
+										string on_false = "false" );
+	}
+	
+	public struct VecBool4 {
+		public bool	x;
+		public bool y;
+		public bool z;
+		public bool w;
+		
+		public VecBool4 		(bool x, bool y);
+		public VecBool4.arr		(bool arr[4]);
+		public VecBool4.valist	(va_list varargs);
+		
+		public bool			get (uint	index);
+		public void			set (uint	index, bool value);
+		
+		public VecBool4		and (VecBool4 b);
+		public VecBool4		or (VecBool4 b);
+		public VecBool4		xor (VecBool4 b);
+		
+		public VecBool4		not	();
+		
+		public bool			any { get; }
+		public bool			all { get; }
+		
+		public static bool	equal (VecBool4 a, VecBool4 b);
+		public static uint	hash (VecBool4 vec);
+		
+		[CCode (cname="crank_vec_bool4_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string on_true	= "true",
+										string on_false = "false" );
+	}
+	
+	[CCode (	destroy_function="crank_vec_bool_n_fini",
+				free_function="crank)vec_bool_n_free"	)]
+	public struct VecBoolN {
+		[CCode (	array_length_cname="n"	)]
+		public bool[]	data;
+		
+		public VecBoolN 		(uint n, ...);
+		public VecBoolN.arr		([CCode (array_length_pos=0.5)]bool arr[]);
+		public VecBoolN.valist	(uint n, va_list varargs);
+		
+		public uint			size {	get; }
+		
+		public bool			get (uint	index);
+		public void			set (uint	index, bool value);
+		
+		public VecBoolN		and (VecBoolN b);
+		public VecBoolN		or (VecBoolN b);
+		public VecBoolN		xor (VecBoolN b);
+		
+		public VecBoolN		not	();
+		
+		public bool			any { get; }
+		public bool			all { get; }
+		
+		public static bool	equal (VecBoolN a, VecBoolN b);
+		public static uint	hash (VecBoolN vec);
+		
+		[CCode (cname="crank_vec_bool_n_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string on_true	= "true",
+										string on_false = "false" );
+	}
+	
 
 	public class FuncType {
 		[CCode (sentinel="G_TYPE_NONE")]

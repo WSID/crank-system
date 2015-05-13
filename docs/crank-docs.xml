@@ -25,6 +25,7 @@
 	<xi:include href="xml/crankvala.xml"/>
 	<xi:include href="xml/crankstring.xml"/>
 	<xi:include href="xml/crankvalue.xml"/>
+	<xi:include href="xml/crankvecbool.xml"/>
     <xi:include href="xml/cranksingular.xml"/>
     <xi:include href="xml/cranktypesgraph.xml"/>
     <xi:include href="xml/crankfuncholder.xml"/>

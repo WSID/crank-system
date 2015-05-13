@@ -18,7 +18,8 @@ test_programs= \
 		test_func_holder \
 		test_singular \
 		test_types_graph \
-		test_base_book
+		test_base_book \
+		test_vec_bool
 
 
 # test_func_holder
@@ -70,3 +71,11 @@ test_base_book_LDADD= \
 
 test_base_book_SOURCES= \
 		test_base_book.vala
+
+
+test_vec_bool_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_vec_bool_SOURCES= \
+		test_vec_bool.vala
