@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<section>
+	<para>
+	Crank System은 여러 데이터 구조를 정의합니다.
+	</para>
+	<para>
+	Crank System에서 제공되는 벡터는 다양합니다.
+	
+	먼저 타입별로 보면 다음과 같이 구분될 수 있습니다.
+	<itemizedlist>
+		<listitem>
+			<link linkend="crank-Boolean-vector">CrankVecBool</link>:
+			<link linkend="gboolean">gboolean</link></listitem>
+	</itemizedlist>
+	
+	또한 성분별로 보면 다음과 같이 구분될 수 있습니다.
+	<itemizedlist>
+	<listitem>고정크기 2차 벡터</listitem>
+	<listitem>고정크기 3차 벡터</listitem>
+	<listitem>고정크기 4차 벡터</listitem>
+	<listitem>가변크기 벡터</listitem>
+	</itemizedlist>
+	</para>
+</section>

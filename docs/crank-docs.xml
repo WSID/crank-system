@@ -20,17 +20,26 @@
   </bookinfo>
   
   <chapter>
-  	<title>Crank Base - 기반 지원</title>
+  	<title>유틸리티 함수들</title>
     <xi:include href="xml/crankbasemacro.xml"/>
 	<xi:include href="xml/crankvala.xml"/>
 	<xi:include href="xml/crankstring.xml"/>
 	<xi:include href="xml/crankvalue.xml"/>
+	<xi:include href="crank-chapter-base-utility.xml"/>
+  </chapter>
+  
+  <chapter>
+    <title>데이터 구조</title>
 	<xi:include href="xml/crankvecbool.xml"/>
+	<xi:include href="crank-chapter-base-data.xml"/>
+  </chapter>
+  
+  <chapter>
+    <title>타입 그래프와 타입 책</title>
     <xi:include href="xml/cranksingular.xml"/>
     <xi:include href="xml/cranktypesgraph.xml"/>
     <xi:include href="xml/crankfuncholder.xml"/>
     <xi:include href="xml/crankbasebook.xml"/>
-    <xi:include href="crank-chapter-base.xml"/>
   </chapter>
   
   <chapter id="object-tree">

@@ -70,7 +70,9 @@ HTML_IMAGES=
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
-content_files= crank-chapter-base.xml
+content_files= \
+	crank-chapter-base-utility.xml \
+	crank-chapter-base-data.xml
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
 # These files must be listed here *and* in content_files

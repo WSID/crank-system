@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<section>
+	<para>
+	Crank System은 기본적인 작업을 편히 하기 위한 매크로와 함수를 제공하며,
+	내부적으로도 해당 매크로와 유틸리티 함수들을 사용합니다.
+	</para>
+	<para>
+	해당 함수의 설명은 각 섹션을 참고하기 바랍니다.
+	</para>
+</section>
