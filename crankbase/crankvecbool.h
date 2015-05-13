@@ -248,10 +248,10 @@ gboolean		crank_vec_bool3_get_any		(	CrankVecBool3*	vec	);
 
 gboolean		crank_vec_bool3_get_all		(	CrankVecBool3*	vec	);
 
-gboolean		crank_vec_bool3_equal		(	CrankVecBool3*	a,
-												CrankVecBool3*	b	);
+gboolean		crank_vec_bool3_equal		(	gconstpointer	a,
+												gconstpointer	b	);
 
-guint			crank_vec_bool3_hash		(	CrankVecBool3*	vec	);
+guint			crank_vec_bool3_hash		(	gconstpointer	a	);
 
 gchar*			crank_vec_bool3_to_string	(	CrankVecBool3*	vec	);
 
@@ -380,10 +380,10 @@ gboolean		crank_vec_bool4_get_any		(	CrankVecBool4*	vec	);
 
 gboolean		crank_vec_bool4_get_all		(	CrankVecBool4*	vec	);
 
-gboolean		crank_vec_bool4_equal		(	CrankVecBool4*	a,
-												CrankVecBool4*	b	);
+gboolean		crank_vec_bool4_equal		(	gconstpointer	a,
+												gconstpointer	b	);
 
-guint			crank_vec_bool4_hash		(	CrankVecBool4*	vec	);
+guint			crank_vec_bool4_hash		(	gconstpointer	a	);
 
 gchar*			crank_vec_bool4_to_string	(	CrankVecBool4*	vec	);
 
@@ -472,10 +472,10 @@ gboolean		crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	);
 
 gboolean		crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	);
 
-gboolean		crank_vec_bool_n_equal		(	CrankVecBoolN*	a,
-												CrankVecBoolN*	b	);
+gboolean		crank_vec_bool_n_equal		(	gconstpointer	a,
+												gconstpointer	b	);
 
-guint			crank_vec_bool_n_hash		(	CrankVecBoolN*	vec	);
+guint			crank_vec_bool_n_hash		(	gconstpointer	a	);
 
 gchar*			crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	);
 

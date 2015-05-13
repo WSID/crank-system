@@ -35,13 +35,17 @@
  *
  * 현재 지원되는 동작은 다음과 같습니다.
  *
- * * 초기화: 인자, 배열 그리고 <structname>va_list</structname>에서 초기화
+ * * 초기화
+ *   * 인자에서 채워넣기
+ *   * 배열에서 채워넣기
+ *   * <structname>va_list</structname>
+ *   * 한 값으로 채워넣기
  * * 성분별 논리 연산: and, or, xor, not
  * * 특성: all, any
  *
  * 제공되는 매크로는 다음과 같습니다.
  *
- * * %TRUE, %FALSE: 모든 값이 %TRUE이거나 %FALSE인 초기화 목록
+ * * TRUE, FALSE: 모든 값이 %TRUE이거나 %FALSE인 초기화 목록
  * * I, J, K, L: 해당 성분 값이 %TRUE인 초기화 목록
  *
  * GLSL의 bvec와 대응됩니다.
@@ -664,31 +668,36 @@ crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
 
 /**
  * crank_vec_bool3_equal:
- * @a: 비교할 벡터입니다.
- * @b: 비교할 벡터입니다.
+ * @a: (type CrankVecBool3): 비교할 벡터입니다.
+ * @b: (type CrankVecBool3): 비교할 벡터입니다.
  *
  * 두 벡터를 비교하여 같은지 다른지 확인합니다.
  *
  * Returns: 두 벡터가 같으면 %TRUE입니다.
  */
 gboolean
-crank_vec_bool3_equal	(	CrankVecBool3* a,
-							CrankVecBool3* b	)
+crank_vec_bool3_equal	(	gconstpointer a,
+							gconstpointer b	)
 {
-	return (a->x == b->x) && (a->y == b->y) && (a->z == b->z);
+	const CrankVecBool3* veca = (const CrankVecBool3*) a;
+	const CrankVecBool3* vecb = (const CrankVecBool3*) b;
+	return	(veca->x == vecb->x) &&
+			(veca->y == vecb->y) &&
+			(veca->z == vecb->z);
 }
 
 /**
  * crank_vec_bool3_hash:
- * @vec: 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBool3): 해쉬를 얻을 벡터입니다.
  *
  * 주어진 벡터의 해쉬를 얻습니다.
  *
  * Returns: 주어진 벡터의 해쉬값입니다.
  */
 guint
-crank_vec_bool3_hash	(	CrankVecBool3* vec	)
+crank_vec_bool3_hash	(	gconstpointer	a	)
 {
+	const CrankVecBool3* vec = (const CrankVecBool3*) a;
 	return g_direct_hash (
 			GINT_TO_POINTER(	(vec->x) +
 								(vec->y << 1) +
@@ -767,6 +776,7 @@ crank_vec_bool4_init	(	CrankVecBool4*	vec,
 	vec->x = x;
 	vec->y = y;
 	vec->z = z;
+	vec->w = w;
 }
 
 
@@ -1023,31 +1033,37 @@ crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
 
 /**
  * crank_vec_bool4_equal:
- * @a: 비교할 벡터입니다.
- * @b: 비교할 벡터입니다.
+ * @a: (type CrankVecBool4): 비교할 벡터입니다.
+ * @b: (type CrankVecBool4): 비교할 벡터입니다.
  *
  * 두 벡터를 비교하여 같은지 다른지 확인합니다.
  *
  * Returns: 두 벡터가 같으면 %TRUE입니다.
  */
 gboolean
-crank_vec_bool4_equal	(	CrankVecBool4* a,
-							CrankVecBool4* b	)
+crank_vec_bool4_equal	(	gconstpointer	a,
+							gconstpointer	b	)
 {
-	return (a->x == b->x) && (a->y == b->y) && (a->z == b->z) && (a->w == b->w);
+	const CrankVecBool4* veca = (const CrankVecBool4*) a;
+	const CrankVecBool4* vecb = (const CrankVecBool4*) b;
+	return	(veca->x == vecb->x) &&
+			(veca->y == vecb->y) &&
+			(veca->z == vecb->z) &&
+			(veca->w == vecb->w);
 }
 
 /**
  * crank_vec_bool4_hash:
- * @vec: 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBool4): 해쉬를 얻을 벡터입니다.
  *
  * 주어진 벡터의 해쉬를 얻습니다.
  *
  * Returns: 주어진 벡터의 해쉬값입니다.
  */
 guint
-crank_vec_bool4_hash	(	CrankVecBool4* vec	)
+crank_vec_bool4_hash	(	gconstpointer a	)
 {
+	const CrankVecBool4* vec = (const CrankVecBool4*) a;
 	return g_direct_hash (
 			GINT_TO_POINTER(	(vec->x) +
 								(vec->y << 1) +
@@ -1507,22 +1523,25 @@ crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_equal:
- * @a: 비교할 벡터입니다.
- * @b: 비교할 벡터입니다.
+ * @a: (type CrankVecBoolN): 비교할 벡터입니다.
+ * @b: (type CrankVecBoolN): 비교할 벡터입니다.
  *
  * 두 벡터를 비교하여 같은지 다른지 확인합니다.
  *
  * Returns: 두 벡터가 같으면 %TRUE입니다.
  */
 gboolean
-crank_vec_bool_n_equal	(	CrankVecBoolN* a,
-							CrankVecBoolN* b	)
+crank_vec_bool_n_equal	(	gconstpointer a,
+							gconstpointer b	)
 {
-	guint i;
-	if (a->n != b->n) return FALSE;
+	const CrankVecBoolN*	veca = (const CrankVecBoolN*) a;
+	const CrankVecBoolN*	vecb = (const CrankVecBoolN*) b;
 	
-	for (i = 0; i < a->n; i++)
-		if (a->data[i] != b->data[i]) return FALSE;
+	guint i;
+	if (veca->n != vecb->n) return FALSE;
+	
+	for (i = 0; i < veca->n; i++)
+		if (veca->data[i] != vecb->data[i]) return FALSE;
 	
 	return TRUE;
 }
@@ -1530,15 +1549,17 @@ crank_vec_bool_n_equal	(	CrankVecBoolN* a,
 
 /**
  * crank_vec_bool_n_hash:
- * @vec: 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBoolN): 해쉬를 얻을 벡터입니다.
  *
  * 주어진 벡터의 해쉬를 얻습니다.
  *
  * Returns: 주어진 벡터의 해쉬값입니다.
  */
 guint
-crank_vec_bool_n_hash	(	CrankVecBoolN* vec	)
+crank_vec_bool_n_hash	(	gconstpointer a	)
 {
+	const CrankVecBoolN* vec  = (const CrankVecBoolN*) a;
+	
 	guint	i;
 	guint	value = 0;
 	
