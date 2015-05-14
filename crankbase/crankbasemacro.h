@@ -251,6 +251,47 @@ G_BEGIN_DECLS
 		BLOCK \
 	CRANK_FOREACH_VARARG_END
 
+
+/**
+ * CRANK_FOREACH_GLIST_BEGIN:
+ * @l: 반복할 GList입니다.
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 각 항목의 이름입니다.
+ *
+ * #GList에 대해 반복하는 루프의 시작을 표시합니다.
+ */
+#define CRANK_FOREACH_GLIST_BEGIN(l, G, e) \
+	{ \
+		GList*	_crank_macro_iter; 			\
+		for (	_crank_macro_iter = l; 		\
+				_crank_macro_iter != NULL;	\
+				_crank_macro_iter = _crank_macro_iter -> next ) { \
+			G	e = (G) _crank_macro_iter -> data;
+
+/**
+ * CRANK_FOREACH_GLIST_END:
+ *
+ * %CRANK_FOREACH_GLIST_BEGIN로 표시한 루프의 끝을 지정합니다.
+ */
+#define CRANK_FOREACH_GLIST_END \
+		} \
+	}
+
+/**
+ * CRANK_FOREACH_GLIST_DO:
+ * @l: 반복할 GList입니다.
+ * @G: 각 항목의 형 (type) 입니다.
+ * @e: 각 항목의 이름입니다.
+ * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ *
+ * GList의 각 항목에 대해 @BLOCK을 수행합니다.
+ */
+#define CRANK_FOREACH_GLIST_DO(l, G, e, BLOCK) \
+	CRANK_FOREACH_GLIST_BEGIN (l, G, e) \
+		BLOCK \
+	CRANK_FOREACH_GLIST_END
+
+
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_BEGIN:
  * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.

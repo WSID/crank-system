@@ -30,6 +30,7 @@
 #include "cranktypesgraph.h"
 #include "crankfuncholder.h"
 
+#include "crankgraph.h"
 #include "crankvecbool.h"
 
 #include "crankbasebook.h"

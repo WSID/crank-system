@@ -38,11 +38,13 @@ void	test_macro_ARRAY_ADD (void);
 void	test_macro_FOREACH_ARRAY (void);
 void	test_macro_FOREACH_VALIST (void);
 void	test_macro_FOREACH_VARARG (void);
+void	test_macro_FOREACH_GLIST (void);
 void	test_macro_FOREACH_G_PTR_ARRAY (void);
 
 void	test_macro_FOREACH_ARRAY_DO (void);
 void	test_macro_FOREACH_VALIST_DO (void);
 void	test_macro_FOREACH_VARARG_DO (void);
+void	test_macro_FOREACH_GLIST_DO (void);
 void	test_macro_FOREACH_G_PTR_ARRAY_DO (void);
 
 
@@ -72,11 +74,14 @@ main (gint   argc,
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg",
 		test_macro_FOREACH_VARARG);
-		
-		
+	
+	g_test_add_func ("/crank/base/macro/foreach/glist",
+		test_macro_FOREACH_GLIST);
 		
 	g_test_add_func ("/wsid/crank/base/macro/foreach/g_ptr_array",
 		test_macro_FOREACH_G_PTR_ARRAY);
+		
+		
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/array_do",
 		test_macro_FOREACH_ARRAY_DO);
@@ -86,6 +91,9 @@ main (gint   argc,
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/vararg_do",
 		test_macro_FOREACH_VARARG_DO);
+		
+	g_test_add_func ("/crank/base/macro/foreach/glist",
+		test_macro_FOREACH_GLIST_DO);
 
 	g_test_add_func ("/wsid/crank/base/macro/foreach/g_ptr_array_do",
 		test_macro_FOREACH_G_PTR_ARRAY_DO);
@@ -229,6 +237,24 @@ test_macro_FOREACH_VARARG (void)
 }
 
 void
+test_macro_FOREACH_GLIST (void)
+{
+	GList*	subject = NULL;
+	gint	sum = 0;
+	
+	subject = g_list_append (subject, GINT_TO_POINTER (3));
+	subject = g_list_append (subject, GINT_TO_POINTER (4));
+	subject = g_list_append (subject, GINT_TO_POINTER (1));
+	subject = g_list_append (subject, GINT_TO_POINTER (7));
+	
+	CRANK_FOREACH_GLIST_BEGIN (subject, gpointer, e)
+		sum += GPOINTER_TO_INT(e);
+	CRANK_FOREACH_GLIST_END
+	
+	g_assert_cmpint (sum, ==, 15);
+}
+
+void
 test_macro_FOREACH_G_PTR_ARRAY (void)
 {
 	// 일단 포인터 형에 정수를 담습니다.
@@ -294,4 +320,20 @@ test_macro_FOREACH_G_PTR_ARRAY_DO (void)
 	CRANK_FOREACH_G_PTR_ARRAY_DO(subject, gpointer, e, {sum += GPOINTER_TO_INT(e);})
 	
 	g_assert_cmpint (sum, ==, 28);
+}
+
+void
+test_macro_FOREACH_GLIST_DO (void)
+{
+	GList*	subject = NULL;
+	gint	sum = 0;
+	
+	subject = g_list_append (subject, GINT_TO_POINTER (3));
+	subject = g_list_append (subject, GINT_TO_POINTER (4));
+	subject = g_list_append (subject, GINT_TO_POINTER (1));
+	subject = g_list_append (subject, GINT_TO_POINTER (7));
+	
+	CRANK_FOREACH_GLIST_DO (subject, gpointer, e, {sum += GPOINTER_TO_INT(e);})
+	
+	g_assert_cmpint (sum, ==, 15);
 }
