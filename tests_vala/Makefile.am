@@ -19,6 +19,7 @@ test_programs= \
 		test_singular \
 		test_types_graph \
 		test_base_book \
+		test_digraph \
 		test_vec_bool
 
 
@@ -72,6 +73,13 @@ test_base_book_LDADD= \
 test_base_book_SOURCES= \
 		test_base_book.vala
 
+
+test_digraph_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_digraph_SOURCES= \
+		test_digraph.vala
 
 test_vec_bool_LDADD= \
 		$(CRANK_BASE_LIBS) \

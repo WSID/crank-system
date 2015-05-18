@@ -74,6 +74,29 @@ namespace Crank {
 	
 	
 	
+	[Compact]
+	public class Digraph {
+		public unowned GLib.List <DigraphNode> nodes { get; }
+		public unowned GLib.List <DigraphEdge> edges { get; }
+	}
+	
+	[Compact]
+	public class DigraphNode {
+		public GLib.List <unowned DigraphEdge>	in_edges { get; }
+		public GLib.List <unowned DigraphEdge>	out_edges { get; }
+		
+		public GLib.List <unowned DigraphNode>	in_nodes { owned get; }
+		public GLib.List <unowned DigraphNode>	out_nodes { owned get; }
+		
+		public uint	indegree { get; }
+		public uint outdegree { get; }
+	}
+	
+	[Compact]
+	public class DigraphEdge {
+		public DigraphNode	tail { get; }
+		public DigraphNode	head { get; }
+	}
 	
 	public struct VecBool2 {
 		public bool	x;

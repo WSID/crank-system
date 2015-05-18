@@ -5,6 +5,10 @@ VecBool* skip
 
 //////// TypesGraph ////////////////////////////////////////////////////////////
 
+DigraphNode.get_data.value ref
+
+DigraphEdge.get_data.value ref
+
 // Fixes GValue processing
 TypesGraph.get.value ref
 TypesGraph.lookup.value ref
