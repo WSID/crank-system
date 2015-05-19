@@ -933,7 +933,119 @@ crank_digraph_connect_object (	CrankDigraph*		graph,
 }
 
 
+/**
+ * crank_digraph_node_get_pointer:
+ * @node: 노드입니다.
+ *
+ * 노드로부터 포인터 값을 얻습니다.
+ *
+ * Returns: (transfer none): 포인터 값입니다.
+ */
+gpointer
+crank_digraph_node_get_pointer (	CrankDigraphNode*	node	)
+{
+	return g_value_get_pointer (& node->data);
+}
 
+/**
+ * crank_digraph_node_get_boxed:
+ * @node: 노드입니다.
+ *
+ * 노드로부터 박스 값을 얻습니다.
+ *
+ * Returns: (transfer none): 박스 값입니다.
+ */
+gpointer
+crank_digraph_node_get_boxed (	CrankDigraphNode*	node	)
+{
+	return g_value_get_boxed (& node->data);
+}
+
+/**
+ * crank_digraph_node_get_object:
+ * @node: 노드입니다.
+ *
+ * 노드로부터 객체 값을 얻습니다.
+ *
+ * Returns: (transfer none): 객체 값입니다.
+ */
+GObject*
+crank_digraph_node_get_object (	CrankDigraphNode*	node	)
+{
+	return g_value_get_object (& node->data);
+}
+
+
+
+/**
+ * crank_digraph_edge_get_float:
+ * @node: 변입니다.
+ *
+ * 변으로부터 단정도 부동 소수 값을 얻습니다.
+ *
+ * Returns: 변의 소수 값입니다.
+ */
+gfloat
+crank_digraph_edge_get_float (	CrankDigraphEdge*	edge	)
+{
+	return g_value_get_float (& edge->data);
+}
+
+/**
+ * crank_digraph_edge_get_double:
+ * @node: 변입니다.
+ *
+ * 변으로부터 배정도 부동 소수 값을 얻습니다.
+ *
+ * Returns: 변의 소수 값입니다.
+ */
+gdouble
+crank_digraph_edge_get_double (	CrankDigraphEdge*	edge	)
+{
+	return g_value_get_double (& edge->data);
+}
+
+/**
+ * crank_digraph_edge_get_pointer:
+ * @node: 변입니다.
+ *
+ * 변으로부터 포인터 값을 얻습니다.
+ *
+ * Returns: 변의 포인터 값입니다.
+ */
+gpointer
+crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
+{
+	return g_value_get_pointer (& edge->data);
+}
+
+/**
+ * crank_digraph_edge_get_boxed:
+ * @node: 변입니다.
+ *
+ * 변으로부터 박스 값을 얻습니다.
+ *
+ * Returns: 변의 박스 값입니다.
+ */
+gpointer
+crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
+{
+	return g_value_get_boxed (& edge->data);
+}
+
+/**
+ * crank_digraph_edge_get_object:
+ * @node: 변입니다.
+ *
+ * 변으로부터 객체 값을 얻습니다.
+ *
+ * Returns: 변의 객체 값입니다.
+ */
+GObject*
+crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
+{
+	return g_value_get_object (& edge->data);
+}
 
 /*
  * crank_digraph_node_new: (private)

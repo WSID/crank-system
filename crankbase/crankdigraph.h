@@ -191,7 +191,7 @@ CrankDigraphEdge*	crank_digraph_connect_object (		CrankDigraph*		graph,
 														GObject*			object	);
 
 
-/*
+
 gpointer			crank_digraph_node_get_pointer (	CrankDigraphNode*	node	);
 
 gpointer			crank_digraph_node_get_boxed (		CrankDigraphNode*	node	);
@@ -208,7 +208,7 @@ gpointer			crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	);
 gpointer			crank_digraph_edge_get_boxed (		CrankDigraphEdge*	edge	);
 
 GObject*			crank_digraph_edge_get_object (		CrankDigraphEdge*	edge	);
-*/
+
 
 
 G_END_DECLS
