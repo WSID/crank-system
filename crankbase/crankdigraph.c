@@ -143,14 +143,13 @@ CrankDigraph*
 crank_digraph_new_with_nodes (	const guint		nnodes,
 								const GValue*	values	)
 {
-	CrankDigraph*	graph = g_new (CrankDigraph, 1);
-
-  	graph->nodes = NULL;
- 	graph->edges = NULL;
-
-  	graph->_refc = 1;
-
- 	return graph;
+	CrankDigraph*	graph = crank_digraph_new ();
+	guint			i;
+	
+	for (i = 0; i < nnodes; i ++)
+		crank_digraph_add (&graph, values + i);
+	
+	return graph;
 }
 
 /**
@@ -171,12 +170,18 @@ crank_digraph_new_full (	const guint		nnodes,
 						const guint		nedges,
 						const CrankDigraphEdgeIndex*	edges	)
 {
-	CrankDigraph*	graph = g_new (CrankDigraph, 1);
-
-  	graph->nodes = NULL;
- 	graph->edges = NULL;
-
-  	graph->_refc = 1;
+	CrankDigraph*	graph = crank_digraph_new_with_nodes (nnodes, values);
+	guint			i;
+	
+	for (i = 0; i < nedges; i++) {
+		CrankDigraphNode*	tail;
+		CrankDigraphNode*	head;
+		
+		tail = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges->tail);
+		head = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges->head);
+		
+		crank_digraph_connect (graph, tail, head, edges->data);
+	}
 
  	return graph;
 }
