@@ -104,6 +104,11 @@ void				crank_digraph_disconnect_edge (		CrankDigraph*		graph,
 
 void				crank_digraph_node_get_data (		CrankDigraphNode*	node,
 														GValue*				value	);
+														
+void				crank_digraph_node_set_data (		CrankDigraphNode*	node,
+														const GValue*		value	);
+
+GType				crank_digraph_node_type_of (		CrankDigraphNode*	node	);
 
 GList*				crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	);
 
@@ -133,10 +138,77 @@ gboolean			crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
 void				crank_digraph_edge_get_data (		CrankDigraphEdge*	edge,
 														GValue*				value	);
 
+void				crank_digraph_edge_set_data (		CrankDigraphEdge*	edge,
+														const GValue*		value	);
+
+GType				crank_digraph_edge_type_of (		CrankDigraphEdge*	edge	);
+
 CrankDigraphNode*	crank_digraph_edge_get_tail (		CrankDigraphEdge*	edge	);
 
 CrankDigraphNode*	crank_digraph_edge_get_head (		CrankDigraphEdge*	edge	);
 
+
+
+
+CrankDigraphNode*	crank_digraph_add_pointer (			CrankDigraph*		graph,
+														const GType			ptype,
+														gpointer			pointer	);
+
+CrankDigraphNode*	crank_digraph_add_boxed	(			CrankDigraph*		graph,
+														const GType			btype,
+														gpointer			boxed	);
+
+CrankDigraphNode*	crank_digraph_add_object	(		CrankDigraph*		graph,
+														GObject*			object	);
+
+
+
+CrankDigraphEdge*	crank_digraph_connect_float (		CrankDigraph*		graph,
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head,
+														gfloat				value	);
+
+CrankDigraphEdge*	crank_digraph_connect_double (		CrankDigraph*		graph,
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head,
+														gdouble				value	);
+
+CrankDigraphEdge*	crank_digraph_connect_pointer (		CrankDigraph*		graph,
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head,
+														const GType			ptype,
+														gpointer			pointer	);
+														
+CrankDigraphEdge*	crank_digraph_connect_boxed (		CrankDigraph*		graph,
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head,
+														const GType			btype,
+														gpointer			boxed	);
+														
+CrankDigraphEdge*	crank_digraph_connect_object (		CrankDigraph*		graph,
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head,
+														GObject*			object	);
+
+
+/*
+gpointer			crank_digraph_node_get_pointer (	CrankDigraphNode*	node	);
+
+gpointer			crank_digraph_node_get_boxed (		CrankDigraphNode*	node	);
+
+GObject*			crank_digraph_node_get_object (		CrankDigraphNode*	node	);
+
+
+gfloat				crank_digraph_edge_get_float (		CrankDigraphEdge*	edge	);
+
+gdouble				crank_digraph_edge_get_double (		CrankDigraphEdge*	edge	);
+
+gpointer			crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	);
+
+gpointer			crank_digraph_edge_get_boxed (		CrankDigraphEdge*	edge	);
+
+GObject*			crank_digraph_edge_get_object (		CrankDigraphEdge*	edge	);
+*/
 
 
 G_END_DECLS

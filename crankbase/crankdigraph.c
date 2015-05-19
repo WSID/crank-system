@@ -418,6 +418,35 @@ crank_digraph_node_get_data (	CrankDigraphNode*	node,
 {
 	g_value_copy (& node->data, value);
 }
+														
+/**
+ * crank_digraph_node_set_data:
+ * @node: 노드입니다.
+ * @value: 노드에 설정할 값입니다.
+ *
+ * 노드에 값을 설정합니다.
+ *
+ */
+void
+crank_digraph_node_set_data (	CrankDigraphNode*	node,
+								const GValue*		value	)
+{
+	crank_value_overwrite (& node->data, value);
+}
+													
+/**
+ * crank_digraph_node_type_of:
+ * @node: 노드입니다.
+ *
+ * 노드가 가지고 있는 #GValue의 타입을 얻습니다.
+ *
+ * Returns: 노드의 #GValue의 타입입니다.
+ */
+GType
+crank_digraph_type_of (	CrankDigraphNode*	node	)
+{
+	return G_VALUE_TYPE (& node->data );
+}
 
 /**
  * crank_digraph_node_get_in_nodes:
@@ -605,6 +634,34 @@ crank_digraph_edge_get_data (	CrankDigraphEdge*	edge,
 }
 
 /**
+ * crank_digraph_edge_set_data:
+ * @edge: 변입니다.
+ * @value: (nullable): 변에 설정할 값입니다.
+ *
+ * 변에 값을 설정합니다.
+ */
+void
+crank_digraph_edge_set_data (	CrankDigraphEdge*	edge,
+								const GValue*		value	)
+{
+	crank_value_overwrite (& edge->data, value);
+}
+
+/**
+ * crank_digraph_edge_type_of:
+ * @edge: 변입니다.
+ *
+ * 변의 #GValue의 타입을 얻습니다.
+ *
+ * Returns: 변의 #GValue의 타입입니다.
+ */
+GType
+crank_digraph_edge_type_of (	CrankDigraphEdge*	edge	)
+{
+	return G_VALUE_TYPE (& edge->data);
+}
+
+/**
  * crank_digraph_edge_get_tail:
  * @edge: 변입니다.
  *
@@ -633,6 +690,247 @@ crank_digraph_edge_get_head (	CrankDigraphEdge*	edge	)
 }
 
 
+
+/**
+ * crank_digraph_add_pointer:
+ * @graph: 그래프입니다.
+ * @ptype: 포인터의 GType입니다. 혹은 %G_TYPE_POINTER를 사용할 수 있습니다.
+ * @pointer: 포인터입니다.
+ *
+ * 포인터 값을 가진 노드를 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 노드입니다.
+ */
+CrankDigraphNode*
+crank_digraph_add_pointer (	CrankDigraph*	graph,
+							const GType		ptype,
+							gpointer		pointer )
+{
+	GValue				value = { 0 };
+	CrankDigraphNode*	node;
+	
+	g_value_init (&value, ptype);
+	g_value_set_pointer (&value, pointer);
+	
+	node = crank_digraph_add (graph, &value);
+	
+	g_value_unset (&value);
+	
+	return node;
+}
+
+/**
+ * crank_digraph_add_boxed:
+ * @graph: 그래프입니다.
+ * @btype: 포인터의 GType입니다.
+ * @boxed: 포인터입니다.
+ *
+ * 박스 값을 가진 노드를 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 노드입니다.
+ */
+CrankDigraphNode*
+crank_digraph_add_boxed (	CrankDigraph*	graph,
+							const GType		btype,
+							gpointer		boxed )
+{
+	GValue				value = { 0 };
+	CrankDigraphNode*	node;
+	
+	g_value_init (&value, btype);
+	g_value_set_pointer (&value, boxed);
+	
+	node = crank_digraph_add (graph, &value);
+	
+	g_value_unset (&value);
+	
+	return node;
+}
+
+
+/**
+ * crank_digraph_add_object:
+ * @graph: 그래프입니다.
+ * @object: 객체입니다.
+ *
+ * 객체 값을 가진 노드를 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 노드입니다.
+ */
+CrankDigraphNode*
+crank_digraph_add_object (	CrankDigraph*	graph,
+							GObject*		object )
+{
+	GValue				value = { 0 };
+	CrankDigraphNode*	node;
+	
+	g_value_init (&value, G_TYPE_OBJECT);
+	g_value_set_object (&value, object);
+	
+	node = crank_digraph_add (graph, &value);
+	
+	g_value_unset (&value);
+	
+	return node;
+}
+
+
+
+/**
+ * crank_digraph_connect_float:
+ * @graph: 그래프입니다.
+ * @tail: 꼬리 노드입니다.
+ * @head: 머리 노드입니다.
+ * @value: 변의 값입니다.
+ *
+ * 단정도 부동 소수 값을 가진 변을 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 변입니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_float (	CrankDigraph*		graph,
+								CrankDigraphNode*	tail,
+								CrankDigraphNode*	head,
+								const gfloat		value	)
+{
+	GValue				edgev = { 0 };
+	CrankDigraphEdge*	edge;
+	
+	g_value_init (&edgev, G_TYPE_FLOAT);
+	g_value_set_float (&edgev, value);
+	
+	edge = crank_digraph_connect (graph, tail, head, &edgev);
+	
+	g_value_unset (&edgev);
+	
+	return edge;
+}
+
+/**
+ * crank_digraph_connect_double:
+ * @graph: 그래프입니다.
+ * @tail: 꼬리 노드입니다.
+ * @head: 머리 노드입니다.
+ * @value: 변의 값입니다.
+ *
+ * 배정도 부동 소수 값을 가진 변을 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 변입니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_double (	CrankDigraph*		graph,
+								CrankDigraphNode*	tail,
+								CrankDigraphNode*	head,
+								const gdouble		value	)
+{
+	GValue				edgev = { 0 };
+	CrankDigraphEdge*	edge;
+	
+	g_value_init (&edgev, G_TYPE_DOUBLE);
+	g_value_set_double (&edgev, value);
+	
+	edge = crank_digraph_connect (graph, tail, head, &edgev);
+	
+	g_value_unset (&edgev);
+	
+	return edge;
+}
+
+/**
+ * crank_digraph_connect_pointer:
+ * @graph: 그래프입니다.
+ * @tail: 꼬리 노드입니다.
+ * @head: 머리 노드입니다.
+ * @ptype: 포인터의 타입입니다.
+ * @pointer: 포인터입니다.
+ *
+ * 포인터 값을 가진 변을 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 변입니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_pointer (	CrankDigraph*		graph,
+								CrankDigraphNode*	tail,
+								CrankDigraphNode*	head,
+								const GType			ptype,
+								gpointer			pointer	)
+{
+	GValue				edgev = { 0 };
+	CrankDigraphEdge*	edge;
+	
+	g_value_init (&edgev, ptype);
+	g_value_set_pointer (&edgev, pointer);
+	
+	edge = crank_digraph_connect (graph, tail, head, &edgev);
+	
+	g_value_unset (&edgev);
+	
+	return edge;
+}
+
+
+/**
+ * crank_digraph_connect_boxed:
+ * @graph: 그래프입니다.
+ * @tail: 꼬리 노드입니다.
+ * @head: 머리 노드입니다.
+ * @btype: 박스의 타입입니다.
+ * @boxed: 박스입니다.
+ *
+ * 박스 값을 가진 변을 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 변입니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_boxed (	CrankDigraph*		graph,
+								CrankDigraphNode*	tail,
+								CrankDigraphNode*	head,
+								const GType			btype,
+								gpointer			boxed	)
+{
+	GValue				edgev = { 0 };
+	CrankDigraphEdge*	edge;
+	
+	g_value_init (&edgev, btype);
+	g_value_set_boxed (&edgev, boxed);
+	
+	edge = crank_digraph_connect (graph, tail, head, &edgev);
+	
+	g_value_unset (&edgev);
+	
+	return edge;
+}
+
+
+/**
+ * crank_digraph_connect_object:
+ * @graph: 그래프입니다.
+ * @tail: 꼬리 노드입니다.
+ * @head: 머리 노드입니다.
+ * @object: 객체입니다.
+ *
+ * 객체 값을 가진 변을 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 변입니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_object (	CrankDigraph*		graph,
+								CrankDigraphNode*	tail,
+								CrankDigraphNode*	head,
+								GObject*			object	)
+{
+	GValue				edgev = { 0 };
+	CrankDigraphEdge*	edge;
+	
+	g_value_init (&edgev, G_TYPE_OBJECT);
+	g_value_set_object (&edgev, object);
+	
+	edge = crank_digraph_connect (graph, tail, head, &edgev);
+	
+	g_value_unset (&edgev);
+	
+	return edge;
+}
 
 
 

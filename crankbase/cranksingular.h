@@ -47,7 +47,7 @@ struct _CrankSingularClass {
 
 
 #define CRANK_TYPE_SINGULAR		(crank_singular_get_type())
-G_DECLARE_DERIVABLE_TYPE (CrankSingular, crank_singular, CRANK, SINGULAR, GObject);
+G_DECLARE_DERIVABLE_TYPE (CrankSingular, crank_singular, CRANK, SINGULAR, GObject)
 
 gboolean		crank_singular_has			(GType	type);
 CrankSingular*	crank_singular_get			(GType	type);
