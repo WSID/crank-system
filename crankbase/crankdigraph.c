@@ -147,7 +147,7 @@ crank_digraph_new_with_nodes (	const guint		nnodes,
 	guint			i;
 	
 	for (i = 0; i < nnodes; i ++)
-		crank_digraph_add (&graph, values + i);
+		crank_digraph_add (graph, values + i);
 	
 	return graph;
 }
@@ -177,10 +177,10 @@ crank_digraph_new_full (	const guint		nnodes,
 		CrankDigraphNode*	tail;
 		CrankDigraphNode*	head;
 		
-		tail = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges->tail);
-		head = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges->head);
+		tail = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges[i].tail);
+		head = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges[i].head);
 		
-		crank_digraph_connect (graph, tail, head, edges->data);
+		crank_digraph_connect (graph, tail, head, & edges[i].data);
 	}
 
  	return graph;
@@ -219,6 +219,48 @@ crank_digraph_unref (	CrankDigraph*		graph	)
 	}
 }
 
+/**
+ * crank_digraph_copy:
+ * @graph: 복사할 그래프입니다.
+ *
+ * 그래프를 복사합니다.
+ *
+ * Returns: (transfer full): 복사된 그래프입니다.
+ */
+CrankDigraph*
+crank_digraph_copy (	CrankDigraph*	graph	)
+{
+	// Hash table은 노드-인덱스를 보관하기 위해 사용합니다.
+	CrankDigraph*	clone;
+	GHashTable*		table;
+
+	clone = crank_digraph_new ();
+	table = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+	CRANK_FOREACH_GLIST_BEGIN (graph->nodes, CrankDigraphNode*, node)
+
+		g_hash_table_insert (table,
+				node,
+				crank_digraph_add (clone, & node->data)	);
+
+	CRANK_FOREACH_GLIST_END
+
+	CRANK_FOREACH_GLIST_BEGIN (graph->edges, CrankDigraphEdge*, edge)
+
+		CrankDigraphNode*	tail;
+		CrankDigraphNode*	head;
+
+		tail = g_hash_table_lookup (table, edge->tail);
+		head = g_hash_table_lookup (table, edge->head);
+
+		crank_digraph_connect (graph, tail, head, & edge->data);
+
+	CRANK_FOREACH_GLIST_END
+
+	g_hash_table_unref (table);
+
+	return clone;
+}
 
 
 /**
@@ -249,7 +291,149 @@ crank_digraph_get_edges (	CrankDigraph*	graph	)
 	return graph->edges;
 }
 
+/**
+ * crank_digraph_depth_first:
+ * @graph: 그래프입니다.
+ * @start: 시작할 노드입니다.
+ * @callback: (scope call): 노드마다 호출할 함수입니다.
+ * @userdata: (closure): @callback의 함수입니다.
+ *
+ * 그래프에서 깊이 우선 반복을 수행합니다.
+ *
+ * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ *
+ * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ */
+gboolean
+crank_digraph_depth_first (	CrankDigraph*			graph,
+							CrankDigraphNode*		start,
+							CrankDigraphCallback	callback,
+							gpointer				userdata	)
+{
+  	GHashTable*		set;
+  	GQueue*			queue;
 
+  	GList*				edge_list;
+  	CrankDigraphEdge*	edge;
+  	CrankDigraphNode*	node;
+
+  	if (! callback (graph, start, userdata)) return FALSE;
+  	if (start->out_edges == NULL) return TRUE;
+
+	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	queue = g_queue_new ();
+
+  	g_hash_table_add (set, start);
+
+  	edge_list = start->out_edges;
+  	
+	while (TRUE) {
+		edge = edge_list->data;
+		node = edge->head;
+
+		// Process node.
+		if (! g_hash_table_contains (set, node)){
+			if (! callback (graph, node, userdata)) {
+				g_hash_table_unref (set);
+				g_queue_free (queue);
+				return FALSE;
+			}
+			g_hash_table_add (set, node);
+
+			if (node->out_edges != NULL) {
+				g_queue_push_head (queue, edge_list);
+				edge_list = node->out_edges;
+				continue;
+			}
+		}
+
+		// Pick next edge_list to process.
+		edge_list = edge_list->next;
+		while (edge_list == NULL) {
+			if (g_queue_is_empty (queue)) {
+				g_hash_table_unref (set);
+				g_queue_free (queue);
+				return TRUE;
+			}
+			edge_list = ((GList*) g_queue_pop_head (queue))->next;
+		}
+	}
+
+	g_hash_table_unref (set);
+	g_queue_free (queue);
+
+	return TRUE;
+}
+/**
+ * crank_digraph_breadth_first:
+ * @graph: 그래프입니다.
+ * @start: 시작할 노드입니다.
+ * @callback: (scope call): 노드마다 호출할 함수입니다.
+ * @userdata: (closure): @callback의 함수입니다.
+ *
+ * 그래프에서 넓이 우선 반복을 수행합니다.
+ *
+ * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ *
+ * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ */
+gboolean
+crank_digraph_breadth_first (	CrankDigraph*			graph,
+								CrankDigraphNode*		start,
+								CrankDigraphCallback	callback,
+								gpointer				userdata	)
+{
+  	GHashTable*		set;
+  	GQueue*			queue;
+
+  	GList*				edge_list;
+  	CrankDigraphNode*	node;
+
+  	if (! callback (graph, start, userdata)) return FALSE;
+  	if (start->out_edges == NULL) return TRUE;
+
+	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	queue = g_queue_new ();
+
+  	g_hash_table_add (set, start);
+
+  	edge_list = start->out_edges;
+  	
+	while (TRUE) {
+		CRANK_FOREACH_GLIST_BEGIN (edge_list, CrankDigraphEdge*, edge)
+			node = edge->head;
+
+			// Process node.
+			if (! g_hash_table_contains (set, node)){
+				if (! callback (graph, node, userdata)) {
+					g_hash_table_unref (set);
+					g_queue_free (queue);
+					return FALSE;
+				}
+				g_hash_table_add (set, node);
+
+				if (node->out_edges != NULL) {
+					g_queue_push_head (queue, edge_list);
+					edge_list = node->out_edges;
+					continue;
+				}
+			}
+		CRANK_FOREACH_GLIST_END
+
+		if (g_queue_is_empty (queue)) {
+			g_hash_table_unref (set);
+			g_queue_free (queue);
+			return TRUE;
+		}
+		
+		edge_list = g_queue_pop_tail (queue);
+	}
+
+	g_hash_table_unref (set);
+	g_queue_free (queue);
+
+	return TRUE;
+}
 /**
  * crank_digraph_add:
  * @graph: 그래프입니다.

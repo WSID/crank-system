@@ -75,6 +75,62 @@ class TestDigraph(unittest.TestCase):
 		assert (not (self.edges[2] in edge_list))
 		assert (not (self.edges[4] in edge_list))
 
+	def test_depth_first (self):
+		
+		iter_nodes = []
+		
+		def accum (g, n):
+			iter_nodes.append (n)
+			return True
+	
+	
+		self.graph.depth_first (self.nodes[0], accum)
+		self.assertEqual (iter_nodes, [self.nodes[0]]);
+		
+		iter_nodes = []
+		self.graph.depth_first (self.nodes[1], accum)
+		self.assertEqual (iter_nodes,
+				[self.nodes[1],
+				self.nodes[2],
+				self.nodes[3]]	)
+				
+		iter_nodes = []
+		self.graph.depth_first (self.nodes[4], accum)
+		self.assertEqual (iter_nodes,
+				[self.nodes[4],
+				self.nodes[5],
+				self.nodes[8],
+				self.nodes[6],
+				self.nodes[7]]	)
+				
+	def test_breadth_first (self):
+		
+		iter_nodes = []
+		
+		def accum (g, n):
+			iter_nodes.append (n)
+			return True
+	
+	
+		self.graph.breadth_first (self.nodes[0], accum)
+		self.assertEqual (iter_nodes, [self.nodes[0]]);
+		
+		iter_nodes = []
+		self.graph.breadth_first (self.nodes[1], accum)
+		self.assertEqual (iter_nodes,
+				[self.nodes[1],
+				self.nodes[2],
+				self.nodes[3]]	)
+				
+		iter_nodes = []
+		self.graph.breadth_first (self.nodes[4], accum)
+		self.assertEqual (iter_nodes,
+				[self.nodes[4],
+				self.nodes[5],
+				self.nodes[6],
+				self.nodes[7],
+				self.nodes[8]]	)
+
 	def test_node_get_data (self):
 		node_v = GObject.Value (value_type=int)
 		

@@ -52,9 +52,24 @@ typedef struct _CrankDigraphEdgeIndex	CrankDigraphEdgeIndex;
 struct _CrankDigraphEdgeIndex {
 	GValue		data;
 
-  	guint		from_index;
-  	guint		to_index;
+  	guint		tail;
+  	guint		head;
 };
+
+
+/**
+ * CrankDigraphCallback:
+ * @graph: 그래프입니다.
+ * @node: 노드입니다.
+ * @userdata: (closure): 유저 데이터입니다.
+ *
+ * 그래프에서 노드에 대해 반복할 때 사용하는 함수입니다.
+ *
+ * Returns: 반복을 계속하기 위해 %TRUE를 사용합니다.
+ */
+typedef	gboolean	(*CrankDigraphCallback)	(	CrankDigraph*		graph,
+												CrankDigraphNode*	node,
+												gpointer			userdata	);
 
 
 CrankDigraph*		crank_digraph_new (void);
@@ -71,11 +86,23 @@ CrankDigraph*		crank_digraph_ref (					CrankDigraph*		graph	);
 
 void				crank_digraph_unref (				CrankDigraph*		graph	);
 
+CrankDigraph*		crank_digraph_copy (				CrankDigraph*		graph	);
+
 
 GList*				crank_digraph_get_nodes (			CrankDigraph*		graph	);
 
 GList*				crank_digraph_get_edges (			CrankDigraph*		graph	);
 
+
+gboolean			crank_digraph_depth_first (			CrankDigraph*		graph,
+														CrankDigraphNode*	start,
+														CrankDigraphCallback	callback,
+														gpointer			userdata	);
+
+gboolean			crank_digraph_breadth_first (		CrankDigraph*		graph,
+														CrankDigraphNode*	start,
+														CrankDigraphCallback	callback,
+														gpointer			userdata	);
 
 
 CrankDigraphNode*	crank_digraph_add (					CrankDigraph*		graph,

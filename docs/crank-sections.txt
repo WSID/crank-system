@@ -352,6 +352,7 @@ CrankDigraph
 CrankDigraphNode
 CrankDigraphEdge
 CrankDigraphEdgeIndex
+CrankDigraphCallback
 crank_digraph_new
 crank_digraph_new_with_nodes
 crank_digraph_new_full
@@ -365,6 +366,8 @@ crank_digraph_connect
 crank_digraph_connect_void
 crank_digraph_disconnect
 crank_digraph_disconnect_edge
+crank_digraph_depth_first
+crank_digraph_breadth_first
 crank_digraph_node_get_data
 crank_digraph_node_set_data
 crank_digraph_node_type_of

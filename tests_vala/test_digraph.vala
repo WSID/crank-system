@@ -55,6 +55,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/digraph/edge", test_digraph_get_edges);
 	GLib.Test.add_func ("/crank/base/digraph/disconnect", test_digraph_disconnect);
 	GLib.Test.add_func ("/crank/base/digraph/disconnect/edge", test_digraph_disconnect_edge);
+	GLib.Test.add_func ("/crank/base/digraph/foreach/depth", test_digraph_depth_first);
+	GLib.Test.add_func ("/crank/base/digraph/foreach/breadth", test_digraph_breadth_first);
+	
 	GLib.Test.add_func ("/crank/base/digraph/node/data", test_digraph_node_get_data);
 	GLib.Test.add_func ("/crank/base/digraph/node/in/edge", test_digraph_node_get_in_edges);
 	GLib.Test.add_func ("/crank/base/digraph/node/out/edge", test_digraph_node_get_out_edges);
@@ -123,6 +126,73 @@ private void test_digraph_disconnect_edge () {
 	assert (edge_list.find (fixture.edges[4]) == null);
 }
 
+private void test_digraph_depth_first () {
+	TestDigraphFixture fixture = TestDigraphFixture ();
+	
+	GLib.List <unowned Crank.DigraphNode> node_list;
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	
+	Crank.DigraphCallback	accum = (g, n) => {
+		node_list.append (n);
+		return true;
+	};
+	
+	
+	fixture.graph.depth_first (fixture.nodes[0], accum);
+	assert (node_list.length () == 1);
+	assert (node_list.nth_data (0) == fixture.nodes[0]);	
+	
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	fixture.graph.depth_first (fixture.nodes[1], accum);	
+	assert (node_list.length () == 3);
+	assert (node_list.nth_data (0) == fixture.nodes[1]);
+	assert (node_list.nth_data (1) == fixture.nodes[2]);
+	assert (node_list.nth_data (2) == fixture.nodes[3]);
+	
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	fixture.graph.depth_first (fixture.nodes[4], accum);	
+	assert (node_list.length () == 5);
+	assert (node_list.nth_data (0) == fixture.nodes[4]);
+	assert (node_list.nth_data (1) == fixture.nodes[5]);
+	assert (node_list.nth_data (2) == fixture.nodes[8]);
+	assert (node_list.nth_data (3) == fixture.nodes[6]);
+	assert (node_list.nth_data (4) == fixture.nodes[7]);
+
+}
+
+private void test_digraph_breadth_first () {
+	TestDigraphFixture fixture = TestDigraphFixture ();
+	
+	GLib.List <unowned Crank.DigraphNode> node_list;
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	
+	Crank.DigraphCallback	accum = (g, n) => {
+		node_list.append (n);
+		return true;
+	};
+	
+	
+	fixture.graph.breadth_first (fixture.nodes[0], accum);
+	assert (node_list.length () == 1);
+	assert (node_list.nth_data (0) == fixture.nodes[0]);	
+	
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	fixture.graph.breadth_first (fixture.nodes[1], accum);	
+	assert (node_list.length () == 3);
+	assert (node_list.nth_data (0) == fixture.nodes[1]);
+	assert (node_list.nth_data (1) == fixture.nodes[2]);
+	assert (node_list.nth_data (2) == fixture.nodes[3]);
+	
+	node_list = new GLib.List <unowned Crank.DigraphNode> ();
+	fixture.graph.breadth_first (fixture.nodes[4], accum);	
+	assert (node_list.length () == 5);
+	assert (node_list.nth_data (0) == fixture.nodes[4]);
+	assert (node_list.nth_data (1) == fixture.nodes[5]);
+	assert (node_list.nth_data (2) == fixture.nodes[6]);
+	assert (node_list.nth_data (3) == fixture.nodes[7]);
+	assert (node_list.nth_data (4) == fixture.nodes[8]);
+
+}
 
 private void test_digraph_node_get_data () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
