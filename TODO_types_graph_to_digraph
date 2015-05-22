@@ -1,0 +1,5 @@
+TODO List for the branch types_graph_to_digraph.
+
+1. Define TypesGraph's own node structure.
+
+2. Include digraph in types graph.
