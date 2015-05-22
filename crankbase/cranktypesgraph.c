@@ -210,18 +210,14 @@ crank_types_graph_data_new (const GType* types, const guint ntypes, const GValue
 {
 	CrankTypesGraphData* data = g_new (CrankTypesGraphData, 1);
 
+	data->types = CRANK_ARRAY_DUP (types, GType, ntypes);
 	data->ntypes = ntypes;
 	data->types_depth = 0;
 	
 	if (types != NULL) {
-		data->types = CRANK_ARRAY_DUP (types, GType, ntypes);
-	
 		CRANK_FOREACH_ARRAY_DO(data->types, GType, type, data->ntypes, {
 			data->types_depth += g_type_depth (type);
 		})
-	}
-	else {
-		data->types = NULL;
 	}
 	
 	memset (&data->value, 0, sizeof(GValue));
@@ -234,7 +230,7 @@ static void
 crank_types_graph_data_free (CrankTypesGraphData*	data)
 {
 	g_free (data->types);
-	g_value_unset (&data->value);
+	if (G_IS_VALUE(&data->value)) g_value_unset (&data->value);
 	
 	g_free (data);
 }
@@ -551,6 +547,13 @@ void
 crank_types_graph_unref (CrankTypesGraph*	graph)
 {
 	if (g_atomic_int_dec_and_test (& (graph->_refc)) ) {
+		
+		CRANK_FOREACH_GLIST_BEGIN (	crank_digraph_get_nodes (graph->base), CrankDigraphNode*,	node)
+			
+			crank_types_graph_data_free (
+					(CrankTypesGraphData*) crank_digraph_node_get_pointer (node));
+		
+		CRANK_FOREACH_GLIST_END
 		
 		crank_digraph_unref (graph->base);
 	
