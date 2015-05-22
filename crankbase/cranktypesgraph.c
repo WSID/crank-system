@@ -89,9 +89,7 @@
 
 //////// 내부 전용 구조체 선언부 ///////////////////////////////////////////////
 
-typedef struct _CrankTypesNode		CrankTypesNode;
-typedef struct _CrankTypesRoot		CrankTypesRoot;
-typedef struct _CrankTypesNodeAdd	CrankTypesNodeAdd;
+typedef struct _CrankTypesGraphData	CrankTypesGraphData;
 
 static G_GNUC_MALLOC
 gchar*				crank_typestring (				const GType*	types,
@@ -102,90 +100,72 @@ gboolean			crank_types_is_a (				const GType*	types_a,
 													const GType*	types_b,
 													const guint		ntypes	);
 
+static
+CrankTypesGraphData*	crank_types_graph_data_new	(	const GType*	types,
+													const guint		ntypes,
+													const GValue*	value	);	
+
+static
+void				crank_types_graph_data_free (	CrankTypesGraphData*	data);
+
+static
+gboolean			crank_types_graph_accum_types (	CrankDigraph*		digraph,
+													CrankDigraphNode*	node,
+													gpointer			userdata	);
+
+static
+gboolean			crank_types_graph_accum_values (CrankDigraph*		digraph,
+													CrankDigraphNode*	node,
+													gpointer			userdata	);
 //////// CrankTypesNode
-
-static G_GNUC_MALLOC
-CrankTypesNode*		crank_types_node_new (			const GType*	types,
-													const guint		ntypes	);
-													
-static inline
-CrankTypesNode*		crank_types_node_ref (			CrankTypesNode* node	);
-
-static inline
-void				crank_types_node_unref (		CrankTypesNode* node	);
 													
 static G_GNUC_MALLOC
-gchar*				crank_types_node_typestring (	CrankTypesNode*	node	);
+gchar*				crank_types_node_typestring (	CrankDigraphNode*	node	);
 
 static
-gboolean			crank_types_node_add (			CrankTypesNode* parent,
-													CrankTypesNode* node	);
+gboolean			crank_types_node_add (			CrankDigraph*		digraph,
+													CrankDigraphNode*	parent,
+													CrankDigraphNode*	node	);
 static
-CrankTypesNode*		crank_types_node_get (			CrankTypesNode* parent,
+CrankDigraphNode*	crank_types_node_get (			CrankDigraphNode* parent,
 													const GType*	key,
 													const guint		key_length	);
 static
-gboolean			crank_types_node_lookup (		CrankTypesNode* parent,
+gboolean			crank_types_node_lookup (		CrankDigraphNode* parent,
 													const GType*	key,
 													const guint		key_length,
 										  			GList**			lookup_list	);
 													
-static inline
-void				crank_types_node_parent (		CrankTypesNode* parent,
-													CrankTypesNode* node		);
-
-static inline
-void				crank_types_node_unparent (		CrankTypesNode* parent,
-													CrankTypesNode* node		);
-
 //////// CrankTypesRoot
-
-static G_GNUC_MALLOC
-CrankTypesRoot*		crank_types_root_new (			const guint		ntypes	);
-
 static
-void				crank_types_root_free (			CrankTypesRoot* root	);
-
+void				crank_types_root_add (			CrankDigraph*		digraph,
+													CrankDigraphNode* root,
+													CrankDigraphNode* node	);
 static
-void				crank_types_root_add (			CrankTypesRoot* parent,
-													CrankTypesNode* node	);
-static
-CrankTypesNode*		crank_types_root_get (			CrankTypesRoot* parent,
+CrankDigraphNode*	crank_types_root_get (			CrankDigraphNode* root,
 													const GType*	key,
 													const guint		key_length	);
 static
-GList*				crank_types_root_lookup (		CrankTypesRoot* parent,
+GList*				crank_types_root_lookup (		CrankDigraphNode* parent,
 													const GType*	key,
 													const guint		key_length	);
 													
 static
-void				crank_types_root_remove (		CrankTypesRoot*	parent,
-													CrankTypesNode* node		);
+void				crank_types_root_remove (		CrankDigraph*		digraph,
+													CrankDigraphNode*	root,
+													CrankDigraphNode*	node		);
 
 
 //////// 내부 전용 구조체 구현부 ///////////////////////////////////////////////
 
-struct _CrankTypesNode {
-	GType*				types;
+struct _CrankTypesGraphData {
+	GType*				types;	// Node value
 	guint				ntypes;
 	
 	guint				types_depth;
-
-	GPtrArray*			parent_nodes;
-	GPtrArray*			child_nodes;
 	
 	GValue				value;
-	
-	guint				_refc;
 };
-
-struct _CrankTypesRoot {
-	guint				ntypes;
-	
-	GPtrArray*			child_nodes;
-};
-
-//////// CrankTypesNode
 
 /*
  * crank_typestring:
@@ -242,86 +222,107 @@ crank_types_is_a	(	const GType*	types,
 	return TRUE;
 }
 
-static CrankTypesNode*
-crank_types_node_new (	const GType* types, const guint ntypes )
+static CrankTypesGraphData*
+crank_types_graph_data_new (const GType* types, const guint ntypes, const GValue* value )
 {
-	CrankTypesNode* node = g_new (CrankTypesNode, 1);
+	CrankTypesGraphData* data = g_new (CrankTypesGraphData, 1);
 	
-	node->types = CRANK_ARRAY_DUP (types, GType, ntypes);
-	node->ntypes = ntypes;
+	data->types = CRANK_ARRAY_DUP (types, GType, ntypes);
+	data->ntypes = ntypes;
 	
-	node->types_depth = 0;
-	CRANK_FOREACH_ARRAY_DO(node->types, GType, type, node->ntypes, {
-		node->types_depth += g_type_depth (type);
+	data->types_depth = 0;
+	CRANK_FOREACH_ARRAY_DO(data->types, GType, type, data->ntypes, {
+		data->types_depth += g_type_depth (type);
 	})
-		
-	node->parent_nodes = g_ptr_array_new ();
-	node->child_nodes = g_ptr_array_new_with_free_func (
-			(GDestroyNotify)crank_types_node_unref);
 	
-	memset (&node->value, 0, sizeof(GValue));
+	memset (&data->value, 0, sizeof(GValue));
+	crank_value_overwrite (&data->value, value);
 	
-	node->_refc = 0;
-	
-	return node;
+	return data;
 }
 
-static inline CrankTypesNode*
-crank_types_node_ref (	CrankTypesNode* node	)
+static void
+crank_types_graph_data_free (CrankTypesGraphData*	data)
 {
-	g_atomic_int_inc(&node->_refc);
-	return node;
+	g_free (data->types);
+	g_value_unset (&data->value);
+	
+	g_free (data);
 }
 
-static inline void
-crank_types_node_unref ( CrankTypesNode* node	)
+static Crank
+
+static gboolean
+crank_types_graph_accum_types (	CrankDigraph*		digraph,
+								CrankDigraphNode*	node,
+								gpointer			userdata	)
 {
-	if (g_atomic_int_dec_and_test(&node->_refc)) {
-		g_value_unset (&node->value);
+	GList**					list_ptr = (GList**)userdata;
+	CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
 	
-		g_ptr_array_free (node->parent_nodes, TRUE);
-		g_ptr_array_free (node->child_nodes, TRUE);
-	
-		g_free (node->types);
-	
-		g_free (node);
-	}
+	*list_ptr = g_list_append (*list_ptr, data->types);
+	return TRUE;
 }
+
+
+static gboolean
+crank_types_graph_accum_values (	CrankDigraph*		digraph,
+								CrankDigraphNode*	node,
+								gpointer			userdata	)
+{
+	GList**					list_ptr = (GList**)userdata;
+	CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
+	
+	*list_ptr = g_list_append (*list_ptr, data->value);
+	return TRUE;
+}
+
 
 static G_GNUC_MALLOC gchar*
-crank_types_node_typestring (	CrankTypesNode*	node	)
+crank_types_node_typestring (	CrankDigraphNode*	node	)
 {
-	return crank_typestring (node->types, node->ntypes);
+	CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
+	return crank_typestring (data->types, data->ntypes);
 }
 
 static gboolean
-crank_types_node_add (	CrankTypesNode* parent,
-						CrankTypesNode*	node	)
+crank_types_node_add (	CrnakDigraph*		digraph,
+						CrankDigraphNode*	parent,
+						CrankDigraphNode*	node	)
 {
+	CrankTypesGraphData*		pdata = crank_digraph_node_get_pointer (parent);
+	CrankTypesGraphData*		ndata = crank_digraph_node_get_pointer (node);
+	
+	GList*		pout_edges =	crank_digraph_node_get_out_edges (parent);
+	
 	// 먼저 하위 노드에 속하는지 확인합니다.
-	if (crank_types_is_a (node->types, parent->types, node->ntypes)) {
+	if (crank_types_is_a (ndata->types, pdata->types, ndata->ntypes)) {
 		gboolean add_to_subnode = FALSE;
 	
-		// 자손과 연결되는지 확인합니다.
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
-			if (crank_types_node_add (sub, node)) {
+		// 자손과 연결 되는지 확인합니다.
+		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+			
+			CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
+			if (crank_types_node_add (digraph, sub, node))
 				add_to_subnode = TRUE;
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
+			
+		CRANK_FOREACH_GLIST_END
 		
-		// 부모와 연결합니다.
+		// 자식에 연결되지 않은 경우 부모와 연결합니다.
 		if (! add_to_subnode) {
 			// node의 하위에 해당하는 항목들은 node에 연결합니다..
-			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+			CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+			
+				CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
 		
 				if (crank_types_is_a(sub->types, node->types, node->ntypes)) {
-					crank_types_node_unparent (parent, sub);
-					crank_types_node_parent (node, sub);
+					crank_digraph_disconnect (digraph, parent, sub);
+					crank_digraph_connect_void (digraph, node, sub);
 				}
 
-			CRANK_FOREACH_G_PTR_ARRAY_END
+			CRANK_FOREACH_GLIST_END
 
-			crank_types_node_parent (parent, node);
+			crank_digraph_connect_void (digraph, parent, node);
 		}
 		
 		return TRUE;
@@ -330,29 +331,36 @@ crank_types_node_add (	CrankTypesNode* parent,
 	else return FALSE;
 }
 
-static CrankTypesNode*
-crank_types_node_get (	CrankTypesNode* parent,
+static CrankDigraphNode*
+crank_types_node_get (	CrankDigraphNode* parent,
 						const GType*	key,
 						const guint		key_length	)
 {
-	CrankTypesNode*	result;
+	CrankDigraphNode*	result;
+	GList*				pout_edges;
+	
+	pout_edges = crank_digraph_node_get_out_edges (parent);
 
 	if (CRANK_ARRAY_CMP (parent->types, key, GType, key_length) == 0) {
 		return parent;
 	}
 	
-	else if (crank_types_is_a (key, parent->types, key_length)) {	
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+	else if (crank_types_is_a (key, parent->types, key_length)) {
+		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+		
+			CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
+			
 			result = crank_types_node_get (sub, key, key_length);
 			if (result != NULL) return result;
-		CRANK_FOREACH_ARRAY_END
+			
+		CRANK_FOREACH_GLIST_END
 	}
 	
 	return NULL;
 }
 
 static gboolean
-crank_types_node_lookup (	CrankTypesNode* parent,
+crank_types_node_lookup (	CrankDigraphNode* parent,
 							const GType*	key,
 							const guint		key_length,
 						 	GList**			lookup_list	)
@@ -365,13 +373,15 @@ crank_types_node_lookup (	CrankTypesNode* parent,
 	}
 
 	else if (crank_types_is_a (key, parent->types, key_length)) {
+		GList*		pout_edges = crank_digraph_node_get_out_edges (parent);
 		gboolean	list_added = FALSE;
 
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+			CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 			list_added =
 					list_added ||
 					crank_types_node_lookup (sub, key, key_length, lookup_list);
-		CRANK_FOREACH_ARRAY_END
+		CRANK_FOREACH_GLIST_END
 		
 		if (list_added) return TRUE;
 		else {
@@ -385,126 +395,104 @@ crank_types_node_lookup (	CrankTypesNode* parent,
 	return FALSE;
 }
 
-static inline void
-crank_types_node_parent (	CrankTypesNode*	parent,
-							CrankTypesNode* node	)
-{
-	g_ptr_array_add (node->parent_nodes, parent);
-	g_ptr_array_add (parent->child_nodes, crank_types_node_ref (node));
-}
-
-static inline void
-crank_types_node_unparent (	CrankTypesNode*	parent,
-							CrankTypesNode*	node	)
-{
-	g_ptr_array_remove (node->parent_nodes, parent);
-	g_ptr_array_remove (parent->child_nodes, node);
-}
 
 //////// CrankTypesRoot
 
-static CrankTypesRoot*
-crank_types_root_new (	const guint ntypes )
-{
-	CrankTypesRoot* root = g_new (CrankTypesRoot, 1);
-	
-	root->ntypes = ntypes;
-	root->child_nodes = g_ptr_array_new_with_free_func (
-			(GDestroyNotify)crank_types_node_unref);
-	
-	return root;
-}
-
 void
-crank_types_root_free ( CrankTypesRoot* root )
-{
-	g_ptr_array_free (root->child_nodes, TRUE);
-	g_free (root);
-}
-
-void
-crank_types_root_add ( 	CrankTypesRoot* root,
-						CrankTypesNode* node 	)
+crank_types_root_add ( 	CrankDigraph*		digraph,
+						CrankDigraphNode* 	root,
+						CrankDigraphNode* 	node 	)
 {
 	gboolean has_parent_node = FALSE;
+	GList*	out_edges = crank_digraph_node_get_out_edges (root);
 	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (root->child_nodes, CrankTypesNode*, sub)
+	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
+		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 
 		if (crank_types_node_add (sub, node)) has_parent_node = TRUE;
 
-	CRANK_FOREACH_G_PTR_ARRAY_END
+	CRANK_FOREACH_GLIST_END
 
 	if (! has_parent_node)
-		g_ptr_array_add (root->child_nodes, crank_types_node_ref (node));
+		crank_digraph_connect_void (digraph, root, node);
 }
 
 
-static CrankTypesNode*
-crank_types_root_get (	CrankTypesRoot* parent,
-						const GType*	key,
-						const guint		key_length	)
+static CrankDigraphNode*
+crank_types_root_get (	CrankDigraphNode*	root,
+						const GType*		key,
+						const guint			key_length	)
 {
-	CrankTypesNode*	result = NULL;
+	CrankDigraphNode*	result = NULL;
+	GList*				out_edges = crank_digraph_node_get_out_edges (root);
 	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
+	
+		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 		result = crank_types_node_get (sub, key, key_length);
 		if (result != NULL) return result;
-	CRANK_FOREACH_ARRAY_END
+		
+	CRANK_FOREACH_GLIST_END
 	
 	return NULL;
 }
 
 static GList*
-crank_types_root_lookup (	CrankTypesRoot* parent,
-							const GType*	key,
-							const guint		key_length	)
+crank_types_root_lookup (	CrankDigraphNode*	root,
+							const GType*		key,
+							const guint			key_length	)
 {
 	GList*	result = NULL;
+	GList*	out_edges = crank_digraph_node_get_out_edges (root);
 
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (parent->child_nodes, CrankTypesNode*, sub)
+	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
+	
+		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 		crank_types_node_lookup (sub, key, key_length, &result);
-	CRANK_FOREACH_ARRAY_END
+	CRANK_FOREACH_GLIST_END
 	return result;
 }
 
 static void
-crank_types_root_remove (	CrankTypesRoot*	root,
-							CrankTypesNode*	node	)
+crank_types_root_remove (	CrankDigraph*		digraph,
+							CrankDigraphNode*	root,
+							CrankDigraphNode*	node	)
 {
 	gboolean is_node_root;
-
+	GList*		out_edges;
+	GList*		in_edges;
+	
 	is_node_root = (node->parent_nodes->len == 0);
 	
 	crank_types_node_ref (node);
 				
 	// 먼저 하위 노드로부터 연결을 끊습니다.
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, subnode)
-		g_ptr_array_remove (subnode->parent_nodes, node);
+	out_edges = crank_digraph_node_get_out_edges (node);
+	in_edges = crank_digraph_node_get_in_edges (node);
+	
+	CRANK_FOREACH_GLIST_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
+		CrankDigraphNode* subnode = crank_digraph_edge_get_head (out_edge);
 		
-		if (subnode->parent_nodes->len == 0) {
+		
+		if (subnode->parent_nodes->len == 1) {
 		
 			if (! is_node_root) {
-				CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->parent_nodes, CrankTypesNode*, pnode)
-					crank_types_node_parent (pnode, subnode);
-				CRANK_FOREACH_G_PTR_ARRAY_END
+				CRANK_FOREACH_GLIST_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
+					CrankDigraphNode* pnode = crank_digraph_edge_get_head (in_edge);
+					crank_digraph_connect_void (digraph, pnode, subnode);
+				CRANK_FOREACH_GLIST_END
 			}
 			
 			else {
-				g_ptr_array_add (root->child_nodes, subnode);
+				crank_digraph_connect_void (digraph, root, subnode);
 			}
 			
 		}
 	CRANK_FOREACH_G_PTR_ARRAY_END
 	
-			
-	if (! is_node_root) {
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->parent_nodes, CrankTypesNode*, pnode)
-			g_ptr_array_remove (pnode->child_nodes, node);
-		CRANK_FOREACH_G_PTR_ARRAY_END
-	}
-	else {
-		g_ptr_array_remove (root->child_nodes, node);
-	}
+	crank_types_graph_data_free (
+			crank_digraph_node_get_pointer (node)	);
+	crank_digraph_remove (digraph, node);
 }
 
 ////////// 선언부 //////////////////////////////////////////////////////////////
@@ -515,12 +503,12 @@ crank_types_root_remove (	CrankTypesRoot*	root,
  * 여러 타입 정보를 관리하는 그래프입니다.
  */
 struct _CrankTypesGraph {
-	CrankTypesRoot**	roots;
+	CrankDigraph*		base;
+	
+	CrankDigraphNode**	roots;
 	guint				nroots;
 	
-	GDestroyNotify		value_destroy;
-	
-	guint 	_refc;
+	guint 			_refc;
 };
 
 G_DEFINE_BOXED_TYPE (CrankTypesGraph,
@@ -545,7 +533,7 @@ CrankTypesNode*		crank_types_graph_lookup_node (		CrankTypesGraph*	graph,
 
 //////// 내부 전용 함수
 
-static CrankTypesRoot*
+static CrankDigraphNode*
 crank_types_graph_get_root (	CrankTypesGraph*	graph,
 								const guint			key_length	)
 {
@@ -563,13 +551,16 @@ crank_types_graph_get_root (	CrankTypesGraph*	graph,
 			graph->roots[i] = NULL;
 	}
 
-	if (graph->roots[key_length] == NULL)
-		graph->roots[key_length] = crank_types_root_new (key_length);
+	if (graph->roots[key_length] == NULL) {
+		GValue	root_value = {0};
+		crank_value_overwrite_uint (&root_value, key_length);
+		graph->roots[key_length] = crank_digraph_add (graph->base, &root_value);
+	}
 
 	return graph->roots[key_length];
 }
 
-static CrankTypesNode*
+static CrankDigraphNode*
 crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
 							  	const GType*		key,
 							  	const guint			key_length	)
@@ -577,9 +568,9 @@ crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
 	// For future, more way to pick one from candidates.
 	//TODO: 픽 방식을 정할 수 있도록 합니다.
 	
-	CrankTypesRoot* root;
-	CrankTypesNode*	node = NULL;
-  	GList*			lookup_list;
+	CrankDigraphNode*	root;
+	CrankDigraphNode*	node = NULL;
+  	GList*				lookup_list;
 
 	root = crank_types_graph_get_root (graph, key_length);
 	lookup_list = crank_types_root_lookup (root, key, key_length);
@@ -588,15 +579,17 @@ crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
 		GList* i;
 	  	guint	depth_max = 0;
 	 	guint	depth;
-
-	  	for (i = lookup_list; i != NULL; i = i->next) {
-	  		depth = ((CrankTypesNode*) i->data)->types_depth;
+	 	
+	 	CRANK_FOREACH_GLIST_BEGIN (lookup_list, CrankDigraphNode*, lookup_node)
+			CrankTypesGraphData* data = crank_digraph_node_get_pointer (lookup_node);
+			
+	  		depth = data->types_depth;
 	  		
 	  		if (depth_max < depth) {
 				depth_max = depth;
-		  		node = (CrankTypesNode*)i->data;
+		  		node = lookup_node;
 			}
-		}
+		CRANK_FOREACH_GLIST_END
 	}
 	
   	return node;
@@ -615,6 +608,8 @@ CrankTypesGraph*
 crank_types_graph_new (void)
 {
 	CrankTypesGraph*	graph = g_new (CrankTypesGraph, 1);
+	
+	graph->base = crank_digraph_new ();
 	
 	graph->roots = g_new0 (CrankTypesRoot*, 4);
 	graph->nroots = 4;
@@ -653,6 +648,8 @@ crank_types_graph_unref (CrankTypesGraph*	graph)
 		CRANK_FOREACH_ARRAY_BEGIN (graph->roots, CrankTypesRoot*, root, graph->nroots)
 			if (root != NULL) crank_types_root_free (root);
 		CRANK_FOREACH_ARRAY_END
+		
+		crank_digraph_unref (graph->base);
 	
 		g_free (graph->roots);
 		g_free (graph);
@@ -674,8 +671,9 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 						const guint			key_length,
 						const GValue*		value	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
+	CrankDigraphNode*		root;
+	CrankDigraphNode*		node;
+	CrankTypesGraphData*	data;
 	
 	root = crank_types_graph_get_root (graph, key_length);
 	node = crank_types_root_get (root, key, key_length);
@@ -683,8 +681,14 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 	if (node == NULL) {
 		node = crank_types_node_new (key, key_length);
 		crank_types_root_add (root, node);
+		
+		data = crank_digraph_node_get_pointer (node);
+	  	crank_value_overwrite (&data->value, value);
 	}
-  	crank_value_overwrite (&node->value, value);
+	else {
+		data = crank_types_graph_data_new (	key, key_length, value );
+		node = crank_digraph_node_add_pointer (data);
+	}
 }
 
 /**
@@ -706,14 +710,16 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 						const guint			key_length,
 						GValue*				value	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
+	CrankDigraphNode*		root;
+	CrankDigraphNode*		node;
+	CrankTypesGraphData*	data;
 	
 	root = crank_types_graph_get_root (graph, key_length);
 	node = crank_types_root_get (root, key, key_length);
 	
 	if (node != NULL) {
-		g_value_copy(&node->value, value);
+		data = crank_digraph_node_get_pointer (data);
+		g_value_copy(&data->value, value);
 		return TRUE;
 	}
 	return FALSE;
@@ -735,8 +741,8 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
 						const GType*		key,
 						const guint			key_length	)
 {
-	CrankTypesRoot* root;
-	CrankTypesNode*	node;
+	CrankDigraphNode*		root;
+	CrankDigraphNode*		node;
 	
 	root = crank_types_graph_get_root (graph, key_length);
 	node = crank_types_root_get (root, key, key_length);
@@ -763,11 +769,12 @@ crank_types_graph_lookup (	CrankTypesGraph*	graph,
 							const guint			key_length,
 							GValue*				value	)
 {
-	CrankTypesNode*	node = crank_types_graph_lookup_node (
+	CrankDigraphNode*	node = crank_types_graph_lookup_node (
 			graph, key, key_length );
 	
 	if (node != NULL) {
-		g_value_copy(&node->value, value);
+		CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
+		g_value_copy(&data->value, value);
 		return TRUE;
 	}
 	return node != NULL;
@@ -792,10 +799,17 @@ crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 								const GType*		key,
 								const guint			key_length	)
 {
-	CrankTypesNode*	node = crank_types_graph_lookup_node (
+	CrankDigraphNode*	node = crank_types_graph_lookup_node (
 			graph, key, key_length );
-	
-	return (node != NULL) ? node->types : NULL;
+			
+	if (node != NULL) {
+		CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
+		
+		return data->types;
+	}
+	else {
+		return NULL;
+	}
 }
 
 /**
@@ -821,6 +835,7 @@ crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 			graph, key, key_length );
 	
 	if (node != NULL) {
+		CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
 		g_value_copy (&node->value, value);
 		*key_orig = node->types;
 	}
@@ -950,12 +965,7 @@ crank_types_graph_get_keys_by_length (	CrankTypesGraph*	graph,
 										const guint			length	)
 {
 	GList*	keys = NULL;
-	GQueue*		queue;
-	GHashTable*	set;
-	CrankTypesRoot*	root;
-	
-	queue = g_queue_new ();
-	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	CrankDigraphNode*	root;
 	
 	if (graph->nroots <= length) return NULL;
 	
@@ -963,25 +973,7 @@ crank_types_graph_get_keys_by_length (	CrankTypesGraph*	graph,
 	if (root == NULL) return NULL;
 	
 	// broad-first iteration을 수행합니다.
-	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (root->child_nodes, CrankTypesNode*, node)
-		g_queue_push_tail (queue, node);
-		g_hash_table_add (set, node);
-	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	while (! g_queue_is_empty (queue)) {
-		CrankTypesNode* node = (CrankTypesNode*) g_queue_pop_head (queue);
-		
-		keys = g_list_append (keys, node->types);
-		
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, child)
-			if (! g_hash_table_contains (set, child)) {
-				g_queue_push_tail (queue, child);
-				g_hash_table_add (set, child);
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
-	}
-	
+	crank_digraph_breadth_first (graph->base, root, crank_types_graph_accum_types, &keys);
 	return keys;
 }
 
@@ -1001,12 +993,7 @@ crank_types_graph_get_values_by_length (	CrankTypesGraph*	graph,
 											const guint			length	)
 {
 	GList*	values = NULL;
-	GQueue*		queue;
-	GHashTable*	set;
-	CrankTypesRoot*	root;
-	
-	queue = g_queue_new ();
-	set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	CrankDigraphNode*	root;
 	
 	if (graph->nroots <= length) return NULL;
 	
@@ -1014,24 +1001,6 @@ crank_types_graph_get_values_by_length (	CrankTypesGraph*	graph,
 	if (root == NULL) return NULL;
 	
 	// broad-first iteration을 수행합니다.
-	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (root->child_nodes, CrankTypesNode*, node)
-		g_queue_push_tail (queue, node);
-		g_hash_table_add (set, node);
-	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	while (! g_queue_is_empty (queue)) {
-		CrankTypesNode* node = (CrankTypesNode*) g_queue_pop_head (queue);
-		
-		values = g_list_append (values, &node->value);
-		
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->child_nodes, CrankTypesNode*, child)
-			if (! g_hash_table_contains (set, child)) {
-				g_queue_push_tail (queue, child);
-				g_hash_table_add (set, child);
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
-	}
-	
+	crank_digraph_node_breadth_first (graph->base, root, crank_types_graph_accum_values, &values);
 	return values;
 }
