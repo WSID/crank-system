@@ -1168,7 +1168,7 @@ crank_digraph_node_get_object (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_edge_get_float:
- * @node: 변입니다.
+ * @edge: 변입니다.
  *
  * 변으로부터 단정도 부동 소수 값을 얻습니다.
  *
@@ -1182,7 +1182,7 @@ crank_digraph_edge_get_float (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_double:
- * @node: 변입니다.
+ * @edge: 변입니다.
  *
  * 변으로부터 배정도 부동 소수 값을 얻습니다.
  *
@@ -1196,7 +1196,7 @@ crank_digraph_edge_get_double (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_pointer:
- * @node: 변입니다.
+ * @edge: 변입니다.
  *
  * 변으로부터 포인터 값을 얻습니다.
  *
@@ -1210,7 +1210,7 @@ crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_boxed:
- * @node: 변입니다.
+ * @edge: 변입니다.
  *
  * 변으로부터 박스 값을 얻습니다.
  *
@@ -1224,7 +1224,7 @@ crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_object:
- * @node: 변입니다.
+ * @edge: 변입니다.
  *
  * 변으로부터 객체 값을 얻습니다.
  *
@@ -1238,7 +1238,7 @@ crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
 
 /*
  * crank_digraph_node_new: (private)
- * @data: 값입니다.
+ * @value: 값입니다.
  *
  * 새로운 노드를 생성합니다.
  */

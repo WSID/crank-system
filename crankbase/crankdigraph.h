@@ -43,8 +43,8 @@ typedef struct _CrankDigraphEdgeIndex	CrankDigraphEdgeIndex;
 /**
  * CrankDigraphEdgeIndex:
  * @data: 변의 값니다.
- * @from_index: 시작 정점의 인덱스입니다.
- * @to_index: 끝 정점의 인덱스입니다.
+ * @tail: 꼬리 정점의 인덱스입니다.
+ * @head: 머리 정점의 인덱스입니다.
  *
  * 정수로 순서가 붙은 정점에 대한 변의 표현입니다.
  * 정점에 순서가 매겨지는 생성자에서 사용됩니다.
