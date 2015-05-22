@@ -129,18 +129,6 @@ gboolean			crank_types_node_lookup (		CrankDigraphNode* parent,
 										  			GList**			lookup_list	);
 													
 //////// CrankTypesRoot
-static
-void				crank_types_root_add (			CrankDigraph*		digraph,
-													CrankDigraphNode* root,
-													CrankDigraphNode* node	);
-static
-CrankDigraphNode*	crank_types_root_get (			CrankDigraphNode* root,
-													const GType*	key,
-													const guint		key_length	);
-static
-GList*				crank_types_root_lookup (		CrankDigraphNode* parent,
-													const GType*	key,
-													const guint		key_length	);
 													
 static
 void				crank_types_root_remove (		CrankDigraph*		digraph,
@@ -232,6 +220,9 @@ crank_types_graph_data_new (const GType* types, const guint ntypes, const GValue
 			data->types_depth += g_type_depth (type);
 		})
 	}
+	else {
+		data->types = NULL;
+	}
 	
 	memset (&data->value, 0, sizeof(GValue));
 	crank_value_overwrite (&data->value, value);
@@ -315,7 +306,8 @@ crank_types_node_get (	CrankDigraphNode* parent,
 	pdata = crank_digraph_node_get_pointer (parent);
 	pout_edges = crank_digraph_node_get_out_edges (parent);
 
-	if (CRANK_ARRAY_CMP (pdata->types, key, GType, key_length) == 0) {
+	if (	(pdata->types != NULL) &&
+			(CRANK_ARRAY_CMP (pdata->types, key, GType, key_length) == 0)	) {
 		return parent;
 	}
 	
@@ -340,7 +332,8 @@ crank_types_node_lookup (	CrankDigraphNode* parent,
 						 	GList**			lookup_list	)
 {
 	CrankTypesGraphData*	pdata = crank_digraph_node_get_pointer (parent);
-	if (CRANK_ARRAY_CMP (pdata->types, key, GType, key_length) == 0) {
+	if (	(pdata->types != NULL) &&
+			(CRANK_ARRAY_CMP (pdata->types, key, GType, key_length) == 0)	) {
 		if (g_list_find(*lookup_list, parent) == NULL) {
 			*lookup_list = g_list_prepend (*lookup_list, parent);
 			return TRUE;
@@ -373,67 +366,11 @@ crank_types_node_lookup (	CrankDigraphNode* parent,
 
 //////// CrankTypesRoot
 
-void
-crank_types_root_add ( 	CrankDigraph*		digraph,
-						CrankDigraphNode* 	root,
-						CrankDigraphNode* 	node 	)
-{
-	gboolean has_parent_node = FALSE;
-	GList*	out_edges = crank_digraph_node_get_out_edges (root);
-	
-	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
-		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
-
-		if (crank_types_node_add (digraph, sub, node)) has_parent_node = TRUE;
-
-	CRANK_FOREACH_GLIST_END
-
-	if (! has_parent_node)
-		crank_digraph_connect_void (digraph, root, node);
-}
-
-
-static CrankDigraphNode*
-crank_types_root_get (	CrankDigraphNode*	root,
-						const GType*		key,
-						const guint			key_length	)
-{
-	CrankDigraphNode*	result = NULL;
-	GList*				out_edges = crank_digraph_node_get_out_edges (root);
-	
-	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
-	
-		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
-		result = crank_types_node_get (sub, key, key_length);
-		if (result != NULL) return result;
-		
-	CRANK_FOREACH_GLIST_END
-	
-	return NULL;
-}
-
-static GList*
-crank_types_root_lookup (	CrankDigraphNode*	root,
-							const GType*		key,
-							const guint			key_length	)
-{
-	GList*	result = NULL;
-	GList*	out_edges = crank_digraph_node_get_out_edges (root);
-
-	CRANK_FOREACH_GLIST_BEGIN (out_edges, CrankDigraphEdge*, edge)
-	
-		CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
-		crank_types_node_lookup (sub, key, key_length, &result);
-	CRANK_FOREACH_GLIST_END
-	return result;
-}
-
 static void
 crank_types_root_remove (	CrankDigraph*		digraph,
 							CrankDigraphNode*	root,
 							CrankDigraphNode*	node	)
 {
-	gboolean is_node_root;
 	CrankTypesGraphData*	ndata;
 	GList*		out_edges;
 	GList*		in_edges;
@@ -442,10 +379,6 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 	out_edges = crank_digraph_node_get_out_edges (node);
 	in_edges = crank_digraph_node_get_in_edges (node);
 	
-	// 노드가 최상단 노드인지 확인합니다.
-	is_node_root = (crank_digraph_edge_get_tail((CrankDigraphEdge*)in_edges->data) == root);
-	
-	
 	// 먼저 하위 노드로부터 연결을 끊습니다.
 	
 	CRANK_FOREACH_GLIST_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
@@ -453,16 +386,10 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 		
 		if (crank_digraph_node_get_indegree (subnode) == 1) {
 		
-			if (! is_node_root) {
-				CRANK_FOREACH_GLIST_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
-					CrankDigraphNode* pnode = crank_digraph_edge_get_tail (in_edge);
-					crank_digraph_connect_void (digraph, pnode, subnode);
-				CRANK_FOREACH_GLIST_END
-			}
-			
-			else {
-				crank_digraph_connect_void (digraph, root, subnode);
-			}
+			CRANK_FOREACH_GLIST_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
+				CrankDigraphNode* pnode = crank_digraph_edge_get_tail (in_edge);
+				crank_digraph_connect_void (digraph, pnode, subnode);
+			CRANK_FOREACH_GLIST_END
 			
 		}
 	CRANK_FOREACH_GLIST_END
@@ -549,10 +476,10 @@ crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
 	
 	CrankDigraphNode*	root;
 	CrankDigraphNode*	node = NULL;
-  	GList*				lookup_list;
+  	GList*				lookup_list = NULL;
 
 	root = crank_types_graph_get_root (graph, key_length);
-	lookup_list = crank_types_root_lookup (root, key, key_length);
+	crank_types_node_lookup (root, key, key_length, &lookup_list);
 
   	if (lookup_list != NULL) {
 		GList* i;
@@ -652,12 +579,12 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 	CrankTypesGraphData*	data;
 	
 	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_get (root, key, key_length);
+	node = crank_types_node_get (root, key, key_length);
 	
 	if (node == NULL) {
 		data = crank_types_graph_data_new (	key, key_length, value );
 		node = crank_digraph_add_pointer (graph->base, G_TYPE_POINTER, data);
-		crank_types_root_add (graph->base, root, node);
+		crank_types_node_add (graph->base, root, node);
 		
 	}
 	else {
@@ -690,7 +617,7 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 	CrankTypesGraphData*	data;
 	
 	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_get (root, key, key_length);
+	node = crank_types_node_get (root, key, key_length);
 	
 	if (node != NULL) {
 		data = crank_digraph_node_get_pointer (node);
@@ -720,7 +647,7 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
 	CrankDigraphNode*		node;
 	
 	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_get (root, key, key_length);
+	node = crank_types_node_get (root, key, key_length);
 	
 	return node != NULL;
 }
@@ -838,7 +765,7 @@ crank_types_graph_remove (	CrankTypesGraph*	graph,
 	CrankDigraphNode*	node;
 	
 	root = crank_types_graph_get_root (graph, key_length);
-	node = crank_types_root_get (root, key, key_length);
+	node = crank_types_node_get (root, key, key_length);
 	
 	if (node != NULL) {
 		crank_types_root_remove (graph->base, root, node);
