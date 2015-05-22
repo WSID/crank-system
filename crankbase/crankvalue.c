@@ -73,8 +73,12 @@ void
 crank_value_overwrite (	GValue*			value,
 					   	const GValue*	from	)
 {
-  	crank_value_overwrite_init (value, G_VALUE_TYPE(from));
-  	g_value_copy (from, value);
+	if (G_IS_VALUE (value)) g_value_unset (value);
+	
+	if ((from != NULL) && (G_IS_VALUE (from))) {
+	  	crank_value_overwrite_init (value, G_VALUE_TYPE(from));
+	  	g_value_copy (from, value);
+	}
 }
 
 /**

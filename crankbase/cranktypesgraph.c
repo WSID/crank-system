@@ -221,14 +221,17 @@ static CrankTypesGraphData*
 crank_types_graph_data_new (const GType* types, const guint ntypes, const GValue* value )
 {
 	CrankTypesGraphData* data = g_new (CrankTypesGraphData, 1);
-	
-	data->types = CRANK_ARRAY_DUP (types, GType, ntypes);
+
 	data->ntypes = ntypes;
-	
 	data->types_depth = 0;
-	CRANK_FOREACH_ARRAY_DO(data->types, GType, type, data->ntypes, {
-		data->types_depth += g_type_depth (type);
-	})
+	
+	if (types != NULL) {
+		data->types = CRANK_ARRAY_DUP (types, GType, ntypes);
+	
+		CRANK_FOREACH_ARRAY_DO(data->types, GType, type, data->ntypes, {
+			data->types_depth += g_type_depth (type);
+		})
+	}
 	
 	memset (&data->value, 0, sizeof(GValue));
 	crank_value_overwrite (&data->value, value);
@@ -526,9 +529,11 @@ crank_types_graph_get_root (	CrankTypesGraph*	graph,
 	}
 
 	if (graph->roots[key_length] == NULL) {
-		GValue	root_value = {0};
-		crank_value_overwrite_int (&root_value, key_length);
-		graph->roots[key_length] = crank_digraph_add (graph->base, &root_value);
+		GValue					value = { 0 };
+		
+		CrankTypesGraphData*	data = crank_types_graph_data_new (NULL, key_length, &value);
+		
+		graph->roots[key_length] = crank_digraph_add_pointer (graph->base, G_TYPE_POINTER, data);
 	}
 
 	return graph->roots[key_length];
