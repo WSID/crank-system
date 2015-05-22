@@ -109,15 +109,6 @@ CrankTypesGraphData*	crank_types_graph_data_new	(	const GType*	types,
 static
 void				crank_types_graph_data_free (	CrankTypesGraphData*	data);
 
-static
-gboolean			crank_types_graph_accum_types (	CrankDigraph*		digraph,
-													CrankDigraphNode*	node,
-													gpointer			userdata	);
-
-static
-gboolean			crank_types_graph_accum_values (CrankDigraph*		digraph,
-													CrankDigraphNode*	node,
-													gpointer			userdata	);
 //////// CrankTypesNode
 													
 static G_GNUC_MALLOC
@@ -217,6 +208,9 @@ crank_types_is_a	(	const GType*	types,
 {
 	guint i;
 	
+	if (types == NULL) return FALSE;
+	if (types_is_a == NULL) return TRUE;
+	
 	for (i = 0; i < ntypes; i++) {
 		if (! g_type_is_a(types[i], types_is_a[i])) return FALSE;
 	}
@@ -249,31 +243,6 @@ crank_types_graph_data_free (CrankTypesGraphData*	data)
 	g_value_unset (&data->value);
 	
 	g_free (data);
-}
-
-static gboolean
-crank_types_graph_accum_types (	CrankDigraph*		digraph,
-								CrankDigraphNode*	node,
-								gpointer			userdata	)
-{
-	GList**					list_ptr = (GList**)userdata;
-	CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
-	
-	*list_ptr = g_list_append (*list_ptr, data->types);
-	return TRUE;
-}
-
-
-static gboolean
-crank_types_graph_accum_values (	CrankDigraph*		digraph,
-								CrankDigraphNode*	node,
-								gpointer			userdata	)
-{
-	GList**					list_ptr = (GList**)userdata;
-	CrankTypesGraphData*	data = crank_digraph_node_get_pointer (node);
-	
-	*list_ptr = g_list_append (*list_ptr, & data->value);
-	return TRUE;
 }
 
 
@@ -466,21 +435,24 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 	GList*		out_edges;
 	GList*		in_edges;
 	
+	ndata = crank_digraph_node_get_pointer (node);
+	out_edges = crank_digraph_node_get_out_edges (node);
+	in_edges = crank_digraph_node_get_in_edges (node);
 	
-	is_node_root = (crank_digraph_node_get_indegree (node) == 0);
+	// 노드가 최상단 노드인지 확인합니다.
+	is_node_root = (crank_digraph_edge_get_tail((CrankDigraphEdge*)in_edges->data) == root);
+	
 	
 	// 먼저 하위 노드로부터 연결을 끊습니다.
 	
 	CRANK_FOREACH_GLIST_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
 		CrankDigraphNode* subnode = crank_digraph_edge_get_head (out_edge);
 		
-		crank_digraph_disconnect_edge (digraph, out_edge);
-		
-		if (crank_digraph_node_get_indegree (node) == 0) {
+		if (crank_digraph_node_get_indegree (subnode) == 1) {
 		
 			if (! is_node_root) {
 				CRANK_FOREACH_GLIST_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
-					CrankDigraphNode* pnode = crank_digraph_edge_get_head (in_edge);
+					CrankDigraphNode* pnode = crank_digraph_edge_get_tail (in_edge);
 					crank_digraph_connect_void (digraph, pnode, subnode);
 				CRANK_FOREACH_GLIST_END
 			}
@@ -946,59 +918,4 @@ crank_types_graph_get_key_lengths ( CrankTypesGraph*	graph )
 		if (graph->roots[i] != NULL) lengths = g_list_append (lengths, GINT_TO_POINTER(i));
 	}
 	return lengths;
-}
-
-
-/**
- * crank_types_graph_get_keys_by_length:
- * @graph: 타입 그래프입니다.
- * @length: 키들의 길이입니다.
- *
- * 타입 그래프에서 주어진 길이에 해당하는 키들을 모두 구합니다.
- *
- * Returns: (element-type GType*) (transfer container): 키들입니다.
- */
-GList*
-crank_types_graph_get_keys_by_length (	CrankTypesGraph*	graph,
-										const guint			length	)
-{
-	GList*	keys = NULL;
-	CrankDigraphNode*	root;
-	
-	if (graph->nroots <= length) return NULL;
-	
-	root = graph->roots[length];
-	if (root == NULL) return NULL;
-	
-	// broad-first iteration을 수행합니다.
-	crank_digraph_breadth_first (graph->base, root, crank_types_graph_accum_types, &keys);
-	return keys;
-}
-
-
-
-/**
- * crank_types_graph_get_values_by_length:
- * @graph: 타입 그래프입니다.
- * @length: 키들의 길이입니다.
- *
- * 타입 그래프에서 주어진 길이에 해당하는 키에 대응하는 값들을 모두 구합니다.
- *
- * Returns: (element-type GValue) (transfer container): 값들입니다.
- */
-GList*
-crank_types_graph_get_values_by_length (	CrankTypesGraph*	graph,
-											const guint			length	)
-{
-	GList*	values = NULL;
-	CrankDigraphNode*	root;
-	
-	if (graph->nroots <= length) return NULL;
-	
-	root = graph->roots[length];
-	if (root == NULL) return NULL;
-	
-	// broad-first iteration을 수행합니다.
-	crank_digraph_breadth_first (graph->base, root, crank_types_graph_accum_values, &values);
-	return values;
 }

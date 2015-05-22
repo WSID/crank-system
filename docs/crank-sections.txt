@@ -89,8 +89,6 @@ crank_types_graph_lookup_types
 crank_types_graph_lookup_full
 crank_types_graph_remove
 crank_types_graph_get_key_lengths
-crank_types_graph_get_keys_by_length
-crank_types_graph_get_values_by_length
 CrankTypesGraph
 <SUBSECTION>
 crank_types_graph_gir_lookup_types
