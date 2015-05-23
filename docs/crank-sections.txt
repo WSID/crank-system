@@ -356,6 +356,7 @@ crank_digraph_new_with_nodes
 crank_digraph_new_full
 crank_digraph_ref
 crank_digraph_unref
+crank_digraph_copy
 crank_digraph_get_nodes
 crank_digraph_get_edges
 crank_digraph_add

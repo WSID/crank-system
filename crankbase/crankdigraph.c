@@ -1200,7 +1200,7 @@ crank_digraph_edge_get_double (	CrankDigraphEdge*	edge	)
  *
  * 변으로부터 포인터 값을 얻습니다.
  *
- * Returns: 변의 포인터 값입니다.
+ * Returns: (transfer none): 변의 포인터 값입니다.
  */
 gpointer
 crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
@@ -1214,7 +1214,7 @@ crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
  *
  * 변으로부터 박스 값을 얻습니다.
  *
- * Returns: 변의 박스 값입니다.
+ * Returns: (transfer none): 변의 박스 값입니다.
  */
 gpointer
 crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
@@ -1228,7 +1228,7 @@ crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
  *
  * 변으로부터 객체 값을 얻습니다.
  *
- * Returns: 변의 객체 값입니다.
+ * Returns: (transfer none): 변의 객체 값입니다.
  */
 GObject*
 crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
