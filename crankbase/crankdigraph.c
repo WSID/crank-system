@@ -292,6 +292,33 @@ crank_digraph_get_edges (	CrankDigraph*	graph	)
 }
 
 /**
+ * crank_digraph_reverse:
+ * @graph: 그래프입니다.
+ *
+ * 그래프의 방향을 뒤집습니다.
+ */
+void
+crank_digraph_reverse (	CrankDigraph*	graph	)
+{
+	CRANK_FOREACH_GLIST_BEGIN (graph->nodes, CrankDigraphNode*, node)
+	
+		GList*	temp = node->in_edges;
+		node->in_edges = node->out_edges;
+		node->out_edges = temp;
+	
+	CRANK_FOREACH_GLIST_END
+	
+	CRANK_FOREACH_GLIST_BEGIN (graph->edges, CrankDigraphEdge*, edge)
+		
+		CrankDigraphNode*	temp = edge->head;
+		edge->head = edge->tail;
+		edge->tail = temp;
+		
+	CRANK_FOREACH_GLIST_END
+}
+
+
+/**
  * crank_digraph_depth_first:
  * @graph: 그래프입니다.
  * @start: 시작할 노드입니다.

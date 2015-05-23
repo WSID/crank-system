@@ -88,11 +88,11 @@ void				crank_digraph_unref (				CrankDigraph*		graph	);
 
 CrankDigraph*		crank_digraph_copy (				CrankDigraph*		graph	);
 
-
 GList*				crank_digraph_get_nodes (			CrankDigraph*		graph	);
 
 GList*				crank_digraph_get_edges (			CrankDigraph*		graph	);
 
+void				crank_digraph_reverse (				CrankDigraph*		graph	);
 
 gboolean			crank_digraph_depth_first (			CrankDigraph*		graph,
 														CrankDigraphNode*	start,

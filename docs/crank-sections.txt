@@ -365,6 +365,7 @@ crank_digraph_connect
 crank_digraph_connect_void
 crank_digraph_disconnect
 crank_digraph_disconnect_edge
+crank_digraph_reverse
 crank_digraph_depth_first
 crank_digraph_breadth_first
 crank_digraph_node_get_data
