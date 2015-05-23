@@ -83,6 +83,7 @@ AC_OUTPUT([
 		Makefile
 		crankbase/Makefile
 		tests/Makefile
+		tests/perf/Makefile
 		tests_python/Makefile
 		tests_vala/Makefile
 		docs/Makefile

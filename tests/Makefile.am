@@ -2,6 +2,8 @@
 
 include ../glib-tap.mk
 
+SUBDIRS=. perf
+
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
 		-I $(top_srcdir)/crankbase

@@ -449,7 +449,7 @@ crank_digraph_add (	CrankDigraph*		graph,
 {
 	CrankDigraphNode* node = crank_digraph_node_new (value);
 	
-	graph->nodes = g_list_append (graph->nodes, node);
+	graph->nodes = g_list_prepend (graph->nodes, node);
 	
 	return node;
 }
@@ -514,10 +514,10 @@ crank_digraph_connect (	CrankDigraph*		graph,
 	}
 	
 	edge = crank_digraph_edge_new (edge_value, tail, head);
-	tail->out_edges = g_list_append (tail->out_edges, edge);
-	head->in_edges = g_list_append (head->in_edges, edge);
+	tail->out_edges = g_list_prepend (tail->out_edges, edge);
+	head->in_edges = g_list_prepend (head->in_edges, edge);
 	
-	graph->edges = g_list_append (graph->edges, edge);
+	graph->edges = g_list_prepend (graph->edges, edge);
 	
 	return edge;
 }
