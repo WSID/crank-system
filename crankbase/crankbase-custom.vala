@@ -76,8 +76,8 @@ namespace Crank {
 	
 	[Compact]
 	public class Digraph {
-		public unowned GLib.List <DigraphNode> nodes { get; }
-		public unowned GLib.List <DigraphEdge> edges { get; }
+		public unowned GLib.GenericArray <DigraphNode> nodes { get; }
+		public unowned GLib.GenericArray <DigraphEdge> edges { get; }
 	}
 	
 	[Compact]

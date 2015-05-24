@@ -88,9 +88,9 @@ void				crank_digraph_unref (				CrankDigraph*		graph	);
 
 CrankDigraph*		crank_digraph_copy (				CrankDigraph*		graph	);
 
-GList*				crank_digraph_get_nodes (			CrankDigraph*		graph	);
+GPtrArray*			crank_digraph_get_nodes (			CrankDigraph*		graph	);
 
-GList*				crank_digraph_get_edges (			CrankDigraph*		graph	);
+GPtrArray*			crank_digraph_get_edges (			CrankDigraph*		graph	);
 
 void				crank_digraph_reverse (				CrankDigraph*		graph	);
 

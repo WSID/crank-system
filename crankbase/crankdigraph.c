@@ -65,8 +65,8 @@ G_DEFINE_BOXED_TYPE (CrankDigraph, crank_digraph, crank_digraph_ref, crank_digra
  * 바랍니다.
  */
 struct _CrankDigraph {
-	GList*	nodes;
-	GList*	edges;
+	GPtrArray*	nodes;
+	GPtrArray*	edges;
 
   	guint	_refc;
 };
@@ -100,13 +100,13 @@ struct _CrankDigraphEdge {
 
 CrankDigraphNode*	crank_digraph_node_new (			const GValue*	data	);
 
-void			crank_digraph_node_free (			CrankDigraphNode*	node	);
+void				crank_digraph_node_free (			CrankDigraphNode*	node	);
 
 CrankDigraphEdge*	crank_digraph_edge_new (			const GValue*	data,
-												CrankDigraphNode*	tail,
-												CrankDigraphNode*	head		);
+														CrankDigraphNode*	tail,
+														CrankDigraphNode*	head		);
 
-void			crank_digraph_edge_free (			CrankDigraphEdge*	edge	);
+void				crank_digraph_edge_free (			CrankDigraphEdge*	edge	);
 
 //////// 구현부 ////////////////////////////////////////////////////////////////
 
@@ -122,8 +122,8 @@ crank_digraph_new (void)
 {
 	CrankDigraph*	graph = g_new (CrankDigraph, 1);
 
-  	graph->nodes = NULL;
- 	graph->edges = NULL;
+  	graph->nodes = g_ptr_array_new_with_free_func ((GDestroyNotify)crank_digraph_node_free);
+  	graph->edges = g_ptr_array_new_with_free_func ((GDestroyNotify)crank_digraph_edge_free);
 
   	graph->_refc = 1;
 
@@ -177,8 +177,8 @@ crank_digraph_new_full (	const guint		nnodes,
 		CrankDigraphNode*	tail;
 		CrankDigraphNode*	head;
 		
-		tail = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges[i].tail);
-		head = (CrankDigraphNode*) g_list_nth_data (graph->nodes, edges[i].head);
+		tail = (CrankDigraphNode*) g_ptr_array_index (graph->nodes, edges[i].tail);
+		head = (CrankDigraphNode*) g_ptr_array_index (graph->nodes, edges[i].head);
 		
 		crank_digraph_connect (graph, tail, head, & edges[i].data);
 	}
@@ -213,8 +213,8 @@ void
 crank_digraph_unref (	CrankDigraph*		graph	)
 {
 	if (g_atomic_int_dec_and_test (& graph->_refc)) {
-		g_list_free_full (graph->nodes, (GDestroyNotify) crank_digraph_node_free);
-		g_list_free_full (graph->edges, (GDestroyNotify) crank_digraph_edge_free);
+		g_ptr_array_free (graph->nodes, TRUE);
+		g_ptr_array_free (graph->edges, TRUE);
 		g_free (graph);
 	}
 }
@@ -237,15 +237,15 @@ crank_digraph_copy (	CrankDigraph*	graph	)
 	clone = crank_digraph_new ();
 	table = g_hash_table_new (g_direct_hash, g_direct_equal);
 
-	CRANK_FOREACH_GLIST_BEGIN (graph->nodes, CrankDigraphNode*, node)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
 
 		g_hash_table_insert (table,
 				node,
 				crank_digraph_add (clone, & node->data)	);
 
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 
-	CRANK_FOREACH_GLIST_BEGIN (graph->edges, CrankDigraphEdge*, edge)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
 
 		CrankDigraphNode*	tail;
 		CrankDigraphNode*	head;
@@ -255,7 +255,7 @@ crank_digraph_copy (	CrankDigraph*	graph	)
 
 		crank_digraph_connect (graph, tail, head, & edge->data);
 
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 
 	g_hash_table_unref (table);
 
@@ -271,7 +271,7 @@ crank_digraph_copy (	CrankDigraph*	graph	)
  *
  * Returns: (transfer none) (element-type CrankDigraphNode): 노드들의 모음입니다.
  */
-GList*
+GPtrArray*
 crank_digraph_get_nodes (	CrankDigraph*	graph	)
 {
 	return graph->nodes;
@@ -285,7 +285,7 @@ crank_digraph_get_nodes (	CrankDigraph*	graph	)
  *
  * Returns: (transfer none) (element-type CrankDigraphEdge): 변들의 모음입니다.
  */
-GList*
+GPtrArray*
 crank_digraph_get_edges (	CrankDigraph*	graph	)
 {
 	return graph->edges;
@@ -300,21 +300,21 @@ crank_digraph_get_edges (	CrankDigraph*	graph	)
 void
 crank_digraph_reverse (	CrankDigraph*	graph	)
 {
-	CRANK_FOREACH_GLIST_BEGIN (graph->nodes, CrankDigraphNode*, node)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
 	
 		GList*	temp = node->in_edges;
 		node->in_edges = node->out_edges;
 		node->out_edges = temp;
 	
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
-	CRANK_FOREACH_GLIST_BEGIN (graph->edges, CrankDigraphEdge*, edge)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
 		
 		CrankDigraphNode*	temp = edge->head;
 		edge->head = edge->tail;
 		edge->tail = temp;
 		
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 }
 
 
@@ -476,7 +476,7 @@ crank_digraph_add (	CrankDigraph*		graph,
 {
 	CrankDigraphNode* node = crank_digraph_node_new (value);
 	
-	graph->nodes = g_list_prepend (graph->nodes, node);
+	g_ptr_array_add (graph->nodes, node);
 	
 	return node;
 }
@@ -495,8 +495,7 @@ crank_digraph_remove (	CrankDigraph*		graph,
 	CRANK_FOREACH_GLIST_BEGIN (node->in_edges, CrankDigraphEdge*, e)
 	
 		e->tail->out_edges = g_list_remove (e->tail->out_edges, e);
-		graph->edges = g_list_remove (graph->edges, e);
-		crank_digraph_edge_free (e);
+		g_ptr_array_remove_fast (graph->edges, e);
 		
 	CRANK_FOREACH_GLIST_END
 	
@@ -504,12 +503,11 @@ crank_digraph_remove (	CrankDigraph*		graph,
 	CRANK_FOREACH_GLIST_BEGIN (node->out_edges, CrankDigraphEdge*, e)
 	
 		e->head->in_edges = g_list_remove (e->head->in_edges, e);
-		graph->edges = g_list_remove (graph->edges, e);
-		crank_digraph_edge_free (e);
+		g_ptr_array_remove_fast (graph->edges, e);
 		
 	CRANK_FOREACH_GLIST_END
 	
-	graph->nodes = g_list_remove (graph->nodes, node);
+	g_ptr_array_remove_fast (graph->nodes, node);
 	
 	crank_digraph_node_free (node);
 }
@@ -541,10 +539,10 @@ crank_digraph_connect (	CrankDigraph*		graph,
 	}
 	
 	edge = crank_digraph_edge_new (edge_value, tail, head);
-	tail->out_edges = g_list_prepend (tail->out_edges, edge);
-	head->in_edges = g_list_prepend (head->in_edges, edge);
+	tail->out_edges = g_list_append (tail->out_edges, edge);
+	head->in_edges = g_list_append (head->in_edges, edge);
 	
-	graph->edges = g_list_prepend (graph->edges, edge);
+	g_ptr_array_add (graph->edges, edge);
 	
 	return edge;
 }
@@ -610,9 +608,7 @@ crank_digraph_disconnect_edge (	CrankDigraph*		graph,
 {
 	e->tail->out_edges = g_list_remove (e->tail->out_edges, e);
 	e->head->in_edges = g_list_remove (e->head->in_edges, e);
-	graph->edges = g_list_remove (graph->edges, e);
-	
-	crank_digraph_edge_free (e);
+	g_ptr_array_remove_fast (graph->edges, e);
 }
 
 

@@ -235,8 +235,17 @@ testutil_accumulator_graph (	CrankDigraph*		digraph,
 								CrankDigraphNode*	node,
 								gpointer			userdata	)
 {
+	GValue	value = { 0 };
 	GList**	list_ptr =	(GList**) userdata;
 	*list_ptr = g_list_append (*list_ptr, node);
+	
+	g_value_init (&value, G_TYPE_INT);
+	
+	crank_digraph_node_get_data (node, &value);
+	
+	g_message ("Node value: %s", g_strdup_value_contents (&value));
+	
+	g_value_unset (&value);
 	return TRUE;
 }
 								
@@ -329,37 +338,45 @@ void
 test_digraph_get_nodes (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
-	GList*			node_list;
+	GPtrArray*		nodes;
 	guint			i;
+	guint			j;
 	
-	node_list = crank_digraph_get_nodes (fixture->digraph);
-	
+	nodes = crank_digraph_get_nodes (fixture->digraph);
 	
 	// 얻은 노드들이 픽스쳐에서 얻은 노드들과 같은지 봅니다.
-	for (i = 0; i < 9; i++)
-		g_assert (g_list_find (node_list, fixture->nodes[i]) != NULL);
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++)
+			if (fixture->nodes[i] == g_ptr_array_index(nodes, j)) break;
+		if (j == 9) g_test_fail ();
+	}
+	
 }
 
 void
 test_digraph_get_edges (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
-	GList*			edge_list;
+	GPtrArray*			edges;
 	guint			i;
+	guint			j;
 	
-	edge_list = crank_digraph_get_edges (fixture->digraph);
+	edges = crank_digraph_get_edges (fixture->digraph);
 	
 	
 	// 얻은 변들이 픽스쳐에서 얻은 변들과 같은지 봅니다.
-	for (i = 0; i < 8; i++)
-		g_assert (g_list_find (edge_list, fixture->edges[i]) != NULL);
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++)
+			if (fixture->edges[i] == g_ptr_array_index(edges, j)) break;
+		if (j == 8) g_test_fail ();
+	}
 }
 
 void
 test_digraph_disconnect (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
-	GList*		edge_list;
+	GPtrArray*	edges;
 								
 	g_assert (	 crank_digraph_disconnect (	fixture->digraph,
 											fixture->nodes[2],
@@ -389,23 +406,34 @@ test_digraph_disconnect (	TestDigraphFixture*	fixture,
 											fixture->nodes[4],
 											fixture->nodes[6])	);
 	
-	edge_list = crank_digraph_get_edges (fixture->digraph);
+	edges = crank_digraph_get_edges (fixture->digraph);
 	
-	g_assert (g_list_find (edge_list, fixture->edges[2]) == NULL);
-	g_assert (g_list_find (edge_list, fixture->edges[4]) == NULL);
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (edges, CrankDigraphEdge*, edge)
+	
+		g_assert (edge != fixture->edges[2]);
+		g_assert (edge != fixture->edges[4]);
+	
+	CRANK_FOREACH_G_PTR_ARRAY_END
 }
 
 void
 test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
-	GList*		edge_list = crank_digraph_get_edges (fixture->digraph);
+	GPtrArray*		edges;
 						
 	crank_digraph_disconnect_edge (fixture->digraph, fixture->edges[2]);
 	crank_digraph_disconnect_edge (fixture->digraph, fixture->edges[4]);
 	
-	g_assert (g_list_find (edge_list, fixture->edges[2]) == NULL);
-	g_assert (g_list_find (edge_list, fixture->edges[4]) == NULL);
+	
+	edges = crank_digraph_get_edges (fixture->digraph);
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (edges, CrankDigraphEdge*, edge)
+	
+		g_assert (edge != fixture->edges[2]);
+		g_assert (edge != fixture->edges[4]);
+	
+	CRANK_FOREACH_G_PTR_ARRAY_END
 }
 
 void
