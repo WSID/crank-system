@@ -548,12 +548,12 @@ crank_types_graph_unref (CrankTypesGraph*	graph)
 {
 	if (g_atomic_int_dec_and_test (& (graph->_refc)) ) {
 		
-		CRANK_FOREACH_GLIST_BEGIN (	crank_digraph_get_nodes (graph->base), CrankDigraphNode*,	node)
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (	crank_digraph_get_nodes (graph->base), CrankDigraphNode*,	node)
 			
 			crank_types_graph_data_free (
 					(CrankTypesGraphData*) crank_digraph_node_get_pointer (node));
 		
-		CRANK_FOREACH_GLIST_END
+		CRANK_FOREACH_G_PTR_ARRAY_END
 		
 		crank_digraph_unref (graph->base);
 	
