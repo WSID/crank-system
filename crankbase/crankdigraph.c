@@ -340,6 +340,48 @@ crank_digraph_index_of_edge (	CrankDigraph*		graph,
 }
 
 /**
+ * crank_digraph_nth_node:
+ * @graph: 그래프입니다.
+ * @index: 인덱스입니다.
+ *
+ * 그래프에서 인덱스에 해당하는 노드를 얻습니다.
+ *
+ * Note:
+ * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * 
+ * Returns: (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
+ */
+CrankDigraphNode*
+crank_digraph_nth_node (	CrankDigraph*	graph,
+							guint			index	)
+{
+	if (index < graph->nodes->len)
+		return (CrankDigraphNode*) g_ptr_array_index (graph->nodes, index);
+	else return NULL;
+}
+
+/**
+ * crank_digraph_nth_edge:
+ * @graph: 그래프입니다.
+ * @index: 인덱스입니다.
+ *
+ * 그래프에서 인덱스에 해당하는 노드를 얻습니다.
+ *
+ * Note:
+ * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * 
+ * Returns: (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
+ */
+CrankDigraphEdge*
+crank_digraph_nth_edge (	CrankDigraph*	graph,
+							guint			index	)
+{
+	if (index < graph->edges->len)
+		return (CrankDigraphEdge*) g_ptr_array_index (graph->edges, index);
+	else return NULL;
+}
+
+/**
  * crank_digraph_reverse:
  * @graph: 그래프입니다.
  *

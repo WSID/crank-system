@@ -98,6 +98,12 @@ gint				crank_digraph_index_of_node (		CrankDigraph*		graph,
 gint				crank_digraph_index_of_edge (		CrankDigraph*		graph,
 														CrankDigraphEdge*	edge	);
 
+CrankDigraphNode*	crank_digraph_nth_node (			CrankDigraph*		graph,
+														guint				index	);
+
+CrankDigraphEdge*	crank_digraph_nth_edge (			CrankDigraph*		graph,
+														guint				index	);
+
 void				crank_digraph_reverse (				CrankDigraph*		graph	);
 
 gboolean			crank_digraph_depth_first (			CrankDigraph*		graph,
