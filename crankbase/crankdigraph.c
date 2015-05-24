@@ -292,6 +292,54 @@ crank_digraph_get_edges (	CrankDigraph*	graph	)
 }
 
 /**
+ * crank_digraph_index_of_node:
+ * @graph: 그래프입니다.
+ * @node: 노드입니다.
+ *
+ * 그래프에서 노드의 인덱스를 얻습니다. 이 인덱스들은 인접 행렬등과 같이 사용될 수 있습니다.
+ *
+ * Note:
+ * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * 
+ * Returns: 노드의 인덱스입니다. 무효한 노드에 대해서 -1을 반환합니다.
+ */
+gint
+crank_digraph_index_of_node (	CrankDigraph*		graph,
+								CrankDigraphNode*	node	)
+{
+	gint i;
+	
+	for (i = 0; i < graph->nodes->len; i++)
+		if (node == graph->nodes->pdata[i]) return i;
+	
+	return -1;
+}
+
+/**
+ * crank_digraph_index_of_edge:
+ * @graph: 그래프입니다.
+ * @edge: 변입니다.
+ *
+ * 그래프에서 변의 인덱스를 얻습니다. 이 인덱스들은 incidence matrix 등과 같이 사용될 수 있습니다.
+ *
+ * Note:
+ * 변의 인덱스는 그래프의 변경에 따라 변할 수 있습니다.
+ *
+ * Returns: 변의 인덱스입니다. 무효한 변에 대해서 -1을 반환합니다.
+ */
+gint
+crank_digraph_index_of_edge (	CrankDigraph*		graph,
+								CrankDigraphEdge*	edge	)
+{
+	gint i;
+	
+	for (i = 0; i < graph->edges->len; i++)
+		if (edge == graph->edges->pdata[i]) return i;
+	
+	return -1;
+}
+
+/**
  * crank_digraph_reverse:
  * @graph: 그래프입니다.
  *

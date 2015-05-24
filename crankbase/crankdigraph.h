@@ -92,6 +92,12 @@ GPtrArray*			crank_digraph_get_nodes (			CrankDigraph*		graph	);
 
 GPtrArray*			crank_digraph_get_edges (			CrankDigraph*		graph	);
 
+gint				crank_digraph_index_of_node (		CrankDigraph*		graph,
+														CrankDigraphNode*	node	);
+
+gint				crank_digraph_index_of_edge (		CrankDigraph*		graph,
+														CrankDigraphEdge*	edge	);
+
 void				crank_digraph_reverse (				CrankDigraph*		graph	);
 
 gboolean			crank_digraph_depth_first (			CrankDigraph*		graph,

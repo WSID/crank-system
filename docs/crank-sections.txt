@@ -359,6 +359,8 @@ crank_digraph_unref
 crank_digraph_copy
 crank_digraph_get_nodes
 crank_digraph_get_edges
+crank_digraph_index_of_node
+crank_digraph_index_of_edge
 crank_digraph_add
 crank_digraph_remove
 crank_digraph_connect
