@@ -67,10 +67,10 @@ CrankDigraph*	create_rand_graph (	guint	node_count,
 									gfloat	connect_ratio	)
 {
 	CrankDigraph*		graph = crank_digraph_new ();
-	CrankDigraphNode**	nodes = g_new (CrankDigraphNode*, node_count);
+	CrankDigraphNode**	nodes;
 	
-	guint			connect_count = 
-			(guint)	((gfloat) node_count * (node_count - 1)) * connect_ratio;
+	guint			connect_possible = node_count * (node_count - 1);
+	guint			connect_count = (guint)	(connect_possible * connect_ratio);
 	
 	guint			i;
 	guint			j;
@@ -79,24 +79,30 @@ CrankDigraph*	create_rand_graph (	guint	node_count,
 	g_test_message ("Connect ratio: %f", connect_ratio);
 	g_test_message ("Connect count: %u", connect_count);
 	
-	// Add nodes
-	for (i = 0; i < node_count; i++)
-		nodes[i] = crank_digraph_add_pointer (graph, G_TYPE_POINTER, NULL);
-	
-	// Add edges
-	for (i = 0; i < connect_count; i++) {
-		guint t;
-		guint f;
-		do {
-			t = (guint) g_test_rand_int_range (0, node_count);
-			f = (guint) g_test_rand_int_range (0, node_count);
-		}
-		while (crank_digraph_node_is_adjacent_to (nodes[t], nodes[f]));
-		
-		crank_digraph_connect_void (graph, nodes[t], nodes[f]);
+	for (i = 0; i < node_count; i++) {
+		crank_digraph_add_pointer (graph, G_TYPE_POINTER, NULL);
 	}
 	
-	g_free (nodes);
+	nodes = (CrankDigraphNode**) (crank_digraph_get_nodes (graph) -> pdata);
+	
+	// Add edges
+	for (i = 0; i < node_count; i++) {
+		for (j = 0; j < i; j++) {
+			if (g_test_rand_int_range (0, connect_possible) < connect_count) {
+				crank_digraph_connect_void (graph, nodes[i], nodes[j]);
+				connect_count --;
+			}
+			connect_possible --;
+		}
+		
+		for (j = i+1; j < node_count; j++) {
+			if (g_test_rand_int_range (0, connect_possible) < connect_count) {
+				crank_digraph_connect_void (graph, nodes[i], nodes[j]);
+				connect_count --;
+			}
+			connect_possible --;
+		}
+	}
 	
 	return graph;
 }
@@ -158,7 +164,7 @@ void			test_depth_first (void)
 	CrankDigraphNode*	node;
 	
 	digraph = create_rand_graph (1024, 0.7f);
-	node = crank_digraph_get_nodes (digraph)->data;
+	node = g_ptr_array_index (crank_digraph_get_nodes (digraph), 0);
 	
 	g_test_message ("Graph built");
 	
@@ -178,7 +184,7 @@ void			test_breadth_first (void)
 	CrankDigraphNode*	node;
 	
 	digraph = create_rand_graph (1024, 0.7f);
-	node = crank_digraph_get_nodes (digraph)->data;
+	node = g_ptr_array_index (crank_digraph_get_nodes (digraph), 0);
 	
 	g_test_message ("Graph built");
 	
