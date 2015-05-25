@@ -458,10 +458,10 @@ test_digraph_depth_first (	TestDigraphFixture*	fixture,
 											testutil_accumulator_graph,
 											&node_list	)	);	
 
+	g_assert_cmpint ( g_list_length (node_list), ==, 3);
 	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[1]	);
 	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[2]	);
 	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[3]	);
-	g_assert_cmpint ( g_list_length (node_list), ==, 3);
 	
 	g_list_free (node_list);
 	node_list = NULL;
@@ -471,12 +471,12 @@ test_digraph_depth_first (	TestDigraphFixture*	fixture,
 											testutil_accumulator_graph,
 											&node_list	)	);	
 
+	g_assert_cmpint ( g_list_length (node_list), ==, 5);
 	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[4]	);
 	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[5]	);
 	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[8]	);
 	g_assert ( g_list_nth_data (node_list, 3) == fixture->nodes[6]	);
 	g_assert ( g_list_nth_data (node_list, 4) == fixture->nodes[7]	);
-	g_assert_cmpint ( g_list_length (node_list), ==, 5);
 	
 	g_list_free (node_list);
 	node_list = NULL;
@@ -550,30 +550,30 @@ void
 test_digraph_node_get_in_edges (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
-	GList*	edge_list;
+	GPtrArray*	edge_list;
 	
 	edge_list = crank_digraph_node_get_in_edges (fixture->nodes[3]);
 	
-	g_assert (g_list_find (edge_list, fixture->edges[1]) != NULL);
-	g_assert (g_list_find (edge_list, fixture->edges[2]) != NULL);
+	g_assert (g_ptr_array_index (edge_list, 0) == fixture->edges[1]);
+	g_assert (g_ptr_array_index (edge_list, 1) == fixture->edges[2]);
 }
 
 void
 test_digraph_node_get_out_edges (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
-	GList*	edge_list;
+	GPtrArray*	edge_list;
 	
 	edge_list = crank_digraph_node_get_out_edges (fixture->nodes[4]);
 	
-	g_assert (g_list_find (edge_list, fixture->edges[3]) != NULL);
-	g_assert (g_list_find (edge_list, fixture->edges[4]) != NULL);
-	g_assert (g_list_find (edge_list, fixture->edges[5]) != NULL);
+	g_assert (g_ptr_array_index (edge_list, 0) == fixture->edges[3]);
+	g_assert (g_ptr_array_index (edge_list, 1) == fixture->edges[4]);
+	g_assert (g_ptr_array_index (edge_list, 2) == fixture->edges[5]);
 }
 
 void
 test_digraph_node_get_in_nodes (	TestDigraphFixture*	fixture,
-								gconstpointer		userdata	)
+									gconstpointer		userdata	)
 {
 	GList*	node_list;
 	

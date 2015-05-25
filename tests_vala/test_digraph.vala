@@ -81,20 +81,20 @@ int main (string[] args) {
 private void test_digraph_get_nodes () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	unowned GLib.List<Crank.DigraphNode> node_list = fixture.graph.nodes;
+	unowned GLib.GenericArray<Crank.DigraphNode> nodes = fixture.graph.nodes;
 	
 	foreach (unowned Crank.DigraphNode node in fixture.nodes)
-		assert (node_list.find (node) != null);
+		assert (node in nodes.data);
 }
 
 
 private void test_digraph_get_edges () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	unowned GLib.List<Crank.DigraphEdge> edge_list = fixture.graph.edges;
+	unowned GLib.GenericArray<Crank.DigraphEdge> edges = fixture.graph.edges;
 	
 	foreach (unowned Crank.DigraphEdge edge in fixture.edges)
-		assert (edge_list.find (edge) != null);
+		assert (edge in edges.data);
 }
 
 private void test_digraph_disconnect () {
@@ -107,10 +107,10 @@ private void test_digraph_disconnect () {
 	assert (! fixture.graph.disconnect (fixture.nodes[4], fixture.nodes[8]) );
 	assert (! fixture.graph.disconnect (fixture.nodes[4], fixture.nodes[6]) );
 	
-	unowned GLib.List<Crank.DigraphEdge>	edge_list = fixture.graph.edges;
+	unowned GLib.GenericArray<Crank.DigraphEdge>	edges = fixture.graph.edges;
 	
-	assert (edge_list.find (fixture.edges[2]) == null);
-	assert (edge_list.find (fixture.edges[4]) == null);
+	assert (! (fixture.edges[2] in edges.data));
+	assert (! (fixture.edges[4] in edges.data));
 }
 
 
@@ -120,10 +120,10 @@ private void test_digraph_disconnect_edge () {
 	fixture.graph.disconnect_edge (fixture.edges[2]);
 	fixture.graph.disconnect_edge (fixture.edges[4]);
 	
-	unowned GLib.List<Crank.DigraphEdge> edge_list = fixture.graph.edges;
+	unowned GLib.GenericArray<Crank.DigraphEdge> edges = fixture.graph.edges;
 	
-	assert (edge_list.find (fixture.edges[2]) == null);
-	assert (edge_list.find (fixture.edges[4]) == null);
+	assert (! (fixture.edges[2] in edges.data));
+	assert (! (fixture.edges[4] in edges.data));
 }
 
 private void test_digraph_depth_first () {
@@ -208,44 +208,44 @@ private void test_digraph_node_get_data () {
 private void test_digraph_node_get_in_edges () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	unowned GLib.List <unowned Crank.DigraphEdge> edge_list =
+	unowned GLib.GenericArray <unowned Crank.DigraphEdge> edges =
 			fixture.nodes[3].in_edges;
 	
-	assert (edge_list.find (fixture.edges[1]) != null);
-	assert (edge_list.find (fixture.edges[2]) != null);
+	assert (fixture.edges[1] in edges.data);
+	assert (fixture.edges[2] in edges.data);
 }
 
 private void test_digraph_node_get_out_edges () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	unowned GLib.List <unowned Crank.DigraphEdge> edge_list =
+	unowned GLib.GenericArray <unowned Crank.DigraphEdge> edges =
 			fixture.nodes[4].out_edges;
 	
-	assert (edge_list.find (fixture.edges[3]) != null);
-	assert (edge_list.find (fixture.edges[4]) != null);
-	assert (edge_list.find (fixture.edges[5]) != null);
+	assert (fixture.edges[3] in edges.data);
+	assert (fixture.edges[4] in edges.data);
+	assert (fixture.edges[5] in edges.data);
 }
 
 private void test_digraph_node_get_in_nodes () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	GLib.List <unowned Crank.DigraphNode> node_list =
+	GLib.List <unowned Crank.DigraphNode> nodes =
 			fixture.nodes[3].in_nodes;
 	
-	assert (node_list.find (fixture.nodes[1]) != null);
-	assert (node_list.find (fixture.nodes[2]) != null);
+	assert (nodes.find (fixture.nodes[1]) != null);
+	assert (nodes.find (fixture.nodes[2]) != null);
 }
 
 
 private void test_digraph_node_get_out_nodes () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	GLib.List <unowned Crank.DigraphNode> node_list =
+	GLib.List <unowned Crank.DigraphNode> nodes =
 			fixture.nodes[4].out_nodes;
 	
-	assert (node_list.find (fixture.nodes[5]) != null);
-	assert (node_list.find (fixture.nodes[6]) != null);
-	assert (node_list.find (fixture.nodes[7]) != null);
+	assert (nodes.find (fixture.nodes[5]) != null);
+	assert (nodes.find (fixture.nodes[6]) != null);
+	assert (nodes.find (fixture.nodes[7]) != null);
 }
 
 private void test_digraph_node_get_indegree () {

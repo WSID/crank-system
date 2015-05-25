@@ -79,8 +79,8 @@ struct _CrankDigraph {
 struct _CrankDigraphNode {
 	GValue		data;
 
-	GList*	in_edges;
-	GList*	out_edges;
+	GPtrArray*	in_edges;
+	GPtrArray*	out_edges;
 };
 
 /**
@@ -392,7 +392,7 @@ crank_digraph_reverse (	CrankDigraph*	graph	)
 {
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
 	
-		GList*	temp = node->in_edges;
+		GPtrArray*	temp = node->in_edges;
 		node->in_edges = node->out_edges;
 		node->out_edges = temp;
 	
@@ -428,56 +428,66 @@ crank_digraph_depth_first (	CrankDigraph*			graph,
 							gpointer				userdata	)
 {
   	GHashTable*		set;
-  	GQueue*			queue;
+  	GQueue*			queue_node;
+  	GQueue*			queue_index;
 
-  	GList*				edge_list;
-  	CrankDigraphEdge*	edge;
-  	CrankDigraphNode*	node;
+	CrankDigraphNode*	node;
+	CrankDigraphEdge*	edge;
+	CrankDigraphNode*	subnode;
+	guint				index;
 
   	if (! callback (graph, start, userdata)) return FALSE;
-  	if (start->out_edges == NULL) return TRUE;
+  	if (start->out_edges->len == 0) return TRUE;
 
 	set = g_hash_table_new (g_direct_hash, g_direct_equal);
-	queue = g_queue_new ();
+	queue_node = g_queue_new ();
+	queue_index = g_queue_new ();
 
   	g_hash_table_add (set, start);
 
-  	edge_list = start->out_edges;
+	node = start;
+	index = 0;
   	
 	while (TRUE) {
-		edge = edge_list->data;
-		node = edge->head;
+		edge 	= (CrankDigraphEdge*) g_ptr_array_index (node->out_edges, index);
+		subnode	= edge->head;
 
 		// Process node.
-		if (! g_hash_table_contains (set, node)){
-			if (! callback (graph, node, userdata)) {
+		if (! g_hash_table_contains (set, subnode)){
+			if (! callback (graph, subnode, userdata)) {
 				g_hash_table_unref (set);
-				g_queue_free (queue);
+				g_queue_free (queue_node);
+				g_queue_free (queue_index);
 				return FALSE;
 			}
-			g_hash_table_add (set, node);
+			g_hash_table_add (set, subnode);
 
-			if (node->out_edges != NULL) {
-				g_queue_push_head (queue, edge_list);
-				edge_list = node->out_edges;
+			if (subnode->out_edges->len != 0) {
+				g_queue_push_tail (queue_node, node);
+				g_queue_push_tail (queue_index, GINT_TO_POINTER (index));
+				node = subnode;
+				index = 0;
 				continue;
 			}
 		}
 
 		// Pick next edge_list to process.
-		edge_list = edge_list->next;
-		while (edge_list == NULL) {
-			if (g_queue_is_empty (queue)) {
+		index++;
+		while (index >= node->out_edges->len) {
+			if (g_queue_is_empty (queue_node)) {
 				g_hash_table_unref (set);
-				g_queue_free (queue);
+				g_queue_free (queue_node);
+				g_queue_free (queue_index);
 				return TRUE;
 			}
-			edge_list = ((GList*) g_queue_pop_head (queue))->next;
+			node = (CrankDigraphNode*) g_queue_pop_tail (queue_node);
+			index = GPOINTER_TO_INT (g_queue_pop_tail (queue_index)) + 1;
 		}
 	}
 
 	g_hash_table_unref (set);
-	g_queue_free (queue);
+	g_queue_free (queue_node);
+	g_queue_free (queue_index);
 
 	return TRUE;
 }
@@ -501,53 +511,44 @@ crank_digraph_breadth_first (	CrankDigraph*			graph,
 								gpointer				userdata	)
 {
   	GHashTable*		set;
-  	GQueue*			queue;
+  	GQueue*			queue_node;
 
-  	GList*				edge_list;
   	CrankDigraphNode*	node;
+  	CrankDigraphNode*	subnode;
 
   	if (! callback (graph, start, userdata)) return FALSE;
-  	if (start->out_edges == NULL) return TRUE;
+  	if (start->out_edges->len == 0) return TRUE;
 
 	set = g_hash_table_new (g_direct_hash, g_direct_equal);
-	queue = g_queue_new ();
+	queue_node = g_queue_new ();
 
   	g_hash_table_add (set, start);
-
-  	edge_list = start->out_edges;
+  	g_queue_push_head (queue_node, start);
   	
-	while (TRUE) {
-		CRANK_FOREACH_GLIST_BEGIN (edge_list, CrankDigraphEdge*, edge)
-			node = edge->head;
+	while (! g_queue_is_empty (queue_node)) {
+		node = (CrankDigraphNode*) g_queue_pop_tail (queue_node);
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, edge)
+			subnode = edge->head;
 
 			// Process node.
-			if (! g_hash_table_contains (set, node)){
-				if (! callback (graph, node, userdata)) {
+			if (! g_hash_table_contains (set, subnode)){
+				if (! callback (graph, subnode, userdata)) {
 					g_hash_table_unref (set);
-					g_queue_free (queue);
+					g_queue_free (queue_node);
 					return FALSE;
 				}
-				g_hash_table_add (set, node);
+				g_hash_table_add (set, subnode);
 
-				if (node->out_edges != NULL) {
-					g_queue_push_head (queue, edge_list);
-					edge_list = node->out_edges;
+				if (subnode->out_edges->len != 0) {
+					g_queue_push_head (queue_node, subnode);
 					continue;
 				}
 			}
-		CRANK_FOREACH_GLIST_END
-
-		if (g_queue_is_empty (queue)) {
-			g_hash_table_unref (set);
-			g_queue_free (queue);
-			return TRUE;
-		}
-		
-		edge_list = g_queue_pop_tail (queue);
+		CRANK_FOREACH_G_PTR_ARRAY_END
 	}
 
 	g_hash_table_unref (set);
-	g_queue_free (queue);
+	g_queue_free (queue_node);
 
 	return TRUE;
 }
@@ -582,24 +583,22 @@ void
 crank_digraph_remove (	CrankDigraph*		graph,
 						CrankDigraphNode*	node	)
 {
-	CRANK_FOREACH_GLIST_BEGIN (node->in_edges, CrankDigraphEdge*, e)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->in_edges, CrankDigraphEdge*, e)
 	
-		e->tail->out_edges = g_list_remove (e->tail->out_edges, e);
+		g_ptr_array_remove_fast (e->tail->out_edges, e);
 		g_ptr_array_remove_fast (graph->edges, e);
 		
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	
-	CRANK_FOREACH_GLIST_BEGIN (node->out_edges, CrankDigraphEdge*, e)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, e)
 	
-		e->head->in_edges = g_list_remove (e->head->in_edges, e);
+		g_ptr_array_remove_fast (e->head->in_edges, e);
 		g_ptr_array_remove_fast (graph->edges, e);
 		
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	g_ptr_array_remove_fast (graph->nodes, node);
-	
-	crank_digraph_node_free (node);
 }
 
 /**
@@ -629,9 +628,8 @@ crank_digraph_connect (	CrankDigraph*		graph,
 	}
 	
 	edge = crank_digraph_edge_new (edge_value, tail, head);
-	tail->out_edges = g_list_append (tail->out_edges, edge);
-	head->in_edges = g_list_append (head->in_edges, edge);
-	
+	g_ptr_array_add (tail->out_edges, edge);
+	g_ptr_array_add (head->in_edges, edge);
 	g_ptr_array_add (graph->edges, edge);
 	
 	return edge;
@@ -672,12 +670,12 @@ crank_digraph_disconnect (	CrankDigraph*		graph,
 							CrankDigraphNode*	tail,
 							CrankDigraphNode*	head	)
 {
-	CRANK_FOREACH_GLIST_BEGIN (tail->out_edges, CrankDigraphEdge*, e)
-		if (e->head == head) {
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (tail->out_edges, CrankDigraphEdge*, e)
+		if (e->head == head) { // TODO: Remove it by index.
 			crank_digraph_disconnect_edge (graph, e);
 			return TRUE;
 		}
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	return FALSE;
 }
@@ -696,8 +694,8 @@ void
 crank_digraph_disconnect_edge (	CrankDigraph*		graph,
 								CrankDigraphEdge*	e		)
 {
-	e->tail->out_edges = g_list_remove (e->tail->out_edges, e);
-	e->head->in_edges = g_list_remove (e->head->in_edges, e);
+	g_ptr_array_remove_fast (e->tail->out_edges, e);
+	g_ptr_array_remove_fast (e->head->in_edges, e);
 	g_ptr_array_remove_fast (graph->edges, e);
 }
 
@@ -765,13 +763,12 @@ GList*
 crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	)
 {
 	GList*	result = NULL;
-	GList*	iter;
 	
-	for (iter = node->in_edges; iter != NULL; iter = iter->next) {
-		g_message ("for edge %p:", iter->data);
-		CrankDigraphEdge* edge = (CrankDigraphEdge*) (iter->data);
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->in_edges, CrankDigraphEdge*, edge)
+	
 		result = g_list_prepend (result, edge->tail);
-	}
+	
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	result = g_list_reverse (result);
 	
@@ -793,12 +790,12 @@ GList*
 crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	)
 {
 	GList*	result = NULL;
-	GList*	iter;
 	
-	for (iter = node->out_edges; iter != NULL; iter = iter->next) {
-		CrankDigraphEdge* edge = (CrankDigraphEdge*) iter->data;
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, edge)
+	
 		result = g_list_prepend (result, edge->head);
-	}
+	
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	result = g_list_reverse (result);
 	
@@ -814,7 +811,7 @@ crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	)
  * Returns: (transfer none) (element-type CrankDigraphEdge):
  *        이 노드로 들어오는 변들입니다.
  */
-GList*
+GPtrArray*
 crank_digraph_node_get_in_edges (	CrankDigraphNode*	node	)
 {
 	return node->in_edges;
@@ -829,7 +826,7 @@ crank_digraph_node_get_in_edges (	CrankDigraphNode*	node	)
  * Returns: (transfer none) (element-type CrankDigraphEdge):
  *        이 노드에서 나가는 변들입니다.
  */
-GList*
+GPtrArray*
 crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	)
 {
 	return node->out_edges;
@@ -846,7 +843,7 @@ crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	)
 guint
 crank_digraph_node_get_indegree (	CrankDigraphNode*	node	)
 {
-	return g_list_length (node->in_edges);
+	return node->in_edges->len;
 }
 
 /**
@@ -860,7 +857,7 @@ crank_digraph_node_get_indegree (	CrankDigraphNode*	node	)
 guint
 crank_digraph_node_get_outdegree (	CrankDigraphNode*	node	)
 {
-	return g_list_length (node->out_edges);
+	return node->out_edges->len;
 }
 
 /**
@@ -874,7 +871,7 @@ crank_digraph_node_get_outdegree (	CrankDigraphNode*	node	)
  */
 gboolean
 crank_digraph_node_is_adjacent (	CrankDigraphNode* node,
-								CrankDigraphNode* other	)
+									CrankDigraphNode* other	)
 {
 	return	crank_digraph_node_is_adjacent_to (node, other) ||
 			crank_digraph_node_is_adjacent_to (other, node);
@@ -893,9 +890,9 @@ gboolean
 crank_digraph_node_is_adjacent_from (	CrankDigraphNode*	node,
 										CrankDigraphNode*	other	)
 {
-	CRANK_FOREACH_GLIST_BEGIN(node->in_edges, CrankDigraphEdge*, e)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->in_edges, CrankDigraphEdge*, e)
 		if (e->tail == other) return TRUE;
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	return FALSE;
 }
@@ -913,9 +910,9 @@ gboolean
 crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
 									CrankDigraphNode*	other	)
 {
-	CRANK_FOREACH_GLIST_BEGIN(node->out_edges, CrankDigraphEdge*, e)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(node->out_edges, CrankDigraphEdge*, e)
 		if (e->head == other) return TRUE;
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	return FALSE;
 }
@@ -930,7 +927,7 @@ crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
  */
 void
 crank_digraph_edge_get_data (	CrankDigraphEdge*	edge,
-							GValue*			value	)
+								GValue*			value	)
 {
 	g_value_copy (& edge->data, value);
 }
@@ -1359,8 +1356,11 @@ CrankDigraphNode*
 crank_digraph_node_new (	const GValue*	value	)
 {
 	CrankDigraphNode*	node = g_slice_new0 (CrankDigraphNode);
-	
+
 	crank_value_overwrite (& node->data, value);
+	
+	node->in_edges = g_ptr_array_new ();
+	node->out_edges = g_ptr_array_new ();
 	
 	return node;
 }

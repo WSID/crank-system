@@ -251,25 +251,25 @@ crank_types_node_add (	CrankDigraph*		digraph,
 	CrankTypesGraphData*		pdata = crank_digraph_node_get_pointer (parent);
 	CrankTypesGraphData*		ndata = crank_digraph_node_get_pointer (node);
 	
-	GList*		pout_edges =	crank_digraph_node_get_out_edges (parent);
+	GPtrArray*		pout_edges =	crank_digraph_node_get_out_edges (parent);
 	
 	// 먼저 하위 노드에 속하는지 확인합니다.
 	if (crank_types_is_a (ndata->types, pdata->types, ndata->ntypes)) {
 		gboolean add_to_subnode = FALSE;
 	
 		// 자손과 연결 되는지 확인합니다.
-		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 			
 			CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
 			if (crank_types_node_add (digraph, sub, node))
 				add_to_subnode = TRUE;
 			
-		CRANK_FOREACH_GLIST_END
+		CRANK_FOREACH_G_PTR_ARRAY_END
 		
 		// 자식에 연결되지 않은 경우 부모와 연결합니다.
 		if (! add_to_subnode) {
 			// node의 하위에 해당하는 항목들은 node에 연결합니다..
-			CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 			
 				CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
 				CrankTypesGraphData* sdata = crank_digraph_node_get_pointer (sub);
@@ -279,7 +279,7 @@ crank_types_node_add (	CrankDigraph*		digraph,
 					crank_digraph_connect_void (digraph, node, sub);
 				}
 
-			CRANK_FOREACH_GLIST_END
+			CRANK_FOREACH_G_PTR_ARRAY_END
 
 			crank_digraph_connect_void (digraph, parent, node);
 		}
@@ -297,7 +297,7 @@ crank_types_node_get (	CrankDigraphNode* parent,
 {
 	CrankDigraphNode*	result;
 	CrankTypesGraphData*	pdata;
-	GList*				pout_edges;
+	GPtrArray*				pout_edges;
 	
 	pdata = crank_digraph_node_get_pointer (parent);
 	pout_edges = crank_digraph_node_get_out_edges (parent);
@@ -308,14 +308,14 @@ crank_types_node_get (	CrankDigraphNode* parent,
 	}
 	
 	else if (crank_types_is_a (key, pdata->types, key_length)) {
-		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 		
 			CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 			
 			result = crank_types_node_get (sub, key, key_length);
 			if (result != NULL) return result;
 			
-		CRANK_FOREACH_GLIST_END
+		CRANK_FOREACH_G_PTR_ARRAY_END
 	}
 	
 	return NULL;
@@ -337,15 +337,15 @@ crank_types_node_lookup (	CrankDigraphNode* parent,
 	}
 
 	else if (crank_types_is_a (key, pdata->types, key_length)) {
-		GList*		pout_edges = crank_digraph_node_get_out_edges (parent);
+		GPtrArray*	pout_edges = crank_digraph_node_get_out_edges (parent);
 		gboolean	list_added = FALSE;
 
-		CRANK_FOREACH_GLIST_BEGIN (pout_edges, CrankDigraphEdge*, edge)
+		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 			CrankDigraphNode*	sub = crank_digraph_edge_get_head (edge);
 			list_added =
 					list_added ||
 					crank_types_node_lookup (sub, key, key_length, lookup_list);
-		CRANK_FOREACH_GLIST_END
+		CRANK_FOREACH_G_PTR_ARRAY_END
 		
 		if (list_added) return TRUE;
 		else {
@@ -368,8 +368,8 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 							CrankDigraphNode*	node	)
 {
 	CrankTypesGraphData*	ndata;
-	GList*		out_edges;
-	GList*		in_edges;
+	GPtrArray*		out_edges;
+	GPtrArray*		in_edges;
 	
 	ndata = crank_digraph_node_get_pointer (node);
 	out_edges = crank_digraph_node_get_out_edges (node);
@@ -377,18 +377,18 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 	
 	// 먼저 하위 노드로부터 연결을 끊습니다.
 	
-	CRANK_FOREACH_GLIST_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
 		CrankDigraphNode* subnode = crank_digraph_edge_get_head (out_edge);
 		
 		if (crank_digraph_node_get_indegree (subnode) == 1) {
 		
-			CRANK_FOREACH_GLIST_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
+			CRANK_FOREACH_G_PTR_ARRAY_BEGIN(in_edges, CrankDigraphEdge*, in_edge)
 				CrankDigraphNode* pnode = crank_digraph_edge_get_tail (in_edge);
 				crank_digraph_connect_void (digraph, pnode, subnode);
-			CRANK_FOREACH_GLIST_END
+			CRANK_FOREACH_G_PTR_ARRAY_END
 			
 		}
-	CRANK_FOREACH_GLIST_END
+	CRANK_FOREACH_G_PTR_ARRAY_END
 	
 	crank_types_graph_data_free (
 			crank_digraph_node_get_pointer (node)	);

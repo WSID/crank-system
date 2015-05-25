@@ -153,9 +153,9 @@ GList*				crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	);
 
 GList*				crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	);
 
-GList*				crank_digraph_node_get_in_edges (	CrankDigraphNode* 	node	);
+GPtrArray*			crank_digraph_node_get_in_edges (	CrankDigraphNode* 	node	);
 
-GList*				crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	);
+GPtrArray*			crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	);
 
 guint				crank_digraph_node_get_indegree (	CrankDigraphNode*	node	);
 
