@@ -219,49 +219,6 @@ crank_digraph_unref (	CrankDigraph*		graph	)
 	}
 }
 
-/**
- * crank_digraph_copy:
- * @graph: 복사할 그래프입니다.
- *
- * 그래프를 복사합니다.
- *
- * Returns: (transfer full): 복사된 그래프입니다.
- */
-CrankDigraph*
-crank_digraph_copy (	CrankDigraph*	graph	)
-{
-	// Hash table은 노드-인덱스를 보관하기 위해 사용합니다.
-	CrankDigraph*	clone;
-	GHashTable*		table;
-
-	clone = crank_digraph_new ();
-	table = g_hash_table_new (g_direct_hash, g_direct_equal);
-
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
-
-		g_hash_table_insert (table,
-				node,
-				crank_digraph_add (clone, & node->data)	);
-
-	CRANK_FOREACH_G_PTR_ARRAY_END
-
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
-
-		CrankDigraphNode*	tail;
-		CrankDigraphNode*	head;
-
-		tail = g_hash_table_lookup (table, edge->tail);
-		head = g_hash_table_lookup (table, edge->head);
-
-		crank_digraph_connect (graph, tail, head, & edge->data);
-
-	CRANK_FOREACH_G_PTR_ARRAY_END
-
-	g_hash_table_unref (table);
-
-	return clone;
-}
-
 
 /**
  * crank_digraph_get_nodes:
@@ -382,29 +339,130 @@ crank_digraph_nth_edge (	CrankDigraph*	graph,
 }
 
 /**
- * crank_digraph_reverse:
+ * crank_digraph_add:
  * @graph: 그래프입니다.
+ * @value: 노드의 값입니다.
  *
- * 그래프의 방향을 뒤집습니다.
+ * 그래프에서 @value를 값으로 가지는 노드를 추가합니다.
+ *
+ * Returns: (transfer none): 추가된 노드입니다.
+ */
+CrankDigraphNode*
+crank_digraph_add (	CrankDigraph*		graph,
+					const GValue*	value	)
+{
+	CrankDigraphNode* node = crank_digraph_node_new (value);
+	
+	g_ptr_array_add (graph->nodes, node);
+	
+	return node;
+}
+
+/**
+ * crank_digraph_remove:
+ * @graph: 그래프입니다.
+ * @node: 제거할 노드입니다.
+ *
+ * 그래프에서 노드를 제거합니다.
  */
 void
-crank_digraph_reverse (	CrankDigraph*	graph	)
+crank_digraph_remove (	CrankDigraph*		graph,
+						CrankDigraphNode*	node	)
 {
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->in_edges, CrankDigraphEdge*, e)
 	
-		GPtrArray*	temp = node->in_edges;
-		node->in_edges = node->out_edges;
-		node->out_edges = temp;
-	
-	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
-		
-		CrankDigraphNode*	temp = edge->head;
-		edge->head = edge->tail;
-		edge->tail = temp;
+		g_ptr_array_remove_fast (e->tail->out_edges, e);
+		g_ptr_array_remove_fast (graph->edges, e);
 		
 	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, e)
+	
+		g_ptr_array_remove_fast (e->head->in_edges, e);
+		g_ptr_array_remove_fast (graph->edges, e);
+		
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	g_ptr_array_remove_fast (graph->nodes, node);
+}
+
+/**
+ * crank_digraph_connect:
+ * @graph: 그래프입니다.
+ * @tail: 변의 꼬리 노드입니다.
+ * @head: 변의 머리 노드입니다.
+ * @edge_value: (nullable): 변의 값입니다.
+ *     NULL을 통해 값이 없는 변을 구성할 수 있습니다.
+ *
+ * @from과 @to를 연결하여 변을 구성합니다.
+ *
+ * Returns: (transfer none) (nullable):
+ *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect (	CrankDigraph*		graph,
+						CrankDigraphNode*	tail,
+						CrankDigraphNode*	head,
+						const GValue*		edge_value	)
+{
+	CrankDigraphEdge*		edge;
+	
+	if (crank_digraph_node_is_adjacent_to (tail, head)) {
+		g_warning ("Trying to connect already connected nodes.");
+		return NULL;
+	}
+	
+	edge = crank_digraph_edge_new (edge_value, tail, head);
+	g_ptr_array_add (tail->out_edges, edge);
+	g_ptr_array_add (head->in_edges, edge);
+	g_ptr_array_add (graph->edges, edge);
+	
+	return edge;
+}
+
+/**
+ * crank_digraph_disconnect:
+ * @graph: 그래프입니다.
+ * @tail: 연결을 끊을 노드입니다.
+ * @head: 연결을 끊을 노드입니다.
+ *
+ * @from에서 @to로 이어지는 변을 찾아 연결을 끊습니다.
+ *
+ * Returns: @from -> @to로 이어지는 변을 제거하면 %TRUE입니다.
+ */
+gboolean
+crank_digraph_disconnect (	CrankDigraph*		graph,
+							CrankDigraphNode*	tail,
+							CrankDigraphNode*	head	)
+{
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (tail->out_edges, CrankDigraphEdge*, e)
+		if (e->head == head) { // TODO: Remove it by index.
+			crank_digraph_disconnect_edge (graph, e);
+			return TRUE;
+		}
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	return FALSE;
+}
+
+/**
+ * crank_digraph_disconnect_edge:
+ * @graph: 그래프입니다.
+ * @e: 제거할 변입니다.
+ *
+ * 주어진 변을 그래프에서 제거합니다.
+ *
+ * Note: 확실히 존재하는 변을 제거하므로 확실히 제거되었는지 확인할 필요가
+ *       없습니다.
+ */
+void
+crank_digraph_disconnect_edge (	CrankDigraph*		graph,
+								CrankDigraphEdge*	e		)
+{
+	g_ptr_array_remove_fast (e->tail->out_edges, e);
+	g_ptr_array_remove_fast (e->head->in_edges, e);
+	g_ptr_array_remove_fast (graph->edges, e);
 }
 
 
@@ -552,153 +610,75 @@ crank_digraph_breadth_first (	CrankDigraph*			graph,
 
 	return TRUE;
 }
-/**
- * crank_digraph_add:
- * @graph: 그래프입니다.
- * @value: 노드의 값입니다.
- *
- * 그래프에서 @value를 값으로 가지는 노드를 추가합니다.
- *
- * Returns: (transfer none): 추가된 노드입니다.
- */
-CrankDigraphNode*
-crank_digraph_add (	CrankDigraph*		graph,
-					const GValue*	value	)
-{
-	CrankDigraphNode* node = crank_digraph_node_new (value);
-	
-	g_ptr_array_add (graph->nodes, node);
-	
-	return node;
-}
 
 /**
- * crank_digraph_remove:
+ * crank_digraph_reverse:
  * @graph: 그래프입니다.
- * @node: 제거할 노드입니다.
  *
- * 그래프에서 노드를 제거합니다.
+ * 그래프의 방향을 뒤집습니다.
  */
 void
-crank_digraph_remove (	CrankDigraph*		graph,
-						CrankDigraphNode*	node	)
+crank_digraph_reverse (	CrankDigraph*	graph	)
 {
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->in_edges, CrankDigraphEdge*, e)
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
 	
-		g_ptr_array_remove_fast (e->tail->out_edges, e);
-		g_ptr_array_remove_fast (graph->edges, e);
+		GPtrArray*	temp = node->in_edges;
+		node->in_edges = node->out_edges;
+		node->out_edges = temp;
+	
+	CRANK_FOREACH_G_PTR_ARRAY_END
+	
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
+		
+		CrankDigraphNode*	temp = edge->head;
+		edge->head = edge->tail;
+		edge->tail = temp;
 		
 	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, e)
-	
-		g_ptr_array_remove_fast (e->head->in_edges, e);
-		g_ptr_array_remove_fast (graph->edges, e);
-		
+}
+
+/**
+ * crank_digraph_copy:
+ * @graph: 복사할 그래프입니다.
+ *
+ * 그래프를 복사합니다.
+ *
+ * Returns: (transfer full): 복사된 그래프입니다.
+ */
+CrankDigraph*
+crank_digraph_copy (	CrankDigraph*	graph	)
+{
+	// Hash table은 노드-인덱스를 보관하기 위해 사용합니다.
+	CrankDigraph*	clone;
+	GHashTable*		table;
+
+	clone = crank_digraph_new ();
+	table = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->nodes, CrankDigraphNode*, node)
+
+		g_hash_table_insert (table,
+				node,
+				crank_digraph_add (clone, & node->data)	);
+
 	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	g_ptr_array_remove_fast (graph->nodes, node);
-}
 
-/**
- * crank_digraph_connect:
- * @graph: 그래프입니다.
- * @tail: 변의 꼬리 노드입니다.
- * @head: 변의 머리 노드입니다.
- * @edge_value: (nullable): 변의 값입니다.
- *     NULL을 통해 값이 없는 변을 구성할 수 있습니다.
- *
- * @from과 @to를 연결하여 변을 구성합니다.
- *
- * Returns: (transfer none) (nullable):
- *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
- */
-CrankDigraphEdge*
-crank_digraph_connect (	CrankDigraph*		graph,
-						CrankDigraphNode*	tail,
-						CrankDigraphNode*	head,
-						const GValue*		edge_value	)
-{
-	CrankDigraphEdge*		edge;
-	
-	if (crank_digraph_node_is_adjacent_to (tail, head)) {
-		g_warning ("Trying to connect already connected nodes.");
-		return NULL;
-	}
-	
-	edge = crank_digraph_edge_new (edge_value, tail, head);
-	g_ptr_array_add (tail->out_edges, edge);
-	g_ptr_array_add (head->in_edges, edge);
-	g_ptr_array_add (graph->edges, edge);
-	
-	return edge;
-}
+	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (graph->edges, CrankDigraphEdge*, edge)
 
-/**
- * crank_digraph_connect_void:
- * @graph: 그래프입니다.
- * @tail: 변의 꼬리 노드입니다.
- * @head: 변의 머리 노드입니다.
- *
- * @from과 @to를 연결하여 변을 구성합니다. 그래프의 연결 관계만 고려할 경우
- * 사용할 수 있습니다.
- *
- * Returns: (transfer none) (nullable):
- *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
- */
-CrankDigraphEdge*
-crank_digraph_connect_void (	CrankDigraph*		graph,
-							CrankDigraphNode*	tail,
-							CrankDigraphNode*	head	)
-{
-	return crank_digraph_connect (graph, tail, head, NULL);
-}
+		CrankDigraphNode*	tail;
+		CrankDigraphNode*	head;
 
-/**
- * crank_digraph_disconnect:
- * @graph: 그래프입니다.
- * @tail: 연결을 끊을 노드입니다.
- * @head: 연결을 끊을 노드입니다.
- *
- * @from에서 @to로 이어지는 변을 찾아 연결을 끊습니다.
- *
- * Returns: @from -> @to로 이어지는 변을 제거하면 %TRUE입니다.
- */
-gboolean
-crank_digraph_disconnect (	CrankDigraph*		graph,
-							CrankDigraphNode*	tail,
-							CrankDigraphNode*	head	)
-{
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (tail->out_edges, CrankDigraphEdge*, e)
-		if (e->head == head) { // TODO: Remove it by index.
-			crank_digraph_disconnect_edge (graph, e);
-			return TRUE;
-		}
+		tail = g_hash_table_lookup (table, edge->tail);
+		head = g_hash_table_lookup (table, edge->head);
+
+		crank_digraph_connect (graph, tail, head, & edge->data);
+
 	CRANK_FOREACH_G_PTR_ARRAY_END
-	
-	return FALSE;
-}
 
-/**
- * crank_digraph_disconnect_edge:
- * @graph: 그래프입니다.
- * @e: 제거할 변입니다.
- *
- * 주어진 변을 그래프에서 제거합니다.
- *
- * Note: 확실히 존재하는 변을 제거하므로 확실히 제거되었는지 확인할 필요가
- *       없습니다.
- */
-void
-crank_digraph_disconnect_edge (	CrankDigraph*		graph,
-								CrankDigraphEdge*	e		)
-{
-	g_ptr_array_remove_fast (e->tail->out_edges, e);
-	g_ptr_array_remove_fast (e->head->in_edges, e);
-	g_ptr_array_remove_fast (graph->edges, e);
-}
+	g_hash_table_unref (table);
 
+	return clone;
+}
 
 
 
@@ -1075,6 +1055,27 @@ crank_digraph_add_object (	CrankDigraph*	graph,
 
 
 
+
+/**
+ * crank_digraph_connect_void:
+ * @graph: 그래프입니다.
+ * @tail: 변의 꼬리 노드입니다.
+ * @head: 변의 머리 노드입니다.
+ *
+ * @from과 @to를 연결하여 변을 구성합니다. 그래프의 연결 관계만 고려할 경우
+ * 사용할 수 있습니다.
+ *
+ * Returns: (transfer none) (nullable):
+ *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
+ */
+CrankDigraphEdge*
+crank_digraph_connect_void (	CrankDigraph*		graph,
+							CrankDigraphNode*	tail,
+							CrankDigraphNode*	head	)
+{
+	return crank_digraph_connect (graph, tail, head, NULL);
+}
+
 /**
  * crank_digraph_connect_float:
  * @graph: 그래프입니다.
@@ -1345,6 +1346,133 @@ crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
 {
 	return g_value_get_object (& edge->data);
 }
+
+
+/**
+ * crank_digraph_node_set_pointer:
+ * @node: 노드입니다.
+ * @ptype: 포인터의 #GType입니다.
+ * @pointer: 포인터입니다.
+ *
+ * 포인터를 노드의 값으로 설정합니다.
+ */
+void
+crank_digraph_node_set_pointer (	CrankDigraphNode*	node,
+									const GType			ptype,
+									gpointer			pointer	)
+{
+	crank_value_overwrite_pointer (& node->data, ptype, pointer);
+}
+
+/**
+ * crank_digraph_node_set_boxed:
+ * @node: 노드입니다.
+ * @btype: 박스의 #GType입니다.
+ * @boxed: 박스입니다.
+ *
+ * 박스를 노드의 값으로 설정합니다.
+ */
+void
+crank_digraph_node_set_boxed (	CrankDigraphNode*	node,
+								const GType			btype,
+								gpointer			boxed	)
+{
+	crank_value_overwrite_boxed (& node->data, btype, boxed);
+}
+
+/**
+ * crank_digraph_node_set_object:
+ * @node: 노드입니다.
+ * @object: 객체입니다.
+ *
+ * 객체를 노드의 값으로 설정합니다.
+ */
+void
+crank_digraph_node_set_object (	CrankDigraphNode*	node,
+								GObject*			object )
+{
+	crank_value_overwrite_object (& node->data, object);
+}
+
+
+
+
+/**
+ * crank_digraph_edge_set_float:
+ * @edge: 변입니다.
+ * @value: 값입니다.
+ *
+ * 변의 값을 단정도 부동소수값으로 설정합니다.
+ */
+void
+crank_digraph_edge_set_float (	CrankDigraphEdge*	edge,
+								const gfloat		value	)
+{
+	crank_value_overwrite_init (& edge->data, G_TYPE_FLOAT);
+	g_value_set_float (& edge->data, value);
+}
+
+/**
+ * crank_digraph_edge_set_double:
+ * @edge: 변입니다.
+ * @value: 값입니다.
+ *
+ * 변의 값을 배정도 부동소수값으로 설정합니다.
+ */
+void
+crank_digraph_edge_set_double (	CrankDigraphEdge*	edge,
+								const gdouble		value	)
+{
+	crank_value_overwrite_init (& edge->data, G_TYPE_DOUBLE);
+	g_value_set_double (& edge->data, value);
+}
+
+/**
+ * crank_digraph_edge_set_pointer:
+ * @edge: 변입니다.
+ * @ptype: 포인터의 타입입니다.
+ * @pointer: 포인터입니다.
+ *
+ * 변의 값을 포인터로 설정합니다.
+ */
+void
+crank_digraph_edge_set_pointer (	CrankDigraphEdge*	edge,
+									const GType			ptype,
+									gpointer			pointer	)
+{
+	crank_value_overwrite_pointer (& edge->data, ptype, pointer);
+}
+
+/**
+ * crank_digraph_edge_set_boxed:
+ * @edge: 변입니다.
+ * @ptype: 박스의 타입입니다.
+ * @pointer: 박스입니다.
+ *
+ * 변의 값을 박스로 설정합니다.
+ */
+void
+crank_digraph_edge_set_boxed (	CrankDigraphEdge*	edge,
+								const GType			btype,
+								gpointer			boxed	)
+{
+	crank_value_overwrite_boxed (& edge->data, btype, boxed);
+}
+
+/**
+ * crank_digraph_edge_set_boxed:
+ * @edge: 변입니다.
+ * @pointer: 객체입니다.
+ *
+ * 변의 값을 객체로 설정합니다.
+ */
+void
+crank_digraph_edge_set_object (	CrankDigraphEdge*	edge,
+								GObject*			object )
+{
+	crank_value_overwrite_object (& edge->data, object);
+}
+
 
 /*
  * crank_digraph_node_new: (private)
