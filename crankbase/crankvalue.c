@@ -151,9 +151,9 @@ crank_value_overwrite_object (	GValue*		value,
  * 정보를 가지지 않기 때문에 @value_type이 제공되어야 합니다.
  */
 void
-crank_value_overwrite_boxed (	GValue*		value,
-							 	GType		value_type,
-							 	gpointer	boxed_value	)
+crank_value_overwrite_boxed (	GValue*			value,
+							 	const GType		value_type,
+							 	gpointer		boxed_value	)
 {
 	crank_value_overwrite_init (value, value_type);
 	g_value_set_boxed (value, boxed_value);
@@ -169,10 +169,11 @@ crank_value_overwrite_boxed (	GValue*		value,
  * @value의 값을 해당 @pointer_value로 설정합니다.
  */
 void
-crank_value_overwrite_pointer (	GValue*		value,
-							   	gpointer	pointer_value	)
+crank_value_overwrite_pointer (	GValue*			value,
+								const GType		value_type,
+							   	gpointer		pointer_value	)
 {
-	crank_value_overwrite_init (value, G_TYPE_POINTER);
+	crank_value_overwrite_init (value, value_type);
   	g_value_set_pointer (value, pointer_value);
 }
 

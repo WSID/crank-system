@@ -48,10 +48,11 @@ void			crank_value_overwrite_object (	GValue*			value,
 									 			GObject*		obj_value	);
 
 void			crank_value_overwrite_boxed (	GValue*			value,
-												GType			value_type,
+												const GType		value_type,
 												gpointer		boxed_value	);
 
 void			crank_value_overwrite_pointer (	GValue*			value,
+												const GType		value_type,
 									  			gpointer		pointer_value	);
 
 void			crank_value_array_overwrite (	GValue*		array,
