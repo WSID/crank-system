@@ -33,6 +33,7 @@
     <xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="crank-chapter-base-data.xml"/>
+	<xi:include href="xml/crankadvgraph.xml"/>
   </chapter>
   
   <chapter>

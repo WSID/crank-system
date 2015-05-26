@@ -418,3 +418,15 @@ crank_digraph_edge_set_object
 CRANK_TYPE_DIGRAPH
 crank_digraph_get_type
 </SECTION>
+
+<SECTION>
+<FILE>crankadvgraph</FILE>
+CrankDigraphNodeFloatFunc
+CrankDigraphNodeDoubleFunc
+CrankDigraphEdgeFloatFunc
+CrankDigraphEdgeDoubleFunc
+CrankDigraphHeuristicFunc
+crank_dijkstra_digraph
+crank_astar_digraph
+crank_dijkstra_full_digraph
+</SECTION>

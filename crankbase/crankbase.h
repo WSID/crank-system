@@ -33,6 +33,8 @@
 #include "crankdigraph.h"
 #include "crankvecbool.h"
 
+#include "crankadvgraph.h"
+
 #include "crankbasebook.h"
 
 #undef _CRANKBASE_INSIDE
