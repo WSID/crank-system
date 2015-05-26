@@ -171,7 +171,7 @@ void			test_depth_first (void)
 	g_test_timer_start ();
 	
 	// perform a depth first iteration
-	crank_digraph_depth_first (digraph, node, doing_nothing, NULL);
+	crank_digraph_node_foreach_depth (node, doing_nothing, NULL);
 	
 	g_test_message ("Time: %lf", g_test_timer_elapsed ());
 	
@@ -191,7 +191,7 @@ void			test_breadth_first (void)
 	g_test_timer_start ();
 	
 	// perform a depth first iteration
-	crank_digraph_breadth_first (digraph, node, doing_nothing, NULL);
+	crank_digraph_node_foreach_breadth (node, doing_nothing, NULL);
 	
 	g_test_message ("Time: %lf", g_test_timer_elapsed ());
 	

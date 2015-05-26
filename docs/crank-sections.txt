@@ -350,13 +350,12 @@ CrankDigraph
 CrankDigraphNode
 CrankDigraphEdge
 CrankDigraphEdgeIndex
-CrankDigraphCallback
+CrankDigraphNodeFunc
 crank_digraph_new
 crank_digraph_new_with_nodes
 crank_digraph_new_full
 crank_digraph_ref
 crank_digraph_unref
-crank_digraph_copy
 crank_digraph_get_nodes
 crank_digraph_get_edges
 crank_digraph_index_of_node
@@ -370,8 +369,7 @@ crank_digraph_connect_void
 crank_digraph_disconnect
 crank_digraph_disconnect_edge
 crank_digraph_reverse
-crank_digraph_depth_first
-crank_digraph_breadth_first
+crank_digraph_copy
 crank_digraph_node_get_data
 crank_digraph_node_set_data
 crank_digraph_node_type_of
@@ -384,6 +382,8 @@ crank_digraph_node_get_outdegree
 crank_digraph_node_is_adjacent
 crank_digraph_node_is_adjacent_from
 crank_digraph_node_is_adjacent_to
+crank_digraph_node_foreach_depth
+crank_digraph_node_foreach_breadth
 crank_digraph_edge_get_data
 crank_digraph_edge_set_data
 crank_digraph_edge_type_of

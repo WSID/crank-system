@@ -146,8 +146,7 @@ crank_digraph_new_with_nodes (	const guint		nnodes,
 	CrankDigraph*	graph = crank_digraph_new ();
 	guint			i;
 	
-	for (i = 0; i < nnodes; i ++)
-		crank_digraph_add (graph, values + i);
+	for (i = 0; i < nnodes; i ++)	crank_digraph_add (graph, values + i);
 	
 	return graph;
 }
@@ -166,9 +165,9 @@ crank_digraph_new_with_nodes (	const guint		nnodes,
  */
 CrankDigraph*
 crank_digraph_new_full (	const guint		nnodes,
-						const GValue*	values,
-						const guint		nedges,
-						const CrankDigraphEdgeIndex*	edges	)
+							const GValue*	values,
+							const guint		nedges,
+							const CrankDigraphEdgeIndex*	edges	)
 {
 	CrankDigraph*	graph = crank_digraph_new_with_nodes (nnodes, values);
 	guint			i;
@@ -199,7 +198,6 @@ CrankDigraph*
 crank_digraph_ref (	CrankDigraph*		graph	)
 {
 	g_atomic_int_inc (& (graph->_refc));
-	
 	return graph;
 }
 
@@ -306,7 +304,7 @@ crank_digraph_index_of_edge (	CrankDigraph*		graph,
  * Note:
  * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
  * 
- * Returns: (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
+ * Returns: (transfer none) (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
  */
 CrankDigraphNode*
 crank_digraph_nth_node (	CrankDigraph*	graph,
@@ -437,7 +435,7 @@ crank_digraph_disconnect (	CrankDigraph*		graph,
 							CrankDigraphNode*	head	)
 {
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN (tail->out_edges, CrankDigraphEdge*, e)
-		if (e->head == head) { // TODO: Remove it by index.
+		if (e->head == head) {
 			crank_digraph_disconnect_edge (graph, e);
 			return TRUE;
 		}
@@ -463,152 +461,6 @@ crank_digraph_disconnect_edge (	CrankDigraph*		graph,
 	g_ptr_array_remove_fast (e->tail->out_edges, e);
 	g_ptr_array_remove_fast (e->head->in_edges, e);
 	g_ptr_array_remove_fast (graph->edges, e);
-}
-
-
-/**
- * crank_digraph_depth_first:
- * @graph: 그래프입니다.
- * @start: 시작할 노드입니다.
- * @callback: (scope call): 노드마다 호출할 함수입니다.
- * @userdata: (closure): @callback의 함수입니다.
- *
- * 그래프에서 깊이 우선 반복을 수행합니다.
- *
- * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
- *
- * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
- */
-gboolean
-crank_digraph_depth_first (	CrankDigraph*			graph,
-							CrankDigraphNode*		start,
-							CrankDigraphCallback	callback,
-							gpointer				userdata	)
-{
-  	GHashTable*		set;
-  	GQueue*			queue_node;
-  	GQueue*			queue_index;
-
-	CrankDigraphNode*	node;
-	CrankDigraphEdge*	edge;
-	CrankDigraphNode*	subnode;
-	guint				index;
-
-  	if (! callback (graph, start, userdata)) return FALSE;
-  	if (start->out_edges->len == 0) return TRUE;
-
-	set = g_hash_table_new (g_direct_hash, g_direct_equal);
-	queue_node = g_queue_new ();
-	queue_index = g_queue_new ();
-
-  	g_hash_table_add (set, start);
-
-	node = start;
-	index = 0;
-  	
-	while (TRUE) {
-		edge 	= (CrankDigraphEdge*) g_ptr_array_index (node->out_edges, index);
-		subnode	= edge->head;
-
-		// Process node.
-		if (! g_hash_table_contains (set, subnode)){
-			if (! callback (graph, subnode, userdata)) {
-				g_hash_table_unref (set);
-				g_queue_free (queue_node);
-				g_queue_free (queue_index);
-				return FALSE;
-			}
-			g_hash_table_add (set, subnode);
-
-			if (subnode->out_edges->len != 0) {
-				g_queue_push_tail (queue_node, node);
-				g_queue_push_tail (queue_index, GINT_TO_POINTER (index));
-				node = subnode;
-				index = 0;
-				continue;
-			}
-		}
-
-		// Pick next edge_list to process.
-		index++;
-		while (index >= node->out_edges->len) {
-			if (g_queue_is_empty (queue_node)) {
-				g_hash_table_unref (set);
-				g_queue_free (queue_node);
-				g_queue_free (queue_index);
-				return TRUE;
-			}
-			node = (CrankDigraphNode*) g_queue_pop_tail (queue_node);
-			index = GPOINTER_TO_INT (g_queue_pop_tail (queue_index)) + 1;
-		}
-	}
-
-	g_hash_table_unref (set);
-	g_queue_free (queue_node);
-	g_queue_free (queue_index);
-
-	return TRUE;
-}
-/**
- * crank_digraph_breadth_first:
- * @graph: 그래프입니다.
- * @start: 시작할 노드입니다.
- * @callback: (scope call): 노드마다 호출할 함수입니다.
- * @userdata: (closure): @callback의 함수입니다.
- *
- * 그래프에서 넓이 우선 반복을 수행합니다.
- *
- * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
- *
- * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
- */
-gboolean
-crank_digraph_breadth_first (	CrankDigraph*			graph,
-								CrankDigraphNode*		start,
-								CrankDigraphCallback	callback,
-								gpointer				userdata	)
-{
-  	GHashTable*		set;
-  	GQueue*			queue_node;
-
-  	CrankDigraphNode*	node;
-  	CrankDigraphNode*	subnode;
-
-  	if (! callback (graph, start, userdata)) return FALSE;
-  	if (start->out_edges->len == 0) return TRUE;
-
-	set = g_hash_table_new (g_direct_hash, g_direct_equal);
-	queue_node = g_queue_new ();
-
-  	g_hash_table_add (set, start);
-  	g_queue_push_head (queue_node, start);
-  	
-	while (! g_queue_is_empty (queue_node)) {
-		node = (CrankDigraphNode*) g_queue_pop_tail (queue_node);
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (node->out_edges, CrankDigraphEdge*, edge)
-			subnode = edge->head;
-
-			// Process node.
-			if (! g_hash_table_contains (set, subnode)){
-				if (! callback (graph, subnode, userdata)) {
-					g_hash_table_unref (set);
-					g_queue_free (queue_node);
-					return FALSE;
-				}
-				g_hash_table_add (set, subnode);
-
-				if (subnode->out_edges->len != 0) {
-					g_queue_push_head (queue_node, subnode);
-					continue;
-				}
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
-	}
-
-	g_hash_table_unref (set);
-	g_queue_free (queue_node);
-
-	return TRUE;
 }
 
 /**
@@ -896,6 +748,120 @@ crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
 	
 	return FALSE;
 }
+
+
+/**
+ * crank_digraph_node_foreach_depth:
+ * @node: 노드입니다.
+ * @func: (scope call): 노드마다 호출할 함수입니다.
+ * @userdata: (closure): @callback의 함수입니다.
+ *
+ * 노드에서 깊이 우선 반복을 수행합니다.
+ *
+ * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ *
+ * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ */
+gboolean
+crank_digraph_node_foreach_depth (	CrankDigraphNode*		node,
+									CrankDigraphNodeFunc	func,
+									gpointer				userdata	)
+{
+	GHashTable*			visited_set;
+	GQueue*				visiting_queue;
+	
+	CrankDigraphNode*	subnode;
+	gboolean			result;
+	
+	visited_set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	visiting_queue = g_queue_new ();
+	
+	g_queue_push_tail (visiting_queue, node);
+	result = TRUE;
+	
+	while (! g_queue_is_empty (visiting_queue)) {
+		subnode = (CrankDigraphNode*) g_queue_pop_tail (visiting_queue);
+		
+		if (! g_hash_table_contains (visited_set, subnode)) {
+			g_hash_table_add (visited_set, subnode);
+			result = func (subnode, userdata);
+			
+			if (! result) break;
+			
+			// Adds each sub item on queue/stack.
+			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
+					crank_digraph_node_get_out_edges (subnode),
+					CrankDigraphEdge*, edge	)
+					
+				g_queue_push_tail (visiting_queue, crank_digraph_edge_get_head (edge));
+				
+			CRANK_FOREACH_G_PTR_ARRAY_END
+		}
+	}
+	
+	g_queue_free (visiting_queue);
+	g_hash_table_unref (visited_set);
+	
+	return result;
+}
+
+/**
+ * crank_digraph_node_foreach_breadth:
+ * @node: 노드입니다.
+ * @func: (scope call): 노드마다 호출할 함수입니다.
+ * @userdata: (closure): @callback의 함수입니다.
+ *
+ * 노드에서 넓이 우선 반복을 수행합니다.
+ *
+ * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ *
+ * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ */
+gboolean
+crank_digraph_node_foreach_breadth (	CrankDigraphNode*		node,
+										CrankDigraphNodeFunc	func,
+										gpointer				userdata	)
+{
+	GHashTable*			visited_set;
+	GQueue*				visiting_queue;
+	
+	CrankDigraphNode*	subnode;
+	gboolean			result;
+	
+	visited_set = g_hash_table_new (g_direct_hash, g_direct_equal);
+	visiting_queue = g_queue_new ();
+	
+	g_queue_push_tail (visiting_queue, node);
+	result = TRUE;
+	
+	while (! g_queue_is_empty (visiting_queue)) {
+		subnode = (CrankDigraphNode*) g_queue_pop_head (visiting_queue);
+		
+		if (! g_hash_table_contains (visited_set, subnode)) {
+			g_hash_table_add (visited_set, subnode);
+			result = func (subnode, userdata);
+			
+			if (! result) break;
+			
+			// Adds each sub item on queue/stack.
+			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
+					crank_digraph_node_get_out_edges (subnode),
+					CrankDigraphEdge*, edge	)
+					
+				g_queue_push_tail (visiting_queue, crank_digraph_edge_get_head (edge));
+				
+			CRANK_FOREACH_G_PTR_ARRAY_END
+		}
+	}
+	
+	g_queue_free (visiting_queue);
+	g_hash_table_unref (visited_set);
+	
+	return result;
+}
+
+
+
 
 
 /**
@@ -1446,8 +1412,8 @@ crank_digraph_edge_set_pointer (	CrankDigraphEdge*	edge,
 /**
  * crank_digraph_edge_set_boxed:
  * @edge: 변입니다.
- * @ptype: 박스의 타입입니다.
- * @pointer: 박스입니다.
+ * @btype: 박스의 타입입니다.
+ * @boxed: (transfer none): 박스입니다.
  *
  * 변의 값을 박스로 설정합니다.
  */
@@ -1460,9 +1426,9 @@ crank_digraph_edge_set_boxed (	CrankDigraphEdge*	edge,
 }
 
 /**
- * crank_digraph_edge_set_boxed:
+ * crank_digraph_edge_set_object:
  * @edge: 변입니다.
- * @pointer: 객체입니다.
+ * @object: (transfer none): 객체입니다.
  *
  * 변의 값을 객체로 설정합니다.
  */
@@ -1472,6 +1438,8 @@ crank_digraph_edge_set_object (	CrankDigraphEdge*	edge,
 {
 	crank_value_overwrite_object (& edge->data, object);
 }
+
+
 
 
 /*
@@ -1509,8 +1477,8 @@ crank_digraph_node_free (	CrankDigraphNode*	node	)
  */
 CrankDigraphEdge*
 crank_digraph_edge_new (	const GValue*	value,
-						CrankDigraphNode*	tail,
-						CrankDigraphNode*	head	)
+							CrankDigraphNode*	tail,
+							CrankDigraphNode*	head	)
 {
 	CrankDigraphEdge* edge = g_slice_new0 (CrankDigraphEdge);
 	

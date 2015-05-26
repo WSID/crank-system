@@ -27,8 +27,7 @@ typedef struct _TestDigraphFixture {
 	CrankDigraphEdge*	edges[16];
 } TestDigraphFixture;
 
-gboolean	testutil_accumulator_graph (	CrankDigraph*		digraph,
-											CrankDigraphNode*	node,
+gboolean	testutil_accumulator_graph (	CrankDigraphNode*	node,
 											gpointer			pointer	);
 
 
@@ -48,12 +47,6 @@ void		test_digraph_disconnect (	TestDigraphFixture*	fixture,
 									gconstpointer		userdata	);
 
 void		test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
-											gconstpointer		userdata	);
-
-void		test_digraph_depth_first (	TestDigraphFixture*	fixture,
-										gconstpointer		userdata	);
-										
-void		test_digraph_breadth_first (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 
 void		test_digraph_node_get_data (	TestDigraphFixture*	fixture,
@@ -85,6 +78,12 @@ void		test_digraph_node_is_adjacent_from (	TestDigraphFixture*	fixture,
 											
 void		test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
 												gconstpointer		userdata	);
+
+void		test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
+												gconstpointer		userdata	);
+										
+void		test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
 
 void		test_digraph_edge_get_tail (	TestDigraphFixture*	fixture,
 										gconstpointer		userdata	);
@@ -124,20 +123,6 @@ main (gint   argc,
 			NULL,
 			test_digraph_setup,
 			test_digraph_disconnect_edge,
-			test_digraph_teardown	);
-
-	g_test_add ("/crank/base/digraph/foreach/depth",
-			TestDigraphFixture,
-			NULL,
-			test_digraph_setup,
-			test_digraph_depth_first,
-			test_digraph_teardown	);
-
-	g_test_add ("/crank/base/digraph/foreach/breadth",
-			TestDigraphFixture,
-			NULL,
-			test_digraph_setup,
-			test_digraph_breadth_first,
 			test_digraph_teardown	);
 
 
@@ -211,6 +196,20 @@ main (gint   argc,
 			test_digraph_node_is_adjacent_to,
 			test_digraph_teardown	);
 
+	g_test_add ("/crank/base/digraph/node/foreach/depth",
+			TestDigraphFixture,
+			NULL,
+			test_digraph_setup,
+			test_digraph_node_foreach_depth,
+			test_digraph_teardown	);
+
+	g_test_add ("/crank/base/digraph/node/foreach/breadth",
+			TestDigraphFixture,
+			NULL,
+			test_digraph_setup,
+			test_digraph_node_foreach_breadth,
+			test_digraph_teardown	);
+
 	g_test_add ("/crank/base/digraph/edge/tail",
 			TestDigraphFixture,
 			NULL,
@@ -231,8 +230,7 @@ main (gint   argc,
 }
 
 gboolean
-testutil_accumulator_graph (	CrankDigraph*		digraph,
-								CrankDigraphNode*	node,
+testutil_accumulator_graph (	CrankDigraphNode*	node,
 								gpointer			userdata	)
 {
 	GValue	value = { 0 };
@@ -436,100 +434,6 @@ test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
 	CRANK_FOREACH_G_PTR_ARRAY_END
 }
 
-void
-test_digraph_depth_first (	TestDigraphFixture*	fixture,
-							gconstpointer		userdata	)
-{
-	GList*		node_list = NULL;
-	
-	g_assert (	crank_digraph_depth_first (	fixture->digraph,
-											fixture->nodes[0],
-											testutil_accumulator_graph,
-											&node_list	)	);
-
-	g_assert ( node_list->data == fixture->nodes[0] );
-	g_assert_cmpint ( g_list_length (node_list), ==, 1);
-	
-	g_list_free (node_list);
-	node_list = NULL;
-	
-	g_assert (	crank_digraph_depth_first (	fixture->digraph,
-											fixture->nodes[1],
-											testutil_accumulator_graph,
-											&node_list	)	);	
-
-	g_assert_cmpint ( g_list_length (node_list), ==, 3);
-	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[1]	);
-	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[2]	);
-	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[3]	);
-	
-	g_list_free (node_list);
-	node_list = NULL;
-	
-	g_assert (	crank_digraph_depth_first (	fixture->digraph,
-											fixture->nodes[4],
-											testutil_accumulator_graph,
-											&node_list	)	);	
-
-	g_assert_cmpint ( g_list_length (node_list), ==, 5);
-	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[4]	);
-	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[5]	);
-	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[8]	);
-	g_assert ( g_list_nth_data (node_list, 3) == fixture->nodes[6]	);
-	g_assert ( g_list_nth_data (node_list, 4) == fixture->nodes[7]	);
-	
-	g_list_free (node_list);
-	node_list = NULL;
-}
-										
-void
-test_digraph_breadth_first (	TestDigraphFixture*	fixture,
-								gconstpointer		userdata	)
-{
-	GList*		node_list = NULL;
-	
-	g_assert (	crank_digraph_breadth_first (	fixture->digraph,
-												fixture->nodes[0],
-												testutil_accumulator_graph,
-												&node_list	)	);
-
-	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[0] );
-	g_assert_cmpint ( g_list_length (node_list), ==, 1);
-
-	
-	g_list_free (node_list);
-	node_list = NULL;
-	
-	g_assert (	crank_digraph_breadth_first (	fixture->digraph,
-												fixture->nodes[1],
-												testutil_accumulator_graph,
-												&node_list	)	);	
-
-	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[1]	);
-	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[2]	);
-	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[3]	);
-	g_assert_cmpint ( g_list_length (node_list), ==, 3);
-	
-	g_list_free (node_list);
-	node_list = NULL;
-	
-	g_assert (	crank_digraph_breadth_first (	fixture->digraph,
-												fixture->nodes[4],
-												testutil_accumulator_graph,
-												&node_list	)	);	
-
-	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[4]	);
-	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[5]	);
-	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[6]	);
-	g_assert ( g_list_nth_data (node_list, 3) == fixture->nodes[7]	);
-	g_assert ( g_list_nth_data (node_list, 4) == fixture->nodes[8]	);
-	g_assert_cmpint ( g_list_length (node_list), ==, 5);
-	
-	g_list_free (node_list);
-	node_list = NULL;
-}
-
-
 
 void
 test_digraph_node_get_data (	TestDigraphFixture*	fixture,
@@ -658,6 +562,94 @@ test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
 	g_assert (! crank_digraph_node_is_adjacent_to (fixture->nodes[0], fixture->nodes[2]));
 	g_assert (! crank_digraph_node_is_adjacent_to (fixture->nodes[4], fixture->nodes[8]));
 }
+
+void
+test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
+							gconstpointer		userdata	)
+{
+	GList*		node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_depth (	fixture->nodes[0],
+													testutil_accumulator_graph,
+													&node_list	)	);
+
+	g_assert ( node_list->data == fixture->nodes[0] );
+	g_assert_cmpint ( g_list_length (node_list), ==, 1);
+	
+	g_list_free (node_list);
+	node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_depth (	fixture->nodes[1],
+													testutil_accumulator_graph,
+													&node_list	)	);
+
+	g_assert_cmpint ( g_list_length (node_list), ==, 3);
+	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[1]	);
+	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[3]	);
+	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[2]	);
+	
+	g_list_free (node_list);
+	node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_depth (	fixture->nodes[4],
+													testutil_accumulator_graph,
+													&node_list	)	);
+
+	g_assert_cmpint ( g_list_length (node_list), ==, 5);
+	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[4]	);
+	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[7]	);
+	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[6]	);
+	g_assert ( g_list_nth_data (node_list, 3) == fixture->nodes[5]	);
+	g_assert ( g_list_nth_data (node_list, 4) == fixture->nodes[8]	);
+	
+	g_list_free (node_list);
+	node_list = NULL;
+}
+										
+void
+test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
+									gconstpointer		userdata	)
+{
+	GList*		node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_breadth (	fixture->nodes[0],
+														testutil_accumulator_graph,
+														&node_list	)	);
+
+	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[0] );
+	g_assert_cmpint ( g_list_length (node_list), ==, 1);
+
+	
+	g_list_free (node_list);
+	node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_breadth (	fixture->nodes[1],
+														testutil_accumulator_graph,
+														&node_list	)	);
+
+	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[1]	);
+	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[2]	);
+	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[3]	);
+	g_assert_cmpint ( g_list_length (node_list), ==, 3);
+	
+	g_list_free (node_list);
+	node_list = NULL;
+	
+	g_assert (	crank_digraph_node_foreach_breadth (	fixture->nodes[4],
+														testutil_accumulator_graph,
+														&node_list	)	);
+
+	g_assert ( g_list_nth_data (node_list, 0) == fixture->nodes[4]	);
+	g_assert ( g_list_nth_data (node_list, 1) == fixture->nodes[5]	);
+	g_assert ( g_list_nth_data (node_list, 2) == fixture->nodes[6]	);
+	g_assert ( g_list_nth_data (node_list, 3) == fixture->nodes[7]	);
+	g_assert ( g_list_nth_data (node_list, 4) == fixture->nodes[8]	);
+	g_assert_cmpint ( g_list_length (node_list), ==, 5);
+	
+	g_list_free (node_list);
+	node_list = NULL;
+}
+
 
 void
 test_digraph_edge_get_data (	TestDigraphFixture*	fixture,

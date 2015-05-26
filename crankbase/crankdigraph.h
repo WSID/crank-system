@@ -58,8 +58,7 @@ struct _CrankDigraphEdgeIndex {
 
 
 /**
- * CrankDigraphCallback:
- * @graph: 그래프입니다.
+ * CrankDigraphNodeFunc:
  * @node: 노드입니다.
  * @userdata: (closure): 유저 데이터입니다.
  *
@@ -67,19 +66,17 @@ struct _CrankDigraphEdgeIndex {
  *
  * Returns: 반복을 계속하기 위해 %TRUE를 사용합니다.
  */
-typedef	gboolean	(*CrankDigraphCallback)	(	CrankDigraph*		graph,
-												CrankDigraphNode*	node,
-												gpointer			userdata	);
-
+typedef	gboolean	(*CrankDigraphNodeFunc)		(		CrankDigraphNode*	node,
+														gpointer			userdata	);
 
 CrankDigraph*		crank_digraph_new (void);
 
-CrankDigraph*		crank_digraph_new_with_nodes (		const guint		nnodes,
-											 			const GValue*	values	);
+CrankDigraph*		crank_digraph_new_with_nodes (		const guint			nnodes,
+											 			const GValue*		values	);
 
-CrankDigraph*		crank_digraph_new_full		(		const guint		nnodes,
-														const GValue*	values,
-														const guint		nedges,
+CrankDigraph*		crank_digraph_new_full		(		const guint			nnodes,
+														const GValue*		values,
+														const guint			nedges,
 														const CrankDigraphEdgeIndex*	edges	);
 														
 
@@ -124,18 +121,6 @@ void				crank_digraph_disconnect_edge (		CrankDigraph*		graph,
                              	      					CrankDigraphEdge*	e	);
 
 
-
-gboolean			crank_digraph_depth_first (			CrankDigraph*		graph,
-														CrankDigraphNode*	start,
-														CrankDigraphCallback	callback,
-														gpointer			userdata	);
-
-gboolean			crank_digraph_breadth_first (		CrankDigraph*		graph,
-														CrankDigraphNode*	start,
-														CrankDigraphCallback	callback,
-														gpointer			userdata	);
-
-
 void				crank_digraph_reverse (				CrankDigraph*		graph	);
 
 CrankDigraph*		crank_digraph_copy (				CrankDigraph*		graph	);
@@ -165,6 +150,7 @@ guint				crank_digraph_node_get_indegree (	CrankDigraphNode*	node	);
 guint				crank_digraph_node_get_outdegree(	CrankDigraphNode*	node	);
 
 
+
 gboolean			crank_digraph_node_is_adjacent (	CrankDigraphNode*	node,
 														CrankDigraphNode*	other	);
 
@@ -174,6 +160,15 @@ gboolean			crank_digraph_node_is_adjacent_from (	CrankDigraphNode*	node,
 gboolean			crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
 														CrankDigraphNode*	other	);
 
+gboolean			crank_digraph_node_foreach_depth (	CrankDigraphNode*		node,
+														CrankDigraphNodeFunc	func,
+														gpointer				userdata	);
+
+gboolean			crank_digraph_node_foreach_breadth (	CrankDigraphNode*		node,
+														CrankDigraphNodeFunc	func,
+														gpointer				userdata	);
+
+														
 
 
 
@@ -188,6 +183,8 @@ GType				crank_digraph_edge_type_of (		CrankDigraphEdge*	edge	);
 CrankDigraphNode*	crank_digraph_edge_get_tail (		CrankDigraphEdge*	edge	);
 
 CrankDigraphNode*	crank_digraph_edge_get_head (		CrankDigraphEdge*	edge	);
+
+
 
 
 
@@ -283,7 +280,7 @@ void				crank_digraph_edge_set_boxed (		CrankDigraphEdge*	edge,
 														gpointer			boxed	);
 
 void				crank_digraph_edge_set_object (		CrankDigraphEdge*	edge,
-														GObject*			pointer	);
+														GObject*			object	);
 
 G_END_DECLS
 
