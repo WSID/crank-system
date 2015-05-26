@@ -164,6 +164,7 @@ crank_value_overwrite_boxed (	GValue*			value,
 /**
  * crank_value_overwrite_pointer: (skip)
  * @value: (out caller-allocates): 설정할 GValue입니다.
+ * @value_type: @pointer_value의 타입입니다.
  * @pointer_value: @value에 설정할 값입니다.
  *
  * @value의 값을 해당 @pointer_value로 설정합니다.

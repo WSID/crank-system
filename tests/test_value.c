@@ -96,7 +96,7 @@ test_value_overwrite_value (void)
   	crank_value_overwrite_boxed (&value, G_TYPE_DATE, date);
 	g_assert (g_date_compare ((GDate*)g_value_get_boxed (&value), date) == 0);
 
-  	crank_value_overwrite_pointer (&value, &value);
+  	crank_value_overwrite_pointer (&value, G_TYPE_POINTER, &value);
   	g_assert (g_value_get_pointer(&value) == &value);
 
   	g_value_unset (&value);
