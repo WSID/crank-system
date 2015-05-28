@@ -6,7 +6,8 @@ SUBDIRS=. perf
 
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
-		-I $(top_srcdir)/crankbase
+		-I $(top_srcdir)/crankbase \
+		-lm
 
 TEST_BASE_LDADD= \
 		$(CRANK_BASE_LIBS) \
@@ -22,6 +23,7 @@ test_programs= \
 		test_singular \
 		test_base_book \
 		test_vec_bool \
+		test_vec_int \
 		test_digraph
 
 test_string_LDADD= $(TEST_BASE_LDADD)
@@ -41,4 +43,8 @@ test_base_book_LDADD= $(TEST_BASE_LDADD)
 
 test_vec_bool_LDADD=  $(TEST_BASE_LDADD)
 
+test_vec_int_LDADD=  $(TEST_BASE_LDADD)
+
 test_digraph_LDADD=  $(TEST_BASE_LDADD)
+
+

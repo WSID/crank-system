@@ -13,6 +13,7 @@ include_HEADERS = \
 		\
 		crankdigraph.h \
 		crankvecbool.h \
+		crankvecint.h \
 		\
 		crankadvgraph.h \
 		\
@@ -27,7 +28,8 @@ include_HEADERS = \
 libcrankbase_la_CFLAGS = \
 		$(CRANK_BASE_CFLAGS) \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
-		-DLOCALEDIR=\"$(localedir)\"
+		-DLOCALEDIR=\"$(localedir)\" \
+		-lm
 
 libcrankbase_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
@@ -40,6 +42,7 @@ libcrankbase_la_SOURCES= \
 		\
 		crankdigraph.c \
 		crankvecbool.c \
+		crankvecint.c \
 		\
 		crankadvgraph.c \
 		\
@@ -65,7 +68,7 @@ CrankBase_0_0_gir_SCANNERFLAGS= \
 		--identifier-prefix="Crank"
 		
 CrankBase_0_0_gir_INCLUDES= GObject-2.0
-CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS)
+CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm
 CrankBase_0_0_gir_LIBS= libcrankbase.la
 CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(include_HEADERS)
 

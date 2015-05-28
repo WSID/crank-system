@@ -32,6 +32,7 @@
 
 #include "crankdigraph.h"
 #include "crankvecbool.h"
+#include "crankvecint.h"
 
 #include "crankadvgraph.h"
 

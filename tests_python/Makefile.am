@@ -7,6 +7,7 @@ TESTS= \
 	test_types_graph.py \
 	test_base_book.py \
 	test_vec_bool.py \
+	test_vec_int.py \
 	test_digraph.py
 
 AM_TESTS_ENVIRONMENT= \

@@ -30,10 +30,11 @@
   
   <chapter>
     <title>데이터 구조</title>
-    <xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
-	<xi:include href="crank-chapter-base-data.xml"/>
+	<xi:include href="xml/crankvecint.xml"/>
+    <xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
+	<xi:include href="crank-chapter-base-data.xml"/>
   </chapter>
   
   <chapter>

@@ -229,6 +229,56 @@ namespace Crank {
 										string on_false = "false" );
 	}
 	
+	
+	public struct VecInt2 {
+		public int x;
+		public int y;
+		
+		public VecInt2 		(int x, int y);
+		public VecInt2.arr		(int arr[2]);
+		public VecInt2.valist	(va_list varargs);
+		public VecInt2.fill		(int	fill);
+		public VecInt2.from_vb	(VecBool2	vb);
+		
+		public VecInt2?	copy	();
+		
+		public int			get (uint	index);
+		public void			set (uint	index, int value);
+		
+		public static uint	hash (VecInt2	a);
+		public static bool	equal (VecInt2	a, VecInt2	b);
+		
+		[CCode (cname="crank_vec_int2_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%d"	);
+		public uint			magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecInt2		neg		();
+		
+		public VecInt2		muls	(	int b	);
+		public VecInt2		divs	(	int	b	);
+		public VecInt2		mods	(	int b	);
+		
+		public VecInt2		add		(	VecInt2 b	);
+		public VecInt2		sub		(	VecInt2	b	);
+		public int			dot		(	VecInt2	b	);
+		
+		public VecInt2		cmpmul	(	VecInt2	b	);
+		public VecInt2		cmpdiv	(	VecInt2	b	);
+		public VecInt2		cmpmod	(	VecInt2	b	);
+		
+		public VecBool2		cmpless	(	VecInt2 b	);
+		public VecBool2		cmpeq	(	VecInt2	b	);
+		public VecBool2		cmpgreater	(	VecInt2	b	);
+		public VecInt2		cmpcmp	(	VecInt2	b	);
+
+		public VecInt2		min (		VecInt2 b	);
+		public VecInt2		max (		VecInt2 b	);
+	}
+	
 
 	public class FuncType {
 		[CCode (sentinel="G_TYPE_NONE")]
