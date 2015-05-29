@@ -279,6 +279,160 @@ namespace Crank {
 		public VecInt2		max (		VecInt2 b	);
 	}
 	
+	public struct VecInt3 {
+		public int x;
+		public int y;
+		public int z;
+		
+		public VecInt3 		(int x, int y);
+		public VecInt3.arr		(int arr[3]);
+		public VecInt3.valist	(va_list varargs);
+		public VecInt3.fill		(int	fill);
+		public VecInt3.from_vb	(VecBool3	vb);
+		
+		public VecInt3?	copy	();
+		
+		public int			get (uint	index);
+		public void			set (uint	index, int value);
+		
+		public static uint	hash (VecInt3	a);
+		public static bool	equal (VecInt3	a, VecInt3	b);
+		
+		[CCode (cname="crank_vec_int3_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%d"	);
+		public uint			magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecInt3		neg		();
+		
+		public VecInt3		muls	(	int b	);
+		public VecInt3		divs	(	int	b	);
+		public VecInt3		mods	(	int b	);
+		
+		public VecInt3		add		(	VecInt3 b	);
+		public VecInt3		sub		(	VecInt3	b	);
+		public int			dot		(	VecInt3	b	);
+		public VecInt3		crs		(	VecInt3	b	);
+		
+		public VecInt3		cmpmul	(	VecInt3	b	);
+		public VecInt3		cmpdiv	(	VecInt3	b	);
+		public VecInt3		cmpmod	(	VecInt3	b	);
+		
+		public VecBool3		cmpless	(	VecInt3 b	);
+		public VecBool3		cmpeq	(	VecInt3	b	);
+		public VecBool3		cmpgreater	(	VecInt3	b	);
+		public VecInt3		cmpcmp	(	VecInt3	b	);
+
+		public VecInt3		min (		VecInt3 b	);
+		public VecInt3		max (		VecInt3 b	);
+	}
+	
+	public struct VecInt4 {
+		public int x;
+		public int y;
+		public int z;
+		
+		public VecInt4 		(int x, int y);
+		public VecInt4.arr		(int arr[4]);
+		public VecInt4.valist	(va_list varargs);
+		public VecInt4.fill		(int	fill);
+		public VecInt4.from_vb	(VecBool4	vb);
+		
+		public VecInt4?	copy	();
+		
+		public int			get (uint	index);
+		public void			set (uint	index, int value);
+		
+		public static uint	hash (VecInt4	a);
+		public static bool	equal (VecInt4	a, VecInt4	b);
+		
+		[CCode (cname="crank_vec_int4_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%d"	);
+		public uint			magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecInt4		neg		();
+		
+		public VecInt4		muls	(	int b	);
+		public VecInt4		divs	(	int	b	);
+		public VecInt4		mods	(	int b	);
+		
+		public VecInt4		add		(	VecInt4 b	);
+		public VecInt4		sub		(	VecInt4	b	);
+		public int			dot		(	VecInt4	b	);
+		
+		public VecInt4		cmpmul	(	VecInt4	b	);
+		public VecInt4		cmpdiv	(	VecInt4	b	);
+		public VecInt4		cmpmod	(	VecInt4	b	);
+		
+		public VecBool4		cmpless	(	VecInt4 b	);
+		public VecBool4		cmpeq	(	VecInt4	b	);
+		public VecBool4		cmpgreater	(	VecInt4	b	);
+		public VecInt4		cmpcmp	(	VecInt4	b	);
+
+		public VecInt4		min (		VecInt4 b	);
+		public VecInt4		max (		VecInt4 b	);
+	}
+	
+	
+	[CCode (	destroy_function="crank_vec_int_n_fini",
+				free_function="crank_vec_int_n_free"	)]
+	public struct VecIntN {
+		[CCode (array_length_cname="n")]
+		public int[] data;
+		
+		public VecIntN 		(uint n, ...);
+		public VecIntN.arr		([CCode (array_length_pos=0.5)] int[] arr);
+		public VecIntN.valist	(uint n, va_list varargs);
+		public VecIntN.fill		(uint n, int	fill);
+		public VecIntN.from_vb	(VecBoolN	vb);
+		
+		public VecIntN?	copy	();
+		
+		public int			get (uint	index);
+		public void			set (uint	index, int value);
+		
+		public static uint	hash (VecIntN	a);
+		public static bool	equal (VecIntN	a, VecIntN	b);
+		
+		[CCode (cname="crank_vec_int_n_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%d"	);
+		public uint			magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecIntN		neg		();
+		
+		public VecIntN		muls	(	int b	);
+		public VecIntN		divs	(	int	b	);
+		public VecIntN		mods	(	int b	);
+		
+		public VecIntN		add		(	VecIntN b	);
+		public VecIntN		sub		(	VecIntN	b	);
+		public int			dot		(	VecIntN	b	);
+		
+		public VecIntN		cmpmul	(	VecIntN	b	);
+		public VecIntN		cmpdiv	(	VecIntN	b	);
+		public VecIntN		cmpmod	(	VecIntN	b	);
+		
+		public VecBoolN		cmpless	(	VecIntN b	);
+		public VecBoolN		cmpeq	(	VecIntN	b	);
+		public VecBoolN		cmpgreater	(	VecIntN	b	);
+		public VecIntN		cmpcmp	(	VecIntN	b	);
+
+		public VecIntN		min (		VecIntN b	);
+		public VecIntN		max (		VecIntN b	);
+	}
+	
+	
 
 	public class FuncType {
 		[CCode (sentinel="G_TYPE_NONE")]
