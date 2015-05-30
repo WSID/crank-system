@@ -983,7 +983,7 @@ crank_digraph_add_boxed (	CrankDigraph*	graph,
 	CrankDigraphNode*	node;
 	
 	g_value_init (&value, btype);
-	g_value_set_pointer (&value, boxed);
+	g_value_set_boxed (&value, boxed);
 	
 	node = crank_digraph_add (graph, &value);
 	
