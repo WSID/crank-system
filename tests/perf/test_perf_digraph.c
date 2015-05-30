@@ -21,6 +21,15 @@
 
 #include "crankbase.h"
 
+gfloat
+cost_edge_func (	CrankDigraphEdge*	edge,
+					gpointer			userdata	);
+
+gfloat
+heuristic_func (	CrankDigraphNode*	from,
+					CrankDigraphNode*	to,
+					gpointer			userdata	);
+
 CrankDigraph*
 create_rand_graph (guint node_count,	gfloat connect_ratio);
 
@@ -32,6 +41,13 @@ test_depth_first (void);
 
 void
 test_breadth_first (void);
+
+void
+test_dijkstra (void);
+
+//void
+//test_astar (void);
+
 
 gint
 main (gint   argc,
@@ -47,6 +63,9 @@ main (gint   argc,
 	
 	g_test_add_func ("/crank/base/digraph/perf/breadth_first",
 			test_breadth_first);
+
+	g_test_add_func ("/crank/base/digraph/perf/dijkstra",
+			test_dijkstra);
 	
 	g_test_run ();
 
@@ -57,9 +76,47 @@ main (gint   argc,
 
 
 
-gboolean		doing_nothing (CrankDigraph* digraph, CrankDigraphNode* node, gpointer userdata)
+gboolean		doing_nothing (CrankDigraphNode* node, gpointer userdata)
 {
 	return TRUE;
+}
+
+
+gfloat
+cost_edge_func (	CrankDigraphEdge*	edge,
+					gpointer			uesrdata	)
+{
+	CrankDigraphNode*	tail;
+	CrankDigraphNode*	head;
+
+	CrankVecInt3	diff;
+	
+	tail = crank_digraph_edge_get_tail (edge);
+	head = crank_digraph_edge_get_head (edge);
+	
+	crank_vec_int3_init_arr (&diff, (gint*) crank_digraph_node_get_boxed (head));
+	
+	crank_vec_int3_sub (	&diff,
+							(CrankVecInt3*) crank_digraph_node_get_boxed (tail),
+							&diff	);
+	
+	return crank_vec_int3_get_magn (&diff);
+}
+
+gfloat
+heuristic_func (	CrankDigraphNode*	from,
+					CrankDigraphNode*	to,
+					gpointer			uesrdata	)
+{
+	CrankVecInt3	diff;
+	
+	crank_vec_int3_init_arr (&diff, (gint*) crank_digraph_node_get_boxed (to));
+	
+	crank_vec_int3_sub (	&diff,
+							(CrankVecInt3*) crank_digraph_node_get_boxed (from),
+							&diff	);
+	
+	return crank_vec_int3_get_magn (&diff);
 }
 
 
@@ -80,7 +137,12 @@ CrankDigraph*	create_rand_graph (	guint	node_count,
 	g_test_message ("Connect count: %u", connect_count);
 	
 	for (i = 0; i < node_count; i++) {
-		crank_digraph_add_pointer (graph, G_TYPE_POINTER, NULL);
+		CrankVecInt3	pos =
+				{	g_test_rand_int_range (-1024, 1023),
+					g_test_rand_int_range (-1024, 1023),
+					g_test_rand_int_range (-1024, 1023)	};
+
+		crank_digraph_add_boxed (graph, CRANK_TYPE_VEC_INT3, &pos);
 	}
 	
 	nodes = (CrankDigraphNode**) (crank_digraph_get_nodes (graph) -> pdata);
@@ -163,7 +225,7 @@ void			test_depth_first (void)
 	CrankDigraph*		digraph;
 	CrankDigraphNode*	node;
 	
-	digraph = create_rand_graph (1024, 0.7f);
+	digraph = create_rand_graph (1024, 0.1f);
 	node = g_ptr_array_index (crank_digraph_get_nodes (digraph), 0);
 	
 	g_test_message ("Graph built");
@@ -183,7 +245,7 @@ void			test_breadth_first (void)
 	CrankDigraph*		digraph;
 	CrankDigraphNode*	node;
 	
-	digraph = create_rand_graph (1024, 0.7f);
+	digraph = create_rand_graph (1024, 0.1f);
 	node = g_ptr_array_index (crank_digraph_get_nodes (digraph), 0);
 	
 	g_test_message ("Graph built");
@@ -194,6 +256,33 @@ void			test_breadth_first (void)
 	crank_digraph_node_foreach_breadth (node, doing_nothing, NULL);
 	
 	g_test_message ("Time: %lf", g_test_timer_elapsed ());
+	
+	crank_digraph_unref (digraph);
+}
+
+
+void			test_dijkstra (void)
+{
+	CrankDigraph*	digraph;
+	CrankDigraphNode*	node_from;
+	CrankDigraphNode*	node_to;
+	
+	GList*			path;
+	
+	digraph = create_rand_graph (1024, 0.1f);
+	node_from = g_ptr_array_index (crank_digraph_get_nodes (digraph), 511);
+	node_to = g_ptr_array_index (crank_digraph_get_nodes (digraph), 512);
+	g_test_message ("Graph built");
+	
+	g_test_timer_start ();
+	
+	// perform dijkstra path finding
+	path = 	crank_dijkstra_digraph (node_from, node_to, cost_edge_func, NULL);
+	
+	g_test_message ("Time: %lf", g_test_timer_elapsed ());
+	g_test_message ("Path length: %u", g_list_length (path));
+	
+	g_list_free (path);
 	
 	crank_digraph_unref (digraph);
 }

@@ -24,7 +24,8 @@ test_programs= \
 		test_base_book \
 		test_vec_bool \
 		test_vec_int \
-		test_digraph
+		test_digraph \
+		test_advgraph
 
 test_string_LDADD= $(TEST_BASE_LDADD)
 
@@ -47,4 +48,5 @@ test_vec_int_LDADD=  $(TEST_BASE_LDADD)
 
 test_digraph_LDADD=  $(TEST_BASE_LDADD)
 
+test_advgraph_LDADD=  $(TEST_BASE_LDADD)
 
