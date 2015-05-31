@@ -382,6 +382,59 @@ namespace Crank {
 	}
 	
 	
+	public struct VecFloat2 {
+		public float x;
+		public float y;
+		
+		public VecFloat2 		(float x, float y);
+		public VecFloat2.arr		(float arr[2]);
+		public VecFloat2.valist	(va_list varargs);
+		public VecFloat2.fill		(int	fill);
+		public VecFloat2.from_vb	(VecBool2	vb);
+		public VecFloat2.from_vi	(VecInt2	vi);
+		
+		public VecFloat2?	copy	();
+		
+		public float		get (uint	index);
+		public void			set (uint	index, float value);
+		
+		public static uint	hash (VecFloat2	a);
+		public static bool	equal (VecFloat2	a, VecFloat2	b);
+		
+		[CCode (cname="crank_vec_float2_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%g"	);
+		public float		magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecFloat2		neg		();
+		public VecFloat2		unit	();
+		
+		public VecFloat2		muls	(	float b	);
+		public VecFloat2		divs	(	float	b	);
+		
+		public VecFloat2		add		(	VecFloat2 	b	);
+		public VecFloat2		sub		(	VecFloat2	b	);
+		public float			dot		(	VecFloat2	b	);
+		
+		public VecFloat2		cmpmul	(	VecFloat2	b	);
+		public VecFloat2		cmpdiv	(	VecFloat2	b	);
+		
+		public VecBool2		cmpless	(	VecFloat2 b	);
+		public VecBool2		cmpeq	(	VecFloat2	b	);
+		public VecBool2		cmpgreater	(	VecFloat2	b	);
+		public VecInt2		cmpcmp	(	VecFloat2	b	);
+
+		public VecFloat2		min (		VecFloat2 b	);
+		public VecFloat2		max (		VecFloat2 b	);
+		
+		public VecFloat2		mixs (		VecFloat2 b, float c	);
+		public VecFloat2		mix (		VecFloat2 b, VecFloat2 c	);
+	}
+	
+	
 	[CCode (	destroy_function="crank_vec_int_n_fini",
 				free_function="crank_vec_int_n_free"	)]
 	public struct VecIntN {

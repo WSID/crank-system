@@ -8,6 +8,7 @@ TESTS= \
 	test_base_book.py \
 	test_vec_bool.py \
 	test_vec_int.py \
+	test_vec_float.py \
 	test_digraph.py
 
 AM_TESTS_ENVIRONMENT= \

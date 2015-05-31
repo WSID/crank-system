@@ -33,6 +33,7 @@
 #include "crankdigraph.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
+#include "crankvecfloat.h"
 
 #include "crankadvgraph.h"
 
