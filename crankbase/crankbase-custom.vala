@@ -284,7 +284,7 @@ namespace Crank {
 		public int y;
 		public int z;
 		
-		public VecInt3 		(int x, int y);
+		public VecInt3 		(int x, int y, int z);
 		public VecInt3.arr		(int arr[3]);
 		public VecInt3.valist	(va_list varargs);
 		public VecInt3.fill		(int	fill);
@@ -334,8 +334,9 @@ namespace Crank {
 		public int x;
 		public int y;
 		public int z;
+		public int w;
 		
-		public VecInt4 		(int x, int y);
+		public VecInt4 		(int x, int y, int z, int w);
 		public VecInt4.arr		(int arr[4]);
 		public VecInt4.valist	(va_list varargs);
 		public VecInt4.fill		(int	fill);
