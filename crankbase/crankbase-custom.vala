@@ -382,6 +382,58 @@ namespace Crank {
 	}
 	
 	
+	[CCode (	destroy_function="crank_vec_int_n_fini",
+				free_function="crank_vec_int_n_free"	)]
+	public struct VecIntN {
+		[CCode (array_length_cname="n")]
+		public int[] data;
+		
+		public VecIntN 		(uint n, ...);
+		public VecIntN.arr		([CCode (array_length_pos=0.5)] int[] arr);
+		public VecIntN.valist	(uint n, va_list varargs);
+		public VecIntN.fill		(uint n, int	fill);
+		public VecIntN.from_vb	(VecBoolN	vb);
+		
+		public VecIntN?	copy	();
+		
+		public int			get (uint	index);
+		public void			set (uint	index, int value);
+		
+		public static uint	hash (VecIntN	a);
+		public static bool	equal (VecIntN	a, VecIntN	b);
+		
+		[CCode (cname="crank_vec_int_n_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%d"	);
+		public uint			magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecIntN		neg		();
+		
+		public VecIntN		muls	(	int b	);
+		public VecIntN		divs	(	int	b	);
+		public VecIntN		mods	(	int b	);
+		
+		public VecIntN		add		(	VecIntN b	);
+		public VecIntN		sub		(	VecIntN	b	);
+		public int			dot		(	VecIntN	b	);
+		
+		public VecIntN		cmpmul	(	VecIntN	b	);
+		public VecIntN		cmpdiv	(	VecIntN	b	);
+		public VecIntN		cmpmod	(	VecIntN	b	);
+		
+		public VecBoolN		cmpless	(	VecIntN b	);
+		public VecBoolN		cmpeq	(	VecIntN	b	);
+		public VecBoolN		cmpgreater	(	VecIntN	b	);
+		public VecIntN		cmpcmp	(	VecIntN	b	);
+
+		public VecIntN		min (		VecIntN b	);
+		public VecIntN		max (		VecIntN b	);
+	}
+	
+	
 	public struct VecFloat2 {
 		public float x;
 		public float y;
@@ -435,55 +487,168 @@ namespace Crank {
 	}
 	
 	
-	[CCode (	destroy_function="crank_vec_int_n_fini",
-				free_function="crank_vec_int_n_free"	)]
-	public struct VecIntN {
-		[CCode (array_length_cname="n")]
-		public int[] data;
+	public struct VecFloat3 {
+		public float x;
+		public float y;
+		public float z;
 		
-		public VecIntN 		(uint n, ...);
-		public VecIntN.arr		([CCode (array_length_pos=0.5)] int[] arr);
-		public VecIntN.valist	(uint n, va_list varargs);
-		public VecIntN.fill		(uint n, int	fill);
-		public VecIntN.from_vb	(VecBoolN	vb);
+		public VecFloat3 			(float x, float y, float z);
+		public VecFloat3.arr		(float arr[3]);
+		public VecFloat3.valist		(va_list varargs);
+		public VecFloat3.fill		(int	fill);
+		public VecFloat3.from_vb	(VecBool3	vb);
+		public VecFloat3.from_vi	(VecInt3	vi);
 		
-		public VecIntN?	copy	();
+		public VecFloat3?	copy	();
 		
-		public int			get (uint	index);
-		public void			set (uint	index, int value);
+		public float		get (uint	index);
+		public void			set (uint	index, float value);
 		
-		public static uint	hash (VecIntN	a);
-		public static bool	equal (VecIntN	a, VecIntN	b);
+		public static uint	hash (VecFloat3	a);
+		public static bool	equal (VecFloat3	a, VecFloat3	b);
 		
-		[CCode (cname="crank_vec_int_n_to_string_full")]
+		[CCode (cname="crank_vec_float3_to_string_full")]
 		public string		to_string (	string left		= "(",
 										string @in		= ", ",
 										string right	= ")",
-										string format	= "%d"	);
-		public uint			magn_sq {get;}
+										string format	= "%g"	);
+		public float		magn_sq {get;}
 		public float		magn {get;}
 		
-		public VecIntN		neg		();
+		public VecFloat3		neg		();
+		public VecFloat3		unit	();
 		
-		public VecIntN		muls	(	int b	);
-		public VecIntN		divs	(	int	b	);
-		public VecIntN		mods	(	int b	);
+		public VecFloat3		muls	(	float b	);
+		public VecFloat3		divs	(	float	b	);
 		
-		public VecIntN		add		(	VecIntN b	);
-		public VecIntN		sub		(	VecIntN	b	);
-		public int			dot		(	VecIntN	b	);
+		public VecFloat3		add		(	VecFloat3 	b	);
+		public VecFloat3		sub		(	VecFloat3	b	);
+		public float			dot		(	VecFloat3	b	);
+		public VecFloat3		crs		(	VecFloat3	b	);
 		
-		public VecIntN		cmpmul	(	VecIntN	b	);
-		public VecIntN		cmpdiv	(	VecIntN	b	);
-		public VecIntN		cmpmod	(	VecIntN	b	);
+		public VecFloat3		cmpmul	(	VecFloat3	b	);
+		public VecFloat3		cmpdiv	(	VecFloat3	b	);
 		
-		public VecBoolN		cmpless	(	VecIntN b	);
-		public VecBoolN		cmpeq	(	VecIntN	b	);
-		public VecBoolN		cmpgreater	(	VecIntN	b	);
-		public VecIntN		cmpcmp	(	VecIntN	b	);
+		public VecBool3		cmpless	(	VecFloat3 b	);
+		public VecBool3		cmpeq	(	VecFloat3	b	);
+		public VecBool3		cmpgreater	(	VecFloat3	b	);
+		public VecInt3		cmpcmp	(	VecFloat3	b	);
 
-		public VecIntN		min (		VecIntN b	);
-		public VecIntN		max (		VecIntN b	);
+		public VecFloat3		min (		VecFloat3 b	);
+		public VecFloat3		max (		VecFloat3 b	);
+		
+		public VecFloat3		mixs (		VecFloat3 b, float c	);
+		public VecFloat3		mix (		VecFloat3 b, VecFloat3 c	);
+	}
+	
+	
+	public struct VecFloat4 {
+		public float x;
+		public float y;
+		public float z;
+		public float w;
+		
+		public VecFloat4 			(float x, float y, float z, float w);
+		public VecFloat4.arr		(float arr[4]);
+		public VecFloat4.valist		(va_list varargs);
+		public VecFloat4.fill		(int	fill);
+		public VecFloat4.from_vb	(VecBool4	vb);
+		public VecFloat4.from_vi	(VecInt4	vi);
+		
+		public VecFloat4?	copy	();
+		
+		public float		get (uint	index);
+		public void			set (uint	index, float value);
+		
+		public static uint	hash (VecFloat4	a);
+		public static bool	equal (VecFloat4	a, VecFloat4	b);
+		
+		[CCode (cname="crank_vec_float3_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%g"	);
+		public float		magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecFloat4		neg		();
+		public VecFloat4		unit	();
+		
+		public VecFloat4		muls	(	float b	);
+		public VecFloat4		divs	(	float	b	);
+		
+		public VecFloat4		add		(	VecFloat4 	b	);
+		public VecFloat4		sub		(	VecFloat4	b	);
+		public float			dot		(	VecFloat4	b	);
+		
+		public VecFloat4		cmpmul	(	VecFloat4	b	);
+		public VecFloat4		cmpdiv	(	VecFloat4	b	);
+		
+		public VecBool4		cmpless	(	VecFloat4 b	);
+		public VecBool4		cmpeq	(	VecFloat4	b	);
+		public VecBool4		cmpgreater	(	VecFloat4	b	);
+		public VecInt4		cmpcmp	(	VecFloat4	b	);
+
+		public VecFloat4		min (		VecFloat4 b	);
+		public VecFloat4		max (		VecFloat4 b	);
+		
+		public VecFloat4		mixs (		VecFloat4 b, float c	);
+		public VecFloat4		mix (		VecFloat4 b, VecFloat4 c	);
+	}
+	
+	
+	[CCode (	destroy_function="crank_vec_float_n_fini",
+				free_function="crank_vec_float_n_free"	)]
+	public struct VecFloatN {
+		[CCode (array_length_cname="n")]
+		public float[]	data;
+		
+		public VecFloatN 			(uint	n,	...);
+		public VecFloatN.arr		([CCode (array_length_pos=0)]float arr[]);
+		public VecFloatN.valist		(uint	n, va_list varargs);
+		public VecFloatN.fill		(uint	n, float	fill);
+		public VecFloatN.from_vb	(VecBoolN	vb);
+		public VecFloatN.from_vi	(VecIntN	vi);
+		
+		public VecFloatN?	copy	();
+		
+		public float		get (uint	index);
+		public void			set (uint	index, float value);
+		
+		public static uint	hash (VecFloatN	a);
+		public static bool	equal (VecFloatN	a, VecFloatN	b);
+		
+		[CCode (cname="crank_vec_float_n_to_string_full")]
+		public string		to_string (	string left		= "(",
+										string @in		= ", ",
+										string right	= ")",
+										string format	= "%g"	);
+		public float		magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecFloatN		neg		();
+		public VecFloatN		unit	();
+		
+		public VecFloatN		muls	(	float b	);
+		public VecFloatN		divs	(	float	b	);
+		
+		public VecFloatN		add		(	VecFloatN 	b	);
+		public VecFloatN		sub		(	VecFloatN	b	);
+		public float			dot		(	VecFloatN	b	);
+		
+		public VecFloatN		cmpmul	(	VecFloatN	b	);
+		public VecFloatN		cmpdiv	(	VecFloatN	b	);
+		
+		public VecBoolN		cmpless	(	VecFloatN b	);
+		public VecBoolN		cmpeq	(	VecFloatN	b	);
+		public VecBoolN		cmpgreater	(	VecFloatN	b	);
+		public VecIntN		cmpcmp	(	VecFloatN	b	);
+
+		public VecFloatN		min (		VecFloatN b	);
+		public VecFloatN		max (		VecFloatN b	);
+		
+		public VecFloatN		mixs (		VecFloatN b, float c	);
+		public VecFloatN		mix (		VecFloatN b, VecFloatN c	);
 	}
 	
 	
