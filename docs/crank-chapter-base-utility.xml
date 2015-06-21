@@ -6,10 +6,11 @@
 ]>
 <section>
 	<para>
-	Crank System은 기본적인 작업을 편히 하기 위한 매크로와 함수를 제공하며,
-	내부적으로도 해당 매크로와 유틸리티 함수들을 사용합니다.
+	Crank System defines several macros and functions to ease basic and frequent
+	tasks. Crank System primarily uses these utilities for itself, but they may
+	also be useful for other libraries and applications.
 	</para>
 	<para>
-	해당 함수의 설명은 각 섹션을 참고하기 바랍니다.
+	For details, please refer to each sections.
 	</para>
 </section>

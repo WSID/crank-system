@@ -19,23 +19,24 @@
 
 /**
  * SECTION: crankvalue
- * @short_description: GValue을 사용하기 위한 함수 모음입니다.
- * @title: GValue 사용 유틸리티
+ * @title: GValue Utility
+ * @short_description: Utility function to manipulate GValues
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 이 섹션의 함수 목록은 #GValue을 취급하기 위한 함수들의 목록입니다.
+ * The functions defined here are used to manipulate #GValue, which
+ * Crank System uses frequently.
  *
- * #GValue은 사용에 앞서 초기화를 해주어야 합니다. 이 함수들은 이러한 과정을
- * 수행하여, 번거로움을 감소시킵니다.
+ * #GValue needs to be initialized before use. Functions in this section 
+ * initializes and sets values at once, for convenience.
  *
- * Crank System은 두 부류의 함수를 제공합니다.
+ * Crank System provides two kind of functions.
  *
- * * 단일의 #GValue를 조작하는 함수들.
- * * #GValue의 C 배열을 조작하는 함수들.
+ * * Manipulates single #GValue.
+ * * Manipulates an array of #GValue
  *
- * 이 함수들은 C/C++에서 사용하기 위해 만들어 졌습니다. Vala나 pyGObject등에서는
- * 각각 지원 기능이 있으므로 해당 기능을 사용하기 바랍니다.
+ * These functions are meant to be used in C. In other language, use each of
+ * support functions.
  */
 
 #define _CRANKBASE_INSIDE
@@ -48,10 +49,10 @@
 
 /**
  * crank_value_overwrite_init: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @type: 설정할 타입입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @type: Type to initialize value.
  *
- * 값을 초기화하고 기타 자원들을 해제한 후, 해당 @type으로 초기화합니다.
+ * Unset @value if it holds value, and re-initialize it with @type.
  */
 void
 crank_value_overwrite_init	(	GValue*		value,
@@ -64,10 +65,11 @@ crank_value_overwrite_init	(	GValue*		value,
 
 /**
  * crank_value_overwrite: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @from: @value의 값으로 설정할 GValue입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @from: GValue to copy
  *
- * @value의 값을 @from의 값으로 설정합니다.
+ * Unset @value if it holds value, and initialize it with type of @from, and
+ * copy value of @from onto @value.
  */
 void
 crank_value_overwrite (	GValue*			value,
@@ -83,10 +85,10 @@ crank_value_overwrite (	GValue*			value,
 
 /**
  * crank_value_overwrite_boolean: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @bool_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @bool_value: boolean value to set @value.
  *
- * @value의 값을 해당 #gboolean의 값으로 설정합니다.
+ * Overwrites boolean value to @value.
  */
 void
 crank_value_overwrite_boolean (	GValue*			value,
@@ -98,10 +100,10 @@ crank_value_overwrite_boolean (	GValue*			value,
 
 /**
  * crank_value_overwrite_int: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @int_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @int_value: int value to set @value.
  *
- * @value의 값을 해당 #gint의 값으로 설정합니다.
+ * Overwrites integer value to @value.
  */
 void
 crank_value_overwrite_int (	GValue*			value,
@@ -113,10 +115,10 @@ crank_value_overwrite_int (	GValue*			value,
 
 /**
  * crank_value_overwrite_string: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @str_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @str_value: string value to set @value.
  *
- * @value의 값을 해당 문자열로 설정합니다.
+ * Overwrites string value to @value.
  */
 void
 crank_value_overwrite_string (	GValue*			value,
@@ -128,10 +130,10 @@ crank_value_overwrite_string (	GValue*			value,
 
 /**
  * crank_value_overwrite_object: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @obj_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite
+ * @obj_value: #GObject value to set @value.
  *
- * @value의 값을 해당 #GObject로 설정합니다.
+ * Overwrites #GObject value to @value.
  */
 void
 crank_value_overwrite_object (	GValue*		value,
@@ -143,12 +145,12 @@ crank_value_overwrite_object (	GValue*		value,
 
 /**
  * crank_value_overwrite_boxed: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @value_type: @value에 설정할 타입입니다.
- * @boxed_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite.
+ * @value_type: GType of @boxed_value.
+ * @boxed_value: Boxed value to set @value.
  *
- * @value의 값을 해당 @boxed_value로 설정합니다. boxed type들은 자체적으로 타입
- * 정보를 가지지 않기 때문에 @value_type이 제공되어야 합니다.
+ * Overwrites boxed value to @value. As boxed type does not hold type
+ * information by itself, GType should be provided.
  */
 void
 crank_value_overwrite_boxed (	GValue*			value,
@@ -163,11 +165,13 @@ crank_value_overwrite_boxed (	GValue*			value,
 
 /**
  * crank_value_overwrite_pointer: (skip)
- * @value: (out caller-allocates): 설정할 GValue입니다.
- * @value_type: @pointer_value의 타입입니다.
- * @pointer_value: @value에 설정할 값입니다.
+ * @value: (out caller-allocates): GValue to overwrite.
+ * @value_type: GType of @pointer_value.
+ * @pointer_value: pointer to set @value.
  *
- * @value의 값을 해당 @pointer_value로 설정합니다.
+ * Overwrites pointer to @value. Generally you can pass %G_TYPE_POINTER to
+ * @value_type. You can pass other G_TYPE_POINTER derived type to mark @value
+ * holds other pointer type.
  */
 void
 crank_value_overwrite_pointer (	GValue*			value,
@@ -181,12 +185,11 @@ crank_value_overwrite_pointer (	GValue*			value,
 
 /**
  * crank_value_array_overwrite: (skip)
- * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
- * @nitem: @array에 덮어쓸 #GValue의 개수입니다.
- * @...: (type GValue): @array에 덮어쓸 #GValue입니다.
+ * @array: (array length=nitem) (out caller-allocates): array of GValue to overwrite.
+ * @nitem: Number of items to overwrite on @array
+ * @...: (type GValue): variadic arguments of GValue to copy.
  *
- * 주어진 #GValue들을 배열위에 덮어씁니다.
- * 함수의 입력으로 들어온 #GValue들을 배열로 전환할 때 사용합니다.
+ * Copies GValue from variadic arguments to array.
  */
 void
 crank_value_array_overwrite (	GValue*		array,
@@ -205,12 +208,12 @@ crank_value_array_overwrite (	GValue*		array,
 
 /**
  * crank_value_array_overwrite_va: (skip)
- * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
- * @nitem: @array에 덮어쓸 개수입니다.
- * @varargs: @array에 덮어쓸 #GValue입니다.
+ * @array: (array length=nitem) (out caller-allocates): array of GValue to overwrite.
+ * @nitem: Number of items to overwrite on @array
+ * @varargs: va_list of GValue to copy
  *
- * 주어진 #GValue들을 배열위에 덮어씁니다.
- * 함수의 입력으로 들어온 #GValue들을 배열로 전환할 때 사용합니다.
+ * Cpoies GValue from va_list to array. This function is used to
+ * convert va_list into array.
  */
 void
 crank_value_array_overwrite_va (GValue*		array,
@@ -225,11 +228,11 @@ crank_value_array_overwrite_va (GValue*		array,
 
 /**
  * crank_value_array_overwrite_array: (skip)
- * @array: (out caller-allocates): 설정할 #GValue 배열입니다.
- * @nitem: @array에 덮어쓸 개수입니다.
- * @other: (array length=nitem): @array에 덮어 쓸 배열입니다.
+ * @array: (array length=nitem) (out caller-allocates): array of GValue to overwrite.
+ * @nitem: Number of items to overwrite on @array
+ * @other: (array length=nitem): array of GValue to copy.
  *
- * @other의 @nitem개의 내용을 @array에 덮어씁니다.
+ * Copies array of GValue to other array.
  */
 void
 crank_value_array_overwrite_array ( GValue*	array,
@@ -243,10 +246,10 @@ crank_value_array_overwrite_array ( GValue*	array,
 
 /**
  * crank_value_array_unset: (skip)
- * @array: (array length=narray): 해제할 #GValue 입니다.
- * @narray: @array의 길이입니다.
+ * @array: (array length=narray): array of GValues to unset.
+ * @narray: length of @array.
  *
- * 주어진 #GValue 배열을 해제합니다.
+ * Unsets each #GValue of @array.
  */
 void
 crank_value_array_unset (	GValue*	array,

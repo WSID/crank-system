@@ -26,33 +26,39 @@
 
 /**
  * SECTION:crankbasemacro
- * @title: Crank System 기본 매크로
- * @short_description: 기본적인 동작들을 매크로로 정의합니다.
+ * @title: Crank System Basic Macros
+ * @short_description: Defines macros for basic actinos
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 이 섹션에서는 Crank System 에서 쓰이는 보조적인 매크로들을 정의합니다.
+ * This section defines utility macros that used in Crank System.
  *
- * 현재 Crank System은 다음의 매크로를 제공합니다.
+ * Currently, Crank System provides following macros.
  *
- * - 배열 작업
- * - 간편한 반복작업
+ * - Operations on Arrays.
+ * - Iteration macros.
  *
  *
- * # 배열 작업
+ * # Operations on Arrays.
  *
- * 배열에 대한 작업을 간소하게 하기 위한 소정의 매크로를 제공합니다.
+ * Macros are provided for simplified oprations involved with arrays.
  * 
- * # 간편한 반복작업
+ * # Iteration macros
  *
- * 특정 목록이나 배열에 대해 반복 작업을 수행해야 하는 일이 잦습니다. 이때, loop를
- * 보다 간편하게 작성할 수 있도록 도움을 줍니다. 
+ * There are so many time to iterate over something. The macros defined here
+ * helps iterate over them.
+ * 
+ * The macros are fall into two category.
  *
- * 짧은 loop로 확장되는 매크로가 있는 반면 (예: #CRANK_FOREACH_VALIST_DO), 긴
- * loop를 구성할 때 처음과 끝을 표시하는 매크로도 있습니다.
+ * * BEGIN and END
+ * * DO
+ *
+ * BEGIN and END macros are paired macro, marking start and end of loop.
+ *
+ * DO macro receives BLOCK parameter so it expands a loop that executes BLOCK.
  *
  * <example>
- *   <title>가변인자로 들어온 #gint들을 더합니다.</title>
+ *   <title>Getting sum of #gint from variadic arguments.</title>
  *   <programlisting language="C">
  *		gint sum (gint first, ...) {
  *			gint result = first;
@@ -65,7 +71,7 @@
  * </example>
  
  * <example>
- *   <title>가변인자로 들어온 #gint들을 더합니다.</title>
+ *   <title>Getting sum of #gint from variadic arguments.</title>
  *   <programlisting language="C">
  *		gint sum (gint first, ...) {
  *			gint result = first;
@@ -84,54 +90,58 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_ARRAY_DUP:
- * @a: 배열입니다.
- * @G: 배열의 구성형입니다.
- * @l: 배열의 길이입니다.
+ * @a: Array to duplicate.
+ * @G: Type of elements.
+ * @l: Length of @a.
  *
- * 배열을 g_memdup()을 사용하여 복사합니다.
+ * Duplicates an array using g_memdup().
  *
- * Returns: (transfer container): 복사된 배열입니다. 사용 후 g_free()로 해제하여야
- *  합니다.
+ * Returns: (transfer container): Copied array. Free by g_free() after use.
  */
 #define CRANK_ARRAY_DUP(a, G, l) ((G*)g_memdup ((a), l * sizeof (G)))
 
 /**
  * CRANK_ARRAY_CMP:
- * @a: 배열입니다.
- * @b: 배열입니다.
- * @G: 배열의 구성형입니다.
- * @n: 배열의 갯수입니다.
+ * @a: Array to compare.
+ * @b: Array to compare.
+ * @G: Type of elements.
+ * @n: Length of @a and @b.
  *
- * 같은 크기의 배열을 <function>memcmp</function>을 이용하여 비교합니다.
+ * Compares same sized array using <function>memcmp</function>.
  *
- * Returns: (type gint): 비교 결과입니다.
+ * Returns: (type gint): Comparsion result.
  */
 #define CRANK_ARRAY_CMP(a, b, G, n) (memcmp((a), (b), (n) * sizeof (G)))
 
 /**
  * CRANK_ARRAY_ADD:
- * @T: 타입입니다.
- * @a: (array length=n) (type T): 값을 추가할 배열입니다.
- * @n: 배열이 가지고 있는 항목의 개수입니다. (배열의 유효한 길이)
- * @c: 배열이 할당된 길이입니다.
- * @I: (type T): 배열에 추가될 항목입니다.
+ * @T: Type of array.
+ * @a: (array length=n): Array to add element.
+ * @n: Item count of @a. (Valid length of @a)
+ * @c: allocated length of @a.
+ * @I: (type T): Item to append.
  *
- * 배열에 항목을 추가합니다. 만일 배열의 개수가 할당량을 넘어가는 경우, 배열은
- * g_renew()을 통해 재 할당됩니다.
+ * Note:
+ * #GArray and #GPtrArray provides more convinient functions and macros to
+ * manipulate. You are advised to use them, rather than using triplet of pointer,
+ * length, alloc-size.
+ *
+ * Append item in array. If allocation size is sufficient, then reallocates
+ * array by g_renew()
  */
 #define CRANK_ARRAY_ADD(T, a, n, c, I) \
 	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
 
 /**
  * CRANK_FOREACH_ARRAY_BEGIN:
- * @a: (array length=l): 각 항목에 대해 loop를 반복할 배열
- * @G: 각 항목의 형 (type)입니다.
- * @e: 각 항목의 이름입니다.
- * @l: @a의 길이입니다.
+ * @a: (array length=l): Array to iterate over.
+ * @G: Type of elements.
+ * @e: name of iteration variable (element).
+ * @l: length of @a.
  *
- * 배열의 각 항목에 대해 반복하는 loop를 구성합니다.
+ * Marks begin of loop that iterate over an array.
  *
- * #CRANK_FOREACH_ARRAY_END로 끝을 표시합니다.
+ * Mark end with #CRANK_FOREACH_ARRAY_END
  */
 #define CRANK_FOREACH_ARRAY_BEGIN(a, G, e, l) \
 	{   int _crank_macro_i; \
@@ -141,20 +151,20 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_ARRAY_END:
  * 
- * %CRANK_FOREACH_ARRAY_BEGIN의 끝을 표시합니다.
+ * Marks end of loop from %CRANK_FOREACH_ARRAY_BEGIN
  */
 #define CRANK_FOREACH_ARRAY_END \
 	} }
 
 /**
  * CRANK_FOREACH_ARRAY_DO:
- * @a: (array length=l): 각 항목에 대해 loop를 반복할 배열
- * @G: 각 항목의 형 (type)입니다.
- * @e: 각 항목의 이름입니다.
- * @l: @a의 길이입니다.
- * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ * @a: (array length=l): Array to iterate over.
+ * @G: Type of elements.
+ * @e: Name of iteration variable (element).
+ * @l: length of @a.
+ * @BLOCK: Content of the loop.
  *
- * 배열에 각 항목에 대해 @BLOCK을 수행합니다.
+ * Iterate over @a with @BLOCK
  */
 #define CRANK_FOREACH_ARRAY_DO(a, G, e, l, BLOCK) \
 	CRANK_FOREACH_ARRAY_BEGIN (a, G, e, l) \
@@ -165,15 +175,15 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_VALIST_BEGIN:
- * @va: 각 항목에 대해 loop를 반복할 va_list
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 항목의 이름입니다.
- * @f: 마지막을 표시하는 값입니다.
+ * @va: va_list to iterate over.
+ * @G: Type of elements.
+ * @e: Name of iteration variable (element).
+ * @f: End marker for @va.
  *
- * 주어진 <structname>va_list</structname>의 각각에 항목에 대해 반복하는 loop를
- * 구성합니다.
+ * Mark begin of loop that iterate over @va.
+ * The loop will iterate till it gets @f.
  *
- * #CRANK_FOREACH_VALIST_END로 끝을 표시합니다.
+ * Mark end with #CRANK_FOREACH_VALIST_END.
  */
 #define CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
     do { \
@@ -184,7 +194,7 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_VALIST_END:
  *
- * %CRANK_FOREACH_VALIST_BEGIN의 끝을 지정합니다.
+ * Marks end of %CRANK_FOREACH_VALIST_BEGIN.
  */
 #define CRANK_FOREACH_VALIST_END \
     } while (TRUE);
@@ -192,13 +202,13 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_VALIST_DO:
- * @va: 각 항목에 대해 loop를 반복할 va_list
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 항목의 이름입니다.
- * @f: 마지막을 표시하는 값입니다.
- * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ * @va: va_list to iterate over.
+ * @G: Type of elements.
+ * @e: Name of iteration variable. (element)
+ * @f: End marker for @va.
+ * @BLOCK: Content of the loop.
  *
- * 주어진 <structname>va_list</structname>의 각각 항목에 대해 @BLOCK을 수행합니다.
+ * Iterates over @va with @BLOCK.
  */
 #define CRANK_FOREACH_VALIST_DO(va, G, e, f, BLOCK) \
 	CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
@@ -210,14 +220,14 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_VARARG_BEGIN:
- * @param_last: 마지막 고정인자 이름입니다.
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 각 항목의 이름입니다.
- * @f: 마지막을 표시하는 값입니다.
+ * @param_last: Last fixed element of current function.
+ * @G: Type of elements.
+ * @e: Name of iteration variable. (element)
+ * @f: End marker for @va.
  *
- * 함수에 주어진 가변 인자 각각에 대해 반복하는 loop를 구성합니다.
+ * Marks begin of loop that iterates over variadic arguments of current function.
  *
- * %CRANK_FOREACH_VARARG_END로 끝을 지정합니다.
+ * Mark end with %CRANK_FOREACH_VARARG_END.
  */
 #define CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
     { \
@@ -228,7 +238,7 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_VARARG_END:
  *
- * %CRANK_FOREACH_VARARG_BEGIN의 끝을 지정합니다.
+ * Marks end of %CRANK_FOREACH_VARARG_BEGIN.
  */
 #define CRANK_FOREACH_VARARG_END \
       CRANK_FOREACH_VALIST_END \
@@ -238,13 +248,13 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_VARARG_DO:
- * @param_last: 현재 함수의 마지막 고정 인자 이름입니다.
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 각 항목의 이름입니다.
- * @f: 마지막을 표시하는 값입니다.
- * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ * @param_last: Last fixed element of current function.
+ * @G: Type of elements.
+ * @e: Name of iteration variable. (element)
+ * @f: End marker for @va.
+ * @BLOCK: Content of loop..
  *
- * 현재 함수의 가변 인자의 각각 항목에 대해 @BLOCK을 수행합니다.
+ * Iterates over variadic arguments with @BLOCK.
  */
 #define CRANK_FOREACH_VARARG_DO(param_last, G, e, f, BLOCK) \
 	CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
@@ -254,11 +264,13 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_GLIST_BEGIN:
- * @l: 반복할 GList입니다.
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 각 항목의 이름입니다.
+ * @l: #GList to iterate over.
+ * @G: Type of element.
+ * @e: Name of iteration variable. (element)
  *
- * #GList에 대해 반복하는 루프의 시작을 표시합니다.
+ * Marks begin of loop that iterates over a #GList.
+ *
+ * Mark end with %CRANK_FOREACH_GLIST_END
  */
 #define CRANK_FOREACH_GLIST_BEGIN(l, G, e) \
 	{ \
@@ -271,7 +283,7 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_GLIST_END:
  *
- * %CRANK_FOREACH_GLIST_BEGIN로 표시한 루프의 끝을 지정합니다.
+ * Marks end of %CRANK_FOREACH_GLIST_BEGIN.
  */
 #define CRANK_FOREACH_GLIST_END \
 		} \
@@ -279,12 +291,12 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_GLIST_DO:
- * @l: 반복할 GList입니다.
- * @G: 각 항목의 형 (type) 입니다.
- * @e: 각 항목의 이름입니다.
- * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ * @l: #GList to iterate over.
+ * @G: Type of element.
+ * @e: Name of iteration variable. (element)
+ * @BLOCK: Contents of the loop.
  *
- * GList의 각 항목에 대해 @BLOCK을 수행합니다.
+ * Iterates over a #GList with @BLOCK.
  */
 #define CRANK_FOREACH_GLIST_DO(l, G, e, BLOCK) \
 	CRANK_FOREACH_GLIST_BEGIN (l, G, e) \
@@ -294,13 +306,13 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_BEGIN:
- * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
- * @G: 각 항목의 형(type)입니다.
- * @e: 각 항목의 이름입니다.
+ * @arr: (type GPtrArray): #GPtrArray to iterate over.
+ * @G: Type of element.
+ * @e: Name of iteration variable. (element)
  *
- * 주어진 #GPtrArray의 각 항목에 대해 루프를 수행합니다.
+ * Marks begin of loop that iterates over #GPtrArray.
  *
- * 루프의 끝은 %CRANK_FOREACH_ARRAY_END로 지정합니다.
+ * Mark end with %CRANK_FOREACH_ARRAY_END.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
 	CRANK_FOREACH_ARRAY_BEGIN((arr)->pdata, gpointer, _crank_macro_ptr, (arr)->len) \
@@ -309,19 +321,19 @@ G_BEGIN_DECLS
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_END:
  *
- * %CRANK_FOREACH_G_PTR_ARRAY_BEGIN으로 시작된 루프의 끝을 지정합니다.
+ * Marks end of %CRANK_FOREACH_G_PTR_ARRAY_BEGIN.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_END \
 	CRANK_FOREACH_ARRAY_END
 
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_DO:
- * @arr: (type GPtrArray): 내용을 수행할 #GPtrArray입니다.
- * @G: 각 항목의 형(type)입니다.
- * @e: 각 항목의 이름입니다.
- * @BLOCK: 항목에 대해 반복되어 실행될 코드입니다.
+ * @arr: (type GPtrArray): #GPtrArray to iterate over.
+ * @G: Type of element.
+ * @e: Name of iteration variable. (element)
+ * @BLOCK: Content of loop.
  *
- * 주어진 #GPtrArray의 각 항목에 대해 주어진 코드를 실행합니다.
+ * Iterates over a #GPtrArray, with @BLOCK.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_DO(arr, G, e, BLOCK) \
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \

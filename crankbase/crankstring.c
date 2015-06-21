@@ -29,37 +29,37 @@
 
 /**
  * SECTION: crankstring
- * @title: 문자열 조작 유틸리티
- * @short_description: 문자열 조작을 위한 유틸리티 함수들
+ * @title: Simple String Reading
+ * @short_description: Utility for String read and manipulation.
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 간단히 문자열을 조작하거나 읽어들이기 위한 함수 모음입니다.
+ * The functions provides simple function to read data from string.
  *
- * Parsing 등과 같은 복잡한 문자열 관련 기능은 해당 기능을 제공하는
- * 라이브러리에서 수행해야 합니다.
+ * For complex string functions like parsing, Libraries that provides these
+ * function should be consulted.
  * 
- * python등과 같은 언어에서는 되도록이면 해당 언어에서 제공하는 기능을 사용하는
- * 것이 좋습니다.
+ * If possible, when using other language like python, use their own string
+ * functions rather than using this functions.
  *
- * # 문자열 읽어들이기
+ * # Reading string.
  *
- * crankbase.h는 문자열을 읽어들이고 값을 간단히 읽어올 수 있는 함수들을 가지고
- * 있습니다. 현재 문자열을 읽어들이는 함수는 3개로 구분되어 있습니다.
+ * crankbase.h has simple functions to read string and retrieve their value.
+ * Currently, these functions are in 3 groups.
  *
  *
- * 1. read 계열
+ * 1. read family.
  *
- *    이 함수들은 문자열을 주어진 위치에서 읽어들입니다. read 계열과 scan 계열은
- *    처리를 위해 gboolean을 반환하며, 실질적인 값은 out parameter를 통해 전달
- *    됩니다.
+ *    The function reads string in given position. read and scan families 
+ *    returns gboolean for iterated processing. Actual values are returned
+ *    through out parameters.
  *    |[ <-- language="C" --!>
  *        gboolean      read_[something] (  const gchar* str,
  *                                          guint* pos,
  *                                          something* stn [, 함수별 추가 항목]);
  *    ]|
  *
- *    이에 다음과 같이 사용 가능합니다.
+ *    They can be used like this.
  *    |[ <-- language="C" --!>
  *        crank_str_read_space (str, &i, NULL);
  *        if (! crank_str_read_word (str, &i, &amp;word_a)) return NULL;
@@ -72,18 +72,16 @@
  *        ....
  *    ]|
  *
- * 2. scan 계열
+ * 2. scan family.
  *
- *    이 함수들은 문자열을 공백을 건너뛰고 읽어들입니다. 공백 처리를 생략하므로
- *    crank_str_read_space()를 생략할 수 있습니다. 다음의 형식으로 구성되어
- *    있습니다.
+ *    These functions skips spaces before reading string. 
  *    |[ <-- language="C" --!>
  *        gboolean      scan_[something] (  const gchar* str,
  *                                          guint* pos,
  *                                          something* stn [, 함수별 추가 항목]);
  *    ]|
  *
- *    위 항목을 다음과 같이 사용할 수 있습니다.
+ *    They can be used like this.
  *    |[ <-- language="C" --!>
  *        if (! crank_str_scan_word (str, &i, &word_a)) return NULL;
  *
@@ -94,12 +92,12 @@
  *        ....
  *    ]|
  *
- * 3. check 계열
+ * 3. check family
  *
- *    이 함수들은 문자열에서 주어진 항목을 가지고 있는지 확인합니다. 공백 처리를
- *    생략하며, 일부 여러개를 확인하는 함수들은 #gboolean외에 다른 값을 반환할
- *    수 있습니다.
- *    다음의 형식으로 이루어져 있습니다.
+ *    The functions will check that certain item is on the string. It skips
+ *    spaces before reading.
+ *    Some function might return other type rather than #gboolean, if it checks
+ *    multiple items.
  *    |[ <-- language="C" --!>
  *        gboolean      check_[something] ( const gchar* str,
  *                                          guint* pos,
@@ -116,13 +114,13 @@
 
 /**
  * crank_str_read_space:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @space: (out) (optional): 공백 기호의 개수입니다.
+ * @str: string to read.
+ * @position: (inout): position.
+ * @space: (out) (optional): count of space characters.
  *
- * 공백을 읽어들이고 @position을 공백이 아닌 위치로 옮깁니다.
+ * Reads @str for space and moves @position into the non-space character.
  *
- * Returns: 공백이 존재하면 %TRUE입니다.
+ * Returns: %TRUE if there is a space.
  */
 gboolean
 crank_str_read_space (	const gchar*		str,
@@ -145,14 +143,14 @@ crank_str_read_space (	const gchar*		str,
 
 /**
  * crank_str_read_word:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @word_ptr: (nullable) (optional) (out): 읽어들인 단어입니다. 단어를 읽지
- * 못하면 %NULL이 저장됩니다. 저장된 단어는 g_free()로 해제하면 됩니다.
+ * @str: string to read.
+ * @position: (inout): position.
+ * @word_ptr: (nullable) (optional) (out): Read word. If it cannot read, %NULL
+ *        will be returned. free with g_free() after use.
  *
- * 단어을 읽어들이고 @position을 단어가 아닌 위치로 옮깁니다.
+ * Reads @str and moves position into non-word character.
  *
- * Returns: 단어를 읽어들였으면 %TRUE입니다.
+ * Returns: %TRUE if it read a word.
  */
 gboolean
 crank_str_read_word (	const gchar*		str,
@@ -180,15 +178,15 @@ crank_str_read_word (	const gchar*		str,
 
 /**
  * crank_str_scan_word:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @word_ptr: (nullable) (optional) (out): 읽어들인 단어입니다. 단어를 읽지
- * 못하면 %NULL이 저장됩니다. 저장된 단어는 g_free()로 해제하면 됩니다.
+ * @str: String to scan.
+ * @position: (inout): position.
+ * @word_ptr: (nullable) (optional) (out): Scanned word. If it cannot read,
+ *        %NULL will be stored. free with g_free() after use.
  *
- * 단어을 읽어들이고 @position을 단어가 아닌 위치로 옮깁니다.
- * 공백은 자동으로 생략합니다.
+ * Reads @str and moves position into non-word character. Skips space before
+ * it reads.
  *
- * Returns: 단어를 읽어들였으면 %TRUE입니다.
+ * Returns: %TRUE if it read a word.
  */
 gboolean
 crank_str_scan_word (	const gchar*		str,
@@ -213,15 +211,15 @@ crank_str_scan_word (	const gchar*		str,
 
 /**
  * crank_str_scan_char:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @char_ptr: (type gchar) (optional) (out): 읽어들인 문자입니다. 문자를 읽지
- * 못하면 '\0'이 저장됩니다.
+ * @str: String to scan.
+ * @position: (inout): position.
+ * @char_ptr: (type gchar) (optional) (out): Scanned char. If it cannot read,
+ *        '\0' will be stored.
  *
- * 문자를 읽어들이고 그 다음 위치로 이동합니다.
- * 공백은 건너 뜁니다.
+ * Reads @str and moves position into next character. Skips space before
+ * it reads.
  *
- * Returns: 문자를 읽어들이지 못하면 %FALSE
+ * Returns: %TRUE if it reads a non-space character.
  */
 gboolean
 crank_str_scan_char (	const gchar*		str,
@@ -249,14 +247,14 @@ crank_str_scan_char (	const gchar*		str,
 
 /**
  * crank_str_check_char:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @check_item: 확인할 문자입니다.
+ * @str: String to check.
+ * @position: (inout): position.
+ * @check_item: item to check.
  *
- * 다음 문자가 @check_item인지 확인합니다.
- * 공백은 건너 뜁니다.
+ * Checks next character is @check_item and moves @position to next if it is.
+ * Skips space before it reads.
  *
- * Returns: 읽어들인 문자가 일치하지 않으면 %FALSE
+ * Returns: Whether the scanned character is equal to check_item.
  */
 gboolean
 crank_str_check_char (	const gchar*		str,

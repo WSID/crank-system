@@ -42,12 +42,13 @@ typedef struct _CrankDigraphEdgeIndex	CrankDigraphEdgeIndex;
 
 /**
  * CrankDigraphEdgeIndex:
- * @data: 변의 값니다.
- * @tail: 꼬리 정점의 인덱스입니다.
- * @head: 머리 정점의 인덱스입니다.
+ * @data: Value of data.
+ * @tail: Index of tail node.
+ * @head: Index of head node.
  *
- * 정수로 순서가 붙은 정점에 대한 변의 표현입니다.
- * 정점에 순서가 매겨지는 생성자에서 사용됩니다.
+ * A structure to specify value of edge, in digraph constructor.
+ *
+ * As nodes are not available on construction, nodes are specified by indices.
  */
 struct _CrankDigraphEdgeIndex {
 	GValue		data;
@@ -59,12 +60,12 @@ struct _CrankDigraphEdgeIndex {
 
 /**
  * CrankDigraphNodeFunc:
- * @node: 노드입니다.
- * @userdata: (closure): 유저 데이터입니다.
+ * @node: A node.
+ * @userdata: (closure): Userdata.
  *
- * 그래프에서 노드에 대해 반복할 때 사용하는 함수입니다.
+ * A function type for iterating over nodes.
  *
- * Returns: 반복을 계속하기 위해 %TRUE를 사용합니다.
+ * Returns: Return %TRUE to keep iteration.
  */
 typedef	gboolean	(*CrankDigraphNodeFunc)		(		CrankDigraphNode*	node,
 														gpointer			userdata	);

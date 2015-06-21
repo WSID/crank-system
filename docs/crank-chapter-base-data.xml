@@ -6,24 +6,50 @@
 ]>
 <section>
 	<para>
-	Crank System은 여러 데이터 구조를 정의합니다.
-	</para>
-	<para>
-	Crank System에서 제공되는 벡터는 다양합니다.
+	Crank System defines various data structures, which are useful for game.
 	
-	먼저 타입별로 보면 다음과 같이 구분될 수 있습니다.
+	<itemizedlist>
+		<listitem>Vectorized types</listitem>
+		<listitem>Matrix types</listitem>
+		<listitem>Graph types</listitem>
+	</itemizedlist>
+	</para>
+	
+	<para>
+	Crank System provides vector types. Each vector types are matched into
+	following types.
+	
 	<itemizedlist>
 		<listitem>
 			<link linkend="crank-Boolean-vector">CrankVecBool</link>:
 			<link linkend="gboolean">gboolean</link></listitem>
+		<listitem>
+			<link linkend="crank-Integer-vectors.">CrankVecInt</link>:
+			<link linkend="gboolean">gint</link></listitem>
+		<listitem>
+			<link linkend="crank-Float-vectors.">CrankVecFloat</link>:
+			<link linkend="gboolean">gfloat</link></listitem>
 	</itemizedlist>
 	
-	또한 성분별로 보면 다음과 같이 구분될 수 있습니다.
+	Every vector types defined here can be categorized by 4 groups.
+	
 	<itemizedlist>
-	<listitem>고정크기 2차 벡터</listitem>
-	<listitem>고정크기 3차 벡터</listitem>
-	<listitem>고정크기 4차 벡터</listitem>
-	<listitem>가변크기 벡터</listitem>
+	<listitem>Fixed 2 sized vector</listitem>
+	<listitem>Fixed 3 sized vector</listitem>
+	<listitem>Fixed 4 sized vector</listitem>
+	<listitem>Variable sized vector</listitem>
 	</itemizedlist>
+	</para>
+	
+	<para>
+	Crank System also provides graph data structure.
+	
+	Crank System currently provides only
+	<link linkend="crank-CrankDigraph">Digraph</link> for now.
+	
+	Also, Crank System also provides advanced operations on graphs, not only
+	data structures.
+	
+	Currently Crank System provides dijkstra, a* with customizable cost functions on graphs.
 	</para>
 </section>

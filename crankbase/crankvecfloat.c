@@ -64,6 +64,9 @@
  *    * Component division
  *    * Component comparsion
  *    * minimum/maximum
+ * * Ternary Operation
+ *    * mixing by scalar.
+ *    * Component mixing by vecfloat.
  */
 
 

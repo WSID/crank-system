@@ -31,10 +31,10 @@ G_BEGIN_DECLS
 
 /**
  * CrankVecBool2:
- * @x: 벡터의 첫번째 원소입니다.
- * @y: 벡터의 두번째 원소입니다.
+ * @x: First vector element.
+ * @y: Second vector element.
  *
- * 부울 벡터입니다. bvec2에 대응됩니다.
+ * Represents a boolean vector. Compared to bvec2 in GLSL.
  */
 typedef struct _CrankVecBool2 {
 	gboolean	x;
@@ -47,28 +47,28 @@ GType			crank_vec_bool2_get_type	(void);
 /**
  * CRANK_VEC_BOOL2_FALSE:
  *
- * 모든 원소가 %FALSE입니다.
+ * Initialization list that all elements are %FALSE.
  */
 #define CRANK_VEC_BOOL2_FALSE	{FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL2_TRUE:
  *
- * 모든 원소가 %TRUE입니다.
+ * Initialization list that all elements are %TRUE.
  */
 #define CRANK_VEC_BOOL2_TRUE	{TRUE, TRUE}
 
 /**
  * CRANK_VEC_BOOL2_I:
  *
- * x 원소만 %TRUE입니다.
+ * Initialization list that only first vector element is %TRUE
  */
 #define CRANK_VEC_BOOL2_I		{TRUE, FALSE}
 
 /**
  * CRANK_VEC_BOOL2_J:
  *
- * y 원소만 %TRUE입니다.
+ * Initialization list that only second vector element is %TRUE
  */
 #define CRANK_VEC_BOOL2_J		{FALSE, TRUE}
 
@@ -145,11 +145,11 @@ gchar*			crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
 
 /**
  * CrankVecBool3:
- * @x: 벡터의 첫번째 원소입니다.
- * @y: 벡터의 두번째 원소입니다.
- * @z: 벡터의 세번째 원소입니다.
+ * @x: First vector element.
+ * @y: Second vector element.
+ * @z: Third vector element.
  *
- * 부울 벡터입니다. bvec3에 대응됩니다.
+ * Represents a boolean vector. Compared to bvec3 in GLSL.
  */
 typedef struct _CrankVecBool3 {
 	gboolean	x;
@@ -163,35 +163,35 @@ GType			crank_vec_bool3_get_type	(void);
 /**
  * CRANK_VEC_BOOL3_FALSE:
  *
- * 모든 성분을 거짓으로 가집니다.
+ * Initialization list that all elements are %FALSE.
  */
 #define CRANK_VEC_BOOL3_FALSE	{FALSE, FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL3_TRUE:
  *
- * 모든 성분을 참으로 가집니다.
+ * Initialization list that all elements are %TRUE.
  */
 #define CRANK_VEC_BOOL3_TRUE	{TRUE, TRUE, TRUE}
 
 /**
  * CRANK_VEC_BOOL3_I:
  *
- * x성분을 참으로 가집니다.
+ * Initialization list that only first vector element is %TRUE
  */
 #define CRANK_VEC_BOOL3_I		{TRUE, FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL3_J:
  *
- * y성분을 참으로 가집니다.
+ * Initialization list that only second vector element is %TRUE
  */
 #define CRANK_VEC_BOOL3_J		{FALSE, TRUE, FALSE}
 
 /**
  * CRANK_VEC_BOOL3_K:
  *
- * z성분을 참으로 가집니다.
+ * Initialization list that only third vector element is %TRUE
  */
 #define CRANK_VEC_BOOL3_K		{FALSE, FALSE, TRUE}
 
@@ -265,12 +265,12 @@ gchar*			crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
 
 /**
  * CrankVecBool4:
- * @x: 벡터의 첫번째 원소입니다.
- * @y: 벡터의 두번째 원소입니다.
- * @z: 벡터의 세번째 원소입니다.
- * @w: 벡터의 네번째 원소입니다.
+ * @x: First vector element.
+ * @y: Second vector element.
+ * @z: Third vector element.
+ * @w: Fourth vector element.
  *
- * 부울 벡터입니다. bvec4에 대응됩니다.
+ * Represents a boolean vector. Compared to bvec4 in GLSL.
  */
 typedef struct _CrankVecBool4 {
 	gboolean	x;
@@ -285,42 +285,42 @@ GType			crank_vec_bool4_get_type	(void);
 /**
  * CRANK_VEC_BOOL4_FALSE:
  *
- * 모든 원소가 %FALSE인 초기화 목록입니다.
+ * Initialization list that all elements are %FALSE.
  */
 #define CRANK_VEC_BOOL4_FALSE	{FALSE, FALSE, FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL4_TRUE:
  *
- * 모든 원소가 %TRUE인 초기화 목록입니다.
+ * Initialization list that all elements are %TRUE.
  */
 #define CRANK_VEC_BOOL4_TRUE	{TRUE, TRUE, TRUE, TRUE}
 
 /**
  * CRANK_VEC_BOOL4_I:
  *
- * 처음 원소가 %TRUE인 초기화 목록입니다.
+ * Initialization list that only first vector element is %TRUE
  */
 #define CRANK_VEC_BOOL4_I		{TRUE, FALSE, FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL4_J:
  *
- * 두번째 원소가 %TRUE인 초기화 목록입니다.
+ * Initialization list that only second vector element is %TRUE
  */
 #define CRANK_VEC_BOOL4_J		{FALSE, TRUE, FALSE, FALSE}
 
 /**
  * CRANK_VEC_BOOL4_K:
  *
- * 세번째 원소가 %TRUE인 초기화 목록입니다.
+ * Initialization list that only third vector element is %TRUE
  */
 #define CRANK_VEC_BOOL4_K		{FALSE, FALSE, TRUE, FALSE}
 
 /**
  * CRANK_VEC_BOOL4_L:
  *
- * 네번째 원소가 %TRUE인 초기화 목록입니다.
+ * Initialization list that only fourth vector element is %TRUE
  */
 #define CRANK_VEC_BOOL4_L		{FALSE, FALSE, FALSE, TRUE}
 
@@ -395,11 +395,10 @@ gchar*			crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
 												const gchar* 	on_false	);
 /**
  * CrankVecBoolN:
- * @data: (array length=n): 벡터의 데이터 값입니다.
- * @n: 벡터의 크기입니다.
+ * @data: (array length=n): Data of boolean vector.
+ * @n: Size of vector.
  *
- * 임의의 크기를 가지는 벡터 포인터를 나타냅니다.
- * 크기가 임의로 결정되는 특성상, 동적으로 자원을 할당합니다.
+ * Arbitarily sized boolean vector.
  */
 typedef struct _CrankVecBoolN {
 	gboolean*	data;

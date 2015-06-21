@@ -29,26 +29,24 @@
 
 /**
  * SECTION: crankfuncholder
- * @short_description: 함수를 타입에 따라 저장합니다.
+ * @short_description: Stores functions by types of parameters.
  * @title: CrankFuncHolder
  * @stability: Unstable
  * @include: crankbase.h
  *
- * #CrankFuncHolder는 함수들을 보관하고 형에 따른 호출을 돕는 역할을 하며,
- * #CrankFuncBook은 #CrankFuncHolder들을 이름에 따라 모으는 역할을 수행합니다.
- *
- * 자세한 설명은 해당 구조체에 대한 설명을 보기 바랍니다.
+ * #CrankFuncHolder stores functions by types of parameters.
+ * #CrankFuncBook stores #CrankFuncHolder by names.
  */
 
 
 
-//////// 내부 전용 함수
+//////// Internal Declaration
 static void			_transform_crank_func_type_string (	const GValue* value_ftype,
 														GValue* value_string	);
 /**
  * CrankFuncType:
  * 
- * 함수의 반환형과 인자의 형을 저장합니다.
+ * Stores return type and parameter types.
  */
 struct _CrankFuncType {
 	GType	return_type;
@@ -76,12 +74,12 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
 
 /**
  * crank_func_type_new:
- * @return_type: 함수의 반환형입니다.
- * @...: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
+ * @return_type: Return type.
+ * @...: Parameter types. Ends with %G_TYPE_NONE.
  * 
- * 새로운 #CrankFuncType을 만듭니다.
+ * Constructs a #CrankFuncType.
  * 
- * Returns: (transfer full): 새로운 CrankFuncType입니다.
+ * Returns: (transfer full): New CrankFuncType.
  */
 CrankFuncType*
 crank_func_type_new (const GType return_type, ...)
@@ -99,12 +97,12 @@ crank_func_type_new (const GType return_type, ...)
 
 /**
  * crank_func_type_new_va:
- * @return_type: 함수의 반환형입니다.
- * @varargs: 함수의 인자형 들입니다. %G_TYPE_NONE으로 끝을 표시합니다.
+ * @return_type: Return type.
+ * @varargs: va_list of parameter types. Ends with %G_TYPE_NONE.
  * 
- * 새로운 #CrankFuncType을 만듭니다.
+ * Constructs a #CrankFuncType.
  * 
- * Returns: (transfer full): 새로운 CrankFuncType입니다.
+ * Returns: (transfer full): New CrankFuncType.
  */
 CrankFuncType*
 crank_func_type_new_va (const GType return_type, va_list varargs)
@@ -113,12 +111,10 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 	guint			param_types_alloc;
 	guint			i;
 	
-	// return_type을 채워 넣습니다.
 	ftype = g_new(CrankFuncType, 1);
 
 	ftype->return_type = return_type;
 	
-	// param_types를 채워 넣습니다.
 	param_types_alloc = 0;
 	ftype->param_types = NULL;
 	ftype->nparam_types = 0;
@@ -141,13 +137,13 @@ crank_func_type_new_va (const GType return_type, va_list varargs)
 
 /**
  * crank_func_type_new_with_types:
- * @return_type: 함수의 반환형입니다.
- * @param_types: (array length=nparam_types): 함수가 받아들이는 인자 형입니다.
- * @nparam_types: @param_types의 길이입니다.
+ * @return_type: Return type.
+ * @param_types: (array length=nparam_types): Parameter types.
+ * @nparam_types: Length of @param_types.
  * 
- * 새로운 #CrankFuncType을 만듭니다.
+ * Constructs a #CrankFuncType.
  * 
- * Returns: (transfer full): 새로운 #CrankFuncType입니다.
+ * Returns: (transfer full): New #CrankFuncType.
  */
 CrankFuncType*
 crank_func_type_new_with_types (
@@ -158,12 +154,10 @@ crank_func_type_new_with_types (
 	CrankFuncType*  ftype;
 	guint			i;
 	
-	// return_type을 채워 넣습니다.
 	ftype = g_new(CrankFuncType, 1);
 
 	ftype->return_type = return_type;
 	
-	// param_types를 채워 넣습니다.
 	ftype->nparam_types = nparam_types;
 	ftype->param_types = CRANK_ARRAY_DUP (param_types, GType, nparam_types);
 	
@@ -176,11 +170,11 @@ crank_func_type_new_with_types (
 
 /**
  * crank_func_type_ref:
- * @ftype: 참조를 증가시킬 #CrankFuncType
+ * @ftype: A #CrankFuncType
  *
- * #CrankFuncType의 참조를 1 증가시킵니다. 
+ * Increase reference count by 1.
  *
- * Returns: 참조가 증가된 @ftype
+ * Returns: @ftype with increased reference count.
  */
 CrankFuncType*
 crank_func_type_ref (CrankFuncType* ftype)
@@ -191,9 +185,10 @@ crank_func_type_ref (CrankFuncType* ftype)
 
 /**
  * crank_func_type_unref:
- * @ftype: 참조를 감소시킬 #CrankFuncType
+ * @ftype: A #CrankFuncType
  *
- * #CrankFuncType의 참조를 1 감소시킵니다. 레퍼런스 카운트가 0이되면 자원이 해제됩니다.
+ * Decrease reference count by 1. If reference count reaches 0, @ftype will be
+ * freed.
  */
 void
 crank_func_type_unref (CrankFuncType* ftype)
@@ -208,12 +203,12 @@ crank_func_type_unref (CrankFuncType* ftype)
 
 /**
  * crank_func_type_hash:
- * @v: (type CrankFuncType): 해시 값을 얻을 #CrankFuncType
+ * @v: (type CrankFuncType): A #CrankFuncType
  *
- * #CrankFuncType을 #GHashTable 등에 키 값으로 사용할 경우 이 함수를 사용할 수
- * 있습니다.
+ * Gets hash value of a #CrankFuncType.
+ * This function can be used when using #CrankFuncType as key of #GHashTable.
  * 
- * Returns: 해시 값입니다.
+ * Returns: Hash value of @v.
  */
 guint
 crank_func_type_hash (gconstpointer v)
@@ -236,13 +231,13 @@ crank_func_type_hash (gconstpointer v)
 
 /**
  * crank_func_type_equal:
- * @a: (type CrankFuncType): 비교할 #CrankFuncType
- * @b: (type CrankFuncType): 비교할 #CrankFuncType
+ * @a: (type CrankFuncType): A #CrankFuncType
+ * @b: (type CrankFuncType): A #CrankFuncType
  *
- * #CrankFuncType을 #GHashTable 등에 키 값으로 사용할 경우 이 함수를 사용할 수
- * 있습니다.
+ * Compares two types and check equality.
+ * This function can be used when using #CrankFuncType as key of #GHashTable.
  * 
- * Returns: 두 타입이 같은지를 알려줍니다.
+ * Returns: Whether two types are equal.
  */
 gboolean
 crank_func_type_equal (gconstpointer a, gconstpointer b) {
@@ -265,21 +260,22 @@ crank_func_type_equal (gconstpointer a, gconstpointer b) {
 
 /**
  * crank_func_type_to_string:
- * @ftype: 문자열로 변환할 #CrankFuncType
+ * @ftype: A  #CrankFuncType
  * 
- * #CrankFuncType을 문자열로 변환합니다. 형식은 다음과 같습니다.
+ * Stringify a #CrankFuncType. The format is,
  * 
  * |[
  * RTYPE (PARAM, PARAM)
  * ]|
  *
- * 만일 형식 gchar* (*)(gint, gint)를 나타내는 경우 다음으로 표현됩니다.
+ * If a #CrankFuncType represents gchar* (*)(gint, gint), is stringified, then
+ * the result is,
  * 
  * |[
  * guchararray (gint, gint)
  * ]|
- * 
- * Returns: (transfer full): 문자열입니다. 사용이 끝난 후 g_free()로 해제해야 합니다.
+ *
+ * Returns: (transfer full): A string representation. Free with g_free().
  */
 gchar*
 crank_func_type_to_string (const CrankFuncType* ftype) {
@@ -314,11 +310,11 @@ crank_func_type_to_string (const CrankFuncType* ftype) {
 
 /**
  * crank_func_type_get_return_type:
- * @ftype: 반환형을 조회할 #CrankFuncType
+ * @ftype: A #CrankFuncType
  *
- * 반환형을 조회합니다.
+ * Gets return type of @ftype.
  * 
- * Returns: 함수 반환 형입니다.
+ * Returns: The return type of @ftype.
  */
 GType
 crank_func_type_get_return_type (const CrankFuncType* ftype) {
@@ -327,12 +323,12 @@ crank_func_type_get_return_type (const CrankFuncType* ftype) {
 
 /**
  * crank_func_type_get_param_type:
- * @ftype: 인자 형을 조회할 #CrankFuncType
- * @index: 인자의 위치입니다.
+ * @ftype: A #CrankFuncType
+ * @index: A index.
  *
- * @index번째 인자의 형을 조회합니다. 
+ * Gets a parameter type at @index.
  *
- * Returns: 함수 반환 형입니다. 부적절한 @index에 대해 %G_TYPE_NONE을 반환합니다.
+ * Returns: The parameter type at @index. %G_TYPE_NONE if out of bound.
  */
 GType
 crank_func_type_get_param_type (const CrankFuncType* ftype,
@@ -343,11 +339,11 @@ crank_func_type_get_param_type (const CrankFuncType* ftype,
 
 /**
  * crank_func_type_get_nparam_types:
- * @ftype: 인자의 개수를 조회할 #CrankFuncType
+ * @ftype: A #CrankFuncType
  * 
- * 인자의 갯수를 조회합니다.
+ * Gets length of parameter types.
  *
- * Returns: 인자의 개수입니다.
+ * Returns: Length of parameter types.
  */
 guint
 crank_func_type_get_nparam_types (const CrankFuncType* ftype)
@@ -357,12 +353,13 @@ crank_func_type_get_nparam_types (const CrankFuncType* ftype)
 
 /**
  * crank_func_type_get_param_types:
- * @ftype: 인자의 형을 조회할 #CrankFuncType
- * @length: 인자의 형의 갯수입니다.
+ * @ftype: A #CrankFuncType
+ * @length (out): Length of parameter types.
  * 
- * 인자 형을 배열로 조회합니다.
+ * Gets parameter types.
  *
- * Returns: (array length=length) (transfer container): 인자 형의 배열입니다. 사용후 g_free()로 해제합니다.
+ * Returns: (array length=length) (transfer container):
+ *         Parameter types. Free with g_free().
  */
 GType*
 crank_func_type_get_param_types (const CrankFuncType* ftype,
@@ -376,20 +373,21 @@ crank_func_type_get_param_types (const CrankFuncType* ftype,
 
 /**
  * crank_func_type_compatible_to:
- * @from: 비교될 원 함수 형입니다.
- * @to: 비교할 함수 형입니다.
- * 
- * 두 형을 비교하여 @from이 @to에 대입될 수 있는지 확인합니다.
- * 
- * 이는 다음과 같습니다.
- * 
- * - @from의 반환형은 @to의 반환형의 하위 종류입니다.
- * - @from의 인자 수는 @to의 인자 수보다 적거나 같습니다.
- * - @to의 각 인자 형은 @from의 인자 형의 하위 종류입니다.
- * 
- * 간단히 is-a 관계라고 생각하면 됩니다.
- * 
- * Returns: @to가 @from에 대입될 수 있는 경우 %TRUE입니다.
+ * @from: A #CrankFuncType.
+ * @to: A #CrankFuncType.
+ *
+ * Compares two type and checks function with type @from can be used as function
+ * with type @to.
+ *
+ * The criteria is listed at below.
+ *
+ * - return type of @from "is a" return type of @to.
+ * - @from has less or equal number of parameter compared to @to.
+ * - Each parameter type of @to is a parameter type of @from at same position.
+ *
+ * it is simply is-a relations.
+ *
+ * Returns: Whether @to is compatible to @from.
  */
 gboolean
 crank_func_type_compatible_to  (	const CrankFuncType* from,
@@ -414,13 +412,13 @@ crank_func_type_compatible_to  (	const CrankFuncType* from,
 
 /**
  * crank_func_type_arg_match_exactually:
- * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
- * @args: (array length=arg_length): 인자 목록입니다.
- * @arg_length: @args의 길이입니다.
+ * @ftype: A #CrankFuncType.
+ * @args: (array length=arg_length): Argument types.
+ * @arg_length: Length of @args.
  *
- * 주어진 인자 타입 목록과 비교하여, 정확히 일치하는지 확인합니다.
+ * Compares argument types and checks whether two are exactually match.
  *
- * Returns: 정확히 일치하는지 입니다.
+ * Returns: Whether parameter types of @ftype matches into @args.
  */
 gboolean
 crank_func_type_arg_match_exactually (	const CrankFuncType* ftype,
@@ -434,13 +432,15 @@ crank_func_type_arg_match_exactually (	const CrankFuncType* ftype,
 
 /**
  * crank_func_type_arg_match:
- * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
- * @args: (array length=arg_length): 인자 목록입니다.
- * @arg_length: @args의 길이입니다.
+ * @ftype: A #CrankFuncType.
+ * @args: (array length=arg_length): Argument types.
+ * @arg_length: Length of @args.
  *
- * 주어진 인자 타입 목록과 비교하여, 해당 타입들이 사용 가능한지 확인합니다..
+ * Compares argument types and checks whether each parameter type of @ftype, is
+ * a argument type at same position.
  *
- * Returns: 해당 타입을 사용할 수 있는지 입니다.
+ * Returns: Whether each parameter type of @ftype is a one of @args at same
+ *         position.
  */
 gboolean
 crank_func_type_arg_match (	const CrankFuncType* ftype,
@@ -460,14 +460,15 @@ crank_func_type_arg_match (	const CrankFuncType* ftype,
 
 /**
  * crank_func_type_arg_match_transformable:
- * @ftype: 주어진 인자목록과 비교할 #CrankFuncType입니다.
- * @args: (array length=arg_length): 인자 목록입니다.
- * @arg_length: @args의 길이입니다.
+ * @ftype: A #CrankFuncType.
+ * @args: (array length=arg_length): Argument types.
+ * @arg_length: Length of @args.
  *
- * 주어진 인자 타입 목록과 비교하여, 해당 타입들을 변환을 통해서라도 사용 가능한지
- * 확인합니다. 
+ * Compares argument types and checks whether each parameter type of @ftype, can
+ * be transformable to argument type at same position.
  *
- * Returns: 해당 타입을 사용할 수 있는지 입니다.
+ * Returns: Whether each parameter type of @ftypes can be transformed to one of
+ *        @args at same position.
  */
 gboolean
 crank_func_type_arg_match_transformable (	const CrankFuncType* ftype,
@@ -551,11 +552,8 @@ crank_func_holder_data_free (	CrankFuncHolderData*	data	)
 /**
  * CrankFuncHolder:
  *
- * 이 구조체는 여러개의 함수들을 #GClosure의 형태로서 보관하고 있으며, 인자 형에
- * 맞는 함수를 얻거나, 호출하기도 합니다.
- *
- * g_closure_invoke()를 이 구조체를 사용하는 경우, 인자의 각 type에 따라, 해당되는
- * #GClosure로 인자들이 전달됩니다.
+ * This structure stores functions as #GClosure. Functions can be retrieved by
+ * parameter types, and invoked by #GValue.
  */
 struct _CrankFuncHolder {
 	GQuark				name;
@@ -589,7 +587,7 @@ GType		crank_func_holder_get_actual_type (	const GValue*	value);
 
 
 
-//////// 내부 전용 함수들
+//////// Internal Definition
 
 CrankFuncHolderData*
 crank_func_holder_get_data_by_param_types (	CrankFuncHolder*		holder,
@@ -667,9 +665,8 @@ crank_func_holder_lookup_data (	CrankFuncHolder*	holder,
 		
 		if (g_type_is_a (rtype_self, rtype_in)) return data;
 	}
-	else {
-		return NULL;
-	}
+	return NULL;
+
 }
 
 GType
@@ -692,15 +689,15 @@ crank_func_holder_get_actual_type (const GValue*		value)
 
 
 
-//////// 외부 공개 함수들
+//////// Function Definition
 
 /**
  * crank_func_holder_new:
- * @name: Holder의 이름입니다. 이 이름은 #CrankFuncBook에서 사용합니다.
+ * @name: Name of holder. Used by #CrankFuncBook
  *
- * 주어진 이름으로 #CrankFuncHolder를 생성합니다.
+ * Constructs #CrankFuncHolder with given name.
  *
- * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
+ * Returns: (transfer full): Newly created #CrankFuncHolder
  */
 G_GNUC_MALLOC CrankFuncHolder*
 crank_func_holder_new (	const gchar*	name	)
@@ -712,11 +709,11 @@ crank_func_holder_new (	const gchar*	name	)
 
 /**
  * crank_func_holder_new_quark:
- * @name: Holder의 이름입니다. 이 이름은 #CrankFuncBook에서 사용합니다.
+ * @name: Name of holder. Used by #CrankFuncBook.
  *
- * 주어진 이름으로 #CrankFuncHolder를 생성합니다.
+ * Constructs #CrankFuncHolder with given name.
  *
- * Returns: (transfer full): 새로 생성된 #CrankFuncHolder
+ * Returns: (transfer full): Newly created #CrankFuncHolder
  */
 G_GNUC_MALLOC CrankFuncHolder*
 crank_func_holder_new_quark (	const GQuark	name	)
@@ -739,11 +736,11 @@ crank_func_holder_new_quark (	const GQuark	name	)
 
 /**
  * crank_func_holder_ref:
- * @holder: 참조를 추가할 CrankFuncHolder입니다.
+ * @holder: A #CrankFuncHolder.
  *
- * @holder의 래퍼런스 카운트를 1 증가시킵니다.
+ * Increases reference counter by 1.
  *
- * Returns: (transfer full): 참조가 1 증가된 CrankFuncHolder입니다.
+ * Returns: (transfer full): @holder with increased reference count.
  */
 CrankFuncHolder*
 crank_func_holder_ref (	CrankFuncHolder*	holder	)
@@ -754,10 +751,10 @@ crank_func_holder_ref (	CrankFuncHolder*	holder	)
 
 /**
  * crank_func_holder_unref:
- * @holder: 참조를 제거할 CrankFuncHolder입니다.
+ * @holder: A #CrankFuncHolder.
  *
- * @holder의 래퍼런스 카운트를 1 감소시킵니다. 래퍼런스 카운트가 0이 되면,
- * @holder는 해제됩니다.
+ * Decreases reference counter by 1. When reference count reaches 0, then
+ * @holder will be freed.
  */
 void
 crank_func_holder_unref (	CrankFuncHolder*	holder	)
@@ -771,11 +768,11 @@ crank_func_holder_unref (	CrankFuncHolder*	holder	)
 
 /**
  * crank_func_holder_get_name:
- * @holder: 이름을 얻을 CrankFuncHolder
+ * @holder: A #CrankFuncHolder
  *
- * #CrankFuncHolder의 이름을 얻습니다.
+ * Gets name of #CrankFuncHolder as string.
  *
- * Returns: 이 구조체의 이름입니다.
+ * Returns: Name of the @holder.
  */
 const gchar*
 crank_func_holder_get_name (	CrankFuncHolder*	holder	)
@@ -785,10 +782,10 @@ crank_func_holder_get_name (	CrankFuncHolder*	holder	)
 
 /**
  * crank_func_holder_set_name:
- * @holder: 이름을 설정할 CrankFuncHolder
- * @name: 설정할 이름
+ * @holder: A CrankFuncHolder
+ * @name: New name of @holder.
  *
- * #CrankFuncHolder의 이름을 설정합니다.
+ * Sets name of #CrankFuncHolder.
  */
 void
 crank_func_holder_set_name (	CrankFuncHolder*	holder,
@@ -800,11 +797,11 @@ crank_func_holder_set_name (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_get_qname:
- * @holder: 이름을 얻을 CrankFuncHolder
+ * @holder: A CrankFuncHolder
  *
- * #CrankFuncHolder의 이름을 #GQuark로 얻습니다.
+ * Gets name of #CrankFuncHolder as #GQuark.
  *
- * Returns: 이 구조체의 이름입니다.
+ * Returns: Name of the @holder.
  */
 GQuark
 crank_func_holder_get_qname (	CrankFuncHolder*	holder	)
@@ -814,10 +811,10 @@ crank_func_holder_get_qname (	CrankFuncHolder*	holder	)
 
 /**
  * crank_func_holder_set_qname:
- * @holder: 이름을 설정할 CrankFuncHolder
- * @name: 설정할 이름
+ * @holder: A CrankFuncHolder
+ * @name: New name of @holder
  *
- * #CrankFuncHolder의 이름을 #GQuark로 설정합니다.
+ * Set name of #CrankFuncHolder.
  */
 void
 crank_func_holder_set_qname (	CrankFuncHolder*	holder,
@@ -828,16 +825,16 @@ crank_func_holder_set_qname (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_set:
- * @holder: 함수를 설정할 CrankFuncHolder
- * @ftype: 함수형입니다.
- * @closure: 설정할 함수입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type.
+ * @closure: A #GClosure holds function.
  *
- * 주어진 함수형에 주어진 함수를 설정합니다. crank_func_holder_invoke() 호출시,
- * 해당 타입의 함수가 호출됩니다.
+ * Sets a function with given function type. crank_func_holder_invoke() will
+ * invoke appropriate type of funciton set here.
  *
  * Note:
- * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
- * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
+ * If another function is registered by same function type but different return
+ * type, then the function will replace previously registered function.
  */
 void
 crank_func_holder_set (	CrankFuncHolder*	holder,
@@ -872,21 +869,22 @@ crank_func_holder_set (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_set_func: (skip)
- * @holder: 함수를 설정할 CrankFuncHolder
- * @ftype: 함수형입니다.
- * @func: 설정할 함수입니다.
- * @userdata: 추가 데이터입니다.
- * @userdata_destroy: @userdata를 해제할 함수입니다.
- * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type.
+ * @func: A function.
+ * @userdata: A userdata.
+ * @userdata_destroy: A destroyer to free @userdata.
+ * @marshal: (nullable): A #GClosureMarshal.
  *
- * 주어진 함수형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
- * 위해 작성되었습니다.
+ * Sets a function with given function type. This function is provided for
+ * convenience for C, by wrapping C functions into GClosure.
  *
- * @marshal에 %NULL을 전달하면, g_cclosure_marshal_generic()을 사용합니다.
+ * When %NULL is passed as @marshal, g_cclosure_marshal_generic() will be used
+ * instead.
  *
  * Note:
- * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
- * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
+ * If another function is registered by same function type but different return
+ * type, then the function will replace previously registered function.
  */
 void
 crank_func_holder_set_func (	CrankFuncHolder*	holder,
@@ -909,19 +907,12 @@ crank_func_holder_set_func (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_set_simple: (skip)
- * @holder: 함수를 설정할 CrankFuncHolder
- * @ftype: 함수형입니다.
- * @func: 설정할 함수입니다.
- * @marshal: (nullable): 추가적인 #GClosureMarshal 입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type.
+ * @func: A function.
+ * @marshal: (nullable): A #GClosureMarshal.
  *
- * 주어진 함수형에 주어진 함수를 설정합니다. C에서 작성한 함수를 바로 사용하기
- * 위해 작성되었습니다.
- *
- * @marshal에 %NULL을 전달하면, g_cclosure_marshal_generic()을 사용합니다.
- *
- * Note:
- * 만일 같은 인자형을 가지지만, 다른 반환형을 가진 함수형을 등록하려고 한다면,
- * 등록된 함수형은 해당하는 기존의 함수형을 지우게 됩니다.
+ * More simpler version of crank_func_holder_set_func().
  */
 void
 crank_func_holder_set_simple (	CrankFuncHolder*	holder,
@@ -934,13 +925,12 @@ crank_func_holder_set_simple (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_get:
- * @holder: 함수를 얻을 CrankFuncHolder
- * @ftype: 함수형입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type.
  *
- * 주어진 함수형에 등록된 함수를 얻습니다. 함수형의 is-a 관계는 고려되지
- * 않습니다.
+ * Get registered function by function type.
  *
- * Returns: (nullable) (transfer none): 해당 함수형에 등록된 함수입니다.
+ * Returns: (nullable) (transfer none): A function as a #GClosure.
  */
 GClosure*
 crank_func_holder_get ( CrankFuncHolder*	holder,
@@ -955,14 +945,14 @@ crank_func_holder_get ( CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_get_by_param_types:
- * @holder: 함수를 얻을 CrankFuncHolder
- * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
- * @nparam_types: @param_types의 길이입니다.
+ * @holder: A CrankFuncHolder
+ * @param_types: (array length=nparam_types): Parameter types.
+ * @nparam_types: Length of @param_types.
  *
- * 주어진 함수의 반환형에 상관 없이 인자 형에 등록된 함수를 얻습니다. 인자 형의
- * is-a 관계는 고려되지 않습니다.
+ * Gets registered function by parameter types. In this case, return type is not
+ * part of consideration.
  *
- * Returns: (nullable) (transfer none): 해당 인자형에 등록된 함수입니다.
+ * Returns: (nullable) (transfer none): A function as a #GClosure.
  */
 GClosure*
 crank_func_holder_get_by_param_types ( 	CrankFuncHolder*	holder,
@@ -979,13 +969,13 @@ crank_func_holder_get_by_param_types ( 	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_lookup:
- * @holder: 함수를 얻을 CrankFuncHolder
- * @ftype: 함수형입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type.
  *
- * 주어진 인자 형에 대응될 수 있는 함수를 얻습니다. 예를 들어 (#GBinding,
- * #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
+ * Gets registered function that can be matched with function type.
+ * (#GBinding, #GObject) can be matched with (#GObject, #GObject).
  *
- * Returns: (nullable) (transfer none): 해당 인자형에 대응될 수 있는 함수입니다.
+ * Returns: (nullable) (transfer none): A function that can be used as @ftype.
  */
 GClosure*
 crank_func_holder_lookup (	CrankFuncHolder*	holder,
@@ -1000,14 +990,15 @@ crank_func_holder_lookup (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_lookup_by_param_types:
- * @holder: 함수를 얻을 CrankFuncHolder
- * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
- * @nparam_types: @param_types의 길이입니다.
+ * @holder: A CrankFuncHolder
+ * @param_types: (array length=nparam_types): Parammeter types.
+ * @nparam_types: Length of @param_types.
  *
- * 반환형에 상관하지 않고 주어진 인자 형에 대응될 수 있는 함수를 얻습니다.
- * 예를 들어 (#GBinding, #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
+ * Gets registered function that can be matched with parameter types.
+ * (#GBinding, #GObject) can be matched with (#GObject, #GObject).
  *
- * Returns: (nullable) (transfer none): 해당 인자형에 대응될 수 있는 함수입니다.
+ * Returns: (nullable) (transfer none): A function that is compatible with
+ *         parameter types.
  */
 GClosure*
 crank_func_holder_lookup_by_param_types (	CrankFuncHolder*	holder,
@@ -1024,14 +1015,15 @@ crank_func_holder_lookup_by_param_types (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_lookup_return_type:
- * @holder: 함수를 얻을 CrankFuncHolder
- * @param_types: (array length=nparam_types): 함수의 인자 형 들입니다.
- * @nparam_types: @param_types의 길이입니다.
+ * @holder: A CrankFuncHolder
+ * @param_types: (array length=nparam_types): Parameter types.
+ * @nparam_types: Length of @param_types.
  *
- * 주어진 인자 형에 대응될 수 있는 함수의 반환형을 얻습니다.
- * 예를 들어 (#GBinding, #GObject)는 (#GObject, #GObject)에 대응될 수 있습니다.
+ * Gets return type of registered function type that can be matched with
+ * parameter type.
  *
- * Returns: 함수의 반환형입니다. 만일 존재하지 않으면, %G_TYPE_INVALID
+ * Returns: Return type of function type, or %G_TYPE_INVALID if no function type
+ *         is matching.
  */
 GType
 crank_func_holder_lookup_return_type (	CrankFuncHolder*	holder,
@@ -1048,13 +1040,12 @@ crank_func_holder_lookup_return_type (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_remove:
- * @holder: 함수를 제거할 CrankFuncHolder
- * @ftype: 제거할 함수형입니다.
+ * @holder: A CrankFuncHolder
+ * @ftype: A function type to remove.
  *
- * 주어진 함수형에 등록된 함수를 제거합니다. 함수형의 is-a 관계는 고려되지
- * 않습니다.
+ * Removes a function type from holder.
  *
- * Returns: 해당 함수가 제거되었는지.
+ * Returns: %TRUE if function type existed and removed.
  */
 gboolean
 crank_func_holder_remove (	CrankFuncHolder*	holder,
@@ -1079,14 +1070,16 @@ crank_func_holder_remove (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_remove_by_param_types:
- * @holder: 함수를 제거할 CrankFuncHolder
- * @param_types: (array length=nparam_types): 함수의 인자형입니다.
- * @nparam_types: @param_types의 길이입니다.
+ * @holder: A CrankFuncHolder
+ * @param_types: (array length=nparam_types): Parameter types.
+ * @nparam_types: Length of @param_types.
  *
- * 주어진 인자 형에 등록된 함수를 제거합니다. 함수형의 is-a 관계는 고려되지
- * 않습니다.
+ * Removes a function type with given parameter types.
  *
- * Returns: 해당 함수가 제거되었는지.
+ * This function does NOT look for matching function. So caller should know the
+ * exact parameter types.
+ *
+ * Returns: %TRUE if a function type with given parameter types existed and removed.
  */
 gboolean
 crank_func_holder_remove_by_param_types (	CrankFuncHolder*	holder,
@@ -1106,16 +1099,18 @@ crank_func_holder_remove_by_param_types (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invoke:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: 반환될 결과가 저장될 #GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자들이 저장된 GValue 배열입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: A #GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @arg_values의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @arg_values.
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value should be initialized with appropriate type. Type can be
+ * obtained from crank_func_holder_lookup_return_type().
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invoke (CrankFuncHolder*	holder,
@@ -1124,7 +1119,7 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
                           const GValue*		arg_values,
                           gpointer			invocation_hint)
 {
-	// 1. 먼저 타입 그래프에서 적당한 GClosure를 찾습니다.
+	// 1. Find matching GClosure.
 	GClosure*			closure;
 
 	GType*	types = g_new(GType, narg_values);
@@ -1134,7 +1129,7 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 		types[i] = crank_func_holder_get_actual_type (arg_values + i);
 
   	closure = crank_func_holder_lookup_by_param_types (holder, types, narg_values);
-	// 2. 찾고 나면 호출합니다.
+	// 2. Invoke it.
 	if (closure != NULL)
 		g_closure_invoke (closure, return_value, narg_values, arg_values, invocation_hint);
 
@@ -1146,16 +1141,18 @@ crank_func_holder_invoke (CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invokev:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: 반환될 결과가 저장될 #GValue입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
- * @narg_values: @...의 개수입니다.
- * @...: 함수를 호출할 인자들입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: A #GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure
+ * @narg_values: Length of @....
+ * @...: variadic of #GValue with arguments.
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @...의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @....
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value should be initialized with appropriate type. Type can be
+ * obtained from crank_func_holder_lookup_return_type().
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invokev (	CrankFuncHolder*	holder,
@@ -1182,16 +1179,18 @@ crank_func_holder_invokev (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invoke_va:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: 반환될 결과가 저장될 #GValue입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
- * @narg_values: @varargs의 개수입니다.
- * @varargs: 함수를 호출할 인자들입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: A #GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @varargs.
+ * @varargs: va_list of #GValue with arguments.
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @varargs의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @varargs.
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value should be initialized with appropriate type. Type can be
+ * obtained from crank_func_holder_lookup_return_type().
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invoke_va (	CrankFuncHolder*	holder,
@@ -1227,16 +1226,19 @@ crank_func_holder_invoke_va (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invoke_overwrite:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: (out): 반환될 결과가 저장될 #GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자들이 저장된 GValue 배열입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: (out): A #GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of #GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @arg_values의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @arg_values.
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value will be overriden and reinitialized by registered return type.
+ * If no function found, or return type is %G_TYPE_VOID, then @return_value
+ * will be left unset.
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invoke_overwrite (CrankFuncHolder*	holder,
@@ -1245,7 +1247,6 @@ crank_func_holder_invoke_overwrite (CrankFuncHolder*	holder,
 				                  const GValue*		arg_values,
 				                  gpointer			invocation_hint)
 {
-	// 1. 먼저 타입 그래프에서 적당한 GClosure를 찾습니다.
 	CrankFuncHolderData* data;
 
 	GType*	types = g_new(GType, narg_values);
@@ -1255,7 +1256,8 @@ crank_func_holder_invoke_overwrite (CrankFuncHolder*	holder,
 		types[i] = crank_func_holder_get_actual_type (arg_values + i);
 
   	data = crank_func_holder_lookup_data_by_param_types (holder, types, narg_values);
-	// 2. 찾고 나면 호출합니다.
+
+
 	if (data != NULL) {
 		crank_value_overwrite_init (
 				return_value,
@@ -1277,16 +1279,19 @@ crank_func_holder_invoke_overwrite (CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invokev_overwrite:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: (out): 반환될 결과가 저장될 #GValue입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
- * @narg_values: @...의 개수입니다.
- * @...: 함수를 호출할 인자들입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: (out): A #GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @...
+ * @...: Variadic arguments of #GValue with arguments
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @...의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @....
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value will be overriden and reinitialized by registered return type.
+ * If no function found, or return type is %G_TYPE_VOID, then @return_value
+ * will be left unset.
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invokev_overwrite (	CrankFuncHolder*	holder,
@@ -1313,16 +1318,19 @@ crank_func_holder_invokev_overwrite (	CrankFuncHolder*	holder,
 
 /**
  * crank_func_holder_invoke_va_overwrite:
- * @holder: 호출할 CrankFuncHolder입니다.
- * @return_value: (out): 반환될 결과가 저장될 #GValue입니다.
- * @invocation_hint: (nullable): 호출에 대한 힌트입니다.
- * @narg_values: @varargs의 개수입니다.
- * @varargs: 함수를 호출할 인자들입니다.
+ * @holder: A CrankFuncHolder.
+ * @return_value: (out): A #GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @varargs.
+ * @varargs: va_list of #GValue with arguments.
  *
- * CrankFuncHolder에 저장된 함수중 주어진 @varargs의 타입에 맞는 함수를
- * 호출합니다. 함수가 호출 된 경우 %TRUE가 반환됩니다.
+ * Invokes a function which matches types of @varargs.
  *
- * Returns: 함수가 호출된 경우 %TRUE
+ * @return_value will be overriden and reinitialized by registered return type.
+ * If no function found, or return type is %G_TYPE_VOID, then @return_value
+ * will be left unset.
+ *
+ * Returns: %TRUE if the function exists and invoked.
  */
 gboolean
 crank_func_holder_invoke_va_overwrite (	CrankFuncHolder*	holder,
@@ -1359,19 +1367,13 @@ crank_func_holder_invoke_va_overwrite (	CrankFuncHolder*	holder,
 /**
  * CrankFuncBook:
  *
- * 여러개의 #CrankFuncHolder를 이름에 따라 가지고 있습니다. 일반적으로 여러개의
- * 연관된 #CrankFuncHolder를 묶는데 사용됩니다.
- *
- * 각 #CrankFuncHolder는 #GQuark에 연관되어 있습니다.
- *
- * g_closure_invoke()를 이 구조체에 사용하는 경우, 첫번째 인자는 #CrankFuncHolder
- * 의 이름으로 해석되며, 나머지 인자들은 그 이름에 해당하는 #CrankFuncHolder로
- * 전달 됩니다.
+ * Stores multiple #CrankFuncHolder by their names. Generally, it is used for
+ * grouping related #CrankFuncHolder.
  */
 struct _CrankFuncBook {
 	GQuark				name;
 	GPtrArray*			func_holders;
-	GHashTable*			table_index;		// CrankFuncHolder -> guint 
+	GHashTable*			table_index;		// CrankFuncHolder -> guint
 	GHashTable*			table_name_holder;	// GQuark -> CrankFuncHolder
 	
 	guint				_refc;
@@ -1387,9 +1389,9 @@ G_DEFINE_BOXED_TYPE(CrankFuncBook, crank_func_book,
 /**
  * crank_func_book_new:
  *
- * 이름 없는 함수 책을 만듭니다.
+ * Constructs a nameless function book.
  *
- * Returns: (transfer full): 새로운 함수 책입니다.
+ * Returns: (transfer full): Newly created function book.
  */
 CrankFuncBook*
 crank_func_book_new (void) {
@@ -1398,11 +1400,11 @@ crank_func_book_new (void) {
 
 /**
  * crank_func_book_new_with_name:
- * @name: (nullable): 함수 책의 이름입니다.
+ * @name: (nullable): Name of function book.
  *
- * 이름을 가진 함수 책을 만듭니다.
+ * Constructs a function book with string name.
  *
- * Returns: (transfer full): 새로운 함수 책입니다.
+ * Returns: (transfer full): Newly created function book.
  */
 CrankFuncBook*
 crank_func_book_new_with_name (	const gchar*	name	)
@@ -1412,11 +1414,11 @@ crank_func_book_new_with_name (	const gchar*	name	)
 
 /**
  * crank_func_book_new_with_qname:
- * @name: 함수 책의 이름입니다.
+ * @name: Name of function book.
  *
- * 이름을 가진 함수 책을 만듭니다.
+ * Constructs a function book with quark name.
  *
- * Returns: (transfer full): 새로운 함수 책입니다.
+ * Returns: (transfer full): Newly created function book.
  */
 CrankFuncBook*
 crank_func_book_new_with_qname (	const GQuark	name	)
@@ -1442,11 +1444,11 @@ crank_func_book_new_with_qname (	const GQuark	name	)
 
 /**
  * crank_func_book_ref:
- * @book: 함수 책입니다.
+ * @book: A function book.
  *
- * 함수책의 래퍼런스 카운트를 1 증가시킵니다.
+ * Increases reference count by 1.
  *
- * Returns: (transfer full): 래퍼런스 카운트가 1 증가된 @book입니다.
+ * Returns: (transfer full): @book with increased reference count.
  */
 CrankFuncBook*
 crank_func_book_ref (	CrankFuncBook*		book	)
@@ -1457,10 +1459,10 @@ crank_func_book_ref (	CrankFuncBook*		book	)
 
 /**
  * crank_func_book_unref:
- * @book: 함수 책입니다.
+ * @book: A function book.
  *
- * 함수책의 래퍼런스 카운트를 1 감소시킵니다. 래퍼런스 카운트가 0이 되면 함수
- * 책은 해제됩니다.
+ * Decrease reference count by 1. If reference count reaches 0, function book
+ * will be freed.
  */
 void
 crank_func_book_unref (	CrankFuncBook*		book	)
@@ -1475,10 +1477,10 @@ crank_func_book_unref (	CrankFuncBook*		book	)
 
 /**
  * crank_func_book_set_name:
- * @book: 이름을 정할 함수 책입니다.
- * @name: (nullable): 이름입니다.
+ * @book: A function book.
+ * @name: (nullable): Name of function book.
  *
- * 함수 책의 이름을 정합니다.
+ * Sets name of function book by string.
  */
 void
 crank_func_book_set_name (	CrankFuncBook*		book,
@@ -1489,11 +1491,11 @@ crank_func_book_set_name (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_get_name:
- * @book: 이름을 얻을 함수 책입니다.
+ * @book: A function book.
  *
- * 함수 책의 이름을 얻습니다.
+ * Gets name of function book as string.
  *
- * Returns: (nullable): 함수책의 이름입니다.
+ * Returns: (nullable): A name of function book.
  */
 const gchar*
 crank_func_book_get_name (	CrankFuncBook*		book	)
@@ -1505,10 +1507,10 @@ crank_func_book_get_name (	CrankFuncBook*		book	)
 
 /**
  * crank_func_book_set_qname:
- * @book: 이름을 정할 함수 책입니다.
- * @name: 이름입니다.
+ * @book: A function book.
+ * @name: Name of function book.
  *
- * 함수 책의 이름을 정합니다.
+ * Sets name of function book by #GQuark.
  */
 void
 crank_func_book_set_qname (	CrankFuncBook*		book,
@@ -1519,11 +1521,11 @@ crank_func_book_set_qname (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_get_qname:
- * @book: 이름을 얻을 함수 책입니다.
+ * @book: A function book.
  *
- * 함수 책의 이름을 얻습니다.
+ * Gets name of function book as #GQuark.
  *
- * Returns: 함수책의 이름입니다.
+ * Returns: A name of function book.
  */
 GQuark
 crank_func_book_get_qname (	CrankFuncBook*		book	)
@@ -1534,11 +1536,11 @@ crank_func_book_get_qname (	CrankFuncBook*		book	)
 
 /**
  * crank_func_book_set:
- * @book: 함수 홀더를 저장할 함수 책입니다.
- * @index: 인덱스입니다.
- * @holder: (nullable): 함수 홀더입니다.
+ * @book: A function book.
+ * @index: Index of function book.
+ * @holder: (nullable): A function holder
  *
- * 함수 홀더를 지정된 인덱스에 설정합니다.
+ * Sets a function holder to index.
  */
 void
 crank_func_book_set (	CrankFuncBook*		book,
@@ -1566,12 +1568,12 @@ crank_func_book_set (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_get:
- * @book: 함수 홀더를 얻을 함수 책입니다.
- * @index: 함수 홀더의 인덱스입니다.
+ * @book: A function book.
+ * @index: Index of function book.
  *
- * 지정된 인덱스에 있는 함수 홀더를 얻습니다.
+ * Gets a function holder at given index.
  *
- * Returns: (nullable): 해당 인덱스에 있는 함수 홀더입니다. 없으면 %NULL
+ * Returns: (nullable): Function holder at given index or %NULL if not.
  */
 CrankFuncHolder*
 crank_func_book_get (	CrankFuncBook*		book,
@@ -1586,12 +1588,13 @@ crank_func_book_get (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_index_of:
- * @book: 함수 책입니다.
- * @holder: 위치를 얻을 함수 홀더입니다.
+ * @book: A function book.
+ * @holder: A function holder.
  *
- * 주어진 함수 홀더의 인덱스를 얻습니다.
+ * Gets index of given function holder.
  *
- * Returns: 함수 홀더의 위치입니다. 존재하지 않을 경우 -1을 반환합니다.
+ * Returns: Function index of given function holder, or -1 if holder is not in
+ *         function book.
  */
 gint
 crank_func_book_index_of (	CrankFuncBook*		book,
@@ -1604,12 +1607,13 @@ crank_func_book_index_of (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_get_by_name:
- * @book: 함수 책입니다.
- * @name: 찾고자 하는 함수 홀더의 이름입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
  *
- * 함수 홀더를 이름으로 찾습니다.
+ * Look for a function holder by name.
  *
- * Returns: (nullable): 해당 이름의 함수 홀더입니다. 만일 존재하지 않으면 %NULL.
+ * Returns: (nullable): A function holder with given name, or %NULL if it does
+ *         not exists.
  */
 CrankFuncHolder*
 crank_func_book_get_by_name (	CrankFuncBook*	book,
@@ -1624,12 +1628,13 @@ crank_func_book_get_by_name (	CrankFuncBook*	book,
 
 /**
  * crank_func_book_get_by_qname:
- * @book: 함수 책입니다.
- * @name: 찾고자 하는 함수 홀더의 이름입니다.
+ * @book: A function book.
+ * @name: Name of function book.
  *
- * 함수 홀더를 이름으로 찾습니다.
+ * Looks for a function holder by name.
  *
- * Returns: (nullable): 해당 이름의 함수 홀더입니다. 만일 존재하지 않으면 %NULL.
+ * Returns: (nullable): A function holder with given name, or %NULL if it does
+ *         not exists.
  */
 CrankFuncHolder*
 crank_func_book_get_by_qname (	CrankFuncBook*	book,
@@ -1640,12 +1645,12 @@ crank_func_book_get_by_qname (	CrankFuncBook*	book,
 
 /**
  * crank_func_book_remove:
- * @book: 함수 책입니다.
- * @index: 제거하고자 하는 인덱스입니다.
+ * @book: A function book.
+ * @index: Index to remove.
  *
- * 주어진 인덱스의 함수 홀더를 제거합니다.
+ * Removes a function holder at given index.
  *
- * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ * Returns: Whether the holder is removed.
  */
 gboolean
 crank_func_book_remove (	CrankFuncBook*	book,
@@ -1669,12 +1674,12 @@ crank_func_book_remove (	CrankFuncBook*	book,
 
 /**
  * crank_func_book_remove_by_name:
- * @book: 함수 책입니다.
- * @name: 제거하고자 하는 이름입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
  *
- * 주어진 이름의 함수 홀더를 제거합니다.
+ * Removes a function holder by its name.
  *
- * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ * Returns: Whether the holder existed and removed.
  */
 gboolean
 crank_func_book_remove_by_name (CrankFuncBook*		book,
@@ -1689,12 +1694,12 @@ crank_func_book_remove_by_name (CrankFuncBook*		book,
 
 /**
  * crank_func_book_remove_by_qname:
- * @book: 함수 책입니다.
- * @name: 제거하고자 하는 이름입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
  *
- * 주어진 이름의 함수 홀더를 제거합니다.
+ * Removes a function holder by its name.
  *
- * Returns: 해당 인덱스의 함수 홀더가 존재하여 제거되었는지
+ * Returns: Whether the holder existed and removed.
  */
 gboolean
 crank_func_book_remove_by_qname (	CrankFuncBook*		book,
@@ -1725,16 +1730,16 @@ crank_func_book_remove_by_qname (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (optional): 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke (	CrankFuncBook*		book,
@@ -1759,16 +1764,16 @@ crank_func_book_invoke (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_name:
- * @book: 함수 책입니다.
- * @name: 이름입니다.
- * @return_value: (optional): 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_name (	CrankFuncBook*		book,
@@ -1802,16 +1807,16 @@ crank_func_book_invoke_name (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_qname:
- * @book: 함수 책입니다.
- * @name: 이름입니다.
- * @return_value: 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_qname (	CrankFuncBook*		book,
@@ -1837,16 +1842,16 @@ crank_func_book_invoke_qname (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_overwrite:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (out): 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_overwrite (	CrankFuncBook*		book,
@@ -1871,16 +1876,16 @@ crank_func_book_invoke_overwrite (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_overwrite_name:
- * @book: 함수 책입니다.
- * @name: 이름입니다.
- * @return_value: (out) (optional): 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_overwrite_name (	CrankFuncBook*		book,
@@ -1915,16 +1920,16 @@ crank_func_book_invoke_overwrite_name (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_overwrite_qname:
- * @book: 함수 책입니다.
- * @name: 이름입니다.
- * @return_value: (out): 반환값이 저장될 GValue입니다.
- * @narg_values: @arg_values의 길이입니다.
- * @arg_values: (array length=narg_values): 인자값이 전달될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
+ * @book: A function book.
+ * @name: Name of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @arg_values: (array length=narg_values): Array of GValue with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 이름을 가진 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_overwrite_qname (	CrankFuncBook*		book,
@@ -1951,16 +1956,16 @@ crank_func_book_invoke_overwrite_qname (	CrankFuncBook*		book,
 
 /**
  * crank_func_book_invokev:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (optional): 반환값이 저장될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
- * @narg_values: @...의 길이입니다.
- * @...: 함수를 호출할 인자들입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @....
+ * @...: Variadic Arguments of GValue with arguments.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invokev (		CrankFuncBook*		book,
@@ -1985,16 +1990,16 @@ crank_func_book_invokev (		CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_va:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (optional): 반환값이 저장될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
- * @narg_values: @varargs의 길이입니다.
- * @varargs: 함수를 호출할 인자들입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @narg_values: Length of @arg_values.
+ * @varargs: Variadic Arguments with arguments.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_va (		CrankFuncBook*		book,
@@ -2013,16 +2018,16 @@ crank_func_book_invoke_va (		CrankFuncBook*		book,
 
 /**
  * crank_func_book_invokev_overwrite:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (out) (optional): 반환값이 저장될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
- * @narg_values: @...의 길이입니다.
- * @...: 함수를 호출할 인자들입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @arg_values.
+ * @...: Variadic Arguments of GValue with arguments.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invokev_overwrite (		CrankFuncBook*		book,
@@ -2052,16 +2057,16 @@ crank_func_book_invokev_overwrite (		CrankFuncBook*		book,
 
 /**
  * crank_func_book_invoke_va_overwrite:
- * @book: 함수 책입니다.
- * @index: 인덱스입니다.
- * @return_value: (out) (optional): 반환값이 저장될 GValue입니다.
- * @invocation_hint: (nullable): #GClosure의 호출 힌트입니다.
- * @narg_values: @varargs의 길이입니다.
- * @varargs: 함수를 호출할 인자들입니다.
+ * @book: A function book.
+ * @index: A index of function holder.
+ * @return_value: (optional): A GValue to store return value.
+ * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
+ * @narg_values: Length of @arg_values.
+ * @varargs: va_list of GValue with arguments.
  *
- * 주어진 인덱스에 등록된 함수 홀더를 호출합니다.
+ * Invokes function holder at given index.
  *
- * Returns: 함수 홀더에 등록된 함수가 호출되었는지.
+ * Returns: Whether the function holder was invoked.
  */
 gboolean
 crank_func_book_invoke_va_overwrite (		CrankFuncBook*		book,

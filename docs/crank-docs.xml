@@ -6,21 +6,20 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>Crank System 참조 문서</title>
-    <subtitle>Crank System - 게임 개발 지원 라이브러리</subtitle>
-    <edition>0.0.1 - Just a barebone!</edition>
+    <title>Crank System Reference Manual</title>
+    <subtitle>Crank System - Game Development Support Library</subtitle>
+    <edition>0.0.1 - Cranknomicon</edition>
     <copyright>
     	<year>2015</year>
     	<holder>WSID</holder>
     </copyright>
     <releaseinfo>
-      Crank System은 게임을 만들기 위한 기본적인 토대를 제공할 예정입니다.
-      현재 버전은 완성된 버전이 아니며, 기반 지원 기능이 개발중입니다.
+      Crank System is under heavy development! :-u
     </releaseinfo>
   </bookinfo>
   
   <chapter>
-  	<title>유틸리티 함수들</title>
+  	<title>Utilities</title>
     <xi:include href="xml/crankbasemacro.xml"/>
 	<xi:include href="xml/crankvala.xml"/>
 	<xi:include href="xml/crankstring.xml"/>
@@ -29,7 +28,7 @@
   </chapter>
   
   <chapter>
-    <title>데이터 구조</title>
+    <title>Data structures</title>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>
@@ -39,7 +38,7 @@
   </chapter>
   
   <chapter>
-    <title>타입 그래프와 타입 책</title>
+    <title>Types and book</title>
     <xi:include href="xml/cranksingular.xml"/>
     <xi:include href="xml/cranktypesgraph.xml"/>
     <xi:include href="xml/crankfuncholder.xml"/>

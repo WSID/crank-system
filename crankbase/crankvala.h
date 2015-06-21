@@ -31,30 +31,29 @@
 
 /**
  * SECTION:crankvala
- * @title: Vala 지원 유틸리티
- * @short_description: Vala 지원 유틸리티 모음.
+ * @title: Vala Support Utility
+ * @short_description: Vala Support Utility
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 이 함수들과 매크로들은 Vala에서 C 중심적인 함수들을 사용할 수 있도록 보조하는
- * 역할을 합니다.
+ * The functions and macros are defined for Vala, to support various features.
  *
- * # 함수 유틸리티
+ * # Function Utility
  *
- * Vala에서는 함수를 userdata와 묶어서 저장합니다. 그러나 이 userdata는 숨겨저
- * 있으며, 프로그래머가 Vala내에서 임의로 빼오는 것은 여러 트릭 등을 사용해야
- * 합니다.
+ * In Vala, functions are stored with their user data. But user datas are
+ * generally hidden from programmers, and it requires some tricks to take out
+ * hidden user datas.
  *
- * 이러한 작업을 단순화하기 위해 여러 매크로를 제공하고 있습니다.
+ * Crank System provides macros to simplify these tasks.
  *
- * * delegate형 변수에서 함수 포인터와 데이터를 조회
- * * has_target=false인 delegate형과 userdata를 has_target=true인 delegate형으로
- *   합치기.
- * * has_target=true인 delegate형을 has_target=false인 delegate형과 userdata로
- *   분리
+ * * Gets function pointer and user data from delegate typed variable.
+ * * Joining function pointer (has_target=false) and user data into
+ *   delegate type (has_target=true).
+ * * Spliting function pointer (has_target=false) and user data from
+ *   delegate type (has_target=true).
  *
- * 매크로와 Vala의 한계로 인하여, 이러한 함수들을 사용할 경우 해당 형으로 수동으로
- * Cast 해야 합니다.
+ * Because of limitation of Vala and macro, the returned values should be
+ * casted for appropriate type.
  *
  * |[ <-- language="vala" --!>
  *    delegate int UserOperation (int a, int b);
@@ -74,15 +73,15 @@
  *    }
  * ]|
  *
- * # 제네릭스 유틸리티
+ * # Generics Utility
  *
- * Vala에서는 제네릭스를 처리할 때, 제네릭스 처리를 위한 추가 인자를 첨부합니다.
- * 이때, 이 함수들은 이 인자들에 작용하여 유용한 값을 얻을 수 있습니다.
+ * When generics come into, Vala adds additional hidden arguments. Functions can
+ * pick useful properties from it.
  *
- * # 제공되는 함수들
+ * # Provided functions.
  *
- * 제공되는 함수들은 대부분 매크로입니다. 따라서 Vala에서는 이름이 다를 수
- * 있으며, 경우에 따라서는 같은 매크로에 여러 함수가 묶여 있을 수 있습니다.
+ * Most of provided functions are actually macro. So these may have different
+ * name in Vala, and may be multiple functions are bound to same macro.
  *
  * |[ <-- language="vala" --!>
  *    namespace Crank {
@@ -131,42 +130,42 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_VALA_FUNC_GET_POINTER: (skip)
- * @fp:	함수 포인터입니다.
- * @userdata: 함수에 추가적으로 전달할 데이터입니다.
+ * @fp:	Function pointer.
+ * @userdata: Hidden user data argument for @fp
  *
- * 함수 포인터를 #GCallback으로 얻습니다.
+ * Gets function pointer as #GCallback.
  *
  * |[ <-- language="vala" --!>
  *    GLib.Callback fp = Crank.func_get_pointer ((Crank.Callback)some_func);
  * ]|
  *
- * Returns: (type GCallback): 함수 포인터를 #GCallback으로 얻습니다.
+ * Returns: (type GCallback): Function pointer
  */
 #define CRANK_VALA_FUNC_GET_POINTER(fp, userdata)	((GCallback)(fp))
 
 /**
  * CRANK_VALA_FUNC_GET_USERDATA: (skip)
- * @fp:	함수 포인터입니다.
- * @userdata: 함수에 추가적으로 전달할 데이터입니다.
+ * @fp:	Function pointer.
+ * @userdata: (closure fp): Hidden user data argument for @fp
  *
- * 함수에 추가적으로 전달할 데이터를 void* 형으로 얻습니다.
+ * Gets user data as (void*)
  *
  * |[ <-- language="vala" --!>
  *    void* userdata = Crank.func_get_userdata ((Crank.Callback)some_func);
  * ]|
  *
- * Returns: 함수에 추가적으로 전달할 데이터를 void*형으로 얻습니다.
+ * Returns: user data for @fp.
  */
 #define CRANK_VALA_FUNC_GET_USERDATA(fp, userdata)	((void*)(userdata))
 
 
 /**
  * CRANK_VALA_FUNC_JOIN_SPLIT: (skip)
- * @fp: 함수 포인터입니다.
- * @userdata: 함수에 추가적으로 전달할 데이터입니다.
- * @userdata_out: (out): 함수 추가 데이터를 얻기 위한 포인터입니다.
+ * @fp: Function pointer.
+ * @userdata: Hidden user data for @fp.
+ * @userdata_out: (out): Out for @userdata.
  *
- * 이 매크로는 delegate 형에서 @userdata를 분리하거나 합칩니다.
+ * This macro is for joining into or splitting @userdata from delegate types.
  *
  * |[ <-- language="vala" --!>
  *    UserOperation op = (UserOperation) Crank.func_join (
@@ -177,20 +176,20 @@ G_BEGIN_DECLS
  *            (Crank.Callback)op, out raw_userdata);
  * ]|
  *
- * Returns: @fp입니다.
+ * Returns: @fp.
  */
 #define CRANK_VALA_FUNC_JOIN_SPLIT(fp, userdata, userdata_out)	\
 		(*(userdata_out)=(userdata), (fp))
 
 /**
  * CRANK_VALA_FUNC_JOIN_SPLIT_OWNED: (skip)
- * @fp: 함수 포인터입니다.
- * @userdata: 함수에 추가적으로 전달할 데이터입니다.
- * @destroy: @userdata를 해제할 함수입니다.
- * @userdata_out: (out): 함수 추가 데이터를 얻기 위한 포인터입니다.
- * @destroy_out: (out): 함수 추가 데이터를 해제하기 위한 함수 포인터에 대한 포인터입니다.
+ * @fp: Function pointer.
+ * @userdata: Hidden user data for @fp.
+ * @destroy: Function to destroy @userdata.
+ * @userdata_out: (out): Out for @userdata.
+ * @destroy_out: (out): Out for @destroy.
  *
- * 이 매크로는 delegate 형에서 @userdata를 분리하거나 합칩니다.
+ * This macro is for joining into or splitting @userdata from delegate types.
  *
  * |[ <-- language="vala" --!>
  *    UserOperation op = (owned) (UserOperation) Crank.func_join_owned (
@@ -208,18 +207,20 @@ G_BEGIN_DECLS
 
 /**
  * CRANK_VALA_GENERIC_UNOWNED: (skip)
- * @t: #GType입니다.
- * @copy: 복사 함수입니다.
- * @destroy: 해제 함수입니다.
+ * @t: A hidden generic parameter #GType.
+ * @copy: A hidden copy function.
+ * @destroy: A hidden destroy function.
  *
- * 이 매크로는 복사 함수가 비어있는지 확인하여, 주어진 타입이 비소유 타입인지
- * 판별합니다.
+ * This macro determine generic type is owned or unowned by checking @copy
+ * function.
  *
  * |[ <-- language="vala" --!>
  *    assert ( Crank.generic_unowned <unowned string> () );
  *    assert ( ! Crank.generic_unowned <string> () );
  *    assert ( Crank.generic_unowned <int> () );
  * ]|
+ *
+ * Returns: %TRUE if generic type is unowned (no transfer ownership).
  */
 #define CRANK_VALA_GENERIC_UNOWNED(t, copy, destroy) (copy == NULL)
 

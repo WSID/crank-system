@@ -27,73 +27,72 @@
 
 /**
  * SECTION: cranksingular
- * @short_description: 단일로 존재하는 객체들의 기반 클래스입니다.
+ * @short_description: Base class for classes that have at most one instances.
  * @title: CrankSingular
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 단일로 존재하는 객체들에 대한 기반 클래스입니다.
+ * This class is base class for classes that have single instance.
  *
- * # GObject 생성에서 싱글톤 기능 제공
+ * # Singleton construction as GObject
  *
- * #CrankSingular는 #GObjectClass.constructor()를 싱글톤 객체를 반환하는 함수로
- * 오버라이드 합니다. 이에 따라, 이를 기반으로 한 하위 클래스들은 g_object_new()
- * 등을 통해서 객체를 얻을 수 있습니다.
+ * #CrankSingular overrides #GObjectClass.constructor() as a function returns
+ * the singleton instance. Therefore, instances of subclasses can be retrieved
+ * by g_object_new().
  *
- * 생성을 통해 싱글톤 객체를 얻지만, 여전히 constructor 함수가 적용되기 때문에,
- * 최대한 부수효과는 피해야 합니다.
+ * Singleton instances can be obtained by construction, but as constructor
+ * function is still in action, side effects should be avoided.
  *
- * 처음 생성될 때에만 작동하는 부분은 #CrankSingularClass.first_construct()를
- * 오버라이드 하여 수행해야 합니다.
+ * #CrankSingularClass.first_construct() is invoked only once per instance.
+ * Subclasses may override this function to initialization function.
  *
- * 싱글톤 객체가 존재하는 경우 g_object_new()는 참조가 증가된 싱글톤 객체를
- * 반환 합니다. 사용이 끝나면 g_object_unref()로 해제하면 됩니다.
+ * If singleton instance exists, g_object_new() will return it with increased
+ * reference count. Free with g_object_unref(), just as it was newly created
+ * instance.
  *
  * <example>
- *   <title>Python에서 first_construct 오버라이드</title>
+ *   <title>Override first_construct in Python</title>
  *   |[<!-- language="python" -->
  *		class SomeSingular (CrankBase.Singular):
  *			def do_first_construct (self):
- *				# 여기서 작업을 수행하면 됩니다.
+ *				# Do your initialization here.
  *				pass
  *   ]|
  * </example>
  * <example>
- *   <title>Vala에서 first_construct 오버라이드</title>
+ *   <title>Override first_construct in Vala</title>
  *   |[<!-- language="vala" -->
  *		public class SomeSingular: Crank.Singular {
  *			public override void first_construct() {
- *				// 여기서 작업을 수행하면 됩니다.
+ *				// Do your initialization here.
  *			}
  *		}
  *   ]|
  * </example>
- * # 스레드 안전성
+ * # Thread Safety
  *
- * 싱글톤 객체가 생성될 경우, 다른 스레드로부터의 접근을 막기 위해 #GMutex로
- * 생성을 잠급니다. 이는 여러개의 스레드가 서로 다른 객체를 생성하느 것을 막기
- * 위해서입니다.
+ * When singleton instance is created, Construction is locked by #GMutex, to
+ * prevent multiple instances are created.
  *
- * 싱글톤 객체 생성시 #GMutex는 #GObjectClass.constructor()에서 잠그고,
- * #GObject.constructed()에서 해제하므로, 해당 함수를 오버라이드 할 경우 체인
- * 업을 해야 합니다.
+ * When instance is created, the mutex is locked in #GObjectClass.constructor(),
+ * and unlocked in #GObjectClass.constructed(). If these are overrided, they
+ * should be chained up.
  *
+ * # Notes about bindings for scripts
  *
- * # 스크립트 언어 바인딩과 관련된 노트
+ * As script objects wraps #GObject objects, Call of g_object_new() returns
+ * different wrapping objects. As a result, two object does not shares dictionary.
  *
- * 스크립트 객체가 #GObject 객체를 감싸는 특성으로 인하여, g_object_new()의
- * 호출은 서로 다른 객체를 반환하게 됩니다. (예: 객체의 사전이 공유되지 않음)
- *
- * 따라서 여러 부분에서 사용한다면 주의가 요구됩니다.
+ * So, using this class in script, requires caution.
  *
  * <programlisting language="python">
  *    singular_a = SomeSingular()
  *    singular_b = SomeSingular()
  *
- *    # GObject 속성은 서로 공유됩니다.
+ *    # GObject properties are shared.
  *    singular_b.some_prop = 7
  *
- *    # Python 객체 사전은 공유되지 않습니다.
+ *    # Python dictionaries are not shared.
  *    singular_a.attr = 32
  *
  *    assert (singular_a == singular_b)
@@ -101,29 +100,27 @@
  *    assert (! hasattr (singular_b, "attr"))
  * </programlisting>
  *
- * 이를 해소하기 위해서는 crank_singular_get() 을 주로 사용 하는 편이
- * 좋습니다.
+ * To resort this problem, try use crank_singular_get() as possible.
  */
 
 /**
  * CrankSingular:
  *
- * 이 구조체는 어떠한 추가적인 정보도 포함하고 있지 않습니다.
+ * This structure does not have anything.
  *
- * 이 클래스가 제공하는 기능의 특성상, 클래스 구조체에서 대부분의 기능을
- * 제공합니다.
+ * Because of characteristic of this class, the class has more data than the
+ * instance.
  */
 
 /**
  * CrankSingularClass:
- * @first_construct: 객체가 생성될때 사용됩니다. 이미 객체가 존재할 경우
- * 호출되지 않습니다.
+ * @first_construct: Invoked when instance is created. If instance already
+ *           exists, it is not invoked.
  *
- * 이 구조체는 클래스 구조체입니다.
- *
+ * The class structure of #CrankSingular.
  */
 
-//////// 내부 선언부 ///////////////////////////////////////////////////////////
+//////// Internal Declaration //////////////////////////////////////////////////
 
 struct _CrankSingularClassPrivate {
 	CrankSingular*	instance;
@@ -136,7 +133,7 @@ G_DEFINE_TYPE_WITH_CODE(CrankSingular, crank_singular, G_TYPE_OBJECT, {
 			sizeof (CrankSingularClassPrivate)	);
 });
 
-//////// GObject에서 오버라이드 한 함수입니다.
+//////// Overriden function for GObject
 
 static GObject*	crank_singular_g_object_constructor (
 		GType					type,
@@ -147,7 +144,7 @@ static void		crank_singular_g_object_constructed (	GObject*	object	);
 static void		crank_singular_g_object_dispose (		GObject*	object	);
 
 
-//////// 내부 전용 함수
+//////// Internal only function
 
 static inline void		crank_singular_class_lock_mutex (	CrankSingularClass* c	);
 static inline void		crank_singular_class_unlock_mutex (	CrankSingularClass*	c	);
@@ -155,7 +152,7 @@ static inline void		crank_singular_class_unlock_mutex (	CrankSingularClass*	c	);
 
 //////// 구현부 ////////////////////////////////////////////////////////////////
 
-//////// GTypeInstance 초기화 함수입니다.
+//////// GTypeInstance Initialization Function.
 
 static void
 crank_singular_init (	CrankSingular*	self	)
@@ -184,7 +181,7 @@ crank_singular_class_init	(	CrankSingularClass*	c	)
 }
 
 
-//////// GObject에서 오버라이드 한 함수입니다.
+//////// Overriden function for GObject
 
 static GObject*
 crank_singular_g_object_constructor (
@@ -204,10 +201,10 @@ crank_singular_g_object_constructor (
 	if (c->priv->instance != NULL) return g_object_ref (c->priv->instance);
 
 	else {
-		// 생성을 잠급니다. 이는 추후 constructed 함수에서 언락합니다.
+		// Locks construction, it is unlocked at constructed().
 		crank_singular_class_lock_mutex (c);
 		
-		// 블록될 동안 객체가 생성되어 있으면, 스킵하고 잠금도 풉니다.
+		// If object is constructd while locked, skip construction and unlock.
 		if (c->priv->instance != NULL) {
 			crank_singular_class_unlock_mutex (c);
 
@@ -217,7 +214,7 @@ crank_singular_g_object_constructor (
 			return g_object_ref(c->priv->instance);
 		}
 
-		// 객체가 없는 경우 새로 만듭니다.
+		// If object is not constructed, create instance.
 		else {
 			parent_c_g_object = G_OBJECT_CLASS(crank_singular_parent_class);
 
@@ -267,7 +264,7 @@ crank_singular_g_object_dispose ( GObject*	object )
 }
 
 
-//////// 내부 전용 함수들
+//////// Internal only functions.
 
 static inline void
 crank_singular_class_lock_mutex (	CrankSingularClass*	c	)
@@ -297,11 +294,11 @@ crank_singular_class_unlock_mutex (	CrankSingularClass* c	)
 
 /**
  * crank_singular_has:
- * @type: #CrankSingular가 존재하는지 확인할 타입입니다.
+ * @type: #CrankSingular derived type to check existence.
  *
- * 주어진 타입에 해당하는 Singular 객체가 존재하는지 확인합니다.
+ * Check whether instance of given @type exists.
  *
- * Returns: 인스턴스가 존재하면 %TRUE
+ * Returns: %TRUE if instance of @type exists.
  */
 gboolean
 crank_singular_has (	GType	type	)
@@ -318,14 +315,14 @@ crank_singular_has (	GType	type	)
 
 /**
  * crank_singular_get:
- * @type: #CrankSingular를 얻을 타입입니다.
+ * @type: #CrankSingular derived type to get instance.
  *
- * 이미 생성된 #CrankSingular를 얻습니다.
+ * Gets already created #CrankSingular instance.
  *
- * 자동으로 생성해야 하는 경우 g_object_new()를 사용해야 합니다. g_object_new()
- * 는 #CrankSingular가 존재하는 경우 해당 객체를 반환합니다.
+ * If instance needs to be ensured, you should use g_object_new().
+ * g_object_new() will return instance when it exists.
  *
- * Returns: (nullable) (transfer full): 해당 타입의 인스턴스이거나, 없으면 %NULL
+ * Returns: (nullable) (transfer full): The instance or %NULL if not exists.
  */
 CrankSingular*
 crank_singular_get (	GType	type	)
@@ -342,12 +339,12 @@ crank_singular_get (	GType	type	)
 
 /**
  * crank_singular_peek:
- * @type: #CrankSingular를 얻을 타입입니다.
+ * @type: #CrankSingular derived type to peek instance.
  *
- * 이미 생성된 #CrankSingular를 얻습니다. crank_singular_get()와 다른 것은
- * 참조를 가져오지 않는 것입니다.
+ * Gets already created #CrankSingular. Unlike crank_singular_get(), it does
+ * not increase reference count.
  *
- * Returns: (nullable) (transfer none): 해당 타입의 인스턴스이거나, 없으면 %NULL
+ * Returns: (nullable) (transfer none): The instance or %NULL if not exists.
  */
 CrankSingular*
 crank_singular_peek (	GType	type	)

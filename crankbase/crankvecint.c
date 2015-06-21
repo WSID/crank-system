@@ -32,7 +32,7 @@
 /**
  * SECTION: crankvecint
  * @title: Integer vectors.
- * @short_description: Vectors that have float elements.
+ * @short_description: Vectors that have integer elements.
  * @stability: Unstable
  * @include: crankbase.h
  *

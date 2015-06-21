@@ -31,12 +31,12 @@ G_BEGIN_DECLS
 
 /**
  * CrankCallback: (skip)
- * @userdata: (closure): 더미입니다.
+ * @userdata: (closure): A userdata for callback.
  *
- * @userdata를 받아들이는 임이의 함수를 상징합니다.
+ * It represents any functions that accept @userdata.
  *
- * 이는 실질적인 함수 형으로 사용되기 보다는 임의의 함수를 받아들일수 있는
- * 인자를 표시하는 목적으로 사용됩니다.
+ * This is not used for actual callback type, but a placeholder for any function
+ * type.
  */
 typedef void		(*CrankCallback) (	gpointer	userdata	);
 

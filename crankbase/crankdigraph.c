@@ -29,31 +29,29 @@
 
 /**
  * SECTION: crankdigraph
- * @short_description: 유향 그래프를 나타냅니다.
  * @title:  CrankDigraph
+ * @short_description: A data structure for digraph.
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 이 구조체는 유향 그래프를 나타내는 구조체입니다.
+ * This structure represents a digraph.
  *
- * # 그래프의 구현에 대하여
+ * # Implementation of digraph.
  *
- * 그래프는 노드들과 그들을 이어주는 변으로 구성되어 있습니다. 다른 종류의
- * 자료구조와는 달리, 노드간 연결 관계에서도 값을 지정하는 경우가 많습니다.
+ * A graph has it's nodes and edges that connects them. Unlike other type of
+ * data structure, Connections itself may have their own values.
  *
- * 따라서 변이 값을 가지는 다양한 사용에 대응하기 위해 변에 대해서도 구조체가
- * 정의되어 있습니다.
+ * To incorporate to cases that edges has value, structure has been defined for 
+ * edges too.
+ * 
+ * In this implementation, each node has edge list, rather than adjacent list.
  *
- * 인접 리스트 방식과 비슷하게, 각 노드별로 변들의 리스트를 가집니다.
+ * REF: #CrankDigraphNode, #CrankDigraphEdge
  *
- * 참조: #CrankDigraphNode, #CrankDigraphEdge
+ * # Life cycle of CrankDigraphNode and CrankDigraphEdge
  *
- * # 그래프 노드와 변들의 라이프사이클
- *
- * 그래프 노드와 변들은 그래프에 완전히 종속적입니다. 그러한 특성으로 인해 해당
- * 구조체들의 메모리 할당 및 해제는 완전히 그래프에 의해 이루어집니다.
- *
- * 그래프 종속적인 특징에 의해 해당 구조체들의 #GType은 정의되지 않습니다.
+ * As nodes and edges are part of graph, memory management is done at graph
+ * level. because of that, they don't have GType.
  */
 
 G_DEFINE_BOXED_TYPE (CrankDigraph, crank_digraph, crank_digraph_ref, crank_digraph_unref);
@@ -61,8 +59,7 @@ G_DEFINE_BOXED_TYPE (CrankDigraph, crank_digraph, crank_digraph_ref, crank_digra
 /**
  * CrankDigraph:
  *
- * 유향 그래프를 나타내는 자료 구조입니다. 자세한 사항은 섹션 설명을 참조하기
- * 바랍니다.
+ * A structure for digraph.
  */
 struct _CrankDigraph {
 	GPtrArray*	nodes;
@@ -74,7 +71,7 @@ struct _CrankDigraph {
 /**
  * CrankDigraphNode:
  *
- * 유향 그래프의 노드를 나타냅니다.
+ * A structure for node.
  */
 struct _CrankDigraphNode {
 	GValue		data;
@@ -86,7 +83,7 @@ struct _CrankDigraphNode {
 /**
  * CrankDigraphEdge:
  *
- * 유향 그래프의 변을 나타냅니다.
+ * A structure for edge.
  */
 struct _CrankDigraphEdge {
 	GValue		data;
@@ -113,9 +110,9 @@ void				crank_digraph_edge_free (			CrankDigraphEdge*	edge	);
 /**
  * crank_digraph_new:
  *
- * 빈 그래프를 생성합니다.
+ * Constructs an empty digraph.
  *
- * Returns: (transfer full): 생성된 그래프입니다.
+ * Returns: (transfer full): Newly created digraph.
  */
 CrankDigraph*
 crank_digraph_new (void)
@@ -132,12 +129,12 @@ crank_digraph_new (void)
 
 /**
  * crank_digraph_new_with_nodes:
- * @nnodes: 노드의 개수입니다.
- * @values: (array length=nnodes): 정점의 값들입니다.
+ * @nnodes: Count of nodes.
+ * @values: (array length=nnodes): Values of nodes.
  *
- * 주어진 값들을 가지고 노드를 생성하여, 그래프를 생성합니다.
+ * Constructs a digraph with given values. The values are used for nodes.
  *
- * Returns: (transfer full): 생성된 그래프입니다.
+ * Returns: (transfer full): Newly created digraph.
  */
 CrankDigraph*
 crank_digraph_new_with_nodes (	const guint		nnodes,
@@ -153,15 +150,15 @@ crank_digraph_new_with_nodes (	const guint		nnodes,
 
 /**
  * crank_digraph_new_full:
- * @nnodes: 노드의 개수입니다.
- * @values: (array length=nnodes): 정점의 값들입니다.
- * @nedges: 변의 개수입니다.
- * @edges: (array length=nedges): 변의 연결 관계와 값입니다.
+ * @nnodes: Count of nodes.
+ * @values: (array length=nnodes): Values of nodes.
+ * @nedges: Count of edges.
+ * @edges: (array length=nedges): Values of edges.
  *
- * 주어진 값들을 가지고 노드를 생성합니다. 그리고 @edges의 인덱스를 이용하여
- * 변을 구성합니다.
+ * Constructs a digraph with given values. As nodes are unavailable on
+ * construction, nodes are pointed by index.
  *
- * Returns: (transfer full): 생성된 그래프입니다.
+ * Returns: (transfer full): Newly created digraph
  */
 CrankDigraph*
 crank_digraph_new_full (	const guint		nnodes,
@@ -188,11 +185,11 @@ crank_digraph_new_full (	const guint		nnodes,
 
 /**
  * crank_digraph_ref:
- * @graph: 그래프입니다.
+ * @graph: A digraph.
  *
- * 그래프의 참조를 1 증가시킵니다.
+ * Increase reference count by 1.
  *
- * Returns: (transfer full): 참조가 1 증가된 그래프입니다.
+ * Returns: (transfer full): A digraph with increased reference count.
  */
 CrankDigraph*
 crank_digraph_ref (	CrankDigraph*		graph	)
@@ -203,9 +200,10 @@ crank_digraph_ref (	CrankDigraph*		graph	)
 
 /**
  * crank_digraph_unref:
- * @graph: (transfer full): 그래프입니다.
+ * @graph: (transfer full): A digraph.
  *
- * 그래프의 참조를 1 감소시킵니다. 만일 참조가 0이라면, 그래프는 해제됩니다.
+ * Decreases reference count by 1. If reference count reaches 0, then digraph
+ * is freed.
  */
 void
 crank_digraph_unref (	CrankDigraph*		graph	)
@@ -220,11 +218,11 @@ crank_digraph_unref (	CrankDigraph*		graph	)
 
 /**
  * crank_digraph_get_nodes:
- * @graph: 그래프입니다.
+ * @graph: A digraph.
  *
- * 그래프에서 노드들을 얻습니다.
+ * Gets the nodes of graph.
  *
- * Returns: (transfer none) (element-type CrankDigraphNode): 노드들의 모음입니다.
+ * Returns: (transfer none) (element-type CrankDigraphNode): Nodes of graph.
  */
 GPtrArray*
 crank_digraph_get_nodes (	CrankDigraph*	graph	)
@@ -234,11 +232,11 @@ crank_digraph_get_nodes (	CrankDigraph*	graph	)
 
 /**
  * crank_digraph_get_edges:
- * @graph: 그래프입니다.
+ * @graph: A digraph.
  *
- * 그래프에서 변들을 얻습니다.
+ * Gets the edges of graph.
  *
- * Returns: (transfer none) (element-type CrankDigraphEdge): 변들의 모음입니다.
+ * Returns: (transfer none) (element-type CrankDigraphEdge): Edges of graph.
  */
 GPtrArray*
 crank_digraph_get_edges (	CrankDigraph*	graph	)
@@ -248,15 +246,15 @@ crank_digraph_get_edges (	CrankDigraph*	graph	)
 
 /**
  * crank_digraph_index_of_node:
- * @graph: 그래프입니다.
- * @node: 노드입니다.
+ * @graph: A digraph.
+ * @node: A node.
  *
- * 그래프에서 노드의 인덱스를 얻습니다. 이 인덱스들은 인접 행렬등과 같이 사용될 수 있습니다.
+ * Gets index of node in graph. The index can be used with adjacency matrices.
  *
  * Note:
- * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * The index can be changed as graph changes.
  * 
- * Returns: 노드의 인덱스입니다. 무효한 노드에 대해서 -1을 반환합니다.
+ * Returns: Index of node in graph. If node is not in graph, -1 is returned.
  */
 gint
 crank_digraph_index_of_node (	CrankDigraph*		graph,
@@ -272,15 +270,15 @@ crank_digraph_index_of_node (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_index_of_edge:
- * @graph: 그래프입니다.
- * @edge: 변입니다.
+ * @graph: A digraph.
+ * @edge: An edge.
  *
- * 그래프에서 변의 인덱스를 얻습니다. 이 인덱스들은 incidence matrix 등과 같이 사용될 수 있습니다.
+ * Gets index of edge in graph.
  *
  * Note:
- * 변의 인덱스는 그래프의 변경에 따라 변할 수 있습니다.
+ * The index can be changed as graph changes.
  *
- * Returns: 변의 인덱스입니다. 무효한 변에 대해서 -1을 반환합니다.
+ * Returns: Index of edge in graph. If edge is not in graph, -1 is returned.
  */
 gint
 crank_digraph_index_of_edge (	CrankDigraph*		graph,
@@ -296,15 +294,16 @@ crank_digraph_index_of_edge (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_nth_node:
- * @graph: 그래프입니다.
- * @index: 인덱스입니다.
+ * @graph: A digraph.
+ * @index: Index of node.
  *
- * 그래프에서 인덱스에 해당하는 노드를 얻습니다.
+ * Gets a node at index.
  *
  * Note:
- * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * The index can be changed as graph changes.
  * 
- * Returns: (transfer none) (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
+ * Returns: (transfer none) (nullable): The node at the index or %NULL if index
+ *        is out of bound.
  */
 CrankDigraphNode*
 crank_digraph_nth_node (	CrankDigraph*	graph,
@@ -317,15 +316,16 @@ crank_digraph_nth_node (	CrankDigraph*	graph,
 
 /**
  * crank_digraph_nth_edge:
- * @graph: 그래프입니다.
- * @index: 인덱스입니다.
+ * @graph: A digraph.
+ * @index: Index of edge..
  *
- * 그래프에서 인덱스에 해당하는 노드를 얻습니다.
+ * Gets a edge at index.
  *
  * Note:
- * 노드의 인덱스는 그래프에 변경에 따라 변할 수 있습니다.
+ * The index can be changed as graph changes.
  * 
- * Returns: (nullable): 해당 노드입니다. 만일 범위를 벗어나면, %NULL이 반환됩니다.
+ * Returns: (transfer none) (nullable): The edge at the index or %NULL if index
+ *        is out of bound.
  */
 CrankDigraphEdge*
 crank_digraph_nth_edge (	CrankDigraph*	graph,
@@ -338,12 +338,12 @@ crank_digraph_nth_edge (	CrankDigraph*	graph,
 
 /**
  * crank_digraph_add:
- * @graph: 그래프입니다.
- * @value: 노드의 값입니다.
+ * @graph: A digraph.
+ * @value: Value for new node.
  *
- * 그래프에서 @value를 값으로 가지는 노드를 추가합니다.
+ * Creates a node with given value.
  *
- * Returns: (transfer none): 추가된 노드입니다.
+ * Returns: (transfer none): Newly created and added node.
  */
 CrankDigraphNode*
 crank_digraph_add (	CrankDigraph*		graph,
@@ -358,10 +358,10 @@ crank_digraph_add (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_remove:
- * @graph: 그래프입니다.
- * @node: 제거할 노드입니다.
+ * @graph: A digraph.
+ * @node: A node to remove.
  *
- * 그래프에서 노드를 제거합니다.
+ * Removes a node from graph. All connected edges to the nodes are removed also.
  */
 void
 crank_digraph_remove (	CrankDigraph*		graph,
@@ -387,16 +387,17 @@ crank_digraph_remove (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect:
- * @graph: 그래프입니다.
- * @tail: 변의 꼬리 노드입니다.
- * @head: 변의 머리 노드입니다.
- * @edge_value: (nullable): 변의 값입니다.
- *     NULL을 통해 값이 없는 변을 구성할 수 있습니다.
+ * @graph: A digraph.
+ * @tail: Tail node of edge.
+ * @head: Head node of edge..
+ * @edge_value: (nullable): Value for new edge.
  *
- * @from과 @to를 연결하여 변을 구성합니다.
+ * Creates an edge connects @from and @to. @edge_value may be %NULL if
+ * value of edge is not matter of use case.
  *
  * Returns: (transfer none) (nullable):
- *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect (	CrankDigraph*		graph,
@@ -421,13 +422,14 @@ crank_digraph_connect (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_disconnect:
- * @graph: 그래프입니다.
- * @tail: 연결을 끊을 노드입니다.
- * @head: 연결을 끊을 노드입니다.
+ * @graph: A digraph.
+ * @tail: Tail node to disconnect.
+ * @head: Head node to disconnect.
  *
- * @from에서 @to로 이어지는 변을 찾아 연결을 끊습니다.
+ * Removes the edge that connects two nodes. If there is no edge, it returns
+ * %FALSE
  *
- * Returns: @from -> @to로 이어지는 변을 제거하면 %TRUE입니다.
+ * Returns: %TRUE, if a edge connects @from and @to, is removed.
  */
 gboolean
 crank_digraph_disconnect (	CrankDigraph*		graph,
@@ -446,13 +448,10 @@ crank_digraph_disconnect (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_disconnect_edge:
- * @graph: 그래프입니다.
- * @e: 제거할 변입니다.
+ * @graph: A digraph.
+ * @e: A edge to remove.
  *
- * 주어진 변을 그래프에서 제거합니다.
- *
- * Note: 확실히 존재하는 변을 제거하므로 확실히 제거되었는지 확인할 필요가
- *       없습니다.
+ * Removes a edge from digraph.
  */
 void
 crank_digraph_disconnect_edge (	CrankDigraph*		graph,
@@ -465,9 +464,9 @@ crank_digraph_disconnect_edge (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_reverse:
- * @graph: 그래프입니다.
+ * @graph: A digraph.
  *
- * 그래프의 방향을 뒤집습니다.
+ * Reverses a graph.
  */
 void
 crank_digraph_reverse (	CrankDigraph*	graph	)
@@ -491,11 +490,11 @@ crank_digraph_reverse (	CrankDigraph*	graph	)
 
 /**
  * crank_digraph_copy:
- * @graph: 복사할 그래프입니다.
+ * @graph: A digraph to copy.
  *
- * 그래프를 복사합니다.
+ * Copies a digraph.
  *
- * Returns: (transfer full): 복사된 그래프입니다.
+ * Returns: (transfer full): A copied digraph.
  */
 CrankDigraph*
 crank_digraph_copy (	CrankDigraph*	graph	)
@@ -539,10 +538,10 @@ crank_digraph_copy (	CrankDigraph*	graph	)
 
 /**
  * crank_digraph_node_get_data:
- * @node: 값을 얻을 노드입니다.
- * @value: 값을 저장할 #GValue입니다.
+ * @node: A node to get data.
+ * @value: #GValue to store value of node.
  *
- * 값을 얻습니다. @value는 해당 값을 저장한 타입에 맞게 초기화 되어야 합니다.
+ * Gets value of node.
  */
 void
 crank_digraph_node_get_data (	CrankDigraphNode*	node,
@@ -553,11 +552,10 @@ crank_digraph_node_get_data (	CrankDigraphNode*	node,
 														
 /**
  * crank_digraph_node_set_data:
- * @node: 노드입니다.
- * @value: 노드에 설정할 값입니다.
+ * @node: A node to set data.
+ * @value: #GValue to set value of node.
  *
- * 노드에 값을 설정합니다.
- *
+ * Sets value of node.
  */
 void
 crank_digraph_node_set_data (	CrankDigraphNode*	node,
@@ -568,11 +566,11 @@ crank_digraph_node_set_data (	CrankDigraphNode*	node,
 													
 /**
  * crank_digraph_node_type_of:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 노드가 가지고 있는 #GValue의 타입을 얻습니다.
+ * Gets #GType of #GValue.
  *
- * Returns: 노드의 #GValue의 타입입니다.
+ * Returns: GType of GValue.
  */
 GType
 crank_digraph_type_of (	CrankDigraphNode*	node	)
@@ -582,14 +580,12 @@ crank_digraph_type_of (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_in_nodes:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드로 들어오는 변을 가진 노드들을 얻습니다.
- *
- * #GList가 매번 생성되므로, 사용이 끝나면 g_list_free() 로 해제해야 합니다.
+ * Gets nodes that have incomming edges to this node.
  *
  * Returns: (transfer container) (element-type CrankDigraphNode):
- *        이 노드로 들어오는 노드들입니다.
+ *        Nodes that have incomming edges to this node.
  */
 GList*
 crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	)
@@ -609,14 +605,12 @@ crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_out_nodes:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드에서 나가는 변을 가진 노드들을 얻습니다.
- *
- * #GList가 매번 생성되므로, 사용이 끝나면 g_list_free() 로 해제해야 합니다.
+ * Gets nodes that have outgoing edges from this node.
  *
  * Returns: (transfer container) (element-type CrankDigraphNode):
- *        이 노드에서 나가는 노드들입니다.
+ *        Nodes that have outgoing edges from this node.
  */
 GList*
 crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	)
@@ -636,12 +630,12 @@ crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_in_edges:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드로 들어오는 변들을 얻습니다.
+ * Gets incomming edges to this node.
  *
  * Returns: (transfer none) (element-type CrankDigraphEdge):
- *        이 노드로 들어오는 변들입니다.
+ *        Incomming edges to this node.
  */
 GPtrArray*
 crank_digraph_node_get_in_edges (	CrankDigraphNode*	node	)
@@ -651,12 +645,12 @@ crank_digraph_node_get_in_edges (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_out_edges:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드에서 나가는 변들을 얻습니다.
+ * Gets outgoing edges from this node.
  *
  * Returns: (transfer none) (element-type CrankDigraphEdge):
- *        이 노드에서 나가는 변들입니다.
+ *        Outgoing edges to this node.
  */
 GPtrArray*
 crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	)
@@ -666,11 +660,11 @@ crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_indegree:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드로 들어오는 변의 개수입니다.
+ * Gets indegree (number of incomming nodes) of this node.
  *
- * Returns: 이 노드로 들어오는 변의 개수입니다.
+ * Returns: Indegree of this node.
  */
 guint
 crank_digraph_node_get_indegree (	CrankDigraphNode*	node	)
@@ -680,11 +674,11 @@ crank_digraph_node_get_indegree (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_outdegree:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 이 노드에서 나가는 변의 개수입니다.
+ * Gets outdegree (number of outgoing nodes) of this node.
  *
- * Returns: 이 노드에서 나가는 변의 개수입니다.
+ * Returns: Outgoing of this node.
  */
 guint
 crank_digraph_node_get_outdegree (	CrankDigraphNode*	node	)
@@ -694,12 +688,12 @@ crank_digraph_node_get_outdegree (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_is_adjacent:
- * @node: 노드입니다.
- * @other: 다른 노드입니다.
+ * @node: A node.
+ * @other: Other node.
  *
- * 노드가 서로 이어져 있는지 확인합니다.
+ * Check there is an edge between @node and @other.
  *
- * Returns: @node에서 @other로 이어지는 변이 있는지 확인합니다.
+ * Returns: Whether there is an edge bewteen @node and @other.
  */
 gboolean
 crank_digraph_node_is_adjacent (	CrankDigraphNode* node,
@@ -711,12 +705,12 @@ crank_digraph_node_is_adjacent (	CrankDigraphNode* node,
 
 /**
  * crank_digraph_node_is_adjacent_from:
- * @node: 노드입니다.
- * @other: 다른 노드입니다.
+ * @node: A node.
+ * @other: Other node.
  *
- * @other가 @node로 들어오는 변을 가지는지 확인합니다.
+ * Check @node has incomming edge from @other.
  *
- * Returns: @other가 @node에 대해 direct predecessor 확인합니다.
+ * Returns: Whether @node has incomming edge to @other.
  */
 gboolean
 crank_digraph_node_is_adjacent_from (	CrankDigraphNode*	node,
@@ -731,12 +725,12 @@ crank_digraph_node_is_adjacent_from (	CrankDigraphNode*	node,
 
 /**
  * crank_digraph_node_is_adjacent_to:
- * @node: 노드입니다.
- * @other: 다른 노드입니다.
+ * @node: A node.
+ * @other: Other node.
  *
- * @other가 @node에서 나오는 변을 가지는지 확인합니다.
+ * Check @node has outgoing edge to @other.
  *
- * Returns: @other가 @node에 대해 direct successor인지 확인합니다.
+ * Returns: Whether @node has outgoing edge from @other
  */
 gboolean
 crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
@@ -752,15 +746,15 @@ crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
 
 /**
  * crank_digraph_node_foreach_depth:
- * @node: 노드입니다.
- * @func: (scope call): 노드마다 호출할 함수입니다.
- * @userdata: (closure): @callback의 함수입니다.
+ * @node: A node.
+ * @func: (scope call): A function to iterate over.
+ * @userdata: (closure): userdata for @func.
  *
- * 노드에서 깊이 우선 반복을 수행합니다.
+ * Performs depth-first iteration.
  *
- * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ * Iteration can be stopped by returning %FALSE from @func.
  *
- * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ * Returns: %FALSE, if @func returns %FALSE.
  */
 gboolean
 crank_digraph_node_foreach_depth (	CrankDigraphNode*		node,
@@ -807,15 +801,15 @@ crank_digraph_node_foreach_depth (	CrankDigraphNode*		node,
 
 /**
  * crank_digraph_node_foreach_breadth:
- * @node: 노드입니다.
- * @func: (scope call): 노드마다 호출할 함수입니다.
- * @userdata: (closure): @callback의 함수입니다.
+ * @node: A node.
+ * @func: (scope call): A function to iterate over.
+ * @userdata: (closure): userdata for @func.
  *
- * 노드에서 넓이 우선 반복을 수행합니다.
+ * Performs depth-first iteration.
  *
- * @callback에서 %FALSE을 호출하여 반복을 중단할 수 있습니다.
+ * Iteration can be stopped by returning %FALSE from @func.
  *
- * Returns: 반복이 중도 중단되지 않고 계속 되었는지.
+ * Returns: %FALSE, if @func returns %FALSE.
  */
 gboolean
 crank_digraph_node_foreach_breadth (	CrankDigraphNode*		node,
@@ -866,10 +860,11 @@ crank_digraph_node_foreach_breadth (	CrankDigraphNode*		node,
 
 /**
  * crank_digraph_edge_get_data:
- * @edge: 변입니다.
- * @value: 값이 저장될 #GValue입니다. 해당하는 타입으로 미리 초기화 되어야 합니다.
+ * @edge: An edge.
+ * @value: A #GValue to store edge's value. Should be initialized with
+ *        appropriate type.
  *
- * 변에서 데이터를 얻습니다.
+ * Gets value from an edge.
  */
 void
 crank_digraph_edge_get_data (	CrankDigraphEdge*	edge,
@@ -880,10 +875,10 @@ crank_digraph_edge_get_data (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_set_data:
- * @edge: 변입니다.
- * @value: (nullable): 변에 설정할 값입니다.
+ * @edge: An edge.
+ * @value: (nullable): A #GValue to set edge's value.
  *
- * 변에 값을 설정합니다.
+ * Sets value of edge.
  */
 void
 crank_digraph_edge_set_data (	CrankDigraphEdge*	edge,
@@ -894,11 +889,11 @@ crank_digraph_edge_set_data (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_type_of:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변의 #GValue의 타입을 얻습니다.
+ * Gets #GType of #GValue that the edge holds.
  *
- * Returns: 변의 #GValue의 타입입니다.
+ * Returns: GType of GValue.
  */
 GType
 crank_digraph_edge_type_of (	CrankDigraphEdge*	edge	)
@@ -908,11 +903,11 @@ crank_digraph_edge_type_of (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_tail:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변의 꼬리 노드를 얻습니다.
+ * Gets the tail node of edge.
  *
- * Returns: (transfer none): 변의 꼬리 노드입니다.
+ * Returns: (transfer none): Tail node of edge.
  */
 CrankDigraphNode*
 crank_digraph_edge_get_tail (	CrankDigraphEdge*	edge	)
@@ -922,11 +917,11 @@ crank_digraph_edge_get_tail (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_head:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변의 머리 노드를 얻습니다.
+ * Gets the head node of edge.
  *
- * Returns: (transfer none): 변의 머리 노드입니다.
+ * Returns: (transfer none): Head node of edge.
  */
 CrankDigraphNode*
 crank_digraph_edge_get_head (	CrankDigraphEdge*	edge	)
@@ -938,13 +933,13 @@ crank_digraph_edge_get_head (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_add_pointer:
- * @graph: 그래프입니다.
- * @ptype: 포인터의 GType입니다. 혹은 %G_TYPE_POINTER를 사용할 수 있습니다.
- * @pointer: 포인터입니다.
+ * @graph: A digraph.
+ * @ptype: GType for @pointer. %G_TYPE_POINTER may be passed.
+ * @pointer: A pointer.
  *
- * 포인터 값을 가진 노드를 추가합니다.
+ * Adds a pointer valued node.
  *
- * Returns: (transfer none): 추가된 노드입니다.
+ * Returns: (transfer none): Newly added node.
  */
 CrankDigraphNode*
 crank_digraph_add_pointer (	CrankDigraph*	graph,
@@ -966,13 +961,13 @@ crank_digraph_add_pointer (	CrankDigraph*	graph,
 
 /**
  * crank_digraph_add_boxed:
- * @graph: 그래프입니다.
- * @btype: 포인터의 GType입니다.
- * @boxed: 포인터입니다.
+ * @graph: A digraph.
+ * @btype: GType for @boxed.
+ * @boxed: A boxed.
  *
- * 박스 값을 가진 노드를 추가합니다.
+ * Adds a boxed valued node.
  *
- * Returns: (transfer none): 추가된 노드입니다.
+ * Returns: (transfer none): Newly added node.
  */
 CrankDigraphNode*
 crank_digraph_add_boxed (	CrankDigraph*	graph,
@@ -995,12 +990,12 @@ crank_digraph_add_boxed (	CrankDigraph*	graph,
 
 /**
  * crank_digraph_add_object:
- * @graph: 그래프입니다.
- * @object: 객체입니다.
+ * @graph: A digraph.
+ * @object: A GObject.
  *
- * 객체 값을 가진 노드를 추가합니다.
+ * Adds a #GObject valued node.
  *
- * Returns: (transfer none): 추가된 노드입니다.
+ * Returns: (transfer none): Newly added node.
  */
 CrankDigraphNode*
 crank_digraph_add_object (	CrankDigraph*	graph,
@@ -1024,15 +1019,15 @@ crank_digraph_add_object (	CrankDigraph*	graph,
 
 /**
  * crank_digraph_connect_void:
- * @graph: 그래프입니다.
- * @tail: 변의 꼬리 노드입니다.
- * @head: 변의 머리 노드입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
  *
- * @from과 @to를 연결하여 변을 구성합니다. 그래프의 연결 관계만 고려할 경우
- * 사용할 수 있습니다.
+ * Creates a valueless edge that connects @tail and @head.
  *
  * Returns: (transfer none) (nullable):
- *        연결된 변입니다. 만일 두 변이 연결되어 있다면 NULL을 반환합니다.
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_void (	CrankDigraph*		graph,
@@ -1044,14 +1039,16 @@ crank_digraph_connect_void (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect_float:
- * @graph: 그래프입니다.
- * @tail: 꼬리 노드입니다.
- * @head: 머리 노드입니다.
- * @value: 변의 값입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
+ * @value: Value of edge.
  *
- * 단정도 부동 소수 값을 가진 변을 추가합니다.
+ * Creates a float-valued edge that connects @tail and @head.
  *
- * Returns: (transfer none): 추가된 변입니다.
+ * Returns: (transfer none) (nullable):
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_float (	CrankDigraph*		graph,
@@ -1074,14 +1071,16 @@ crank_digraph_connect_float (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect_double:
- * @graph: 그래프입니다.
- * @tail: 꼬리 노드입니다.
- * @head: 머리 노드입니다.
- * @value: 변의 값입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
+ * @value: Value of edge.
  *
- * 배정도 부동 소수 값을 가진 변을 추가합니다.
+ * Creates a double-valued edge that connects @tail and @head.
  *
- * Returns: (transfer none): 추가된 변입니다.
+ * Returns: (transfer none) (nullable):
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_double (	CrankDigraph*		graph,
@@ -1104,15 +1103,17 @@ crank_digraph_connect_double (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect_pointer:
- * @graph: 그래프입니다.
- * @tail: 꼬리 노드입니다.
- * @head: 머리 노드입니다.
- * @ptype: 포인터의 타입입니다.
- * @pointer: 포인터입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
+ * @ptype: Type of @pointer.
+ * @pointer: Pointer for edge.
  *
- * 포인터 값을 가진 변을 추가합니다.
+ * Creates a pointer-valued edge that connects @tail and @head.
  *
- * Returns: (transfer none): 추가된 변입니다.
+ * Returns: (transfer none) (nullable):
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_pointer (	CrankDigraph*		graph,
@@ -1137,15 +1138,17 @@ crank_digraph_connect_pointer (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect_boxed:
- * @graph: 그래프입니다.
- * @tail: 꼬리 노드입니다.
- * @head: 머리 노드입니다.
- * @btype: 박스의 타입입니다.
- * @boxed: 박스입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
+ * @btype: Type of @boxed
+ * @boxed: Boxed for edge.
  *
- * 박스 값을 가진 변을 추가합니다.
+ * Creates a boxed-valued edge that connects @tail and @head.
  *
- * Returns: (transfer none): 추가된 변입니다.
+ * Returns: (transfer none) (nullable):
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_boxed (	CrankDigraph*		graph,
@@ -1170,14 +1173,16 @@ crank_digraph_connect_boxed (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_connect_object:
- * @graph: 그래프입니다.
- * @tail: 꼬리 노드입니다.
- * @head: 머리 노드입니다.
- * @object: 객체입니다.
+ * @graph: A digraph.
+ * @tail: Tail node for edge.
+ * @head: Head node for edge.
+ * @object: #GObject for edge.
  *
- * 객체 값을 가진 변을 추가합니다.
+ * Creates a object-valued edge that connects @tail and @head.
  *
- * Returns: (transfer none): 추가된 변입니다.
+ * Returns: (transfer none) (nullable):
+ *        Newly created edge that connects two nodes. If there is already a edge
+ *        that connects, no edge is created and returns %NULL.
  */
 CrankDigraphEdge*
 crank_digraph_connect_object (	CrankDigraph*		graph,
@@ -1201,11 +1206,11 @@ crank_digraph_connect_object (	CrankDigraph*		graph,
 
 /**
  * crank_digraph_node_get_pointer:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 노드로부터 포인터 값을 얻습니다.
+ * Gets a pointer value of node.
  *
- * Returns: (transfer none): 포인터 값입니다.
+ * Returns: (transfer none): Pointer value of node.
  */
 gpointer
 crank_digraph_node_get_pointer (	CrankDigraphNode*	node	)
@@ -1215,11 +1220,11 @@ crank_digraph_node_get_pointer (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_boxed:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 노드로부터 박스 값을 얻습니다.
+ * Gets a boxed value of node.
  *
- * Returns: (transfer none): 박스 값입니다.
+ * Returns: (transfer none): Boxed value of node.
  */
 gpointer
 crank_digraph_node_get_boxed (	CrankDigraphNode*	node	)
@@ -1229,11 +1234,11 @@ crank_digraph_node_get_boxed (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_node_get_object:
- * @node: 노드입니다.
+ * @node: A node.
  *
- * 노드로부터 객체 값을 얻습니다.
+ * Gets a #GObject value of node.
  *
- * Returns: (transfer none): 객체 값입니다.
+ * Returns: (transfer none): GObject value of node.
  */
 GObject*
 crank_digraph_node_get_object (	CrankDigraphNode*	node	)
@@ -1245,11 +1250,11 @@ crank_digraph_node_get_object (	CrankDigraphNode*	node	)
 
 /**
  * crank_digraph_edge_get_float:
- * @edge: 변입니다.
+ * @edge: A edge.
  *
- * 변으로부터 단정도 부동 소수 값을 얻습니다.
+ * Gets a float value of edge.
  *
- * Returns: 변의 소수 값입니다.
+ * Returns: Float value of edge.
  */
 gfloat
 crank_digraph_edge_get_float (	CrankDigraphEdge*	edge	)
@@ -1259,11 +1264,11 @@ crank_digraph_edge_get_float (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_double:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변으로부터 배정도 부동 소수 값을 얻습니다.
+ * Gets a double value of edge.
  *
- * Returns: 변의 소수 값입니다.
+ * Returns: Double value of edge.
  */
 gdouble
 crank_digraph_edge_get_double (	CrankDigraphEdge*	edge	)
@@ -1273,11 +1278,11 @@ crank_digraph_edge_get_double (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_pointer:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변으로부터 포인터 값을 얻습니다.
+ * Gets a pointer value of edge.
  *
- * Returns: (transfer none): 변의 포인터 값입니다.
+ * Returns: (transfer none): Pointer value of edge.
  */
 gpointer
 crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
@@ -1287,11 +1292,11 @@ crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_boxed:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변으로부터 박스 값을 얻습니다.
+ * Gets a boxed value of edge.
  *
- * Returns: (transfer none): 변의 박스 값입니다.
+ * Returns: (transfer none): Boxed value of edge.
  */
 gpointer
 crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
@@ -1301,11 +1306,11 @@ crank_digraph_edge_get_boxed (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_edge_get_object:
- * @edge: 변입니다.
+ * @edge: An edge.
  *
- * 변으로부터 객체 값을 얻습니다.
+ * Gets a #GObject value of edge.
  *
- * Returns: (transfer none): 변의 객체 값입니다.
+ * Returns: (transfer none): GObject value of edge.
  */
 GObject*
 crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
@@ -1316,11 +1321,11 @@ crank_digraph_edge_get_object (	CrankDigraphEdge*	edge	)
 
 /**
  * crank_digraph_node_set_pointer:
- * @node: 노드입니다.
- * @ptype: 포인터의 #GType입니다.
- * @pointer: 포인터입니다.
+ * @node: A node.
+ * @ptype: #GType of @pointer.
+ * @pointer: Pointer to set the value.
  *
- * 포인터를 노드의 값으로 설정합니다.
+ * Sets value of node to pointer.
  */
 void
 crank_digraph_node_set_pointer (	CrankDigraphNode*	node,
@@ -1332,11 +1337,11 @@ crank_digraph_node_set_pointer (	CrankDigraphNode*	node,
 
 /**
  * crank_digraph_node_set_boxed:
- * @node: 노드입니다.
- * @btype: 박스의 #GType입니다.
- * @boxed: 박스입니다.
+ * @node: A node.
+ * @btype: #GType of @boxed.
+ * @boxed: A boxed.
  *
- * 박스를 노드의 값으로 설정합니다.
+ * Sets value of node to boxed.
  */
 void
 crank_digraph_node_set_boxed (	CrankDigraphNode*	node,
@@ -1348,10 +1353,10 @@ crank_digraph_node_set_boxed (	CrankDigraphNode*	node,
 
 /**
  * crank_digraph_node_set_object:
- * @node: 노드입니다.
- * @object: 객체입니다.
+ * @node: A node.
+ * @object: A #GObject.
  *
- * 객체를 노드의 값으로 설정합니다.
+ * Sets value of node to #GObject
  */
 void
 crank_digraph_node_set_object (	CrankDigraphNode*	node,
@@ -1365,10 +1370,10 @@ crank_digraph_node_set_object (	CrankDigraphNode*	node,
 
 /**
  * crank_digraph_edge_set_float:
- * @edge: 변입니다.
- * @value: 값입니다.
+ * @edge: An edge.
+ * @value: A float value.
  *
- * 변의 값을 단정도 부동소수값으로 설정합니다.
+ * Sets value of edge to float.
  */
 void
 crank_digraph_edge_set_float (	CrankDigraphEdge*	edge,
@@ -1380,10 +1385,10 @@ crank_digraph_edge_set_float (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_set_double:
- * @edge: 변입니다.
- * @value: 값입니다.
+ * @edge: An edge.
+ * @value: A double value.
  *
- * 변의 값을 배정도 부동소수값으로 설정합니다.
+ * Sets value of edge to double.
  */
 void
 crank_digraph_edge_set_double (	CrankDigraphEdge*	edge,
@@ -1395,11 +1400,11 @@ crank_digraph_edge_set_double (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_set_pointer:
- * @edge: 변입니다.
- * @ptype: 포인터의 타입입니다.
- * @pointer: 포인터입니다.
+ * @edge: An edge.
+ * @ptype: #GType of @pointer.
+ * @pointer: A pointer value.
  *
- * 변의 값을 포인터로 설정합니다.
+ * Sets value of edge to pointer.
  */
 void
 crank_digraph_edge_set_pointer (	CrankDigraphEdge*	edge,
@@ -1411,11 +1416,11 @@ crank_digraph_edge_set_pointer (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_set_boxed:
- * @edge: 변입니다.
- * @btype: 박스의 타입입니다.
- * @boxed: (transfer none): 박스입니다.
+ * @edge: An edge.
+ * @btype: #GType of @boxed.
+ * @boxed: (transfer none): A boxed value.
  *
- * 변의 값을 박스로 설정합니다.
+ * Sets value of edge to boxed.
  */
 void
 crank_digraph_edge_set_boxed (	CrankDigraphEdge*	edge,
@@ -1427,10 +1432,10 @@ crank_digraph_edge_set_boxed (	CrankDigraphEdge*	edge,
 
 /**
  * crank_digraph_edge_set_object:
- * @edge: 변입니다.
- * @object: (transfer none): 객체입니다.
+ * @edge: An edge.
+ * @object: (transfer none): A #GObject.
  *
- * 변의 값을 객체로 설정합니다.
+ * Sets value of edge to object.
  */
 void
 crank_digraph_edge_set_object (	CrankDigraphEdge*	edge,
@@ -1441,12 +1446,13 @@ crank_digraph_edge_set_object (	CrankDigraphEdge*	edge,
 
 
 
+//////// Internal Functions ////////
 
 /*
  * crank_digraph_node_new: (private)
- * @value: 값입니다.
+ * @value: Value.
  *
- * 새로운 노드를 생성합니다.
+ * Constructs new node.
  */
 CrankDigraphNode*
 crank_digraph_node_new (	const GValue*	value	)
@@ -1471,9 +1477,9 @@ crank_digraph_node_free (	CrankDigraphNode*	node	)
 
 /*
  * crank_digraph_edge_new: (private)
- * @data: 값입니다.
+ * @data: Value.
  *
- * 새로운 노드를 생성합니다.
+ * Constructs new edge with given nodes.
  */
 CrankDigraphEdge*
 crank_digraph_edge_new (	const GValue*	value,

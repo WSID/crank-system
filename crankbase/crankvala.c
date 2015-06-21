@@ -22,24 +22,25 @@
 
 /**
  * crank_vala_create_closure: (skip)
- * @callback: GClosure로 포장할 함수입니다.
- * @userdata: 추가적으로 사용할 데이터입니다.
- * @destroy: @userdata를 해제할 함수입니다.
- * @marshal: (nullable): @callback을 호출할 때 사용할 GClosureMarshal입니다.
+ * @callback: (scope async): A function to wrap in GClosure.
+ * @userdata: (closure): userdata for @callback.
+ * @destroy: A function to destroy @userdata.
+ * @marshal: (nullable): A #GClosureMarshal to marshal arguments to @callback.
  *
- * #GClosure를 생성합니다.
+ * Constructs a #GCClosure.
  *
- * Vala에서는 #GClosure를 생성하기 힘들 수 있습니다. (#GCClosure에 대한 접근이
- * 불가능함, #GClosureMarshal 함수들이 보이지 않음 등)
+ * In Vala, it is hard to create #GClosure (No binding for #GCClosure and
+ * #GClosureMarshal)
  *
- * 따라서 Crank System은 관려 기능이 언어에 추가되기 전까진, 함수를 지원합니다.
+ * Therefore, Crank System provides these service until Vala adds its own support
+ * for #GClosure.
  *
- * |[ <-- language="vala" --!>
+ * |[ <-- language="Vala" --!>
  *    GLib.Closure closure = Crank.create_closure (
  *        (Crank.Callback) some_func    );
  * ]|
  *
- * Returns: (transfer full): 새로 생성된 #GClosure입니다.
+ * Returns: (transfer full): Newly created #GClosure.
  */
 GClosure*
 crank_vala_create_closure (	CrankCallback	callback,

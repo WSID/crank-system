@@ -28,29 +28,29 @@
 
 /**
  * SECTION: cranktypesgraph
- * @short_description: 여러 타입 정보를 관리하는 그래프입니다.
  * @title: CrankTypesGraph
+ * @short_description: Data structure to manage arrays of types.
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 타입 그래프는 여러 타입의 배열을 상관관계에 따라 그래프화 하여 이어 놓은 것
- * 입니다.
- * 이 자료 구조는 #CrankFuncHolder에서 인자들의 타입에 따라 호출을 적절한 함수로
- * 넘기기 위한 것입니다.
+ * CrankTypesGraph is a key-value data structure that manages datas, by relation
+ * of arrays of types. This data structures is mainly backing for
+ * #CrankFuncHolder, to passing functions for given types.
  *
- * # 키와 값의 형식
+ * # Keys and Values
  *
- * #CrankTypesGraph는 #GType의 배열을 키로 사용합니다. 따라서, 배열의 포인터와
- * 길이를 넘겨주어야 합니다. 또한 반드시 crank_types_graph_lookup() (와 다른
- * 함수들)의 결과는 반드시 같은 길이의 키로 반환됩니다.
+ * #CrankTypesGraph uses array of #GType as key. Therefore, pointer of array and
+ * length should be passed. And result array of crank_types_graph_lookup()
+ * familes have same length as arrays that passed.
  *
- * #CrankTypesGraph에서는 값을 #GValue에 저장합니다. 이는 #GValue을 통해 값을
- * 전달하고 전달 받습니다.
+ * #CrankTypesGraph stores data in #GValue. Datas should be passed by #GValue.
  *
- * 값을 설정할 경우에는 임의의 #GValue을 전달하는 것이 가능합니다. 값을 받을
- * 경우, #GValue는 해당 타입을 받을 수 있도록 초기화 되어야 합니다.
+ * When setting data, Any #GValue can be passed. When receiving data, #GValue
+ * should be initialized with appropriate type.
  *
- * # 타입 배열에 대한 is-a 관계 # {#is_a}
+ * # is-a relationship of types # {#is_a}
+ *
+ * If inheritence of types A, B, C, D and E is defined as below,
  *
  * -A
  *   - B
@@ -58,37 +58,33 @@
  *     - D
  *     - E
  *
- *
- * 타입 A, B, C, D, E가 위의 상속 관계를 가질 경우, 예를 들어, 두 클래스간
- * is-a 관계는 다음과 같습니다.
- *
+ * Then the followings are true, for is-a relationship.
  *
  * - E is a A
  * - C is a A
  * - B is not a D ...
  *
- * 타입 배열간 is-a 관계는 두 개의 규칙을 만족하면 성립합니다.
+ * In #CrankTypesGraph, two arrays are considered to have is-a relation if,
  *
- * - 두 배열의 길이가 같을 것
- * - 각각의 원소가 서로 대응되는 원소에 대해 is-a 관계를 가질 것
+ * - Same size of array.
+ * - Each element of one array has is-a relation to matching element of other
+ *    array.
  *
- *    예를 들면, [a, b] is a [c, d]가 되기 위해서는 a is a c, b is a d가 되어야
- *    합니다.
+ *    For example, To have [C, D] is a [A, B], C should be A, D should be B.
  *
- * 따라서 이 예에서는 다음의 관계가 성립합니다.
+ * Therefore, the followings are true.
  *
  * - [A] is not a [A, A]
  * - [D, E] is a [A, C]
  * - [C, E] is not a [E, C]
- * - ...
  *
- * 타입 그래프는 여러 개의 타입을 가지는 배열을 관리합니다. 따라서 하나의 타입
- * 배열은 여러 개의 타입 배열에 대해 is-a 관계를 가질 수 있습니다. 만일 이러한
- * 경우가 발생하는 경우 #CrankTypesGraph는 가장 구체적인 타입 배열에 대한 값으로
- * 조회합니다. 
+ * Types Graph manages array of types, rather than single type. So one array
+ * may have is-a relation to other. If this is happens, #CrankTypesGraph will
+ * return the array with most derived types. (Which has most largest sum of
+ * depth of types.)
  */
 
-//////// 내부 전용 구조체 선언부 ///////////////////////////////////////////////
+//////// Internal Structure Declaration ////////////////////////////////////////
 
 typedef struct _CrankTypesGraphData	CrankTypesGraphData;
 
@@ -136,7 +132,7 @@ void				crank_types_root_remove (		CrankDigraph*		digraph,
 													CrankDigraphNode*	node		);
 
 
-//////// 내부 전용 구조체 구현부 ///////////////////////////////////////////////
+//////// Internal Structure Definition /////////////////////////////////////////
 
 struct _CrankTypesGraphData {
 	GType*				types;	// Node value
@@ -149,13 +145,13 @@ struct _CrankTypesGraphData {
 
 /*
  * crank_typestring:
- * @types: (array length=ntypes): #GType 배열입니다.
- * @ntypes: @types 배열의 길이입니다.
+ * @types: (array length=ntypes): An array of #GType.
+ * @ntypes: Length of @types.
  *
- * 타입들을 문자열로 표현해야 할 경우 사용됩니다. 주로 디버깅 스트링으로 내부적
- * 노드를 표현할 때 사용합니다.
+ * Creates string representation of type array.
+ * Generally, it is used for debugging.
  *
- * Returns: 타입 이름을 콤마로 구분한 문자열입니다.
+ * Returns: Comma separated names of type.
  */
 static G_GNUC_MALLOC gchar*
 crank_typestring	(	const GType*	types,
@@ -180,14 +176,13 @@ crank_typestring	(	const GType*	types,
 
 /*
  * crank_types_is_a:
- * @types: (array length=ntypes): #GType 배열입니다.
- * @types_is_a: (array length=types): #GType 배열입니다.
- * @ntypes: 두 배열의 길이입니다.
+ * @types: (array length=ntypes): An array of #GType.
+ * @types_is_a: (array length=ntypes): An array of #GType.
+ * @ntypes: Length of both array.
  *
- * @types과 @types_is_a가 is-a관계인지 확인합니다. 노드를 삽입할
- * 때 사용합니다.
+ * Checks @types is a @types_is_a. Used when inserting nodes.
  *
- * Returns: @types가 @types_is_a와 is-a관계인지 확인합니다.
+ * Returns: Whether @types is a @types_is_a.
  */
 static gboolean
 crank_types_is_a	(	const GType*	types,
@@ -253,11 +248,11 @@ crank_types_node_add (	CrankDigraph*		digraph,
 	
 	GPtrArray*		pout_edges =	crank_digraph_node_get_out_edges (parent);
 	
-	// 먼저 하위 노드에 속하는지 확인합니다.
+	// Checks that node is ancestor of parent.
 	if (crank_types_is_a (ndata->types, pdata->types, ndata->ntypes)) {
 		gboolean add_to_subnode = FALSE;
 	
-		// 자손과 연결 되는지 확인합니다.
+		// Checks if the node is ancestor of subnodes.
 		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 			
 			CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
@@ -266,9 +261,9 @@ crank_types_node_add (	CrankDigraph*		digraph,
 			
 		CRANK_FOREACH_G_PTR_ARRAY_END
 		
-		// 자식에 연결되지 않은 경우 부모와 연결합니다.
+		// If no subnode is connected to node, connect it to parent.
 		if (! add_to_subnode) {
-			// node의 하위에 해당하는 항목들은 node에 연결합니다..
+			// If subnode is ancestor of node, connect it, unlinking from parent.
 			CRANK_FOREACH_G_PTR_ARRAY_BEGIN (pout_edges, CrankDigraphEdge*, edge)
 			
 				CrankDigraphNode* sub = crank_digraph_edge_get_head (edge);
@@ -375,7 +370,7 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 	out_edges = crank_digraph_node_get_out_edges (node);
 	in_edges = crank_digraph_node_get_in_edges (node);
 	
-	// 먼저 하위 노드로부터 연결을 끊습니다.
+	// Disconnect from subnodes.
 	
 	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(out_edges, CrankDigraphEdge*, out_edge)
 		CrankDigraphNode* subnode = crank_digraph_edge_get_head (out_edge);
@@ -395,7 +390,7 @@ crank_types_root_remove (	CrankDigraph*		digraph,
 	crank_digraph_remove (digraph, node);
 }
 
-////////// 선언부 //////////////////////////////////////////////////////////////
+////////// Declaration /////////////////////////////////////////////////////////
 
 /**
  * CrankTypesGraph:
@@ -428,10 +423,10 @@ CrankDigraphNode*		crank_types_graph_lookup_node (		CrankTypesGraph*	graph,
 
 
 
-//////// 구현부 ////////////////////////////////////////////////////////////////
+//////// Definition ////////////////////////////////////////////////////////////
 
 
-//////// 내부 전용 함수
+//////// Internal functions
 
 static CrankDigraphNode*
 crank_types_graph_get_root (	CrankTypesGraph*	graph,
@@ -468,8 +463,7 @@ crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
 							  	const guint			key_length	)
 {
 	// For future, more way to pick one from candidates.
-	//TODO: 픽 방식을 정할 수 있도록 합니다.
-	
+
 	CrankDigraphNode*	root;
 	CrankDigraphNode*	node = NULL;
   	GList*				lookup_list = NULL;
@@ -497,14 +491,14 @@ crank_types_graph_lookup_node (	CrankTypesGraph*	graph,
   	return node;
 }
 
-//////// 외부 공개 함수들
+//////// Functions
 
 /**
  * crank_types_graph_new: (constructor)
  *
- * 새로운 타입 그래프를 생성합니다.
+ * Constructs empty types graph.
  *
- * Returns: (transfer full): 생성된 #CrankTypesGraph입니다.
+ * Returns: (transfer full): Newly created #CrankTypesGraph.
  */
 CrankTypesGraph*
 crank_types_graph_new (void)
@@ -523,11 +517,11 @@ crank_types_graph_new (void)
 
 /**
  * crank_types_graph_ref:
- * @graph: 타입 그래프입니다.
+ * @graph: A types graph.
  *
- * 레퍼런스 카운트를 1 증가시킵니다.
+ * Increase reference count by 1.
  *
- * Returns: (transfer full): 레퍼런스 카운트가 1 증가된 @graph입니다.
+ * Returns: (transfer full): @graph with increased reference count.
  */
 CrankTypesGraph*
 crank_types_graph_ref (CrankTypesGraph*	graph)
@@ -538,10 +532,10 @@ crank_types_graph_ref (CrankTypesGraph*	graph)
 
 /**
  * crank_types_graph_unref:
- * @graph: 타입 그래프입니다.
+ * @graph: A types graph.
  *
- * 레퍼런스 카운트를 1 감소시킵니다. 만일 레퍼런스 카운트가 0이 되면 그래프는
- * 해제됩니다.
+ * Decrease reference count by 1. If reference count reaches 0, the graph is
+ * freed.
  */
 void
 crank_types_graph_unref (CrankTypesGraph*	graph)
@@ -564,12 +558,12 @@ crank_types_graph_unref (CrankTypesGraph*	graph)
 
 /**
  * crank_types_graph_set:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 값을 설정하고자 하는 키입니다.
- * @key_length: 값을 설정하고자 하는 키의 길이입니다.
- * @value: 값입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to set value.
+ * @key_length: Size of the key.
+ * @value: Value to set.
  *
- * 타입 그래프에서 키에 대한 값을 설정합니다.
+ * Set a value of types graph by given key.
  */
 void
 crank_types_graph_set ( CrankTypesGraph*	graph,
@@ -598,16 +592,17 @@ crank_types_graph_set ( CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_get:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 값을 얻고자 하는 키입니다.
- * @key_length: 값을 얻고자 하는 키의 길이입니다.
- * @value: 값이 저장되는 곳입니다.
- *    해당 값의 타입으로 초기화 되어 있어야 합니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to set value.
+ * @key_length: Size of the key.
+ * @value: Value to get. It should be initialized by appropriate type.
  *
- * 타입 그래프에서 키에 대한 값을 얻어옵니다. 만일 [is-a][is_a] 관계로 조회해야
- * 할 경우, crank_types_graph_lookup()으로 조회해야 합니다.
+ * Gets value for given key.
  *
- * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Use crank_types_graph_lookup() if [is-a relationship][is_a] should be
+ * considered.
+ *
+ * Returns: %TRUE if the key exists.
  */
 gboolean
 crank_types_graph_get ( CrankTypesGraph*	graph,
@@ -632,14 +627,13 @@ crank_types_graph_get ( CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_has:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to check existence.
+ * @key_length: Size of the key.
  *
- * 타입 그래프에서 해당 키가 존재하는지 확인합니다. 만일 [is-a][is_a] 관계로
- * 조회해야 할 경우, crank_types_graph_lookup_types()로 확인 가능합니다.
+ * Checks existence of key in a graph.
  *
- * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Returns: %FALSE, If the key does not exist.
  */
 gboolean
 crank_types_graph_has (	CrankTypesGraph*	graph,
@@ -657,16 +651,16 @@ crank_types_graph_has (	CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_lookup:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
- * @value: 값이 저장되는 곳입니다.
- *    해당 값의 타입으로 초기화 되어 있어야 합니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to look up.
+ * @key_length: Size of the key.
+ * @value: A GValue to store value. It should be initialized with appropriate
+ *         type.
  *
- * 타입 그래프에서 키에 해당하는 값을 얻습니다. 키가 존재하지 않더라도,
- * [is-a](#is_a) 관계가 만족되는 키에서 값을 얻어오게 됩니다.
+ * Looks up value which matches to given key. Even the key does not exist, the
+ * value of most appropriate key on graph is retrieved.
  *
- * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Returns: %FALSE, If there is no matching key.
  */
 gboolean
 crank_types_graph_lookup (	CrankTypesGraph*	graph,
@@ -688,16 +682,14 @@ crank_types_graph_lookup (	CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_lookup_types:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to look up.
+ * @key_length: Size of the key.
  *
- * 타입 그래프에서 등록된 키 중에서 주어진 키와 [is-a][is_a] 관계를 맺고 있는
- * 키를 얻습니다.
+ * Looks up most appropriate key for given key. If the given key exists in graph,
+ * the given key is returned.
  *
- * 이는 키의 존재를 확인할 때에도 사용 가능합니다.
- *
- * Returns: (array length=key_length): 해당 @key에 대응되는 원래 키입니다.
+ * Returns: (array length=key_length) (nullable): Most appropriate key for @key.
  */
 const GType*
 crank_types_graph_lookup_types (CrankTypesGraph*	graph,
@@ -719,15 +711,16 @@ crank_types_graph_lookup_types (CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_lookup_full:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
- * @key_orig: (out) (array length=key_length) (transfer none): 키의 원래 키입니다.
- * @value: 값입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to look up.
+ * @key_length: Size of the key.
+ * @key_orig: (out) (array length=key_length) (transfer none):
+ *         Return location for most appropriate key.
+ * @value: A GValue to store value.
  *
- * 타입 그래프에서 키에 해당하는 원래 키와 값을 얻습니다.
+ * Looks up appropriate key and its value for @key.
  *
- * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Returns: %FALSE if there is no matching key.
  */
 gboolean
 crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
@@ -750,14 +743,13 @@ crank_types_graph_lookup_full (	CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_remove:
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 제거하고자 하는 키입니다.
- * @key_length: 제거하고자 하는 키의 길이입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to remove.
+ * @key_length: Size of the key.
  *
- * 타입 그래프에서 주어진 키를 제거합니다. 키의 [is-a](#id-1.2.4.7.3) 관계는
- * 고려되지 않습니다.
+ * Removes a key from graph.
  *
- * Returns: 해당 키가 존재하여, 제거되었으면 %TRUE입니다.
+ * Returns: %TRUE if the key existed and was removed.
  */
 gboolean
 crank_types_graph_remove (	CrankTypesGraph*	graph,
@@ -782,18 +774,17 @@ crank_types_graph_remove (	CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_gir_lookup_types: (rename-to crank_types_graph_lookup_types)
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
- * @ret_length: @key_length의 값을 복사할 위치입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to look up.
+ * @key_length: Size of the key.
+ * @ret_length: Location to copy @key_length.
  *
- * 타입 그래프에서 등록된 키 중에서 주어진 키와 [is-a][is_a] 관계를 맺고 있는
- * 키를 얻습니다.
+ * Looks up most appropriate key for given key.
  *
- * 이 함수는 반환되는 배열의 길이를 명시적으로 반환하여, pyGObject, Vala 등에서
- * 문제를 일으키지 않고 사용할 수 있도록 만들어졌습니다.
+ * This function returns length of returned array, so less problem with
+ * pyGObject, Vala, etc.
  *
- * Returns: (array length=ret_length): 해당 @key에 대응되는 원래 키입니다.
+ * Returns: (array length=ret_length): Most appropriate key for @key.
  */
 const GType*
 crank_types_graph_gir_lookup_types (CrankTypesGraph*	graph,
@@ -807,19 +798,20 @@ crank_types_graph_gir_lookup_types (CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_gir_lookup_full: (rename-to crank_types_graph_lookup_full)
- * @graph: 타입 그래프입니다.
- * @key: (array length=key_length): 조회하고자 하는 키입니다.
- * @key_length: 조회하고자 하는 키의 길이입니다.
- * @key_orig: (out) (array length=ret_length) (transfer none): 키의 원래 키입니다.
- * @ret_length: (out): @key_length의 값이 복사될 위치입니다.
+ * @graph: A types graph.
+ * @key: (array length=key_length): A key to look up.
+ * @key_length: Size of the key.
+ * @key_orig: (out) (array length=ret_length) (transfer none):
+ *        The location for most appropriate key.
+ * @ret_length: (out): Location to copy @key_length.
  * @value: 값입니다.
  *
- * 타입 그래프에서 주어진 키에 해당하는 원래 키와 값을 얻습니다.
+ * Looks up the key and value for given key.
  *
- * 이 함수는 반환되는 배열의 길이를 명시적으로 반환하여, pyGObject, Vala 등에서
- * 문제를 일으키지 않고 사용할 수 있도록 만들어졌습니다.
+ * This function returns length of returned array, so less problem with
+ * pyGObject, Vala, etc.
  *
- * Returns: 해당 키가 존재하지 않으면 %FALSE입니다.
+ * Returns: %FALSE if there is no matching key.
  */
 gboolean
 crank_types_graph_gir_lookup_full (	CrankTypesGraph*	graph,
@@ -835,13 +827,14 @@ crank_types_graph_gir_lookup_full (	CrankTypesGraph*	graph,
 
 /**
  * crank_types_graph_get_key_lengths:
- * @graph: 타입 그래프입니다.
+ * @graph: A types graph.
  *
- * 타입 그래프에서 키의 길이들을 모두 구합니다.
+ * Gets lengths of all keys.
  *
- * 예를 들면, ([int], [float], [int, float])에 대해서 1과 2를 반환합니다.
+ * For ([int], [float], [int, float]), it returns 1, 2.
  *
- * Returns: (element-type gint) (transfer container): 키의 길이들입니다.
+ * Returns: (element-type gint) (transfer container):
+ *         The lengths of keys the graph holds.
  */
 GList*
 crank_types_graph_get_key_lengths ( CrankTypesGraph*	graph )

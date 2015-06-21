@@ -21,34 +21,30 @@
 /**
  * SECTION: crankvecbool
  * @title: Boolean vector
- * @short_description: Boolean 값을 가지는 벡터입니다.
+ * @short_description: Vectors that have boolean elements.
  * @stability: Unstable
  * @include: crankbase.h
  *
- * 부울 값을 가지는 벡터를 상징합니다. 원소들은 #gboolean 형의 값을 가집니다.
+ * Represents vectors that have boolean elements.
  *
- * 수학적으로는 참, 거짓은 벡터의 원소로는 구성되지 않습니다만, 여기서는 벡터의
- * 원소로서 구성합니다. #gboolean의 특성상 부동소수 벡터와 다른 점을 가집니다.
+ * In mathematics, %TRUE and %FALSE cannot be composed as elements of vector,
+ * as they cannot form a field. Anyway because of characteristic of #gboolean,
+ * 'Boolean vectors' have differences from float vectors.
  *
- * * 덧셈 뺄셈 등이 정의 되는 부동 소수 벡터와는 달리, 논리 연산을 정의합니다.
- * * 전체 또는 일부가 %TRUE이면 %TRUE를 반환하는 getter 함수
+ * * Boolean vectors have logical operations while float ones have airthmetic operations
+ * * Boolean vectors have any, all property while float ones have magnitude/norm.
  *
- * 현재 지원되는 동작은 다음과 같습니다.
+ * * Componentwise Operations
+ *    * and, or, xor, not
+ * * Property
+ *    * all, any
  *
- * * 초기화
- *   * 인자에서 채워넣기
- *   * 배열에서 채워넣기
- *   * <structname>va_list</structname>
- *   * 한 값으로 채워넣기
- * * 성분별 논리 연산: and, or, xor, not
- * * 특성: all, any
+ * Provided macros are following
  *
- * 제공되는 매크로는 다음과 같습니다.
+ * * TRUE, FALSE: Initialization list that all elements are %TRUE or %FALSE.
+ * * I, J, K, L: Initialization list that one of element is %TRUE.
  *
- * * TRUE, FALSE: 모든 값이 %TRUE이거나 %FALSE인 초기화 목록
- * * I, J, K, L: 해당 성분 값이 %TRUE인 초기화 목록
- *
- * GLSL의 bvec와 대응됩니다.
+ * Compared to bvec in GLSL.
  */
 
 #include <stdarg.h>
@@ -64,11 +60,11 @@ G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_copy, g_fre
 
 /**
  * crank_vec_bool2_init:
- * @vec: (out): 초기화할 벡터입니다.
- * @x: 1번째 원소입니다.
- * @y: 2번째 원소입니다.
+ * @vec: (out): Vector to initialize.
+ * @x: First vector element.
+ * @y: Second vector element.
  *
- * 주어진 인자에서 초기화합니다.
+ * Initialize elements from arguments.
  */
 void
 crank_vec_bool2_init	(	CrankVecBool2*	vec,
@@ -81,10 +77,10 @@ crank_vec_bool2_init	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_init_arr:
- * @vec: (out): 초기화할 벡터입니다.
- * @arr: (array fixed-size=2): 원소들의 배열입니다.
+ * @vec: (out): Vector to initialize.
+ * @arr: (array fixed-size=2): Array of elements.
  *
- * 배열에서 원소들을 초기화 합니다.
+ * Initialize elements from array.
  */
 void
 crank_vec_bool2_init_arr	(	CrankVecBool2*	vec,
@@ -96,10 +92,10 @@ crank_vec_bool2_init_arr	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_init_valist:
- * @vec: (out): 초기화할 벡터입니다.
- * @varargs: 가변인자 목록입니다.
+ * @vec: (out): Vector to initialize.
+ * @varargs: va_list of elements.
  *
- * 가변인자 목록에서 #gboolean 2개를 가져와서 초기화합니다.
+ * Initialize elements from 2 variadic arguments.
  */
 void
 crank_vec_bool2_init_valist	(	CrankVecBool2*	vec,
@@ -111,10 +107,10 @@ crank_vec_bool2_init_valist	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_init_fill:
- * @vec: (out): 초기화할 벡터입니다.
- * @fill: 채울 값입니다.
+ * @vec: (out): Vector to initialize.
+ * @fill: Value to fill.
  *
- * 모든 성분을 @fill으로 채웁니다.
+ * Fill elements by @fill value.
  */
 void
 crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
@@ -127,11 +123,11 @@ crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_copy:
- * @vec: 복사할 벡터입니다.
+ * @vec: Vector to copy
  *
- * 벡터를 복사합니다. 사용이 끝나면, g_free()로 해제해야 합니다.
+ * Copies a vector. Free with g_free () after use.
  *
- * Returns: (transfer full): 복사된 벡터입니다. g_free()로 해제합니다.
+ * Returns: (transfer full):  Copied vector. Free with g_free().
  */
 CrankVecBool2*
 crank_vec_bool2_copy	(	CrankVecBool2*	vec	)
@@ -142,12 +138,12 @@ crank_vec_bool2_copy	(	CrankVecBool2*	vec	)
 
 /**
  * crank_vec_bool2_get:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
- * 
- * 주어진 벡터로부터 원소를 얻습니다.
+ * @vec: A vector to get element.
+ * @index: Index of element.
  *
- * Returns: @vec의 @index번째 원소입니다.
+ * Gets element from vector.
+ *
+ * Returns: Element of @vec at @index.
  */
 gboolean
 crank_vec_bool2_get	(	CrankVecBool2*	vec,
@@ -158,11 +154,11 @@ crank_vec_bool2_get	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_set:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
- * @value: 설정할 원소입니다.
+ * @vec: A vector to set element.
+ * @index: Index of element.
+ * @value: Element to set.
  * 
- * 주어진 벡터의 원소를 설정합니다.
+ * Sets element in vector.
  */
 void
 crank_vec_bool2_set	(	CrankVecBool2*	vec,
@@ -174,11 +170,11 @@ crank_vec_bool2_set	(	CrankVecBool2*	vec,
 
 /**
  * crank_vec_bool2_and:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a & @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리곱을 구합니다. 각 원소별로 논리곱을 구한 결과가 저장됩니다.
+ * Gets Component AND of @a and @b.
  */
 void
 crank_vec_bool2_and	(	CrankVecBool2*	a,
@@ -191,11 +187,11 @@ crank_vec_bool2_and	(	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_or:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a | @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리합을 구합니다. 각 원소별로 논리합을 구한 결과가 저장됩니다.
+ * Gets Component OR of @a and @b.
  */
 void
 crank_vec_bool2_or	(	CrankVecBool2*	a,
@@ -208,12 +204,11 @@ crank_vec_bool2_or	(	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_xor:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a ^ @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 배타적 논리합을 구합니다. 각 원소별로 배타적 논리합을 구한 결과가
- * 저장됩니다.
+ * Gets Component of exclusive or of @a and @b.
  */
 void
 crank_vec_bool2_xor	(	CrankVecBool2*	a,
@@ -227,10 +222,10 @@ crank_vec_bool2_xor	(	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_not:
- * @a: 벡터입니다.
- * @r: (out): ~@a의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 부정을 구합니다. 각 원소별로 부정을 구한 결과가 저장됩니다.
+ * Gets Component NOT of @a.
  */
 void
 crank_vec_bool2_not	(	CrankVecBool2*	a,
@@ -242,12 +237,12 @@ crank_vec_bool2_not	(	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_andv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a & b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool2_and()의 다른 이름입니다. and를 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool2_and(). Some language may use "and" as
+ * keyword or operator.
  */
 void
 crank_vec_bool2_andv (	CrankVecBool2*	a,
@@ -259,12 +254,12 @@ crank_vec_bool2_andv (	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_orv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a | b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool2_or()의 다른 이름입니다. or을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool2_and(). Some language may use "or" as
+ * keyword or operator.
  */
 void
 crank_vec_bool2_orv (	CrankVecBool2*	a,
@@ -276,11 +271,11 @@ crank_vec_bool2_orv (	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_notv:
- * @a: 벡터입니다.
- * @r: (out): ! a 를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool2_not()의 다른 이름입니다. not을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool2_not(). Some language may use "not" as
+ * keyword or operator.
  */
 void
 crank_vec_bool2_notv (	CrankVecBool2*	a,
@@ -291,11 +286,11 @@ crank_vec_bool2_notv (	CrankVecBool2*	a,
 
 /**
  * crank_vec_bool2_get_any:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 일부 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks there is any element be %TRUE.
  *
- * Returns: 일부 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether there is any element be %TRUE.
  */
 gboolean
 crank_vec_bool2_get_any	(	CrankVecBool2*	vec	)
@@ -305,11 +300,11 @@ crank_vec_bool2_get_any	(	CrankVecBool2*	vec	)
 
 /**
  * crank_vec_bool2_get_all:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 모든 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks whether all elements are %TRUE.
  *
- * Returns: 모든 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether all elements are %TRUE.
  */
 gboolean
 crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
@@ -319,12 +314,12 @@ crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
 
 /**
  * crank_vec_bool2_equal:
- * @a: (type CrankVecBool2): 비교할 벡터입니다.
- * @b: (type CrankVecBool2): 비교할 벡터입니다.
+ * @a: (type CrankVecBool2): A vector.
+ * @b: (type CrankVecBool2): A vector.
  *
- * 두 벡터를 비교하여 같은지 다른지 확인합니다.
+ * Checks whether two vectors are equal.
  *
- * Returns: 두 벡터가 같으면 %TRUE입니다.
+ * Returns: Whether two vectors are equal.
  */
 gboolean
 crank_vec_bool2_equal	(	gconstpointer a,
@@ -339,11 +334,11 @@ crank_vec_bool2_equal	(	gconstpointer a,
 
 /**
  * crank_vec_bool2_hash:
- * @a: (type CrankVecBool2): 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBool2): A vector.
  *
- * 주어진 벡터의 해쉬를 얻습니다.
+ * Gets hash value of vector.
  *
- * Returns: 주어진 벡터의 해쉬값입니다.
+ * Returns: Hash value of vector.
  */
 guint
 crank_vec_bool2_hash	(	gconstpointer a	)
@@ -355,11 +350,15 @@ crank_vec_bool2_hash	(	gconstpointer a	)
 
 /**
  * crank_vec_bool2_to_string:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  *
- * 주어진 벡터를 문자열로 만듭니다.
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE})
+ * |[
+ *   (true, false)
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool2_to_string	(	CrankVecBool2*	vec	)
@@ -369,16 +368,20 @@ crank_vec_bool2_to_string	(	CrankVecBool2*	vec	)
 
 /**
  * crank_vec_bool2_to_string_full:
- * @vec: 벡터입니다.
- * @left: 왼쪽 막음입니다.
- * @in: 중간 구분자입니다.
- * @right: 오른 막음입니다.
- * @on_true: 참 값을 표현할 문자열입니다.
- * @on_false: 거짓 값을 포현할 문자열입니다.
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
  *
- * 주어진 벡터를 문자열로 만듭니다. 주어진 문자열들의 조합으로 구성합니다.
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE})
+ * |[
+ *   left on_true in on_false right
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
@@ -404,12 +407,12 @@ G_DEFINE_BOXED_TYPE (CrankVecBool3, crank_vec_bool3, crank_vec_bool3_copy, g_fre
 
 /**
  * crank_vec_bool3_init:
- * @vec: (out): 초기화할 벡터입니다.
- * @x: 1번째 원소입니다.
- * @y: 2번째 원소입니다.
- * @z: 3번째 원소입니다.
+ * @vec: (out): Vector to initialize.
+ * @x: First vector element.
+ * @y: Second vector element.
+ * @z: Third vector element.
  *
- * 주어진 인자에서 초기화합니다.
+ * Initialize elements from arguments.
  */
 void
 crank_vec_bool3_init	(	CrankVecBool3*	vec,
@@ -424,10 +427,10 @@ crank_vec_bool3_init	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_init_arr:
- * @vec: (out): 초기화할 벡터입니다.
- * @arr: (array fixed-size=3): 원소들의 배열입니다.
+ * @vec: (out): Vector to initialize.
+ * @arr: (array fixed-size=3): Array of elements.
  *
- * 배열에서 원소들을 초기화 합니다.
+ * Initialize elements from array.
  */
 void
 crank_vec_bool3_init_arr	(	CrankVecBool3*	vec,
@@ -440,10 +443,10 @@ crank_vec_bool3_init_arr	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_init_valist:
- * @vec: (out): 초기화할 벡터입니다.
- * @varargs: 가변인자 목록입니다.
+ * @vec: (out): Vector to initialize.
+ * @varargs: va_lost of elements.
  *
- * 가변인자 목록에서 #gboolean 3개를 가져와서 초기화합니다.
+ * Initialize elements from 3 variadic arguments.
  */
 void
 crank_vec_bool3_init_valist	(	CrankVecBool3*	vec,
@@ -457,10 +460,10 @@ crank_vec_bool3_init_valist	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_init_fill:
- * @vec: (out): 초기화할 벡터입니다.
- * @fill: 채울 값입니다.
+ * @vec: (out): Vector to initialize.
+ * @fill: Value to fill.
  *
- * 모든 성분을 @fill으로 채웁니다.
+ * Fill elements by @fill value.
  */
 void
 crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
@@ -474,11 +477,11 @@ crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_copy:
- * @vec: 복사할 벡터입니다.
+ * @vec: Vector to copy
  *
- * 벡터를 복사합니다. 사용이 끝나면, g_free()로 해제해야 합니다.
+ * Copies a vector. Free with g_free () after use.
  *
- * Returns: (transfer full): 복사된 벡터입니다. g_free()로 해제합니다.
+ * Returns: (transfer full):  Copied vector. Free with g_free().
  */
 CrankVecBool3*
 crank_vec_bool3_copy	(	CrankVecBool3*	vec	)
@@ -488,12 +491,12 @@ crank_vec_bool3_copy	(	CrankVecBool3*	vec	)
 
 /**
  * crank_vec_bool3_get:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
+ * @vec: A vector to get element.
+ * @index: Index of element.
  * 
- * 주어진 벡터로부터 원소를 얻습니다.
+ * Gets element from vector.
  *
- * Returns: @vec의 @index번째 원소입니다.
+ * Returns: Element of @vec at @index.
  */
 gboolean
 crank_vec_bool3_get	(	CrankVecBool3*	vec,
@@ -504,11 +507,11 @@ crank_vec_bool3_get	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_set:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
- * @value: 설정할 원소입니다.
+ * @vec: A vector to set element.
+ * @index: Index of element.
+ * @value: Element to set.
  * 
- * 주어진 벡터의 원소를 설정합니다.
+ * Sets element of vector.
  */
 void
 crank_vec_bool3_set	(	CrankVecBool3*	vec,
@@ -520,11 +523,11 @@ crank_vec_bool3_set	(	CrankVecBool3*	vec,
 
 /**
  * crank_vec_bool3_and:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a & @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리곱을 구합니다. 각 원소별로 논리곱을 구한 결과가 저장됩니다.
+ * Gets Component AND of @a and @b.
  */
 void
 crank_vec_bool3_and	(	CrankVecBool3*	a,
@@ -538,11 +541,11 @@ crank_vec_bool3_and	(	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_or:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a | @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리합을 구합니다. 각 원소별로 논리합을 구한 결과가 저장됩니다.
+ * Gets Component OR of @a and @b.
  */
 void
 crank_vec_bool3_or	(	CrankVecBool3*	a,
@@ -556,12 +559,11 @@ crank_vec_bool3_or	(	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_xor:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a ^ @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 배타적 논리합을 구합니다. 각 원소별로 배타적 논리합을 구한 결과가
- * 저장됩니다.
+ * Gets Component of exclusive OR of @a and @b.
  */
 void
 crank_vec_bool3_xor	(	CrankVecBool3*	a,
@@ -575,10 +577,10 @@ crank_vec_bool3_xor	(	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_not:
- * @a: 벡터입니다.
- * @r: (out): ~@a의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 부정을 구합니다. 각 원소별로 부정을 구한 결과가 저장됩니다.
+ * Gets Component NOT of @a.
  */
 void
 crank_vec_bool3_not	(	CrankVecBool3*	a,
@@ -590,12 +592,12 @@ crank_vec_bool3_not	(	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_andv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a & b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool3_and()의 다른 이름입니다. and를 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool3_and(). Some language may use "and" as
+ * keyword or operator.
  */
 void
 crank_vec_bool3_andv (	CrankVecBool3*	a,
@@ -607,12 +609,12 @@ crank_vec_bool3_andv (	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_orv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a | b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool3_or()의 다른 이름입니다. or을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool3_or(). Some language may use "or" as
+ * keyword or operator.
  */
 void
 crank_vec_bool3_orv (	CrankVecBool3*	a,
@@ -624,11 +626,11 @@ crank_vec_bool3_orv (	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_notv:
- * @a: 벡터입니다.
- * @r: (out): ! a 를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool3_not()의 다른 이름입니다. not을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool3_not(). Some language may use "not" as
+ * keyword or operator.
  */
 void
 crank_vec_bool3_notv (	CrankVecBool3*	a,
@@ -640,11 +642,11 @@ crank_vec_bool3_notv (	CrankVecBool3*	a,
 
 /**
  * crank_vec_bool3_get_any:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 일부 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks there is any element be %TRUE.
  *
- * Returns: 일부 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether there is any element be %TRUE.
  */
 gboolean
 crank_vec_bool3_get_any	(	CrankVecBool3*	vec	)
@@ -654,11 +656,11 @@ crank_vec_bool3_get_any	(	CrankVecBool3*	vec	)
 
 /**
  * crank_vec_bool3_get_all:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 모든 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks whether all elements are %TRUE.
  *
- * Returns: 모든 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether all elements are %TRUE.
  */
 gboolean
 crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
@@ -668,12 +670,12 @@ crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
 
 /**
  * crank_vec_bool3_equal:
- * @a: (type CrankVecBool3): 비교할 벡터입니다.
- * @b: (type CrankVecBool3): 비교할 벡터입니다.
+ * @a: (type CrankVecBool3): A vector.
+ * @b: (type CrankVecBool3): A vector.
  *
- * 두 벡터를 비교하여 같은지 다른지 확인합니다.
+ * Checks whether two vectors are equal.
  *
- * Returns: 두 벡터가 같으면 %TRUE입니다.
+ * Returns: Whether two vectors are equal.
  */
 gboolean
 crank_vec_bool3_equal	(	gconstpointer a,
@@ -688,11 +690,11 @@ crank_vec_bool3_equal	(	gconstpointer a,
 
 /**
  * crank_vec_bool3_hash:
- * @a: (type CrankVecBool3): 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBool3): A vector.
  *
- * 주어진 벡터의 해쉬를 얻습니다.
+ * Gets hash value of vector.
  *
- * Returns: 주어진 벡터의 해쉬값입니다.
+ * Returns: Hash value of vector.
  */
 guint
 crank_vec_bool3_hash	(	gconstpointer	a	)
@@ -706,11 +708,15 @@ crank_vec_bool3_hash	(	gconstpointer	a	)
 
 /**
  * crank_vec_bool3_to_string:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  *
- * 주어진 벡터를 문자열로 만듭니다.
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE, FALSE})
+ * |[
+ *   (true, false, false)
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool3_to_string	(	CrankVecBool3*	vec	)
@@ -720,16 +726,20 @@ crank_vec_bool3_to_string	(	CrankVecBool3*	vec	)
 
 /**
  * crank_vec_bool3_to_string_full:
- * @vec: 벡터입니다.
- * @left: 왼쪽 막음입니다.
- * @in: 중간 구분자입니다.
- * @right: 오른 막음입니다.
- * @on_true: 참 값을 표현할 문자열입니다.
- * @on_false: 거짓 값을 포현할 문자열입니다.
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
  *
- * 주어진 벡터를 문자열로 만듭니다. 주어진 문자열들의 조합으로 구성합니다.
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE, FALSE})
+ * |[
+ *   left on_true in on_false in on_false right
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
@@ -758,13 +768,13 @@ G_DEFINE_BOXED_TYPE (CrankVecBool4, crank_vec_bool4, crank_vec_bool4_copy, g_fre
 
 /**
  * crank_vec_bool4_init:
- * @vec: (out): 초기화할 벡터입니다.
- * @x: 1번째 원소입니다.
- * @y: 2번째 원소입니다.
- * @z: 3번째 원소입니다.
- * @w: 4번째 원소입니다.
+ * @vec: (out): Vector to initialize.
+ * @x: First vector element.
+ * @y: Second vector element.
+ * @z: Third vector element.
+ * @w: Fourth vector element.
  *
- * 주어진 인자에서 초기화합니다.
+ * Initialize elements from arguments.
  */
 void
 crank_vec_bool4_init	(	CrankVecBool4*	vec,
@@ -782,10 +792,10 @@ crank_vec_bool4_init	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_init_arr:
- * @vec: (out): 초기화할 벡터입니다.
- * @arr: (array fixed-size=4): 원소들의 배열입니다.
+ * @vec: (out): Vector to initialize.
+ * @arr: (array fixed-size=4): Array of elements.
  *
- * 배열에서 원소들을 초기화 합니다.
+ * Initialize elements from array.
  */
 void
 crank_vec_bool4_init_arr	(	CrankVecBool4*	vec,
@@ -799,10 +809,10 @@ crank_vec_bool4_init_arr	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_init_valist:
- * @vec: (out): 초기화할 벡터입니다.
- * @varargs: 가변인자 목록입니다.
+ * @vec: (out): Vector to initialize.
+ * @varargs: va_list of elements.
  *
- * 가변인자 목록에서 #gboolean 4개를 가져와서 초기화합니다.
+ * Initialize elements from 4 variadic arguments.
  */
 void
 crank_vec_bool4_init_valist	(	CrankVecBool4*	vec,
@@ -817,10 +827,10 @@ crank_vec_bool4_init_valist	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_init_fill:
- * @vec: (out): 초기화할 벡터입니다.
- * @fill: 채울 값입니다.
+ * @vec: (out): Vector to initialize.
+ * @fill: Value to fill.
  *
- * 모든 성분을 @fill으로 채웁니다.
+ * Fill elements by @fill value.
  */
 void
 crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
@@ -834,11 +844,11 @@ crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_copy:
- * @vec: 복사할 벡터입니다.
+ * @vec: Vector to copy
  *
- * 벡터를 복사합니다. 사용이 끝나면, g_free()로 해제해야 합니다.
+ * Copies a vector. Free with g_free () after use.
  *
- * Returns: (transfer full): 복사된 벡터입니다. g_free()로 해제합니다.
+ * Returns: (transfer full): Copied vector. Free with g_free().
  */
 CrankVecBool4*
 crank_vec_bool4_copy	(	CrankVecBool4*	vec	)
@@ -848,12 +858,12 @@ crank_vec_bool4_copy	(	CrankVecBool4*	vec	)
 
 /**
  * crank_vec_bool4_get:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
+ * @vec: A vector to get element.
+ * @index: Index of element.
  * 
- * 주어진 벡터로부터 원소를 얻습니다.
+ * Gets element of vector.
  *
- * Returns: @vec의 @index번째 원소입니다.
+ * Returns: Element of @vec at @index.
  */
 gboolean
 crank_vec_bool4_get	(	CrankVecBool4*	vec,
@@ -864,11 +874,11 @@ crank_vec_bool4_get	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_set:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
- * @value: 설정할 원소입니다.
+ * @vec: A vector to set element.
+ * @index: Index of element.
+ * @value: Element to set.
  * 
- * 주어진 벡터의 원소를 설정합니다.
+ * Sets element of vector.
  */
 void
 crank_vec_bool4_set	(	CrankVecBool4*	vec,
@@ -880,11 +890,11 @@ crank_vec_bool4_set	(	CrankVecBool4*	vec,
 
 /**
  * crank_vec_bool4_and:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a & @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리곱을 구합니다. 각 원소별로 논리곱을 구한 결과가 저장됩니다.
+ * Gets Component AND of @a and @b.
  */
 void
 crank_vec_bool4_and	(	CrankVecBool4*	a,
@@ -899,11 +909,11 @@ crank_vec_bool4_and	(	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_or:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a | @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리합을 구합니다. 각 원소별로 논리합을 구한 결과가 저장됩니다.
+ * Gets Component OR of @a and @b.
  */
 void
 crank_vec_bool4_or	(	CrankVecBool4*	a,
@@ -918,12 +928,11 @@ crank_vec_bool4_or	(	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_xor:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a ^ @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 배타적 논리합을 구합니다. 각 원소별로 배타적 논리합을 구한 결과가
- * 저장됩니다.
+ * Gets Component exclusive or of @a and @b.
  */
 void
 crank_vec_bool4_xor	(	CrankVecBool4*	a,
@@ -938,10 +947,10 @@ crank_vec_bool4_xor	(	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_not:
- * @a: 벡터입니다.
- * @r: (out): ~@a의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 부정을 구합니다. 각 원소별로 부정을 구한 결과가 저장됩니다.
+ * Gets Component NOT of @a and @b.
  */
 void
 crank_vec_bool4_not	(	CrankVecBool4*	a,
@@ -954,12 +963,12 @@ crank_vec_bool4_not	(	CrankVecBool4*	a,
 }
 /**
  * crank_vec_bool4_andv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a & b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool4_and()의 다른 이름입니다. and를 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool4_and(). Some language may use "and" as
+ * keyword or operator.
  */
 void
 crank_vec_bool4_andv (	CrankVecBool4*	a,
@@ -971,12 +980,12 @@ crank_vec_bool4_andv (	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_orv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a | b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool4_or()의 다른 이름입니다. or을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool4_or(). Some language may use "or" as
+ * keyword or operator.
  */
 void
 crank_vec_bool4_orv (	CrankVecBool4*	a,
@@ -988,11 +997,12 @@ crank_vec_bool4_orv (	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_notv:
- * @a: 벡터입니다.
- * @r: (out): ! a 를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool4_not()의 다른 이름입니다. not을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool4_not(). Some language may use "not" as
+ * keyword or operator.
  */
 void
 crank_vec_bool4_notv (	CrankVecBool4*	a,
@@ -1004,11 +1014,11 @@ crank_vec_bool4_notv (	CrankVecBool4*	a,
 
 /**
  * crank_vec_bool4_get_any:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 일부 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks there is any element be %TRUE.
  *
- * Returns: 일부 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether there is any element be %TRUE.
  */
 gboolean
 crank_vec_bool4_get_any	(	CrankVecBool4*	vec	)
@@ -1019,11 +1029,11 @@ crank_vec_bool4_get_any	(	CrankVecBool4*	vec	)
 
 /**
  * crank_vec_bool4_get_all:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 모든 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks whether all elements are %TRUE.
  *
- * Returns: 모든 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether all elements are %TRUE.
  */
 gboolean
 crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
@@ -1033,12 +1043,12 @@ crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
 
 /**
  * crank_vec_bool4_equal:
- * @a: (type CrankVecBool4): 비교할 벡터입니다.
- * @b: (type CrankVecBool4): 비교할 벡터입니다.
+ * @a: (type CrankVecBool4): A vector.
+ * @b: (type CrankVecBool4): A vector.
  *
- * 두 벡터를 비교하여 같은지 다른지 확인합니다.
+ * Checks whether two vectors are equal.
  *
- * Returns: 두 벡터가 같으면 %TRUE입니다.
+ * Returns: Whether two vectors are equal.
  */
 gboolean
 crank_vec_bool4_equal	(	gconstpointer	a,
@@ -1054,11 +1064,11 @@ crank_vec_bool4_equal	(	gconstpointer	a,
 
 /**
  * crank_vec_bool4_hash:
- * @a: (type CrankVecBool4): 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBool4): A vector.
  *
- * 주어진 벡터의 해쉬를 얻습니다.
+ * Gets hash value of vector.
  *
- * Returns: 주어진 벡터의 해쉬값입니다.
+ * Returns: Hash value of vector.
  */
 guint
 crank_vec_bool4_hash	(	gconstpointer a	)
@@ -1073,11 +1083,15 @@ crank_vec_bool4_hash	(	gconstpointer a	)
 
 /**
  * crank_vec_bool4_to_string:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  *
- * 주어진 벡터를 문자열로 만듭니다.
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE})
+ * |[
+ *   (true, false, false, true)
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool4_to_string	(	CrankVecBool4*	vec	)
@@ -1088,16 +1102,20 @@ crank_vec_bool4_to_string	(	CrankVecBool4*	vec	)
 
 /**
  * crank_vec_bool4_to_string_full:
- * @vec: 벡터입니다.
- * @left: 왼쪽 막음입니다.
- * @in: 중간 구분자입니다.
- * @right: 오른 막음입니다.
- * @on_true: 참 값을 표현할 문자열입니다.
- * @on_false: 거짓 값을 포현할 문자열입니다.
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
  *
- * 주어진 벡터를 문자열로 만듭니다. 주어진 문자열들의 조합으로 구성합니다.
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE})
+ * |[
+ *   left on_true in on_false in on_false in on_true right
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
@@ -1129,12 +1147,12 @@ G_DEFINE_BOXED_TYPE (CrankVecBoolN, crank_vec_bool_n,
 
 /**
  * crank_vec_bool_n_init:
- * @vec: (out): 초기화할 벡터입니다.
- * @n: 초기화할 벡터의 길이입니다.
- * @...: 벡터의 성분들입니다.
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @...: Vector elements.
  *
- * 주어진 가변 인자에서 벡터를 초기화 합니다. 사용이 끝나면
- * crank_vec_bool_n_fini()으로 해제합니다.
+ * Initialize elements from arguments.
+ * Unset with crank_vec_bool_n_fini() after use.
  */
 void
 crank_vec_bool_n_init	(	CrankVecBoolN*	vec,
@@ -1152,12 +1170,12 @@ crank_vec_bool_n_init	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_init_arr:
- * @vec: (out): 초기화할 벡터입니다.
- * @n: 벡터의 길이입니다.
- * @arr: (array length=n): 원소들의 배열입니다.
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @arr: (array length=n): Array of elements.
  *
- * 배열에서 원소들을 초기화 합니다. 사용이 끝나면
- * crank_vec_bool_n_fini()으로 해제합니다.
+ * Initialize elements from array.
+ * Unset with crank_vec_bool_n_fini() after use.
  */
 void
 crank_vec_bool_n_init_arr	(	CrankVecBoolN*	vec,
@@ -1171,12 +1189,12 @@ crank_vec_bool_n_init_arr	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_init_valist:
- * @vec: (out): 초기화할 벡터입니다.
- * @n: 벡터의 길이입니다.
- * @varargs: 가변인자 목록입니다.
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @varargs: va_list of elements.
  *
- * 가변인자 목록에서 #gboolean 2개를 가져와서 초기화합니다. 사용이 끝나면
- * crank_vec_bool_n_fini()으로 해제합니다.
+ * Initialize elements from given count of variadic arguments.
+ * Unset with crank_vec_bool_n_fini() after use.
  */
 void
 crank_vec_bool_n_init_valist	(	CrankVecBoolN*	vec,
@@ -1195,11 +1213,12 @@ crank_vec_bool_n_init_valist	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_init_fill:
- * @vec: (out): 초기화할 벡터입니다.
- * @n: 벡터의 크기입니다.
- * @fill: 채울 값입니다.
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @fill: Value to fill.
  *
- * 모든 성분을 @fill으로 채웁니다.
+ * Fill elements by @fill value.
+ * Unset with crank_vec_bool_n_fini() after use.
  */
 void
 crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
@@ -1219,9 +1238,9 @@ crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_fini:
- * @vec: 리셋할 벡터입니다.
+ * @vec: A vector to unset.
  *
- * 자원을 해제합니다.
+ * Frees associated resources and unset @vec.
  */
 void
 crank_vec_bool_n_fini	(	CrankVecBoolN*	vec	)
@@ -1232,9 +1251,9 @@ crank_vec_bool_n_fini	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_free:
- * @vec: 해제할 벡터입니다.
+ * @vec: A vector to free.
  *
- * 연관된 자원을 해제하고, 벡터도 메모리에서 해제합니다.
+ * Frees associated resources and frees @vec.
  */
 void
 crank_vec_bool_n_free	(	CrankVecBoolN*	vec	)
@@ -1246,11 +1265,11 @@ crank_vec_bool_n_free	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_copy:
- * @vec: 복사할 벡터입니다.
+ * @vec: Vector to copy
  *
- * 벡터를 복사합니다. 사용이 끝나면, crank_vec_bool_n_free()로 해제해야 합니다.
+ * Copies a vector. Free with crank_vec_bool_n_free() after use.
  *
- * Returns: (transfer full): 복사된 벡터입니다.
+ * Returns: (transfer full): Copied vector. Free with g_free().
  */
 CrankVecBoolN*
 crank_vec_bool_n_copy	(	CrankVecBoolN*	vec	)
@@ -1263,11 +1282,11 @@ crank_vec_bool_n_copy	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_get_size:
- * @vec: 크기를 얻을 벡터입니다.
+ * @vec: Vector to get size.
  *
- * 주어진 벡터의 크기를 얻습니다. @vec->n으로도 얻을 수 있습니다.
+ * Gets size of vector. This can be obtained from @vec->n.
  *
- * Returns: 벡터의 크기입니다.
+ * Returns: Size of vector.
  */
 guint
 crank_vec_bool_n_get_size	(	CrankVecBoolN*	vec	)
@@ -1278,12 +1297,12 @@ crank_vec_bool_n_get_size	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_get:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
+ * @vec: A vector to get element.
+ * @index: Index of element.
  * 
- * 주어진 벡터로부터 원소를 얻습니다.
+ * Gets element of vector.
  *
- * Returns: @vec의 @index번째 원소입니다.
+ * Returns: Element of @vec at @index.
  */
 gboolean
 crank_vec_bool_n_get	(	CrankVecBoolN*	vec,
@@ -1294,11 +1313,11 @@ crank_vec_bool_n_get	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_set:
- * @vec: 원소를 얻을 벡터입니다.
- * @index: 원소의 인덱스입니다.
- * @value: 설정할 원소입니다.
+ * @vec: A vector to set element.
+ * @index: Index of element.
+ * @value: Element to set.
  * 
- * 주어진 벡터의 원소를 설정합니다.
+ * Sets element of vector.
  */
 void
 crank_vec_bool_n_set	(	CrankVecBoolN*	vec,
@@ -1310,12 +1329,11 @@ crank_vec_bool_n_set	(	CrankVecBoolN*	vec,
 
 /**
  * crank_vec_bool_n_and:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a & @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리곱을 구합니다. 만일 크기가 맞지 않을 경우, 크기가 작은 벡터의 길이
- * 만을 계산한 뒤 반환합니다.
+ * Gets Component AND of @a and @b.
  */
 void
 crank_vec_bool_n_and	(	CrankVecBoolN*	a,
@@ -1336,12 +1354,11 @@ crank_vec_bool_n_and	(	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_or:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a | @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 논리합을 구합니다. 만일 크기가 맞지 않을 경우, 크기가 긴 벡터의 길이
- * 에 맞추어 계산한 뒤 반환합니다.
+ * Gets Component OR of @a and @b.
  */
 void
 crank_vec_bool_n_or	(	CrankVecBoolN*	a,
@@ -1376,12 +1393,11 @@ crank_vec_bool_n_or	(	CrankVecBoolN*	a,
 }
 /**
  * crank_vec_bool_n_xor:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): @a ^ @b의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 배타적 논리합을 구합니다. 각 원소별로 배타적 논리합을 구한 결과가
- * 저장됩니다.
+ * Gets Component exclusive or of @a and @b.
  */
 void
 crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
@@ -1417,10 +1433,10 @@ crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_not:
- * @a: 벡터입니다.
- * @r: (out): ~@a의 결과를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  * 
- * 벡터의 부정을 구합니다. 각 원소별로 부정을 구한 결과가 저장됩니다.
+ * Gets Component NOT of @a and @b.
  */
 void
 crank_vec_bool_n_not	(	CrankVecBoolN*	a,
@@ -1438,12 +1454,12 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_andv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a & b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool_n_and()의 다른 이름입니다. and를 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool_n_and(). Some language may use "and" as
+ * keyword or operator.
  */
 void
 crank_vec_bool_n_andv (	CrankVecBoolN*	a,
@@ -1455,12 +1471,12 @@ crank_vec_bool_n_andv (	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_orv:
- * @a: 벡터입니다.
- * @b: 벡터입니다.
- * @r: (out): a | b를 저장할 벡터입니다.
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool_n_or()의 다른 이름입니다. or을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool_n_or(). Some language may use "or" as
+ * keyword or operator.
  */
 void
 crank_vec_bool_n_orv (	CrankVecBoolN*	a,
@@ -1472,11 +1488,11 @@ crank_vec_bool_n_orv (	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_notv:
- * @a: 벡터입니다.
- * @r: (out): ! a 를 저장할 벡터입니다.
+ * @a: A vector.
+ * @r: (out): A vector to store result.
  *
- * crank_vec_bool_n_not()의 다른 이름입니다. not을 연산자로 사용하는 일부 언어에
- * 사용하기 위해 만들어졌습니다.
+ * Another name for crank_vec_bool_n_not(). Some language may use "not" as
+ * keyword or operator.
  */
 void
 crank_vec_bool_n_notv (	CrankVecBoolN*	a,
@@ -1487,11 +1503,11 @@ crank_vec_bool_n_notv (	CrankVecBoolN*	a,
 
 /**
  * crank_vec_bool_n_get_any:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 일부 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks there is any element be %TRUE.
  *
- * Returns: 일부 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether there is any element be %TRUE.
  */
 gboolean
 crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	)
@@ -1505,11 +1521,11 @@ crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_get_all:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  * 
- * 벡터의 모든 원소가 %TRUE인지 아닌지 확인합니다.
+ * Checks whether all elements are %TRUE.
  *
- * Returns: 모든 원소가 %TRUE이면 %TRUE입니다.
+ * Returns: Whether all elements are %TRUE.
  */
 gboolean
 crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
@@ -1523,12 +1539,12 @@ crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_equal:
- * @a: (type CrankVecBoolN): 비교할 벡터입니다.
- * @b: (type CrankVecBoolN): 비교할 벡터입니다.
+ * @a: (type CrankVecBoolN): A vector.
+ * @b: (type CrankVecBoolN): A vector.
  *
- * 두 벡터를 비교하여 같은지 다른지 확인합니다.
+ * Checks whether two vectors are equal.
  *
- * Returns: 두 벡터가 같으면 %TRUE입니다.
+ * Returns: Whether two vectors are equal.
  */
 gboolean
 crank_vec_bool_n_equal	(	gconstpointer a,
@@ -1549,11 +1565,11 @@ crank_vec_bool_n_equal	(	gconstpointer a,
 
 /**
  * crank_vec_bool_n_hash:
- * @a: (type CrankVecBoolN): 해쉬를 얻을 벡터입니다.
+ * @a: (type CrankVecBoolN): A vector.
  *
- * 주어진 벡터의 해쉬를 얻습니다.
+ * Gets hash value of vector.
  *
- * Returns: 주어진 벡터의 해쉬값입니다.
+ * Returns: Hash value of vector.
  */
 guint
 crank_vec_bool_n_hash	(	gconstpointer a	)
@@ -1564,18 +1580,22 @@ crank_vec_bool_n_hash	(	gconstpointer a	)
 	guint	value = 0;
 	
 	for (i = 0; i < vec->n; i++)
-		value = value ^ ((vec->data[i] ? 1 : 0) << (i && 31));
+		value = value ^ ((vec->data[i] ? 1 : 0) << (i & 31));
 
 	return g_direct_hash (GINT_TO_POINTER (value));
 }
 
 /**
  * crank_vec_bool_n_to_string:
- * @vec: 벡터입니다.
+ * @vec: A vector.
  *
- * 주어진 벡터를 문자열로 만듭니다.
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
+ * |[
+ *   (true, false, false, true, true)
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	)
@@ -1585,16 +1605,20 @@ crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	)
 
 /**
  * crank_vec_bool_n_to_string_full:
- * @vec: 벡터입니다.
- * @left: 왼쪽 막음입니다.
- * @in: 중간 구분자입니다.
- * @right: 오른 막음입니다.
- * @on_true: 참 값을 표현할 문자열입니다.
- * @on_false: 거짓 값을 포현할 문자열입니다.
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
  *
- * 주어진 벡터를 문자열로 만듭니다. 주어진 문자열들의 조합으로 구성합니다.
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
+ * |[
+ *   left on_true in on_false in on_false in on_true in on_true right
+ * ]|
  *
- * Returns: 주어진 벡터의 문자열 형입니다.
+ * Returns: String representation of vector.
  */
 gchar*
 crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
