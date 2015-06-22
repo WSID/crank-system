@@ -132,6 +132,88 @@ G_BEGIN_DECLS
 #define CRANK_ARRAY_ADD(T, a, n, c, I) \
 	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
 
+
+
+
+
+
+/**
+ * CRANK_FOREACH_RANGE_BEGIN:
+ * @G: Type of iteration variable.
+ * @e: Name of iteration variable.
+ * @rs: Start of range.
+ * @re: End of range.
+ * @inc: Increasement.
+ *
+ * Marks begin of loop that iterates over [@rs, @re) with @inc.
+ *
+ * Mark end with #CRANK_FOREACH_RANGE_END
+ */
+#define CRANK_FOREACH_RANGE_BEGIN(G, e, rs, re, inc) \
+	{	G e; \
+		for (e = rs; e < re; e = e + inc) {
+
+/**
+ * CRANK_FOREACH_RANGE_END:
+ *
+ * Marks end of loop of %CRANK_FOREACH_RANGE_BEGIN
+ */
+#define CRANK_FOREACH_RANGE_END \
+	} }
+
+/**
+ * CRANK_FOREACH_RANGE_DO:
+ * @G: Type of iteration variable.
+ * @e: Name of iteration variable.
+ * @rs: Start of range.
+ * @re: End of range.
+ * @inc: Increasement.
+ * @BLOCK: block to iterate.
+ *
+ * Iterates over range [@rs, @re) with @BLOCK.
+ */
+#define CRANK_FOREACH_RANGE_DO(G, e, rs, re, inc, BLOCK) \
+	CRANK_FOREACH_RANGE_BEGIN (G, e, rs, re, inc) \
+		BLOCK \
+	CRANK_FOREACH_RANGE_END
+
+
+
+/**
+ * CRANK_FOREACH_IRANGE_BEGIN:
+ * @e: Name of iteration variable.
+ * @n: End of range.
+ *
+ * Marks begin of loop that iterates over [0, @n).
+ * Note that @n is not included.
+ *
+ * Mark end with #CRANK_FOREACH_IRANGE_END
+ */
+#define CRANK_FOREACH_IRANGE_BEGIN(e, n) \
+	CRANK_FOREACH_RANGE_BEGIN (gint, e, 0, n, 1)
+
+/**
+ * CRANK_FOREACH_IRANGE_END:
+ *
+ * Marks end of loop of %CRANK_FOREACH_IRANGE_BEGIN
+ */
+#define CRANK_FOREACH_IRANGE_END \
+	CRANK_FOREACH_RANGE_END
+
+/**
+ * CRANK_FOREACH_IRANGE_DO:
+ * @e: Name of iteration variable.
+ * @n: End of range.
+ * @BLOCK: Block to iterate.
+ *
+ * Iterates over range [0, @n) with @BLOCK.
+ */
+#define CRANK_FOREACH_IRANGE_DO(e, n, BLOCK) \
+	CRANK_FOREACH_IRANGE_BEGIN (e, n) \
+		BLOCK \
+	CRANK_FOREACH_IRANGE_END
+
+
 /**
  * CRANK_FOREACH_ARRAY_BEGIN:
  * @a: (array length=l): Array to iterate over.
@@ -144,8 +226,7 @@ G_BEGIN_DECLS
  * Mark end with #CRANK_FOREACH_ARRAY_END
  */
 #define CRANK_FOREACH_ARRAY_BEGIN(a, G, e, l) \
-	{   int _crank_macro_i; \
-		for (_crank_macro_i = 0; _crank_macro_i < l; _crank_macro_i++) { \
+	CRANK_FOREACH_IRANGE_BEGIN (_crank_macro_i, l) \
 		G e = a[_crank_macro_i];
 
 /**
@@ -154,7 +235,7 @@ G_BEGIN_DECLS
  * Marks end of loop from %CRANK_FOREACH_ARRAY_BEGIN
  */
 #define CRANK_FOREACH_ARRAY_END \
-	} }
+	CRANK_FOREACH_IRANGE_END
 
 /**
  * CRANK_FOREACH_ARRAY_DO:
