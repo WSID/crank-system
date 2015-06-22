@@ -1844,7 +1844,7 @@ crank_func_book_invoke_qname (	CrankFuncBook*		book,
  * crank_func_book_invoke_overwrite:
  * @book: A function book.
  * @index: A index of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @narg_values: Length of @arg_values.
  * @arg_values: (array length=narg_values): Array of GValue with arguments.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
@@ -1878,7 +1878,7 @@ crank_func_book_invoke_overwrite (	CrankFuncBook*		book,
  * crank_func_book_invoke_overwrite_name:
  * @book: A function book.
  * @name: Name of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @narg_values: Length of @arg_values.
  * @arg_values: (array length=narg_values): Array of GValue with arguments.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
@@ -1922,7 +1922,7 @@ crank_func_book_invoke_overwrite_name (	CrankFuncBook*		book,
  * crank_func_book_invoke_overwrite_qname:
  * @book: A function book.
  * @name: Name of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @narg_values: Length of @arg_values.
  * @arg_values: (array length=narg_values): Array of GValue with arguments.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
@@ -1958,7 +1958,7 @@ crank_func_book_invoke_overwrite_qname (	CrankFuncBook*		book,
  * crank_func_book_invokev:
  * @book: A function book.
  * @index: A index of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  * @narg_values: Length of @....
  * @...: Variadic Arguments of GValue with arguments.
@@ -1992,7 +1992,7 @@ crank_func_book_invokev (		CrankFuncBook*		book,
  * crank_func_book_invoke_va:
  * @book: A function book.
  * @index: A index of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @narg_values: Length of @arg_values.
  * @varargs: Variadic Arguments with arguments.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
@@ -2020,7 +2020,7 @@ crank_func_book_invoke_va (		CrankFuncBook*		book,
  * crank_func_book_invokev_overwrite:
  * @book: A function book.
  * @index: A index of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  * @narg_values: Length of @arg_values.
  * @...: Variadic Arguments of GValue with arguments.
@@ -2059,7 +2059,7 @@ crank_func_book_invokev_overwrite (		CrankFuncBook*		book,
  * crank_func_book_invoke_va_overwrite:
  * @book: A function book.
  * @index: A index of function holder.
- * @return_value: (optional): A GValue to store return value.
+ * @return_value: (optional) (out): A GValue to store return value.
  * @invocation_hint: (nullable): Invocation hint for backing #GClosure.
  * @narg_values: Length of @arg_values.
  * @varargs: va_list of GValue with arguments.
