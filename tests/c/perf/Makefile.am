@@ -1,6 +1,6 @@
 ## tests: 라이브러리 테스트
 
-include ../../glib-tap.mk
+include ../../../glib-tap.mk
 
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
