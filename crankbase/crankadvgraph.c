@@ -200,9 +200,10 @@ crank_dijkstra_digraph (	CrankDigraphNode*			from,
  * @heuristic_userdata: (closure heuristic_userdata): userdata for @heuristic_func
  *
  * Gets reasonably short path for a graph. (Not always returns shortest path,
- * but generally short paths. _
+ * but generally short paths.)
  *
- * If edge_func returns negative value, this will behave incorrectly.
+ * If @edge_func returns negative value, this will behave incorrectly.
+ * If @edge_func returns 0 or positive constant value, this will behave like dijkstra.
  *
  * Returns: (nullable) (transfer container) (element-type CrankDigraphNode)
  *    Path as list of Nodes.
