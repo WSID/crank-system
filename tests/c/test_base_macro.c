@@ -34,6 +34,7 @@ gint  subject_function_FOREACH_VARARG_DO (gint a, ...);
 void	test_macro_ARRAY_DUP (void);
 void	test_macro_ARRAY_CMP (void);
 void	test_macro_ARRAY_ADD (void);
+void	test_macro_ARRAY_FILL (void);
 
 void	test_macro_FOREACH_RANGE (void);
 void	test_macro_FOREACH_IRANGE (void);
@@ -68,7 +69,8 @@ main (gint   argc,
 	g_test_add_func ("/wsid/crank/base/macro/arrayadd",
 		test_macro_ARRAY_ADD);
 		
-		
+	g_test_add_func ("/crank/base/macro/array/fill",
+		test_macro_ARRAY_FILL);
 
   	g_test_add_func ("/crank/base/macro/foreach/range",
 		test_macro_FOREACH_RANGE);
@@ -227,6 +229,18 @@ test_macro_ARRAY_ADD (void)
 	g_free (subject);
 }
 
+void
+test_macro_ARRAY_FILL (void)
+{
+	gint	subject[3];
+
+	CRANK_ARRAY_FILL (subject, gint, 3, 20);
+
+	g_assert_cmpint (subject[0], ==, 20);
+	g_assert_cmpint (subject[1], ==, 20);
+	g_assert_cmpint (subject[2], ==, 20);
+}
+
 
 void
 test_macro_FOREACH_RANGE (void)
@@ -325,6 +339,8 @@ test_macro_FOREACH_RANGE_DO (void)
 	gint	fact = 1;
 
 	CRANK_FOREACH_RANGE_DO (gint, i, 2, 7, 1, fact *= i;)
+
+
 
 	g_assert_cmpint (fact, ==, 720);
 }

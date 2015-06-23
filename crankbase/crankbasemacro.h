@@ -132,6 +132,17 @@ G_BEGIN_DECLS
 #define CRANK_ARRAY_ADD(T, a, n, c, I) \
 	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
 
+/**
+ * CRANK_ARRAY_FILL:
+ * @a: Array to fill.
+ * @G: Type of element.
+ * @n: Item count of @a.
+ * @v: Value to fill.
+ *
+ * Fill an array by given value.
+ */
+#define CRANK_ARRAY_FILL(a, G, n, v) \
+	CRANK_FOREACH_IRANGE_DO(i, n, {a[i] = (G)v;})
 
 
 
