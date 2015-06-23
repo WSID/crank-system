@@ -277,16 +277,15 @@ crank_str_check_char (	const gchar*		str,
 
 /**
  * crank_str_check_chars:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @check_items: (type gchar) (array length=ncheck_items): 확인할 문자들입니다.
- * @ncheck_items: @check_items의 길이입니다.
+ * @str: String to check.
+ * @position: (inout): position.
+ * @check_items: (type gchar) (array length=ncheck_items): Items to check.
+ * @ncheck_items: Length of @check_items.
  *
- * 다음 문자가 @check_items 중 하나에 속해있는지 확인하고 @check_items에서의
- * 해당 인덱스를 반환합니다.
- * 공백은 건너 뜁니다.
+ * Checks next character is one of @check_items, and moves @position to next if it is.
+ * Skips space before it reads.
  *
- * Returns: 읽어들인 문자가 @check_items 중에 존재하지 않으면 -1
+ * Returns: The index of read character at @check_items, or -1 for absences.
  */
 gint
 crank_str_check_chars (	const gchar*		str,
@@ -314,15 +313,14 @@ crank_str_check_chars (	const gchar*		str,
 
 /**
  * crank_str_check_chars_str:
- * @str: 읽어들일 문자열입니다.
- * @position: (inout): 위치입니다.
- * @check_items: 확인할 문자들입니다.
+ * @str: String to check.
+ * @position: (inout): position.
+ * @check_items: Items to check.
  *
- * 다음 문자가 @check_items 중 하나에 속해있는지 확인하고 @check_items에서의
- * 해당 인덱스를 반환합니다.
- * 공백은 건너 뜁니다.
+ * Checks next character is one of @check_items, and moves @position ot next if it is.
+ * Skips space before it reads.
  *
- * Returns: 읽어들인 문자가 @check_items 중에 존재하지 않으면 -1
+ * Returns: The index of read character at @check_items, or -1 for absences
  */
 gint
 crank_str_check_chars_str (	const gchar*		str,
