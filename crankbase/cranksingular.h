@@ -40,8 +40,12 @@ struct _CrankSingularClass {
 
 	/*< public >*/
   	void		(*first_construct)				(CrankSingular*			self);
-
+  	
 	/*< private >*/
+  	void*		padding_1;
+  	void*		padding_2;
+  	void*		padding_3;
+
 	CrankSingularClassPrivate*	priv;
 };
 
