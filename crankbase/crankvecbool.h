@@ -27,6 +27,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankveccommon.h"
+
 G_BEGIN_DECLS
 
 /**
@@ -36,10 +38,11 @@ G_BEGIN_DECLS
  *
  * Represents a boolean vector. Compared to bvec2 in GLSL.
  */
-typedef struct _CrankVecBool2 {
+
+struct _CrankVecBool2 {
 	gboolean	x;
 	gboolean	y;
-} CrankVecBool2;
+};
 
 #define CRANK_TYPE_VEC_BOOL2	(crank_vec_bool2_get_type ())
 GType			crank_vec_bool2_get_type	(void);
@@ -151,11 +154,11 @@ gchar*			crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
  *
  * Represents a boolean vector. Compared to bvec3 in GLSL.
  */
-typedef struct _CrankVecBool3 {
+struct _CrankVecBool3 {
 	gboolean	x;
 	gboolean	y;
 	gboolean	z;
-} CrankVecBool3;
+};
 
 #define CRANK_TYPE_VEC_BOOL3	(crank_vec_bool3_get_type ())
 GType			crank_vec_bool3_get_type	(void);
@@ -272,12 +275,12 @@ gchar*			crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
  *
  * Represents a boolean vector. Compared to bvec4 in GLSL.
  */
-typedef struct _CrankVecBool4 {
+struct _CrankVecBool4 {
 	gboolean	x;
 	gboolean	y;
 	gboolean	z;
 	gboolean	w;
-} CrankVecBool4;
+};
 
 #define CRANK_TYPE_VEC_BOOL4	(crank_vec_bool4_get_type ())
 GType			crank_vec_bool4_get_type	(void);
@@ -400,10 +403,10 @@ gchar*			crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
  *
  * Arbitarily sized boolean vector.
  */
-typedef struct _CrankVecBoolN {
+struct _CrankVecBoolN {
 	gboolean*	data;
 	guint		n;
-} CrankVecBoolN;
+};
 
 #define CRANK_TYPE_VEC_BOOL_N	(crank_vec_bool4_get_type ())
 GType			crank_vec_bool_n_get_type	(void);

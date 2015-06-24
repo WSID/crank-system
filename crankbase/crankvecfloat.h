@@ -27,8 +27,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "crankvecbool.h"
-#include "crankvecint.h"
+#include "crankveccommon.h"
 
 G_BEGIN_DECLS
 
@@ -39,10 +38,10 @@ G_BEGIN_DECLS
  *
  * Float vector. Compared to vec2 in GLSL.
  */
-typedef struct _CrankVecFloat2 {
+struct _CrankVecFloat2 {
 	gfloat	x;
 	gfloat	y;
-} CrankVecFloat2;
+};
 
 #define CRANK_TYPE_VEC_FLOAT2	(crank_vec_float2_get_type ())
 GType			crank_vec_float2_get_type	(void);
@@ -210,11 +209,11 @@ void			crank_vec_float2_mix	(		CrankVecFloat2*	a,
  *
  * Float vector. Compared to vec3 in GLSL.
  */
-typedef struct _CrankVecFloat3 {
+struct _CrankVecFloat3 {
 	gfloat	x;
 	gfloat	y;
 	gfloat	z;
-} CrankVecFloat3;
+};
 
 #define CRANK_TYPE_VEC_FLOAT3	(crank_vec_float3_get_type ())
 GType			crank_vec_float3_get_type	(void);
@@ -395,12 +394,12 @@ void			crank_vec_float3_mix	(		CrankVecFloat3*	a,
  *
  * Float vector. Compared to vec3 in GLSL.
  */
-typedef struct _CrankVecFloat4 {
+struct _CrankVecFloat4 {
 	gfloat	x;
 	gfloat	y;
 	gfloat	z;
 	gfloat	w;
-} CrankVecFloat4;
+};
 
 #define CRANK_TYPE_VEC_FLOAT4	(crank_vec_float4_get_type ())
 GType			crank_vec_float4_get_type	(void);
@@ -583,10 +582,10 @@ void			crank_vec_float4_mix	(		CrankVecFloat4*	a,
  *
  * Struct to point variable size of float vector.
  */
-typedef struct _CrankVecFloatN {
+struct _CrankVecFloatN {
 	gfloat*	data;
 	guint	n;
-} CrankVecFloatN;
+};
 
 #define CRANK_TYPE_VEC_FLOAT_N	(crank_vec_float_n_get_type ())
 GType			crank_vec_float_n_get_type	(void);

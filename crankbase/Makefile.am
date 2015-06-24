@@ -13,6 +13,7 @@ include_HEADERS = \
 		crankstring.h \
 		\
 		crankdigraph.h \
+		crankveccommon.h \
 		crankvecbool.h \
 		crankvecint.h \
 		crankvecfloat.h \

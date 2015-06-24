@@ -27,7 +27,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "crankvecbool.h"
+#include "crankveccommon.h"
 
 G_BEGIN_DECLS
 
@@ -38,10 +38,10 @@ G_BEGIN_DECLS
  *
  * integer vector. Compared to ivec2 in GLSL.
  */
-typedef struct _CrankVecInt2 {
+struct _CrankVecInt2 {
 	gint	x;
 	gint	y;
-} CrankVecInt2;
+};
 
 #define CRANK_TYPE_VEC_INT2	(crank_vec_int2_get_type ())
 GType			crank_vec_int2_get_type	(void);
@@ -199,11 +199,11 @@ void			crank_vec_int2_max	(			CrankVecInt2*	a,
  *
  * integer vector. Compared to ivec3 in GLSL.
  */
-typedef struct _CrankVecInt3 {
+struct _CrankVecInt3 {
 	gint	x;
 	gint	y;
 	gint	z;
-} CrankVecInt3;
+};
 
 #define CRANK_TYPE_VEC_INT3	(crank_vec_int3_get_type ())
 GType			crank_vec_int3_get_type	(void);
@@ -374,12 +374,12 @@ void			crank_vec_int3_max	(			CrankVecInt3*	a,
  *
  * integer vector. Compared to ivec4 in GLSL.
  */
-typedef struct _CrankVecInt4 {
+struct _CrankVecInt4 {
 	gint	x;
 	gint	y;
 	gint	z;
 	gint	w;
-} CrankVecInt4;
+};
 
 #define CRANK_TYPE_VEC_INT4	(crank_vec_int4_get_type ())
 GType			crank_vec_int4_get_type	(void);
@@ -552,10 +552,10 @@ void			crank_vec_int4_max	(			CrankVecInt4*	a,
  *
  * Variable sized integer vector.
  */
-typedef struct _CrankVecIntN {
+struct _CrankVecIntN {
 	gint*	data;
 	guint	n;
-} CrankVecIntN;
+};
 
 #define CRANK_TYPE_VEC_INT_N	(crank_vec_int_n_get_type ())
 GType			crank_vec_int_n_get_type	(void);

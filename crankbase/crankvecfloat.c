@@ -26,6 +26,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankveccommon.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
 #include "crankvecfloat.h"

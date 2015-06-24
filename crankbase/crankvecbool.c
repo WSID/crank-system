@@ -53,6 +53,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankveccommon.h"
 #include "crankvecbool.h"
 
 G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_copy, g_free)

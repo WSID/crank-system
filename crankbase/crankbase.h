@@ -28,6 +28,7 @@
 #include "crankvalue.h"
 
 #include "crankdigraph.h"
+#include "crankveccommon.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
 #include "crankvecfloat.h"
@@ -36,17 +37,5 @@
 
 
 #undef _CRANKBASE_INSIDE
-
-
-/**
- * CrankCallback: (skip)
- * @userdata: (closure): A userdata for callback.
- *
- * It represents any functions that accept @userdata.
- *
- * This is not used for actual callback type, but a placeholder for any function
- * type.
- */
-typedef void		(*CrankCallback) (	gpointer	userdata	);
 
 #endif /* CRANKBASE_H */
