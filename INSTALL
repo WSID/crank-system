@@ -1,26 +1,18 @@
-Crank System: 게임 개발 지원을 위한 Library
+Crank System: A Library for gaming.
 ******************************************
 
 1. autotools setting
 
-이 패키지는 autotools을 통해 내용물들을 빌드합니다.
-하지만 빌드를 위해 필요한 추가 파일이 많은 관계로 git 등에서는 해당 파일들을 생성해서
-처리하는 방향으로 잡고 있으며, 일반적으로 autogen.sh를 제공합니다.
+This package is built with autotools. 
 
-이 패키지에서는 autogen.sh를 제공하지 않고 autoreconf의 사용을 권장합니다.
-
-빌드 보조 스크립트도 없으므로 --install (줄여서 -i) 옵션을 사용하여 설치하세요.
-
-$ autoreconf -i
+This package does not provides autogen.sh, so use autoreconf.
 
 
-2. 일반적인 설치법
+2. General Installation
 
-만일 온라인 상에서 tar.bz 패키지를 받은 경우, configure 스크립트가 존재합니다.
-일반적으로 설치는 다음과 같습니다.
+If it is obtained from tarball, then it comes with configure script. Then you
+can install by below.
 
 $ ./configure --prefix=/usr ...
 $ make -j4
 $ sudo make install
-
-configure 스크립트는 여러가지 인자를 통해 조절 가능합니다.
