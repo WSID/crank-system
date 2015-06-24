@@ -2,10 +2,6 @@
 # Python에서 Crank System을 테스트합니다.
 
 TESTS= \
-	test_func_holder.py \
-	test_singular.py \
-	test_types_graph.py \
-	test_base_book.py \
 	test_vec_bool.py \
 	test_vec_int.py \
 	test_vec_float.py \

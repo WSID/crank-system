@@ -37,14 +37,6 @@
 	<xi:include href="crank-chapter-base-data.xml"/>
   </chapter>
   
-  <chapter>
-    <title>Types and book</title>
-    <xi:include href="xml/cranksingular.xml"/>
-    <xi:include href="xml/cranktypesgraph.xml"/>
-    <xi:include href="xml/crankfuncholder.xml"/>
-    <xi:include href="xml/crankbasebook.xml"/>
-  </chapter>
-  
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>

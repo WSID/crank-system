@@ -27,7 +27,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include "crankfuncholder.h"
+#include "crankfunction.h"
 
 /**
  * SECTION:crankvala

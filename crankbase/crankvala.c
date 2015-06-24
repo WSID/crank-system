@@ -19,7 +19,6 @@
  
 #define _CRANKBASE_INSIDE
 #include "crankvala.h"
-
 /**
  * crank_vala_create_closure: (skip)
  * @callback: (scope async): A function to wrap in GClosure.

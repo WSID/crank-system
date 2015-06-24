@@ -15,10 +15,6 @@ AM_CFLAGS= \
 test_programs= \
 		test_vala \
 		test_string \
-		test_func_holder \
-		test_singular \
-		test_types_graph \
-		test_base_book \
 		test_digraph \
 		test_vec_bool \
 		test_vec_int \
@@ -42,39 +38,6 @@ test_string_LDADD= \
 test_string_SOURCES= \
 		test_string.vala
 		
-
-# test_func_holder
-test_func_holder_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la
-
-test_func_holder_SOURCES= \
-		test_func_holder.vala
-		
-
-test_singular_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la
-
-test_singular_SOURCES= \
-		test_singular.vala
-
-
-test_types_graph_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la
-
-test_types_graph_SOURCES= \
-		test_types_graph.vala
-
-
-test_base_book_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la
-
-test_base_book_SOURCES= \
-		test_base_book.vala
-
 
 test_digraph_LDADD= \
 		$(CRANK_BASE_LIBS) \
