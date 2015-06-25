@@ -58,30 +58,50 @@ class TestVecBool(unittest.TestCase):
 		
 		c = a.xor (b)
 		
-		self.assertEqual (c.x, False);
-		self.assertEqual (c.y, True);
+		self.assertEqual (c.x, False)
+		self.assertEqual (c.y, True)
 	
 	def test_2_not (self):
 		a = CrankBase.VecBool2.init (True, False)
 		
-		c = a.notv ();
+		c = a.notv ()
 		
-		self.assertEqual (c.x, False);
-		self.assertEqual (c.y, True);
+		self.assertEqual (c.x, False)
+		self.assertEqual (c.y, True)
 	
 	def test_2_any (self):
-		a = CrankBase.VecBool2.init (True, False);
-		b = CrankBase.VecBool2.init (False, False);
+		a = CrankBase.VecBool2.init (True, False)
+		b = CrankBase.VecBool2.init (False, False)
 		
-		self.assertEqual (a.get_any (), True);
-		self.assertEqual (b.get_any (), False);
+		self.assertEqual (a.get_any (), True)
+		self.assertEqual (b.get_any (), False)
 	
 	def test_2_all (self):
-		a = CrankBase.VecBool2.init (True, True);
-		b = CrankBase.VecBool2.init (True, False);
+		a = CrankBase.VecBool2.init (True, True)
+		b = CrankBase.VecBool2.init (True, False)
 		
-		self.assertEqual (a.get_all (), True);
-		self.assertEqual (b.get_all (), False);
+		self.assertEqual (a.get_all (), True)
+		self.assertEqual (b.get_all (), False)
+
+	def test_2_equal (self):
+		a = CrankBase.VecBool2.init (True, True)
+		b = CrankBase.VecBool2.init (True, True)
+		c = CrankBase.VecBool2.init (True, False)
+		
+		assert (    a.equal (b))
+		assert (not a.equal (c))
+	
+	def test_2_hash (self):
+		a = CrankBase.VecBool2.init (True, True)
+		b = CrankBase.VecBool2.init (True, True)
+		c = CrankBase.VecBool2.init (True, False)
+		
+		self.assertEqual (a.hash (), b.hash ())
+		self.assertNotEqual (a.hash (), c.hash ())
+	
+	def test_2_to_string (self):
+		a = CrankBase.VecBool2.init (True, False)
+		self.assertEqual (a.to_string(), "(true, false)")
 
 
 
@@ -149,6 +169,26 @@ class TestVecBool(unittest.TestCase):
 		
 		self.assertEqual (a.get_all (), True);
 		self.assertEqual (b.get_all (), False);
+
+	def test_n_equal (self):
+		a = CrankBase.VecBoolN.init_arr ([True, True])
+		b = CrankBase.VecBoolN.init_arr ([True, True])
+		c = CrankBase.VecBoolN.init_arr ([True, False])
+		
+		assert (    a.equal (b))
+		assert (not a.equal (c))
+	
+	def test_n_hash (self):
+		a = CrankBase.VecBoolN.init_arr ([True, True])
+		b = CrankBase.VecBoolN.init_arr ([True, True])
+		c = CrankBase.VecBoolN.init_arr ([True, False])
+		
+		self.assertEqual (a.hash (), b.hash ())
+		self.assertNotEqual (a.hash (), c.hash ())
+		
+	def test_2_to_string (self):
+		a = CrankBase.VecBool2.init_arr ([True, False, False, True])
+		self.assertEqual (a.to_string(), "(true, false, false, true)")
 
 if __name__ == '__main__':
 	unittest.main ()

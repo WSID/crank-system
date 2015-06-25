@@ -18,7 +18,8 @@ test_programs= \
 		test_digraph \
 		test_vec_bool \
 		test_vec_int \
-		test_vec_float
+		test_vec_float \
+		test_advgraph
 
 
 # test_func_holder
@@ -68,3 +69,11 @@ test_vec_float_LDADD= \
 
 test_vec_float_SOURCES= \
 		test_vec_float.vala
+
+
+test_advgraph_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_advgraph_SOURCES= \
+		test_advgraph.vala

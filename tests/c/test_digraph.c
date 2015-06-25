@@ -86,6 +86,9 @@ void		test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
 										
 void		test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
+											
+void		test_digraph_edge_get_data (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
 
 void		test_digraph_edge_get_tail (	TestDigraphFixture*	fixture,
 										gconstpointer		userdata	);
@@ -210,6 +213,13 @@ main (gint   argc,
 			NULL,
 			test_digraph_setup,
 			test_digraph_node_foreach_breadth,
+			test_digraph_teardown	);
+			
+	g_test_add ("/crank/base/digraph/edge/data",
+			TestDigraphFixture,
+			NULL,
+			test_digraph_setup,
+			test_digraph_edge_get_data,
 			test_digraph_teardown	);
 
 	g_test_add ("/crank/base/digraph/edge/tail",

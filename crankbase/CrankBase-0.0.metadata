@@ -25,3 +25,8 @@
 VecBool* skip
 VecInt* skip
 VecFloat* skip
+
+//////// Digraph
+DigraphNode.get_data.value ref
+DigraphEdge.get_data.value ref
+

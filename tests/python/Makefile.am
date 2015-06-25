@@ -5,7 +5,8 @@ TESTS= \
 	test_vec_bool.py \
 	test_vec_int.py \
 	test_vec_float.py \
-	test_digraph.py
+	test_digraph.py \
+	test_advgraph.py
 
 AM_TESTS_ENVIRONMENT= \
 	LD_LIBRARY_PATH=$(top_builddir)/crankbase/.libs/ \

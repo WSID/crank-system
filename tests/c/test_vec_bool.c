@@ -123,9 +123,49 @@ void	test_2_hash (void)
 	g_assert_cmpuint (ah, !=, ch);
 }
 
+void	test_2_to_string (void)
+{
+	CrankVecBool2	a = {FALSE, TRUE};
+	gchar*			astr = crank_vec_bool2_to_string (&a);
+	
+	g_assert_cmpstr (astr, ==, "(false, true)");
+	
+	g_free (astr);
+}
 
 
 
+void	test_n_equal (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
+	
+	g_assert (  crank_vec_bool_n_equal (&a, &b));
+	g_assert (! crank_vec_bool_n_equal (&a, &c));
+}
+
+void	test_n_hash (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
+	
+	guint			a_hash = crank_vec_bool_n_hash (&a);
+	guint			b_hash = crank_vec_bool_n_hash (&b);
+	guint			c_hash = crank_vec_bool_n_hash (&c);
+	
+	g_assert_cmpuint (a_hash, ==, b_hash);
+	g_assert_cmpuint (a_hash, !=, c_hash);
+}
 void	test_n_get (void)
 {
 	CrankVecBoolN	a = {0};
@@ -255,11 +295,27 @@ void	test_n_all (void)
 	crank_vec_bool_n_fini (&b);
 }
 
+void	test_n_to_string (void)
+{
+	CrankVecBoolN	a = {0};
+	gchar*			astr;
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	astr = crank_vec_bool_n_to_string (&a);
+	
+	g_assert_cmpstr (astr, ==, "(false, false, false, true)");
+	
+	g_free (astr);
+}
+
 
 void	main (gint argc, gchar** argv)
 {
 	g_test_init (&argc, &argv, NULL);
 	
+	g_test_add_func ("/crank/base/vec/bool/2/equal", test_2_equal);
+	g_test_add_func ("/crank/base/vec/bool/2/hash", test_2_hash);
+	g_test_add_func ("/crank/base/vec/bool/2/to_string", test_2_to_string);
 	g_test_add_func ("/crank/base/vec/bool/2/get", test_2_get);
 	g_test_add_func ("/crank/base/vec/bool/2/and", test_2_and);
 	g_test_add_func ("/crank/base/vec/bool/2/or", test_2_or);
@@ -268,6 +324,9 @@ void	main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/2/any", test_2_any);
 	g_test_add_func ("/crank/base/vec/bool/2/all", test_2_all);
 	
+	g_test_add_func ("/crank/base/vec/bool/n/equal", test_n_equal);
+	g_test_add_func ("/crank/base/vec/bool/n/hash", test_n_hash);
+	g_test_add_func ("/crank/base/vec/bool/n/to_string", test_n_to_string);
 	g_test_add_func ("/crank/base/vec/bool/n/get", test_n_get);
 	g_test_add_func ("/crank/base/vec/bool/n/and", test_n_and);
 	g_test_add_func ("/crank/base/vec/bool/n/or", test_n_or);

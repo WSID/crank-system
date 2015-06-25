@@ -30,6 +30,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/bool/2/all", test_2_all);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/equal", test_2_equal);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/hash", test_2_hash);
+	GLib.Test.add_func ("/crank/base/vec/bool/2/to_string", test_2_to_string);
 	
 	GLib.Test.add_func ("/crank/base/vec/bool/n/get", test_n_get);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/and", test_n_and);
@@ -39,6 +40,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/bool/n/all", test_n_all);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/equal", test_n_equal);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/hash", test_n_hash);
+	GLib.Test.add_func ("/crank/base/vec/bool/n/to_string", test_n_to_string);
 	GLib.Test.run ();
 	
 	return 0;
@@ -122,6 +124,12 @@ void test_2_hash () {
 	
 	assert (Crank.VecBool2.hash (a) == Crank.VecBool2.hash (b));
 	assert (Crank.VecBool2.hash (a) != Crank.VecBool2.hash (c));
+}
+
+void test_2_to_string () {
+	Crank.VecBool2 a = {true, true};
+	
+	assert (a.to_string () == "(true, true)");
 }
 
 
@@ -215,4 +223,10 @@ void test_n_hash () {
 	
 	assert (Crank.VecBoolN.hash (a) == Crank.VecBoolN.hash (b));
 	assert (Crank.VecBoolN.hash (a) != Crank.VecBoolN.hash (c));
-}        
+}
+
+void test_n_to_string () {
+	Crank.VecBoolN a = Crank.VecBoolN (4, true, true, false, false);
+	
+	assert (a.to_string () == "(true, true, false, false)");
+}
