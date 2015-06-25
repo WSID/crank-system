@@ -1639,7 +1639,7 @@ crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
 	if (0 < vec->n) {
 		g_string_append (str, vec->data[0] ? on_true : on_false );
 		
-		CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
+		CRANK_FOREACH_ARRAY_BEGIN ((vec->data + 1), gboolean, e, (vec->n - 1))
 			g_string_append (str, in );
 			g_string_append (str, e ? on_true : on_false );
 		CRANK_FOREACH_ARRAY_END

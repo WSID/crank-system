@@ -186,8 +186,8 @@ class TestVecBool(unittest.TestCase):
 		self.assertEqual (a.hash (), b.hash ())
 		self.assertNotEqual (a.hash (), c.hash ())
 		
-	def test_2_to_string (self):
-		a = CrankBase.VecBool2.init_arr ([True, False, False, True])
+	def test_n_to_string (self):
+		a = CrankBase.VecBoolN.init_arr ([True, False, False, True])
 		self.assertEqual (a.to_string(), "(true, false, false, true)")
 
 if __name__ == '__main__':
