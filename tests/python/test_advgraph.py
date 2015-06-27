@@ -152,9 +152,17 @@ class TestDigraph(unittest.TestCase):
 			self.nodes[3],
 			self.nodes[1]])
 
-	@unittest.skip ("Current Python GI does not support callbacks more than 1.")
 	def test_astar (self):
-		path = CrankBase.astar_digraph (self.nodes[5], self.nodes[7], self.edge_distance, None, self.heuristic, None)
+		# a* needs 2 functions so that pygobject cannot get tuple userdata from
+		# variadic arguments, instead it will get userdatas directly as tuple.
+		
+		# For now, we don't need userdata, so we pass empty tuples.
+		# "None" will cause TypeError.
+		path = CrankBase.astar_digraph (
+				self.nodes[5],
+				self.nodes[7],
+				self.edge_distance, (),
+				self.heuristic, ()	)
 
 		self.assertEqual (path,
 			[self.nodes[5],
