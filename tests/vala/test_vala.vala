@@ -24,64 +24,6 @@ private delegate int	SubjectFuncTypeR (int* userdata);
 
 private delegate int	SubjectFuncType ();
 
-private int
-subject_int_0 (int* userdata) {
-	int prev = *userdata;
-	*userdata = *userdata + 1;
-	
-	return prev;
-}
-
-
-private void
-test_func_join () {
-	int subject = 41;
-	
-	SubjectFuncType	func =
-		(SubjectFuncType) Crank.func_join ((GLib.Callback)subject_int_0, &subject);
-	
-	assert (func () == 41);
-	assert (subject == 42);
-}
-
-
-private void
-test_func_split () {
-	int subject = 42;
-	
-	SubjectFuncType		func_join = () => {
-			subject = subject * 2;
-			return subject;
-	};
-	
-	void*				func_userdata;
-	SubjectFuncTypeR	func =
-		(SubjectFuncTypeR) Crank.func_split ((Crank.Callback)func_join, out func_userdata);
-	
-	assert (func (func_userdata) == 84);
-	assert (subject == 84);
-}
-
-private void
-test_generic_unowned () {
-	assert (  Crank.generic_unowned<int> ());
-	assert (! Crank.generic_unowned<float?> ());
-	assert (  Crank.generic_unowned<unowned string> ());
-	assert (! Crank.generic_unowned<string> ());
-}
-
-
-private void
-test_create_closure () {
-	SubjectFuncType func = () => 733;
-	GLib.Closure closure = Crank.create_closure ((Crank.Callback)func);
-	GLib.Value value = GLib.Value (typeof (int));
-	
-	Crank.closure_invoke (closure, ref value, {(void*)null}, null);
-	
-	assert (value.get_int () == 733);
-}
-
 
 int main (string[] args) {
 	GLib.Test.init (ref args);
@@ -101,4 +43,59 @@ int main (string[] args) {
 	GLib.Test.run ();
 	
 	return 0;
+}
+
+
+private int
+subject_int_0 (int* userdata) {
+	int prev = *userdata;
+	*userdata = *userdata + 1;
+	
+	return prev;
+}
+
+
+private void test_func_join () {
+	int subject = 41;
+	
+	SubjectFuncType	func =
+		(SubjectFuncType) Crank.func_join ((GLib.Callback)subject_int_0, &subject);
+	
+	assert (func () == 41);
+	assert (subject == 42);
+}
+
+
+private void test_func_split () {
+	int subject = 42;
+	
+	SubjectFuncType		func_join = () => {
+			subject = subject * 2;
+			return subject;
+	};
+	
+	void*				func_userdata;
+	SubjectFuncTypeR	func =
+		(SubjectFuncTypeR) Crank.func_split ((Crank.Callback)func_join, out func_userdata);
+	
+	assert (func (func_userdata) == 84);
+	assert (subject == 84);
+}
+
+private void test_generic_unowned () {
+	assert (  Crank.generic_unowned<int> ());
+	assert (! Crank.generic_unowned<float?> ());
+	assert (  Crank.generic_unowned<unowned string> ());
+	assert (! Crank.generic_unowned<string> ());
+}
+
+
+private void test_create_closure () {
+	SubjectFuncType func = () => 733;
+	GLib.Closure closure = Crank.create_closure ((Crank.Callback)func);
+	GLib.Value value = GLib.Value (typeof (int));
+	
+	Crank.closure_invoke (closure, ref value, {(void*)null}, null);
+	
+	assert (value.get_int () == 733);
 }

@@ -124,6 +124,20 @@ public struct TestFixture {
 	}
 }
 
+int main (string[] args) {
+	GLib.Test.init (ref args);
+	
+	GLib.Test.add_func ("/crank/base/advgraph/dijkstra/digraph",
+		test_dijkstra );
+	
+	GLib.Test.add_func ("/crank/base/advgraph/astar/digraph",
+		test_astar);
+	
+	GLib.Test.run ();
+	
+	return 0;
+}
+
 private float	edge_distance (Crank.DigraphEdge	edge)
 {
 	Crank.VecInt2	disp;
@@ -172,18 +186,4 @@ private void test_astar ()
 	assert (path.nth_data (2) == ft.nodes[4]);
 	assert (path.nth_data (3) == ft.nodes[0]);
 	assert (path.nth_data (4) == ft.nodes[7]);
-}
-
-int main (string[] args) {
-	GLib.Test.init (ref args);
-	
-	GLib.Test.add_func ("/crank/base/advgraph/dijkstra/digraph",
-		test_dijkstra );
-	
-	GLib.Test.add_func ("/crank/base/advgraph/astar/digraph",
-		test_astar);
-	
-	GLib.Test.run ();
-	
-	return 0;
 }

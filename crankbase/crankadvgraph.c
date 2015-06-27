@@ -196,10 +196,10 @@ crank_dijkstra_digraph (	CrankDigraphNode*			from,
  * crank_astar_digraph:
  * @from: starting node
  * @to: destination node
- * @edge_func: (scope call): cost function for each edge.
- * @edge_userdata: (closure edge_func): userdata for @edge_func.
- * @heuristic_func: (scope call): estimated cost function for each node to destination
- * @heuristic_userdata: (closure heuristic_func): userdata for @heuristic_func
+ * @edge_func: (scope call) (closure edge_userdata): cost function for each edge.
+ * @edge_userdata: userdata for @edge_func.
+ * @heuristic_func: (scope call) (closure heuristic_userdata): estimated cost function for each node to destination
+ * @heuristic_userdata: userdata for @heuristic_func
  *
  * Gets reasonably short path for a graph. (Not always returns shortest path,
  * but generally short paths.)

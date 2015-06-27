@@ -22,294 +22,35 @@
 #include <glib.h>
 #include "crankbase.h"
 
-void	test_2_get (void)
-{
-	CrankVecBool2	a = {TRUE, FALSE};
-	
-	g_assert (crank_vec_bool2_get (&a, 0) == TRUE);
-	g_assert (crank_vec_bool2_get (&a, 1) == FALSE);
-}
+//////// Declaration ///////////////////////////////////////////////////////////
 
-void	test_2_and (void)
-{
-	CrankVecBool2	a = {TRUE, TRUE};
-	CrankVecBool2	b = {FALSE, TRUE};
+static void	test_2_equal (void);
+static void	test_2_hash (void);
+static void	test_2_to_string (void);
+static void	test_2_get (void);
+static void	test_2_and (void);
+static void	test_2_or (void);
+static void	test_2_xor (void);
+static void	test_2_not (void);
+static void	test_2_any (void);
+static void	test_2_all (void);
 
-	CrankVecBool2	c;
-
-	crank_vec_bool2_and (&a, &b, &c);
-
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
-}
-
-void	test_2_or (void)
-{
-	CrankVecBool2	a = {FALSE, FALSE};
-	CrankVecBool2	b = {FALSE, TRUE};
-
-	CrankVecBool2	c;
-
-	crank_vec_bool2_or (&a, &b, &c);
-
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
-}
-
-void	test_2_xor (void)
-{
-	CrankVecBool2	a = {TRUE, FALSE};
-	CrankVecBool2	b = {TRUE, TRUE};
-
-	CrankVecBool2	c;
-
-	crank_vec_bool2_xor (&a, &b, &c);
-
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
-}
-
-void	test_2_not (void)
-{
-	CrankVecBool2	a = {TRUE, FALSE};
-
-	CrankVecBool2	c;
-
-	crank_vec_bool2_not (&a, &c);
-
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
-}
-
-void	test_2_any (void)
-{
-	CrankVecBool2	a = {FALSE, FALSE};
-	CrankVecBool2	b = {FALSE, TRUE};
-
-  	g_assert (crank_vec_bool2_get_any (&a) == FALSE);
-  	g_assert (crank_vec_bool2_get_any (&b) == TRUE);
-}
-
-void	test_2_all (void)
-{
-	CrankVecBool2	a = {TRUE, FALSE};
-	CrankVecBool2	b = {TRUE, TRUE};
-
-  	g_assert (crank_vec_bool2_get_all (&a) == FALSE);
-  	g_assert (crank_vec_bool2_get_all (&b) == TRUE);
-}
-
-void	test_2_equal (void)
-{
-	CrankVecBool2	a = {TRUE, TRUE};
-	CrankVecBool2	b = {TRUE, TRUE};
-	CrankVecBool2	c = {TRUE, FALSE};
-	
-	g_assert (  crank_vec_bool2_equal (&a, &b));
-	g_assert (! crank_vec_bool2_equal (&a, &c));
-}
-
-void	test_2_hash (void)
-{
-	CrankVecBool2	a = {TRUE, TRUE};
-	CrankVecBool2	b = {TRUE, TRUE};
-	CrankVecBool2	c = {TRUE, FALSE};
-	
-	guint			ah = crank_vec_bool2_hash (&a);
-	guint			bh = crank_vec_bool2_hash (&b);
-	guint			ch = crank_vec_bool2_hash (&c);
-	
-	g_assert_cmpuint (ah, ==, bh);
-	g_assert_cmpuint (ah, !=, ch);
-}
-
-void	test_2_to_string (void)
-{
-	CrankVecBool2	a = {FALSE, TRUE};
-	gchar*			astr = crank_vec_bool2_to_string (&a);
-	
-	g_assert_cmpstr (astr, ==, "(false, true)");
-	
-	g_free (astr);
-}
+static void	test_n_equal (void);
+static void	test_n_hash (void);
+static void	test_n_to_string (void);
+static void	test_n_get (void);
+static void	test_n_and (void);
+static void	test_n_or (void);
+static void	test_n_xor (void);
+static void	test_n_not (void);
+static void	test_n_any (void);
+static void	test_n_all (void);
 
 
+//////// Main //////////////////////////////////////////////////////////////////
 
-void	test_n_equal (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	CrankVecBoolN	c = {0};
-	
-	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
-	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
-	
-	g_assert (  crank_vec_bool_n_equal (&a, &b));
-	g_assert (! crank_vec_bool_n_equal (&a, &c));
-}
-
-void	test_n_hash (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	CrankVecBoolN	c = {0};
-	
-	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
-	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
-	
-	guint			a_hash = crank_vec_bool_n_hash (&a);
-	guint			b_hash = crank_vec_bool_n_hash (&b);
-	guint			c_hash = crank_vec_bool_n_hash (&c);
-	
-	g_assert_cmpuint (a_hash, ==, b_hash);
-	g_assert_cmpuint (a_hash, !=, c_hash);
-}
-void	test_n_get (void)
-{
-	CrankVecBoolN	a = {0};
-	
-	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, FALSE, TRUE);
-	
-	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
-	g_assert (crank_vec_bool_n_get (&a, 1) == TRUE);
-	g_assert (crank_vec_bool_n_get (&a, 2) == FALSE);
-	g_assert (crank_vec_bool_n_get (&a, 3) == FALSE);
-	g_assert (crank_vec_bool_n_get (&a, 4) == TRUE);
-	
-	crank_vec_bool_n_fini (&a);
-}
-
-void	test_n_and (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-
-	CrankVecBoolN	c = {0};
-
-	crank_vec_bool_n_init (&a, 4, TRUE, TRUE, FALSE, FALSE);
-	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
-
-	crank_vec_bool_n_and (&a, &b, &c);
-
-	g_assert (crank_vec_bool_n_get_size (&c) == 2);
-  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&b);
-	crank_vec_bool_n_fini (&c);
-}
-
-void	test_n_or (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-
-	CrankVecBoolN	c = {0};
-
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
-
-	crank_vec_bool_n_or (&a, &b, &c);
-
-  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
-	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&b);
-	crank_vec_bool_n_fini (&c);
-}
-
-void	test_n_xor (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	
-	CrankVecBoolN	c = {0};
-	
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
-	
-	crank_vec_bool_n_xor (&a, &b, &c);
-	
-	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
-	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&b);
-	crank_vec_bool_n_fini (&c);
-}
-
-void	test_n_not (void)
-{
-	CrankVecBoolN	a = {0};
-	
-	CrankVecBoolN	c = {0};
-	
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	
-	crank_vec_bool_n_not (&a, &c);
-	
-	g_assert (crank_vec_bool_n_get (&c, 0) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == FALSE);
-	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&c);
-}
-
-void	test_n_any (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, FALSE, FALSE );
-	
-	g_assert (crank_vec_bool_n_get_any (&a) == TRUE);
-  	g_assert (crank_vec_bool_n_get_any (&b) == FALSE);
-	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&b);
-}
-
-void	test_n_all (void)
-{
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, TRUE, TRUE );
-	
-	g_assert (crank_vec_bool_n_get_all (&a) == FALSE);
-  	g_assert (crank_vec_bool_n_get_all (&b) == TRUE);
-  	
-	crank_vec_bool_n_fini (&a);
-	crank_vec_bool_n_fini (&b);
-}
-
-void	test_n_to_string (void)
-{
-	CrankVecBoolN	a = {0};
-	gchar*			astr;
-	
-	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	astr = crank_vec_bool_n_to_string (&a);
-	
-	g_assert_cmpstr (astr, ==, "(false, false, false, true)");
-	
-	g_free (astr);
-}
-
-
-void	main (gint argc, gchar** argv)
+gint
+main (gint argc, gchar** argv)
 {
 	g_test_init (&argc, &argv, NULL);
 	
@@ -336,4 +77,314 @@ void	main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/n/all", test_n_all);
 	
 	g_test_run ();
+	return 0;
+}
+
+
+//////// Definition ////////////////////////////////////////////////////////////
+
+static void
+test_2_get (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+	
+	g_assert (crank_vec_bool2_get (&a, 0) == TRUE);
+	g_assert (crank_vec_bool2_get (&a, 1) == FALSE);
+}
+
+static void
+test_2_and (void)
+{
+	CrankVecBool2	a = {TRUE, TRUE};
+	CrankVecBool2	b = {FALSE, TRUE};
+
+	CrankVecBool2	c;
+
+	crank_vec_bool2_and (&a, &b, &c);
+
+  	g_assert (c.x == FALSE);
+  	g_assert (c.y == TRUE);
+}
+
+static void
+test_2_or (void)
+{
+	CrankVecBool2	a = {FALSE, FALSE};
+	CrankVecBool2	b = {FALSE, TRUE};
+
+	CrankVecBool2	c;
+
+	crank_vec_bool2_or (&a, &b, &c);
+
+  	g_assert (c.x == FALSE);
+  	g_assert (c.y == TRUE);
+}
+
+static void
+test_2_xor (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+	CrankVecBool2	b = {TRUE, TRUE};
+
+	CrankVecBool2	c;
+
+	crank_vec_bool2_xor (&a, &b, &c);
+
+  	g_assert (c.x == FALSE);
+  	g_assert (c.y == TRUE);
+}
+
+static void
+test_2_not (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+
+	CrankVecBool2	c;
+
+	crank_vec_bool2_not (&a, &c);
+
+  	g_assert (c.x == FALSE);
+  	g_assert (c.y == TRUE);
+}
+
+static void
+test_2_any (void)
+{
+	CrankVecBool2	a = {FALSE, FALSE};
+	CrankVecBool2	b = {FALSE, TRUE};
+
+  	g_assert (crank_vec_bool2_get_any (&a) == FALSE);
+  	g_assert (crank_vec_bool2_get_any (&b) == TRUE);
+}
+
+static void
+test_2_all (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+	CrankVecBool2	b = {TRUE, TRUE};
+
+  	g_assert (crank_vec_bool2_get_all (&a) == FALSE);
+  	g_assert (crank_vec_bool2_get_all (&b) == TRUE);
+}
+
+static void
+test_2_equal (void)
+{
+	CrankVecBool2	a = {TRUE, TRUE};
+	CrankVecBool2	b = {TRUE, TRUE};
+	CrankVecBool2	c = {TRUE, FALSE};
+	
+	g_assert (  crank_vec_bool2_equal (&a, &b));
+	g_assert (! crank_vec_bool2_equal (&a, &c));
+}
+
+static void
+test_2_hash (void)
+{
+	CrankVecBool2	a = {TRUE, TRUE};
+	CrankVecBool2	b = {TRUE, TRUE};
+	CrankVecBool2	c = {TRUE, FALSE};
+	
+	guint			ah = crank_vec_bool2_hash (&a);
+	guint			bh = crank_vec_bool2_hash (&b);
+	guint			ch = crank_vec_bool2_hash (&c);
+	
+	g_assert_cmpuint (ah, ==, bh);
+	g_assert_cmpuint (ah, !=, ch);
+}
+
+static void
+test_2_to_string (void)
+{
+	CrankVecBool2	a = {FALSE, TRUE};
+	gchar*			astr = crank_vec_bool2_to_string (&a);
+	
+	g_assert_cmpstr (astr, ==, "(false, true)");
+	
+	g_free (astr);
+}
+
+
+
+static void
+test_n_equal (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
+	
+	g_assert (  crank_vec_bool_n_equal (&a, &b));
+	g_assert (! crank_vec_bool_n_equal (&a, &c));
+}
+
+static void
+test_n_hash (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
+	crank_vec_bool_n_init (&c, 3, TRUE, TRUE, TRUE);
+	
+	guint			a_hash = crank_vec_bool_n_hash (&a);
+	guint			b_hash = crank_vec_bool_n_hash (&b);
+	guint			c_hash = crank_vec_bool_n_hash (&c);
+	
+	g_assert_cmpuint (a_hash, ==, b_hash);
+	g_assert_cmpuint (a_hash, !=, c_hash);
+}
+static void
+test_n_get (void)
+{
+	CrankVecBoolN	a = {0};
+	
+	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, FALSE, TRUE);
+	
+	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
+	g_assert (crank_vec_bool_n_get (&a, 1) == TRUE);
+	g_assert (crank_vec_bool_n_get (&a, 2) == FALSE);
+	g_assert (crank_vec_bool_n_get (&a, 3) == FALSE);
+	g_assert (crank_vec_bool_n_get (&a, 4) == TRUE);
+	
+	crank_vec_bool_n_fini (&a);
+}
+
+static void
+test_n_and (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+
+	CrankVecBoolN	c = {0};
+
+	crank_vec_bool_n_init (&a, 4, TRUE, TRUE, FALSE, FALSE);
+	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
+
+	crank_vec_bool_n_and (&a, &b, &c);
+
+	g_assert (crank_vec_bool_n_get_size (&c) == 2);
+  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
+  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
+	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+	crank_vec_bool_n_fini (&c);
+}
+
+static void
+test_n_or (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+
+	CrankVecBoolN	c = {0};
+
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
+
+	crank_vec_bool_n_or (&a, &b, &c);
+
+  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
+  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
+  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
+  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
+	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+	crank_vec_bool_n_fini (&c);
+}
+
+static void
+test_n_xor (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
+	
+	crank_vec_bool_n_xor (&a, &b, &c);
+	
+	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
+  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
+  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
+  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
+	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+	crank_vec_bool_n_fini (&c);
+}
+
+static void
+test_n_not (void)
+{
+	CrankVecBoolN	a = {0};
+	
+	CrankVecBoolN	c = {0};
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	
+	crank_vec_bool_n_not (&a, &c);
+	
+	g_assert (crank_vec_bool_n_get (&c, 0) == TRUE);
+  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
+  	g_assert (crank_vec_bool_n_get (&c, 2) == TRUE);
+  	g_assert (crank_vec_bool_n_get (&c, 3) == FALSE);
+	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&c);
+}
+
+static void
+test_n_any (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 2, FALSE, FALSE );
+	
+	g_assert (crank_vec_bool_n_get_any (&a) == TRUE);
+  	g_assert (crank_vec_bool_n_get_any (&b) == FALSE);
+	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+}
+
+static void
+test_n_all (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 2, TRUE, TRUE );
+	
+	g_assert (crank_vec_bool_n_get_all (&a) == FALSE);
+  	g_assert (crank_vec_bool_n_get_all (&b) == TRUE);
+  	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+}
+
+static void
+test_n_to_string (void)
+{
+	CrankVecBoolN	a = {0};
+	gchar*			astr;
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	astr = crank_vec_bool_n_to_string (&a);
+	
+	g_assert_cmpstr (astr, ==, "(false, false, false, true)");
+	
+	g_free (astr);
 }

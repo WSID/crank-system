@@ -23,11 +23,63 @@
 
 #include "crankbase.h"
 
+//////// Declaration ///////////////////////////////////////////////////////////
+
 typedef struct {
 	CrankDigraph*		graph;
 	CrankDigraphNode*	nodes[16];
 	CrankDigraphNode*	edges[32];
 } TestFixtureDigraph;
+
+void	test_fixture_init (			TestFixtureDigraph*	ft,
+									gpointer			userdata	);
+
+void	test_fixture_fini (			TestFixtureDigraph*	ft,
+									gpointer			userdata	);
+
+gfloat	testutil_edge_distance (	CrankDigraphEdge*	edge,
+									gpointer			userdata	);
+
+gfloat	testutil_heuristic (		CrankDigraphNode*	from,
+									CrankDigraphNode*	to,
+									gpointer			userdata	);
+									
+void	test_dijkstra (				TestFixtureDigraph*	ft,
+									gpointer			userdata	);
+									
+void	test_astar (				TestFixtureDigraph*	ft,
+									gpointer			userdata	);
+	
+
+//////// Main //////////////////////////////////////////////////////////////////
+
+gint
+main (	gint   argc,
+      	gchar *argv[] )
+{
+	g_test_init (&argc, &argv, NULL);
+
+	g_test_add ("/crank/base/advgraph/dijkstra/digraph",
+			TestFixtureDigraph,
+			NULL,
+			test_fixture_init,
+			test_dijkstra,
+			test_fixture_fini);
+			
+	g_test_add ("/crank/base/advgraph/astar/digraph",
+			TestFixtureDigraph,
+			NULL,
+			test_fixture_init,
+			test_astar,
+			test_fixture_fini);
+	
+	g_test_run ();
+
+	return 0;
+}
+
+
+//////// Definition ////////////////////////////////////////////////////////////
 
 void
 test_fixture_init (	TestFixtureDigraph*	ft,
@@ -212,32 +264,4 @@ test_astar (	TestFixtureDigraph*	ft,
 	g_assert (g_list_nth_data (path, 4) == ft->nodes[7]);
 	
 	g_list_free (path);
-}	
-
-
-
-gint
-main (gint   argc,
-      gchar *argv[])
-{
-	g_test_init (&argc, &argv, NULL);
-
-	g_test_add ("/crank/base/advgraph/dijkstra/digraph",
-			TestFixtureDigraph,
-			NULL,
-			test_fixture_init,
-			test_dijkstra,
-			test_fixture_fini);
-			
-	g_test_add ("/crank/base/advgraph/astar/digraph",
-			TestFixtureDigraph,
-			NULL,
-			test_fixture_init,
-			test_astar,
-			test_fixture_fini);
-	
-	g_test_run ();
-
-	return 0;
 }
-

@@ -46,14 +46,14 @@ int main (string[] args) {
 	return 0;
 }
 
-void test_2_get () {
+private void test_2_get () {
 	Crank.VecBool2 a = {true, false};
 	
 	assert (a[0] == true);
 	assert (a[1] == false);
 }
 
-void test_2_and () {
+private void test_2_and () {
 	Crank.VecBool2 a = {true, true};
 	Crank.VecBool2 b = {false, true};
 	
@@ -63,7 +63,7 @@ void test_2_and () {
 	assert (c.y == true);
 }
 
-void test_2_or () {
+private void test_2_or () {
 	Crank.VecBool2 a = {false, false};
 	Crank.VecBool2 b = {false, true};
 	
@@ -73,7 +73,7 @@ void test_2_or () {
 	assert (c.y == true);
 }
 
-void test_2_xor () {
+private void test_2_xor () {
 	Crank.VecBool2 a = {true, false};
 	Crank.VecBool2 b = {true, true};
 	
@@ -83,7 +83,7 @@ void test_2_xor () {
 	assert (c.y == true);
 }
 
-void test_2_not () {
+private void test_2_not () {
 	Crank.VecBool2 a = {true, false};
 	
 	Crank.VecBool2 c = a.not ();
@@ -92,7 +92,7 @@ void test_2_not () {
 	assert (c.y == true);
 }
 
-void test_2_any () {
+private void test_2_any () {
 	Crank.VecBool2 a = {false, false};
 	Crank.VecBool2 b = {false, true};
 	
@@ -100,7 +100,7 @@ void test_2_any () {
 	assert (b.any == true);
 }
 
-void test_2_all () {
+private void test_2_all () {
 	Crank.VecBool2 a = {true, false};
 	Crank.VecBool2 b = {true, true};
 	
@@ -108,7 +108,7 @@ void test_2_all () {
 	assert (b.all == true);
 }
 
-void test_2_equal () {
+private void test_2_equal () {
 	Crank.VecBool2 a = {true, true};
 	Crank.VecBool2 b = {true, true};
 	Crank.VecBool2 c = {true, false};
@@ -117,7 +117,7 @@ void test_2_equal () {
 	assert (! Crank.VecBool2.equal (a, c));
 }
 
-void test_2_hash () {
+private void test_2_hash () {
 	Crank.VecBool2 a = {true, true};
 	Crank.VecBool2 b = {true, true};
 	Crank.VecBool2 c = {true, false};
@@ -126,7 +126,7 @@ void test_2_hash () {
 	assert (Crank.VecBool2.hash (a) != Crank.VecBool2.hash (c));
 }
 
-void test_2_to_string () {
+private void test_2_to_string () {
 	Crank.VecBool2 a = {true, true};
 	
 	assert (a.to_string () == "(true, true)");
@@ -135,7 +135,7 @@ void test_2_to_string () {
 
 
 
-void test_n_get () {
+private void test_n_get () {
 	Crank.VecBoolN a = Crank.VecBoolN(4, true, false, false, true);
 	
 	assert (a[0] == true);
@@ -144,7 +144,7 @@ void test_n_get () {
 	assert (a[3] == true);
 }
 
-void test_n_and () {
+private void test_n_and () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
@@ -155,7 +155,7 @@ void test_n_and () {
 	assert (c[1] == false);
 }
 
-void test_n_or () {
+private void test_n_or () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
@@ -168,7 +168,7 @@ void test_n_or () {
 	assert (c[3] == true);
 }
 
-void test_n_xor () {
+private void test_n_xor () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
@@ -181,7 +181,7 @@ void test_n_xor () {
 	assert (c[3] == true);
 }
 
-void test_n_not () {
+private void test_n_not () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, false);
 	
 	Crank.VecBoolN c = a.not ();
@@ -191,7 +191,7 @@ void test_n_not () {
 	assert (c[1] == true);
 }
 
-void test_n_any () {
+private void test_n_any () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, false, false);
 	Crank.VecBoolN b = Crank.VecBoolN (2, false, true);
 	
@@ -199,7 +199,7 @@ void test_n_any () {
 	assert (b.any == true);
 }
 
-void test_n_all () {
+private void test_n_all () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, false);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
@@ -207,7 +207,7 @@ void test_n_all () {
 	assert (b.all == true);
 }
 
-void test_n_equal () {
+private void test_n_equal () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN c = Crank.VecBoolN (2, true, false);
@@ -216,7 +216,7 @@ void test_n_equal () {
 	assert (! Crank.VecBoolN.equal (a, c));
 }
 
-void test_n_hash () {
+private void test_n_hash () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN c = Crank.VecBoolN (2, true, false);
@@ -225,7 +225,7 @@ void test_n_hash () {
 	assert (Crank.VecBoolN.hash (a) != Crank.VecBoolN.hash (c));
 }
 
-void test_n_to_string () {
+private void test_n_to_string () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, true, false, false);
 	
 	assert (a.to_string () == "(true, true, false, false)");

@@ -25,20 +25,25 @@
 #include "crankbase.h"
 #include "crankstring.h"
 
-void	test_read_space (void);
 
-void	test_read_word (void);
+//////// Declaration ///////////////////////////////////////////////////////////
 
-void	test_scan_char (void);
+static void	test_read_space (void);
 
-void	test_scan_word (void);
+static void	test_read_word (void);
 
-void	test_check_char (void);
+static void	test_scan_char (void);
 
-void	test_check_chars (void);
+static void	test_scan_word (void);
 
-void	test_check_chars_str (void);
+static void	test_check_char (void);
 
+static void	test_check_chars (void);
+
+static void	test_check_chars_str (void);
+
+
+//////// Main //////////////////////////////////////////////////////////////////
 gint
 main	(gint argc, gchar** argv)
 {
@@ -66,10 +71,13 @@ main	(gint argc, gchar** argv)
 						test_check_chars_str);
 
 	g_test_run ();
-
+	return 0;
 }
 
-void
+
+//////// Definition ////////////////////////////////////////////////////////////
+
+static void
 test_read_space (void) {
 
 	const gchar* subject = "  A string!";
@@ -95,7 +103,7 @@ test_read_space (void) {
 	g_assert_cmpuint (space, ==, 0);
 }
 
-void
+static void
 test_read_word (void) {
 	const gchar*	subject = 	"A quick brown fox jumps over the lazy dog";
 	guint			pos = 		0;
@@ -121,7 +129,7 @@ test_read_word (void) {
 	g_free (word);
 }
 
-void
+static void
 test_scan_char (void) {
 	const gchar*	subject =	"( : )";
 	guint			pos =		0;
@@ -139,7 +147,7 @@ test_scan_char (void) {
 	g_assert (! crank_str_scan_char (subject, &pos, &sym));
 }
 
-void
+static void
 test_scan_word (void) {
 	const gchar*	subject =	"Cookie cake strawberry";
 	guint			pos =		0;
@@ -158,7 +166,7 @@ test_scan_word (void) {
 	g_free (word);
 }
 
-void
+static void
 test_check_char (void) {
 	const gchar*	subject = 	"( : )";
 	guint 			pos = 		0;
@@ -170,7 +178,7 @@ test_check_char (void) {
 	g_assert (crank_str_check_char (subject, &pos, ')'));
 }
 
-void
+static void
 test_check_chars (void) {
 	const gchar*	subject =	"( : ) ,";
 	guint			pos =		0;
@@ -184,7 +192,7 @@ test_check_chars (void) {
 
 }
 
-void
+static void
 test_check_chars_str (void) {
 	const gchar*	subject =	"( : ) ,";
 	guint			pos =		0;

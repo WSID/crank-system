@@ -23,33 +23,31 @@
 
 #include "crankbase.h"
 
-gfloat
-cost_edge_func (	CrankDigraphEdge*	edge,
-					gpointer			userdata	);
 
-gfloat
-heuristic_func (	CrankDigraphNode*	from,
-					CrankDigraphNode*	to,
-					gpointer			userdata	);
+//////// Declaration ///////////////////////////////////////////////////////////
 
-CrankDigraph*
-create_rand_graph (guint node_count,	gfloat connect_ratio);
+static gfloat		cost_edge_func (		CrankDigraphEdge*	edge,
+											gpointer			userdata	);
 
-void
-test_complete_graph (void);
+static gfloat		heuristic_func (		CrankDigraphNode*	from,
+											CrankDigraphNode*	to,
+											gpointer			userdata	);
 
-void
-test_depth_first (void);
+static CrankDigraph*	create_rand_graph (	guint				node_count,
+											gfloat 				connect_ratio);
 
-void
-test_breadth_first (void);
+static void	test_complete_graph (void);
 
-void
-test_dijkstra (void);
+static void	test_depth_first (void);
 
-//void
-//test_astar (void);
+static void	test_breadth_first (void);
 
+static void	test_dijkstra (void);
+
+//static void	test_astar (void);
+
+
+//////// Main //////////////////////////////////////////////////////////////////
 
 gint
 main (gint   argc,
@@ -75,16 +73,17 @@ main (gint   argc,
 }
 
 
+//////// Definition ////////////////////////////////////////////////////////////
 
-
-
-gboolean		doing_nothing (CrankDigraphNode* node, gpointer userdata)
+static gboolean
+doing_nothing (	CrankDigraphNode*	node,
+				gpointer			userdata)
 {
 	return TRUE;
 }
 
 
-gfloat
+static gfloat
 cost_edge_func (	CrankDigraphEdge*	edge,
 					gpointer			uesrdata	)
 {
@@ -105,7 +104,7 @@ cost_edge_func (	CrankDigraphEdge*	edge,
 	return crank_vec_int3_get_magn (&diff);
 }
 
-gfloat
+static gfloat
 heuristic_func (	CrankDigraphNode*	from,
 					CrankDigraphNode*	to,
 					gpointer			uesrdata	)
@@ -172,7 +171,7 @@ CrankDigraph*	create_rand_graph (	guint	node_count,
 }
 
 
-void			test_complete_graph (void)
+static void	test_complete_graph (void)
 {
 	// Constructs Complete digraph with 1024 nodes
 	
@@ -222,7 +221,7 @@ void			test_complete_graph (void)
 	crank_digraph_unref (digraph);
 }
 
-void			test_depth_first (void)
+static void	test_depth_first (void)
 {
 	CrankDigraph*		digraph;
 	CrankDigraphNode*	node;
@@ -242,7 +241,7 @@ void			test_depth_first (void)
 	crank_digraph_unref (digraph);
 }
 
-void			test_breadth_first (void)
+static void	test_breadth_first (void)
 {
 	CrankDigraph*		digraph;
 	CrankDigraphNode*	node;
@@ -263,7 +262,7 @@ void			test_breadth_first (void)
 }
 
 
-void			test_dijkstra (void)
+static void	test_dijkstra (void)
 {
 	CrankDigraph*	digraph;
 	CrankDigraphNode*	node_from;

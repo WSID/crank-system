@@ -23,82 +23,86 @@
 
 #include "crankbase.h"
 
+//////// Definition ////////////////////////////////////////////////////////////
+
 typedef struct _TestDigraphFixture {
 	CrankDigraph*		digraph;
 	CrankDigraphNode*	nodes[16];
 	CrankDigraphEdge*	edges[16];
 } TestDigraphFixture;
 
-gboolean	testutil_accumulator_graph (	CrankDigraphNode*	node,
-											gpointer			pointer	);
+static gboolean	testutil_accumulator_graph (	CrankDigraphNode*	node,
+												gpointer			pointer	);
 
 
-void		test_digraph_setup (		TestDigraphFixture*	fixture,
-									gconstpointer		userdata	);
-
-void		test_digraph_teardown (	TestDigraphFixture*	fixture,
-									gconstpointer		userdata	);
-
-void		test_digraph_get_nodes (	TestDigraphFixture*	fixture,
-									gconstpointer		userdata	);
-
-void		test_digraph_get_edges (	TestDigraphFixture*	fixture,
-									gconstpointer		userdata	);
-
-void		test_digraph_disconnect (	TestDigraphFixture*	fixture,
-									gconstpointer		userdata	);
-
-void		test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
+static void	test_digraph_setup (			TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 
-void		test_digraph_node_get_data (	TestDigraphFixture*	fixture,
-										gconstpointer		userdata	);
-										
-void		test_digraph_node_get_in_edges (	TestDigraphFixture*	fixture,
+static void	test_digraph_teardown (			TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
-											
-void		test_digraph_node_get_out_edges (	TestDigraphFixture*	fixture,
+
+static void	test_digraph_get_nodes (		TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+
+static void	test_digraph_get_edges (		TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+
+static void	test_digraph_disconnect (		TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+
+static void	test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+
+static void	test_digraph_node_get_data (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 										
-void		test_digraph_node_get_in_nodes (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_get_in_edges (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_node_get_out_nodes (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_get_out_edges (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+										
+static void	test_digraph_node_get_in_nodes (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_node_get_indegree (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_get_out_nodes (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_node_get_outdegree (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_get_indegree (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_node_is_adjacent (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_get_outdegree (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_node_is_adjacent_from (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_is_adjacent (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+											
+static void	test_digraph_node_is_adjacent_from (	TestDigraphFixture*	fixture,
 													gconstpointer		userdata	);
 											
-void		test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
 												gconstpointer		userdata	);
 
-void		test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
 												gconstpointer		userdata	);
 										
-void		test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
+static void	test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 											
-void		test_digraph_edge_get_data (	TestDigraphFixture*	fixture,
+static void	test_digraph_edge_get_data (	TestDigraphFixture*	fixture,
 											gconstpointer		userdata	);
 
-void		test_digraph_edge_get_tail (	TestDigraphFixture*	fixture,
-										gconstpointer		userdata	);
+static void	test_digraph_edge_get_tail (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
 
-void		test_digraph_edge_get_head (	TestDigraphFixture*	fixture,
-										gconstpointer		userdata	);
+static void	test_digraph_edge_get_head (	TestDigraphFixture*	fixture,
+											gconstpointer		userdata	);
+
+
+//////// Main //////////////////////////////////////////////////////////////////
 
 gint
-main (gint   argc,
-      gchar *argv[])
+main (gint argc, gchar **argv)
 {
 	g_test_init (&argc, &argv, NULL);
 
@@ -241,7 +245,10 @@ main (gint   argc,
 	return 0;
 }
 
-gboolean
+
+//////// Definition ////////////////////////////////////////////////////////////
+
+static gboolean
 testutil_accumulator_graph (	CrankDigraphNode*	node,
 								gpointer			userdata	)
 {
@@ -260,7 +267,7 @@ testutil_accumulator_graph (	CrankDigraphNode*	node,
 }
 								
 
-void
+static void
 test_digraph_setup (	TestDigraphFixture*	fixture,
 					gconstpointer		userdata	)
 {
@@ -337,14 +344,14 @@ test_digraph_setup (	TestDigraphFixture*	fixture,
 	g_value_unset (&edge_v);
 }
 
-void
+static void
 test_digraph_teardown (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
 	crank_digraph_unref (fixture->digraph);
 }
 
-void
+static void
 test_digraph_get_nodes (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
@@ -354,7 +361,7 @@ test_digraph_get_nodes (	TestDigraphFixture*	fixture,
 	
 	nodes = crank_digraph_get_nodes (fixture->digraph);
 	
-	// 얻은 노드들이 픽스쳐에서 얻은 노드들과 같은지 봅니다.
+	// Checks the nodes we got, are same to nodes in fixture.
 	for (i = 0; i < 9; i++) {
 		for (j = 0; j < 9; j++)
 			if (fixture->nodes[i] == g_ptr_array_index(nodes, j)) break;
@@ -363,7 +370,7 @@ test_digraph_get_nodes (	TestDigraphFixture*	fixture,
 	
 }
 
-void
+static void
 test_digraph_get_edges (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
@@ -374,7 +381,7 @@ test_digraph_get_edges (	TestDigraphFixture*	fixture,
 	edges = crank_digraph_get_edges (fixture->digraph);
 	
 	
-	// 얻은 변들이 픽스쳐에서 얻은 변들과 같은지 봅니다.
+	// Checks the edges we got, are same to edges in fixture.
 	for (i = 0; i < 8; i++) {
 		for (j = 0; j < 8; j++)
 			if (fixture->edges[i] == g_ptr_array_index(edges, j)) break;
@@ -382,7 +389,7 @@ test_digraph_get_edges (	TestDigraphFixture*	fixture,
 	}
 }
 
-void
+static void
 test_digraph_disconnect (	TestDigraphFixture*	fixture,
 						gconstpointer		userdata	)
 {
@@ -426,7 +433,7 @@ test_digraph_disconnect (	TestDigraphFixture*	fixture,
 	CRANK_FOREACH_G_PTR_ARRAY_END
 }
 
-void
+static void
 test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -447,7 +454,7 @@ test_digraph_disconnect_edge (	TestDigraphFixture*	fixture,
 }
 
 
-void
+static void
 test_digraph_node_get_data (	TestDigraphFixture*	fixture,
 							gconstpointer		userdata	)
 {
@@ -462,7 +469,7 @@ test_digraph_node_get_data (	TestDigraphFixture*	fixture,
 	}
 }
 
-void
+static void
 test_digraph_node_get_in_edges (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -474,7 +481,7 @@ test_digraph_node_get_in_edges (	TestDigraphFixture*	fixture,
 	g_assert (g_ptr_array_index (edge_list, 1) == fixture->edges[2]);
 }
 
-void
+static void
 test_digraph_node_get_out_edges (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -487,7 +494,7 @@ test_digraph_node_get_out_edges (	TestDigraphFixture*	fixture,
 	g_assert (g_ptr_array_index (edge_list, 2) == fixture->edges[5]);
 }
 
-void
+static void
 test_digraph_node_get_in_nodes (	TestDigraphFixture*	fixture,
 									gconstpointer		userdata	)
 {
@@ -501,7 +508,7 @@ test_digraph_node_get_in_nodes (	TestDigraphFixture*	fixture,
 	g_list_free (node_list);
 }
 
-void
+static void
 test_digraph_node_get_out_nodes (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -516,7 +523,7 @@ test_digraph_node_get_out_nodes (	TestDigraphFixture*	fixture,
 	g_list_free (node_list);
 }
 
-void
+static void
 test_digraph_node_get_indegree (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -525,7 +532,7 @@ test_digraph_node_get_indegree (	TestDigraphFixture*	fixture,
 	g_assert_cmpuint (crank_digraph_node_get_indegree (fixture->nodes[6]), ==, 2);
 }
 
-void
+static void
 test_digraph_node_get_outdegree (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -534,7 +541,7 @@ test_digraph_node_get_outdegree (	TestDigraphFixture*	fixture,
 	g_assert_cmpuint (crank_digraph_node_get_outdegree (fixture->nodes[6]), ==, 0);
 }
 
-void
+static void
 test_digraph_node_is_adjacent (	TestDigraphFixture*	fixture,
 								gconstpointer		userdata	)
 {
@@ -548,7 +555,7 @@ test_digraph_node_is_adjacent (	TestDigraphFixture*	fixture,
 }
 
 
-void
+static void
 test_digraph_node_is_adjacent_from (	TestDigraphFixture*	fixture,
 										gconstpointer		userdata	)
 {
@@ -562,7 +569,7 @@ test_digraph_node_is_adjacent_from (	TestDigraphFixture*	fixture,
 }
 
 
-void
+static void
 test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
 										gconstpointer		userdata	)
 {
@@ -575,7 +582,7 @@ test_digraph_node_is_adjacent_to (	TestDigraphFixture*	fixture,
 	g_assert (! crank_digraph_node_is_adjacent_to (fixture->nodes[4], fixture->nodes[8]));
 }
 
-void
+static void
 test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
 							gconstpointer		userdata	)
 {
@@ -618,7 +625,7 @@ test_digraph_node_foreach_depth (	TestDigraphFixture*	fixture,
 	node_list = NULL;
 }
 										
-void
+static void
 test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
 									gconstpointer		userdata	)
 {
@@ -663,9 +670,9 @@ test_digraph_node_foreach_breadth (	TestDigraphFixture*	fixture,
 }
 
 
-void
+static void
 test_digraph_edge_get_data (	TestDigraphFixture*	fixture,
-							gconstpointer		userdata	)
+								gconstpointer		userdata	)
 {
 	GValue	edge_v = {0};
 	
@@ -678,17 +685,17 @@ test_digraph_edge_get_data (	TestDigraphFixture*	fixture,
 	g_value_unset (&edge_v);
 }
 
-void
+static void
 test_digraph_edge_get_tail (	TestDigraphFixture*	fixture,
-							gconstpointer		userdata	)
+								gconstpointer		userdata	)
 {
 	g_assert (crank_digraph_edge_get_tail (fixture->edges[3]) == fixture->nodes[4]);
 	g_assert (crank_digraph_edge_get_tail (fixture->edges[5]) == fixture->nodes[4]);
 	g_assert (crank_digraph_edge_get_tail (fixture->edges[7]) == fixture->nodes[7]);
 }
-void
+static void
 test_digraph_edge_get_head (	TestDigraphFixture*	fixture,
-							gconstpointer		userdata	)
+								gconstpointer		userdata	)
 {
 	g_assert (crank_digraph_edge_get_head (fixture->edges[1]) == fixture->nodes[3]);
 	g_assert (crank_digraph_edge_get_head (fixture->edges[2]) == fixture->nodes[3]);

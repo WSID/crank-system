@@ -23,17 +23,18 @@
 
 #include "crankbase.h"
 
-static
-void		test_value_overwrite		(void);
+//////// Declaration ///////////////////////////////////////////////////////////
 
-static
-void		test_value_overwrite_value	(void);
+static void		test_value_overwrite (void);
 
-static
-void		test_value_array_overwrite	(void);
+static void		test_value_overwrite_value (void);
 
-static
-void		test_value_array_overwrite_array	(void);
+static void		test_value_array_overwrite (void);
+
+static void		test_value_array_overwrite_array (void);
+
+
+//////// Main //////////////////////////////////////////////////////////////////
 
 gint
 main (gint argc, gchar** argv)
@@ -51,9 +52,10 @@ main (gint argc, gchar** argv)
 					test_value_array_overwrite_array);
 
   	g_test_run ();
-
   	return 0;
 }
+
+//////// Definition ////////////////////////////////////////////////////////////
 
 static void
 test_value_overwrite (void)

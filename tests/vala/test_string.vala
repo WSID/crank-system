@@ -45,8 +45,7 @@ int main (string[] args) {
 	return 0;
 }
 
-void
-test_read_space () {
+private void test_read_space () {
 	string subject = "  A string!";
 	uint pos = 0;
 	uint space;
@@ -70,8 +69,7 @@ test_read_space () {
 	assert (space == 0);
 }
 
-void
-test_read_word () {
+private void test_read_word () {
 	string subject = "A quick brown fox jumps over the lazy dog";
 	uint pos = 0;
 	string word;
@@ -93,8 +91,7 @@ test_read_word () {
 	assert (word == "mps");
 }
 
-void
-test_scan_char () {
+private void test_scan_char () {
 	string subject = "( : )";
 	uint pos = 0;
 	char sym;
@@ -111,8 +108,7 @@ test_scan_char () {
 	assert (! Crank.str_scan_char (subject, ref pos, out sym));
 }
 
-void
-test_scan_word () {
+private void test_scan_word () {
 	string subject = "Cookie cake strawberry";
 	uint pos = 0;
 	string word;
@@ -127,8 +123,7 @@ test_scan_word () {
 	assert (word == "strawberry");
 }
 
-void
-test_check_char () {
+private void test_check_char () {
 	string subject = "( : )";
 	uint pos = 0;
 	
@@ -139,8 +134,7 @@ test_check_char () {
 	assert (Crank.str_check_char (subject, ref pos, ')'));
 }
 
-void
-test_check_chars () {
+private void test_check_chars () {
 	string subject = "( : ) ,";
 	uint pos = 0;
 	
@@ -152,8 +146,7 @@ test_check_chars () {
 	assert (-1 == Crank.str_check_chars (subject, ref pos, chars));
 }
 
-void
-test_check_chars_str () {
+private void test_check_chars_str () {
 	string subject = "( : ) ,";
 	uint pos = 0;
 	
