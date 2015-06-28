@@ -1,7 +1,7 @@
-# Crank System: 게임 개발 지원을 위한 Library
-############################################
+# Crank System: A Library for gaming
+################################################################################
 
-# 기본 configure 설정
+######## Basic configure #######################################################
 AC_PREREQ([2.69])
 AC_INIT([crank-system], [0.0], [jongsome@gmail.com])
 
@@ -15,40 +15,41 @@ LT_INIT
 
 IT_PROG_INTLTOOL([0.35.0])
 AC_SUBST(GETTEXT_PACKAGE, crank)
-# 기타 빌드 시스템 설정
-# 테스트 케이스
+
+
+######## Basic program check. ##################################################
+PKG_PROG_PKG_CONFIG
+AC_PROG_CC
+
+
+######## Module configure ######################################################
+PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
+
+
+
+######## Testing ###############################################################
 GLIB_TESTS
 
-# GTK-Doc
+
+######## GTK-Doc ###############################################################
 m4_ifdef([GTK_DOC_CHECK], [
 GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 ],[
 AM_CONDITIONAL([ENABLE_GTK_DOC], false)
 ])
 
-# GObject Introspection
+######## GObject Introspection #################################################
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 
-# 기본 프로그램 설정
-PKG_PROG_PKG_CONFIG
-AC_PROG_CC
-
-# 모듈 설정
-PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
-
-
-
-
-
-# Introspection Test for Python
+######## Introspection Test for Python #########################################
 AC_ARG_ENABLE(test-python,
 		  AS_HELP_STRING([--enable-test-python[=@<:@no/auto/yes@:>@]],
-		                 [gir에 대해 python 검사를 수행합니다.]),
+		                 [Enable tests on gir with python]),
 		  , 
 		  [enable_test_python=auto])
 
-AC_MSG_CHECKING([test-python 확인 진행중])
+AC_MSG_CHECKING([Checking for test-python])
 
 AS_CASE([$enable_test_python],
 	[no],
@@ -65,20 +66,20 @@ AS_CASE([$enable_test_python],
 			then AM_PATH_PYTHON([],[test_python="yes"], [test_python="no"])
 		 fi	],
 		 
-	[AC_MSG_ERROR([--enable-test-python은 yes/no/auto 옵션으로만 주세요.])	]	)
+	[AC_MSG_ERROR([only yes/no/auto option for enable-test-python])	]	)
 
 AC_MSG_RESULT([$test_python])
 AM_CONDITIONAL([TEST_PYTHON], [test S$test_python == S"yes"])
 
 
 
-# Test for vapigen to build .vapi file
+######## Test for vapigen to build .vapi file ##################################
 VAPIGEN_CHECK()
 AS_IF([test S"$enable_vala" = S"yes"],
 		[AM_PROG_VALAC])
 
 
-# 출력합니다.
+######## Prints configuration results ##########################################
 AC_OUTPUT([
 		Makefile
 		crankbase/Makefile
