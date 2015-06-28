@@ -41,14 +41,14 @@ main (gint argc, gchar** argv)
 {
 	g_test_init (&argc, &argv, NULL);
 
-  	g_test_add_func ("/wsid/crank/base/value/overwrite",
+  	g_test_add_func ("/crank/base/value/overwrite",
 					test_value_overwrite);
-  	g_test_add_func ("/wsid/crank/base/value/overwrite_value",
+  	g_test_add_func ("/crank/base/value/overwrite_value",
 					test_value_overwrite_value);
 					
-  	g_test_add_func ("/wsid/crank/base/value/array/overwrite",
+  	g_test_add_func ("/crank/base/value/array/overwrite",
 					test_value_array_overwrite);
-  	g_test_add_func ("/wsid/crank/base/value/array/overwrite_array",
+  	g_test_add_func ("/crank/base/value/array/overwrite_array",
 					test_value_array_overwrite_array);
 
   	g_test_run ();

@@ -28,16 +28,16 @@ private delegate int	SubjectFuncType ();
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	
-	GLib.Test.add_func ("/wsid/crank/base/function/join",
+	GLib.Test.add_func ("/crank/base/vala/function/join",
 			test_func_join);
 	
-	GLib.Test.add_func ("/wsid/crank/base/function/split",
+	GLib.Test.add_func ("/crank/base/vala/function/split",
 			test_func_split);
 	
-	GLib.Test.add_func ("/wsid/crank/base/generic/unowned",
+	GLib.Test.add_func ("/crank/base/vala/generic/unowned",
 			test_generic_unowned);
 	
-	GLib.Test.add_func ("/wsid/crank/base/closure",
+	GLib.Test.add_func ("/crank/base/vala/closure",
 			test_create_closure);
 			
 	GLib.Test.run ();
