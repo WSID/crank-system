@@ -17,6 +17,8 @@ if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
         echo "" >&2
 fi
 
+mkdir -p $srcdir/build-aux
+
 set -x
 aclocal --install || exit 1
 glib-gettextize --force --copy || exit 1
