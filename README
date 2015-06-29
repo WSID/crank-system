@@ -1,6 +1,23 @@
 Crank System: A Library for gaming.
 
-1. Library Overview.
+1. Installation
+If this is obtained as tarball, then it comes with building system to build this.
+
+If this is obtained from git, autogen.sh script is provided for inflating
+building system.
+
+Whether you get build system with tarball, or inflated with autogen.sh, when
+build system is ready, you can build and install by following commands.
+
+./configure
+make
+make install
+
+You may add additional arguments to customize building process.
+
+
+
+2. Library Overview.
 Goal of this library is provide classes and functions for a game.
 
 Currently this library provides none of functions.
