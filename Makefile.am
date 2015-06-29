@@ -14,8 +14,4 @@ pkgconfig_DATA= \
 
 
 EXTRA_DIST= \
-		glib-tap.mk \
-		tap-driver.sh \
-		tap-test \
-		test-driver \
 		po
