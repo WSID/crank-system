@@ -77,6 +77,8 @@ typelib_DATA= $(INTROSPECTION_GIRS:.gir=.typelib)
 
 
 # Vapigen 파일
+EXTRA_DIST=CrankBase-0.0.metadata crankbase-custom.vala
+
 if ENABLE_VAPIGEN
 -include $(VAPIGEN_MAKEFILE)
 
@@ -85,7 +87,7 @@ crank-base-0.0.vapi: CrankBase-0.0.gir CrankBase-0.0.metadata crankbase-custom.v
 VAPIGEN_VAPIS= crank-base-0.0.vapi
 
 crank_base_0_0_vapi_METADATADIRS= $(srcdir)
-crank_base_0_0_vapi_FILES= CrankBase-0.0.gir crankbase-custom.vala
+crank_base_0_0_vapi_FILES= $(srcdir)/CrankBase-0.0.gir $(srcdir)/crankbase-custom.vala
 
 vapidir= $(datadir)/vala/vapi
 vapi_DATA= $(VAPIGEN_VAPIS)
