@@ -1,5 +1,10 @@
 SUBDIRS=c
 
+EXTRA_DIST= \
+		glib-tap.mk \
+		tap-driver.sh \
+		tap-test \
+		test-driver
 
 if TEST_PYTHON
 SUBDIRS+= python
