@@ -61,6 +61,8 @@
 G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_copy, g_free)
 
 
+//////// Initialization ////////////////////////////////////////////////////////
+
 /**
  * crank_vec_bool2_init:
  * @vec: (out): Vector to initialize.
@@ -124,6 +126,9 @@ crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
 }
 
 
+//////// Basic Operations //////////////////////////////////////////////////////
+
+
 /**
  * crank_vec_bool2_copy:
  * @vec: Vector to copy
@@ -137,6 +142,129 @@ crank_vec_bool2_copy	(	CrankVecBool2*	vec	)
 {
 	return (CrankVecBool2*) g_memdup (vec, sizeof (CrankVecBool2));
 }
+
+
+/**
+ * crank_vec_bool2_equal:
+ * @a: (type CrankVecBool2): A vector.
+ * @b: (type CrankVecBool2): A vector.
+ *
+ * Checks whether two vectors are equal.
+ *
+ * Returns: Whether two vectors are equal.
+ */
+gboolean
+crank_vec_bool2_equal	(	gconstpointer a,
+							gconstpointer b	)
+{
+	const CrankVecBool2* veca = (const CrankVecBool2*) a;
+	const CrankVecBool2* vecb = (const CrankVecBool2*) b;
+
+	return (veca->x == vecb->x) && (veca->y == vecb->y);
+}
+
+
+/**
+ * crank_vec_bool2_hash:
+ * @a: (type CrankVecBool2): A vector.
+ *
+ * Gets hash value of vector.
+ *
+ * Returns: Hash value of vector.
+ */
+guint
+crank_vec_bool2_hash	(	gconstpointer a	)
+{
+	const CrankVecBool2* vec = (const CrankVecBool2*) a;
+
+	return g_direct_hash (GINT_TO_POINTER((vec->x) + (vec->y << 1)));
+}
+
+/**
+ * crank_vec_bool2_to_string:
+ * @vec: A vector.
+ *
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE})
+ * |[
+ *   (true, false)
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool2_to_string	(	CrankVecBool2*	vec	)
+{
+	return crank_vec_bool2_to_string_full (vec, "(", ", ", ")", "true", "false");
+}
+
+/**
+ * crank_vec_bool2_to_string_full:
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
+ *
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE})
+ * |[
+ *   left on_true in on_false right
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
+								const gchar*	left,
+								const gchar*	in,
+								const gchar*	right,
+								const gchar*	on_true,
+								const gchar*	on_false	)
+{
+	return g_strdup_printf ("%s%s%s%s%s",
+			left,
+			vec->x ? on_true : on_false,
+			in,
+			vec->y ? on_true : on_false,
+			right	);
+}
+
+
+//////// Basic Properties //////////////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool2_get_any:
+ * @vec: A vector.
+ *
+ * Checks there is any element be %TRUE.
+ *
+ * Returns: Whether there is any element be %TRUE.
+ */
+gboolean
+crank_vec_bool2_get_any	(	CrankVecBool2*	vec	)
+{
+	return (vec->x || vec->y);
+}
+
+/**
+ * crank_vec_bool2_get_all:
+ * @vec: A vector.
+ *
+ * Checks whether all elements are %TRUE.
+ *
+ * Returns: Whether all elements are %TRUE.
+ */
+gboolean
+crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
+{
+	return (vec->x && vec->y);
+}
+
+
+//////// Functions as collection ///////////////////////////////////////////////
 
 
 /**
@@ -170,6 +298,10 @@ crank_vec_bool2_set	(	CrankVecBool2*	vec,
 {
 	((gboolean*)vec)[index] = value;
 }
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
+
 
 /**
  * crank_vec_bool2_and:
@@ -245,7 +377,7 @@ crank_vec_bool2_not	(	CrankVecBool2*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool2_and(). Some language may use "and" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool2_andv (	CrankVecBool2*	a,
@@ -262,7 +394,7 @@ crank_vec_bool2_andv (	CrankVecBool2*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool2_and(). Some language may use "or" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool2_orv (	CrankVecBool2*	a,
@@ -278,7 +410,7 @@ crank_vec_bool2_orv (	CrankVecBool2*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool2_not(). Some language may use "not" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool2_notv (	CrankVecBool2*	a,
@@ -287,126 +419,14 @@ crank_vec_bool2_notv (	CrankVecBool2*	a,
 	crank_vec_bool2_not (a, r);
 }
 
-/**
- * crank_vec_bool2_get_any:
- * @vec: A vector.
- * 
- * Checks there is any element be %TRUE.
- *
- * Returns: Whether there is any element be %TRUE.
- */
-gboolean
-crank_vec_bool2_get_any	(	CrankVecBool2*	vec	)
-{
-	return (vec->x || vec->y);
-}
-
-/**
- * crank_vec_bool2_get_all:
- * @vec: A vector.
- * 
- * Checks whether all elements are %TRUE.
- *
- * Returns: Whether all elements are %TRUE.
- */
-gboolean
-crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
-{
-	return (vec->x && vec->y);
-}
-
-/**
- * crank_vec_bool2_equal:
- * @a: (type CrankVecBool2): A vector.
- * @b: (type CrankVecBool2): A vector.
- *
- * Checks whether two vectors are equal.
- *
- * Returns: Whether two vectors are equal.
- */
-gboolean
-crank_vec_bool2_equal	(	gconstpointer a,
-							gconstpointer b	)
-{
-	const CrankVecBool2* veca = (const CrankVecBool2*) a;
-	const CrankVecBool2* vecb = (const CrankVecBool2*) b;
-
-	return (veca->x == vecb->x) && (veca->y == vecb->y);
-}
-
-
-/**
- * crank_vec_bool2_hash:
- * @a: (type CrankVecBool2): A vector.
- *
- * Gets hash value of vector.
- *
- * Returns: Hash value of vector.
- */
-guint
-crank_vec_bool2_hash	(	gconstpointer a	)
-{
-	const CrankVecBool2* vec = (const CrankVecBool2*) a;
-	
-	return g_direct_hash (GINT_TO_POINTER((vec->x) + (vec->y << 1)));
-}
-
-/**
- * crank_vec_bool2_to_string:
- * @vec: A vector.
- *
- * Stringify a given vector.
- * The format will be. (for example of {TRUE, FALSE})
- * |[
- *   (true, false)
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool2_to_string	(	CrankVecBool2*	vec	)
-{
-	return crank_vec_bool2_to_string_full (vec, "(", ", ", ")", "true", "false");
-}
-
-/**
- * crank_vec_bool2_to_string_full:
- * @vec: A vector.
- * @left: Left delimiter.
- * @in: Middle delimiter that divides components.
- * @right: Right delimiter.
- * @on_true: String representation of %TRUE.
- * @on_false: String representation of %FALSE.
- *
- * Stringify a given vector with given string parts.
- * The order of part will be (for example of {TRUE, FALSE})
- * |[
- *   left on_true in on_false right
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	on_true,
-								const gchar*	on_false	)
-{
-	return g_strdup_printf ("%s%s%s%s%s",
-			left,
-			vec->x ? on_true : on_false,
-			in,
-			vec->y ? on_true : on_false,
-			right	);
-}
-
 
 
 
 
 G_DEFINE_BOXED_TYPE (CrankVecBool3, crank_vec_bool3, crank_vec_bool3_copy, g_free)
+
+
+//////// Initialization ////////////////////////////////////////////////////////
 
 /**
  * crank_vec_bool3_init:
@@ -478,6 +498,9 @@ crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
 }
 
 
+//////// Basic Operations //////////////////////////////////////////////////////
+
+
 /**
  * crank_vec_bool3_copy:
  * @vec: Vector to copy
@@ -490,185 +513,6 @@ CrankVecBool3*
 crank_vec_bool3_copy	(	CrankVecBool3*	vec	)
 {
 	return (CrankVecBool3*) g_memdup (vec, sizeof (CrankVecBool3));
-}
-
-/**
- * crank_vec_bool3_get:
- * @vec: A vector to get element.
- * @index: Index of element.
- * 
- * Gets element from vector.
- *
- * Returns: Element of @vec at @index.
- */
-gboolean
-crank_vec_bool3_get	(	CrankVecBool3*	vec,
-						const guint		index	)
-{
-	return ((gboolean*)vec)[index];
-}
-
-/**
- * crank_vec_bool3_set:
- * @vec: A vector to set element.
- * @index: Index of element.
- * @value: Element to set.
- * 
- * Sets element of vector.
- */
-void
-crank_vec_bool3_set	(	CrankVecBool3*	vec,
-						const guint		index,
-						const gboolean	value	)
-{
-	((gboolean*)vec)[index] = value;
-}
-
-/**
- * crank_vec_bool3_and:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets Component AND of @a and @b.
- */
-void
-crank_vec_bool3_and	(	CrankVecBool3*	a,
-						CrankVecBool3*	b,
-						CrankVecBool3*	r	)
-{
-	r->x = a->x && b->x;
-	r->y = a->y && b->y;
-	r->z = a->z && b->z;
-}
-
-/**
- * crank_vec_bool3_or:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets Component OR of @a and @b.
- */
-void
-crank_vec_bool3_or	(	CrankVecBool3*	a,
-						CrankVecBool3*	b,
-						CrankVecBool3*	r	)
-{
-	r->x = a->x || b->x;
-	r->y = a->y || b->y;
-	r->z = a->z || b->z;
-}
-
-/**
- * crank_vec_bool3_xor:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets Component of exclusive OR of @a and @b.
- */
-void
-crank_vec_bool3_xor	(	CrankVecBool3*	a,
-						CrankVecBool3*	b,
-						CrankVecBool3*	r	)
-{
-	r->x = a->x != b->x;
-	r->y = a->y != b->y;
-	r->z = a->z != b->z;
-}
-
-/**
- * crank_vec_bool3_not:
- * @a: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets Component NOT of @a.
- */
-void
-crank_vec_bool3_not	(	CrankVecBool3*	a,
-						CrankVecBool3*	r	)
-{
-	r->x = ! a->x;
-	r->y = ! a->y;
-}
-
-/**
- * crank_vec_bool3_andv:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- *
- * Another name for crank_vec_bool3_and(). Some language may use "and" as
- * keyword or operator.
- */
-void
-crank_vec_bool3_andv (	CrankVecBool3*	a,
-						CrankVecBool3*	b,
-						CrankVecBool3*	r	)
-{
-	crank_vec_bool3_and (a, b, r);
-}
-
-/**
- * crank_vec_bool3_orv:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- *
- * Another name for crank_vec_bool3_or(). Some language may use "or" as
- * keyword or operator.
- */
-void
-crank_vec_bool3_orv (	CrankVecBool3*	a,
-						CrankVecBool3*	b,
-						CrankVecBool3*	r	)
-{
-	crank_vec_bool3_or (a, b, r);
-}
-
-/**
- * crank_vec_bool3_notv:
- * @a: A vector.
- * @r: (out): A vector to store result.
- *
- * Another name for crank_vec_bool3_not(). Some language may use "not" as
- * keyword or operator.
- */
-void
-crank_vec_bool3_notv (	CrankVecBool3*	a,
-						CrankVecBool3*	r	)
-{
-	crank_vec_bool3_not (a, r);
-}
-
-
-/**
- * crank_vec_bool3_get_any:
- * @vec: A vector.
- * 
- * Checks there is any element be %TRUE.
- *
- * Returns: Whether there is any element be %TRUE.
- */
-gboolean
-crank_vec_bool3_get_any	(	CrankVecBool3*	vec	)
-{
-	return (vec->x || vec->y || vec->z);
-}
-
-/**
- * crank_vec_bool3_get_all:
- * @vec: A vector.
- * 
- * Checks whether all elements are %TRUE.
- *
- * Returns: Whether all elements are %TRUE.
- */
-gboolean
-crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
-{
-	return (vec->x && vec->y && vec->z);
 }
 
 /**
@@ -763,11 +607,203 @@ crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
 }
 
 
+//////// Basic Properties //////////////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool3_get_any:
+ * @vec: A vector.
+ *
+ * Checks there is any element be %TRUE.
+ *
+ * Returns: Whether there is any element be %TRUE.
+ */
+gboolean
+crank_vec_bool3_get_any	(	CrankVecBool3*	vec	)
+{
+	return (vec->x || vec->y || vec->z);
+}
+
+/**
+ * crank_vec_bool3_get_all:
+ * @vec: A vector.
+ *
+ * Checks whether all elements are %TRUE.
+ *
+ * Returns: Whether all elements are %TRUE.
+ */
+gboolean
+crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
+{
+	return (vec->x && vec->y && vec->z);
+}
+
+
+//////// Functions as collection ///////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool3_get:
+ * @vec: A vector to get element.
+ * @index: Index of element.
+ *
+ * Gets element from vector.
+ *
+ * Returns: Element of @vec at @index.
+ */
+gboolean
+crank_vec_bool3_get	(	CrankVecBool3*	vec,
+						const guint		index	)
+{
+	return ((gboolean*)vec)[index];
+}
+
+/**
+ * crank_vec_bool3_set:
+ * @vec: A vector to set element.
+ * @index: Index of element.
+ * @value: Element to set.
+ *
+ * Sets element of vector.
+ */
+void
+crank_vec_bool3_set	(	CrankVecBool3*	vec,
+						const guint		index,
+						const gboolean	value	)
+{
+	((gboolean*)vec)[index] = value;
+}
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool3_and:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets Component AND of @a and @b.
+ */
+void
+crank_vec_bool3_and	(	CrankVecBool3*	a,
+						CrankVecBool3*	b,
+						CrankVecBool3*	r	)
+{
+	r->x = a->x && b->x;
+	r->y = a->y && b->y;
+	r->z = a->z && b->z;
+}
+
+/**
+ * crank_vec_bool3_or:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets Component OR of @a and @b.
+ */
+void
+crank_vec_bool3_or	(	CrankVecBool3*	a,
+						CrankVecBool3*	b,
+						CrankVecBool3*	r	)
+{
+	r->x = a->x || b->x;
+	r->y = a->y || b->y;
+	r->z = a->z || b->z;
+}
+
+/**
+ * crank_vec_bool3_xor:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets Component of exclusive OR of @a and @b.
+ */
+void
+crank_vec_bool3_xor	(	CrankVecBool3*	a,
+						CrankVecBool3*	b,
+						CrankVecBool3*	r	)
+{
+	r->x = a->x != b->x;
+	r->y = a->y != b->y;
+	r->z = a->z != b->z;
+}
+
+/**
+ * crank_vec_bool3_not:
+ * @a: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets Component NOT of @a.
+ */
+void
+crank_vec_bool3_not	(	CrankVecBool3*	a,
+						CrankVecBool3*	r	)
+{
+	r->x = ! a->x;
+	r->y = ! a->y;
+}
+
+/**
+ * crank_vec_bool3_andv:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Another name for crank_vec_bool3_and(). Some language may use "and" as
+ * keyword or operator and cannot be used as function name.
+ */
+void
+crank_vec_bool3_andv (	CrankVecBool3*	a,
+						CrankVecBool3*	b,
+						CrankVecBool3*	r	)
+{
+	crank_vec_bool3_and (a, b, r);
+}
+
+/**
+ * crank_vec_bool3_orv:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Another name for crank_vec_bool3_or(). Some language may use "or" as
+ * keyword or operator and cannot be used as function name.
+ */
+void
+crank_vec_bool3_orv (	CrankVecBool3*	a,
+						CrankVecBool3*	b,
+						CrankVecBool3*	r	)
+{
+	crank_vec_bool3_or (a, b, r);
+}
+
+/**
+ * crank_vec_bool3_notv:
+ * @a: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Another name for crank_vec_bool3_not(). Some language may use "not" as
+ * keyword or operator and cannot be used as function name.
+ */
+void
+crank_vec_bool3_notv (	CrankVecBool3*	a,
+						CrankVecBool3*	r	)
+{
+	crank_vec_bool3_not (a, r);
+}
+
+
 
 
 
 
 G_DEFINE_BOXED_TYPE (CrankVecBool4, crank_vec_bool4, crank_vec_bool4_copy, g_free)
+
+//////// Initialization ////////////////////////////////////////////////////////
 
 /**
  * crank_vec_bool4_init:
@@ -845,6 +881,10 @@ crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
 	vec->w = fill;
 }
 
+
+//////// Basic Operations //////////////////////////////////////////////////////
+
+
 /**
  * crank_vec_bool4_copy:
  * @vec: Vector to copy
@@ -860,10 +900,123 @@ crank_vec_bool4_copy	(	CrankVecBool4*	vec	)
 }
 
 /**
+ * crank_vec_bool4_hash:
+ * @a: (type CrankVecBool4): A vector.
+ *
+ * Gets hash value of vector.
+ *
+ * Returns: Hash value of vector.
+ */
+guint
+crank_vec_bool4_hash	(	gconstpointer a	)
+{
+	const CrankVecBool4* vec = (const CrankVecBool4*) a;
+	return g_direct_hash (
+			GINT_TO_POINTER(	(vec->x) +
+								(vec->y << 1) +
+								(vec->z << 2) +
+								(vec->w << 3)	));
+}
+
+/**
+ * crank_vec_bool4_to_string:
+ * @vec: A vector.
+ *
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE})
+ * |[
+ *   (true, false, false, true)
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool4_to_string	(	CrankVecBool4*	vec	)
+{
+	return crank_vec_bool4_to_string_full (vec, "(", ", ", ")", "true", "false");
+}
+
+
+/**
+ * crank_vec_bool4_to_string_full:
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
+ *
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE})
+ * |[
+ *   left on_true in on_false in on_false in on_true right
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
+								const gchar*	left,
+								const gchar*	in,
+								const gchar*	right,
+								const gchar*	on_true,
+								const gchar*	on_false	)
+{
+	return g_strdup_printf ("%s%s%s%s%s%s%s%s%s",
+			left,
+			vec->x ? on_true : on_false,
+			in,
+			vec->y ? on_true : on_false,
+			in,
+			vec->z ? on_true : on_false,
+			in,
+			vec->w ? on_true : on_false,
+			right	);
+}
+
+
+
+//////// Basic Properties /////////////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool4_get_any:
+ * @vec: A vector.
+ *
+ * Checks there is any element be %TRUE.
+ *
+ * Returns: Whether there is any element be %TRUE.
+ */
+gboolean
+crank_vec_bool4_get_any	(	CrankVecBool4*	vec	)
+{
+	return (vec->x || vec->y || vec->z || vec->w);
+}
+
+
+/**
+ * crank_vec_bool4_get_all:
+ * @vec: A vector.
+ *
+ * Checks whether all elements are %TRUE.
+ *
+ * Returns: Whether all elements are %TRUE.
+ */
+gboolean
+crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
+{
+	return (vec->x && vec->y && vec->z && vec->w);
+}
+
+
+//////// Functions as collection ///////////////////////////////////////////////
+
+
+/**
  * crank_vec_bool4_get:
  * @vec: A vector to get element.
  * @index: Index of element.
- * 
+ *
  * Gets element of vector.
  *
  * Returns: Element of @vec at @index.
@@ -880,7 +1033,7 @@ crank_vec_bool4_get	(	CrankVecBool4*	vec,
  * @vec: A vector to set element.
  * @index: Index of element.
  * @value: Element to set.
- * 
+ *
  * Sets element of vector.
  */
 void
@@ -890,6 +1043,10 @@ crank_vec_bool4_set	(	CrankVecBool4*	vec,
 {
 	((gboolean*)vec)[index] = value;
 }
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
+
 
 /**
  * crank_vec_bool4_and:
@@ -971,7 +1128,7 @@ crank_vec_bool4_not	(	CrankVecBool4*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool4_and(). Some language may use "and" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool4_andv (	CrankVecBool4*	a,
@@ -988,7 +1145,7 @@ crank_vec_bool4_andv (	CrankVecBool4*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool4_or(). Some language may use "or" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool4_orv (	CrankVecBool4*	a,
@@ -1005,7 +1162,7 @@ crank_vec_bool4_orv (	CrankVecBool4*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool4_not(). Some language may use "not" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool4_notv (	CrankVecBool4*	a,
@@ -1013,37 +1170,6 @@ crank_vec_bool4_notv (	CrankVecBool4*	a,
 {
 	crank_vec_bool4_not (a, r);
 }
-
-
-/**
- * crank_vec_bool4_get_any:
- * @vec: A vector.
- * 
- * Checks there is any element be %TRUE.
- *
- * Returns: Whether there is any element be %TRUE.
- */
-gboolean
-crank_vec_bool4_get_any	(	CrankVecBool4*	vec	)
-{
-	return (vec->x || vec->y || vec->z || vec->w);
-}
-
-
-/**
- * crank_vec_bool4_get_all:
- * @vec: A vector.
- * 
- * Checks whether all elements are %TRUE.
- *
- * Returns: Whether all elements are %TRUE.
- */
-gboolean
-crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
-{
-	return (vec->x && vec->y && vec->z && vec->w);
-}
-
 /**
  * crank_vec_bool4_equal:
  * @a: (type CrankVecBool4): A vector.
@@ -1065,81 +1191,6 @@ crank_vec_bool4_equal	(	gconstpointer	a,
 			(veca->w == vecb->w);
 }
 
-/**
- * crank_vec_bool4_hash:
- * @a: (type CrankVecBool4): A vector.
- *
- * Gets hash value of vector.
- *
- * Returns: Hash value of vector.
- */
-guint
-crank_vec_bool4_hash	(	gconstpointer a	)
-{
-	const CrankVecBool4* vec = (const CrankVecBool4*) a;
-	return g_direct_hash (
-			GINT_TO_POINTER(	(vec->x) +
-								(vec->y << 1) +
-								(vec->z << 2) +
-								(vec->w << 3)	));
-}
-
-/**
- * crank_vec_bool4_to_string:
- * @vec: A vector.
- *
- * Stringify a given vector.
- * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE})
- * |[
- *   (true, false, false, true)
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool4_to_string	(	CrankVecBool4*	vec	)
-{
-	return crank_vec_bool4_to_string_full (vec, "(", ", ", ")", "true", "false");
-}
-
-
-/**
- * crank_vec_bool4_to_string_full:
- * @vec: A vector.
- * @left: Left delimiter.
- * @in: Middle delimiter that divides components.
- * @right: Right delimiter.
- * @on_true: String representation of %TRUE.
- * @on_false: String representation of %FALSE.
- *
- * Stringify a given vector with given string parts.
- * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE})
- * |[
- *   left on_true in on_false in on_false in on_true right
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	on_true,
-								const gchar*	on_false	)
-{
-	return g_strdup_printf ("%s%s%s%s%s%s%s%s%s",
-			left,
-			vec->x ? on_true : on_false,
-			in,
-			vec->y ? on_true : on_false,
-			in,
-			vec->z ? on_true : on_false,
-			in,
-			vec->w ? on_true : on_false,
-			right	);
-}
-
 
 
 
@@ -1147,6 +1198,8 @@ crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
 G_DEFINE_BOXED_TYPE (CrankVecBoolN, crank_vec_bool_n,
 		crank_vec_bool_n_copy,
 		crank_vec_bool_n_free)
+
+//////// Initialization and finalization ///////////////////////////////////////
 
 /**
  * crank_vec_bool_n_init:
@@ -1163,11 +1216,11 @@ crank_vec_bool_n_init	(	CrankVecBoolN*	vec,
 							...	)
 {
 	va_list varargs;
-	
+
 	va_start (varargs, n);
-	
+
 	crank_vec_bool_n_init_valist (vec, n, varargs);
-	
+
 	va_end (varargs);
 }
 
@@ -1205,13 +1258,13 @@ crank_vec_bool_n_init_valist	(	CrankVecBoolN*	vec,
 									va_list			varargs	)
 {
 	guint	i;
-	
+
 	if (vec->data != NULL) g_free (vec->data);
 	vec->n = n;
 	vec->data = g_new (gboolean, n);
-	
+
 	for (i = 0; i < n; i++) vec->data[i] = va_arg (varargs, gboolean);
-	
+
 }
 
 /**
@@ -1229,13 +1282,13 @@ crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
 								const gboolean	fill	)
 {
 	guint	i;
-	
+
 	if (vec->data != NULL) g_free (vec->data);
 	vec->n = n;
 	vec->data = g_new (gboolean, n);
-	
+
 	for (i = 0; i < n; i++) vec->data[i] = fill;
-	
+
 }
 
 
@@ -1253,6 +1306,23 @@ crank_vec_bool_n_fini	(	CrankVecBoolN*	vec	)
 }
 
 /**
+ * crank_vec_bool_n_copy:
+ * @vec: Vector to copy
+ *
+ * Copies a vector. Free with crank_vec_bool_n_free() after use.
+ *
+ * Returns: (transfer full): Copied vector. Free with g_free().
+ */
+CrankVecBoolN*
+crank_vec_bool_n_copy	(	CrankVecBoolN*	vec	)
+{
+	CrankVecBoolN* result = g_new0 (CrankVecBoolN, 1);
+
+	crank_vec_bool_n_init_arr (result, vec->n, vec->data);
+	return result;
+}
+
+/**
  * crank_vec_bool_n_free:
  * @vec: A vector to free.
  *
@@ -1266,22 +1336,165 @@ crank_vec_bool_n_free	(	CrankVecBoolN*	vec	)
 }
 
 
+//////// Basic Operations //////////////////////////////////////////////////////
+
+
 /**
- * crank_vec_bool_n_copy:
- * @vec: Vector to copy
+ * crank_vec_bool_n_equal:
+ * @a: (type CrankVecBoolN): A vector.
+ * @b: (type CrankVecBoolN): A vector.
  *
- * Copies a vector. Free with crank_vec_bool_n_free() after use.
+ * Checks whether two vectors are equal.
  *
- * Returns: (transfer full): Copied vector. Free with g_free().
+ * Returns: Whether two vectors are equal.
  */
-CrankVecBoolN*
-crank_vec_bool_n_copy	(	CrankVecBoolN*	vec	)
+gboolean
+crank_vec_bool_n_equal	(	gconstpointer a,
+							gconstpointer b	)
 {
-	CrankVecBoolN* result = g_new0 (CrankVecBoolN, 1);
+	const CrankVecBoolN*	veca = (const CrankVecBoolN*) a;
+	const CrankVecBoolN*	vecb = (const CrankVecBoolN*) b;
+
+	guint i;
+	if (veca->n != vecb->n) return FALSE;
+
+	for (i = 0; i < veca->n; i++)
+		if (veca->data[i] != vecb->data[i]) return FALSE;
+
+	return TRUE;
+}
+
+
+/**
+ * crank_vec_bool_n_hash:
+ * @a: (type CrankVecBoolN): A vector.
+ *
+ * Gets hash value of vector.
+ *
+ * Returns: Hash value of vector.
+ */
+guint
+crank_vec_bool_n_hash	(	gconstpointer a	)
+{
+	const CrankVecBoolN* vec  = (const CrankVecBoolN*) a;
+
+	guint	i;
+	guint	value = 0;
+
+	for (i = 0; i < vec->n; i++)
+		value = value ^ ((vec->data[i] ? 1 : 0) << (i & 31));
+
+	return g_direct_hash (GINT_TO_POINTER (value));
+}
+
+/**
+ * crank_vec_bool_n_to_string:
+ * @vec: A vector.
+ *
+ * Stringify a given vector.
+ * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
+ * |[
+ *   (true, false, false, true, true)
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	)
+{
+	return crank_vec_bool_n_to_string_full (vec, "(", ", ", ")", "true", "false");
+}
+
+/**
+ * crank_vec_bool_n_to_string_full:
+ * @vec: A vector.
+ * @left: Left delimiter.
+ * @in: Middle delimiter that divides components.
+ * @right: Right delimiter.
+ * @on_true: String representation of %TRUE.
+ * @on_false: String representation of %FALSE.
+ *
+ * Stringify a given vector with given string parts.
+ * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
+ * |[
+ *   left on_true in on_false in on_false in on_true in on_true right
+ * ]|
+ *
+ * Returns: String representation of vector.
+ */
+gchar*
+crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
+								const gchar*	left,
+								const gchar*	in,
+								const gchar*	right,
+								const gchar*	on_true,
+								const gchar*	on_false	)
+{
+	GString*	str;
+	gchar*		result;
 	
-	crank_vec_bool_n_init_arr (result, vec->n, vec->data);
+	str = g_string_new (left);
+	
+	if (0 < vec->n) {
+		g_string_append (str, vec->data[0] ? on_true : on_false );
+
+		CRANK_FOREACH_ARRAY_BEGIN ((vec->data + 1), gboolean, e, (vec->n - 1))
+			g_string_append (str, in );
+			g_string_append (str, e ? on_true : on_false );
+		CRANK_FOREACH_ARRAY_END
+	}
+
+	g_string_append (str, right);
+	
+	result = str->str;
+	g_string_free (str, FALSE);
+
 	return result;
 }
+
+
+//////// Basic Properties //////////////////////////////////////////////////////
+
+
+/**
+ * crank_vec_bool_n_get_any:
+ * @vec: A vector.
+ *
+ * Checks there is any element be %TRUE.
+ *
+ * Returns: Whether there is any element be %TRUE.
+ */
+gboolean
+crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	)
+{
+	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
+		if (e) return TRUE;
+	CRANK_FOREACH_ARRAY_END
+
+	return FALSE;
+}
+
+/**
+ * crank_vec_bool_n_get_all:
+ * @vec: A vector.
+ *
+ * Checks whether all elements are %TRUE.
+ *
+ * Returns: Whether all elements are %TRUE.
+ */
+gboolean
+crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
+{
+	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
+		if (! e) return FALSE;
+	CRANK_FOREACH_ARRAY_END
+	
+	return TRUE;
+}
+
+
+//////// Functions as collection ///////////////////////////////////////////////
+
 
 /**
  * crank_vec_bool_n_get_size:
@@ -1329,6 +1542,10 @@ crank_vec_bool_n_set	(	CrankVecBoolN*	vec,
 {
 	vec->data[index] = value;
 }
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
+
 
 /**
  * crank_vec_bool_n_and:
@@ -1462,7 +1679,7 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool_n_and(). Some language may use "and" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool_n_andv (	CrankVecBoolN*	a,
@@ -1479,7 +1696,7 @@ crank_vec_bool_n_andv (	CrankVecBoolN*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool_n_or(). Some language may use "or" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool_n_orv (	CrankVecBoolN*	a,
@@ -1495,7 +1712,7 @@ crank_vec_bool_n_orv (	CrankVecBoolN*	a,
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool_n_not(). Some language may use "not" as
- * keyword or operator.
+ * keyword or operator and cannot be used as function name.
  */
 void
 crank_vec_bool_n_notv (	CrankVecBoolN*	a,
@@ -1503,153 +1720,3 @@ crank_vec_bool_n_notv (	CrankVecBoolN*	a,
 {
 	crank_vec_bool_n_not (a, r);
 }
-
-/**
- * crank_vec_bool_n_get_any:
- * @vec: A vector.
- * 
- * Checks there is any element be %TRUE.
- *
- * Returns: Whether there is any element be %TRUE.
- */
-gboolean
-crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	)
-{
-	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-		if (e) return TRUE;
-	CRANK_FOREACH_ARRAY_END
-	
-	return FALSE;
-}
-
-/**
- * crank_vec_bool_n_get_all:
- * @vec: A vector.
- * 
- * Checks whether all elements are %TRUE.
- *
- * Returns: Whether all elements are %TRUE.
- */
-gboolean
-crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
-{
-	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-		if (! e) return FALSE;
-	CRANK_FOREACH_ARRAY_END
-	
-	return TRUE;
-}
-
-/**
- * crank_vec_bool_n_equal:
- * @a: (type CrankVecBoolN): A vector.
- * @b: (type CrankVecBoolN): A vector.
- *
- * Checks whether two vectors are equal.
- *
- * Returns: Whether two vectors are equal.
- */
-gboolean
-crank_vec_bool_n_equal	(	gconstpointer a,
-							gconstpointer b	)
-{
-	const CrankVecBoolN*	veca = (const CrankVecBoolN*) a;
-	const CrankVecBoolN*	vecb = (const CrankVecBoolN*) b;
-	
-	guint i;
-	if (veca->n != vecb->n) return FALSE;
-	
-	for (i = 0; i < veca->n; i++)
-		if (veca->data[i] != vecb->data[i]) return FALSE;
-	
-	return TRUE;
-}
-
-
-/**
- * crank_vec_bool_n_hash:
- * @a: (type CrankVecBoolN): A vector.
- *
- * Gets hash value of vector.
- *
- * Returns: Hash value of vector.
- */
-guint
-crank_vec_bool_n_hash	(	gconstpointer a	)
-{
-	const CrankVecBoolN* vec  = (const CrankVecBoolN*) a;
-	
-	guint	i;
-	guint	value = 0;
-	
-	for (i = 0; i < vec->n; i++)
-		value = value ^ ((vec->data[i] ? 1 : 0) << (i & 31));
-
-	return g_direct_hash (GINT_TO_POINTER (value));
-}
-
-/**
- * crank_vec_bool_n_to_string:
- * @vec: A vector.
- *
- * Stringify a given vector.
- * The format will be. (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
- * |[
- *   (true, false, false, true, true)
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	)
-{
-	return crank_vec_bool_n_to_string_full (vec, "(", ", ", ")", "true", "false");
-}
-
-/**
- * crank_vec_bool_n_to_string_full:
- * @vec: A vector.
- * @left: Left delimiter.
- * @in: Middle delimiter that divides components.
- * @right: Right delimiter.
- * @on_true: String representation of %TRUE.
- * @on_false: String representation of %FALSE.
- *
- * Stringify a given vector with given string parts.
- * The order of part will be (for example of {TRUE, FALSE, FALSE, TRUE, TRUE})
- * |[
- *   left on_true in on_false in on_false in on_true in on_true right
- * ]|
- *
- * Returns: String representation of vector.
- */
-gchar*
-crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	on_true,
-								const gchar*	on_false	)
-{
-	GString*	str;
-	gchar*		result;
-	
-	str = g_string_new (left);
-	
-	if (0 < vec->n) {
-		g_string_append (str, vec->data[0] ? on_true : on_false );
-		
-		CRANK_FOREACH_ARRAY_BEGIN ((vec->data + 1), gboolean, e, (vec->n - 1))
-			g_string_append (str, in );
-			g_string_append (str, e ? on_true : on_false );
-		CRANK_FOREACH_ARRAY_END
-	}
-	
-	g_string_append (str, right);
-	
-	result = str->str;
-	g_string_free (str, FALSE);
-	
-	return result;
-}
-

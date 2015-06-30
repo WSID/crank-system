@@ -78,6 +78,8 @@ GType			crank_vec_bool2_get_type	(void);
 #define CRANK_VEC_BOOL2_J		{FALSE, TRUE}
 
 
+//////// Initialization ////////////////////////////////////////////////////////
+
 void			crank_vec_bool2_init 		(	CrankVecBool2*	vec,
 												gboolean		x,
 												gboolean		y	);
@@ -91,7 +93,36 @@ void			crank_vec_bool2_init_valist	(	CrankVecBool2*	vec,
 void			crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
 												const gboolean	fill	);
 
+
+//////// Basic Operations //////////////////////////////////////////////////////
+
 CrankVecBool2*	crank_vec_bool2_copy		(	CrankVecBool2*	vec	);
+
+
+gboolean		crank_vec_bool2_equal		(	gconstpointer	a,
+												gconstpointer	b	);
+
+guint			crank_vec_bool2_hash		(	gconstpointer	a	);
+
+
+gchar*			crank_vec_bool2_to_string	(	CrankVecBool2*	vec	);
+
+gchar*			crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
+												const gchar*	left,
+												const gchar*	in,
+												const gchar*	right,
+												const gchar*	on_true,
+												const gchar*	on_false	);
+
+
+//////// Basic property ////////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool2_get_any		(	CrankVecBool2*	vec	);
+
+gboolean		crank_vec_bool2_get_all		(	CrankVecBool2*	vec	);
+
+
+//////// Function as collection ////////////////////////////////////////////////
 
 gboolean		crank_vec_bool2_get			(	CrankVecBool2*	vec,
 												const guint		index	);
@@ -99,6 +130,9 @@ gboolean		crank_vec_bool2_get			(	CrankVecBool2*	vec,
 void			crank_vec_bool2_set			(	CrankVecBool2*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
 
 void			crank_vec_bool2_and			(	CrankVecBool2*	a,
 												CrankVecBool2*	b,
@@ -126,25 +160,7 @@ void			crank_vec_bool2_orv			(	CrankVecBool2*	a,
 void			crank_vec_bool2_notv		(	CrankVecBool2*	a,
 												CrankVecBool2*	r	);
 
-gboolean		crank_vec_bool2_get_any		(	CrankVecBool2*	vec	);
 
-gboolean		crank_vec_bool2_get_all		(	CrankVecBool2*	vec	);
-
-
-gboolean		crank_vec_bool2_equal		(	gconstpointer	a,
-												gconstpointer	b	);
-
-guint			crank_vec_bool2_hash		(	gconstpointer	a	);
-
-
-gchar*			crank_vec_bool2_to_string	(	CrankVecBool2*	vec	);
-
-gchar*			crank_vec_bool2_to_string_full (CrankVecBool2*	vec,
-												const gchar*	left,
-												const gchar*	in,
-												const gchar*	right,
-												const gchar*	on_true,
-												const gchar*	on_false	);
 
 
 
@@ -201,6 +217,8 @@ GType			crank_vec_bool3_get_type	(void);
 #define CRANK_VEC_BOOL3_K		{FALSE, FALSE, TRUE}
 
 
+//////// Initialization ////////////////////////////////////////////////////////
+
 void			crank_vec_bool3_init 		(	CrankVecBool3*	vec,
 												gboolean		x,
 												gboolean		y,
@@ -215,7 +233,34 @@ void			crank_vec_bool3_init_valist	(	CrankVecBool3*	vec,
 void			crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
 												const gboolean	fill	);
 
+
+//////// Basic Operations //////////////////////////////////////////////////////
+
 CrankVecBool3*	crank_vec_bool3_copy		(	CrankVecBool3*	vec	);
+
+gboolean		crank_vec_bool3_equal		(	gconstpointer	a,
+												gconstpointer	b	);
+
+guint			crank_vec_bool3_hash		(	gconstpointer	a	);
+
+gchar*			crank_vec_bool3_to_string	(	CrankVecBool3*	vec	);
+
+gchar*			crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
+												const gchar*	left,
+												const gchar*	in,
+												const gchar*	right,
+												const gchar*	on_true,
+												const gchar*	on_false	);
+
+
+//////// Basic Properties //////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool3_get_any		(	CrankVecBool3*	vec	);
+
+gboolean		crank_vec_bool3_get_all		(	CrankVecBool3*	vec	);
+
+
+//////// Function as collection ////////////////////////////////////////////////
 
 gboolean		crank_vec_bool3_get			(	CrankVecBool3*	vec,
 												const guint		index	);
@@ -223,6 +268,9 @@ gboolean		crank_vec_bool3_get			(	CrankVecBool3*	vec,
 void			crank_vec_bool3_set			(	CrankVecBool3*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
 
 void			crank_vec_bool3_and			(	CrankVecBool3*	a,
 												CrankVecBool3*	b,
@@ -249,23 +297,7 @@ void			crank_vec_bool3_orv			(	CrankVecBool3*	a,
 void			crank_vec_bool3_notv		(	CrankVecBool3*	a,
 												CrankVecBool3*	r	);
 
-gboolean		crank_vec_bool3_get_any		(	CrankVecBool3*	vec	);
 
-gboolean		crank_vec_bool3_get_all		(	CrankVecBool3*	vec	);
-
-gboolean		crank_vec_bool3_equal		(	gconstpointer	a,
-												gconstpointer	b	);
-
-guint			crank_vec_bool3_hash		(	gconstpointer	a	);
-
-gchar*			crank_vec_bool3_to_string	(	CrankVecBool3*	vec	);
-
-gchar*			crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
-												const gchar*	left,
-												const gchar*	in,
-												const gchar*	right,
-												const gchar*	on_true,
-												const gchar*	on_false	);
 
 
 /**
@@ -330,6 +362,8 @@ GType			crank_vec_bool4_get_type	(void);
 #define CRANK_VEC_BOOL4_L		{FALSE, FALSE, FALSE, TRUE}
 
 
+//////// Initialization ////////////////////////////////////////////////////////
+
 void			crank_vec_bool4_init 		(	CrankVecBool4*	vec,
 												gboolean		x,
 												gboolean		y,
@@ -345,7 +379,34 @@ void			crank_vec_bool4_init_valist	(	CrankVecBool4*	vec,
 void			crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
 												const gboolean	fill	);
 
+
+//////// Basic Operations //////////////////////////////////////////////////////
+
 CrankVecBool4*	crank_vec_bool4_copy		(	CrankVecBool4*	vec	);
+
+gboolean		crank_vec_bool4_equal		(	gconstpointer	a,
+												gconstpointer	b	);
+
+guint			crank_vec_bool4_hash		(	gconstpointer	a	);
+
+gchar*			crank_vec_bool4_to_string	(	CrankVecBool4*	vec	);
+
+gchar*			crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
+												const gchar*	left,
+												const gchar*	in,
+												const gchar*	right,
+												const gchar*	on_true,
+												const gchar* 	on_false	);
+
+
+//////// Basic Properties //////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool4_get_any		(	CrankVecBool4*	vec	);
+
+gboolean		crank_vec_bool4_get_all		(	CrankVecBool4*	vec	);
+
+
+//////// Functions as collection ///////////////////////////////////////////////
 
 gboolean		crank_vec_bool4_get			(	CrankVecBool4*	vec,
 												const guint		index	);
@@ -353,6 +414,9 @@ gboolean		crank_vec_bool4_get			(	CrankVecBool4*	vec,
 void			crank_vec_bool4_set			(	CrankVecBool4*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
 
 void			crank_vec_bool4_and			(	CrankVecBool4*	a,
 												CrankVecBool4*	b,
@@ -381,23 +445,9 @@ void			crank_vec_bool4_orv			(	CrankVecBool4*	a,
 void			crank_vec_bool4_notv		(	CrankVecBool4*	a,
 												CrankVecBool4*	r	);
 
-gboolean		crank_vec_bool4_get_any		(	CrankVecBool4*	vec	);
 
-gboolean		crank_vec_bool4_get_all		(	CrankVecBool4*	vec	);
 
-gboolean		crank_vec_bool4_equal		(	gconstpointer	a,
-												gconstpointer	b	);
 
-guint			crank_vec_bool4_hash		(	gconstpointer	a	);
-
-gchar*			crank_vec_bool4_to_string	(	CrankVecBool4*	vec	);
-
-gchar*			crank_vec_bool4_to_string_full (CrankVecBool4*	vec,
-												const gchar*	left,
-												const gchar*	in,
-												const gchar*	right,
-												const gchar*	on_true,
-												const gchar* 	on_false	);
 /**
  * CrankVecBoolN:
  * @data: (array length=n): Data of boolean vector.
@@ -413,6 +463,8 @@ struct _CrankVecBoolN {
 #define CRANK_TYPE_VEC_BOOL_N	(crank_vec_bool4_get_type ())
 GType			crank_vec_bool_n_get_type	(void);
 
+
+//////// Initialization and finalization ///////////////////////////////////////
 
 void			crank_vec_bool_n_init 		(	CrankVecBoolN*	vec,
 												const guint		n,
@@ -436,12 +488,44 @@ CrankVecBoolN*	crank_vec_bool_n_copy		(	CrankVecBoolN*	vec	);
 
 void			crank_vec_bool_n_free		(	CrankVecBoolN*	vec	);
 
+
+//////// Basic Operations //////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool_n_equal		(	gconstpointer	a,
+												gconstpointer	b	);
+
+guint			crank_vec_bool_n_hash		(	gconstpointer	a	);
+
+gchar*			crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	);
+
+gchar*			crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
+												const gchar*	left,
+												const gchar*	in,
+												const gchar*	right,
+												const gchar*	on_true,
+												const gchar* 	on_false	);
+
+
+//////// Basic Properties //////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	);
+
+gboolean		crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	);
+
+
+//////// Functions as collection ///////////////////////////////////////////////
+
+guint			crank_vec_bool_n_get_size	(	CrankVecBoolN*	vec	);
+
 gboolean		crank_vec_bool_n_get		(	CrankVecBoolN*	vec,
 												const guint		index	);
 
 void			crank_vec_bool_n_set		(	CrankVecBoolN*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+
+//////// Vector - Vector Operations ////////////////////////////////////////////
 
 void			crank_vec_bool_n_and		(	CrankVecBoolN*	a,
 												CrankVecBoolN*	b,
@@ -470,26 +554,6 @@ void			crank_vec_bool_n_orv		(	CrankVecBoolN*	a,
 void			crank_vec_bool_n_notv		(	CrankVecBoolN*	a,
 												CrankVecBoolN*	r	);
 
-guint			crank_vec_bool_n_get_size	(	CrankVecBoolN*	vec	);
-
-gboolean		crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	);
-
-gboolean		crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	);
-
-gboolean		crank_vec_bool_n_equal		(	gconstpointer	a,
-												gconstpointer	b	);
-
-guint			crank_vec_bool_n_hash		(	gconstpointer	a	);
-
-gchar*			crank_vec_bool_n_to_string	(	CrankVecBoolN*	vec	);
-
-gchar*			crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
-												const gchar*	left,
-												const gchar*	in,
-												const gchar*	right,
-												const gchar*	on_true,
-												const gchar* 	on_false	);
-						
 G_END_DECLS
 
 #endif //CRANKBOOLVEC_H
