@@ -29,6 +29,23 @@
 #include <glib.h>
 
 /**
+ * SECTION: crankfunction
+ * @title: Function Definitions
+ * @short_description: Contains function types that frequently used.
+ * @include: crankbase.h
+ * @stability: unstable
+ *
+ * Any library usually defines their own function types, as required function
+ * types are very specific to their use, and not really useful for generic uses.
+ *
+ * No exception to Crank System, too. Most of function type defined in Crank
+ * System, are defined in their specific section. But some of function types are
+ * frequently used and might be useful for generic uses.
+ */
+
+G_BEGIN_DECLS
+
+/**
  * CrankCallback: (skip)
  * @userdata: (closure): A userdata for callback.
  *
@@ -37,6 +54,54 @@
  * This is not used for actual callback type, but a placeholder for any function
  * type.
  */
-typedef void		(*CrankCallback) (	gpointer	userdata	);
+typedef void		(*CrankCallback) (		gpointer		userdata	);
+
+/**
+ * CrankBoolBoolFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gboolean and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean	(*CrankBoolBoolFunc) (	const gboolean	value,
+											gpointer		userdata	);
+
+/**
+ * CrankBoolIntFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gint and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean	(*CrankBoolIntFunc) (	const gint		value,
+											gpointer		userdata	);
+
+
+/**
+ * CrankBoolFloatFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gfloat and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
+											gpointer		userdata	);
+
+G_END_DECLS
 
 #endif

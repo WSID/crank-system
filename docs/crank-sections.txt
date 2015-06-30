@@ -21,6 +21,14 @@ CRANK_FOREACH_GLIST_END
 </SECTION>
 
 <SECTION>
+<FILE>crankfunction</FILE>
+CrankCallback
+CrankBoolBoolFunc
+CrankBoolIntFunc
+CrankBoolFloatFunc
+</SECTION>
+
+<SECTION>
 <FILE>crankvala</FILE>
 CRANK_VALA_FUNC_GET_POINTER
 CRANK_VALA_FUNC_GET_USERDATA
