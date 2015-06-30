@@ -79,6 +79,7 @@ crank_vec_bool2_init_fill
 crank_vec_bool2_copy
 crank_vec_bool2_get
 crank_vec_bool2_set
+crank_vec_bool2_foreach
 crank_vec_bool2_and
 crank_vec_bool2_or
 crank_vec_bool2_xor
@@ -102,6 +103,7 @@ crank_vec_bool3_init_fill
 crank_vec_bool3_copy
 crank_vec_bool3_get
 crank_vec_bool3_set
+crank_vec_bool3_foreach
 crank_vec_bool3_and
 crank_vec_bool3_or
 crank_vec_bool3_xor
@@ -126,6 +128,7 @@ crank_vec_bool4_init_fill
 crank_vec_bool4_copy
 crank_vec_bool4_get
 crank_vec_bool4_set
+crank_vec_bool4_foreach
 crank_vec_bool4_and
 crank_vec_bool4_or
 crank_vec_bool4_xor
@@ -146,6 +149,11 @@ crank_vec_bool_n_copy
 crank_vec_bool_n_free
 crank_vec_bool_n_get
 crank_vec_bool_n_set
+crank_vec_bool_n_prepend
+crank_vec_bool_n_append
+crank_vec_bool_n_insert
+crank_vec_bool_n_remove
+crank_vec_bool_n_foreach
 crank_vec_bool_n_get_size
 crank_vec_bool_n_and
 crank_vec_bool_n_or

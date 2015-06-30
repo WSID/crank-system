@@ -110,6 +110,7 @@ namespace Crank {
 		
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
+		public bool			foreach (Crank.BoolBoolFunc func);
 		
 		public VecBool2		and (VecBool2 b);
 		public VecBool2		or (VecBool2 b);
@@ -142,6 +143,7 @@ namespace Crank {
 		
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
+		public bool			foreach (Crank.BoolBoolFunc func);
 		
 		public VecBool3		and (VecBool3 b);
 		public VecBool3		or (VecBool3 b);
@@ -175,6 +177,7 @@ namespace Crank {
 		
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
+		public bool			foreach (Crank.BoolBoolFunc func);
 		
 		public VecBool4		and (VecBool4 b);
 		public VecBool4		or (VecBool4 b);
@@ -210,6 +213,11 @@ namespace Crank {
 		
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
+		public void			prepend (bool value);
+		public void			append (bool value);
+		public void			insert (uint index, bool value);
+		public void			remove (uint index);
+		public bool			foreach (Crank.BoolBoolFunc func);
 		
 		public VecBoolN		and (VecBoolN b);
 		public VecBoolN		or (VecBoolN b);

@@ -24,10 +24,14 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
+static gboolean	test_counter (	const gboolean	value,
+								gpointer		userdata	);
+
 static void	test_2_equal (void);
 static void	test_2_hash (void);
 static void	test_2_to_string (void);
 static void	test_2_get (void);
+static void test_2_foreach (void);
 static void	test_2_and (void);
 static void	test_2_or (void);
 static void	test_2_xor (void);
@@ -39,6 +43,9 @@ static void	test_n_equal (void);
 static void	test_n_hash (void);
 static void	test_n_to_string (void);
 static void	test_n_get (void);
+static void test_n_insert (void);
+static void test_n_remove (void);
+static void test_n_foreach (void);
 static void	test_n_and (void);
 static void	test_n_or (void);
 static void	test_n_xor (void);
@@ -58,6 +65,7 @@ main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/2/hash", test_2_hash);
 	g_test_add_func ("/crank/base/vec/bool/2/to_string", test_2_to_string);
 	g_test_add_func ("/crank/base/vec/bool/2/get", test_2_get);
+	g_test_add_func ("/crank/base/vec/bool/2/foreach", test_2_foreach);
 	g_test_add_func ("/crank/base/vec/bool/2/and", test_2_and);
 	g_test_add_func ("/crank/base/vec/bool/2/or", test_2_or);
 	g_test_add_func ("/crank/base/vec/bool/2/xor", test_2_xor);
@@ -69,6 +77,9 @@ main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/n/hash", test_n_hash);
 	g_test_add_func ("/crank/base/vec/bool/n/to_string", test_n_to_string);
 	g_test_add_func ("/crank/base/vec/bool/n/get", test_n_get);
+	g_test_add_func ("/crank/base/vec/bool/n/insert", test_n_insert);
+	g_test_add_func ("/crank/base/vec/bool/n/remove", test_n_remove);
+	g_test_add_func ("/crank/base/vec/bool/n/foreach", test_n_foreach);
 	g_test_add_func ("/crank/base/vec/bool/n/and", test_n_and);
 	g_test_add_func ("/crank/base/vec/bool/n/or", test_n_or);
 	g_test_add_func ("/crank/base/vec/bool/n/xor", test_n_xor);
@@ -83,6 +94,22 @@ main (gint argc, gchar** argv)
 
 //////// Definition ////////////////////////////////////////////////////////////
 
+static gboolean
+test_counter (	const gboolean	value,
+				gpointer		userdata	)
+{
+	guint*	counts = (guint*) userdata;
+
+	if (value) {
+		(*counts) ++;
+	}
+
+	return TRUE;
+}
+
+
+
+
 static void
 test_2_get (void)
 {
@@ -90,6 +117,16 @@ test_2_get (void)
 	
 	g_assert (crank_vec_bool2_get (&a, 0) == TRUE);
 	g_assert (crank_vec_bool2_get (&a, 1) == FALSE);
+}
+
+static void
+test_2_foreach (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+	guint			count = 0;
+
+	g_assert (crank_vec_bool2_foreach (&a, test_counter, &count));
+	g_assert_cmpint (count, ==, 1);
 }
 
 static void
@@ -252,6 +289,54 @@ test_n_get (void)
 	g_assert (crank_vec_bool_n_get (&a, 3) == FALSE);
 	g_assert (crank_vec_bool_n_get (&a, 4) == TRUE);
 	
+	crank_vec_bool_n_fini (&a);
+}
+
+static void
+test_n_insert (void)
+{
+	CrankVecBoolN	a = {0};
+	crank_vec_bool_n_init (&a, 4, TRUE, FALSE, FALSE, TRUE);
+
+	crank_vec_bool_n_insert (&a, 2, TRUE);
+
+	g_assert_cmpint (crank_vec_bool_n_get_size (&a), ==, 5);
+	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
+	g_assert (crank_vec_bool_n_get (&a, 1) == FALSE);
+	g_assert (crank_vec_bool_n_get (&a, 2) == TRUE);
+	g_assert (crank_vec_bool_n_get (&a, 3) == FALSE);
+	g_assert (crank_vec_bool_n_get (&a, 4) == TRUE);
+
+	crank_vec_bool_n_fini (&a);
+}
+
+static void
+test_n_remove (void)
+{
+	CrankVecBoolN	a = {0};
+	crank_vec_bool_n_init (&a, 4, TRUE, FALSE, FALSE, TRUE);
+
+	crank_vec_bool_n_remove (&a, 2);
+
+	g_assert_cmpint (crank_vec_bool_n_get_size (&a), ==, 3);
+	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
+	g_assert (crank_vec_bool_n_get (&a, 1) == FALSE);
+	g_assert (crank_vec_bool_n_get (&a, 2) == TRUE);
+
+	crank_vec_bool_n_fini (&a);
+}
+
+static void
+test_n_foreach (void)
+{
+	CrankVecBoolN	a = {0};
+	guint			count = 0;
+
+	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, FALSE, TRUE);
+
+	g_assert (crank_vec_bool_n_foreach (&a, test_counter, &count));
+	g_assert_cmpint (count, ==, 3);
+
 	crank_vec_bool_n_fini (&a);
 }
 

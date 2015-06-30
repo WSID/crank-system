@@ -263,6 +263,30 @@ crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
 	return (vec->x && vec->y);
 }
 
+/**
+ * crank_vec_bool2_foreach:
+ * @vec: A vector
+ * @func: (scope call): A function to iterate.
+ * @userdata: (closure): A userdata for @func.
+ *
+ * Iterates over a boolean vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_bool2_foreach (	CrankVecBool2*		vec,
+							CrankBoolBoolFunc	func,
+						 	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+			func (vec->y, userdata))
+		return TRUE;
+	else
+		return FALSE;
+}
+
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -674,6 +698,31 @@ crank_vec_bool3_set	(	CrankVecBool3*	vec,
 	((gboolean*)vec)[index] = value;
 }
 
+/**
+ * crank_vec_bool3_foreach:
+ * @vec: A vector
+ * @func: (scope call): A function to iterate.
+ * @userdata: (closure): A userdata for @func.
+ *
+ * Iterates over a boolean vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_bool3_foreach (	CrankVecBool3*		vec,
+							CrankBoolBoolFunc	func,
+						 	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+			func (vec->y, userdata) &&
+	 		func (vec->z, userdata))
+		return TRUE;
+	else
+		return FALSE;
+}
+
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
 
@@ -1044,6 +1093,31 @@ crank_vec_bool4_set	(	CrankVecBool4*	vec,
 	((gboolean*)vec)[index] = value;
 }
 
+/**
+ * crank_vec_bool4_foreach:
+ * @vec: A vector
+ * @func: (scope call): A function to iterate.
+ * @userdata: (closure): A userdata for @func.
+ *
+ * Iterates over a boolean vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_bool4_foreach (	CrankVecBool4*		vec,
+							CrankBoolBoolFunc	func,
+						 	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+			func (vec->y, userdata) &&
+	 		func (vec->z, userdata) &&
+	 		func (vec->w, userdata))
+		return TRUE;
+	else
+		return FALSE;
+}
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
 
@@ -1541,6 +1615,106 @@ crank_vec_bool_n_set	(	CrankVecBoolN*	vec,
 							const gboolean	value	)
 {
 	vec->data[index] = value;
+}
+
+/**
+ * crank_vec_bool_n_prepend:
+ * @vec: A vector.
+ * @value: A value to insert in vector.
+ *
+ * Prepends @value to @vec.
+ */
+void
+crank_vec_bool_n_prepend (	CrankVecBoolN*	vec,
+						  	const gboolean	value	)
+{
+ 	crank_vec_bool_n_insert (vec, 0, value);
+}
+
+/**
+ * crank_vec_bool_n_append:
+ * @vec: A vector.
+ * @value: A value to insert in vector.
+ *
+ * Appends @value to @vec.
+ */
+void
+crank_vec_bool_n_append (	CrankVecBoolN*	vec,
+						  	const gboolean	value	)
+{
+	crank_vec_bool_n_insert (vec, vec->n, value);
+}
+
+/**
+ * crank_vec_bool_n_insert:
+ * @vec: A vector.
+ * @index: Index to insert value.
+ * @value: A value to insert in vector.
+ *
+ * Inserts @value to @vec at @index.
+ */
+void
+crank_vec_bool_n_insert (	CrankVecBoolN*	vec,
+						 	const guint		index,
+						 	const gboolean	value	)
+{
+  	guint	i;
+
+  	vec->data = g_renew (gboolean, vec->data, vec->n + 1);
+
+	for (i = vec->n; index < i; i--)
+		vec->data[i] = vec->data[i - 1];
+
+	vec->data[index] = value;
+  	vec->n++;
+}
+
+/**
+ * crank_vec_bool_n_remove:
+ * @vec: A vector
+ * @index: A index to remove.
+ *
+ * Removes an element from a boolean vector.
+ */
+void
+crank_vec_bool_n_remove (	CrankVecBoolN*	vec,
+						 	const guint		index	)
+{
+	guint	i;
+
+	vec->n--;
+
+  	for (i = index; i < vec->n; i++)
+	  	vec->data[i] = vec->data[i + 1];
+
+  	vec->data = g_renew (gboolean, vec->data, vec->n);
+}
+
+/**
+ * crank_vec_bool_n_foreach:
+ * @vec: A vector
+ * @func: (scope call): A function to iterate.
+ * @userdata: (closure): A userdata for @func.
+ *
+ * Iterates over a boolean vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_bool_n_foreach (	CrankVecBoolN*		vec,
+							CrankBoolBoolFunc	func,
+						 	gpointer			userdata	)
+{
+	guint	i;
+
+  	if (vec->data != NULL) {
+		for (i = 0; i < vec->n; i++)
+			if (! func (vec->data[i], userdata)) return FALSE;
+	}
+
+  	return TRUE;
 }
 
 

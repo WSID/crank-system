@@ -26,13 +26,30 @@ import unittest
 from gi.repository import GObject
 from gi.repository import CrankBase
 
+class Counter:
+	def __init__ (self):
+		self.count = 0;
+
+	def inc (self, v):
+		self.count = v and self.count + 1 or self.count
+		return True
+
 
 class TestVecBool(unittest.TestCase):
+
+
 	def test_2_get (self):
 		a = CrankBase.VecBool2.init (True, False)
 		
 		self.assertEqual (a.get (0), True)
 		self.assertEqual (a.get (1), False)
+
+	def test_2_foreach (self):
+		a = CrankBase.VecBool2.init (True, False)
+		counter = Counter ()
+
+		assert (a.foreach (counter.inc))
+		self.assertEqual (counter.count, 1)
 		
 	def test_2_and (self):
 		a = CrankBase.VecBool2.init (True, True)
@@ -112,7 +129,34 @@ class TestVecBool(unittest.TestCase):
 		self.assertEqual (a.get (1), False)
 		self.assertEqual (a.get (2), False)
 		self.assertEqual (a.get (3), True)
-		
+
+	def test_n_insert (self):
+		a = CrankBase.VecBoolN.init_arr ([True, False, False, True])
+		a.insert (2, True)
+
+		self.assertEqual (a.get (0), True)
+		self.assertEqual (a.get (1), False)
+		self.assertEqual (a.get (2), True)
+		self.assertEqual (a.get (3), False)
+		self.assertEqual (a.get (4), True)
+
+	def test_n_remove (self):
+		a = CrankBase.VecBoolN.init_arr ([True, False, False, True])
+		a.remove (2)
+
+		self.assertEqual (a.get (0), True)
+		self.assertEqual (a.get (1), False)
+		self.assertEqual (a.get (2), True)
+
+
+
+	def test_n_foreach (self):
+		a = CrankBase.VecBoolN.init_arr ([True, False, False, True])
+		counter = Counter ()
+
+		assert (a.foreach (counter.inc))
+		self.assertEqual (counter.count, 2)
+
 	def test_n_and (self):
 		a = CrankBase.VecBoolN.init_arr ([True, True, False, True])
 		b = CrankBase.VecBoolN.init_arr ([False, True])

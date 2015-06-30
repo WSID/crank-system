@@ -23,9 +23,11 @@ int main (string[] args) {
 	GLib.Test.init (ref args);
 
 	GLib.Test.add_func ("/crank/base/vec/bool/2/get", test_2_get);
+	GLib.Test.add_func ("/crank/base/vec/bool/2/foreach", test_2_foreach);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/and", test_2_and);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/or", test_2_or);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/xor", test_2_xor);
+	GLib.Test.add_func ("/crank/base/vec/bool/2/not", test_2_not);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/any", test_2_any);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/all", test_2_all);
 	GLib.Test.add_func ("/crank/base/vec/bool/2/equal", test_2_equal);
@@ -33,9 +35,13 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/bool/2/to_string", test_2_to_string);
 	
 	GLib.Test.add_func ("/crank/base/vec/bool/n/get", test_n_get);
+	GLib.Test.add_func ("/crank/base/vec/bool/n/insert", test_n_insert);
+	GLib.Test.add_func ("/crank/base/vec/bool/n/remove", test_n_remove);
+	GLib.Test.add_func ("/crank/base/vec/bool/n/foreach", test_n_foreach);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/and", test_n_and);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/or", test_n_or);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/xor", test_n_xor);
+	GLib.Test.add_func ("/crank/base/vec/bool/n/not", test_n_not);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/any", test_n_any);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/all", test_n_all);
 	GLib.Test.add_func ("/crank/base/vec/bool/n/equal", test_n_equal);
@@ -51,6 +57,18 @@ private void test_2_get () {
 	
 	assert (a[0] == true);
 	assert (a[1] == false);
+}
+
+private void test_2_foreach () {
+	Crank.VecBool2	a = {true, false};
+	uint			count = 0;
+
+	assert (	a.foreach ((v) => {
+		if (v) count++;
+		return true;
+	}) );
+
+	assert (count == 1);
 }
 
 private void test_2_and () {
@@ -142,6 +160,40 @@ private void test_n_get () {
 	assert (a[1] == false);
 	assert (a[2] == false);
 	assert (a[3] == true);
+}
+
+private void test_n_insert () {
+	Crank.VecBoolN a = Crank.VecBoolN(4, true, false, false, true);
+
+	a.insert (2, true);
+
+	assert (a[0] == true);
+	assert (a[1] == false);
+	assert (a[2] == true);
+	assert (a[3] == false);
+	assert (a[4] == true);
+}
+
+private void test_n_remove () {
+	Crank.VecBoolN a = Crank.VecBoolN(4, true, false, false, true);
+
+	a.remove (2);
+
+	assert (a[0] == true);
+	assert (a[1] == false);
+	assert (a[2] == true);
+}
+
+private void test_n_foreach () {
+	Crank.VecBoolN	a = Crank.VecBoolN (4, true, false, false, true);
+	uint			count = 0;
+
+	assert (	a.foreach ((v) => {
+		if (v) count++;
+		return true;
+	}) );
+
+	assert (count == 2);
 }
 
 private void test_n_and () {

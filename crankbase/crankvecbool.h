@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
 #include "crankveccommon.h"
 
 G_BEGIN_DECLS
@@ -130,6 +131,10 @@ gboolean		crank_vec_bool2_get			(	CrankVecBool2*	vec,
 void			crank_vec_bool2_set			(	CrankVecBool2*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+gboolean		crank_vec_bool2_foreach		(	CrankVecBool2*		vec,
+												CrankBoolBoolFunc	func,
+												gpointer			userdata	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -268,6 +273,10 @@ gboolean		crank_vec_bool3_get			(	CrankVecBool3*	vec,
 void			crank_vec_bool3_set			(	CrankVecBool3*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+gboolean		crank_vec_bool3_foreach		(	CrankVecBool3*		vec,
+												CrankBoolBoolFunc	func,
+												gpointer			userdata	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -415,6 +424,10 @@ void			crank_vec_bool4_set			(	CrankVecBool4*	vec,
 												const guint		index,
 												const gboolean	value	);
 
+gboolean		crank_vec_bool4_foreach		(	CrankVecBool4*		vec,
+												CrankBoolBoolFunc	func,
+												gpointer			userdata	);
+
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
 
@@ -523,6 +536,23 @@ gboolean		crank_vec_bool_n_get		(	CrankVecBoolN*	vec,
 void			crank_vec_bool_n_set		(	CrankVecBoolN*	vec,
 												const guint		index,
 												const gboolean	value	);
+
+void			crank_vec_bool_n_prepend 	(	CrankVecBoolN*	vec,
+								  				const gboolean	value	);
+
+void			crank_vec_bool_n_append		(	CrankVecBoolN*	vec,
+												const gboolean	value	);
+
+void			crank_vec_bool_n_insert		(	CrankVecBoolN*	vec,
+								 				const guint		index,
+								 				const gboolean	value	);
+
+void			crank_vec_bool_n_remove		(	CrankVecBoolN*	vec,
+								 				const guint		index	);
+
+gboolean		crank_vec_bool_n_foreach	(	CrankVecBoolN*		vec,
+												CrankBoolBoolFunc	func,
+												gpointer			userdata	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
