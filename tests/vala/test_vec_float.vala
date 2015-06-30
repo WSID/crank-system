@@ -23,6 +23,7 @@ int main (string[] args) {
 	GLib.Test.init (ref args);
 
 	GLib.Test.add_func ("/crank/base/vec/float/2/get", test_2_get);
+	GLib.Test.add_func ("/crank/base/vec/float/2/foreach", test_2_foreach);
 	GLib.Test.add_func ("/crank/base/vec/float/2/equal", test_2_equal);
 	GLib.Test.add_func ("/crank/base/vec/float/2/to_string", test_2_to_string);
 	GLib.Test.add_func ("/crank/base/vec/float/2/magn", test_2_magn);
@@ -44,6 +45,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
 	GLib.Test.add_func ("/crank/base/vec/float/n/get", test_n_get);
+	GLib.Test.add_func ("/crank/base/vec/float/n/foreach", test_n_foreach);
 	GLib.Test.add_func ("/crank/base/vec/float/n/equal", test_n_equal);
 	GLib.Test.add_func ("/crank/base/vec/float/n/to_string", test_n_to_string);
 	GLib.Test.add_func ("/crank/base/vec/float/n/magn", test_n_magn);
@@ -84,6 +86,19 @@ private void test_2_get () {
 	
 	assert (float_eq (a.x, 3.0f));
 	assert (float_eq (a.y, 4.0f));
+}
+
+
+private void test_2_foreach () {
+	Crank.VecFloat2 a = {3.0f, 4.0f};
+	float sum = 0.0f;
+
+	a.foreach ((v) => {
+		sum += v;
+		return true;
+	});
+
+	assert (sum == 7.0f);
 }
 
 
@@ -290,6 +305,19 @@ private void test_n_get () {
 	
 	assert (float_eq (a[0], 3.0f));
 	assert (float_eq (a[1], 4.0f));
+}
+
+
+private void test_n_foreach () {
+	Crank.VecFloatN a = Crank.VecFloatN(2, 3.0f, 4.0f);
+	float sum = 0.0f;
+
+	a.foreach ((v) => {
+		sum += v;
+		return true;
+	});
+
+	assert (sum == 7.0f);
 }
 
 

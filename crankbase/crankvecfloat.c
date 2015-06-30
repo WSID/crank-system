@@ -220,6 +220,30 @@ crank_vec_float2_set			(	CrankVecFloat2*	vec,
 	((gfloat*)vec)[index] = value;
 }
 
+/**
+ * crank_vec_float2_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a float vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_float2_foreach (	CrankVecFloat2*		vec,
+						  	CrankBoolFloatFunc	func,
+						  	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata))
+		return TRUE;
+  	else
+	  	return FALSE;
+}
+
 //////// Basic operation ////////
 
 /**
@@ -822,6 +846,31 @@ crank_vec_float3_set			(	CrankVecFloat3*	vec,
 									const gfloat		value	)
 {
 	((gfloat*)vec)[index] = value;
+}
+
+/**
+ * crank_vec_float3_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a float vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_float3_foreach (	CrankVecFloat3*		vec,
+						  	CrankBoolFloatFunc	func,
+						  	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata) &&
+	 		func (vec->z, userdata))
+		return TRUE;
+  	else
+	  	return FALSE;
 }
 
 //////// Basic operation ////////
@@ -1479,6 +1528,32 @@ crank_vec_float4_set			(	CrankVecFloat4*	vec,
 									const gfloat		value	)
 {
 	((gfloat*)vec)[index] = value;
+}
+
+/**
+ * crank_vec_float4_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a float vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_float4_foreach (	CrankVecFloat4*		vec,
+						  	CrankBoolFloatFunc	func,
+						  	gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata) &&
+	 		func (vec->z, userdata) &&
+	 		func (vec->w, userdata))
+		return TRUE;
+  	else
+	  	return FALSE;
 }
 
 //////// Basic operation ////////
@@ -2193,6 +2268,31 @@ crank_vec_float_n_set			(	CrankVecFloatN*	vec,
 									const gfloat		value	)
 {
 	vec->data[index] = value;
+}
+
+/**
+ * crank_vec_float_n_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a float vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_float_n_foreach (	CrankVecFloatN*		vec,
+						  	CrankBoolFloatFunc	func,
+						  	gpointer			userdata	)
+{
+  	guint	i;
+
+  	for (i = 0; i < vec->n; i++)
+	  	if (! func (vec->data[i], userdata)) return FALSE;
+
+	return TRUE;
 }
 
 //////// Basic operation ////////

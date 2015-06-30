@@ -459,6 +459,7 @@ namespace Crank {
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
+		public bool			foreach (Crank.BoolFloatFunc func);
 		
 		public static uint	hash (VecFloat2	a);
 		public static bool	equal (VecFloat2	a, VecFloat2	b);
@@ -513,6 +514,7 @@ namespace Crank {
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
+		public bool			foreach (Crank.BoolFloatFunc func);
 		
 		public static uint	hash (VecFloat3	a);
 		public static bool	equal (VecFloat3	a, VecFloat3	b);
@@ -569,6 +571,7 @@ namespace Crank {
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
+		public bool			foreach (Crank.BoolFloatFunc func);
 		
 		public static uint	hash (VecFloat4	a);
 		public static bool	equal (VecFloat4	a, VecFloat4	b);
@@ -624,6 +627,7 @@ namespace Crank {
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
+		public bool			foreach (Crank.BoolFloatFunc func);
 		
 		public static uint	hash (VecFloatN	a);
 		public static bool	equal (VecFloatN	a, VecFloatN	b);

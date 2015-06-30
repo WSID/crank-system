@@ -24,15 +24,19 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void	test_assert_float_real (	const gchar*	file,
-										const guint		line,
-										const gchar*	func,
-										const gchar*	a_str,
-										const gchar*	b_str,
-										gfloat			a,
-										gfloat			b	);
+static void		test_assert_float_real (	const gchar*	file,
+											const guint		line,
+											const gchar*	func,
+											const gchar*	a_str,
+											const gchar*	b_str,
+											gfloat			a,
+											gfloat			b	);
+
+static gboolean	test_accumulation (			const gfloat	value,
+							   				gpointer		userdata	);
 
 static void	test_2_get (void);
+static void test_2_foreach (void);
 static void	test_2_equal (void);
 static void	test_2_to_string (void);
 static void	test_2_magn (void);
@@ -54,6 +58,7 @@ static void	test_2_mixs (void);
 static void	test_2_mix (void);
 
 static void	test_n_get (void);
+static void	test_n_foreach (void);
 static void	test_n_equal (void);
 static void	test_n_to_string (void);
 static void	test_n_magn (void);
@@ -83,6 +88,7 @@ main (	gint argc, gchar** argv	)
 	g_test_init (&argc, &argv, NULL);
 	
 	g_test_add_func ("/crank/base/vec/float/2/get", test_2_get);
+	g_test_add_func ("/crank/base/vec/float/2/foreach", test_2_foreach);
 	g_test_add_func ("/crank/base/vec/float/2/equal", test_2_equal);
 	g_test_add_func ("/crank/base/vec/float/2/to_string", test_2_to_string);
 	g_test_add_func ("/crank/base/vec/float/2/magn", test_2_magn);
@@ -103,6 +109,7 @@ main (	gint argc, gchar** argv	)
 	g_test_add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
 	g_test_add_func ("/crank/base/vec/float/n/get", test_n_get);
+	g_test_add_func ("/crank/base/vec/float/n/foreach", test_n_foreach);
 	g_test_add_func ("/crank/base/vec/float/n/equal", test_n_equal);
 	g_test_add_func ("/crank/base/vec/float/n/to_string", test_n_to_string);
 	g_test_add_func ("/crank/base/vec/float/n/magn", test_n_magn);
@@ -159,6 +166,16 @@ test_assert_float_real (	const gchar*	file,
 			b)
 
 
+static gboolean
+test_accumulation (	const gfloat	value,
+				   	gpointer		userdata	)
+{
+	gfloat*	sum	=	(gfloat*)userdata;
+
+	(*sum) += value;
+  	return TRUE;
+}
+
 
 
 
@@ -169,6 +186,16 @@ static void	test_2_get (void)
 	
 	test_assert_float (crank_vec_float2_get (&a, 0), 3.0f);
 	test_assert_float (crank_vec_float2_get (&a, 1), 4.0f);
+}
+
+static void test_2_foreach (void)
+{
+	CrankVecFloat2 	a = {3.0f, 4.0f};
+  	gfloat			sum = 0.0f;
+
+  	g_assert (crank_vec_float2_foreach (&a, test_accumulation, &sum));
+
+  	test_assert_float (sum, 7.0f);
 }
 
 
@@ -406,6 +433,19 @@ static void	test_n_get (void)
 	
 	test_assert_float (crank_vec_float_n_get (&a, 0), 3.0f);
 	test_assert_float (crank_vec_float_n_get (&a, 1), 4.0f);
+}
+
+
+static void test_n_foreach (void)
+{
+	CrankVecFloatN 	a = {0};
+  	gfloat			sum = 0.0f;
+
+  	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
+
+  	g_assert (crank_vec_float_n_foreach (&a, test_accumulation, &sum));
+
+  	test_assert_float (sum, 7.0f);
 }
 
 

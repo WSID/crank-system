@@ -97,6 +97,10 @@ void			crank_vec_float2_set		(	CrankVecFloat2*	vec,
 												const guint		index,
 												const gfloat	value	);
 
+gboolean		crank_vec_float2_foreach	(	CrankVecFloat2*		vec,
+												CrankBoolFloatFunc	func,
+												gpointer			userdata	);
+
 //////// Basic operation ////////
 
 guint			crank_vec_float2_hash		(	gconstpointer	a	);
@@ -276,6 +280,10 @@ gfloat			crank_vec_float3_get		(	CrankVecFloat3*	vec,
 void			crank_vec_float3_set		(	CrankVecFloat3*	vec,
 												const guint		index,
 												const gfloat	value	);
+
+gboolean		crank_vec_float3_foreach	(	CrankVecFloat3*		vec,
+												CrankBoolFloatFunc	func,
+												gpointer			userdata	);
 
 //////// Basic operation ////////
 
@@ -471,6 +479,10 @@ void			crank_vec_float4_set		(	CrankVecFloat4*	vec,
 												const guint		index,
 												const gfloat	value	);
 
+gboolean		crank_vec_float4_foreach	(	CrankVecFloat4*		vec,
+												CrankBoolFloatFunc	func,
+												gpointer			userdata	);
+
 //////// Basic operation ////////
 
 guint			crank_vec_float4_hash		(	gconstpointer	a	);
@@ -626,6 +638,10 @@ gfloat			crank_vec_float_n_get		(	CrankVecFloatN*	vec,
 void			crank_vec_float_n_set		(	CrankVecFloatN*	vec,
 												const guint		index,
 												const gfloat	value	);
+
+gboolean		crank_vec_float_n_foreach	(	CrankVecFloatN*		vec,
+												CrankBoolFloatFunc	func,
+												gpointer			userdata	);
 
 //////// Basic operation ////////
 

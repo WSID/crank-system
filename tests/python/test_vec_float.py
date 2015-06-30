@@ -47,11 +47,23 @@ class TestVecInt(unittest.TestCase):
 			if ((a < b - delta) or (b + delta < a)):
 				raise AssertionError ("%g != %g (diff=%g)" % (a, b, b-a))
 
+	def accumulation (self, value):
+        	self.sum = self.sum + value;
+        	return True;
+
+
 	def test_2_get (self):
 		a = CrankBase.VecFloat2.init (3, 4)
 		
 		self.assertFloat (a.get (0), 3)
 		self.assertFloat (a.get (1), 4)
+
+	def test_2_foreach (self):
+		a = CrankBase.VecFloat2.init (3, 4)
+		self.sum = 0;
+
+		assert (a.foreach (self.accumulation))
+		self.assertEqual (self.sum, 7)
 
 	def test_2_equal (self):
 		a = CrankBase.VecFloat2.init (3, 4)
@@ -208,6 +220,13 @@ class TestVecInt(unittest.TestCase):
 		
 		self.assertFloat (a.get (0), 3)
 		self.assertFloat (a.get (1), 4)
+
+	def test_2_foreach (self):
+		a = CrankBase.VecFloatN.init_arr ([3, 4])
+		self.sum = 0;
+
+		assert (a.foreach (self.accumulation))
+		self.assertEqual (self.sum, 7)
 
 	def test_n_equal (self):
 		a = CrankBase.VecFloatN.init_arr ([3, 4])

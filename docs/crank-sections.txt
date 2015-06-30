@@ -362,6 +362,7 @@ crank_vec_float2_init_from_vi
 crank_vec_float2_copy
 crank_vec_float2_get
 crank_vec_float2_set
+crank_vec_float2_foreach
 crank_vec_float2_hash
 crank_vec_float2_equal
 crank_vec_float2_to_string
@@ -399,6 +400,7 @@ crank_vec_float3_init_from_vi
 crank_vec_float3_copy
 crank_vec_float3_get
 crank_vec_float3_set
+crank_vec_float3_foreach
 crank_vec_float3_hash
 crank_vec_float3_equal
 crank_vec_float3_to_string
@@ -438,6 +440,7 @@ crank_vec_float4_init_from_vi
 crank_vec_float4_copy
 crank_vec_float4_get
 crank_vec_float4_set
+crank_vec_float4_foreach
 crank_vec_float4_hash
 crank_vec_float4_equal
 crank_vec_float4_to_string
@@ -473,6 +476,7 @@ crank_vec_float_n_copy
 crank_vec_float_n_free
 crank_vec_float_n_get
 crank_vec_float_n_set
+crank_vec_float_n_foreach
 crank_vec_float_n_hash
 crank_vec_float_n_equal
 crank_vec_float_n_to_string
