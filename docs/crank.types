@@ -1,3 +1,5 @@
+crank_digraph_get_type
+
 crank_vec_bool2_get_type
 crank_vec_bool3_get_type
 crank_vec_bool4_get_type
@@ -7,3 +9,11 @@ crank_vec_bool_n_get_type
 crank_vec_int2_get_type
 crank_vec_int3_get_type
 crank_vec_int4_get_type
+
+crank_vec_int_n_get_type
+
+crank_vec_float2_get_type
+crank_vec_float3_get_type
+crank_vec_float4_get_type
+
+crank_vec_float_n_get_type
