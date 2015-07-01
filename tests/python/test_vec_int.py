@@ -28,12 +28,24 @@ from gi.repository import CrankBase
 
 
 class TestVecInt(unittest.TestCase):
+	def accumulation (self, value):
+		self.sum = self.sum + value
+		return True
+
 	def test_2_get (self):
 		a = CrankBase.VecInt2.init (3, 4)
 		
 		self.assertEqual (a.get (0), 3)
 		self.assertEqual (a.get (1), 4)
-		
+
+	def test_2_foreach (self):
+		a = CrankBase.VecInt2.init (3, 4)
+		self.sum = 0
+
+		assert (a.foreach (self.accumulation))
+		self.assertEqual (self.sum, 7)
+
+
 	def test_2_hash (self):
 		a = CrankBase.VecInt2.init (3, 4)
 		b = CrankBase.VecInt2.init (5, 12)
@@ -187,6 +199,28 @@ class TestVecInt(unittest.TestCase):
 		self.assertEqual (a.get (0), 3)
 		self.assertEqual (a.get (1), 4)
 		
+	def test_n_insert (self):
+		a = CrankBase.VecIntN.init_arr ([3, 4])
+		a.insert (1, 12)
+
+		self.assertEqual (a.get (0), 3)
+		self.assertEqual (a.get (1), 12)
+		self.assertEqual (a.get (2), 4)
+
+	def test_n_remove (self):
+		a = CrankBase.VecIntN.init_arr ([3, 4])
+		a.remove (1)
+
+		self.assertEqual (a.get_size (), 1)
+		self.assertEqual (a.get (0), 3)
+
+	def test_n_foreach (self):
+		a = CrankBase.VecIntN.init_arr ([3, 4])
+		self.sum = 0
+
+		assert (a.foreach (self.accumulation))
+		self.assertEqual (self.sum, 7)
+
 	def test_n_hash (self):
 		a = CrankBase.VecIntN.init_arr ([3, 4])
 		b = CrankBase.VecIntN.init_arr ([5, 12])

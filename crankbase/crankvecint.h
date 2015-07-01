@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
 #include "crankveccommon.h"
 
 G_BEGIN_DECLS
@@ -93,6 +94,10 @@ gint			crank_vec_int2_get			(	CrankVecInt2*	vec,
 void			crank_vec_int2_set			(	CrankVecInt2*	vec,
 												const guint		index,
 												const gint		value	);
+
+gboolean		crank_vec_int2_foreach		(	CrankVecInt2*		vec,
+												CrankBoolIntFunc	func,
+												gpointer			userdata	);
 
 //////// Basic operation ////////
 
@@ -263,6 +268,10 @@ gint			crank_vec_int3_get			(	CrankVecInt3*	vec,
 void			crank_vec_int3_set			(	CrankVecInt3*	vec,
 												const guint		index,
 												const gint		value	);
+
+gboolean		crank_vec_int3_foreach		(	CrankVecInt3*		vec,
+												CrankBoolIntFunc	func,
+												gpointer			userdata	);
 
 //////// Basic operation ////////
 
@@ -448,6 +457,10 @@ void			crank_vec_int4_set			(	CrankVecInt4*	vec,
 												const guint		index,
 												const gint		value	);
 
+gboolean		crank_vec_int4_foreach		(	CrankVecInt4*		vec,
+												CrankBoolIntFunc	func,
+												gpointer			userdata	);
+
 //////// Basic operation ////////
 
 guint			crank_vec_int4_hash (			gconstpointer	a	);
@@ -587,12 +600,31 @@ CrankVecIntN*	crank_vec_int_n_copy		(	CrankVecIntN*	vec	);
 
 void			crank_vec_int_n_free		(	CrankVecIntN*	vec		);
 
+guint			crank_vec_int_n_get_size	(	CrankVecIntN*	vec		);
+
 gint			crank_vec_int_n_get			(	CrankVecIntN*	vec,
 												const guint		index	);
 
 void			crank_vec_int_n_set			(	CrankVecIntN*	vec,
 												const guint		index,
 												const gint		value	);
+
+void			crank_vec_int_n_prepend		(	CrankVecIntN*	vec,
+								 				const gint		value	);
+
+void			crank_vec_int_n_append		(	CrankVecIntN*	vec,
+												const gint		value	);
+
+void			crank_vec_int_n_insert		(	CrankVecIntN*	vec,
+												const guint		index,
+												const gint		value	);
+
+void			crank_vec_int_n_remove		(	CrankVecIntN*	vec,
+												const guint		index	);
+
+gboolean		crank_vec_int_n_foreach		(	CrankVecIntN*		vec,
+								 				CrankBoolIntFunc	func,
+								 				gpointer			userdata	);
 
 //////// Basic operation ////////
 

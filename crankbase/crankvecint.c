@@ -28,6 +28,7 @@
 #include <glib-object.h>
 
 #include "crankbasemacro.h"
+#include "crankfunction.h"
 #include "crankveccommon.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
@@ -199,6 +200,30 @@ crank_vec_int2_set			(	CrankVecInt2*	vec,
 								const gint		value	)
 {
 	((gint*)vec)[index] = value;
+}
+
+/**
+ * crank_vec_int2_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a int vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_int2_foreach (	CrankVecInt2*		vec,
+							CrankBoolIntFunc	func,
+							gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata) )
+		return TRUE;
+	else
+		return FALSE;
 }
 
 //////// Basic operation ////////
@@ -753,6 +778,31 @@ crank_vec_int3_set			(	CrankVecInt3*	vec,
 								const gint		value	)
 {
 	((gint*)vec)[index] = value;
+}
+
+/**
+ * crank_vec_int3_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a int vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_int3_foreach (	CrankVecInt3*		vec,
+							CrankBoolIntFunc	func,
+							gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata) &&
+			func (vec->z, userdata) )
+		return TRUE;
+	else
+		return FALSE;
 }
 
 //////// Basic operation ////////
@@ -1361,6 +1411,32 @@ crank_vec_int4_set			(	CrankVecInt4*	vec,
 								const gint		value	)
 {
 	((gint*)vec)[index] = value;
+}
+
+/**
+ * crank_vec_int4_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a int vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_int4_foreach (	CrankVecInt4*		vec,
+							CrankBoolIntFunc	func,
+							gpointer			userdata	)
+{
+	if (	func (vec->x, userdata) &&
+	 		func (vec->y, userdata) &&
+			func (vec->z, userdata) &&
+			func (vec->w, userdata) )
+		return TRUE;
+	else
+		return FALSE;
 }
 
 //////// Basic operation ////////
@@ -1981,6 +2057,20 @@ crank_vec_int_n_free ( CrankVecIntN*	vec )
 }
 
 /**
+ * crank_vec_int_n_get_size:
+ * @vec: Vector to get size.
+ *
+ * Gets size of vector.
+ *
+ * Returns: Size of vector.
+ */
+guint
+crank_vec_int_n_get_size (	CrankVecIntN*	vec	)
+{
+	return vec->n;
+}
+
+/**
  * crank_vec_int_n_get:
  * @vec: Vector to get element.
  * @index: index to get element at.
@@ -2010,6 +2100,108 @@ crank_vec_int_n_set			(	CrankVecIntN*	vec,
 								const gint		value	)
 {
 	vec->data[index] = value;
+}
+
+/**
+ * crank_vec_int_n_prepend:
+ * @vec: A Vector to insert element.
+ * @value: Value of element.
+ *
+ * Prepends an element to vector.
+ */
+void
+crank_vec_int_n_prepend (	CrankVecIntN*	vec,
+						 	const gint		value	)
+{
+  	crank_vec_int_n_insert (vec, 0, value);
+}
+
+/**
+ * crank_vec_int_n_append:
+ * @vec: A Vector to insert element.
+ * @value: Value of element.
+ *
+ * Appends an element to vector.
+ */
+void
+crank_vec_int_n_append (	CrankVecIntN*	vec,
+							const gint		value	)
+{
+  	crank_vec_int_n_insert (vec, vec->n, value);
+}
+
+/**
+ * crank_vec_int_n_insert:
+ * @vec: A Vector to insert element.
+ * @index: Index to insert element.
+ * @value: Value of element.
+ *
+ * Insert an element to vector.
+ */
+void
+crank_vec_int_n_insert (	CrankVecIntN*	vec,
+							const guint		index,
+							const gint		value	)
+{
+	guint	i = 0;
+
+	g_return_if_fail (index <= vec->n);
+
+	vec->data = g_renew (gint, vec->data, vec->n + 1);
+
+  	for (i = vec->n - 1; index <= i; i--)
+		vec->data[i + 1] = vec->data[i];
+
+	vec->data[index] = value;
+
+  	vec->n ++;
+}
+
+/**
+ * crank_vec_int_n_remove:
+ * @vec: A Vector to remove element.
+ * @index: Index to remove element.
+ *
+ * Remove an element from vector.
+ */
+void
+crank_vec_int_n_remove (	CrankVecIntN*	vec,
+							const guint		index	)
+{
+	guint	i = 0;
+
+	g_return_if_fail (index < vec->n);
+
+  	vec->n--;
+  	for (i = index; i < vec->n; i++)
+		vec->data[i] = vec->data[i + 1];
+
+	vec->data = g_renew (gint, vec->data, vec->n);
+}
+
+/**
+ * crank_vec_int_n_foreach:
+ * @vec: Vector to iterate.
+ * @func: (scope call): Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a int vector.
+ *
+ * Return #TRUE to continue iteration, #FALSE to stop iteration.
+ *
+ * Returns: Whether iteration was stopped.
+ */
+gboolean
+crank_vec_int_n_foreach (	CrankVecIntN*		vec,
+							CrankBoolIntFunc	func,
+							gpointer			userdata	)
+{
+  	guint	i;
+
+  	for (i = 0; i < vec->n; i++)
+	  	if (! func(vec->data[i], userdata)) return FALSE;
+
+  	return TRUE;
 }
 
 //////// Basic operation ////////

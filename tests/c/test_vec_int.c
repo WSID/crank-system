@@ -25,7 +25,11 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
+static gboolean	test_accumulation (const gint value, gpointer userdata);
+
+
 static void	test_2_get (void);
+static void test_2_foreach (void);
 static void	test_2_hash (void);
 static void	test_2_equal (void);
 static void	test_2_to_string (void);
@@ -47,6 +51,9 @@ static void	test_2_min (void);
 static void	test_2_max (void);
 
 static void	test_n_get (void);
+static void test_n_insert (void);
+static void test_n_remove (void);
+static void test_n_foreach (void);
 static void	test_n_hash (void);
 static void	test_n_equal (void);
 static void	test_n_to_string (void);
@@ -76,6 +83,7 @@ main (	gint argc, gchar** argv)
 	g_test_init (&argc, &argv, NULL);
 
 	g_test_add_func ("/crank/base/vec/int/2/get", test_2_get);
+  	g_test_add_func ("/crank/base/vec/int/2/foreach", test_2_foreach);
 	g_test_add_func ("/crank/base/vec/int/2/hash", test_2_hash);
 	g_test_add_func ("/crank/base/vec/int/2/equal", test_2_equal);
 	g_test_add_func ("/crank/base/vec/int/2/to_string", test_2_to_string);
@@ -97,6 +105,9 @@ main (	gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/int/2/max", test_2_max);
 
 	g_test_add_func ("/crank/base/vec/int/n/get", test_n_get);
+  	g_test_add_func ("/crank/base/vec/int/n/insert", test_n_insert);
+  	g_test_add_func ("/crank/base/vec/int/n/remove", test_n_remove);
+  	g_test_add_func ("/crank/base/vec/int/n/foreach", test_n_foreach);
 	g_test_add_func ("/crank/base/vec/int/n/hash", test_n_hash);
 	g_test_add_func ("/crank/base/vec/int/n/equal", test_n_equal);
 	g_test_add_func ("/crank/base/vec/int/n/to_string", test_n_to_string);
@@ -124,6 +135,20 @@ main (	gint argc, gchar** argv)
 
 //////// Definition ////////////////////////////////////////////////////////////
 
+static gboolean
+test_accumulation (	const gint	value,
+				   	gpointer	userdata	)
+{
+	gint*	sum = (gint*)userdata;
+
+  	(*sum) += value;
+
+	return TRUE;
+}
+
+
+
+
 static void
 test_2_get (void)
 {
@@ -132,6 +157,18 @@ test_2_get (void)
 	g_assert_cmpint (crank_vec_int2_get (&a, 0), ==, 3);
 	g_assert_cmpint (crank_vec_int2_get (&a, 1), ==, 4);
 }
+
+
+static void
+test_2_foreach (void)
+{
+  	CrankVecInt2	a = {3, 4};
+  	gint			sum = 0;
+
+  	g_assert (crank_vec_int2_foreach (&a, test_accumulation, &sum));
+	g_assert_cmpint (sum, ==, 7);
+}
+
 
 static void
 test_2_hash (void)
@@ -395,6 +432,50 @@ test_n_get (void)
 	
 	crank_vec_int_n_fini (&a);
 }
+
+static void
+test_n_insert (void)
+{
+	CrankVecIntN	a = {0};
+
+	crank_vec_int_n_init (&a, 2, 3, 4);
+  	crank_vec_int_n_insert (&a, 1, 12);
+
+	g_assert_cmpint (crank_vec_int_n_get (&a, 0), ==, 3);
+	g_assert_cmpint (crank_vec_int_n_get (&a, 1), ==, 12);
+	g_assert_cmpint (crank_vec_int_n_get (&a, 2), ==, 4);
+
+	crank_vec_int_n_fini (&a);
+}
+
+static void
+test_n_remove (void)
+{
+	CrankVecIntN	a = {0};
+
+	crank_vec_int_n_init (&a, 2, 3, 4);
+  	crank_vec_int_n_remove (&a, 1);
+
+  	g_assert_cmpuint (crank_vec_int_n_get_size (&a), ==, 1);
+	g_assert_cmpint (crank_vec_int_n_get (&a, 0), ==, 3);
+
+	crank_vec_int_n_fini (&a);
+}
+
+static void
+test_n_foreach (void)
+{
+  	CrankVecIntN	a = {0};
+  	gint			sum = 0;
+
+  	crank_vec_int_n_init (&a, 2, 3, 4);
+
+  	g_assert (crank_vec_int_n_foreach (&a, test_accumulation, &sum));
+	g_assert_cmpint (sum, ==, 7);
+
+  	crank_vec_int_n_fini (&a);
+}
+
 
 static void
 test_n_hash (void)

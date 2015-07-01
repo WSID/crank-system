@@ -23,6 +23,7 @@ int main (string[] args) {
 	GLib.Test.init (ref args);
 
 	GLib.Test.add_func ("/crank/base/vec/int/2/get", test_2_get);
+	GLib.Test.add_func ("/carnk/base/vec/int/2/foreach", test_2_foreach);
 	GLib.Test.add_func ("/crank/base/vec/int/2/hash", test_2_hash);
 	GLib.Test.add_func ("/crank/base/vec/int/2/equal", test_2_equal);
 	GLib.Test.add_func ("/crank/base/vec/int/2/to_string", test_2_to_string);
@@ -44,6 +45,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/int/2/max", test_2_max);
 	
 	GLib.Test.add_func ("/crank/base/vec/int/n/get", test_n_get);
+	GLib.Test.add_func ("/crank/base/vec/int/n/insert", test_n_insert);
+	GLib.Test.add_func ("/crank/base/vec/int/n/remove", test_n_remove);
+	GLib.Test.add_func ("/carnk/base/vec/int/n/foreach", test_n_foreach);
 	GLib.Test.add_func ("/crank/base/vec/int/n/hash", test_n_hash);
 	GLib.Test.add_func ("/crank/base/vec/int/n/equal", test_n_equal);
 	GLib.Test.add_func ("/crank/base/vec/int/n/to_string", test_n_to_string);
@@ -75,6 +79,18 @@ private void test_2_get () {
 	
 	assert (a.x == 3);
 	assert (a.y == 4);
+}
+
+
+private void test_2_foreach () {
+	Crank.VecInt2	a = {3, 4};
+	int	sum = 0;
+
+	assert (a.foreach ((v) => {
+		sum += v;
+		return true;
+	}));
+	assert (sum == 7);
 }
 
 
@@ -276,6 +292,37 @@ private void test_n_get () {
 	
 	assert (a.data[0] == 3);
 	assert (a.data[1] == 4);
+}
+
+
+private void test_n_insert () {
+	Crank.VecIntN	a = Crank.VecIntN(2, 3, 4);
+	a.insert (1, 12);
+
+	assert (a[0] == 3);
+	assert (a[1] == 12);
+	assert (a[2] == 4);
+}
+
+
+private void test_n_remove () {
+	Crank.VecIntN	a = Crank.VecIntN(2, 3, 4);
+	a.remove (1);
+
+	assert (a.size == 1);
+	assert (a[0] == 3);
+}
+
+
+private void test_n_foreach () {
+	Crank.VecIntN	a = Crank.VecIntN(2, 3, 4);
+	int	sum = 0;
+
+	assert (a.foreach ((v) => {
+		sum += v;
+		return true;
+	}));
+	assert (sum == 7);
 }
 
 
