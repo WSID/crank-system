@@ -308,6 +308,25 @@ private void test_n_get () {
 }
 
 
+private void test_n_insert () {
+	Crank.VecFloatN	a = Crank.VecFloatN(2, 3.0f, 4.0f);
+	a.insert (1, 12.0f);
+
+	assert (float_eq (a[0], 3.0f));
+	assert (float_eq (a[1], 12.0f));
+	assert (float_eq (a[2], 4.0f));
+}
+
+
+private void test_n_remove () {
+	Crank.VecFloatN	a = Crank.VecFloatN(2, 3.0f, 4.0f);
+	a.remove (1);
+
+	assert (a.size == 1);
+	assert (float_eq (a[0], 3.0f));
+}
+
+
 private void test_n_foreach () {
 	Crank.VecFloatN a = Crank.VecFloatN(2, 3.0f, 4.0f);
 	float sum = 0.0f;

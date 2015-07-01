@@ -627,8 +627,14 @@ namespace Crank {
 		
 		public VecFloatN?	copy	();
 		
+		public uint			size { get; }
+
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
+		public void			prepend (float value);
+		public void			append (float value);
+		public void			insert (uint index, float value);
+		public void			remove (uint index);
 		public bool			foreach (Crank.BoolFloatFunc func);
 		
 		public static uint	hash (VecFloatN	a);

@@ -58,6 +58,8 @@ static void	test_2_mixs (void);
 static void	test_2_mix (void);
 
 static void	test_n_get (void);
+static void	test_n_insert (void);
+static void test_n_remove (void);
 static void	test_n_foreach (void);
 static void	test_n_equal (void);
 static void	test_n_to_string (void);
@@ -109,6 +111,7 @@ main (	gint argc, gchar** argv	)
 	g_test_add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
 	g_test_add_func ("/crank/base/vec/float/n/get", test_n_get);
+  	g_test_add_func ("/crank/base/vec/float/n/insert", test_n_insert);
 	g_test_add_func ("/crank/base/vec/float/n/foreach", test_n_foreach);
 	g_test_add_func ("/crank/base/vec/float/n/equal", test_n_equal);
 	g_test_add_func ("/crank/base/vec/float/n/to_string", test_n_to_string);
@@ -433,6 +436,31 @@ static void	test_n_get (void)
 	
 	test_assert_float (crank_vec_float_n_get (&a, 0), 3.0f);
 	test_assert_float (crank_vec_float_n_get (&a, 1), 4.0f);
+}
+
+
+static void test_n_insert (void)
+{
+	CrankVecFloatN	a = {0};
+
+  	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
+  	crank_vec_float_n_insert (&a, 1, 12.0f);
+
+  	test_assert_float (crank_vec_float_n_get (&a, 0), 3.0f);
+  	test_assert_float (crank_vec_float_n_get (&a, 1), 12.0f);
+  	test_assert_float (crank_vec_float_n_get (&a, 2), 4.0f);
+}
+
+
+static void test_n_remove (void)
+{
+	CrankVecFloatN	a = {0};
+
+  	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
+  	crank_vec_float_n_remove (&a, 1);
+
+	g_assert_cmpuint (crank_vec_float_n_get_size (&a), ==, 1);
+  	test_assert_float (crank_vec_float_n_get (&a, 0), 3.0f);
 }
 
 

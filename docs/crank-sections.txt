@@ -474,8 +474,13 @@ crank_vec_float_n_init_from_vi
 crank_vec_float_n_fini
 crank_vec_float_n_copy
 crank_vec_float_n_free
+crank_vec_float_n_get_size
 crank_vec_float_n_get
 crank_vec_float_n_set
+crank_vec_float_n_prepend
+crank_vec_float_n_append
+crank_vec_float_n_insert
+crank_vec_float_n_remove
 crank_vec_float_n_foreach
 crank_vec_float_n_hash
 crank_vec_float_n_equal

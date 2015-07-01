@@ -221,7 +221,23 @@ class TestVecInt(unittest.TestCase):
 		self.assertFloat (a.get (0), 3)
 		self.assertFloat (a.get (1), 4)
 
-	def test_2_foreach (self):
+	def test_n_insert (self):
+		a = CrankBase.VecFloatN.init_arr ([3, 4])
+		a.insert (1, 12)
+
+		self.assertFloat (a.get (0), 3)
+		self.assertFloat (a.get (1), 12)
+		self.assertFloat (a.get (2), 4)
+
+	def test_n_remove (self):
+		a = CrankBase.VecFloatN.init_arr ([3, 4])
+		a.remove (1)
+
+		self.assertEqual (a.get_size (), 1)
+		self.assertFloat (a.get (0), 3)
+
+
+	def test_n_foreach (self):
 		a = CrankBase.VecFloatN.init_arr ([3, 4])
 		self.sum = 0;
 

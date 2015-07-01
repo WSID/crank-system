@@ -2239,6 +2239,20 @@ crank_vec_float_n_free (	CrankVecFloatN*	vec	)
 }
 
 /**
+ * crank_vec_float_n_get_size:
+ * @vec: A Vector.
+ *
+ * Gets size of a vector.
+ *
+ * Returns: Size of vector.
+ */
+guint
+crank_vec_float_n_get_size (	CrankVecFloatN*	vec	)
+{
+	return vec->n;
+}
+
+/**
  * crank_vec_float_n_get:
  * @vec: Vector to get element.
  * @index: index to get element at.
@@ -2268,6 +2282,83 @@ crank_vec_float_n_set			(	CrankVecFloatN*	vec,
 									const gfloat		value	)
 {
 	vec->data[index] = value;
+}
+
+/**
+ * crank_vec_float_n_prepend:
+ * @vec: Vector to insert element.
+ * @value: Value of element.
+ *
+ * Prepends an element to vector.
+ */
+void
+crank_vec_float_n_prepend (	CrankVecFloatN*	vec,
+						   	const gfloat	value	)
+{
+	crank_vec_float_n_insert (vec, 0, value);
+}
+
+/**
+ * crank_vec_float_n_append:
+ * @vec: Vector to insert element.
+ * @value: Value of element.
+ *
+ * Appends an element to vector.
+ */
+void
+crank_vec_float_n_append (	CrankVecFloatN* vec,
+						  	const gfloat	value	)
+{
+	crank_vec_float_n_insert (vec, vec->n, value);
+}
+
+/**
+ * crank_vec_float_n_insert:
+ * @vec: Vector to insert element.
+ * @index: Index to insert element.
+ * @value: Value of element.
+ *
+ * Inserts an element to vector.
+ */
+void
+crank_vec_float_n_insert (	CrankVecFloatN*	vec,
+						  	const guint		index,
+						  	const gfloat	value	)
+{
+  	guint	i;
+
+	g_return_if_fail (index <= vec->n);
+
+  	vec->n++;
+  	vec->data = g_renew (gfloat, vec->data, vec->n);
+
+  	for (i = vec->n - 1; index < i; i--)
+		vec->data[i] = vec->data[i - 1];
+
+  	vec->data[index] = value;
+}
+
+/**
+ * crank_vec_float_n_remove:
+ * @vec: Vector to remove element.
+ * @index; Index to remove element.
+ *
+ * Removes an element from vector.
+ */
+void
+crank_vec_float_n_remove (	CrankVecFloatN*	vec,
+						  	const guint		index	)
+{
+	guint	i;
+
+  	g_return_if_fail (index < vec->n);
+
+	vec->n--;
+
+  	for (i = index; i < vec->n; i++)
+	  	vec->data[i] = vec->data[i + 1];
+
+  	vec->data = g_renew (gfloat, vec->data, vec->n);
 }
 
 /**

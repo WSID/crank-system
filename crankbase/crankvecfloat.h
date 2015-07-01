@@ -632,12 +632,27 @@ CrankVecFloatN*	crank_vec_float_n_copy		(	CrankVecFloatN*	vec	);
 
 void			crank_vec_float_n_free		(	CrankVecFloatN*	vec	);
 
+guint			crank_vec_float_n_get_size	(	CrankVecFloatN*	vec	);
+
 gfloat			crank_vec_float_n_get		(	CrankVecFloatN*	vec,
 												const guint		index	);
 
 void			crank_vec_float_n_set		(	CrankVecFloatN*	vec,
 												const guint		index,
 												const gfloat	value	);
+
+void			crank_vec_float_n_prepend	(	CrankVecFloatN*	vec,
+								 				const gfloat	value	);
+
+void			crank_vec_float_n_append	(	CrankVecFloatN*	vec,
+								 				const gfloat	value	);
+
+void			crank_vec_float_n_insert	(	CrankVecFloatN*	vec,
+								 				const guint		index,
+								 				const gfloat	value	);
+
+void			crank_vec_float_n_remove	(	CrankVecFloatN*	vec,
+                                 				const guint     index	);
 
 gboolean		crank_vec_float_n_foreach	(	CrankVecFloatN*		vec,
 												CrankBoolFloatFunc	func,
