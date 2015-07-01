@@ -209,6 +209,8 @@ namespace Crank {
 		public VecBoolN.arr		([CCode (array_length_pos=0.5)]bool arr[]);
 		public VecBoolN.valist	(uint n, va_list varargs);
 		
+		public VecBoolN?	copy ();
+
 		public uint			size {	get; }
 		
 		public bool			get (uint	index);
