@@ -45,6 +45,8 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
 	GLib.Test.add_func ("/crank/base/vec/float/n/get", test_n_get);
+	GLib.Test.add_func ("/crank/base/vec/float/n/insert", test_n_insert);
+	GLib.Test.add_func ("/crank/base/vec/float/n/remove", test_n_remove);
 	GLib.Test.add_func ("/crank/base/vec/float/n/foreach", test_n_foreach);
 	GLib.Test.add_func ("/crank/base/vec/float/n/equal", test_n_equal);
 	GLib.Test.add_func ("/crank/base/vec/float/n/to_string", test_n_to_string);
