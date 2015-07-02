@@ -1232,7 +1232,6 @@ crank_vec_bool4_orv (	CrankVecBool4*	a,
 /**
  * crank_vec_bool4_notv:
  * @a: A vector.
- * @b: A vector.
  * @r: (out): A vector to store result.
  *
  * Another name for crank_vec_bool4_not(). Some language may use "not" as

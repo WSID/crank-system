@@ -319,7 +319,7 @@ crank_astar_digraph (	CrankDigraphNode*			from,
 
 
 /**
- * crank_dijkstra_full_digraph:
+ * crank_dijkstra_full_digraph: (skip)
  * @from: starting node
  * @edge_func: (scope call): cost function for each edge.
  * @userdata: (closure): user data
@@ -330,8 +330,7 @@ crank_astar_digraph (	CrankDigraphNode*			from,
  *
  * If @from is sole disconnected node, then the tree contains only @from
  *
- * Returns: (transfer container) (element-type CrankDigraphNode*):
- *    The tree of #CrankDigraphNode
+ * Returns: (transfer container) (element-type CerankDigraphNode): The tree of #CrankDigraphNode
  */
 GNode*
 crank_dijkstra_full_digraph (	CrankDigraphNode*			from,
