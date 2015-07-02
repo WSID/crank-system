@@ -41,6 +41,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/float/2/cmpcmp", test_2_cmpcmp);
 	GLib.Test.add_func ("/crank/base/vec/float/2/min", test_2_min);
 	GLib.Test.add_func ("/crank/base/vec/float/2/max", test_2_max);
+	GLib.Test.add_func ("/crank/base/vec/float/2/mulm", test_2_mulm);
 	GLib.Test.add_func ("/crank/base/vec/float/2/mixs", test_2_mixs);
 	GLib.Test.add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
@@ -271,6 +272,17 @@ private void test_2_max () {
 
 	assert (float_eq (c.x, 53.0f));
 	assert (float_eq (c.y, 20.0f));
+}
+
+
+private void test_2_mulm () {
+	Crank.VecFloat2 a = {3.0f, 4.0f};
+	Crank.MatFloat2 b = {1.0f, 2.0f,	3.0f, 4.0f};
+
+	a = a.mulm (b);
+
+	assert (float_eq (a.x, 15.0f));
+	assert (float_eq (a.y, 22.0f));
 }
 
 

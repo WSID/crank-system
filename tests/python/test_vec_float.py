@@ -191,8 +191,15 @@ class TestVecInt(unittest.TestCase):
 		
 		self.assertFloat (c.x, 27)
 		self.assertFloat (c.y, 34)
-		
-	
+
+	def test_2_mulm (self):
+		a = CrankBase.VecFloat2.init (3, 4)
+		b = CrankBase.MatFloat2.init (1, 2,	3, 4)
+
+		a = a.mulm (b)
+		self.assertFloat (a.x, 15)
+		self.assertFloat (a.y, 22)
+
 	def test_2_mixs (self):
 		a = CrankBase.VecFloat2.init (15, 27)
 		b = CrankBase.VecFloat2.init (30, 17)

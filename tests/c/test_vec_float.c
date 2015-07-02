@@ -54,6 +54,7 @@ static void	test_2_cmpgreater (void);
 static void	test_2_cmpcmp (void);
 static void	test_2_min (void);
 static void	test_2_max (void);
+static void	test_2_mulm (void);
 static void	test_2_mixs (void);
 static void	test_2_mix (void);
 
@@ -107,6 +108,7 @@ main (	gint argc, gchar** argv	)
 	g_test_add_func ("/crank/base/vec/float/2/cmpcmp", test_2_cmpcmp);
 	g_test_add_func ("/crank/base/vec/float/2/min", test_2_min);
 	g_test_add_func ("/crank/base/vec/float/2/max", test_2_max);
+  	g_test_add_func ("/crank/base/vec/float/2/mulm", test_2_mulm);
 	g_test_add_func ("/crank/base/vec/float/2/mixs", test_2_mixs);
 	g_test_add_func ("/crank/base/vec/float/2/mix", test_2_mix);
 	
@@ -396,6 +398,18 @@ static void	test_2_max (void)
 	
 	test_assert_float (r.x, 53.0f);
 	test_assert_float (r.y, 21.0f);
+}
+
+
+static void test_2_mulm (void)
+{
+	CrankVecFloat2	a = {3.0f, 4.0f};
+  	CrankMatFloat2	b = {1.0f, 2.0f,	3.0f, 4.0f};
+
+  	crank_vec_float2_mulm (&a, &b, &a);
+
+  	test_assert_float (a.x, 15.0f);
+  	test_assert_float (a.y, 22.0f);
 }
 
 

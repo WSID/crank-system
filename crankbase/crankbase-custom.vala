@@ -505,6 +505,8 @@ namespace Crank {
 		public VecFloat2		min (		VecFloat2 b	);
 		public VecFloat2		max (		VecFloat2 b	);
 		
+		public VecFloat2		mulm (		MatFloat2 b	);
+
 		public VecFloat2		mixs (		VecFloat2 b, float c	);
 		public VecFloat2		mix (		VecFloat2 b, VecFloat2 c	);
 	}

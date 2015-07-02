@@ -190,6 +190,13 @@ void			crank_vec_float2_max	(		CrankVecFloat2*	a,
 												CrankVecFloat2*	b,
 												CrankVecFloat2*	r	);
 
+//////// Matrix Operations /////////////////////////////////////////////////////
+
+void			crank_vec_float2_mulm (			CrankVecFloat2*	a,
+							  					CrankMatFloat2*	b,
+							  					CrankVecFloat2*	r	);
+
+
 //////// Ternary Operations ////////
 
 void			crank_vec_float2_mixs	(		CrankVecFloat2*	a,

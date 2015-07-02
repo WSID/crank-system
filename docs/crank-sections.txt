@@ -393,6 +393,7 @@ crank_vec_float2_cmpgreater
 crank_vec_float2_cmpcmp
 crank_vec_float2_min
 crank_vec_float2_max
+crank_vec_float2_mulm
 crank_vec_float2_mixs
 crank_vec_float2_mix
 CrankVecFloat3

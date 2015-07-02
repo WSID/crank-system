@@ -32,6 +32,7 @@
 #include "crankvecbool.h"
 #include "crankvecint.h"
 #include "crankvecfloat.h"
+#include "crankmatfloat.h"
 
 /**
  * SECTION: crankvecfloat
@@ -636,6 +637,29 @@ crank_vec_float2_max (	CrankVecFloat2*	a,
 {
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
+}
+
+
+/**
+ * crank_vec_float2_mulm:
+ * @a: A Vector
+ * @b: A Matrix
+ * @r: (out): A Vector to store result.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_float2_mulm (	CrankVecFloat2*	a,
+					   	CrankMatFloat2*	b,
+					   	CrankVecFloat2*	r	)
+{
+  	gfloat nx, ny;
+
+	nx = (a->x * b->m00) + (a->y * b->m10);
+	ny = (a->x * b->m01) + (a->y * b->m11);
+
+  	r->x = nx;
+  	r->y = ny;
 }
 
 /**
