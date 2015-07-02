@@ -41,4 +41,9 @@ typedef struct _CrankVecFloat3 CrankVecFloat3;
 typedef struct _CrankVecFloat4 CrankVecFloat4;
 typedef struct _CrankVecFloatN CrankVecFloatN;
 
+typedef struct _CrankMatFloat2 CrankMatFloat2;
+typedef struct _CrankMatFloat3 CrankMatFloat3;
+typedef struct _CrankMatFloat4 CrankMatFloat4;
+typedef struct _CrankMatFloatN CrankMatFloatN;
+
 #endif

@@ -37,6 +37,8 @@
 
 #include "crankadvgraph.h"
 
+#include "crankmatfloat.h"
+
 
 #undef _CRANKBASE_INSIDE
 

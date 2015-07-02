@@ -682,4 +682,63 @@ namespace Crank {
 		public VecFloatN		mixs (		VecFloatN b, float c	);
 		public VecFloatN		mix (		VecFloatN b, VecFloatN c	);
 	}
+
+
+	public struct MatFloat2 {
+		public float m00;
+		public float m01;
+		public float m10;
+		public float m11;
+
+		public MatFloat2 (float m00, float m01, float m10, float m11);
+		public MatFloat2.arr (float marr[4]);
+		public MatFloat2.rv (VecFloat2 rv0, VecFloat2 rv1);
+		public MatFloat2.rvarr (VecFloat2 rvarr[2]);
+		public MatFloat2.cv (VecFloat2 cv0, VecFloat2 cv1);
+		public MatFloat2.cvarr (VecFloat2 cvarr[2]);
+		public MatFloat2.diag (float m00, float m11);
+		public MatFloat2.diag_arr (float darr[2]);
+		public MatFloat2.fill (float fill);
+
+		public MatFloat2	copy ();
+		public MatFloat2?	dup ();
+
+		public static uint	hash (	MatFloat2?	a);
+		public static bool	equal (	MatFloat2?	a, MatFloat2?	b);
+
+		[CCode (cname="crank_mat_float2_to_string_full")]
+		public string	to_string (	string	mat_left = "[",
+									string	mat_in = ", ",
+									string	mat_right = "]",
+									string	row_left = "[",
+									string	row_in = ", ",
+									string	row_right = "]",
+									string	format = "%g"	);
+
+		public float	get (uint i, uint j);
+		public void		set (uint i, uint j, float value);
+
+		public VecFloat2	get_row (uint index);
+		public void			set_row (uint index, VecFloat2 row);
+		public VecFloat2	get_col (uint index);
+		public void			set_col (uint index, VecFloat2 col);
+
+		public float		tr { get; }
+		public float		det { get; }
+		public MatFloat2	cof { owned get; }
+		public MatFloat2	adj { owned get; }
+
+		public MatFloat2	neg ();
+		public MatFloat2	transpose ();
+		public MatFloat2	inverse ();
+
+		public MatFloat2	muls (float b);
+		public MatFloat2	divs (float b);
+		public VecFloat2	mulv (VecFloat2 b);
+		public MatFloat2	mul (MatFloat2 b);
+
+		public MatFloat2	mixs (MatFloat2 b, float c);
+		public MatFloat2	mix (MatFloat2 b, MatFloat2 c);
+
+	}
 }
