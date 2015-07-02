@@ -743,4 +743,68 @@ namespace Crank {
 		public MatFloat2	mix (MatFloat2 b, MatFloat2 c);
 
 	}
+
+	public struct MatFloat3 {
+		public float m00;
+		public float m01;
+		public float m02;
+		public float m10;
+		public float m11;
+		public float m12;
+		public float m20;
+		public float m21;
+		public float m22;
+
+		public MatFloat3 (	float m00, float m01, float m02,
+							float m10, float m11, float m12,
+							float m20, float m21, float m22);
+		public MatFloat3.arr (float marr[9]);
+		public MatFloat3.rv (VecFloat3 rv0, VecFloat3 rv1, VecFloat3 rv2);
+		public MatFloat3.rvarr (VecFloat3 rvarr[3]);
+		public MatFloat3.cv (VecFloat3 cv0, VecFloat3 cv1);
+		public MatFloat3.cvarr (VecFloat3 cvarr[3]);
+		public MatFloat3.diag (float m00, float m11, float m22);
+		public MatFloat3.diag_arr (float darr[3]);
+		public MatFloat3.fill (float fill);
+
+		public MatFloat3	copy ();
+		public MatFloat3?	dup ();
+
+		public static uint	hash (	MatFloat3?	a);
+		public static bool	equal (	MatFloat3?	a, MatFloat3?	b);
+
+		[CCode (cname="crank_mat_float3_to_string_full")]
+		public string	to_string (	string	mat_left = "[",
+									string	mat_in = ", ",
+									string	mat_right = "]",
+									string	row_left = "[",
+									string	row_in = ", ",
+									string	row_right = "]",
+									string	format = "%g"	);
+
+		public float	get (uint i, uint j);
+		public void		set (uint i, uint j, float value);
+
+		public VecFloat3	get_row (uint index);
+		public void			set_row (uint index, VecFloat3 row);
+		public VecFloat3	get_col (uint index);
+		public void			set_col (uint index, VecFloat3 col);
+
+		public float		tr { get; }
+		public float		det { get; }
+		public MatFloat3	cof { owned get; }
+		public MatFloat3	adj { owned get; }
+
+		public MatFloat3	neg ();
+		public MatFloat3	transpose ();
+		public MatFloat3	inverse ();
+
+		public MatFloat3	muls (float b);
+		public MatFloat3	divs (float b);
+		public VecFloat3	mulv (VecFloat3 b);
+		public MatFloat3	mul (MatFloat3 b);
+
+		public MatFloat3	mixs (MatFloat3 b, float c);
+		public MatFloat3	mix (MatFloat3 b, MatFloat3 c);
+	}
 }

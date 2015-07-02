@@ -19,3 +19,4 @@ crank_vec_float4_get_type
 crank_vec_float_n_get_type
 
 crank_mat_float2_get_type
+crank_mat_float3_get_type
