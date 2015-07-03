@@ -617,7 +617,11 @@ void			crank_vec_float_n_init		(	CrankVecFloatN*	vec,
 
 void			crank_vec_float_n_init_arr	(	CrankVecFloatN*	vec,
 												const guint		n,
-												gfloat*			arr	);
+												const gfloat*	arr	);
+
+void			crank_vec_float_n_init_arr_take (	CrankVecFloatN*	vec,
+													const guint		n,
+													gfloat*			arr	);
 
 void			crank_vec_float_n_init_valist (	CrankVecFloatN*	vec,
 												const guint		n,

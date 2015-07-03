@@ -632,6 +632,7 @@ namespace Crank {
 		
 		public VecFloatN 			(uint	n,	...);
 		public VecFloatN.arr		([CCode (array_length_pos=0)]float arr[]);
+		public VecFloatN.arr_take	([CCode (array_length_pos=0)]owned float arr[]);
 		public VecFloatN.valist		(uint	n, va_list varargs);
 		public VecFloatN.fill		(uint	n, float	fill);
 		public VecFloatN.from_vb	(VecBoolN	vb);

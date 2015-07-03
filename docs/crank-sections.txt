@@ -477,6 +477,7 @@ crank_vec_float4_mix
 CrankVecFloatN
 crank_vec_float_n_init
 crank_vec_float_n_init_arr
+crank_vec_float_n_init_arr_take
 crank_vec_float_n_init_valist
 crank_vec_float_n_init_fill
 crank_vec_float_n_init_from_vb

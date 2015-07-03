@@ -2131,13 +2131,31 @@ crank_vec_float_n_init	(	CrankVecFloatN*	vec,
 void
 crank_vec_float_n_init_arr	(	CrankVecFloatN*	vec,
 								const guint		n,
-								gfloat*			arr	)
+								const gfloat*	arr	)
 {
 	guint	i;
 	
 	crank_vec_float_n_realloc (vec, n);
 	
 	for (i = 0; i < n; i++)	vec->data[i] = arr[i];
+}
+
+/**
+ * crank_vec_float_n_init_arr_take:
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @arr: (transfer full): Array that contains elements.
+ *
+ * Initializes vector by taking array as data.
+ */
+void
+crank_vec_float_n_init_arr_take (	CrankVecFloatN*	vec,
+								 	const guint		n,
+								 	gfloat*			arr	)
+{
+  	g_free (vec->data);
+  	vec->n = n;
+  	vec->data = arr;
 }
 
 /**
