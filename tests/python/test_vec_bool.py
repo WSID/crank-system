@@ -158,7 +158,7 @@ class TestVecBool(unittest.TestCase):
 		self.assertEqual (counter.count, 2)
 
 	def test_n_and (self):
-		a = CrankBase.VecBoolN.init_arr ([True, True, False, True])
+		a = CrankBase.VecBoolN.init_arr ([True, True])
 		b = CrankBase.VecBoolN.init_arr ([False, True])
 		
 		c = a.andv (b)
@@ -169,7 +169,7 @@ class TestVecBool(unittest.TestCase):
 		
 	def test_n_or (self):
 		a = CrankBase.VecBoolN.init_arr ([True, False, False, True])
-		b = CrankBase.VecBoolN.init_arr ([False, False])
+		b = CrankBase.VecBoolN.init_arr ([False, False, False, False])
 		
 		c = a.orv (b)
 		
@@ -181,7 +181,7 @@ class TestVecBool(unittest.TestCase):
 	
 	def test_n_xor (self):
 		a = CrankBase.VecBoolN.init_arr ([True, True, False, True])
-		b = CrankBase.VecBoolN.init_arr ([False, True])
+		b = CrankBase.VecBoolN.init_arr ([False, True, False, False])
 		
 		c = a.xor (b)
 		

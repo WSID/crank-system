@@ -97,7 +97,10 @@ void			crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
 
 //////// Basic Operations //////////////////////////////////////////////////////
 
-CrankVecBool2*	crank_vec_bool2_copy		(	CrankVecBool2*	vec	);
+void			crank_vec_bool2_copy		(	CrankVecBool2*	vec,
+									  			CrankVecBool2*	other	);
+
+CrankVecBool2*	crank_vec_bool2_dup			(	CrankVecBool2*	vec	);
 
 
 gboolean		crank_vec_bool2_equal		(	gconstpointer	a,
@@ -241,7 +244,10 @@ void			crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
 
 //////// Basic Operations //////////////////////////////////////////////////////
 
-CrankVecBool3*	crank_vec_bool3_copy		(	CrankVecBool3*	vec	);
+void			crank_vec_bool3_copy		(	CrankVecBool3*	vec,
+							  					CrankVecBool3*	other	);
+
+CrankVecBool3*	crank_vec_bool3_dup			(	CrankVecBool3*	vec	);
 
 gboolean		crank_vec_bool3_equal		(	gconstpointer	a,
 												gconstpointer	b	);
@@ -391,7 +397,10 @@ void			crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
 
 //////// Basic Operations //////////////////////////////////////////////////////
 
-CrankVecBool4*	crank_vec_bool4_copy		(	CrankVecBool4*	vec	);
+void			crank_vec_bool4_copy		(	CrankVecBool4*	vec,
+							  					CrankVecBool4*	other	);
+
+CrankVecBool4*	crank_vec_bool4_dup			(	CrankVecBool4*	vec	);
 
 gboolean		crank_vec_bool4_equal		(	gconstpointer	a,
 												gconstpointer	b	);
@@ -497,7 +506,10 @@ void			crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
 
 void			crank_vec_bool_n_fini		(	CrankVecBoolN*	vec	);
 
-CrankVecBoolN*	crank_vec_bool_n_copy		(	CrankVecBoolN*	vec	);
+void			crank_vec_bool_n_copy		(	CrankVecBoolN*	vec,
+							   					CrankVecBoolN*	other	);
+
+CrankVecBoolN*	crank_vec_bool_n_dup		(	CrankVecBoolN*	vec	);
 
 void			crank_vec_bool_n_free		(	CrankVecBoolN*	vec	);
 

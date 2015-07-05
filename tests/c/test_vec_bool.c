@@ -348,7 +348,7 @@ test_n_and (void)
 
 	CrankVecBoolN	c = {0};
 
-	crank_vec_bool_n_init (&a, 4, TRUE, TRUE, FALSE, FALSE);
+	crank_vec_bool_n_init (&a, 2, TRUE, TRUE);
 	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
 
 	crank_vec_bool_n_and (&a, &b, &c);
@@ -371,7 +371,7 @@ test_n_or (void)
 	CrankVecBoolN	c = {0};
 
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 4, FALSE, TRUE, FALSE, FALSE);
 
 	crank_vec_bool_n_or (&a, &b, &c);
 
@@ -394,7 +394,7 @@ test_n_xor (void)
 	CrankVecBoolN	c = {0};
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
-	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 4, FALSE, TRUE, FALSE, FALSE);
 	
 	crank_vec_bool_n_xor (&a, &b, &c);
 	

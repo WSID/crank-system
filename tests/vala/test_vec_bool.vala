@@ -197,7 +197,7 @@ private void test_n_foreach () {
 }
 
 private void test_n_and () {
-	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
+	Crank.VecBoolN a = Crank.VecBoolN (2, true, false);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
 	Crank.VecBoolN c = a.and (b);
@@ -209,7 +209,7 @@ private void test_n_and () {
 
 private void test_n_or () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
-	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
+	Crank.VecBoolN b = Crank.VecBoolN (4, true, true, false, true);
 	
 	Crank.VecBoolN c = a.or (b);
 	
@@ -222,7 +222,7 @@ private void test_n_or () {
 
 private void test_n_xor () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
-	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
+	Crank.VecBoolN b = Crank.VecBoolN (4, true, true, false, false);
 	
 	Crank.VecBoolN c = a.xor (b);
 	

@@ -58,7 +58,7 @@
 #include "crankveccommon.h"
 #include "crankvecbool.h"
 
-G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_dup, g_free)
 
 
 //////// Initialization ////////////////////////////////////////////////////////
@@ -132,13 +132,27 @@ crank_vec_bool2_init_fill	(	CrankVecBool2*	vec,
 /**
  * crank_vec_bool2_copy:
  * @vec: Vector to copy
+ * @other: (out): Other vector to paste.
+ *
+ * Copies a vector to other.
+ */
+void
+crank_vec_bool2_copy	(	CrankVecBool2*	vec,
+							CrankVecBool2*	other	)
+{
+	memcpy (other, vec, sizeof (CrankVecBool2));
+}
+
+/**
+ * crank_vec_bool2_dup:
+ * @vec: Vector to copy
  *
  * Copies a vector. Free with g_free () after use.
  *
  * Returns: (transfer full):  Copied vector. Free with g_free().
  */
 CrankVecBool2*
-crank_vec_bool2_copy	(	CrankVecBool2*	vec	)
+crank_vec_bool2_dup	(	CrankVecBool2*	vec	)
 {
 	return (CrankVecBool2*) g_memdup (vec, sizeof (CrankVecBool2));
 }
@@ -447,7 +461,7 @@ crank_vec_bool2_notv (	CrankVecBool2*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecBool3, crank_vec_bool3, crank_vec_bool3_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecBool3, crank_vec_bool3, crank_vec_bool3_dup, g_free)
 
 
 //////// Initialization ////////////////////////////////////////////////////////
@@ -528,13 +542,27 @@ crank_vec_bool3_init_fill	(	CrankVecBool3*	vec,
 /**
  * crank_vec_bool3_copy:
  * @vec: Vector to copy
+ * @other: (out): Other vector to paste.
+ *
+ * Copies a vector.
+ */
+void
+crank_vec_bool3_copy	(	CrankVecBool3*	vec,
+							CrankVecBool3*	other	)
+{
+	memcpy (other, vec, sizeof (CrankVecBool3));
+}
+
+/**
+ * crank_vec_bool3_dup:
+ * @vec: Vector to copy
  *
  * Copies a vector. Free with g_free () after use.
  *
  * Returns: (transfer full):  Copied vector. Free with g_free().
  */
 CrankVecBool3*
-crank_vec_bool3_copy	(	CrankVecBool3*	vec	)
+crank_vec_bool3_dup		(	CrankVecBool3*	vec	)
 {
 	return (CrankVecBool3*) g_memdup (vec, sizeof (CrankVecBool3));
 }
@@ -850,7 +878,7 @@ crank_vec_bool3_notv (	CrankVecBool3*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecBool4, crank_vec_bool4, crank_vec_bool4_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecBool4, crank_vec_bool4, crank_vec_bool4_dup, g_free)
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -937,13 +965,28 @@ crank_vec_bool4_init_fill	(	CrankVecBool4*	vec,
 /**
  * crank_vec_bool4_copy:
  * @vec: Vector to copy
+ * @other: (out): Other vector to paste.
+ *
+ * Copies a vector.
+ */
+void
+crank_vec_bool4_copy	(	CrankVecBool4*	vec,
+							CrankVecBool4*	other	)
+{
+	return (CrankVecBool4*) g_memdup (vec, sizeof (CrankVecBool4));
+}
+
+
+/**
+ * crank_vec_bool4_dup:
+ * @vec: Vector to copy
  *
  * Copies a vector. Free with g_free () after use.
  *
  * Returns: (transfer full): Copied vector. Free with g_free().
  */
 CrankVecBool4*
-crank_vec_bool4_copy	(	CrankVecBool4*	vec	)
+crank_vec_bool4_dup	(	CrankVecBool4*	vec	)
 {
 	return (CrankVecBool4*) g_memdup (vec, sizeof (CrankVecBool4));
 }
@@ -1268,9 +1311,18 @@ crank_vec_bool4_equal	(	gconstpointer	a,
 
 
 
+
+
+
+
 G_DEFINE_BOXED_TYPE (CrankVecBoolN, crank_vec_bool_n,
-		crank_vec_bool_n_copy,
+		crank_vec_bool_n_dup,
 		crank_vec_bool_n_free)
+
+//////// Internal Declarations /////////////////////////////////////////////////
+
+static void	crank_vec_bool_n_realloc	(	CrankVecBoolN*	vec,
+							   				const guint		n	);
 
 //////// Initialization and finalization ///////////////////////////////////////
 
@@ -1311,7 +1363,7 @@ crank_vec_bool_n_init_arr	(	CrankVecBoolN*	vec,
 								const guint		n,
 								gboolean*		arr	)
 {
-	if (vec->data != NULL) g_free (vec->data);
+	g_free (vec->data);
 	vec->data = CRANK_ARRAY_DUP(arr, gboolean, n);
 	vec->n = n;
 }
@@ -1332,9 +1384,7 @@ crank_vec_bool_n_init_valist	(	CrankVecBoolN*	vec,
 {
 	guint	i;
 
-	if (vec->data != NULL) g_free (vec->data);
-	vec->n = n;
-	vec->data = g_new (gboolean, n);
+  	crank_vec_bool_n_realloc (vec, n);
 
 	for (i = 0; i < n; i++) vec->data[i] = va_arg (varargs, gboolean);
 
@@ -1356,9 +1406,7 @@ crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
 {
 	guint	i;
 
-	if (vec->data != NULL) g_free (vec->data);
-	vec->n = n;
-	vec->data = g_new (gboolean, n);
+  	crank_vec_bool_n_realloc (vec, n);
 
 	for (i = 0; i < n; i++) vec->data[i] = fill;
 
@@ -1381,13 +1429,27 @@ crank_vec_bool_n_fini	(	CrankVecBoolN*	vec	)
 /**
  * crank_vec_bool_n_copy:
  * @vec: Vector to copy
+ * @other: (out): Other vector to paste.
+ *
+ * Copies a vector.
+ */
+void
+crank_vec_bool_n_copy	(	CrankVecBoolN*	vec,
+						 	CrankVecBoolN*	other	)
+{
+	crank_vec_bool_n_init_arr (other, vec->n, vec->data);
+}
+
+/**
+ * crank_vec_bool_n_dup:
+ * @vec: Vector to copy
  *
  * Copies a vector. Free with crank_vec_bool_n_free() after use.
  *
  * Returns: (transfer full): Copied vector. Free with g_free().
  */
 CrankVecBoolN*
-crank_vec_bool_n_copy	(	CrankVecBoolN*	vec	)
+crank_vec_bool_n_dup	(	CrankVecBoolN*	vec	)
 {
 	CrankVecBoolN* result = g_new0 (CrankVecBoolN, 1);
 
@@ -1734,14 +1796,14 @@ crank_vec_bool_n_and	(	CrankVecBoolN*	a,
 							CrankVecBoolN*	r	)
 {
 	guint i;
-	
-	if (r->data != NULL) g_free (r->data);
-	
-	r->n = MIN(a->n, b->n);
-	r->data = g_new (gboolean, r->n);
-	
-	for (i = 0; i < r->n; i++)
-		r->data[i] = (a->data[i]) && (b->data[i]);
+
+  	if (a->n == b->n) {
+	  	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
+
+		for (i = 0; i < a->n; i++)
+			r->data[i] = (a->data[i]) && (b->data[i]);
+  	}
+  	else g_warning ("VecBoolN: and: size mismatch: %u, %u", a->n, b->n);
 }
 
 
@@ -1758,38 +1820,22 @@ crank_vec_bool_n_or	(	CrankVecBoolN*	a,
 						CrankVecBoolN*	b,
 						CrankVecBoolN*	r	)
 {
-	CrankVecBoolN* l;
-	CrankVecBoolN* s;
-	
 	guint i;
-	
-	if (r->data != NULL) g_free (r->data);
-	
-	if (a->n < b->n) {
-		l = b;
-		s = a;
+
+  	if (a->n == b->n) {
+	 	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
+
+		for (i = 0; i < a->n; i++)
+			r->data[i] = a->data[i] || b->data[i] ;
 	}
-	else {
-		l = a;
-		s = b;
-	}
-	
-	r->n =		l->n;
-	r->data = 	g_new (gboolean, r->n);
-	
-	for (i = 0; i < s->n; i++)
-		r->data[i] = a->data[i] || b->data[i] ;
-	
-	memcpy (	(r->data + s->n),
-				(l->data + s->n),
-				sizeof(gboolean) *(l->n - s->n)	);
+  	else g_warning ("VecBoolN: or: size mismatch: %u, %u", a->n, b->n);
 }
 /**
  * crank_vec_bool_n_xor:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets Component exclusive or of @a and @b.
  */
 void
@@ -1797,30 +1843,15 @@ crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
 							CrankVecBoolN*	b,
 							CrankVecBoolN*	r	)
 {
-	CrankVecBoolN* l;
-	CrankVecBoolN* s;
-	
 	guint i;
-	
-	if (r->data != NULL) g_free (r->data);
-	
-	if (a->n < b->n) {
-		l = b;
-		s = a;
+
+  	if (a->n == b->n) {
+	 	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
+
+		for (i = 0; i < a->n; i++)
+			r->data[i] = (a->data[i] != b->data[i]);
 	}
-	else {
-		l = a;
-		s = b;
-	}
-	
-	r->n =		l->n;
-	r->data = 	g_new (gboolean, r->n);
-	
-	for (i = 0; i < s->n; i++) r->data[i] = a->data[i] != b->data[i] ;
-	
-	memcpy (	(r->data + s->n),
-				(l->data + s->n),
-				sizeof(gboolean) *(l->n - s->n)	);
+  	else g_warning ("VecBoolN: or: size mismatch: %u, %u", a->n, b->n);
 }
 
 
@@ -1828,7 +1859,7 @@ crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
  * crank_vec_bool_n_not:
  * @a: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets Component NOT of @a and @b.
  */
 void
@@ -1837,11 +1868,8 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
 {
 	guint i;
 	
-	if (r->data != NULL) g_free (r->data);
+ 	if (r != a) crank_vec_bool_n_realloc (r, a->n);
 
-	r->n = a->n;
-	r->data = g_new (gboolean, r->n);
-	
 	for (i = 0; i < r->n; i++) r->data[i] = !(a->data[i]);
 }
 
@@ -1892,4 +1920,15 @@ crank_vec_bool_n_notv (	CrankVecBoolN*	a,
 						CrankVecBoolN*	r	)
 {
 	crank_vec_bool_n_not (a, r);
+}
+
+
+
+//////// Internal Definition ///////////////////////////////////////////////////
+
+void
+crank_vec_bool_n_realloc (	CrankVecBoolN*	vec, const guint n	)
+{
+	vec->data = g_renew (gboolean, vec->data, n);
+ 	vec->n = n;
 }

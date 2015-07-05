@@ -100,6 +100,8 @@ namespace Crank {
 		public DigraphNode	head { get; }
 	}
 	
+
+	[CCode (copy_function="crank_vec_bool2_copy")]
 	public struct VecBool2 {
 		public bool	x;
 		public bool y;
@@ -108,6 +110,8 @@ namespace Crank {
 		public VecBool2.arr		(bool arr[2]);
 		public VecBool2.valist	(va_list varargs);
 		
+		public VecBool2?	dup ();
+
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
 		public bool			foreach (Crank.BoolBoolFunc func);
@@ -132,6 +136,7 @@ namespace Crank {
 										string on_false = "false" );
 	}
 	
+	[CCode (copy_function="crank_vec_bool3_copy")]
 	public struct VecBool3 {
 		public bool	x;
 		public bool y;
@@ -141,6 +146,8 @@ namespace Crank {
 		public VecBool3.arr		(bool arr[3]);
 		public VecBool3.valist	(va_list varargs);
 		
+		public VecBool3?	dup ();
+
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
 		public bool			foreach (Crank.BoolBoolFunc func);
@@ -165,6 +172,7 @@ namespace Crank {
 										string on_false = "false" );
 	}
 	
+	[CCode (copy_function="crank_vec_bool4_copy")]
 	public struct VecBool4 {
 		public bool	x;
 		public bool y;
@@ -175,6 +183,8 @@ namespace Crank {
 		public VecBool4.arr		(bool arr[4]);
 		public VecBool4.valist	(va_list varargs);
 		
+		public VecBool4?	dup ();
+
 		public bool			get (uint	index);
 		public void			set (uint	index, bool value);
 		public bool			foreach (Crank.BoolBoolFunc func);
@@ -199,7 +209,8 @@ namespace Crank {
 										string on_false = "false" );
 	}
 	
-	[CCode (	destroy_function="crank_vec_bool_n_fini",
+	[CCode (	copy_function="crank_vec_bool_n_copy",
+				destroy_function="crank_vec_bool_n_fini",
 				free_function="crank)vec_bool_n_free"	)]
 	public struct VecBoolN {
 		[CCode (	array_length_cname="n"	)]
@@ -209,7 +220,7 @@ namespace Crank {
 		public VecBoolN.arr		([CCode (array_length_pos=0.5)]bool arr[]);
 		public VecBoolN.valist	(uint n, va_list varargs);
 		
-		public VecBoolN?	copy ();
+		public VecBoolN?	dup ();
 
 		public uint			size {	get; }
 		
