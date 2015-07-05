@@ -210,6 +210,7 @@ crank_vec_int2_get
 crank_vec_int2_set
 crank_vec_int2_foreach
 crank_vec_int2_copy
+crank_vec_int2_dup
 crank_vec_int2_hash
 crank_vec_int2_equal
 crank_vec_int2_to_string
@@ -244,6 +245,7 @@ crank_vec_int3_init_valist
 crank_vec_int3_init_fill
 crank_vec_int3_init_from_vb
 crank_vec_int3_copy
+crank_vec_int3_dup
 crank_vec_int3_hash
 crank_vec_int3_equal
 crank_vec_int3_to_string
@@ -284,6 +286,7 @@ crank_vec_int4_init_valist
 crank_vec_int4_init_fill
 crank_vec_int4_init_from_vb
 crank_vec_int4_copy
+crank_vec_int4_dup
 crank_vec_int4_hash
 crank_vec_int4_equal
 crank_vec_int4_to_string
@@ -317,6 +320,7 @@ crank_vec_int_n_init_fill
 crank_vec_int_n_init_from_vb
 crank_vec_int_n_fini
 crank_vec_int_n_copy
+crank_vec_int_n_dup
 crank_vec_int_n_free
 crank_vec_int_n_hash
 crank_vec_int_n_equal

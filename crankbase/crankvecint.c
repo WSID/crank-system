@@ -72,7 +72,7 @@
 
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
-G_DEFINE_BOXED_TYPE (CrankVecInt2, crank_vec_int2, crank_vec_int2_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecInt2, crank_vec_int2, crank_vec_int2_dup, g_free)
 
 /**
  * crank_vec_int2_init:
@@ -155,19 +155,30 @@ crank_vec_int2_init_from_vb	(	CrankVecInt2*	vec,
 /**
  * crank_vec_int2_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_int2_copy			(	CrankVecInt2*	vec,
+					   			CrankVecInt2*	other	)
+{
+  	memcpy (other, vec, sizeof (CrankVecInt2));
+}
+
+
+/**
+ * crank_vec_int2_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecInt2*
-crank_vec_int2_copy			(	CrankVecInt2*	vec	)
+crank_vec_int2_dup			(	CrankVecInt2*	vec	)
 {
-	CrankVecInt2* result = g_new (CrankVecInt2, 1);
-	
-	crank_vec_int2_init_arr (result, (gint*)vec);
-	
-	return result;
+  	return (CrankVecInt2*) g_memdup (vec, sizeof (CrankVecInt2));
 }
 
 /**
@@ -643,7 +654,7 @@ crank_vec_int2_max (	CrankVecInt2*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecInt3, crank_vec_int3, crank_vec_int3_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecInt3, crank_vec_int3, crank_vec_int3_dup, g_free)
 
 /**
  * crank_vec_int3_init:
@@ -733,19 +744,30 @@ crank_vec_int3_init_from_vb	(	CrankVecInt3*	vec,
 /**
  * crank_vec_int3_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_int3_copy			(	CrankVecInt3*	vec,
+					   			CrankVecInt3*	other	)
+{
+  	memcpy (other, vec, sizeof (CrankVecInt3));
+}
+
+
+/**
+ * crank_vec_int3_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecInt3*
-crank_vec_int3_copy			(	CrankVecInt3*	vec	)
+crank_vec_int3_dup			(	CrankVecInt3*	vec	)
 {
-	CrankVecInt3* result = g_new (CrankVecInt3, 1);
-	
-	crank_vec_int3_init_arr (result, (gint*)vec);
-	
-	return result;
+  	return (CrankVecInt3*) g_memdup (vec, sizeof (CrankVecInt3));
 }
 
 /**
@@ -1269,7 +1291,7 @@ crank_vec_int3_max (	CrankVecInt3*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecInt4, crank_vec_int4, crank_vec_int4_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecInt4, crank_vec_int4, crank_vec_int4_dup, g_free)
 
 /**
  * crank_vec_int4_init:
@@ -1366,19 +1388,30 @@ crank_vec_int4_init_from_vb	(	CrankVecInt4*	vec,
 /**
  * crank_vec_int4_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_int4_copy			(	CrankVecInt4*	vec,
+					   			CrankVecInt4*	other	)
+{
+  	memcpy (other, vec, sizeof (CrankVecInt4));
+}
+
+
+/**
+ * crank_vec_int4_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecInt4*
-crank_vec_int4_copy			(	CrankVecInt4*	vec	)
+crank_vec_int4_dup			(	CrankVecInt4*	vec	)
 {
-	CrankVecInt4* result = g_new (CrankVecInt4, 1);
-	
-	crank_vec_int4_init_arr (result, (gint*)vec);
-	
-	return result;
+  	return (CrankVecInt4*) g_memdup (vec, sizeof (CrankVecInt4));
 }
 
 /**
@@ -1901,7 +1934,7 @@ crank_vec_int4_max (	CrankVecInt4*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecIntN, crank_vec_int_n, crank_vec_int_n_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecIntN, crank_vec_int_n, crank_vec_int_n_dup, crank_vec_int_n_free)
 
 /**
  * crank_vec_int_n_init:
@@ -2034,21 +2067,41 @@ crank_vec_int_n_init_from_vb	(	CrankVecIntN*	vec,
 /**
  * crank_vec_int_n_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_int_n_copy			(	CrankVecIntN*	vec,
+									CrankVecIntN*	other	)
+{
+	crank_vec_int_n_init_arr (other, vec->n, vec->data);
+}
+
+/**
+ * crank_vec_int_n_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecIntN*
-crank_vec_int_n_copy			(	CrankVecIntN*	vec	)
+crank_vec_int_n_dup			(	CrankVecIntN*	vec	)
 {
-	CrankVecIntN* result = g_new (CrankVecIntN, 1);
-	
-	crank_vec_int_n_init_arr (result, vec->n, vec->data);
-	
-	return result;
+  	CrankVecIntN*	result = g_new0 (CrankVecIntN, 1);
+
+  	crank_vec_int_n_init_arr (result, vec->n, vec->data);
+
+  	return result;
 }
 
+/**
+ * crank_vec_int_n_free:
+ * @vec: Vector to free.
+ *
+ * Frees an allocated vector. Use with crank_vec_int_n_dup().
+ */
 void
 crank_vec_int_n_free ( CrankVecIntN*	vec )
 {

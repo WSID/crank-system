@@ -253,6 +253,7 @@ namespace Crank {
 	}
 	
 	
+	[CCode (copy_function="crank_vec_int2_copy")]
 	public struct VecInt2 {
 		public int x;
 		public int y;
@@ -263,7 +264,7 @@ namespace Crank {
 		public VecInt2.fill		(int	fill);
 		public VecInt2.from_vb	(VecBool2	vb);
 		
-		public VecInt2?	copy	();
+		public VecInt2?	dup	();
 		
 		public int			get (uint	index);
 		public void			set (uint	index, int value);
@@ -303,6 +304,7 @@ namespace Crank {
 		public VecInt2		max (		VecInt2 b	);
 	}
 	
+	[CCode (copy_function="crank_vec_int3_copy")]
 	public struct VecInt3 {
 		public int x;
 		public int y;
@@ -314,7 +316,7 @@ namespace Crank {
 		public VecInt3.fill		(int	fill);
 		public VecInt3.from_vb	(VecBool3	vb);
 		
-		public VecInt3?	copy	();
+		public VecInt3?	dup	();
 		
 		public int			get (uint	index);
 		public void			set (uint	index, int value);
@@ -355,6 +357,7 @@ namespace Crank {
 		public VecInt3		max (		VecInt3 b	);
 	}
 	
+	[CCode (copy_function="crank_vec_int4_copy")]
 	public struct VecInt4 {
 		public int x;
 		public int y;
@@ -367,7 +370,7 @@ namespace Crank {
 		public VecInt4.fill		(int	fill);
 		public VecInt4.from_vb	(VecBool4	vb);
 		
-		public VecInt4?	copy	();
+		public VecInt4?	dup	();
 		
 		public int			get (uint	index);
 		public void			set (uint	index, int value);
@@ -408,7 +411,8 @@ namespace Crank {
 	}
 	
 	
-	[CCode (	destroy_function="crank_vec_int_n_fini",
+	[CCode (	copy_function="crank_vec_int_n_copy",
+				destroy_function="crank_vec_int_n_fini",
 				free_function="crank_vec_int_n_free"	)]
 	public struct VecIntN {
 		[CCode (array_length_cname="n")]
@@ -420,7 +424,7 @@ namespace Crank {
 		public VecIntN.fill		(uint n, int	fill);
 		public VecIntN.from_vb	(VecBoolN	vb);
 		
-		public VecIntN?	copy	();
+		public VecIntN?	dup	();
 		
 		public uint			size { get; }
 

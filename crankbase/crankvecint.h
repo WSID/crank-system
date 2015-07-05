@@ -86,7 +86,10 @@ void			crank_vec_int2_init_fill	(	CrankVecInt2*	vec,
 void			crank_vec_int2_init_from_vb (	CrankVecInt2*	vec,
 												CrankVecBool2*	vb		);
 
-CrankVecInt2*	crank_vec_int2_copy			(	CrankVecInt2*	vec	);
+void			crank_vec_int2_copy			(	CrankVecInt2*	vec,
+							  					CrankVecInt2*	other	);
+
+CrankVecInt2*	crank_vec_int2_dup			(	CrankVecInt2*	vec	);
 
 gint			crank_vec_int2_get			(	CrankVecInt2*	vec,
 												const guint		index	);
@@ -260,7 +263,10 @@ void			crank_vec_int3_init_fill	(	CrankVecInt3*	vec,
 void			crank_vec_int3_init_from_vb (	CrankVecInt3*	vec,
 												CrankVecBool3*	vb		);
 
-CrankVecInt3*	crank_vec_int3_copy			(	CrankVecInt3*	vec	);
+void			crank_vec_int3_copy			(	CrankVecInt3*	vec,
+							  					CrankVecInt3*	other	);
+
+CrankVecInt3*	crank_vec_int3_dup			(	CrankVecInt3*	vec	);
 
 gint			crank_vec_int3_get			(	CrankVecInt3*	vec,
 												const guint		index	);
@@ -448,7 +454,10 @@ void			crank_vec_int4_init_fill	(	CrankVecInt4*	vec,
 void			crank_vec_int4_init_from_vb (	CrankVecInt4*	vec,
 												CrankVecBool4*	vb		);
 
-CrankVecInt4*	crank_vec_int4_copy			(	CrankVecInt4*	vec	);
+void			crank_vec_int4_copy			(	CrankVecInt4*	vec,
+												CrankVecInt4*	other	);
+
+CrankVecInt4*	crank_vec_int4_dup			(	CrankVecInt4*	vec	);
 
 gint			crank_vec_int4_get			(	CrankVecInt4*	vec,
 												const guint		index	);
@@ -596,7 +605,10 @@ void			crank_vec_int_n_init_from_vb (	CrankVecIntN*	vec,
 												
 void			crank_vec_int_n_fini		(	CrankVecIntN*	vec	);
 
-CrankVecIntN*	crank_vec_int_n_copy		(	CrankVecIntN*	vec	);
+void			crank_vec_int_n_copy		(	CrankVecIntN*	vec,
+									 			CrankVecIntN*	other	);
+
+CrankVecIntN*	crank_vec_int_n_dup			(	CrankVecIntN*	vec	);
 
 void			crank_vec_int_n_free		(	CrankVecIntN*	vec		);
 
