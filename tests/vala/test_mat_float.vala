@@ -37,8 +37,28 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/mat/float/2/muls", test_2_muls);
 	GLib.Test.add_func ("/crank/base/mat/float/2/divs", test_2_divs);
 	GLib.Test.add_func ("/crank/base/mat/float/2/mulv", test_2_mulv);
+	GLib.Test.add_func ("/crank/base/mat/float/2/mul", test_2_mul);
 	GLib.Test.add_func ("/crank/base/mat/float/2/mixs", test_2_mixs);
 	GLib.Test.add_func ("/crank/base/mat/float/2/mix", test_2_mix);
+	
+	GLib.Test.add_func ("/crank/base/mat/float/n/equal", test_n_equal);
+	GLib.Test.add_func ("/crank/base/mat/float/n/to_string", test_n_to_string);
+	GLib.Test.add_func ("/crank/base/mat/float/n/get", test_n_get);
+	GLib.Test.add_func ("/crank/base/mat/float/n/get_row", test_n_get_row);
+	GLib.Test.add_func ("/crank/base/mat/float/n/get_col", test_n_get_col);
+	GLib.Test.add_func ("/crank/base/mat/float/n/tr", test_n_tr);
+	GLib.Test.add_func ("/crank/base/mat/float/n/det", test_n_det);
+	GLib.Test.add_func ("/crank/base/mat/float/n/cof", test_n_cof);
+	GLib.Test.add_func ("/crank/base/mat/float/n/adj", test_n_adj);
+	GLib.Test.add_func ("/crank/base/mat/float/n/neg", test_n_neg);
+	GLib.Test.add_func ("/crank/base/mat/float/n/transpose", test_n_transpose);
+	GLib.Test.add_func ("/crank/base/mat/float/n/inverse", test_n_inverse);
+	GLib.Test.add_func ("/crank/base/mat/float/n/muls", test_n_muls);
+	GLib.Test.add_func ("/crank/base/mat/float/n/divs", test_n_divs);
+	GLib.Test.add_func ("/crank/base/mat/float/n/mulv", test_n_mulv);
+	GLib.Test.add_func ("/crank/base/mat/float/n/mul", test_n_mul);
+	GLib.Test.add_func ("/crank/base/mat/float/n/mixs", test_n_mixs);
+	GLib.Test.add_func ("/crank/base/mat/float/n/mix", test_n_mix);
 
 	GLib.Test.run ();
 
@@ -188,6 +208,19 @@ private void test_2_mulv () {
 	float_eq (b.y, 25.0f);
 }
 
+
+private void test_2_mul () {
+	Crank.MatFloat2 a = {1.0f, 2.0f,	3.0f, 4.0f};
+	Crank.MatFloat2 b = {3.0f, 6.0f, 	9.0f, 12.0f};
+	
+	a = a.mul (b);
+
+	float_eq (a.m00, 21.0f);
+	float_eq (a.m01, 30.0f);
+	float_eq (a.m10, 45.0f);
+	float_eq (a.m11, 66.0f);
+}
+
 private void test_2_mixs () {
 	Crank.MatFloat2 a = {1.0f, 2.0f,	3.0f, 4.0f};
 	Crank.MatFloat2 b = {3.0f, 6.0f,	9.0f, 12.0f};
@@ -209,4 +242,246 @@ private void test_2_mix () {
 	float_eq (a.m01, 3.0f);
 	float_eq (a.m10, 6.0f);
 	float_eq (a.m11, 10.0f);
+}
+
+
+
+
+
+private void test_n_equal () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.MatFloatN b = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.MatFloatN c = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f},
+		 {3.0f, 4.0f},
+		 {5.0f, 6.0f}});
+		 
+	assert (  Crank.MatFloatN.equal (a, b));
+	assert (! Crank.MatFloatN.equal (a, c));
+}
+
+private void test_n_to_string () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+
+	message (a.to_string ());
+	assert (a.to_string () == "[[1, 2, 3], [4, 5, 6]]");
+}
+
+private void test_n_get () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+
+	float_eq (a[0, 0], 1.0f);
+	float_eq (a[0, 1], 2.0f);
+	float_eq (a[0, 2], 3.0f);
+	float_eq (a[1, 0], 4.0f);
+	float_eq (a[1, 1], 5.0f);
+	float_eq (a[1, 2], 6.0f);
+}
+
+private void test_n_get_row () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+
+	Crank.VecFloatN rv = a.get_row (0);
+
+	float_eq (rv[0], 1.0f);
+	float_eq (rv[1], 2.0f);
+	float_eq (rv[2], 3.0f);
+
+	rv = a.get_row (1);
+
+	float_eq (rv[0], 4.0f);
+	float_eq (rv[1], 5.0f);
+	float_eq (rv[2], 6.0f);
+}
+
+private void test_n_get_col () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+
+	Crank.VecFloatN cv = a.get_col (0);
+
+	float_eq (cv[0], 1.0f);
+	float_eq (cv[1], 4.0f);
+
+	cv = a.get_col (1);
+
+	float_eq (cv[0], 2.0f);
+	float_eq (cv[1], 5.0f);
+	
+	cv = a.get_col (2);
+
+	float_eq (cv[0], 3.0f);
+	float_eq (cv[1], 6.0f);
+}
+
+private void test_n_tr () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 0.0f, 0.0f, 1.0f, 1.0f},
+		 {0.0f, 2.0f, 0.0f, 3.0f, 1.0f},
+		 {0.0f, 0.0f, 3.0f, 0.0f, 0.0f},
+		 {1.0f, 3.0f, 0.0f, 4.0f, 0.0f},
+		 {0.0f, 1.0f, 0.0f, 0.0f, 5.0f}} );
+	float_eq (a.tr, 15.0f);
+}
+
+private void test_n_det () {
+	GLib.Test.skip ("");
+}
+
+private void test_n_cof ()  {
+	GLib.Test.skip ("");
+}
+
+private void test_n_adj ()  {
+	GLib.Test.skip ("");
+}
+
+private void test_n_neg () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+		 
+	a = a.neg ();
+	
+	//float_eq (a[0, 0], -1.0f);
+	float_eq (a[0, 1], -2.0f);
+	float_eq (a[0, 2], -3.0f);
+	float_eq (a[1, 0], -4.0f);
+	float_eq (a[1, 1], -5.0f);
+	float_eq (a[1, 2], -6.0f);
+}
+
+private void test_n_transpose () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+
+	a = a.transpose ();
+	assert (a.row_size == 3);
+	message ("%u", a.col_size);
+	assert (a.col_size == 2);
+	float_eq (a[0, 0], 1.0f);
+	float_eq (a[0, 1], 4.0f);
+	float_eq (a[1, 0], 2.0f);
+	float_eq (a[1, 1], 5.0f);
+	float_eq (a[2, 0], 3.0f);
+	float_eq (a[2, 1], 6.0f);
+}
+
+private void test_n_inverse () {
+	GLib.Test.skip ("");
+}
+
+private void test_n_muls () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+		 
+	a = a.muls (3.0f);
+	
+	float_eq (a[0, 0], 3.0f);
+	float_eq (a[0, 1], 6.0f);
+	float_eq (a[0, 2], 9.0f);
+	float_eq (a[1, 0], 12.0f);
+	float_eq (a[1, 1], 15.0f);
+	float_eq (a[1, 2], 18.0f);
+}
+
+private void test_n_divs () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+		 
+	a = a.divs (2.0f);
+	
+	float_eq (a[0, 0], 0.5f);
+	float_eq (a[0, 1], 1.0f);
+	float_eq (a[0, 2], 1.5f);
+	float_eq (a[1, 0], 2.0f);
+	float_eq (a[1, 1], 2.5f);
+	float_eq (a[1, 2], 3.0f);
+}
+
+private void test_n_mulv () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.VecFloatN b = Crank.VecFloatN.arr (
+		{2.0f, 3.0f, 5.0f});
+		
+	b = a.mulv (b);
+
+	assert (b.size == 2);
+	float_eq (b[0], 23.0f);
+	float_eq (b[1], 53.0f);
+}
+
+private void test_n_mul () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.MatFloatN b = Crank.MatFloatN.arr (
+		{{3.0f, 2.0f, 1.0f},
+		 {2.0f, 1.0f, 0.0f},
+		 {1.0f, 0.0f, -1.0f}});
+
+	a = a.mul (b);
+	
+	assert (a.row_size == 2);
+	assert (a.col_size == 3);
+	float_eq (a[0, 0], 10.0f);
+	float_eq (a[0, 1], 4.0f);
+	float_eq (a[0, 2], -2.0f);
+	float_eq (a[1, 0], 28.0f);
+	float_eq (a[1, 1], 13.0f);
+	float_eq (a[1, 2], -2.0f);
+}
+
+private void test_n_mixs () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.MatFloatN b = Crank.MatFloatN.arr (
+		{{3.0f, 6.0f, 9.0f},
+		 {12.0f, 15.0f, 18.0f}});
+		 
+	a = a.mixs (b, 0.5f);
+
+	float_eq (a[0, 0], 2.0f);
+	float_eq (a[0, 1], 4.0f);
+	float_eq (a[0, 2], 6.0f);
+	float_eq (a[1, 0], 8.0f);
+	float_eq (a[1, 1], 10.0f);
+	float_eq (a[1, 2], 12.0f);
+}
+
+private void test_n_mix () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 2.0f, 3.0f},
+		 {4.0f, 5.0f, 6.0f}});
+	Crank.MatFloatN b = Crank.MatFloatN.arr (
+		{{3.0f, 6.0f, 9.0f},
+		 {12.0f, 15.0f, 18.0f}});
+	Crank.MatFloatN c = Crank.MatFloatN.arr (
+		{{0.0f, 0.2f, 0.4f},
+		 {0.6f, 0.8f, 1.0f}});
+	a = a.mix (b, c);
+
+	float_eq (a[0, 0], 1.0f);
+	float_eq (a[0, 1], 2.8f);
+	float_eq (a[0, 2], 5.4f);
+	float_eq (a[1, 0], 8.8f);
+	float_eq (a[1, 1], 13.0f);
+	float_eq (a[1, 2], 18.0f);
 }

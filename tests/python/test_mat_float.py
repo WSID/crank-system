@@ -202,3 +202,227 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat (a.m01, 3)
 		self.assertFloat (a.m10, 6)
 		self.assertFloat (a.m11, 12)
+		
+	def test_n_equal (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		b = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		c = CrankBase.MatFloatN.init_arr (3, 2,
+				[1, 2,
+				 3, 4,
+				 5, 6])
+		
+		assert (a.equal (b))
+		assert (not a.equal (c))
+		
+	def test_n_to_string (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
+		self.assertEqual (a.to_string (), "[[1, 2, 3], [4, 5, 6]]")
+		
+	def test_n_get (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
+		self.assertFloat(a.get (0,0), 1)
+		self.assertFloat(a.get (0,1), 2)
+		self.assertFloat(a.get (0,2), 3)
+		self.assertFloat(a.get (1,0), 4)
+		self.assertFloat(a.get (1,1), 5)
+		self.assertFloat(a.get (1,2), 6)
+		
+	def test_n_get_row (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
+		rv = a.get_row (0)
+		self.assertFloat (rv.get(0), 1)
+		self.assertFloat (rv.get(1), 2)
+		self.assertFloat (rv.get(2), 3)
+		
+		rv = a.get_row (1)
+		self.assertFloat (rv.get(0), 4)
+		self.assertFloat (rv.get(1), 5)
+		self.assertFloat (rv.get(2), 6)
+		
+	def test_n_get_col (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
+		cv = a.get_col (0)
+		self.assertFloat (cv.get(0), 1)
+		self.assertFloat (cv.get(1), 4)
+		
+		cv = a.get_col (1)
+		self.assertFloat (cv.get(0), 2)
+		self.assertFloat (cv.get(1), 5)
+		
+		cv = a.get_col (2)
+		self.assertFloat (cv.get(0), 3)
+		self.assertFloat (cv.get(1), 6)
+	
+	def test_n_tr (self):
+		a = CrankBase.MatFloatN.init_arr (5, 5,
+				[1, 0, 0, 1, 0,
+				 0, 2, 0, 3, 1,
+				 0, 0, 3, 0, 0,
+				 1, 3, 0, 4, 0,
+				 0, 1, 0, 0, 5]);
+
+		self.assertFloat (a.get_tr (), 15);
+	
+	@unittest.skip ("Determinent for variable size matrix is in progress.")
+	def test_n_det (self):
+		pass
+	
+	@unittest.skip ("Determinent for variable size matrix is in progress.")
+	def test_n_cof (self):
+		pass
+	
+	@unittest.skip ("Determinent for variable size matrix is in progress.")
+	def test_n_adj (self):
+		pass
+	
+		
+	def test_n_neg (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		
+		a = a.neg ()
+		
+		self.assertFloat(a.get (0, 0), -1)
+		self.assertFloat(a.get (0, 1), -2)
+		self.assertFloat(a.get (0, 2), -3)
+		self.assertFloat(a.get (1, 0), -4)
+		self.assertFloat(a.get (1, 1), -5)
+		self.assertFloat(a.get (1, 2), -6)
+		
+	def test_n_transpose (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		
+		a = a.transpose ()
+		
+		self.assertEqual (a.get_row_size(), 3)
+		self.assertEqual (a.get_col_size(), 2)
+		self.assertFloat(a.get (0, 0), 1)
+		self.assertFloat(a.get (0, 1), 4)
+		self.assertFloat(a.get (1, 0), 2)
+		self.assertFloat(a.get (1, 1), 5)
+		self.assertFloat(a.get (2, 0), 3)
+		self.assertFloat(a.get (2, 1), 6)
+		
+	@unittest.skip ("Determinent for variable size matrix is in progress.")
+	def test_n_inverse (self):
+		pass
+	
+	def test_n_muls (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		
+		a = a.muls (3)
+		
+		self.assertFloat(a.get (0, 0), 3)
+		self.assertFloat(a.get (0, 1), 6)
+		self.assertFloat(a.get (0, 2), 9)
+		self.assertFloat(a.get (1, 0), 12)
+		self.assertFloat(a.get (1, 1), 15)
+		self.assertFloat(a.get (1, 2), 18)
+	
+	def test_n_divs (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		
+		a = a.divs (2)
+		
+		self.assertFloat(a.get (0, 0), 0.5)
+		self.assertFloat(a.get (0, 1), 1.0)
+		self.assertFloat(a.get (0, 2), 1.5)
+		self.assertFloat(a.get (1, 0), 2.0)
+		self.assertFloat(a.get (1, 1), 2.5)
+		self.assertFloat(a.get (1, 2), 3.0)
+		
+	def test_n_mulv (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+		
+		b = CrankBase.MatFloatN.init_arr (3, [2, 3, 5])
+		
+		b = a.mulv (b)
+		
+		self.assertFloat(b.get(0), 23)
+		self.assertFloat(b.get(1), 53)
+		
+	def test_n_mul (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+				 
+		b = CrankBase.MatFloatN.init_arr (3, 3,
+				[3, 2, 1,
+				 2, 1, 0,
+				 1, 0, -1])
+
+		a = a.mul (b)
+		
+		self.assertEqual (a.get_row_size(), 2)
+		self.assertEqual (a.get_col_size(), 3)
+		self.assertFloat (a.get (0, 0), 10)
+		self.assertFloat (a.get (0, 1), 4)
+		self.assertFloat (a.get (0, 2), -2)
+		self.assertFloat (a.get (1, 0), 28)
+		self.assertFloat (a.get (1, 1), 13)
+		self.assertFloat (a.get (1, 2), -2)
+	
+	def test_n_mixs (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+				 
+		b = CrankBase.MatFloatN.init_arr (2, 3,
+				[3, 6, 9,
+				 12, 15, 18])
+
+		a = a.mixs (b, 0.5)
+		
+		self.assertFloat (a.get (0, 0), 2)
+		self.assertFloat (a.get (0, 1), 4)
+		self.assertFloat (a.get (0, 2), 6)
+		self.assertFloat (a.get (1, 0), 8)
+		self.assertFloat (a.get (1, 1), 10)
+		self.assertFloat (a.get (1, 2), 12)
+	
+	def test_n_mix (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+				 
+		b = CrankBase.MatFloatN.init_arr (2, 3,
+				[3, 6, 9,
+				 12, 15, 18])
+				 
+		c = CrankBase.MatFloatN.init_arr (2, 3,
+				[0.0, 0.2, 0.4,
+				 0.6, 0.8, 1.0])
+
+		a = a.mix (b, c)
+		
+		self.assertFloat (a.get (0, 0), 1.0)
+		self.assertFloat (a.get (0, 1), 2.4)
+		self.assertFloat (a.get (0, 2), 5.4)
+		self.assertFloat (a.get (1, 0), 8.8)
+		self.assertFloat (a.get (1, 1), 13.0)
+		self.assertFloat (a.get (1, 2), 18.0)

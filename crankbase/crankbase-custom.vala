@@ -762,7 +762,7 @@ namespace Crank {
 		public MatFloat3.arr (float marr[9]);
 		public MatFloat3.rv (VecFloat3 rv0, VecFloat3 rv1, VecFloat3 rv2);
 		public MatFloat3.rvarr (VecFloat3 rvarr[3]);
-		public MatFloat3.cv (VecFloat3 cv0, VecFloat3 cv1);
+		public MatFloat3.cv (VecFloat3 cv0, VecFloat3 cv1, VecFloat3 cv2);
 		public MatFloat3.cvarr (VecFloat3 cvarr[3]);
 		public MatFloat3.diag (float m00, float m11, float m22);
 		public MatFloat3.diag_arr (float darr[3]);
@@ -807,5 +807,140 @@ namespace Crank {
 
 		public MatFloat3	mixs (MatFloat3 b, float c);
 		public MatFloat3	mix (MatFloat3 b, MatFloat3 c);
+	}
+
+	public struct MatFloat4 {
+		public float m00;
+		public float m01;
+		public float m02;
+		public float m03;
+		public float m10;
+		public float m11;
+		public float m12;
+		public float m13;
+		public float m20;
+		public float m21;
+		public float m22;
+		public float m23;
+		public float m30;
+		public float m31;
+		public float m32;
+		public float m33;
+
+		public MatFloat4 (	float m00, float m01, float m02, float m03,
+							float m10, float m11, float m12, float m13,
+							float m20, float m21, float m22, float m23,
+							float m30, float m31, float m32, float m33	);
+		public MatFloat4.arr (float marr[16]);
+		public MatFloat4.rv (VecFloat4 rv0, VecFloat4 rv1, VecFloat4 rv2, VecFloat4 rv3);
+		public MatFloat4.rvarr (VecFloat4 rvarr[4]);
+		public MatFloat4.cv (VecFloat4 cv0, VecFloat4 cv1, VecFloat4 cv2, VecFloat4 cv3);
+		public MatFloat4.cvarr (VecFloat4 cvarr[4]);
+		public MatFloat4.diag (float m00, float m11, float m22, float m33);
+		public MatFloat4.diag_arr (float darr[4]);
+		public MatFloat4.fill (float fill);
+
+		public MatFloat4	copy ();
+		public MatFloat4?	dup ();
+
+		public static uint	hash (	MatFloat4?	a);
+		public static bool	equal (	MatFloat4?	a, MatFloat4?	b);
+
+		[CCode (cname="crank_mat_float4_to_string_full")]
+		public string	to_string (	string	mat_left = "[",
+									string	mat_in = ", ",
+									string	mat_right = "]",
+									string	row_left = "[",
+									string	row_in = ", ",
+									string	row_right = "]",
+									string	format = "%g"	);
+
+		public float	get (uint i, uint j);
+		public void		set (uint i, uint j, float value);
+
+		public VecFloat4	get_row (uint index);
+		public void			set_row (uint index, VecFloat4 row);
+		public VecFloat4	get_col (uint index);
+		public void			set_col (uint index, VecFloat4 col);
+
+		public float		tr { get; }
+		public float		det { get; }
+		public MatFloat4	cof { owned get; }
+		public MatFloat4	adj { owned get; }
+
+		public MatFloat4	neg ();
+		public MatFloat4	transpose ();
+		public MatFloat4	inverse ();
+
+		public MatFloat4	muls (float b);
+		public MatFloat4	divs (float b);
+		public VecFloat4	mulv (VecFloat4 b);
+		public MatFloat4	mul (MatFloat4 b);
+
+		public MatFloat4	mixs (MatFloat4 b, float c);
+		public MatFloat4	mix (MatFloat4 b, MatFloat4 c);
+	}
+
+	[CCode (	copy_function="crank_mat_float_n_copy",
+				destroy_function="crank_mat_float_n_fini",
+				free_function="crank_mat_float_n_free"	)]
+	public struct MatFloatN {
+		public float*	data;
+		public uint		rn;
+		public uint		cn;
+
+		public MatFloatN (uint rn, uint cn, ...);
+		public MatFloatN.arr ([CCode (array_length_pos=0)]float[,] marr);
+		public MatFloatN.arr_take ([CCode (array_length_pos=0)]owned float[,] marr);
+		public MatFloatN.rv (uint rn, ...);
+		public MatFloatN.rvarr ([CCode (array_length_pos=0)]VecFloat4[] rvarr);
+		public MatFloatN.cv (uint cn, ...);
+		public MatFloatN.cvarr ([CCode (array_length_pos=0)]VecFloat4[] cvarr);
+		public MatFloatN.diag (uint n, ...);
+		public MatFloatN.diag_arr ([CCode (array_length_pos=0)]float[] darr);
+		public MatFloatN.fill (uint rn, uint cn, float fill);
+
+		public MatFloatN	copy ();
+		public MatFloatN?	dup ();
+
+		public static uint	hash (	MatFloatN?	a);
+		public static bool	equal (	MatFloatN?	a, MatFloatN?	b);
+
+		[CCode (cname="crank_mat_float_n_to_string_full")]
+		public string	to_string (	string	mat_left = "[",
+									string	mat_in = ", ",
+									string	mat_right = "]",
+									string	row_left = "[",
+									string	row_in = ", ",
+									string	row_right = "]",
+									string	format = "%g"	);
+		
+		public uint		row_size { get; }
+		public uint		col_size { get; }
+
+		public float	get (uint i, uint j);
+		public void		set (uint i, uint j, float value);
+
+		public VecFloatN	get_row (uint index);
+		public void			set_row (uint index, VecFloatN row);
+		public VecFloatN	get_col (uint index);
+		public void			set_col (uint index, VecFloatN col);
+
+		public float		tr { get; }
+		public float		det { get; }
+		public MatFloatN	cof { owned get; }
+		public MatFloatN	adj { owned get; }
+
+		public MatFloatN	neg ();
+		public MatFloatN	transpose ();
+		public MatFloatN	inverse ();
+
+		public MatFloatN	muls (float b);
+		public MatFloatN	divs (float b);
+		public VecFloatN	mulv (VecFloatN b);
+		public MatFloatN	mul (MatFloatN b);
+
+		public MatFloatN	mixs (MatFloatN b, float c);
+		public MatFloatN	mix (MatFloatN b, MatFloatN c);
 	}
 }
