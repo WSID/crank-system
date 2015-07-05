@@ -579,6 +579,8 @@ namespace Crank {
 		public VecFloat3		min (		VecFloat3 b	);
 		public VecFloat3		max (		VecFloat3 b	);
 		
+		public VecFloat3		mulm (		MatFloat3 b	);
+
 		public VecFloat3		mixs (		VecFloat3 b, float c	);
 		public VecFloat3		mix (		VecFloat3 b, VecFloat3 c	);
 	}
@@ -635,6 +637,8 @@ namespace Crank {
 		public VecFloat4		min (		VecFloat4 b	);
 		public VecFloat4		max (		VecFloat4 b	);
 		
+		public VecFloat4		mulm (		MatFloat4 b	);
+
 		public VecFloat4		mixs (		VecFloat4 b, float c	);
 		public VecFloat4		mix (		VecFloat4 b, VecFloat4 c	);
 	}
@@ -699,6 +703,8 @@ namespace Crank {
 		public VecFloatN		min (		VecFloatN b	);
 		public VecFloatN		max (		VecFloatN b	);
 		
+		public VecFloatN		mulm (		MatFloatN b	);
+
 		public VecFloatN		mixs (		VecFloatN b, float c	);
 		public VecFloatN		mix (		VecFloatN b, VecFloatN c	);
 	}

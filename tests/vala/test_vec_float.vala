@@ -66,6 +66,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/float/n/cmpcmp", test_n_cmpcmp);
 	GLib.Test.add_func ("/crank/base/vec/float/n/min", test_n_min);
 	GLib.Test.add_func ("/crank/base/vec/float/n/max", test_n_max);
+	GLib.Test.add_func ("/crank/base/vec/float/n/mulm", test_n_mulm);
 	GLib.Test.add_func ("/crank/base/vec/float/n/mixs", test_n_mixs);
 	GLib.Test.add_func ("/crank/base/vec/float/n/mix", test_n_mix);
 	
@@ -521,6 +522,20 @@ private void test_n_max () {
 
 	assert (float_eq (c[0], 53.0f));
 	assert (float_eq (c[1], 20.0f));
+}
+
+
+private void test_n_mulm () {
+	Crank.VecFloatN a = Crank.VecFloatN(3, 2.0f, 3.0f, 5.0f);
+	Crank.MatFloatN b = Crank.MatFloatN(3, 2,
+			1.0f, 2.0f,
+			3.0f, 4.0f,
+			5.0f, 6.0f);
+
+	a = a.mulm (b);
+
+	assert (float_eq (a[0], 36.0f));
+	assert (float_eq (a[1], 46.0f));
 }
 
 

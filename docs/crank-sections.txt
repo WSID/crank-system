@@ -443,6 +443,7 @@ crank_vec_float3_cmpgreater
 crank_vec_float3_cmpcmp
 crank_vec_float3_min
 crank_vec_float3_max
+crank_vec_float3_mulm
 crank_vec_float3_mixs
 crank_vec_float3_mix
 CrankVecFloat4
@@ -483,6 +484,7 @@ crank_vec_float4_cmpgreater
 crank_vec_float4_cmpcmp
 crank_vec_float4_min
 crank_vec_float4_max
+crank_vec_float4_mulm
 crank_vec_float4_mixs
 crank_vec_float4_mix
 CrankVecFloatN
@@ -526,6 +528,7 @@ crank_vec_float_n_cmpgreater
 crank_vec_float_n_cmpcmp
 crank_vec_float_n_min
 crank_vec_float_n_max
+crank_vec_float_n_mulm
 crank_vec_float_n_mixs
 crank_vec_float_n_mix
 <SUBSECTION Standard>

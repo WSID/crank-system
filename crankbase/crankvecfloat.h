@@ -391,6 +391,13 @@ void			crank_vec_float3_max	(		CrankVecFloat3*	a,
 												CrankVecFloat3*	b,
 												CrankVecFloat3*	r	);
 
+//////// Matrix operations ////////
+
+void			crank_vec_float3_mulm	(		CrankVecFloat3*	a,
+							  					CrankMatFloat3*	b,
+							  					CrankVecFloat3*	r	);
+
+
 //////// Ternary Operations ////////
 
 void			crank_vec_float3_mixs	(		CrankVecFloat3*	a,
@@ -588,6 +595,12 @@ void			crank_vec_float4_max	(		CrankVecFloat4*	a,
 												CrankVecFloat4*	b,
 												CrankVecFloat4*	r	);
 
+//////// Matrix operations ////////
+
+void			crank_vec_float4_mulm	(		CrankVecFloat4*	a,
+							  					CrankMatFloat4*	b,
+							  					CrankVecFloat4*	r	);
+
 //////// Ternary Operations ////////
 
 void			crank_vec_float4_mixs	(		CrankVecFloat4*	a,
@@ -769,6 +782,12 @@ void			crank_vec_float_n_min	(		CrankVecFloatN*	a,
 void			crank_vec_float_n_max	(		CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
 												CrankVecFloatN*	r	);
+
+//////// Matrix operations ////////
+
+void			crank_vec_float_n_mulm	(		CrankVecFloatN*	a,
+							  					CrankMatFloatN*	b,
+							  					CrankVecFloatN*	r	);
 
 //////// Ternary Operations ////////
 

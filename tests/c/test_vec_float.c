@@ -79,6 +79,7 @@ static void	test_n_cmpgreater (void);
 static void	test_n_cmpcmp (void);
 static void	test_n_min (void);
 static void	test_n_max (void);
+static void	test_n_mulm (void);
 static void	test_n_mixs (void);
 static void	test_n_mix (void);
 
@@ -131,6 +132,7 @@ main (	gint argc, gchar** argv	)
 	g_test_add_func ("/crank/base/vec/float/n/cmpcmp", test_n_cmpcmp);
 	g_test_add_func ("/crank/base/vec/float/n/min", test_n_min);
 	g_test_add_func ("/crank/base/vec/float/n/max", test_n_max);
+  	g_test_add_func ("/crank/base/vec/float/n/mulm", test_n_mulm);
 	g_test_add_func ("/crank/base/vec/float/n/mixs", test_n_mixs);
 	g_test_add_func ("/crank/base/vec/float/n/mix", test_n_mix);
 	
@@ -736,6 +738,29 @@ static void	test_n_mixs (void)
 	
 	test_assert_float (r.data[0], 20.0f);
 	test_assert_float (r.data[1], 19.0f);
+}
+
+
+static void	test_n_mulm (void)
+{
+	CrankVecFloatN	a = {0};
+	CrankMatFloatN	b = {0};
+	crank_vec_float_n_init (&a, 3, 2.0f, 5.0f, 7.0f);
+	crank_mat_float_n_init (&b, 3, 2,
+			1.0f, 2.0f,
+			3.0f, 4.0f,
+			5.0f, 6.0f	);
+	CrankVecFloatN	r = {0};
+
+	crank_vec_float_n_mulm (&a, &b, &r);
+
+  	g_assert_cmpuint (r.n, ==, 2);
+	test_assert_float (r.data[0], 52.0f);
+	test_assert_float (r.data[1], 66.0f);
+
+  	crank_vec_float_n_fini (&a);
+  	crank_mat_float_n_fini (&b);
+  	crank_vec_float_n_fini (&r);
 }
 
 

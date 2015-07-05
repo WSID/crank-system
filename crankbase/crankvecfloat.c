@@ -1354,6 +1354,32 @@ crank_vec_float3_max (	CrankVecFloat3*	a,
 	r->z = MAX (a->z, b->z);
 }
 
+
+/**
+ * crank_vec_float3_mulm:
+ * @a: A Vector
+ * @b: A Matrix
+ * @r: (out): A Vector to store result.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_float3_mulm (	CrankVecFloat3*	a,
+					   	CrankMatFloat3*	b,
+					   	CrankVecFloat3*	r	)
+{
+  	gfloat nx, ny, nz;
+
+	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
+	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
+	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22);
+
+  	r->x = nx;
+  	r->y = ny;
+  	r->z = nz;
+}
+
+
 /**
  * crank_vec_float3_mixs:
  * @a: A vector.
@@ -2047,6 +2073,33 @@ crank_vec_float4_max (	CrankVecFloat4*	a,
 	r->y = MAX (a->y, b->y);
 	r->z = MAX (a->z, b->z);
 	r->w = MAX (a->w, b->w);
+}
+
+
+/**
+ * crank_vec_float4_mulm:
+ * @a: A Vector
+ * @b: A Matrix
+ * @r: (out): A Vector to store result.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_float4_mulm (	CrankVecFloat4*	a,
+					   	CrankMatFloat4*	b,
+					   	CrankVecFloat4*	r	)
+{
+  	gfloat nx, ny, nz, nw;
+
+	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
+	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
+	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22) + (a->w * b->m32);
+	nw = (a->x * b->m03) + (a->y * b->m13) + (a->z * b->m23) + (a->w * b->m33);
+
+  	r->x = nx;
+  	r->y = ny;
+  	r->z = nz;
+  	r->w = nw;
 }
 
 /**
@@ -2970,6 +3023,36 @@ crank_vec_float_n_max (	CrankVecFloatN*	a,
 		for (i = 0; i < a->n; i++) r->data[i] = MAX (a->data[i], b->data[i]);
 	}
 	else g_warning ("VecFloatN: max: size mismatch: %u, %u", a->n, b->n);
+}
+
+
+/**
+ * crank_vec_float_n_mulm:
+ * @a: A vector.
+ * @b: A Matrox.
+ * @r: (out): A vector to store result.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_float_n_mulm (	CrankVecFloatN*	a,
+							CrankMatFloatN*	b,
+							CrankVecFloatN*	r	)
+{
+  	if (a->n == b->rn) {
+		guint	i;
+	  	guint	j;
+	  	gfloat*	data;
+
+	  	data = g_new0 (gfloat, b->cn);
+
+	  	for (i = 0; i < b->cn; i++)
+	  		for (j = 0; j < a->n; j++)
+		  		data[i] += a->data[j] * b->data[(b->cn * j) + i];
+
+	  	crank_vec_float_n_init_arr_take (r, b->cn, data);
+	}
+  	else g_warning ("VecFloatN: mulm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
 }
 
 /**

@@ -367,6 +367,18 @@ class TestVecInt(unittest.TestCase):
 		c = a.max (b)
 		
 		self.assertFloat (c.data, [27, 34])
+
+
+	def test_n_mulm (self):
+		a = CrankBase.VecFloatN.init_arr ([2, 3, 5])
+		b = CrankBase.MatFloatN.init_arr (3, 2,
+                		[1, 2,
+                  		 3, 4,
+                     		 5, 6])
+
+		a = a.mulm (b)
+		self.assertFloat (a.get(0), 36)
+		self.assertFloat (a.get(1), 46)
 		
 	
 	def test_n_mixs (self):
