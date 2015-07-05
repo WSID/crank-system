@@ -98,6 +98,9 @@ void		crank_mat_float2_init_diag (	CrankMatFloat2*	mat,
 void		crank_mat_float2_init_diag_arr (	CrankMatFloat2*	mat,
 												const gfloat*	darr	);
 
+void		crank_mat_float2_init_diag_vec (	CrankMatFloat2*	mat,
+									  			CrankVecFloat2* dv		);
+
 void		crank_mat_float2_init_fill (	CrankMatFloat2* mat,
 								  			const gfloat	fill	);
 
@@ -308,6 +311,9 @@ void		crank_mat_float3_init_diag (	CrankMatFloat3*	mat,
 
 void		crank_mat_float3_init_diag_arr (	CrankMatFloat3*	mat,
 												const gfloat*	darr	);
+
+void		crank_mat_float3_init_diag_vec (	CrankMatFloat3*	mat,
+												CrankVecFloat3*	darr	);
 
 void		crank_mat_float3_init_fill (	CrankMatFloat3* mat,
 								  			const gfloat	fill	);
@@ -547,6 +553,9 @@ void		crank_mat_float4_init_diag (	CrankMatFloat4*	mat,
 void		crank_mat_float4_init_diag_arr (	CrankMatFloat4*	mat,
 												const gfloat*	darr	);
 
+void		crank_mat_float4_init_diag_vec (	CrankMatFloat4*	mat,
+												CrankVecFloat4*	darr	);
+
 void		crank_mat_float4_init_fill (	CrankMatFloat4* mat,
 								  			const gfloat	fill	);
 
@@ -727,6 +736,9 @@ void		crank_mat_float_n_init_diag (	CrankMatFloatN*	mat,
 void		crank_mat_float_n_init_diag_arr (	CrankMatFloatN*	mat,
 												const guint		n,
 												const gfloat*	darr	);
+
+void		crank_mat_float_n_init_diag_vec (	CrankMatFloatN*	mat,
+									   			CrankVecFloatN*	dvec	);
 
 void		crank_mat_float_n_init_fill (	CrankMatFloatN* mat,
 											const guint		rn,

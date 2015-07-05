@@ -217,6 +217,21 @@ crank_mat_float2_init_diag_arr (	CrankMatFloat2*	mat,
 }
 
 /**
+ * crank_mat_float2_init_diag_vec:
+ * @mat: (out): A Matrix.
+ * @dvec: A vector with diagonal components.
+ *
+ * Initialize a matrix with a vector of diagonal elements.
+ * Other elements are initialized with 0.
+ */
+void
+crank_mat_float2_init_diag_vec (	CrankMatFloat2*	mat,
+									CrankVecFloat2*	dvec	)
+{
+	crank_mat_float2_init_diag (mat, dvec->x, dvec->y);
+}
+
+/**
  * crank_mat_float2_init_fill:
  * @mat: (out): A Matrix.
  * @fill: A fill value to fill the matrix.
@@ -963,6 +978,21 @@ crank_mat_float3_init_diag_arr (	CrankMatFloat3*	mat,
 									const gfloat*	darr	)
 {
 	crank_mat_float3_init_diag (mat, darr[0], darr[1], darr[2]);
+}
+
+/**
+ * crank_mat_float3_init_diag_vec:
+ * @mat: (out): A Matrix.
+ * @dvec: A vector with diagonal components.
+ *
+ * Initialize a matrix with a vector of diagonal elements.
+ * Other elements are initialized with 0.
+ */
+void
+crank_mat_float3_init_diag_vec (	CrankMatFloat3*	mat,
+									CrankVecFloat3*	dvec	)
+{
+	crank_mat_float3_init_diag (mat, dvec->x, dvec->y, dvec->z);
 }
 
 /**
@@ -1833,6 +1863,21 @@ crank_mat_float4_init_diag_arr (	CrankMatFloat4*	mat,
 									const gfloat*	darr	)
 {
 	crank_mat_float4_init_diag (mat, darr[0], darr[1], darr[2], darr[3]);
+}
+
+/**
+ * crank_mat_float4_init_diag_vec:
+ * @mat: (out): A Matrix.
+ * @dvec: A vector with diagonal components.
+ *
+ * Initialize a matrix with a vector of diagonal elements.
+ * Other elements are initialized with 0.
+ */
+void
+crank_mat_float4_init_diag_vec (	CrankMatFloat4*	mat,
+									CrankVecFloat4*	dvec	)
+{
+	crank_mat_float4_init_diag (mat, dvec->x, dvec->y, dvec->z, dvec->w);
 }
 
 /**
@@ -2891,6 +2936,21 @@ crank_mat_float_n_init_diag_arr (	CrankMatFloatN*	mat,
   	crank_mat_float_n_realloc (mat, n, n);
  	for (i = 0; i < n; i++)
 	 	mat->data[(n * i) + i] = darr[i];
+}
+
+/**
+ * crank_mat_float_n_init_diag_vec:
+ * @mat: (out): A Matrix.
+ * @dvec: A vector with diagonal components.
+ *
+ * Initialize a matrix with a vector of diagonal elements.
+ * Other elements are initialized with 0.
+ */
+void
+crank_mat_float_n_init_diag_vec (	CrankMatFloatN*	mat,
+									CrankVecFloatN*	dvec	)
+{
+	crank_mat_float_n_init_diag_arr (mat, dvec->n, dvec->data);
 }
 
 /**

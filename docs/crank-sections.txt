@@ -555,6 +555,7 @@ crank_mat_float2_init_cv
 crank_mat_float2_init_cvarr
 crank_mat_float2_init_diag
 crank_mat_float2_init_diag_arr
+crank_mat_float2_init_diag_vec
 crank_mat_float2_init_fill
 crank_mat_float2_copy
 crank_mat_float2_dup
@@ -595,6 +596,7 @@ crank_mat_float3_init_cv
 crank_mat_float3_init_cvarr
 crank_mat_float3_init_diag
 crank_mat_float3_init_diag_arr
+crank_mat_float3_init_diag_vec
 crank_mat_float3_init_fill
 crank_mat_float3_copy
 crank_mat_float3_dup
@@ -635,6 +637,7 @@ crank_mat_float4_init_cv
 crank_mat_float4_init_cvarr
 crank_mat_float4_init_diag
 crank_mat_float4_init_diag_arr
+crank_mat_float4_init_diag_vec
 crank_mat_float4_init_fill
 crank_mat_float4_copy
 crank_mat_float4_dup
@@ -674,6 +677,7 @@ crank_mat_float_n_init_cv
 crank_mat_float_n_init_cvarr
 crank_mat_float_n_init_diag
 crank_mat_float_n_init_diag_arr
+crank_mat_float_n_init_diag_vec
 crank_mat_float_n_init_fill
 crank_mat_float_n_fini
 crank_mat_float_n_copy
