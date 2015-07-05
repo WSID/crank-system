@@ -76,7 +76,7 @@
 
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat2, crank_vec_float2, crank_vec_float2_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecFloat2, crank_vec_float2, crank_vec_float2_dup, g_free)
 
 /**
  * crank_vec_float2_init:
@@ -174,19 +174,29 @@ crank_vec_float2_init_from_vi	(	CrankVecFloat2*	vec,
 /**
  * crank_vec_float2_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_float2_copy			(	CrankVecFloat2*	vec,
+						 			CrankVecFloat2*	other	)
+{
+	memcpy (other, vec, sizeof(CrankVecFloat2));
+}
+
+/**
+ * crank_vec_float2_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat2*
-crank_vec_float2_copy			(	CrankVecFloat2*	vec	)
+crank_vec_float2_dup			(	CrankVecFloat2*	vec	)
 {
-	CrankVecFloat2* result = g_new (CrankVecFloat2, 1);
-	
-	crank_vec_float2_init_arr (result, (gfloat*)vec);
-	
-	return result;
+  	return (CrankVecFloat2*) g_memdup (vec, sizeof (CrankVecFloat2));
 }
 
 /**
@@ -719,7 +729,7 @@ crank_vec_float2_mix (	CrankVecFloat2*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat3, crank_vec_float3, crank_vec_float3_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecFloat3, crank_vec_float3, crank_vec_float3_dup, g_free)
 
 /**
  * crank_vec_float3_init:
@@ -825,19 +835,29 @@ crank_vec_float3_init_from_vi	(	CrankVecFloat3*	vec,
 /**
  * crank_vec_float3_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_float3_copy			(	CrankVecFloat3*	vec,
+						 			CrankVecFloat3*	other	)
+{
+	memcpy (other, vec, sizeof(CrankVecFloat3));
+}
+
+/**
+ * crank_vec_float3_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat3*
-crank_vec_float3_copy			(	CrankVecFloat3*	vec	)
+crank_vec_float3_dup			(	CrankVecFloat3*	vec	)
 {
-	CrankVecFloat3* result = g_new (CrankVecFloat3, 1);
-	
-	crank_vec_float3_init_arr (result, (gfloat*)vec);
-	
-	return result;
+  	return (CrankVecFloat3*) g_memdup (vec, sizeof (CrankVecFloat3));
 }
 
 /**
@@ -1393,7 +1413,7 @@ crank_vec_float3_mix (	CrankVecFloat3*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat4, crank_vec_float4, crank_vec_float4_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecFloat4, crank_vec_float4, crank_vec_float4_dup, g_free)
 
 /**
  * crank_vec_float4_init:
@@ -1507,19 +1527,29 @@ crank_vec_float4_init_from_vi	(	CrankVecFloat4*	vec,
 /**
  * crank_vec_float4_copy:
  * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_float4_copy			(	CrankVecFloat4*	vec,
+						 			CrankVecFloat4*	other	)
+{
+	memcpy (other, vec, sizeof(CrankVecFloat4));
+}
+
+/**
+ * crank_vec_float4_dup:
+ * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
  *
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat4*
-crank_vec_float4_copy			(	CrankVecFloat4*	vec	)
+crank_vec_float4_dup			(	CrankVecFloat4*	vec	)
 {
-	CrankVecFloat4* result = g_new (CrankVecFloat4, 1);
-	
-	crank_vec_float4_init_arr (result, (gfloat*)vec);
-	
-	return result;
+  	return (CrankVecFloat4*) g_memdup (vec, sizeof (CrankVecFloat4));
 }
 
 /**
@@ -2080,7 +2110,7 @@ crank_vec_float4_mix (	CrankVecFloat4*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecFloatN, crank_vec_float_n, crank_vec_float_n_copy, g_free)
+G_DEFINE_BOXED_TYPE (CrankVecFloatN, crank_vec_float_n, crank_vec_float_n_dup, g_free)
 
 //////// Private functions ////////
 
@@ -2249,8 +2279,23 @@ crank_vec_float_n_fini (	CrankVecFloatN*	vec	)
 	vec->n = 0;
 }
 
+
 /**
  * crank_vec_float_n_copy:
+ * @vec: Vector to copy.
+ * @other: (out): Other vector to paste.
+ *
+ * Copies vector.
+ */
+void
+crank_vec_float_n_copy			(	CrankVecFloatN*	vec,
+						 			CrankVecFloatN*	other	)
+{
+  	crank_vec_float_n_init_arr (other, vec->n, vec->data);
+}
+
+/**
+ * crank_vec_float_n_dup:
  * @vec: Vector to copy.
  *
  * Copies vector. The returned pointer should be freed by g_free().
@@ -2258,13 +2303,11 @@ crank_vec_float_n_fini (	CrankVecFloatN*	vec	)
  * Returns: (transfer full): copied vector
  */
 CrankVecFloatN*
-crank_vec_float_n_copy			(	CrankVecFloatN*	vec	)
+crank_vec_float_n_dup			(	CrankVecFloatN*	vec	)
 {
-	CrankVecFloatN* result = g_new0 (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_arr (result, vec->n, vec->data);
-	
-	return result;
+  	CrankVecFloatN*	result = g_new0 (CrankVecFloatN, 1);
+  	crank_vec_float_n_init_arr (result, vec->n, vec->data);
+  	return result;
 }
 
 /**
@@ -2596,7 +2639,7 @@ crank_vec_float_n_neg (	CrankVecFloatN*	a,
 {
 	guint	i;
 	
-	crank_vec_float_n_realloc (r, a->n);
+	if (a != r) crank_vec_float_n_realloc (r, a->n);
 	
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i];
 }
@@ -2634,7 +2677,7 @@ crank_vec_float_n_muls	(	CrankVecFloatN*	a,
 {
 	guint	i;
 	
-	crank_vec_float_n_realloc (r, a->n);
+	if (a != r) crank_vec_float_n_realloc (r, a->n);
 	
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * b;
 }
@@ -2654,7 +2697,7 @@ crank_vec_float_n_divs	(	CrankVecFloatN*	a,
 {
 	guint	i;
 	
-	crank_vec_float_n_realloc (r, a->n);
+	if (a != r) crank_vec_float_n_realloc (r, a->n);
 	
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b;
 }
@@ -2677,7 +2720,7 @@ void			crank_vec_float_n_add			(	CrankVecFloatN*	a,
 	if (a->n == b->n) {
 		guint	i;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) r->data[i] = a->data[i] + b->data[i];
 	}
@@ -2700,7 +2743,7 @@ crank_vec_float_n_sub	(	CrankVecFloatN*	a,
 	if (a->n == b->n) {
 		guint	i;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) r->data[i] = a->data[i] - b->data[i];
 	}
@@ -2899,7 +2942,7 @@ crank_vec_float_n_min (	CrankVecFloatN*	a,
 	if (a->n == b->n) {
 		guint	i;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) r->data[i] = MIN (a->data[i], b->data[i]);
 	}
@@ -2922,7 +2965,7 @@ crank_vec_float_n_max (	CrankVecFloatN*	a,
 	if (a->n == b->n) {
 		guint	i;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) r->data[i] = MAX (a->data[i], b->data[i]);
 	}
@@ -2951,7 +2994,7 @@ crank_vec_float_n_mixs (	CrankVecFloatN*	a,
 		guint	i;
 		gfloat d = 1.0f - c;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * d + b->data[i] * c;
 	}
@@ -2981,7 +3024,7 @@ crank_vec_float_n_mix (	CrankVecFloatN*	a,
 		gfloat	d;
 		guint	i;
 		
-		crank_vec_float_n_realloc (r, a->n);
+		if ((a != r) && (b != r) && (c != r)) crank_vec_float_n_realloc (r, a->n);
 	
 		for (i = 0; i < a->n; i++) {
 			d = 1.0f - c->data[i];

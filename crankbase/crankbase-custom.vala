@@ -470,7 +470,7 @@ namespace Crank {
 		public VecIntN		max (		VecIntN b	);
 	}
 	
-	
+	[CCode (copy_function="crank_vec_float2_copy")]
 	public struct VecFloat2 {
 		public float x;
 		public float y;
@@ -482,7 +482,7 @@ namespace Crank {
 		public VecFloat2.from_vb	(VecBool2	vb);
 		public VecFloat2.from_vi	(VecInt2	vi);
 		
-		public VecFloat2?	copy	();
+		public VecFloat2?	dup	();
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
@@ -526,7 +526,8 @@ namespace Crank {
 		public VecFloat2		mix (		VecFloat2 b, VecFloat2 c	);
 	}
 	
-	
+
+	[CCode (copy_function="crank_vec_float3_copy")]
 	public struct VecFloat3 {
 		public float x;
 		public float y;
@@ -582,7 +583,7 @@ namespace Crank {
 		public VecFloat3		mix (		VecFloat3 b, VecFloat3 c	);
 	}
 	
-	
+	[CCode (copy_function="crank_vec_float4_copy")]
 	public struct VecFloat4 {
 		public float x;
 		public float y;
@@ -596,7 +597,7 @@ namespace Crank {
 		public VecFloat4.from_vb	(VecBool4	vb);
 		public VecFloat4.from_vi	(VecInt4	vi);
 		
-		public VecFloat4?	copy	();
+		public VecFloat4?	dup	();
 		
 		public float		get (uint	index);
 		public void			set (uint	index, float value);
@@ -639,7 +640,8 @@ namespace Crank {
 	}
 	
 	
-	[CCode (	destroy_function="crank_vec_float_n_fini",
+	[CCode (	copy_function="crank_vec_float_n_copy",
+				destroy_function="crank_vec_float_n_fini",
 				free_function="crank_vec_float_n_free"	)]
 	public struct VecFloatN {
 		[CCode (array_length_cname="n")]
@@ -653,7 +655,7 @@ namespace Crank {
 		public VecFloatN.from_vb	(VecBoolN	vb);
 		public VecFloatN.from_vi	(VecIntN	vi);
 		
-		public VecFloatN?	copy	();
+		public VecFloatN?	dup	();
 		
 		public uint			size { get; }
 

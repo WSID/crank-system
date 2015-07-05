@@ -88,7 +88,10 @@ void			crank_vec_float2_init_from_vb (	CrankVecFloat2*	vec,
 void			crank_vec_float2_init_from_vi (	CrankVecFloat2*	vec,
 												CrankVecInt2*	vi		);
 
-CrankVecFloat2*	crank_vec_float2_copy		(	CrankVecFloat2*	vec	);
+void			crank_vec_float2_copy		(	CrankVecFloat2*	vec,
+							   					CrankVecFloat2*	other	);
+
+CrankVecFloat2*	crank_vec_float2_dup		(	CrankVecFloat2*	vec	);
 
 gfloat			crank_vec_float2_get		(	CrankVecFloat2*	vec,
 												const guint		index	);
@@ -279,7 +282,10 @@ void			crank_vec_float3_init_from_vb (	CrankVecFloat3*	vec,
 void			crank_vec_float3_init_from_vi (	CrankVecFloat3*	vec,
 												CrankVecInt3*	vi		);
 
-CrankVecFloat3*	crank_vec_float3_copy		(	CrankVecFloat3*	vec	);
+void			crank_vec_float3_copy		(	CrankVecFloat3*	vec,
+							   					CrankVecFloat3*	other	);
+
+CrankVecFloat3*	crank_vec_float3_dup		(	CrankVecFloat3*	vec	);
 
 gfloat			crank_vec_float3_get		(	CrankVecFloat3*	vec,
 												const guint		index	);
@@ -477,7 +483,10 @@ void			crank_vec_float4_init_from_vb (	CrankVecFloat4*	vec,
 void			crank_vec_float4_init_from_vi (	CrankVecFloat4*	vec,
 												CrankVecInt4*	vi		);
 
-CrankVecFloat4*	crank_vec_float4_copy		(	CrankVecFloat4*	vec	);
+void			crank_vec_float4_copy		(	CrankVecFloat4*	vec,
+							   					CrankVecFloat4*	other	);
+
+CrankVecFloat4*	crank_vec_float4_dup		(	CrankVecFloat4*	vec	);
 
 gfloat			crank_vec_float4_get		(	CrankVecFloat4*	vec,
 												const guint		index	);
@@ -639,7 +648,10 @@ void			crank_vec_float_n_init_from_vi (	CrankVecFloatN*	vec,
 
 void			crank_vec_float_n_fini		(	CrankVecFloatN*	vec	);
 
-CrankVecFloatN*	crank_vec_float_n_copy		(	CrankVecFloatN*	vec	);
+void			crank_vec_float_n_copy		(	CrankVecFloatN*	vec,
+										 		CrankVecFloatN*	other	);
+
+CrankVecFloatN*	crank_vec_float_n_dup		(	CrankVecFloatN*	vec	);
 
 void			crank_vec_float_n_free		(	CrankVecFloatN*	vec	);
 

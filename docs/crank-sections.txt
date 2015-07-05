@@ -377,6 +377,7 @@ crank_vec_float2_init_fill
 crank_vec_float2_init_from_vb
 crank_vec_float2_init_from_vi
 crank_vec_float2_copy
+crank_vec_float2_dup
 crank_vec_float2_get
 crank_vec_float2_set
 crank_vec_float2_foreach
@@ -416,6 +417,7 @@ crank_vec_float3_init_fill
 crank_vec_float3_init_from_vb
 crank_vec_float3_init_from_vi
 crank_vec_float3_copy
+crank_vec_float3_dup
 crank_vec_float3_get
 crank_vec_float3_set
 crank_vec_float3_foreach
@@ -456,6 +458,7 @@ crank_vec_float4_init_fill
 crank_vec_float4_init_from_vb
 crank_vec_float4_init_from_vi
 crank_vec_float4_copy
+crank_vec_float4_dup
 crank_vec_float4_get
 crank_vec_float4_set
 crank_vec_float4_foreach
@@ -492,6 +495,7 @@ crank_vec_float_n_init_from_vb
 crank_vec_float_n_init_from_vi
 crank_vec_float_n_fini
 crank_vec_float_n_copy
+crank_vec_float_n_dup
 crank_vec_float_n_free
 crank_vec_float_n_get_size
 crank_vec_float_n_get
