@@ -563,6 +563,8 @@ crank_mat_float2_inverse
 crank_mat_float2_muls
 crank_mat_float2_divs
 crank_mat_float2_mulv
+crank_mat_float2_add
+crank_mat_float2_sub
 crank_mat_float2_mul
 crank_mat_float2_mixs
 crank_mat_float2_mix
@@ -601,6 +603,8 @@ crank_mat_float3_inverse
 crank_mat_float3_muls
 crank_mat_float3_divs
 crank_mat_float3_mulv
+crank_mat_float3_add
+crank_mat_float3_sub
 crank_mat_float3_mul
 crank_mat_float3_mixs
 crank_mat_float3_mix
@@ -639,6 +643,8 @@ crank_mat_float4_inverse
 crank_mat_float4_muls
 crank_mat_float4_divs
 crank_mat_float4_mulv
+crank_mat_float4_add
+crank_mat_float4_sub
 crank_mat_float4_mul
 crank_mat_float4_mixs
 crank_mat_float4_mix
@@ -646,6 +652,7 @@ crank_mat_float4_mix
 CrankMatFloatN
 crank_mat_float_n_init
 crank_mat_float_n_init_arr
+crank_mat_float_n_init_arr_take
 crank_mat_float_n_init_rv
 crank_mat_float_n_init_rvarr
 crank_mat_float_n_init_cv
@@ -653,12 +660,16 @@ crank_mat_float_n_init_cvarr
 crank_mat_float_n_init_diag
 crank_mat_float_n_init_diag_arr
 crank_mat_float_n_init_fill
+crank_mat_float_n_fini
 crank_mat_float_n_copy
 crank_mat_float_n_dup
+crank_mat_float_n_free
 crank_mat_float_n_hash
 crank_mat_float_n_equal
 crank_mat_float_n_to_string
 crank_mat_float_n_to_string_full
+crank_mat_float_n_get_row_size
+crank_mat_float_n_get_col_size
 crank_mat_float_n_get
 crank_mat_float_n_set
 crank_mat_float_n_get_row
@@ -669,15 +680,27 @@ crank_mat_float_n_get_tr
 crank_mat_float_n_get_det
 crank_mat_float_n_get_cof
 crank_mat_float_n_get_adj
+crank_mat_float_n_is_square
 crank_mat_float_n_neg
 crank_mat_float_n_transpose
 crank_mat_float_n_inverse
 crank_mat_float_n_muls
 crank_mat_float_n_divs
 crank_mat_float_n_mulv
+crank_mat_float_n_add
+crank_mat_float_n_sub
 crank_mat_float_n_mul
 crank_mat_float_n_mixs
 crank_mat_float_n_mix
+<SUBSECTION Private>
+CRANK_TYPE_MAT_FLOAT2
+CRANK_TYPE_MAT_FLOAT3
+CRANK_TYPE_MAT_FLOAT4
+CRANK_TYPE_MAT_FLOAT_N
+crank_mat_float2_get_type
+crank_mat_float3_get_type
+crank_mat_float4_get_type
+crank_mat_float_n_get_type
 </SECTION>
 
 

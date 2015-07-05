@@ -671,8 +671,49 @@ crank_mat_float2_mulv (	CrankMatFloat2*	a,
 					   	CrankVecFloat2*	b,
 					   	CrankVecFloat2*	r	)
 {
-	r->x = a->m00 * b->x + a->m01 * b->y;
-  	r->y = a->m10 * b->x + a->m11 * b->y;
+	gfloat nx = a->m00 * b->x + a->m01 * b->y;
+  	gfloat ny = a->m10 * b->x + a->m11 * b->y;
+
+  	r->x = nx;
+  	r->y = ny;
+}
+
+/**
+ * crank_mat_float2_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float2_add (	CrankMatFloat2*	a,
+					  	CrankMatFloat2*	b,
+					  	CrankMatFloat2*	r	)
+{
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+}
+
+/**
+ * crank_mat_float2_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float2_sub (	CrankMatFloat2*	a,
+					  	CrankMatFloat2*	b,
+					  	CrankMatFloat2*	r	)
+{
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
 }
 
 /**
@@ -1436,6 +1477,54 @@ crank_mat_float3_mulv (	CrankMatFloat3*	a,
   	r->x = nx;
   	r->y = ny;
   	r->z = nz;
+}
+
+/**
+ * crank_mat_float3_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float3_add (	CrankMatFloat3*	a,
+					  	CrankMatFloat3*	b,
+					  	CrankMatFloat3*	r	)
+{
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m02 = a->m02 + b->m02;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+  	r->m12 = a->m12 + b->m12;
+  	r->m20 = a->m20 + b->m20;
+  	r->m21 = a->m21 + b->m21;
+  	r->m22 = a->m22 + b->m22;
+}
+
+/**
+ * crank_mat_float3_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float3_sub (	CrankMatFloat3*	a,
+					  	CrankMatFloat3*	b,
+					  	CrankMatFloat3*	r	)
+{
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m02 = a->m02 - b->m02;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
+  	r->m12 = a->m12 - b->m12;
+  	r->m20 = a->m20 - b->m20;
+  	r->m21 = a->m21 - b->m21;
+  	r->m22 = a->m22 - b->m22;
 }
 
 /**
@@ -2357,6 +2446,70 @@ crank_mat_float4_mulv (	CrankMatFloat4*	a,
   	r->w = nw;
 }
 
+
+/**
+ * crank_mat_float4_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float4_add (	CrankMatFloat4*	a,
+					  	CrankMatFloat4*	b,
+					  	CrankMatFloat4*	r	)
+{
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m02 = a->m02 + b->m02;
+  	r->m03 = a->m03 + b->m03;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+  	r->m12 = a->m12 + b->m12;
+  	r->m13 = a->m13 + b->m13;
+  	r->m20 = a->m20 + b->m20;
+  	r->m21 = a->m21 + b->m21;
+  	r->m22 = a->m22 + b->m22;
+  	r->m23 = a->m23 + b->m23;
+  	r->m30 = a->m30 + b->m30;
+  	r->m31 = a->m31 + b->m31;
+  	r->m32 = a->m32 + b->m32;
+  	r->m33 = a->m33 + b->m33;
+}
+
+/**
+ * crank_mat_float4_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float4_sub (	CrankMatFloat4*	a,
+					  	CrankMatFloat4*	b,
+					  	CrankMatFloat4*	r	)
+{
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m02 = a->m02 - b->m02;
+  	r->m03 = a->m03 - b->m03;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
+  	r->m12 = a->m12 - b->m12;
+  	r->m13 = a->m13 - b->m13;
+  	r->m20 = a->m20 - b->m20;
+  	r->m21 = a->m21 - b->m21;
+  	r->m22 = a->m22 - b->m22;
+  	r->m23 = a->m23 - b->m23;
+  	r->m30 = a->m30 - b->m30;
+  	r->m31 = a->m31 - b->m31;
+  	r->m32 = a->m32 - b->m32;
+  	r->m33 = a->m33 - b->m33;
+}
+
+
 /**
  * crank_mat_float4_mul:
  * @a: A Matrix.
@@ -2512,7 +2665,7 @@ crank_mat_float_n_init (	CrankMatFloatN*	mat,
   	va_start (varargs, cn);
 
   	for (i = 0; i < rn*cn; i++)
-		mat->data[i] = (gfloat) (va_arg(varargs, gdouble));
+		mat->data[i] = (gfloat) (va_arg (varargs, gdouble));
 
   	va_end (varargs);
 }
@@ -3120,9 +3273,8 @@ crank_mat_float_n_get_tr (	CrankMatFloatN*	mat	)
 
 	g_return_val_if_fail (crank_mat_float_n_is_square (mat), 0.0f);
 
-	for (i = 0; i < mat->rn; i++) {
+	for (i = 0; i < mat->rn; i++)
 		tr += mat->data [(mat->cn * i) + i];
-	}
 
   	return tr;
 }
@@ -3324,6 +3476,69 @@ crank_mat_float_n_mulv (	CrankMatFloatN*	a,
 	}
 
   	crank_vec_float_n_init_arr_take (r, a->rn, data);
+}
+
+
+/**
+ * crank_mat_float_n_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float_n_add (	CrankMatFloatN*	a,
+					  	CrankMatFloatN*	b,
+					  	CrankMatFloatN*	r	)
+{
+  	guint	i;
+  	guint	j;
+
+  	g_return_if_fail (a->rn == b->rn);
+  	g_return_if_fail (a->cn == b->cn);
+
+  	if ((r != a) && (r != b))
+	  	crank_mat_float_n_realloc (r, a->rn, a->cn);
+
+  	for (i = 0; i < a->rn; i++) {
+	  	for (j = 0; j < a->cn; j++) {
+	  		guint	ei = (i * a->cn) + j;
+
+	  		r->data[ei] = a->data[ei] + b->data[ei];
+		}
+	}
+}
+
+/**
+ * crank_mat_float_n_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float_n_sub (	CrankMatFloatN*	a,
+					  	CrankMatFloatN*	b,
+					  	CrankMatFloatN*	r	)
+{
+  	guint	i;
+  	guint	j;
+
+  	g_return_if_fail (a->rn == b->rn);
+  	g_return_if_fail (a->cn == b->cn);
+
+  	if ((r != a) && (r != b))
+	  	crank_mat_float_n_realloc (r, a->rn, a->cn);
+
+  	for (i = 0; i < a->rn; i++) {
+	  	for (j = 0; j < a->cn; j++) {
+	  		guint	ei = (i * a->cn) + j;
+
+	  		r->data[ei] = a->data[ei] - b->data[ei];
+		}
+	}
 }
 
 /**

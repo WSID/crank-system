@@ -193,6 +193,14 @@ void		crank_mat_float2_mulv (	CrankMatFloat2*	a,
 
 //////// Matrix operations ////////
 
+void		crank_mat_float2_add (	CrankMatFloat2*	a,
+									CrankMatFloat2*	b,
+									CrankMatFloat2*	r	);
+
+void		crank_mat_float2_sub (	CrankMatFloat2*	a,
+									CrankMatFloat2*	b,
+									CrankMatFloat2*	r	);
+
 void		crank_mat_float2_mul (	CrankMatFloat2*	a,
 									CrankMatFloat2*	b,
 									CrankMatFloat2* r	);
@@ -395,6 +403,14 @@ void		crank_mat_float3_mulv (	CrankMatFloat3*	a,
 									CrankVecFloat3*	r	);
 
 //////// Matrix operations ////////
+
+void		crank_mat_float3_add (	CrankMatFloat3*	a,
+									CrankMatFloat3*	b,
+									CrankMatFloat3*	r	);
+
+void		crank_mat_float3_sub (	CrankMatFloat3*	a,
+									CrankMatFloat3*	b,
+									CrankMatFloat3*	r	);
 
 void		crank_mat_float3_mul (	CrankMatFloat3*	a,
 									CrankMatFloat3*	b,
@@ -626,6 +642,14 @@ void		crank_mat_float4_mulv (	CrankMatFloat4*	a,
 
 //////// Matrix operations ////////
 
+void		crank_mat_float4_add (	CrankMatFloat4*	a,
+									CrankMatFloat4*	b,
+									CrankMatFloat4*	r	);
+
+void		crank_mat_float4_sub (	CrankMatFloat4*	a,
+									CrankMatFloat4*	b,
+									CrankMatFloat4*	r	);
+
 void		crank_mat_float4_mul (	CrankMatFloat4*	a,
 									CrankMatFloat4*	b,
 									CrankMatFloat4* r	);
@@ -810,6 +834,14 @@ void		crank_mat_float_n_mulv (	CrankMatFloatN*	a,
 									CrankVecFloatN*	r	);
 
 //////// Matrix operations ////////
+
+void		crank_mat_float_n_add (	CrankMatFloatN*	a,
+									CrankMatFloatN*	b,
+									CrankMatFloatN*	r	);
+
+void		crank_mat_float_n_sub (	CrankMatFloatN*	a,
+									CrankMatFloatN*	b,
+									CrankMatFloatN*	r	);
 
 void		crank_mat_float_n_mul (	CrankMatFloatN*	a,
 									CrankMatFloatN*	b,

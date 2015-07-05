@@ -172,6 +172,26 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat (b.x, 11)
 		self.assertFloat (b.y, 25)
 
+	def test_2_add (self):
+		a = CrankBase.MatFloat2 (1, 2,	3, 4)
+		b = CrankBase.MatFloat2 (3, 6,	9, 12)
+		a = a.add (b)
+
+		self.assertFloat (a.m00, 4)
+		self.assertFloat (a.m01, 8)
+		self.assertFloat (a.m10, 12)
+		self.assertFloat (a.m11, 16)
+
+	def test_2_sub (self):
+		a = CrankBase.MatFloat2 (1, 2,	3, 4)
+		b = CrankBase.MatFloat2 (3, 6,	9, 12)
+		a = a.sub (b)
+
+		self.assertFloat (a.m00, -2)
+		self.assertFloat (a.m01, -4)
+		self.assertFloat (a.m10, -6)
+		self.assertFloat (a.m11, -8)
+
 	def test_2_mul (self):
 		a = CrankBase.MatFloat2 (1, 2,	3, 4)
 		b = CrankBase.MatFloat2 (3, 6,	9, 12)
@@ -366,11 +386,47 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat(b.get(0), 23)
 		self.assertFloat(b.get(1), 53)
 		
-	def test_n_mul (self):
+	def test_n_add (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
+		b = CrankBase.MatFloatN.init_arr (2, 3,
+				[3, 2, 1,
+				 2, 1, 0])
+
+		a = a.add (b)
+
+		self.assertFloat (a.get (0, 0), 4)
+		self.assertFloat (a.get (0, 1), 4)
+		self.assertFloat (a.get (0, 2), 4)
+		self.assertFloat (a.get (1, 0), 6)
+		self.assertFloat (a.get (1, 1), 6)
+		self.assertFloat (a.get (1, 2), 6)
+
+	def test_n_sub (self):
 		a = CrankBase.MatFloatN.init_arr (2, 3,
 				[1, 2, 3,
 				 4, 5, 6])
 				 
+		b = CrankBase.MatFloatN.init_arr (2, 3,
+				[3, 2, 1,
+				 2, 1, 0])
+
+		a = a.sub (b)
+
+		self.assertFloat (a.get (0, 0), -2)
+		self.assertFloat (a.get (0, 1), 0)
+		self.assertFloat (a.get (0, 2), -2)
+		self.assertFloat (a.get (1, 0), 2)
+		self.assertFloat (a.get (1, 1), 4)
+		self.assertFloat (a.get (1, 2), 6)
+
+	def test_n_mul (self):
+		a = CrankBase.MatFloatN.init_arr (2, 3,
+				[1, 2, 3,
+				 4, 5, 6])
+
 		b = CrankBase.MatFloatN.init_arr (3, 3,
 				[3, 2, 1,
 				 2, 1, 0,

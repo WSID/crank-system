@@ -738,6 +738,10 @@ namespace Crank {
 		public MatFloat2	muls (float b);
 		public MatFloat2	divs (float b);
 		public VecFloat2	mulv (VecFloat2 b);
+
+		public MatFloat2	add (MatFloat2 b);
+		public MatFloat2	sub (MatFloat2 b);
+
 		public MatFloat2	mul (MatFloat2 b);
 
 		public MatFloat2	mixs (MatFloat2 b, float c);
@@ -803,6 +807,9 @@ namespace Crank {
 		public MatFloat3	muls (float b);
 		public MatFloat3	divs (float b);
 		public VecFloat3	mulv (VecFloat3 b);
+
+		public MatFloat3	add (MatFloat3 b);
+		public MatFloat3	sub (MatFloat3 b);
 		public MatFloat3	mul (MatFloat3 b);
 
 		public MatFloat3	mixs (MatFloat3 b, float c);
@@ -875,6 +882,10 @@ namespace Crank {
 		public MatFloat4	muls (float b);
 		public MatFloat4	divs (float b);
 		public VecFloat4	mulv (VecFloat4 b);
+
+		public MatFloat4	add (MatFloat4 b);
+		public MatFloat4	sub (MatFloat4 b);
+
 		public MatFloat4	mul (MatFloat4 b);
 
 		public MatFloat4	mixs (MatFloat4 b, float c);
@@ -938,6 +949,10 @@ namespace Crank {
 		public MatFloatN	muls (float b);
 		public MatFloatN	divs (float b);
 		public VecFloatN	mulv (VecFloatN b);
+
+		public MatFloatN	add (MatFloatN b);
+		public MatFloatN	sub (MatFloatN b);
+
 		public MatFloatN	mul (MatFloatN b);
 
 		public MatFloatN	mixs (MatFloatN b, float c);
