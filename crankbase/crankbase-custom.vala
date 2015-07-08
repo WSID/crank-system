@@ -121,8 +121,11 @@ namespace Crank {
 		
 		public bool check_valid ();
 		public void	swap (uint i, uint j);
+		
 		public Permutation reverse ();
 		public Permutation inverse ();
+		
+		public Permutation shuffle (Permutation q);
 	}
 	
 

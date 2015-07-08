@@ -36,6 +36,9 @@ int main (string[] args) {
 	
 	GLib.Test.add_func ("/crank/base/permutation/inverse",
 		test_inverse );
+		
+	GLib.Test.add_func ("/crank/base/permutatino/shuffle",
+		test_shuffle );
 	
 	GLib.Test.run ();
 	
@@ -91,4 +94,16 @@ private void test_inverse () {
 	assert (p[2] == 3);
 	assert (p[3] == 2);
 	assert (p[4] == 4);
+}
+
+private void test_shuffle () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	Crank.Permutation	q = Crank.Permutation (4,	1, 0, 2, 3);
+	
+	p = p.shuffle (q);
+	
+	assert (p[0] == 1);
+	assert (p[1] == 0);
+	assert (p[2] == 3);
+	assert (p[3] == 2);
 }

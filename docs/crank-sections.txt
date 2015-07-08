@@ -87,6 +87,7 @@ crank_permutation_check_valid
 crank_permutation_swap
 crank_permutation_inverse
 crank_permutation_reverse
+crank_permutation_shuffle
 <SUBSECTION Standard>
 CRANK_TYPE_PERMUTATION
 crank_permutation_get_type

@@ -385,7 +385,39 @@ crank_permutation_inverse (	CrankPermutation*	p,
 
 	crank_permutation_init_arr_take (q, p->n, data);
 }
+
+
+/**
+ * crank_permutation_shuffle:
+ * @p: A Permutation.
+ * @q: A Permutation.
+ * @r: (out): A Permutation to store result.
+ *
+ * Shuffles @p with order of @q.
+ *
+ * The sign of result, is product of two permutations.
+ */
+void
+crank_permutation_shuffle (	CrankPermutation*	p,
+							CrankPermutation*	q,
+							CrankPermutation*	r	)
+{
+	guint 	i;
+	guint*	data;
 	
+	if (p->n != q->n) {
+		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
+		crank_permutation_fini (r);
+		return;
+	}
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)
+		data[i] = p->data[ q->data[i] ];
+	
+	crank_permutation_init_arr_take (r, p->n, data);
+}
 
 //////// Internal Definition ///////////////////////////////////////////////////
 

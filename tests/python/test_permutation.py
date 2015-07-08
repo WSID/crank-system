@@ -73,5 +73,16 @@ class TestPermutation(unittest.TestCase):
 		self.assertEqual (q.get (3), 2)
 		self.assertEqual (q.get (4), 4)
 
+	def test_shuffle (self):
+		p = CrankBase.Permutation.init_arr ([0, 1, 3, 2])
+		q = CrankBase.Permutation.init_arr ([1, 0, 2, 3])
+
+		p = p.shuffle (q)
+
+		self.assertEqual (p.get (0), 1);
+		self.assertEqual (p.get (1), 0);
+		self.assertEqual (p.get (2), 3);
+		self.assertEqual (p.get (3), 2);
+
 if __name__ == '__main__':
 	unittest.main ()

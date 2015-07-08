@@ -98,7 +98,11 @@ void			crank_permutation_reverse (		CrankPermutation*	p,
 
 void			crank_permutation_inverse (		CrankPermutation*	p,
 												CrankPermutation*	q	);
-												
+
+void			crank_permutation_shuffle (		CrankPermutation*	p,
+												CrankPermutation*	q,
+												CrankPermutation*	r	);
+
 G_END_DECLS
 
 #endif 
