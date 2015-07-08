@@ -53,29 +53,64 @@ class TestAdvMat(unittest.TestCase):
 				8,	39,	84,
 				2,	16,	49	])
 				
-		(r, l, u) = CrankBase.lu_mat_float_n (a);
+		(r, l, u) = CrankBase.lu_mat_float_n (a)
 		
-		assert (r);
+		assert (r)
 		
-		self.assertFloat (l.get (0, 0), 3);
-		self.assertFloat (l.get (0, 1), 0);
-		self.assertFloat (l.get (0, 2), 0);
-		self.assertFloat (l.get (1, 0), 8);
-		self.assertFloat (l.get (1, 1), 7);
-		self.assertFloat (l.get (1, 2), 0);
-		self.assertFloat (l.get (2, 0), 2);
-		self.assertFloat (l.get (2, 1), 8);
-		self.assertFloat (l.get (2, 2), 3);
+		self.assertFloat (l.get (0, 0), 3)
+		self.assertFloat (l.get (0, 1), 0)
+		self.assertFloat (l.get (0, 2), 0)
+		self.assertFloat (l.get (1, 0), 8)
+		self.assertFloat (l.get (1, 1), 7)
+		self.assertFloat (l.get (1, 2), 0)
+		self.assertFloat (l.get (2, 0), 2)
+		self.assertFloat (l.get (2, 1), 8)
+		self.assertFloat (l.get (2, 2), 3)
 		
-		self.assertFloat (u.get (0, 0), 1);
-		self.assertFloat (u.get (0, 1), 4);
-		self.assertFloat (u.get (0, 2), 7);
-		self.assertFloat (u.get (1, 0), 0);
-		self.assertFloat (u.get (1, 1), 1);
-		self.assertFloat (u.get (1, 2), 4);
-		self.assertFloat (u.get (2, 0), 0);
-		self.assertFloat (u.get (2, 1), 0);
-		self.assertFloat (u.get (2, 2), 1);
+		self.assertFloat (u.get (0, 0), 1)
+		self.assertFloat (u.get (0, 1), 4)
+		self.assertFloat (u.get (0, 2), 7)
+		self.assertFloat (u.get (1, 0), 0)
+		self.assertFloat (u.get (1, 1), 1)
+		self.assertFloat (u.get (1, 2), 4)
+		self.assertFloat (u.get (2, 0), 0)
+		self.assertFloat (u.get (2, 1), 0)
+		self.assertFloat (u.get (2, 2), 1)
+
+
+	def test_lu_p (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				0,	4,	3,
+				3,	6,	6,
+				2,	20,	8	])
+				
+		(r, p, l, u) = CrankBase.lu_p_mat_float_n (a)
+		
+		assert (r)
+		
+		self.assertEqual (p.get (0), 1)
+		self.assertEqual (p.get (1), 2)
+		self.assertEqual (p.get (2), 0)
+		
+		self.assertFloat (l.get (0, 0), 3)
+		self.assertFloat (l.get (0, 1), 0)
+		self.assertFloat (l.get (0, 2), 0)
+		self.assertFloat (l.get (1, 0), 2)
+		self.assertFloat (l.get (1, 1), 16)
+		self.assertFloat (l.get (1, 2), 0)
+		self.assertFloat (l.get (2, 0), 0)
+		self.assertFloat (l.get (2, 1), 4)
+		self.assertFloat (l.get (2, 2), 2)
+		
+		self.assertFloat (u.get (0, 0), 1)
+		self.assertFloat (u.get (0, 1), 2)
+		self.assertFloat (u.get (0, 2), 2)
+		self.assertFloat (u.get (1, 0), 0)
+		self.assertFloat (u.get (1, 1), 1)
+		self.assertFloat (u.get (1, 2), 0.25)
+		self.assertFloat (u.get (2, 0), 0)
+		self.assertFloat (u.get (2, 1), 0)
+		self.assertFloat (u.get (2, 2), 1)
 
 
 if __name__ == '__main__':

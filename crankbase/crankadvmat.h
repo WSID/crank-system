@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankmatfloat.h"
 
@@ -37,6 +38,11 @@ G_BEGIN_DECLS
 gboolean	crank_lu_mat_float_n (	CrankMatFloatN*	a,
 									CrankMatFloatN*	l,
 									CrankMatFloatN*	u	);
+									
+gboolean	crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
+										CrankPermutation*	p,
+										CrankMatFloatN*		l,
+										CrankMatFloatN*		u	);
 
 G_END_DECLS
 

@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankmatfloat.h"
 #include "crankadvmat.h"
@@ -74,6 +75,9 @@
  *
  * This implementation uses Crout's Method. So all diagonal elements of @u will
  * be 1.
+ *
+ * Note that this does not perform pivoting. If pivoting is required, then use
+ * crank_lu_p_mat_float_n().
  *
  * Returns: Whether @a has LU Decomposition.
  */
@@ -156,4 +160,69 @@ crank_lu_mat_float_n (	CrankMatFloatN*	a,
 	}
 
   	return TRUE;
+}
+
+/**
+ * crank_lu_p_mat_float_n:
+ * @a: A Matrix.
+ * @p: (out): Pivoting result.
+ * @l: (out): Lower triangular factor.
+ * @u: (out): Upper triangular factor.
+ *
+ * Try to get LU decomposition of @a, with pivoting.
+ *
+ * Sometimes, some matrices are not able to be factorized, even not being
+ * singular matrices. In this case, pivoting enables these matrices to be
+ * decomposited.
+ *
+ * Generally, the decompositions are expressed with permutation matrices, but
+ * in this function, the pivot result is returned as #CrankPermutation.
+ *
+ * For implementation detail, please see crank_lu_mat_float_n().
+ *
+ * Returns: Whether @a has LU Decomposition.
+ */
+gboolean
+crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
+							CrankPermutation*	p,
+							CrankMatFloatN*		l,
+							CrankMatFloatN*		u	)
+{
+	guint			i;
+	guint			j;
+	CrankMatFloatN	na = {0};
+	
+
+  	if (! crank_mat_float_n_is_square (a)) {
+	  	crank_mat_float_n_fini (l);
+	  	crank_mat_float_n_fini (u);
+	  	g_warning ("Adv: MatFloatN: lu_p: non square: %u, %u", a->rn, a->cn);
+	  	return FALSE;
+	}
+	
+	// Do pivoting.
+	// Maximaze diagnoal component.
+	crank_permutation_init_identity (p, a->rn);
+	
+	for (i = 0; i < a->rn; i++) {
+		guint	max_index = i;
+		gfloat	max =
+				crank_mat_float_n_get (a,	crank_permutation_get (p, i), i);
+				
+		for (j = i + 1; j < a->rn; j++) {
+			gfloat	cur =
+				crank_mat_float_n_get (a, 	crank_permutation_get (p, j), i);
+			
+			if (max < cur) {
+				max_index = j;
+				max = cur;
+			}
+		}
+	
+		crank_permutation_swap (p, i, max_index);
+	}
+	
+	// Do LU Decomposition.
+	crank_mat_float_n_shuffle_row (a, p, &na);
+	return crank_lu_mat_float_n (&na, l, u);
 }

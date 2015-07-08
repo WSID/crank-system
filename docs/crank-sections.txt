@@ -843,4 +843,5 @@ crank_dijkstra_full_digraph
 <SECTION>
 <FILE>crankadvmat</FILE>
 crank_lu_mat_float_n
+crank_lu_p_mat_float_n
 </SECTION>

@@ -25,6 +25,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/advmat/lu/mat/float/n",
 		test_lu );
 	
+	GLib.Test.add_func ("/crank/base/advmat/lu_p/mat/float/n",
+		test_lu_p );
+	
 	GLib.Test.run ();
 	
 	return 0;
@@ -76,5 +79,47 @@ private void test_lu () {
 	assert (float_eq (u[2, 0], 0));
 	assert (float_eq (u[2, 1], 0));
 	assert (float_eq (u[2, 2], 1));
+}
+
+private void test_lu_p () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{0.0f,	4.0f,	3.0f},
+		{3.0f,	6.0f,	6.0f},
+		{2.0f,	20.0f,	8.0f}}	);
+	
+	Crank.MatFloatN l;
+	Crank.MatFloatN u;
+	Crank.Permutation p;
+	
+	Crank.lu_p_mat_float_n (a, out p, out l, out u);
+	
+	assert (p[0] == 1);
+	assert (p[1] == 2);
+	assert (p[2] == 0);
+	
+	assert (float_eq (l[0, 0], 3.0f));
+	assert (float_eq (l[0, 1], 0.0f));
+	assert (float_eq (l[0, 2], 0.0f));
+	
+	assert (float_eq (l[1, 0], 2.0f));
+	assert (float_eq (l[1, 1], 16.0f));
+	assert (float_eq (l[1, 2], 0.0f));
+	
+	assert (float_eq (l[2, 0], 0.0f));
+	assert (float_eq (l[2, 1], 4.0f));
+	assert (float_eq (l[2, 2], 2.0f));
+	
+	
+	assert (float_eq (u[0, 0], 1.0f));
+	assert (float_eq (u[0, 1], 2.0f));
+	assert (float_eq (u[0, 2], 2.0f));
+	
+	assert (float_eq (u[1, 0], 0.0f));
+	assert (float_eq (u[1, 1], 1.0f));
+	assert (float_eq (u[1, 2], 0.25f));
+	
+	assert (float_eq (u[2, 0], 0.0f));
+	assert (float_eq (u[2, 1], 0.0f));
+	assert (float_eq (u[2, 2], 1.0f));
 }
 
