@@ -739,6 +739,8 @@ crank_mat_float_n_sub
 crank_mat_float_n_mul
 crank_mat_float_n_mixs
 crank_mat_float_n_mix
+crank_mat_float_n_shuffle_row
+crank_mat_float_n_shuffle_col
 <SUBSECTION Private>
 CRANK_TYPE_MAT_FLOAT2
 CRANK_TYPE_MAT_FLOAT3

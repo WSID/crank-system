@@ -1008,5 +1008,8 @@ namespace Crank {
 
 		public MatFloatN	mixs (MatFloatN b, float c);
 		public MatFloatN	mix (MatFloatN b, MatFloatN c);
+		
+		public MatFloatN	shuffle_row (Permutation p);
+		public MatFloatN	shuffle_col (Permutation p);
 	}
 }

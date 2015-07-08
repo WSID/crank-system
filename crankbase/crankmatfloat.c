@@ -27,6 +27,7 @@
 
 #include "crankbasemacro.h"
 #include "crankfunction.h"
+#include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankvecfloat.h"
 
@@ -3716,6 +3717,83 @@ crank_mat_float_n_mix (	CrankMatFloatN*	a,
 	}
 }
 
+
+//////// Shuffling /////////////////////////////////////////////////////////////
+
+/**
+ * crank_mat_float_n_shuffle_row:
+ * @a: A Matrix
+ * @p: A Permutation to shuffle row.
+ * @r: (out): A Matrix to store result.
+ *
+ * Shuffles row vectors by given permutation.
+ */
+void
+crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
+								CrankPermutation*	p,
+								CrankMatFloatN*		r	)
+{
+	gfloat*	data;
+	guint	i;
+	guint	j;
+	
+	if (a->rn == p->n) {
+		data = g_new (gfloat*, a->rn * a->cn);
+	
+		for (i = 0; i < a->rn; i++) {
+			guint ni = crank_permutation_get (p, i);
+			
+			for (j = 0; j < a->cn; j++)
+				data[(i * a->cn) + j] = crank_mat_float_n_get (a, ni, j);
+		}
+		
+		crank_mat_float_n_init_arr_take (r, a->rn, a->cn, data);
+	}
+	
+	else {
+		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
+				a->rn, a->cn, p->n);
+		crank_permutation_fini (p);
+	}
+}
+
+
+/**
+ * crank_mat_float_n_shuffle_col:
+ * @a: A Matrix
+ * @p: A Permutation to shuffle row.
+ * @r: (out): A Matrix to store result.
+ *
+ * Shuffles row vectors by given permutation.
+ */
+void
+crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
+								CrankPermutation*	p,
+								CrankMatFloatN*		r	)
+{
+	gfloat*	data;
+	guint	i;
+	guint	j;
+	
+	if (a->cn == p->n) {
+		data = g_new (gfloat*, a->rn * a->cn);
+	
+		for (i = 0; i < a->rn; i++) {
+			for (j = 0; j < a->cn; j++) {
+				data[(i * a->cn) + j] =
+						crank_mat_float_n_get (a, i, crank_permutation_get (p, j));
+			}
+		}
+		
+		crank_mat_float_n_init_arr_take (r, a->rn, a->cn, data);
+	}
+	
+	else {
+		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
+				a->rn, a->cn, p->n);
+		crank_permutation_fini (p);
+	}
+}
 
 //////// Internal Definition ///////////////////////////////////////////////////
 

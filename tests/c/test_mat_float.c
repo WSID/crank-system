@@ -83,6 +83,9 @@ static void		test_n_mul (void);
 static void		test_n_mixs (void);
 static void		test_n_mix (void);
 
+static void		test_n_shuffle_row (void);
+static void		test_n_shuffle_col (void);
+
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -131,6 +134,9 @@ gint	main (gint argc, gchar** argv)
   	g_test_add_func ("/crank/base/mat/float/n/mul",			test_n_mul);
   	g_test_add_func ("/crank/base/mat/float/n/mixs",		test_n_mixs);
   	g_test_add_func ("/crank/base/mat/float/n/mix",			test_n_mix);
+  	
+  	g_test_add_func ("/crank/base/mat/float/n/shuffle/row",	test_n_shuffle_row);
+  	g_test_add_func ("/crank/base/mat/float/n/shuffle/col",	test_n_shuffle_col);
 
   	g_test_run ();
   	return 0;
@@ -848,4 +854,62 @@ test_n_mix (void)
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&b);
 	crank_mat_float_n_fini (&c);
+}
+
+static void
+test_n_shuffle_row (void)
+{
+	CrankMatFloatN		a = {0};
+	CrankPermutation	p = {0};
+	
+	crank_mat_float_n_init (&a, 4, 2,
+		1.0f, 3.0f,
+		7.0f, 2.0f,
+		1.0f, 4.0f,
+		3.0f, 1.0f	);
+
+	crank_permutation_init (&p, 4,
+		1, 3, 0, 2	);
+
+	crank_mat_float_n_shuffle_row (&a, &p, &a);
+	
+	test_assert_float (a.data[0], 7.0f);
+	test_assert_float (a.data[1], 2.0f);
+	test_assert_float (a.data[2], 3.0f);
+	test_assert_float (a.data[3], 1.0f);
+	test_assert_float (a.data[4], 1.0f);
+	test_assert_float (a.data[5], 3.0f);
+	test_assert_float (a.data[6], 1.0f);
+	test_assert_float (a.data[7], 4.0f);
+
+	crank_mat_float_n_fini (&a);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_n_shuffle_col (void)
+{
+	CrankMatFloatN		a = {0};
+	CrankPermutation	p = {0};
+	
+	crank_mat_float_n_init (&a, 2, 4,
+		1.0f, 7.0f, 1.0f, 3.0f,
+		3.0f, 2.0f, 4.0f, 1.0f	);
+
+	crank_permutation_init (&p, 4,
+		1, 3, 0, 2	);
+
+	crank_mat_float_n_shuffle_col (&a, &p, &a);
+	
+	test_assert_float (a.data[0], 7.0f);
+	test_assert_float (a.data[1], 3.0f);
+	test_assert_float (a.data[2], 1.0f);
+	test_assert_float (a.data[3], 1.0f);
+	test_assert_float (a.data[4], 2.0f);
+	test_assert_float (a.data[5], 1.0f);
+	test_assert_float (a.data[6], 3.0f);
+	test_assert_float (a.data[7], 4.0f);
+
+	crank_mat_float_n_fini (&a);
+	crank_permutation_fini (&p);
 }

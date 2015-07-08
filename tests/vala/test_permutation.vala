@@ -37,7 +37,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/permutation/inverse",
 		test_inverse );
 		
-	GLib.Test.add_func ("/crank/base/permutatino/shuffle",
+	GLib.Test.add_func ("/crank/base/permutation/shuffle",
 		test_shuffle );
 	
 	GLib.Test.run ();

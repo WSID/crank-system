@@ -482,3 +482,39 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat (a.get (1, 0), 8.8)
 		self.assertFloat (a.get (1, 1), 13.0)
 		self.assertFloat (a.get (1, 2), 18.0)
+
+	def test_n_shuffle_row (self):
+		a = CrankBase.MatFloatN.init_arr (4, 2,
+				[1, 3,
+				 7, 2,
+				 1, 4,
+				 3, 1])
+		p = CrankBase.Permutation.init_arr ([1, 3, 0, 2])
+		
+		a = a.shuffle_row (p)
+		
+		self.assertFloat (a.get (0, 0), 7)
+		self.assertFloat (a.get (0, 1), 2)
+		self.assertFloat (a.get (1, 0), 3)
+		self.assertFloat (a.get (1, 1), 1)
+		self.assertFloat (a.get (2, 0), 1)
+		self.assertFloat (a.get (2, 1), 3)
+		self.assertFloat (a.get (3, 0), 1)
+		self.assertFloat (a.get (3, 1), 4)
+		
+	def test_n_shuffle_col (self):
+		a = CrankBase.MatFloatN.init_arr (2, 4,
+				[1, 7, 1, 3,
+				 3, 2, 4, 1])
+		p = CrankBase.Permutation.init_arr ([1, 3, 0, 2])
+		
+		a = a.shuffle_col (p)
+		
+		self.assertFloat (a.get (0, 0), 7)
+		self.assertFloat (a.get (0, 1), 3)
+		self.assertFloat (a.get (0, 2), 1)
+		self.assertFloat (a.get (0, 3), 1)
+		self.assertFloat (a.get (1, 0), 2)
+		self.assertFloat (a.get (1, 1), 1)
+		self.assertFloat (a.get (1, 2), 3)
+		self.assertFloat (a.get (1, 3), 4)

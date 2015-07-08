@@ -35,6 +35,8 @@ static void		test_reverse (void);
 
 static void		test_inverse (void);
 
+static void		test_shuffle (void);
+
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -57,6 +59,10 @@ main (gint argc, gchar** argv)
 					
   	g_test_add_func ("/crank/base/permutation/inverse",
 					test_inverse);
+					
+  	g_test_add_func ("/crank/base/permutation/shuffle",
+					test_shuffle);
+
 
   	g_test_run ();
   	return 0;
@@ -153,8 +159,8 @@ test_shuffle (void)
 	CrankPermutation	p = {0};
 	CrankPermutation	q = {0};
 	
-	crank_permutataion_init (&p, 4,	0, 1, 3, 2);
-	crank_permutataion_init (&q, 4, 1, 0, 2, 3);
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	crank_permutation_init (&q, 4,	1, 0, 2, 3);
 	
 	crank_permutation_shuffle (&p, &q, &p);
 	

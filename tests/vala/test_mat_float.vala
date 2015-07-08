@@ -63,6 +63,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/mat/float/n/mul", test_n_mul);
 	GLib.Test.add_func ("/crank/base/mat/float/n/mixs", test_n_mixs);
 	GLib.Test.add_func ("/crank/base/mat/float/n/mix", test_n_mix);
+	
+	GLib.Test.add_func ("/crank/base/mat/float/n/shuffle/row", test_n_shuffle_row);
+	GLib.Test.add_func ("/crank/base/mat/float/n/shuffle/col", test_n_shuffle_col);
 
 	GLib.Test.run ();
 
@@ -549,4 +552,44 @@ private void test_n_mix () {
 	float_eq (a[1, 0], 8.8f);
 	float_eq (a[1, 1], 13.0f);
 	float_eq (a[1, 2], 18.0f);
+}
+
+private void test_n_shuffle_row () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 3.0f},
+		 {7.0f, 2.0f},
+		 {1.0f, 4.0f},
+		 {3.0f, 1.0f}} );
+	
+	Crank.Permutation p = Crank.Permutation.arr ({1, 3, 0, 2});
+	
+	a = a.shuffle_row (p);
+	
+	assert (float_eq (a[0, 0], 7.0f));
+	assert (float_eq (a[0, 1], 2.0f));
+	assert (float_eq (a[1, 0], 3.0f));
+	assert (float_eq (a[1, 1], 1.0f));
+	assert (float_eq (a[2, 0], 1.0f));
+	assert (float_eq (a[2, 1], 3.0f));
+	assert (float_eq (a[3, 0], 1.0f));
+	assert (float_eq (a[3, 1], 4.0f));
+}
+
+private void test_n_shuffle_col () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 7.0f, 1.0f, 3.0f},
+		 {3.0f, 2.0f, 4.0f, 1.0f}});
+	
+	Crank.Permutation p = Crank.Permutation.arr ({1, 3, 0, 2});
+	
+	a = a.shuffle_col (p);
+	
+	assert (float_eq (a[0, 0], 7.0f));
+	assert (float_eq (a[0, 1], 3.0f));
+	assert (float_eq (a[0, 2], 1.0f));
+	assert (float_eq (a[0, 3], 1.0f));
+	assert (float_eq (a[1, 0], 2.0f));
+	assert (float_eq (a[1, 1], 1.0f));
+	assert (float_eq (a[1, 2], 3.0f));
+	assert (float_eq (a[1, 3], 4.0f));
 }

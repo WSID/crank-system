@@ -30,6 +30,7 @@
 #include <glib-object.h>
 
 #include "crankfunction.h"
+#include "crankpermutation.h"
 #include "crankveccommon.h"
 
 G_BEGIN_DECLS
@@ -870,6 +871,16 @@ void		crank_mat_float_n_mix (	CrankMatFloatN*	a,
 									CrankMatFloatN*	b,
 									CrankMatFloatN*	c,
 									CrankMatFloatN*	r	);
+									
+//////// Shuffling ////////
+
+void		crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
+											CrankPermutation*	p,
+											CrankMatFloatN*		r	);
+
+void		crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
+											CrankPermutation*	p,
+											CrankMatFloatN*		r	);
 
 G_END_DECLS
 
