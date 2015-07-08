@@ -2,12 +2,14 @@
 # Python에서 Crank System을 테스트합니다.
 
 TESTS= \
+	test_permutation.py \
 	test_vec_bool.py \
 	test_vec_int.py \
 	test_vec_float.py \
 	test_digraph.py \
 	test_advgraph.py \
-	test_mat_float.py
+	test_mat_float.py \
+	test_advmat.py
 
 AM_TESTS_ENVIRONMENT= \
 	LD_LIBRARY_PATH=$(top_builddir)/crankbase/.libs/ \

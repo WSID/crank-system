@@ -18,18 +18,22 @@ test_programs= \
 		test_string \
 		test_base_macro \
 		test_value \
+		test_permutation \
 		test_vec_bool \
 		test_vec_int \
 		test_vec_float \
 		test_digraph \
 		test_advgraph \
-		test_mat_float
+		test_mat_float \
+		test_advmat
 
 test_string_LDADD= $(TEST_BASE_LDADD)
 
 test_base_macro_LDADD= $(TEST_BASE_LDADD)
 
 test_value_LDADD= $(TEST_BASE_LDADD)
+
+test_permutation_LDADD= $(TEST_BASE_LDADD)
 
 
 test_vec_bool_LDADD=  $(TEST_BASE_LDADD)
@@ -43,3 +47,5 @@ test_digraph_LDADD=  $(TEST_BASE_LDADD)
 test_advgraph_LDADD=  $(TEST_BASE_LDADD)
 
 test_mat_float_LDADD=  $(TEST_BASE_LDADD)
+
+test_advmat_LDADD=  $(TEST_BASE_LDADD)

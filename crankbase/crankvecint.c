@@ -37,7 +37,7 @@
  * SECTION: crankvecint
  * @title: Integer vectors.
  * @short_description: Vectors that have integer elements.
- * @stability: Unstable
+ * @stability: unstable
  * @include: crankbase.h
  *
  * Crank System provides 2, 3, 4, and free sized float vectors for convinience.

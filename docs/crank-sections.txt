@@ -66,6 +66,33 @@ crank_value_array_unset
 </SECTION>
 
 <SECTION>
+<FILE>crankpermutation</FILE>
+CrankPermutation
+crank_permutation_init
+crank_permutation_init_arr
+crank_permutation_init_arr_take
+crank_permutation_init_identity
+crank_permutation_copy
+crank_permutation_dup
+crank_permutation_fini
+crank_permutation_free
+
+crank_permutation_get_size
+crank_permutation_get
+crank_permutation_index_of
+
+crank_permutation_get_sign
+
+crank_permutation_check_valid
+crank_permutation_swap
+crank_permutation_inverse
+crank_permutation_reverse
+<SUBSECTION Standard>
+CRANK_TYPE_PERMUTATION
+crank_permutation_get_type
+</SECTION>
+
+<SECTION>
 <FILE>crankvecbool</FILE>
 CrankVecBool2
 CRANK_VEC_BOOL2_FALSE
@@ -808,4 +835,9 @@ CrankDigraphHeuristicFunc
 crank_dijkstra_digraph
 crank_astar_digraph
 crank_dijkstra_full_digraph
+</SECTION>
+
+<SECTION>
+<FILE>crankadvmat</FILE>
+crank_lu_mat_float_n
 </SECTION>

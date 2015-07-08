@@ -3016,7 +3016,9 @@ crank_mat_float_n_dup (	CrankMatFloatN*	mat	)
 void
 crank_mat_float_n_fini (	CrankMatFloatN*	mat	)
 {
-	crank_mat_float_n_realloc (mat, 0, 0);
+  	g_free (mat->data);
+  	mat->rn = 0;
+  	mat->cn = 0;
 }
 
 /**

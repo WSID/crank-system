@@ -29,6 +29,7 @@
 #include "crankvala.h"
 #include "crankvalue.h"
 
+#include "crankpermutation.h"
 #include "crankdigraph.h"
 #include "crankveccommon.h"
 #include "crankvecbool.h"
@@ -39,6 +40,7 @@
 
 #include "crankmatfloat.h"
 
+#include "crankadvmat.h"
 
 #undef _CRANKBASE_INSIDE
 

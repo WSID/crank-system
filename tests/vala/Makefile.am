@@ -15,12 +15,14 @@ AM_CFLAGS= \
 test_programs= \
 		test_vala \
 		test_string \
+		test_permutation \
 		test_digraph \
 		test_vec_bool \
 		test_vec_int \
 		test_vec_float \
 		test_advgraph \
-		test_mat_float
+		test_mat_float \
+		test_advmat
 
 
 # test_func_holder
@@ -40,6 +42,13 @@ test_string_LDADD= \
 test_string_SOURCES= \
 		test_string.vala
 		
+		
+test_permutation_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_permutation_SOURCES= \
+		test_permutation.vala
 
 test_digraph_LDADD= \
 		$(CRANK_BASE_LIBS) \
@@ -85,3 +94,10 @@ test_mat_float_LDADD= \
 
 test_mat_float_SOURCES= \
 		test_mat_float.vala
+
+test_advmat_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_advmat_SOURCES= \
+		test_advmat.vala

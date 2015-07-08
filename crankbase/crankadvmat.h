@@ -1,3 +1,6 @@
+#ifndef CRANKADVMAT_H
+#define CRANKADVMAT_H
+
 /* Copyright (C) 2015, WSID   */
 
 /* Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,18 +22,22 @@
  * THE SOFTWARE.
  */
 
-* cheader_filename="crankbase.h"
+#ifndef _CRANKBASE_INSIDE
+#error "crankadvmat.h cannot be included directly."
+#endif
 
-Permutation skip
+#include <glib.h>
+#include <glib-object.h>
 
-//////// VecBool ///////////////////////////////////////////////////////////////
-VecBool* skip
-VecInt* skip
-VecFloat* skip
+#include "crankveccommon.h"
+#include "crankmatfloat.h"
 
-MatFloat* skip
+G_BEGIN_DECLS
 
-//////// Digraph
-DigraphNode.get_data.value ref
-DigraphEdge.get_data.value ref
+gboolean	crank_lu_mat_float_n (	CrankMatFloatN*	a,
+									CrankMatFloatN*	l,
+									CrankMatFloatN*	u	);
 
+G_END_DECLS
+
+#endif /* CRANKADVMAT_H */

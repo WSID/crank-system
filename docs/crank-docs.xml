@@ -30,12 +30,14 @@
   
   <chapter>
     <title>Data structures</title>
+    <xi:include href="xml/crankpermutation.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>
 	<xi:include href="xml/crankmatfloat.xml"/>
    	<xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
+	<xi:include href="xml/crankadvmat.xml"/>
 	<xi:include href="crank-chapter-base-data.xml"/>
   </chapter>
   

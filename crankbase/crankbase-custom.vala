@@ -100,6 +100,31 @@ namespace Crank {
 		public DigraphNode	head { get; }
 	}
 	
+	[CCode (copy_function="crank_permutation_copy",
+			destroy_function="crank_permutation_fini",
+			free_function="crank_permutation_free")]
+	public struct Permutation {
+		public Permutation (uint n, ...);
+		public Permutation.arr ([CCode (array_length_pos=0)]uint[] data);
+		public Permutation.arr_take ([CCode (array_length_pos=0)]owned uint[] data);
+		
+		public Permutation.identity (uint n);
+		
+		public Permutation? dup();
+		
+		public uint size { get; }
+		
+		public uint get (uint i);
+		public int index_of (uint v);
+		
+		public int sign { get; }
+		
+		public bool check_valid ();
+		public void	swap (uint i, uint j);
+		public Permutation reverse ();
+		public Permutation inverse ();
+	}
+	
 
 	[CCode (copy_function="crank_vec_bool2_copy")]
 	public struct VecBool2 {
