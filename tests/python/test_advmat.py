@@ -112,6 +112,56 @@ class TestAdvMat(unittest.TestCase):
 		self.assertFloat (u.get (2, 1), 0)
 		self.assertFloat (u.get (2, 2), 1)
 
+	def test_gram_schmidt (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				3, 4, 1,
+				2, 2, 1,
+				4, 2, 1] )
+	
+		(res, q, r) = CrankBase.gram_schmidt_mat_float_n (a)
+		
+		assert (res)
+		
+		self.assertFloat (q.get (0, 0), 0.5571)
+		self.assertFloat (q.get (0, 1), 0.7459)
+		self.assertFloat (q.get (0, 2), -0.3651)
+		self.assertFloat (q.get (1, 0), 0.3714)
+		self.assertFloat (q.get (1, 1), 0.1695)
+		self.assertFloat (q.get (1, 2), 0.9129)
+		self.assertFloat (q.get (2, 0), 0.7428)
+		self.assertFloat (q.get (2, 1), -0.6442)
+		self.assertFloat (q.get (2, 2), -0.1826)
+		
+		self.assertFloat (r.get (0, 0), 5.3852)
+		self.assertFloat (r.get (0, 1), 4.4567)
+		self.assertFloat (r.get (0, 2), 1.6713)
+		self.assertFloat (r.get (1, 0), 0.0)
+		self.assertFloat (r.get (1, 1), 2.0342)
+		self.assertFloat (r.get (1, 2), 0.2712)
+		self.assertFloat (r.get (2, 0), 0)
+		self.assertFloat (r.get (2, 1), 0)
+		self.assertFloat (r.get (2, 2), 0.3651)
+
+
+	def test_qr_household (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				3, 4, 1,
+				2, 2, 1,
+				4, 2, 1] )
+	
+		(res, r) = CrankBase.qr_householder_mat_float_n (a)
+		
+		assert (res)
+		
+		self.assertFloat (r.get (0, 0), 5.3852)
+		self.assertFloat (r.get (0, 1), 4.4567)
+		self.assertFloat (r.get (0, 2), 1.6713)
+		self.assertFloat (r.get (1, 0), 0.0)
+		self.assertFloat (r.get (1, 1), 2.0342)
+		self.assertFloat (r.get (1, 2), 0.2712)
+		self.assertFloat (r.get (2, 0), 0)
+		self.assertFloat (r.get (2, 1), 0)
+		self.assertFloat (r.get (2, 2), 0.3651)
 
 if __name__ == '__main__':
 	unittest.main ()

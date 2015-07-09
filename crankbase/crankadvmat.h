@@ -44,6 +44,14 @@ gboolean	crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 										CrankMatFloatN*		l,
 										CrankMatFloatN*		u	);
 
+
+gboolean	crank_gram_schmidt_mat_float_n (	CrankMatFloatN*	a,
+												CrankMatFloatN*	q,
+												CrankMatFloatN*	r	);
+
+gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
+												CrankMatFloatN*	r	);
+
 G_END_DECLS
 
 #endif /* CRANKADVMAT_H */

@@ -844,4 +844,6 @@ crank_dijkstra_full_digraph
 <FILE>crankadvmat</FILE>
 crank_lu_mat_float_n
 crank_lu_p_mat_float_n
+crank_gram_schmidt_mat_float_n
+crank_qr_householder_mat_float_n
 </SECTION>

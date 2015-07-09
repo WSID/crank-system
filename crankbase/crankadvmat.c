@@ -26,6 +26,7 @@
 
 #include "crankpermutation.h"
 #include "crankveccommon.h"
+#include "crankvecfloat.h"
 #include "crankmatfloat.h"
 #include "crankadvmat.h"
 
@@ -225,4 +226,183 @@ crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 	// Do LU Decomposition.
 	crank_mat_float_n_shuffle_row (a, p, &na);
 	return crank_lu_mat_float_n (&na, l, u);
+}
+
+/**
+ * crank_gram_schmidt_mat_float_n:
+ * @a: A Matrix.
+ * @q: (out): A Resulting Orthogonal Matrix.
+ * @r: (out): The upper triangular.
+ *
+ * Gets QR Decomposition by Gram Schmidt process.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
+									CrankMatFloatN*		q,
+									CrankMatFloatN*		r	)
+{
+	CrankVecFloatN*		e;
+	CrankVecFloatN**	ep;
+	
+	guint	i;
+	guint	j;
+	guint	k;
+	
+	if (a->rn == a->cn) {
+		e = g_new0 (CrankVecFloatN, a->rn);
+		crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
+		
+		for (i = 0; i < a->rn; i++) {
+			CrankVecFloatN	ac = {0};
+			CrankVecFloatN	u = {0};
+			
+			// u = a.col[i]
+			crank_mat_float_n_get_col (a, i, &ac);
+			crank_vec_float_n_copy (&ac, &u);
+		
+			// u -= proj(a.col[i], e[0..(i-1)])
+			// r = a.col[i] dot e
+			for (j = 0; j < i; j++) {
+				CrankVecFloatN	proj = {0};
+				gfloat			dot;
+				dot = crank_vec_float_n_dot (e + j, &ac);
+				
+				// If QR decomposition is not possible, return.
+				if (dot == 0.0f) {
+					for (k = 0; k < i; k++) crank_vec_float_n_fini (e + k);
+					g_free (e);
+					crank_vec_float_n_fini (&ac);
+					crank_vec_float_n_fini (&u);
+					crank_mat_float_n_fini (q);
+					crank_mat_float_n_fini (r);
+					return FALSE;
+				}
+				
+				crank_vec_float_n_muls (e + j, dot, &proj);
+				
+				crank_vec_float_n_sub (&u, &proj, &u);
+				crank_mat_float_n_set (r, j, i, dot);
+			}
+		
+			// e[i] = u.unit
+			crank_mat_float_n_set (r, i, i, crank_vec_float_n_get_magn (&u));
+			crank_vec_float_n_unit (&u, e + i);
+			crank_vec_float_n_fini (&u);
+		}
+		
+		ep = g_new (CrankVecFloatN*, a->rn);
+		for (i = 0; i < a->rn; i++) ep[i] = e + i;
+
+		crank_mat_float_n_init_cvarr (q, a->rn, ep);
+
+		for (i = 0; i < a->rn; i++) {
+			crank_vec_float_n_fini (e + i);
+		}
+		g_free (e);
+		g_free (ep);
+		
+		return TRUE;
+	}
+	else {
+		g_warning ("Adv: MatFloatN: gram schmidt: non square: %u, %u",
+				a->rn, a->cn);
+		return FALSE;
+	}
+}
+
+/**
+ * crank_qr_householder_mat_float_n:
+ * @a: A Matrix.
+ * @r: (out): A Lower triangular matrix.
+ *
+ * Performs QR Decomposition by householder method.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
+									CrankMatFloatN*	r	)
+{
+	guint			i;
+	guint			j;
+	guint			k;
+	
+	CrankMatFloatN	pa = {0};
+	CrankMatFloatN	qi = {0};
+	CrankMatFloatN	qpai = {0};
+	CrankVecFloatN	an = {0};
+	
+	if (a->rn == a->cn) {
+	
+		if (a->rn == 1) {
+			crank_mat_float_n_init (r, 0, 0,
+					crank_mat_float_n_get (a, 0, 0));
+			return TRUE;
+		}
+	
+	
+		// Setup initial state.
+		crank_mat_float_n_copy (a, &pa);
+		crank_mat_float_n_init_fill (r, a->rn, a->rn, 0.0f);
+		
+		for (i = 0; i < a->rn - 1; i++) {
+			// Initialize an
+			crank_mat_float_n_get_col (&pa, 0, &an);
+
+			crank_vec_float_n_set (&an, 0,
+					crank_vec_float_n_get (&an, 0) -
+					crank_vec_float_n_get_magn (&an));
+
+			crank_vec_float_n_unit (&an, &an);
+			
+			// Initialize qi			
+			crank_mat_float_n_init_fill (&qi, a->rn - i, a->rn - i, 0.0f);
+			
+			for (j = 0; j < a->rn - i; j++) {
+				for (k = 0; k < a->rn - i; k++) {
+					crank_mat_float_n_set (&qi, j, k,
+							- 2 *
+							crank_vec_float_n_get (&an, j) *
+							crank_vec_float_n_get (&an, k));
+				}
+				
+				crank_mat_float_n_set (&qi, j, j,
+						1 + crank_mat_float_n_get (&qi, j, j));
+			}
+			
+			crank_mat_float_n_mul (&qi, &pa, &qpai);
+			
+			// Resulting row 0 of qpai is part of r
+			// and rest part is next pa
+			for (j = 0; j < a->rn - i; j++) {
+				crank_mat_float_n_set (r, i, i + j,
+						crank_mat_float_n_get (&qpai, 0, j));
+			}
+			
+			crank_mat_float_n_init_fill (&pa, a->rn - 1, a->rn - 1, 0.0f);
+			for (j = 1; j < a->rn - i; j++) {
+				for (k = 1; k < a->rn - i; k++) {
+					crank_mat_float_n_set (&pa, (j - 1), (k - 1),
+							crank_mat_float_n_get (&qpai, j, k));
+				}
+			}
+					
+		}
+		// Fill last part of r
+		crank_mat_float_n_set(r, (a->rn - 1), (a->rn - 1),
+				crank_mat_float_n_get (&qpai, 1, 1));
+		
+		crank_mat_float_n_fini (&pa);
+		crank_mat_float_n_fini (&qi);
+		crank_mat_float_n_fini (&qpai);
+		crank_vec_float_n_fini (&an);
+		return TRUE;
+	}
+	else {
+		g_warning ("Adv: MatFloatN: QR householder: unsupported size: not square: %u, %u",
+				a->rn, a->cn);
+		return FALSE;
+	}
 }

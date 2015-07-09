@@ -28,6 +28,12 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/advmat/lu_p/mat/float/n",
 		test_lu_p );
 	
+	GLib.Test.add_func ("/crank/base/advmat/gram_schmidt/mat/float/n",
+		test_gram_schmidt );
+	
+	GLib.Test.add_func ("/crank/base/advmat/qr_householder/mat/float/n",
+		test_qr_householder);
+	
 	GLib.Test.run ();
 	
 	return 0;
@@ -53,7 +59,7 @@ private void test_lu () {
 	Crank.MatFloatN l;
 	Crank.MatFloatN u;
 	
-	Crank.lu_mat_float_n (a, out l, out u);
+	assert (Crank.lu_mat_float_n (a, out l, out u));
 	
 	assert (float_eq (l[0, 0], 3));
 	assert (float_eq (l[0, 1], 0));
@@ -91,7 +97,7 @@ private void test_lu_p () {
 	Crank.MatFloatN u;
 	Crank.Permutation p;
 	
-	Crank.lu_p_mat_float_n (a, out p, out l, out u);
+	assert (Crank.lu_p_mat_float_n (a, out p, out l, out u));
 	
 	assert (p[0] == 1);
 	assert (p[1] == 2);
@@ -121,5 +127,67 @@ private void test_lu_p () {
 	assert (float_eq (u[2, 0], 0.0f));
 	assert (float_eq (u[2, 1], 0.0f));
 	assert (float_eq (u[2, 2], 1.0f));
+}
+
+
+private void test_gram_schmidt () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{3.0f,	4.0f,	1.0f},
+		{2.0f,	2.0f,	1.0f},
+		{4.0f,	2.0f,	1.0f}}	);
+	
+	Crank.MatFloatN q;
+	Crank.MatFloatN r;
+	
+	assert (Crank.gram_schmidt_mat_float_n (a, out q, out r));
+	
+	assert (float_eq (q[0, 0], 0.5571f));
+	assert (float_eq (q[0, 1], 0.7459f));
+	assert (float_eq (q[0, 2], -0.3651f));
+	
+	assert (float_eq (q[1, 0], 0.3714f));
+	assert (float_eq (q[1, 1], 0.1695f));
+	assert (float_eq (q[1, 2], 0.9129f));
+	
+	assert (float_eq (q[2, 0], 0.7428f));
+	assert (float_eq (q[2, 1], -0.6442f));
+	assert (float_eq (q[2, 2], -0.1826f));
+	
+	
+	assert (float_eq (r[0, 0], 5.3852f));
+	assert (float_eq (r[0, 1], 4.4567f));
+	assert (float_eq (r[0, 2], 1.6713f));
+	
+	assert (float_eq (r[1, 0], 0.0f));
+	assert (float_eq (r[1, 1], 2.0342f));
+	assert (float_eq (r[1, 2], 0.2712f));
+	
+	assert (float_eq (r[2, 0], 0.0f));
+	assert (float_eq (r[2, 1], 0.0f));
+	assert (float_eq (r[2, 2], 0.3651f));
+}
+
+
+private void test_qr_householder () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{3.0f,	4.0f,	1.0f},
+		{2.0f,	2.0f,	1.0f},
+		{4.0f,	2.0f,	1.0f}}	);
+	
+	Crank.MatFloatN r;
+	
+	assert (Crank.qr_householder_mat_float_n (a, out r));
+	
+	assert (float_eq (r[0, 0], 5.3852f));
+	assert (float_eq (r[0, 1], 4.4567f));
+	assert (float_eq (r[0, 2], 1.6713f));
+	
+	assert (float_eq (r[1, 0], 0.0f));
+	assert (float_eq (r[1, 1], 2.0342f));
+	assert (float_eq (r[1, 2], 0.2712f));
+	
+	assert (float_eq (r[2, 0], 0.0f));
+	assert (float_eq (r[2, 1], 0.0f));
+	assert (float_eq (r[2, 2], 0.3651f));
 }
 
