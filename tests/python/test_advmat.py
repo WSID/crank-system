@@ -163,5 +163,26 @@ class TestAdvMat(unittest.TestCase):
 		self.assertFloat (r.get (2, 1), 0)
 		self.assertFloat (r.get (2, 2), 0.3651)
 
+
+	def test_qr_givens (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				3, 4, 1,
+				2, 2, 1,
+				4, 2, 1] )
+	
+		(res, r) = CrankBase.qr_givens_mat_float_n (a)
+		
+		assert (res)
+		
+		self.assertFloat (r.get (0, 0), 5.3852)
+		self.assertFloat (r.get (0, 1), 4.4567)
+		self.assertFloat (r.get (0, 2), 1.6713)
+		self.assertFloat (r.get (1, 0), 0.0)
+		self.assertFloat (r.get (1, 1), 2.0342)
+		self.assertFloat (r.get (1, 2), 0.2712)
+		self.assertFloat (r.get (2, 0), 0)
+		self.assertFloat (r.get (2, 1), 0)
+		self.assertFloat (r.get (2, 2), 0.3651)
+
 if __name__ == '__main__':
 	unittest.main ()

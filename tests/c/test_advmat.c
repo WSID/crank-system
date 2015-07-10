@@ -42,6 +42,8 @@ static void test_gram_schmidt (void);
 
 static void test_qr_householder (void);
 
+static void test_qr_givens (void);
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -57,6 +59,8 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/qr/gram_schmidt/mat/float/n", test_gram_schmidt);
 	
 	g_test_add_func ("/crank/base/advmat/qr/householder/mat/float/n", test_qr_householder);
+	
+	g_test_add_func ("/crank/base/advmat/qr/givens/mat/float/n", test_qr_givens);
 	g_test_run ();
 
 	return 0;
@@ -243,6 +247,36 @@ test_qr_householder (void)
 		4.0f,	2.0f,	1.0f	);
 
 	g_assert (crank_qr_householder_mat_float_n (&a, &r));
+	
+	test_assert_float (crank_mat_float_n_get (&r, 0, 0),  5.3852f);
+	test_assert_float (crank_mat_float_n_get (&r, 0, 1),  4.4567f);
+	test_assert_float (crank_mat_float_n_get (&r, 0, 2),  1.6713f);
+	test_assert_float (crank_mat_float_n_get (&r, 1, 0),  0.0f);
+	test_assert_float (crank_mat_float_n_get (&r, 1, 1),  2.0342f);
+	test_assert_float (crank_mat_float_n_get (&r, 1, 2),  0.2712f);
+	test_assert_float (crank_mat_float_n_get (&r, 2, 0),  0.0f);
+	test_assert_float (crank_mat_float_n_get (&r, 2, 1),  0.0f);
+	test_assert_float (crank_mat_float_n_get (&r, 2, 2),  0.3651f);
+	
+	
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
+}
+
+static void
+test_qr_givens (void)
+{
+	CrankMatFloatN	a = {0};
+	CrankMatFloatN	r = {0};
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		3.0f,	4.0f,	1.0f,
+		2.0f,	2.0f,	1.0f,
+		4.0f,	2.0f,	1.0f	);
+
+	g_assert (crank_qr_givens_mat_float_n (&a, &r));
+	
+	g_message ("%s", crank_mat_float_n_to_string (&r));
 	
 	test_assert_float (crank_mat_float_n_get (&r, 0, 0),  5.3852f);
 	test_assert_float (crank_mat_float_n_get (&r, 0, 1),  4.4567f);

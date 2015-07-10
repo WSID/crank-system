@@ -34,6 +34,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/advmat/qr_householder/mat/float/n",
 		test_qr_householder);
 	
+	GLib.Test.add_func ("/crank/base/advmat/qr_givens/mat/float/n",
+		test_qr_givens);
+	
 	GLib.Test.run ();
 	
 	return 0;
@@ -190,4 +193,29 @@ private void test_qr_householder () {
 	assert (float_eq (r[2, 1], 0.0f));
 	assert (float_eq (r[2, 2], 0.3651f));
 }
+
+
+private void test_qr_givens () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{3.0f,	4.0f,	1.0f},
+		{2.0f,	2.0f,	1.0f},
+		{4.0f,	2.0f,	1.0f}}	);
+	
+	Crank.MatFloatN r;
+	
+	assert (Crank.qr_givens_mat_float_n (a, out r));
+	
+	assert (float_eq (r[0, 0], 5.3852f));
+	assert (float_eq (r[0, 1], 4.4567f));
+	assert (float_eq (r[0, 2], 1.6713f));
+	
+	assert (float_eq (r[1, 0], 0.0f));
+	assert (float_eq (r[1, 1], 2.0342f));
+	assert (float_eq (r[1, 2], 0.2712f));
+	
+	assert (float_eq (r[2, 0], 0.0f));
+	assert (float_eq (r[2, 1], 0.0f));
+	assert (float_eq (r[2, 2], 0.3651f));
+}
+
 

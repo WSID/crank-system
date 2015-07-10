@@ -403,3 +403,87 @@ crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 		return FALSE;
 	}
 }
+
+/**
+ * crank_qr_givens_mat_float_n:
+ * @a: A Matrix.
+ * @r: (out): A Lower triangular matrix.
+ *
+ * Performs QR Decomposition by Givens rotation.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
+								CrankMatFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+	
+	CrankMatFloatN	pa = {0};
+	
+	if (a->rn == a->cn) {
+	
+		if (a->rn == 1) {
+			crank_mat_float_n_init (r, 0, 0,
+					crank_mat_float_n_get (a, 0, 0));
+			return TRUE;
+		}
+		
+		crank_mat_float_n_init_fill (r, a->rn, a->rn, 0.0f);
+		crank_mat_float_n_copy (a, &pa);
+		
+		for (i = 0; i < a->rn - 1; i++) {
+			guint	n = a->rn - i;
+			
+			for (j = n - 1; 0 < j; j--) {
+				CrankVecFloat2 x = {
+						crank_mat_float_n_get (&pa, j - 1, 0),
+						crank_mat_float_n_get (&pa, j, 0)};
+				
+				if ((x.x == 0) && (x.y == 0)) {
+					crank_mat_float_n_fini (&pa);
+					crank_mat_float_n_fini (r);
+					
+					return FALSE;
+				}
+				
+				crank_vec_float2_unit (&x, &x);
+				
+				// Multiplies Givens rotation matrix.
+				//
+				// We don't build up Full givens rotation matrix,
+				// instead we apply this with sin, cos value.
+				for (k = 0; k < n; k++) {
+					gfloat	e = crank_mat_float_n_get (&pa, j - 1, k);
+					gfloat	f = crank_mat_float_n_get (&pa, j, k);
+					
+					crank_mat_float_n_set (&pa, j-1, k,
+							e * x.x + f * x.y);
+							
+					crank_mat_float_n_set (&pa, j, k,
+							- e * x.y + f * x.x);
+				}
+			}
+			
+			for (j = 0; j < n; j++) {
+				crank_mat_float_n_set (r, i, i + j,
+					crank_mat_float_n_get (&pa, 0, j));
+			}
+			
+			crank_mat_float_n_slice (&pa, 1, 1, pa.rn, pa.cn, &pa);
+		}
+		
+		crank_mat_float_n_set (r, a->rn - 1, a->rn - 1, pa.data[0]);
+		
+		crank_mat_float_n_fini (&pa);
+		
+		return TRUE;
+	}
+	else {
+		g_warning ("Adv: MatFloatN: QR householder: unsupported size: not square: %u, %u",
+				a->rn, a->cn);
+		return FALSE;
+	}
+}

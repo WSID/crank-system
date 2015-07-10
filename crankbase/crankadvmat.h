@@ -52,6 +52,9 @@ gboolean	crank_gram_schmidt_mat_float_n (	CrankMatFloatN*	a,
 gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 												CrankMatFloatN*	r	);
 
+gboolean	crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
+											CrankMatFloatN*	r	);
+
 G_END_DECLS
 
 #endif /* CRANKADVMAT_H */
