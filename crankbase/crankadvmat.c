@@ -57,12 +57,17 @@
  *
  * Currently Crank System provides,
  * * LU Decomposition
- *   A = L U
- *
- *   L is lower triangular matrix.
- *
- *   U is upper triangular matrix.
+ *   * A = L U
+ *     * L is lower triangular matrix.
+ *     * U is upper triangular matrix.
  *   * Crout's Method.
+ *
+ * * QR Decomposition
+ *   * A = Q R
+ *     * Q is Orthogonal Matrix.
+ *     * R is upper triangular matrix.
+ *   * Gram Schmidt Process
+ *   * Householder Method (Does not return Q)
  */
 
 
@@ -380,15 +385,7 @@ crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 				crank_mat_float_n_set (r, i, i + j,
 						crank_mat_float_n_get (&qpai, 0, j));
 			}
-			
-			crank_mat_float_n_init_fill (&pa, a->rn - 1, a->rn - 1, 0.0f);
-			for (j = 1; j < a->rn - i; j++) {
-				for (k = 1; k < a->rn - i; k++) {
-					crank_mat_float_n_set (&pa, (j - 1), (k - 1),
-							crank_mat_float_n_get (&qpai, j, k));
-				}
-			}
-					
+			crank_mat_float_n_slice (&qpai, 1, 1, qpai.rn, qpai.cn, &pa);
 		}
 		// Fill last part of r
 		crank_mat_float_n_set(r, (a->rn - 1), (a->rn - 1),
