@@ -3319,6 +3319,87 @@ crank_mat_float_n_set_col (	CrankMatFloatN*	mat,
 }
 
 /**
+ * crank_mat_float_n_slice_row:
+ * @mat: A Matrix.
+ * @start: Starting index.
+ * @end: Ending index.
+ * @r: (out): A Sliced Matrix.
+ *
+ * Slices rows of a matrix.
+ */
+void
+crank_mat_float_n_slice_row (	CrankMatFloatN*	mat,
+								const guint		start,
+								const guint		end,
+								CrankMatFloatN*	r	)
+{
+	crank_mat_float_n_slice (mat, start, 0, end, mat->cn, r);
+}
+
+
+/**
+ * crank_mat_float_n_slice_col:
+ * @mat: A Matrix.
+ * @start: Starting index.
+ * @end: Ending index.
+ * @r: (out): A Sliced Matrix.
+ *
+ * Slices columns of a matrix.
+ */
+void
+crank_mat_float_n_slice_col (	CrankMatFloatN*	mat,
+								const guint		start,
+								const guint		end,
+								CrankMatFloatN*	r	)
+{
+	crank_mat_float_n_slice (mat, 0, start, mat->rn, end, r);
+}
+
+
+/**
+ * crank_mat_float_n_slice:
+ * @mat: A Matrix.
+ * @row_start: Starting row index.
+ * @col_start: Starting column index.
+ * @row_end: Ending row index.
+ * @col_end: Ending column index.
+ * @r: (out): A Sliced Matrix.
+ *
+ * Slices a matrix.
+ */
+void
+crank_mat_float_n_slice (	CrankMatFloatN*	mat,
+							const guint		row_start,
+							const guint		col_start,
+							const guint		row_end,
+							const guint		col_end,
+							CrankMatFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	
+	guint	rn;
+	guint	cn;
+	gfloat*	data;
+	
+	g_return_if_fail (row_start <= row_end);
+	g_return_if_fail (col_start <= col_end);
+	
+	rn = row_end - row_start;
+	cn = col_end - col_start;
+	data = g_new (gfloat, rn * cn);
+	
+	for (i = 0; i < rn; i++) {
+		for (j = 0; j < cn; j++) {
+			data[ (i * cn) + j] =
+					crank_mat_float_n_get (mat,	i + row_start, j + col_start );
+		}
+	}
+	
+	crank_mat_float_n_init_arr_take (r, rn, cn, data);
+}
+
+/**
  * crank_mat_float_n_get_tr:
  * @mat: A Matrix
  *
@@ -3738,7 +3819,7 @@ crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
 	guint	j;
 	
 	if (a->rn == p->n) {
-		data = g_new (gfloat*, a->rn * a->cn);
+		data = g_new (gfloat, a->rn * a->cn);
 	
 		for (i = 0; i < a->rn; i++) {
 			guint ni = crank_permutation_get (p, i);
@@ -3776,7 +3857,7 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 	guint	j;
 	
 	if (a->cn == p->n) {
-		data = g_new (gfloat*, a->rn * a->cn);
+		data = g_new (gfloat, a->rn * a->cn);
 	
 		for (i = 0; i < a->rn; i++) {
 			for (j = 0; j < a->cn; j++) {

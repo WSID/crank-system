@@ -987,6 +987,10 @@ namespace Crank {
 		public void			set_row (uint index, VecFloatN row);
 		public VecFloatN	get_col (uint index);
 		public void			set_col (uint index, VecFloatN col);
+		
+		public MatFloatN	slice_row (uint	start, uint end);
+		public MatFloatN	slice_col (uint	start, uint end);
+		public MatFloatN	slice (uint row_start, uint col_start, uint row_end, uint col_end);
 
 		public float		tr { get; }
 		public float		det { get; }

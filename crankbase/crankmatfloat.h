@@ -804,6 +804,23 @@ void		crank_mat_float_n_set_col (	CrankMatFloatN*	mat,
 										guint			index,
 										CrankVecFloatN*	col		);
 
+void		crank_mat_float_n_slice_row (	CrankMatFloatN*	mat,
+										const guint			start,
+										const guint			end,
+										CrankMatFloatN*		r		);
+										
+void		crank_mat_float_n_slice_col (	CrankMatFloatN*	mat,
+										const guint			start,
+										const guint			end,
+										CrankMatFloatN*		r		);
+
+void		crank_mat_float_n_slice (	CrankMatFloatN*	mat,
+										const guint		row_start,
+										const guint		col_start,
+										const guint		row_end,
+										const guint		col_end,
+										CrankMatFloatN*	r		);
+
 
 //////// Property of matrices ////////
 

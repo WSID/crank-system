@@ -288,6 +288,20 @@ class TestMatFloat(unittest.TestCase):
 		cv = a.get_col (2)
 		self.assertFloat (cv.get(0), 3)
 		self.assertFloat (cv.get(1), 6)
+
+	def test_n_slice (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3,
+				[1, 2, 3,
+				 4, 5, 6,
+				 7, 8, 9])
+		
+		a = a.slice (1, 1, 3, 2)
+		
+		self.assertEqual (a.get_row_size (), 2)
+		self.assertEqual (a.get_col_size (), 1)
+		
+		self.assertFloat (a.get (0, 0), 5)
+		self.assertFloat (a.get (0, 1), 8)
 	
 	def test_n_tr (self):
 		a = CrankBase.MatFloatN.init_arr (5, 5,

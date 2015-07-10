@@ -64,6 +64,7 @@ static void		test_n_to_string (void);
 static void		test_n_get (void);
 static void		test_n_get_row (void);
 static void		test_n_get_col (void);
+static void		test_n_slice (void);
 
 static void		test_n_tr (void);
 static void		test_n_det (void);
@@ -119,6 +120,7 @@ gint	main (gint argc, gchar** argv)
   	g_test_add_func ("/crank/base/mat/float/n/get",			test_n_get);
   	g_test_add_func ("/crank/base/mat/float/n/get_row",		test_n_get_row);
   	g_test_add_func ("/crank/base/mat/float/n/get_col",		test_n_get_col);
+  	g_test_add_func ("/crank/base/mat/float/n/slice",		test_n_slice);
   	g_test_add_func ("/crank/base/mat/float/n/tr",			test_n_tr);
   	g_test_add_func ("/crank/base/mat/float/n/det",			test_n_det);
   	g_test_add_func ("/crank/base/mat/float/n/cof",			test_n_cof);
@@ -562,6 +564,27 @@ test_n_get_col (void)
 
   	crank_mat_float_n_fini (&a);
   	crank_vec_float_n_fini (&c);
+}
+
+static void
+test_n_slice (void)
+{
+	CrankMatFloatN	a = {0};
+	
+	crank_mat_float_n_init (&a, 3, 3,
+			1.0f,	2.0f,	3.0f,
+			4.0f,	5.0f,	6.0f,
+			7.0f,	8.0f,	9.0f	);
+
+	crank_mat_float_n_slice (&a, 1, 1, 3, 2, &a);
+	
+	g_assert_cmpuint (a.rn, ==, 2);
+	g_assert_cmpuint (a.cn, ==, 1);
+	
+	test_assert_float (a.data[0], 5.0f);
+	test_assert_float (a.data[1], 8.0f);
+	
+	crank_mat_float_n_fini (&a);
 }
 
 static void

@@ -723,6 +723,9 @@ crank_mat_float_n_get_row
 crank_mat_float_n_set_row
 crank_mat_float_n_get_col
 crank_mat_float_n_set_col
+crank_mat_float_n_slice_row
+crank_mat_float_n_slice_col
+crank_mat_float_n_slice
 crank_mat_float_n_get_tr
 crank_mat_float_n_get_det
 crank_mat_float_n_get_cof
