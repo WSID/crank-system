@@ -71,6 +71,13 @@
  */
 
 
+static guint	float_hash (gconstpointer	v);
+static gboolean	float_equal (gconstpointer	v1, gconstpointer	v2);
+static gfloat*	float_dup (gfloat			f);
+static void		destroy_slice_float		(gpointer		ptr);
+
+
+
 /**
  * crank_lu_mat_float_n:
  * @a: A Matrix.
@@ -486,4 +493,102 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 				a->rn, a->cn);
 		return FALSE;
 	}
+}
+
+/**
+ * crank_eval_qr_mat_float_n:
+ * @a: A Matrix.
+ *
+ * Gets a map of (eigenvalues -> multiplicity) of given matrix.
+ *
+ * Eigenvalues are calculated by QR Algorithm; If QR Decompisition is not
+ * possible, %NULL may be returned.
+ *
+ * Returns: (transfer container) (element-type gfloat*, guint) (nullable):
+ *		A #GHashTable of (Eigenvalues -> multiplicity)
+ */
+GHashTable*
+crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	)
+{
+	CrankMatFloatN	ai = {0};
+	CrankMatFloatN	qi = {0};
+	CrankMatFloatN	ri = {0};
+	gboolean		cont;
+	GHashTable*		result;
+	
+	guint	i;
+	guint	j;
+	
+	cont = TRUE;
+	
+	if (! crank_gram_schmidt_mat_float_n (a, &qi, &ri))
+		return NULL;
+	
+	while (cont) {
+		
+		crank_mat_float_n_mul (&ri, &qi, &ai);
+		
+		cont = FALSE;
+		for (i = 0; i < a->rn; i++) {
+			for (j = 0; j < i; j++) {
+				// Checks for elements are smaller than reasonably small value.
+				//TODO: Make a way to adjust this value.
+				
+				if (0.0001f < crank_mat_float_n_get (&ai, i, j)) {
+					cont = TRUE;
+					break;
+				}
+			}
+			if (cont) break;
+		}
+		
+		if (cont) {
+			if (! crank_gram_schmidt_mat_float_n (&ai, &qi, &ri))
+				return NULL;
+		}
+	}
+	
+	result = g_hash_table_new_full (float_hash, float_equal, destroy_slice_float, NULL);
+	
+	for (i = 0; i < a->rn; i++) {
+		gfloat	e = crank_mat_float_n_get (&ai, i, i);
+		guint	c = GPOINTER_TO_INT (g_hash_table_lookup (result, &e));
+		
+		if (c == 0) {
+			g_hash_table_insert (result, float_dup (e),
+					GINT_TO_POINTER (c + 1));
+		}
+		else {
+			g_hash_table_insert (result, &e, GINT_TO_POINTER (c + 1));
+		}
+	}
+	return result;
+}
+
+
+
+static guint
+float_hash (gconstpointer	f) {
+	gdouble d = (gdouble) (*(gfloat*)f);
+	
+	return g_double_hash (&d);
+}
+
+static gboolean
+float_equal (gconstpointer	p1, gconstpointer	p2) {
+	gfloat f1 = *(gfloat*)p1;
+	gfloat f2 = *(gfloat*)p2;
+	return (p1 == p2);
+}
+
+static gfloat*
+float_dup (gfloat	f) {
+	gfloat*	result = g_slice_new (gfloat);
+	*result = f;
+	return result;
+}
+
+static void
+destroy_slice_float (gpointer	ptr) {
+	g_slice_free (gfloat, ptr);
 }

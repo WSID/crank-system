@@ -44,6 +44,8 @@ static void test_qr_householder (void);
 
 static void test_qr_givens (void);
 
+static void test_eval_qr (void);
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -61,6 +63,8 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/qr/householder/mat/float/n", test_qr_householder);
 	
 	g_test_add_func ("/crank/base/advmat/qr/givens/mat/float/n", test_qr_givens);
+	
+	g_test_add_func ("/crank/base/advmat/eval/qr/mat/float/n", test_eval_qr);
 	g_test_run ();
 
 	return 0;
@@ -291,4 +295,45 @@ test_qr_givens (void)
 	
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&r);
+}
+
+static void
+test_eval_qr (void)
+{
+	CrankMatFloatN	a = {0};
+	GHashTable*		t;
+	GHashTableIter	iter;
+	
+	gfloat*			key;
+	guint*			value;
+	
+	guint			i;
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		1.0f,	2.0f,	3.0f,
+		2.0f,	4.0f,	9.0f,
+		3.0f,	9.0f,	16.0f	);
+
+	t = crank_eval_qr_mat_float_n (&a);
+	
+	g_assert_nonnull (t);
+	
+	g_hash_table_iter_init (&iter, t);
+	
+	for (i = 0; i < 3; i++) {
+		g_assert (g_hash_table_iter_next (&iter,
+				(gpointer *)&key,
+				(gpointer *)&value	));
+	
+		if ( 1.0f < *key )
+			test_assert_float (*key, 21.4467f);
+		else if ( 0.0f < *key)
+			test_assert_float (*key, 0.4618f);
+		else test_assert_float (*key, -0.9085f);
+		
+		g_assert_cmpuint (GPOINTER_TO_INT (value), ==, 1);
+	}
+	
+	crank_mat_float_n_fini (&a);
+	g_hash_table_unref (t);
 }

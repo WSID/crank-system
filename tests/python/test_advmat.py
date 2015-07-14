@@ -184,5 +184,12 @@ class TestAdvMat(unittest.TestCase):
 		self.assertFloat (r.get (2, 1), 0)
 		self.assertFloat (r.get (2, 2), 0.3651)
 
+	@unittest.skip ("Function signiture needs to be changed.")
+	def test_eval_qr (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				1, 2, 3,
+				2, 3, 9,
+				3, 9, 16	])
+
 if __name__ == '__main__':
 	unittest.main ()

@@ -55,6 +55,8 @@ gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 gboolean	crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 											CrankMatFloatN*	r	);
 
+GHashTable*	crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	);
+
 G_END_DECLS
 
 #endif /* CRANKADVMAT_H */

@@ -850,4 +850,5 @@ crank_lu_p_mat_float_n
 crank_gram_schmidt_mat_float_n
 crank_qr_householder_mat_float_n
 crank_qr_givens_mat_float_n
+crank_eval_qr_mat_float_n
 </SECTION>
