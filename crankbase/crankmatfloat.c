@@ -30,6 +30,7 @@
 #include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankvecfloat.h"
+#include "crankadvmat.h"
 
 #include "crankmatfloat.h"
 
@@ -77,6 +78,13 @@ G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_f
  * * Ternary Operations
  *    * Mixing by scalar
  *    * Component mixing by matrix.
+ *
+ * # Notes about involuement of advanced operations.
+ *
+ * If matrices grows bigger, then it is harder and requires much operations to
+ * get its property. Therefore, we need to use advanced operations to decompose
+ * matrices to more simpler form.
+ * For example: Crank System uses LU Decomposition to get determinent of matrices.
  */
 
 
@@ -3434,10 +3442,35 @@ crank_mat_float_n_get_tr (	CrankMatFloatN*	mat	)
 gfloat
 crank_mat_float_n_get_det (	CrankMatFloatN* mat	)
 {
-  	g_warning ("Function not implemented.");
-  	// For now we just return 0.
-  	// We need LU, or QR Decompositions, to calculate determinent in reasonable time.
-  	return 0;
+	if (mat->rn == mat->cn) {
+		CrankMatFloatN		l = {0};
+		CrankMatFloatN		u = {0};
+		CrankPermutation	p = {0};
+		
+		gfloat	det;
+		
+		if (crank_lu_p_mat_float_n (mat, &p, &l, &u)) {
+			gint	sign = crank_permutation_get_sign (&p);
+			guint	i;
+			
+			det = sign;
+			
+			for (i = 0; i < mat->rn; i++) {
+				det *= crank_mat_float_n_get (&l, i, i);
+				det *= crank_mat_float_n_get (&u, i, i);
+			}
+			
+			crank_permutation_fini (&p);
+			crank_mat_float_n_fini (&l);
+			crank_mat_float_n_fini (&u);
+		}
+		
+		return det;
+	}
+	else {
+		g_warning ("MatFloatN: get_det: non square: %u, %u", mat->rn, mat->cn);
+		return 0.0f;
+	}
 }
 
 /**

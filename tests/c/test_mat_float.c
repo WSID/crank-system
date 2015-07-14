@@ -607,7 +607,18 @@ test_n_tr (void)
 static void
 test_n_det (void)
 {
-	g_test_skip ("Determinent for variable size matrix is in progress.");
+	CrankMatFloatN	a = {0};
+
+  	crank_mat_float_n_init (&a, 5, 5,
+			1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 2.0f, 0.0f, 3.0f, 1.0f,
+			0.0f, 0.0f, 3.0f, 0.0f, 0.0f,
+			1.0f, 3.0f, 0.0f, 4.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f, 5.0f);
+
+	test_assert_float (crank_mat_float_n_get_det (&a), -54.0f);
+	
+	crank_mat_float_n_fini (&a);
 }
 
 static void
