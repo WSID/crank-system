@@ -184,6 +184,22 @@ class TestAdvMat(unittest.TestCase):
 		self.assertFloat (r.get (2, 1), 0)
 		self.assertFloat (r.get (2, 2), 0.3651)
 
+	def test_eval_power (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				1, 2, 3,
+				2, 4, 9,
+				3, 9, 16	] );
+
+		(e, evec) = CrankBase.eval_power_mat_float_n (a, None)
+		
+		self.assertFloat (e, 21.4467);
+		
+		self.assertFloat (evec.get(0), 0.1729);
+		self.assertFloat (evec.get(1), 0.4671);
+		self.assertFloat (evec.get(2), 0.8671);
+		
+
+
 	@unittest.skip ("Function signiture needs to be changed.")
 	def test_eval_qr (self):
 		a = CrankBase.MatFloatN.init_arr (3, 3, [

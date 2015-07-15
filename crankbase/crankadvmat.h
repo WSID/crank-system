@@ -55,6 +55,10 @@ gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 gboolean	crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 											CrankMatFloatN*	r	);
 
+gfloat		crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
+											CrankVecFloatN*	b,
+											CrankVecFloatN*	evec	);
+
 GHashTable*	crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	);
 
 G_END_DECLS

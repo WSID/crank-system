@@ -28,14 +28,17 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/advmat/lu_p/mat/float/n",
 		test_lu_p );
 	
-	GLib.Test.add_func ("/crank/base/advmat/gram_schmidt/mat/float/n",
+	GLib.Test.add_func ("/crank/base/advmat/qr/gram_schmidt/mat/float/n",
 		test_gram_schmidt );
 	
-	GLib.Test.add_func ("/crank/base/advmat/qr_householder/mat/float/n",
+	GLib.Test.add_func ("/crank/base/advmat/qr/householder/mat/float/n",
 		test_qr_householder);
 	
-	GLib.Test.add_func ("/crank/base/advmat/qr_givens/mat/float/n",
+	GLib.Test.add_func ("/crank/base/advmat/qr/givens/mat/float/n",
 		test_qr_givens);
+	
+	GLib.Test.add_func ("/crank/base/advmat/eval/power/mat/float/n",
+		test_eval_power);
 	
 	GLib.Test.run ();
 	
@@ -216,6 +219,21 @@ private void test_qr_givens () {
 	assert (float_eq (r[2, 0], 0.0f));
 	assert (float_eq (r[2, 1], 0.0f));
 	assert (float_eq (r[2, 2], 0.3651f));
+}
+
+
+private void test_eval_power () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr ( {
+			{1.0f, 2.0f, 3.0f},
+			{2.0f, 4.0f, 9.0f},
+			{3.0f, 9.0f, 16.0f}} );
+
+	Crank.VecFloatN	evec;
+	
+	assert (float_eq (Crank.eval_power_mat_float_n (a, null, out evec), 21.4467f));
+	assert (float_eq (evec[0], 0.1729f));
+	assert (float_eq (evec[1], 0.4671f));
+	assert (float_eq (evec[2], 0.8671f));
 }
 
 

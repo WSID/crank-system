@@ -496,6 +496,59 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 }
 
 /**
+ * crank_eval_power_mat_float_n:
+ * @a: A Matrix.
+ * @b: (nullable): A Seed vector.
+ * @evec: (optional) (out): Associated eigenvector.
+ *
+ * Gets a eigenvalue of given matrix, by power method.
+ *
+ * The returned value is most dominent eigenvalue whose associated eigenvector
+ * is not orthogonal to seed vector.
+ *
+ * If it failed to convergent, it returns NaN.
+ *
+ * If @b is %NULL, this uses first column as seed.
+ *
+ * Returns: Most dominent eigenvalue whose eigenvector is not orthogonal to @b.
+ */
+gfloat
+crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
+								CrankVecFloatN*	b,
+								CrankVecFloatN*	evec	)
+{
+	if (crank_mat_float_n_is_square (a)) {
+		CrankVecFloatN	bs = {0};
+		gfloat			magn = 0;
+		gfloat			magnp = 0;
+		
+		if (b != NULL) {
+			crank_vec_float_n_copy (b, &bs);
+		}
+		else {
+			crank_mat_float_n_get_col (a, 0, &bs);
+		}
+		
+		do {
+			magnp = magn;
+			crank_mat_float_n_mulv (a, &bs, &bs);
+			magn = crank_vec_float_n_get_magn (&bs);
+			crank_vec_float_n_divs (&bs, magn, &bs);
+		}
+		while (0.0001f < ABS (magn - magnp));
+		
+		if (evec != NULL) crank_vec_float_n_copy (&bs, evec);
+		crank_vec_float_n_fini (&bs);
+		return magn;
+	}
+	else {
+		g_warning ("Adv: MatFloatN: Power: not square: %u, %u",
+				a->rn, a->cn);
+		return 0.0f/0.0f;
+	}
+}
+
+/**
  * crank_eval_qr_mat_float_n:
  * @a: A Matrix.
  *

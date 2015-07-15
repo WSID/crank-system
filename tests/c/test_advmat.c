@@ -44,6 +44,8 @@ static void test_qr_householder (void);
 
 static void test_qr_givens (void);
 
+static void test_eval_power (void);
+
 static void test_eval_qr (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -63,6 +65,8 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/qr/householder/mat/float/n", test_qr_householder);
 	
 	g_test_add_func ("/crank/base/advmat/qr/givens/mat/float/n", test_qr_givens);
+	
+	g_test_add_func ("/crank/base/advmat/eval/power/mat/float/n", test_eval_power);
 	
 	g_test_add_func ("/crank/base/advmat/eval/qr/mat/float/n", test_eval_qr);
 	g_test_run ();
@@ -295,6 +299,27 @@ test_qr_givens (void)
 	
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&r);
+}
+
+static void
+test_eval_power (void)
+{
+	CrankMatFloatN	a = {0};
+	CrankVecFloatN	evec = {0};
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		1.0f,	2.0f,	3.0f,
+		2.0f,	4.0f,	9.0f,
+		3.0f,	9.0f,	16.0f	);
+
+	test_assert_float (crank_eval_power_mat_float_n (&a, NULL, &evec), 21.4467f);
+	
+	test_assert_float (crank_vec_float_n_get (&evec, 0), 0.1729f);
+	test_assert_float (crank_vec_float_n_get (&evec, 1), 0.4671f);
+	test_assert_float (crank_vec_float_n_get (&evec, 2), 0.8671f);
+	
+	crank_vec_float_n_fini (&evec);
+	crank_mat_float_n_fini (&a);
 }
 
 static void
