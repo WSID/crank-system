@@ -25,7 +25,8 @@ test_programs= \
 		test_digraph \
 		test_advgraph \
 		test_mat_float \
-		test_advmat
+		test_advmat \
+		test_complex
 
 test_string_LDADD= $(TEST_BASE_LDADD)
 
@@ -49,3 +50,5 @@ test_advgraph_LDADD=  $(TEST_BASE_LDADD)
 test_mat_float_LDADD=  $(TEST_BASE_LDADD)
 
 test_advmat_LDADD=  $(TEST_BASE_LDADD)
+
+test_complex_LDADD=  $(TEST_BASE_LDADD)

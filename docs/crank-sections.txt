@@ -832,6 +832,37 @@ crank_digraph_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankcomplex</FILE>
+CrankCplxFloat
+crank_cplx_float_init
+crank_cplx_float_init_arr
+crank_cplx_float_init_valist
+crank_cplx_float_init_fill
+crank_cplx_float_copy
+crank_cplx_float_dup
+crank_cplx_float_equal
+crank_cplx_float_hash
+crank_cplx_float_to_string
+crank_cplx_float_to_string_full
+crank_cplx_float_get_norm_sq
+crank_cplx_float_get_norm
+crank_cplx_float_neg
+crank_cplx_float_inverse
+crank_cplx_float_conjugate
+crank_cplx_float_addr
+crank_cplx_float_subr
+crank_cplx_float_mulr
+crank_cplx_float_divr
+crank_cplx_float_add
+crank_cplx_float_sub
+crank_cplx_float_mul
+crank_cplx_float_div
+<SUBSECTION Standard>
+CRANK_TYPE_CPLX_FLOAT
+crank_cplx_float_get_type
+</SECTION>
+
+<SECTION>
 <FILE>crankadvgraph</FILE>
 CrankDigraphNodeFloatFunc
 CrankDigraphNodeDoubleFunc

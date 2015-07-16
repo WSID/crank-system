@@ -23,3 +23,5 @@ crank_mat_float3_get_type
 crank_mat_float4_get_type
 
 crank_mat_float_n_get_type
+
+crank_cplx_float_get_type

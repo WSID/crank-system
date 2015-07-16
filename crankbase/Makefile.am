@@ -19,6 +19,7 @@ include_HEADERS = \
 		crankvecint.h \
 		crankvecfloat.h \
 		crankmatfloat.h \
+		crankcomplex.h \
 		\
 		crankadvgraph.h \
 		crankadvmat.h
@@ -46,6 +47,7 @@ libcrankbase_la_SOURCES= \
 		crankvecint.c \
 		crankvecfloat.c \
 		crankmatfloat.c \
+		crankcomplex.c \
 		\
 		crankadvgraph.c \
 		crankadvmat.c

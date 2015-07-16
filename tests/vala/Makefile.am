@@ -22,7 +22,8 @@ test_programs= \
 		test_vec_float \
 		test_advgraph \
 		test_mat_float \
-		test_advmat
+		test_advmat \
+		test_complex
 
 
 # test_func_holder
@@ -101,3 +102,11 @@ test_advmat_LDADD= \
 
 test_advmat_SOURCES= \
 		test_advmat.vala
+		
+		
+test_complex_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_complex_SOURCES= \
+		test_complex.vala

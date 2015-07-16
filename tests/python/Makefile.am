@@ -9,7 +9,8 @@ TESTS= \
 	test_digraph.py \
 	test_advgraph.py \
 	test_mat_float.py \
-	test_advmat.py
+	test_advmat.py \
+	test_complex.py
 
 AM_TESTS_ENVIRONMENT= \
 	LD_LIBRARY_PATH=$(top_builddir)/crankbase/.libs/ \

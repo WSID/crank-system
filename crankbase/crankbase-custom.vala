@@ -1016,4 +1016,44 @@ namespace Crank {
 		public MatFloatN	shuffle_row (Permutation p);
 		public MatFloatN	shuffle_col (Permutation p);
 	}
+	
+	public struct CplxFloat {
+		public float	real;
+		public float	imag;
+		
+		public CplxFloat (float real, float imag);
+		public CplxFloat.arr (float	parts[2]);
+		public CplxFloat.valist (va_list varargs);
+		public CplxFloat.fill (float fill);
+		
+		public CplxFloat 	copy ();
+		public CplxFloat?	dup ();
+		
+		public static bool	equal (CplxFloat a,	CplxFloat b);
+		public static uint	hash (CplxFloat a);
+		
+		[CCode (cname="crank_cplx_float_to_string_full")]
+		public string		to_string (	string	left = "",
+										string	mid = " + ",
+										string	right = "",
+										string	format_real = "%g",
+										string	format_imag = "(%gi)");
+
+		public float		norm_sq { get; }
+		public float		norm { get; }
+		
+		public CplxFloat	conjugate ();
+		public CplxFloat	neg ();
+		public CplxFloat	inverse ();
+		
+		public CplxFloat	addr (float b);
+		public CplxFloat	subr (float b);
+		public CplxFloat	mulr (float b);
+		public CplxFloat	divr (float b);
+		
+		public CplxFloat	add (CplxFloat b);
+		public CplxFloat	sub (CplxFloat b);
+		public CplxFloat	mul (CplxFloat b);
+		public CplxFloat	div (CplxFloat b);
+	}
 }

@@ -42,6 +42,8 @@
 
 #include "crankadvmat.h"
 
+#include "crankcomplex.h"
+
 #undef _CRANKBASE_INSIDE
 
 #endif /* CRANKBASE_H */
