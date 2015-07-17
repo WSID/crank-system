@@ -26,6 +26,7 @@ CrankCallback
 CrankBoolBoolFunc
 CrankBoolIntFunc
 CrankBoolFloatFunc
+CrankBoolCplxFloatFunc
 </SECTION>
 
 <SECTION>

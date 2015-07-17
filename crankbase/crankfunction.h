@@ -28,6 +28,8 @@
 
 #include <glib.h>
 
+#include "crankcomplex.h"
+
 /**
  * SECTION: crankfunction
  * @title: Function Definitions
@@ -101,6 +103,22 @@ typedef gboolean	(*CrankBoolIntFunc) (	const gint		value,
  */
 typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
 											gpointer		userdata	);
+
+
+/**
+ * CrankBoolCplxFloatFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #CrankCplxFloat and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
+												gpointer		userdata	);
 
 G_END_DECLS
 
