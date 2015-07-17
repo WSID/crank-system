@@ -31,10 +31,14 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/cplx/float/subr",		test_subr	);
 	GLib.Test.add_func ("/crank/base/cplx/float/mulr",		test_mulr	);
 	GLib.Test.add_func ("/crank/base/cplx/float/divr",		test_divr	);
+	GLib.Test.add_func ("/crank/base/cplx/float/rsubr",		test_rsubr	);
+	GLib.Test.add_func ("/crank/base/cplx/float/rdivr",		test_rdivr	);
 	GLib.Test.add_func ("/crank/base/cplx/float/add",		test_add	);
 	GLib.Test.add_func ("/crank/base/cplx/float/sub",		test_sub	);
 	GLib.Test.add_func ("/crank/base/cplx/float/mul",		test_mul	);
 	GLib.Test.add_func ("/crank/base/cplx/float/div",		test_div	);
+	GLib.Test.add_func ("/crank/base/cplx/float/mul_conj",	test_mul_conj	);
+	GLib.Test.add_func ("/crank/base/cplx/float/mix",		test_mix	);
 	
 
 	GLib.Test.run ();
@@ -130,6 +134,23 @@ private void test_divr () {
 	assert (float_eq (a.imag, 2.0f));
 }
 
+private void test_rsubr () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	a = a.rsubr (2);
+	
+	assert (float_eq (a.real, -1.0f));
+	assert (float_eq (a.imag, -4.0f));
+}
+
+private void test_rdivr () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	a = a.rdivr (2);
+	
+	assert (float_eq (a.real, 0.24f));
+	assert (float_eq (a.imag, -0.32f));
+}
 
 private void test_add () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
@@ -169,4 +190,24 @@ private void test_div () {
 	
 	assert (float_eq (a.real, 63.0f / 169.0f));
 	assert (float_eq (a.imag, -16.0f / 169.0f));
+}
+
+private void test_mul_conj () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	Crank.CplxFloat b = {5.0f, 12.0f};
+	
+	a = a.mul_conj (b);
+	
+	assert (float_eq (a.real, 63.0f));
+	assert (float_eq (a.imag, -16.0f));
+}
+
+private void test_mix () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	Crank.CplxFloat b = {5.0f, 12.0f};
+	
+	a = a.mix (b, 0.25f);
+	
+	assert (float_eq (a.real, 3.5f));
+	assert (float_eq (a.imag, 6.0f));
 }

@@ -1051,9 +1051,16 @@ namespace Crank {
 		public CplxFloat	mulr (float b);
 		public CplxFloat	divr (float b);
 		
+		public CplxFloat	rsubr (float b);
+		public CplxFloat	rdivr (float b);
+		
 		public CplxFloat	add (CplxFloat b);
 		public CplxFloat	sub (CplxFloat b);
 		public CplxFloat	mul (CplxFloat b);
 		public CplxFloat	div (CplxFloat b);
+		
+		public CplxFloat	mul_conj (CplxFloat	b);
+		
+		public CplxFloat	mix (CplxFloat b, float c);
 	}
 }

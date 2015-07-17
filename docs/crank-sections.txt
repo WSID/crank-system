@@ -853,10 +853,14 @@ crank_cplx_float_addr
 crank_cplx_float_subr
 crank_cplx_float_mulr
 crank_cplx_float_divr
+crank_cplx_float_rsubr
+crank_cplx_float_rdivr
 crank_cplx_float_add
 crank_cplx_float_sub
 crank_cplx_float_mul
 crank_cplx_float_div
+crank_cplx_float_mul_conj
+crank_cplx_float_mix
 <SUBSECTION Standard>
 CRANK_TYPE_CPLX_FLOAT
 crank_cplx_float_get_type

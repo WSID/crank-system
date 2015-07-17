@@ -116,6 +116,21 @@ class TestVecInt(unittest.TestCase):
 		self.assertFloat (a.real, 1.5)
 		self.assertFloat (a.imag, 2)
 		
+	def test_rsubr (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.rsubr (2)
+		
+		self.assertFloat (a.real, -1)
+		self.assertFloat (a.imag, -4)
+		
+	def test_rdivr (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.rdivr (2)
+		
+		self.assertFloat (a.real, 0.24)
+		self.assertFloat (a.imag, -0.32)
 		
 	def test_add (self):
 		a = CrankBase.CplxFloat.init (3, 4)
@@ -152,6 +167,24 @@ class TestVecInt(unittest.TestCase):
 		
 		self.assertFloat (a.real, 63.0/169.0)
 		self.assertFloat (a.imag, -16.0/169.0)
+
+	def test_mul_conj (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		b = CrankBase.CplxFloat.init (5, 12)
+		
+		a = a.mul_conj (b)
+		
+		self.assertFloat (a.real, 63.0)
+		self.assertFloat (a.imag, -16.0)
+		
+	def test_mix (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		b = CrankBase.CplxFloat.init (5, 12)
+		
+		a = a.mix (b, 0.25)
+		
+		self.assertFloat (a.real, 3.5)
+		self.assertFloat (a.imag, 6.0)
 		
 if __name__ == '__main__':
 	unittest.main ()

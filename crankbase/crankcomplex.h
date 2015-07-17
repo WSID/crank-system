@@ -117,6 +117,16 @@ void		crank_cplx_float_divr (		CrankCplxFloat*	a,
 										gfloat			b,
 										CrankCplxFloat*	r		);
 
+//////// Real - Cplx Operations ////////////////////////////////////////////////
+
+void		crank_cplx_float_rsubr (	CrankCplxFloat*	a,
+										gfloat			b,
+										CrankCplxFloat*	r		);
+
+void		crank_cplx_float_rdivr (	CrankCplxFloat*	a,
+										gfloat			b,
+										CrankCplxFloat*	r		);
+
 //////// Cplx - Cplx Operations ////////////////////////////////////////////////
 
 void		crank_cplx_float_add (		CrankCplxFloat*	a,
@@ -133,6 +143,17 @@ void		crank_cplx_float_mul (		CrankCplxFloat*	a,
 
 void		crank_cplx_float_div (		CrankCplxFloat*	a,
 										CrankCplxFloat*	b,
+										CrankCplxFloat*	r	);
+
+void		crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
+										CrankCplxFloat*	b,
+										CrankCplxFloat*	r	);
+
+//////// Ternary Operations ////////////////////////////////////////////////////
+
+void		crank_cplx_float_mix (		CrankCplxFloat*	a,
+										CrankCplxFloat*	b,
+										gfloat			c,
 										CrankCplxFloat*	r	);
 
 

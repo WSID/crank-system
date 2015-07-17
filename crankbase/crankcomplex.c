@@ -372,7 +372,7 @@ crank_cplx_float_mulr (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets a addition of complex by scalar.
+ * Gets a division of complex by scalar.
  */
 void
 crank_cplx_float_divr (	CrankCplxFloat*	a,
@@ -381,6 +381,48 @@ crank_cplx_float_divr (	CrankCplxFloat*	a,
 {
 	r->real = a->real / b;
 	r->imag = a->imag / b;
+}
+
+
+//////// Real - Cplx Operations ////////////////////////////////////////////////
+
+/**
+ * crank_cplx_float_rsubr:
+ * @a: A Complex.
+ * @b: A real value.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets subtraction of scalar by complex.
+ */
+void
+crank_cplx_float_rsubr (	CrankCplxFloat*	a,
+							gfloat			b,
+							CrankCplxFloat*	r		)
+{
+	r->real = b - a->real;
+	r->imag = - a->imag;
+}
+
+/**
+ * crank_cplx_float_rdivr:
+ * @a: A Complex.
+ * @b: A real value.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets division of scalar by complex.
+ */
+void
+crank_cplx_float_rdivr (	CrankCplxFloat*	a,
+							gfloat			b,
+							CrankCplxFloat*	r		)
+{
+	gfloat	anorm_sq = crank_cplx_float_get_norm_sq (a);
+	
+	gfloat nr = (b * a->real) / anorm_sq;
+	gfloat ni = (- b * a->imag) / anorm_sq;
+	
+	r->real = nr;
+	r->imag = ni;
 }
 
 //////// Cplx - Cplx Operations ////////////////////////////////////////////////
@@ -432,8 +474,10 @@ crank_cplx_float_mul (	CrankCplxFloat*	a,
 						CrankCplxFloat*	b,
 						CrankCplxFloat*	r	)
 {
-	r->real = a->real * b->real - a->imag * b->imag;
-	r->imag = a->real * b->imag + a->imag * b->real;
+	gfloat nr = a->real * b->real - a->imag * b->imag;
+	gfloat ni = a->real * b->imag + a->imag * b->real;
+	r->real = nr;
+	r->imag = ni;
 }
 
 /**
@@ -451,6 +495,50 @@ crank_cplx_float_div (	CrankCplxFloat*	a,
 {
 	gfloat	bnorm_sq = crank_cplx_float_get_norm_sq (b);
 	
-	r->real = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
-	r->imag = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
+	gfloat nr = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
+	gfloat ni = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
+	
+	r->real = nr;
+	r->imag = ni;
+}
+
+/**
+ * crank_cplx_float_mul_conj:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Multiplies @a with conjugate of @b.
+ */
+void		crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
+										CrankCplxFloat*	b,
+										CrankCplxFloat*	r	)
+{
+	gfloat nr = a->real * b->real + a->imag * b->imag;
+	gfloat ni = - a->real * b->imag + a->imag * b->real;
+	r->real = nr;
+	r->imag = ni;
+}
+
+//////// Ternary Operations ////////////////////////////////////////////////////
+
+/**
+ * crank_cplx_float_mix:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @c: A scalar.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets a mixture of two complex.
+ */
+void
+crank_cplx_float_mix (	CrankCplxFloat*	a,
+						CrankCplxFloat*	b,
+						gfloat			c,
+						CrankCplxFloat*	r	)
+{
+	gfloat	d = 1 - c;
+	
+	r->real = a->real * d + b->real * c;
+	r->imag = a->imag * d + b->imag * c;
 }
