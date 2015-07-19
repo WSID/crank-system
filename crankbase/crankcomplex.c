@@ -30,16 +30,30 @@
 
 /**
  * SECTION: crankcomplex
- * @title: Complex Values.
- * @short_description: A Complex values.
+ * @title: Complex value
+ * @short_description: Complex values.
  * @usability: unstable
  * @includes: crankbase.h
  *
- * A Crank System provides Complex Numerics.
+ * A Crank System provides Complex Numbers.
  *
- * This is used for eigenvalues.
- *
- * Quarternions are used more, as they can express rotations, in a clean manner.
+ * Currently, only float complex type is provided.
+ * 
+ * * Property
+ *    * Norm, and square of norm.
+ * * Unary Operations
+ *    * Negate
+ *    * Inverse
+ *    * Conjugation
+ * * Cplx - Scalar
+ *    * Add, Sub, Mul, Div
+ * * Scalar - Cplx
+ *    * Sub, Div
+ * * Cplx - Cplx
+ *    * Add, Sub, Mul, Div
+ *    * Mul-conjugate
+ * * Ternary
+ *    * Mix
  */
 
 
@@ -86,7 +100,7 @@ crank_cplx_float_init_arr (	CrankCplxFloat*	cplx,
 
 /**
  * crank_cplx_float_init_valist:
- * @cplx: (out); A Complex to initialize.
+ * @cplx: (out): A Complex to initialize.
  * @varargs: Variadic arguments. should contains 2 double values.
  *
  * Initialize a complex with given parts from variadic arguments.
@@ -194,9 +208,11 @@ crank_cplx_float_hash (		gconstpointer	a	)
  *
  * Stringify a complex value as,
  *
- * |[ 3.2 + (-1.34i) ]|
+ * |[ 
+ *    3.2 + (-1.34i)
+ * ]|
  * 
- * Returns: String representation of complex.
+ * Returns: String representation of complex. Free with g_free()
  */
 gchar*
 crank_cplx_float_to_string (	CrankCplxFloat*	cplx	)
@@ -213,6 +229,10 @@ crank_cplx_float_to_string (	CrankCplxFloat*	cplx	)
  * @right: Right, marking end of complex.
  * @format_real: Format for real part - should comsume 1 float value.
  * @format_imag: Format for imaginary part - should consume 1 float value.
+ *
+ * Stringify complex value into string.
+ *
+ * Returns: String representation of complex. Free with g_free()
  */
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
 												const gchar*	left,
@@ -241,10 +261,12 @@ gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
 
 //////// Unary Operations //////////////////////////////////////////////////////
 /**
- * crank_colx_float_get_norm_sq:
+ * crank_cplx_float_get_norm_sq:
  * @cplx: A Complex.
+ *
+ * Gets square of norm.
  * 
- * Returns: Square of norm.
+ * Returns: Square of norm of complex.
  */
 gfloat
 crank_cplx_float_get_norm_sq (	CrankCplxFloat*	cplx	)
@@ -256,6 +278,8 @@ crank_cplx_float_get_norm_sq (	CrankCplxFloat*	cplx	)
  * crank_cplx_float_get_norm:
  * @cplx: A Complex.
  * 
+ * Gets norm of complex.
+ *
  * Returns: Norm.
  */
 gfloat

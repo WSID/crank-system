@@ -80,6 +80,9 @@
  * When generics come into, Vala adds additional hidden arguments. Functions can
  * pick useful properties from it.
  *
+ * In Crank System, this can check its copy function, so that it can know its
+ * vala type is owned or unowned.
+ *
  * # Provided functions.
  *
  * Most of provided functions are actually macro. So these may have different

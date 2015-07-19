@@ -1,4 +1,6 @@
-crank_digraph_get_type
+crank_permutation_get_type
+
+crank_cplx_float_get_type
 
 crank_vec_bool2_get_type
 crank_vec_bool3_get_type
@@ -18,10 +20,12 @@ crank_vec_float4_get_type
 
 crank_vec_float_n_get_type
 
+crank_vec_cplx_float_n_get_type
+
 crank_mat_float2_get_type
 crank_mat_float3_get_type
 crank_mat_float4_get_type
 
 crank_mat_float_n_get_type
 
-crank_cplx_float_get_type
+crank_digraph_get_type

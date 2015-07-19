@@ -31,12 +31,26 @@
 
 /**
  * SECTION: crankpermutation
- * @title: Permutation.
- * @short_description: Represents permutation, or rearrange of elements.
+ * @title: Permutation
+ * @short_description: Permutations, or placing of ordered items.
  * @stability: unstable
  * @include: crankbase.h
  *
- * Crank System provides permutation representation for convenience.
+ * A Permutation is a placing of ordered items. In this structure, items are
+ * represented in #guint, starting from 0.
+ *
+ * # Operations
+ *
+ * Supported operations are,
+ * * properties
+ *    * sign
+ * * Unary operations
+ *    * Reverse
+ *    * Inverse
+ * * Binary operations
+ *    * Shuffle
+ * * Modification
+ *    * swap
  */
 
 
@@ -62,6 +76,9 @@ G_DEFINE_BOXED_TYPE (
  * @...: Element of permutation.
  *
  * Initialize a permutation with given elements.
+ *
+ * Validity is not checked in initializing. You should check validity by
+ * crank_permutation_check_valid(), before using.
  */
 void
 crank_permutation_init (	CrankPermutation*	p,
@@ -87,6 +104,9 @@ crank_permutation_init (	CrankPermutation*	p,
  * @data: (array length=n): Element of permutation.
  *
  * Initialize a permutation with given elements.
+ *
+ * Validity is not checked in initializing. You should check validity by
+ * crank_permutation_check_valid(), before using.
  */
 void
 crank_permutation_init_arr (	CrankPermutation*	p,
@@ -105,6 +125,9 @@ crank_permutation_init_arr (	CrankPermutation*	p,
  * @data: (array length=n) (transfer full): Element of permutation.
  *
  * Initialize a permutation with given elements.
+ *
+ * Validity is not checked in initializing. You should check validity by
+ * crank_permutation_check_valid(), before using.
  */
 void
 crank_permutation_init_arr_take (	CrankPermutation*	p,
@@ -153,7 +176,7 @@ crank_permutation_copy (	CrankPermutation*	p,
  * crank_permutation_dup:
  * @p: A Permutation.
  *
- * Allocates and copies a permutation to @q.
+ * Allocates and copies a permutation.
  *
  * Returns: new allocated permutation. free with crank_permutation_free()
  */
@@ -274,6 +297,10 @@ crank_permutation_index_of (	CrankPermutation*	p,
  * * for 5, no more element comes.
  *
  * If sign is +, then 1 is returned, for -, -1 is returned.
+ *
+ * If @p is 0 sized permutation, 0 is returned.
+ *
+ * Returns: 1 or -1, or 0.
  */
 gint
 crank_permutation_get_sign (	CrankPermutation*	p	)
@@ -281,6 +308,8 @@ crank_permutation_get_sign (	CrankPermutation*	p	)
 	guint	i;
 	guint	j;
 	guint	inversion = 0;
+	
+	if (p->n == 0) return 0;
 	
 	for (i = 0; i < p->n; i++)
 		for (j = i + 1; j < p->n; j++)
@@ -343,6 +372,9 @@ crank_permutation_swap (	CrankPermutation*	p,
  *
  * Reverse a permutation, so that first element placed to last.
  *
+ * If (size % 4) is 2 or 3, reversed permutation has inverted sign of original
+ * permutation.
+ *
  * This means
  * * {1, 3, 4, 2, 5}
  * becomes
@@ -366,7 +398,9 @@ crank_permutation_reverse (		CrankPermutation*	p,
  * @p: A Permutation.
  * @q: (out): A Permutation to store result.
  *
- * Inverse a permutation. Inversed permutation reverts original permutation.
+ * Inverse a permutation. Inverted permutation reverts original permutation.
+ *
+ * Inverted permutation has same sign of original permutation.
  *
  * This means
  * * {1, 3, 4, 2, 5}

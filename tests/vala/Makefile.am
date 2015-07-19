@@ -16,17 +16,17 @@ test_programs= \
 		test_vala \
 		test_string \
 		test_permutation \
-		test_digraph \
+		test_complex \
 		test_vec_bool \
 		test_vec_int \
 		test_vec_float \
-		test_advgraph \
+		test_vec_cplx_float \
 		test_mat_float \
 		test_advmat \
-		test_complex
+		test_digraph \
+		test_advgraph
 
 
-# test_func_holder
 test_vala_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
@@ -42,6 +42,7 @@ test_string_LDADD= \
 
 test_string_SOURCES= \
 		test_string.vala
+	
 		
 		
 test_permutation_LDADD= \
@@ -51,13 +52,15 @@ test_permutation_LDADD= \
 test_permutation_SOURCES= \
 		test_permutation.vala
 
-test_digraph_LDADD= \
+		
+test_complex_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
 
-test_digraph_SOURCES= \
-		test_digraph.vala
-
+test_complex_SOURCES= \
+		test_complex.vala
+		
+		
 test_vec_bool_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
@@ -80,14 +83,15 @@ test_vec_float_LDADD= \
 
 test_vec_float_SOURCES= \
 		test_vec_float.vala
-
-
-test_advgraph_LDADD= \
+		
+		
+test_vec_cplx_float_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
 
-test_advgraph_SOURCES= \
-		test_advgraph.vala
+test_vec_cplx_float_SOURCES= \
+		test_vec_cplx_float.vala
+
 
 test_mat_float_LDADD= \
 		$(CRANK_BASE_LIBS) \
@@ -102,11 +106,19 @@ test_advmat_LDADD= \
 
 test_advmat_SOURCES= \
 		test_advmat.vala
-		
-		
-test_complex_LDADD= \
+
+
+test_digraph_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
 
-test_complex_SOURCES= \
-		test_complex.vala
+test_digraph_SOURCES= \
+		test_digraph.vala
+
+
+test_advgraph_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_advgraph_SOURCES= \
+		test_advgraph.vala

@@ -76,29 +76,53 @@ namespace Crank {
 	
 	
 	
-	[Compact]
-	public class Digraph {
-		public unowned GLib.GenericArray <DigraphNode> nodes { get; }
-		public unowned GLib.GenericArray <DigraphEdge> edges { get; }
+	public struct CplxFloat {
+		public float	real;
+		public float	imag;
+		
+		public CplxFloat (float real, float imag);
+		public CplxFloat.arr (float	parts[2]);
+		public CplxFloat.valist (va_list varargs);
+		public CplxFloat.fill (float fill);
+		
+		public CplxFloat 	copy ();
+		public CplxFloat?	dup ();
+		
+		public static bool	equal (CplxFloat a,	CplxFloat b);
+		public static uint	hash (CplxFloat a);
+		
+		[CCode (cname="crank_cplx_float_to_string_full")]
+		public string		to_string (	string	left = "",
+										string	mid = " + ",
+										string	right = "",
+										string	format_real = "%g",
+										string	format_imag = "(%gi)");
+
+		public float		norm_sq { get; }
+		public float		norm { get; }
+		
+		public CplxFloat	conjugate ();
+		public CplxFloat	neg ();
+		public CplxFloat	inverse ();
+		
+		public CplxFloat	addr (float b);
+		public CplxFloat	subr (float b);
+		public CplxFloat	mulr (float b);
+		public CplxFloat	divr (float b);
+		
+		public CplxFloat	rsubr (float b);
+		public CplxFloat	rdivr (float b);
+		
+		public CplxFloat	add (CplxFloat b);
+		public CplxFloat	sub (CplxFloat b);
+		public CplxFloat	mul (CplxFloat b);
+		public CplxFloat	div (CplxFloat b);
+		
+		public CplxFloat	mul_conj (CplxFloat	b);
+		
+		public CplxFloat	mix (CplxFloat b, float c);
 	}
 	
-	[Compact]
-	public class DigraphNode {
-		public GLib.GenericArray <unowned DigraphEdge>	in_edges { get; }
-		public GLib.GenericArray <unowned DigraphEdge>	out_edges { get; }
-		
-		public GLib.List <unowned DigraphNode>	in_nodes { owned get; }
-		public GLib.List <unowned DigraphNode>	out_nodes { owned get; }
-		
-		public uint	indegree { get; }
-		public uint outdegree { get; }
-	}
-	
-	[Compact]
-	public class DigraphEdge {
-		public DigraphNode	tail { get; }
-		public DigraphNode	head { get; }
-	}
 	
 	[CCode (copy_function="crank_permutation_copy",
 			destroy_function="crank_permutation_fini",
@@ -737,6 +761,76 @@ namespace Crank {
 		public VecFloatN		mix (		VecFloatN b, VecFloatN c	);
 	}
 
+	
+	[CCode (copy_function="crank_vec_cplx_float_n_copy",
+			destroy_function="crank_vec_cplx_float_n_fini",
+			free_function="crank_vec_cplx_float_n_free")]
+	public struct VecCplxFloatN {
+		[CCode (array_length_cname="n")]
+		public CplxFloat[]	data;
+		
+		public VecCplxFloatN 			(uint	n,	...);
+		public VecCplxFloatN.arr		([CCode (array_length_pos=0)]CplxFloat arr[]);
+		public VecCplxFloatN.arr_take	([CCode (array_length_pos=0)]owned CplxFloat arr[]);
+		public VecCplxFloatN.valist		(uint	n, va_list varargs);
+		public VecCplxFloatN.fill		(uint	n, float	fill);
+		public VecCplxFloatN.from_vb	(VecBoolN	vb);
+		public VecCplxFloatN.from_vi	(VecIntN	vi);
+		
+		public VecCplxFloatN.imm		(uint	n, ...);
+		public VecCplxFloatN.valist_imm (uint	n, va_list	varargs);
+		public VecCplxFloatN.fill_imm	(float	real, float	imag);
+		
+		public VecFloatN?	dup	();
+		
+		public uint			size { get; }
+
+		public CplxFloat	get (uint	index);
+		public void			set (uint	index, CplxFloat value);
+		public void			prepend (CplxFloat value);
+		public void			append (CplxFloat value);
+		public void			insert (uint index, CplxFloat value);
+		public void			remove (uint index);
+		public bool			foreach (BoolCplxFloatFunc func);
+		
+		public static uint	hash (VecCplxFloatN	a);
+		public static bool	equal (VecCplxFloatN	a, VecCplxFloatN	b);
+		
+		[CCode (cname="crank_vec_cplx_float_n_to_string_full")]
+		public string		to_string (	string vec_left		= "(",
+										string vec_in		= ", ",
+										string vec_right	= ")",
+										string cplx_left	= "",
+										string cplx_in		= " + ",
+										string cplx_right	= "",
+										string format_real	= "%g",
+										string format_imag	= "(%gi)"	);
+		public float		magn_sq {get;}
+		public float		magn {get;}
+		
+		public VecCplxFloatN		neg		();
+		public VecCplxFloatN		unit	();
+		
+		public VecCplxFloatN		muls	(	CplxFloat 	b	);
+		public VecCplxFloatN		divs	(	CplxFloat	b	);
+		public VecCplxFloatN		mulrs	(	float		b	);
+		public VecCplxFloatN		divrs	(	float		b	);
+		
+		public VecCplxFloatN		add		(	VecCplxFloatN 	b	);
+		public VecCplxFloatN		sub		(	VecCplxFloatN	b	);
+		public CplxFloat			dot		(	VecCplxFloatN	b	);
+		
+		public VecCplxFloatN		cmpmul	(	VecCplxFloatN	b	);
+		public VecCplxFloatN		cmpdiv	(	VecCplxFloatN	b	);
+		
+		public VecBoolN		cmpeq	(	VecCplxFloatN	b	);
+		
+		public VecCplxFloatN		mulrm (		MatFloatN b	);
+
+		public VecCplxFloatN		mixs (		VecCplxFloatN b, float c	);
+		public VecCplxFloatN		mix (		VecCplxFloatN b, VecFloatN c	);
+	}
+	
 
 	public struct MatFloat2 {
 		public float m00;
@@ -1017,50 +1111,28 @@ namespace Crank {
 		public MatFloatN	shuffle_col (Permutation p);
 	}
 	
-	public struct CplxFloat {
-		public float	real;
-		public float	imag;
+	
+	[Compact]
+	public class Digraph {
+		public unowned GLib.GenericArray <DigraphNode> nodes { get; }
+		public unowned GLib.GenericArray <DigraphEdge> edges { get; }
+	}
+	
+	[Compact]
+	public class DigraphNode {
+		public GLib.GenericArray <unowned DigraphEdge>	in_edges { get; }
+		public GLib.GenericArray <unowned DigraphEdge>	out_edges { get; }
 		
-		public CplxFloat (float real, float imag);
-		public CplxFloat.arr (float	parts[2]);
-		public CplxFloat.valist (va_list varargs);
-		public CplxFloat.fill (float fill);
+		public GLib.List <unowned DigraphNode>	in_nodes { owned get; }
+		public GLib.List <unowned DigraphNode>	out_nodes { owned get; }
 		
-		public CplxFloat 	copy ();
-		public CplxFloat?	dup ();
-		
-		public static bool	equal (CplxFloat a,	CplxFloat b);
-		public static uint	hash (CplxFloat a);
-		
-		[CCode (cname="crank_cplx_float_to_string_full")]
-		public string		to_string (	string	left = "",
-										string	mid = " + ",
-										string	right = "",
-										string	format_real = "%g",
-										string	format_imag = "(%gi)");
-
-		public float		norm_sq { get; }
-		public float		norm { get; }
-		
-		public CplxFloat	conjugate ();
-		public CplxFloat	neg ();
-		public CplxFloat	inverse ();
-		
-		public CplxFloat	addr (float b);
-		public CplxFloat	subr (float b);
-		public CplxFloat	mulr (float b);
-		public CplxFloat	divr (float b);
-		
-		public CplxFloat	rsubr (float b);
-		public CplxFloat	rdivr (float b);
-		
-		public CplxFloat	add (CplxFloat b);
-		public CplxFloat	sub (CplxFloat b);
-		public CplxFloat	mul (CplxFloat b);
-		public CplxFloat	div (CplxFloat b);
-		
-		public CplxFloat	mul_conj (CplxFloat	b);
-		
-		public CplxFloat	mix (CplxFloat b, float c);
+		public uint	indegree { get; }
+		public uint outdegree { get; }
+	}
+	
+	[Compact]
+	public class DigraphEdge {
+		public DigraphNode	tail { get; }
+		public DigraphNode	head { get; }
 	}
 }

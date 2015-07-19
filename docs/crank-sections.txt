@@ -3,6 +3,13 @@
 CRANK_ARRAY_DUP
 CRANK_ARRAY_CMP
 CRANK_ARRAY_ADD
+CRANK_ARRAY_FILL
+CRANK_FOREACH_RANGE_BEGIN
+CRANK_FOREACH_RANGE_DO
+CRANK_FOREACH_RANGE_END
+CRANK_FOREACH_IRANGE_BEGIN
+CRANK_FOREACH_IRANGE_DO
+CRANK_FOREACH_IRANGE_END
 CRANK_FOREACH_ARRAY_BEGIN
 CRANK_FOREACH_ARRAY_END
 CRANK_FOREACH_ARRAY_DO
@@ -92,6 +99,41 @@ crank_permutation_shuffle
 <SUBSECTION Standard>
 CRANK_TYPE_PERMUTATION
 crank_permutation_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankcomplex</FILE>
+CrankCplxFloat
+crank_cplx_float_init
+crank_cplx_float_init_arr
+crank_cplx_float_init_valist
+crank_cplx_float_init_fill
+crank_cplx_float_copy
+crank_cplx_float_dup
+crank_cplx_float_equal
+crank_cplx_float_hash
+crank_cplx_float_to_string
+crank_cplx_float_to_string_full
+crank_cplx_float_get_norm_sq
+crank_cplx_float_get_norm
+crank_cplx_float_neg
+crank_cplx_float_inverse
+crank_cplx_float_conjugate
+crank_cplx_float_addr
+crank_cplx_float_subr
+crank_cplx_float_mulr
+crank_cplx_float_divr
+crank_cplx_float_rsubr
+crank_cplx_float_rdivr
+crank_cplx_float_add
+crank_cplx_float_sub
+crank_cplx_float_mul
+crank_cplx_float_div
+crank_cplx_float_mul_conj
+crank_cplx_float_mix
+<SUBSECTION Standard>
+CRANK_TYPE_CPLX_FLOAT
+crank_cplx_float_get_type
 </SECTION>
 
 <SECTION>
@@ -571,6 +613,59 @@ crank_vec_float4_get_type
 crank_vec_float_n_get_type
 </SECTION>
 
+
+<SECTION>
+<FILE>crankveccplxfloat</FILE>
+CrankVecCplxFloatN
+crank_vec_cplx_float_n_init
+crank_vec_cplx_float_n_init_valist
+crank_vec_cplx_float_n_init_arr
+crank_vec_cplx_float_n_init_arr_take
+crank_vec_cplx_float_n_init_fill
+crank_vec_cplx_float_n_init_imm
+crank_vec_cplx_float_n_init_valist_imm
+crank_vec_cplx_float_n_init_fill_imm
+crank_vec_cplx_float_n_init_from_vb
+crank_vec_cplx_float_n_init_from_vi
+crank_vec_cplx_float_n_copy
+crank_vec_cplx_float_n_dup
+crank_vec_cplx_float_n_fini
+crank_vec_cplx_float_n_free
+crank_vec_cplx_float_n_hash
+crank_vec_cplx_float_n_equal
+crank_vec_cplx_float_n_to_string
+crank_vec_cplx_float_n_to_string_full
+crank_vec_cplx_float_n_get_size
+crank_vec_cplx_float_n_get
+crank_vec_cplx_float_n_set
+crank_vec_cplx_float_n_foreach
+crank_vec_cplx_float_n_prepend
+crank_vec_cplx_float_n_append
+crank_vec_cplx_float_n_insert
+crank_vec_cplx_float_n_remove
+crank_vec_cplx_float_n_get_magn
+crank_vec_cplx_float_n_get_magn_sq
+crank_vec_cplx_float_n_neg
+crank_vec_cplx_float_n_unit
+crank_vec_cplx_float_n_mulrs
+crank_vec_cplx_float_n_divrs
+crank_vec_cplx_float_n_divs
+crank_vec_cplx_float_n_muls
+crank_vec_cplx_float_n_add
+crank_vec_cplx_float_n_sub
+crank_vec_cplx_float_n_dot
+crank_vec_cplx_float_n_cmpdiv
+crank_vec_cplx_float_n_cmpeq
+crank_vec_cplx_float_n_cmpmul
+crank_vec_cplx_float_n_mulrm
+crank_vec_cplx_float_n_mixs
+crank_vec_cplx_float_n_mix
+<SUBSECTION Standard>
+CRANK_TYPE_VEC_CPLX_FLOAT_N
+crank_vec_cplx_float_n_get_type
+</SECTION>
+
+
 <SECTION>
 <FILE>crankmatfloat</FILE>
 CrankMatFloat2
@@ -745,7 +840,7 @@ crank_mat_float_n_mixs
 crank_mat_float_n_mix
 crank_mat_float_n_shuffle_row
 crank_mat_float_n_shuffle_col
-<SUBSECTION Private>
+<SUBSECTION Standard>
 CRANK_TYPE_MAT_FLOAT2
 CRANK_TYPE_MAT_FLOAT3
 CRANK_TYPE_MAT_FLOAT4
@@ -755,7 +850,6 @@ crank_mat_float3_get_type
 crank_mat_float4_get_type
 crank_mat_float_n_get_type
 </SECTION>
-
 
 <SECTION>
 <FILE>crankdigraph</FILE>
@@ -830,41 +924,6 @@ crank_digraph_edge_set_object
 <SUBSECTION Standard>
 CRANK_TYPE_DIGRAPH
 crank_digraph_get_type
-</SECTION>
-
-<SECTION>
-<FILE>crankcomplex</FILE>
-CrankCplxFloat
-crank_cplx_float_init
-crank_cplx_float_init_arr
-crank_cplx_float_init_valist
-crank_cplx_float_init_fill
-crank_cplx_float_copy
-crank_cplx_float_dup
-crank_cplx_float_equal
-crank_cplx_float_hash
-crank_cplx_float_to_string
-crank_cplx_float_to_string_full
-crank_cplx_float_get_norm_sq
-crank_cplx_float_get_norm
-crank_cplx_float_neg
-crank_cplx_float_inverse
-crank_cplx_float_conjugate
-crank_cplx_float_addr
-crank_cplx_float_subr
-crank_cplx_float_mulr
-crank_cplx_float_divr
-crank_cplx_float_rsubr
-crank_cplx_float_rdivr
-crank_cplx_float_add
-crank_cplx_float_sub
-crank_cplx_float_mul
-crank_cplx_float_div
-crank_cplx_float_mul_conj
-crank_cplx_float_mix
-<SUBSECTION Standard>
-CRANK_TYPE_CPLX_FLOAT
-crank_cplx_float_get_type
 </SECTION>
 
 <SECTION>

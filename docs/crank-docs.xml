@@ -19,13 +19,13 @@
   </bookinfo>
   
   <chapter>
-  	<title>Utilities</title>
+  	<title>Fundamentals</title>
     <xi:include href="xml/crankbasemacro.xml"/>
     	<xi:include href="xml/crankfunction.xml"/>
 	<xi:include href="xml/crankvala.xml"/>
 	<xi:include href="xml/crankstring.xml"/>
 	<xi:include href="xml/crankvalue.xml"/>
-	<xi:include href="crank-chapter-base-utility.xml"/>
+	<xi:include href="crank-chapter-base-fundamental.xml"/>
   </chapter>
   
   <chapter>
@@ -35,10 +35,11 @@
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>
+	<xi:include href="xml/crankveccplxfloat.xml"/>
 	<xi:include href="xml/crankmatfloat.xml"/>
+	<xi:include href="xml/crankadvmat.xml"/>
    	<xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
-	<xi:include href="xml/crankadvmat.xml"/>
 	<xi:include href="crank-chapter-base-data.xml"/>
   </chapter>
   

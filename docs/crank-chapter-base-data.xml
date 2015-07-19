@@ -9,11 +9,15 @@
 	Crank System defines various data structures, which are useful for game.
 	
 	<itemizedlist>
+	    <listitem>Permutation</listitem>
+	    <listitem>Complex types</listitem>
 		<listitem>Vectorized types</listitem>
 		<listitem>Matrix types</listitem>
 		<listitem>Graph types</listitem>
 	</itemizedlist>
 	</para>
+
+
 	
 	<para>
 	Crank System provides vector types. Each vector types are matched into
@@ -25,13 +29,18 @@
 			<link linkend="gboolean">gboolean</link></listitem>
 		<listitem>
 			<link linkend="crank-Integer-vectors.">CrankVecInt</link>:
-			<link linkend="gboolean">gint</link></listitem>
+			<link linkend="gint">gint</link></listitem>
 		<listitem>
 			<link linkend="crank-Float-vectors.">CrankVecFloat</link>:
-			<link linkend="gboolean">gfloat</link></listitem>
+			<link linkend="gfloat">gfloat</link></listitem>
+		<listitem>
+			CrankVecCplxFloat: CrankCplxFloat</listitem>
 	</itemizedlist>
 	
 	Every vector types defined here can be categorized by 4 groups.
+	
+	Please note that fixed sized vectors are provided only for bool, integer,
+	float type.
 	
 	<itemizedlist>
 	<listitem>Fixed 2 sized vector</listitem>
@@ -40,6 +49,32 @@
 	<listitem>Variable sized vector</listitem>
 	</itemizedlist>
 	</para>
+	
+	
+	
+	<para>
+	Crank System also provides matrices types.
+	
+	For now, crank system provides only float matrices for now.
+	
+	Just like vectorized type, Crank System provides 4 size.
+	
+	<itemizedlist>
+	<listitem>Fixed 2x2 sized matrix</listitem>
+	<listitem>Fixed 3x3 sized matrix</listitem>
+	<listitem>Fixed 4x4 sized matrix</listitem>
+	<listitem>Variable sized matrix</listitem>
+	</itemizedlist>
+	
+	Crank System also provides advanced operations on matrix.
+	<itemizedlist>
+	<listitem>LU Decompositions</listitem>
+	<listitem>QR Decompositions</listitem>
+	<listitem>Eigenvalue/vector calculation</listitem>
+	</itemizedlist>
+	</para>
+	
+	
 	
 	<para>
 	Crank System also provides graph data structure.

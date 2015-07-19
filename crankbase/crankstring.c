@@ -55,10 +55,14 @@
  *    The function reads string in given position. read and scan families 
  *    returns gboolean for iterated processing. Actual values are returned
  *    through out parameters.
+ *
+ *    Eg: Reading/scanning name of entry.
+ *
  *    |[ <-- language="C" --!>
  *        gboolean      read_[something] (  const gchar* str,
  *                                          guint* pos,
- *                                          something* stn [, 함수별 추가 항목]);
+ *                                          something* stn
+ *                                          [, additional item per function]);
  *    ]|
  *
  *    They can be used like this.
@@ -80,7 +84,8 @@
  *    |[ <-- language="C" --!>
  *        gboolean      scan_[something] (  const gchar* str,
  *                                          guint* pos,
- *                                          something* stn [, 함수별 추가 항목]);
+ *                                          something* stn
+ *                                          [, additional item per function]);
  *    ]|
  *
  *    They can be used like this.
@@ -100,15 +105,20 @@
  *    spaces before reading.
  *    Some function might return other type rather than #gboolean, if it checks
  *    multiple items.
+ *
+ *    Eg: Checking for some symbols.
+ 
  *    |[ <-- language="C" --!>
  *        gboolean      check_[something] ( const gchar* str,
  *                                          guint* pos,
- *                                          something stn [, 함수별 추가 항목]);
+ *                                          something stn
+ *                                          [, additional item per function]);
  *
  *        gint          check_[something]s (const gchar* str,
  *                                          guint* pos,
  *                                          something* stn,
- *                                          guint nstn [, 함수별 추가 항목]);
+ *                                          guint nstn
+ *                                          [, additional item per function]);
  *
  *        ....
  *    ]|

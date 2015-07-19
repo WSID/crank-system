@@ -27,6 +27,7 @@ Permutation skip
 VecBool* skip
 VecInt* skip
 VecFloat* skip
+VecCplxFloatN	skip
 
 MatFloat* skip
 

@@ -33,8 +33,8 @@
  * In Vala, it is hard to create #GClosure (No binding for #GCClosure and
  * #GClosureMarshal)
  *
- * Therefore, Crank System provides these service until Vala adds its own support
- * for #GClosure.
+ * Therefore, Crank System provides this function until Vala adds its own
+ * support for #GClosure.
  *
  * |[ <-- language="Vala" --!>
  *    GLib.Closure closure = Crank.create_closure (

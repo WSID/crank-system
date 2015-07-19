@@ -30,19 +30,20 @@
 #include "crankvalue.h"
 
 #include "crankpermutation.h"
-#include "crankdigraph.h"
+#include "crankcomplex.h"
+
 #include "crankveccommon.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
 #include "crankvecfloat.h"
-
-#include "crankadvgraph.h"
+#include "crankveccplxfloat.h"
 
 #include "crankmatfloat.h"
-
 #include "crankadvmat.h"
 
-#include "crankcomplex.h"
+#include "crankdigraph.h"
+#include "crankadvgraph.h"
+
 
 #undef _CRANKBASE_INSIDE
 
