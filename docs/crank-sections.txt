@@ -104,6 +104,7 @@ crank_permutation_get_type
 <SECTION>
 <FILE>crankcomplex</FILE>
 CrankCplxFloat
+CRANK_CPLX_FLOAT_DEFFORMAT
 crank_cplx_float_init
 crank_cplx_float_init_arr
 crank_cplx_float_init_valist
@@ -116,9 +117,11 @@ crank_cplx_float_to_string
 crank_cplx_float_to_string_full
 crank_cplx_float_get_norm_sq
 crank_cplx_float_get_norm
+crank_cplx_float_get_arg
 crank_cplx_float_neg
 crank_cplx_float_inverse
 crank_cplx_float_conjugate
+crank_cplx_float_unit
 crank_cplx_float_addr
 crank_cplx_float_subr
 crank_cplx_float_mulr
@@ -131,6 +134,8 @@ crank_cplx_float_mul
 crank_cplx_float_div
 crank_cplx_float_mul_conj
 crank_cplx_float_mix
+crank_cplx_float_ln
+crank_cplx_float_exp
 <SUBSECTION Standard>
 CRANK_TYPE_CPLX_FLOAT
 crank_cplx_float_get_type

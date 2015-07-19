@@ -43,6 +43,8 @@ static void		test_inverse ( void );
 
 static void		test_conjugate ( void );
 
+static void		test_unit ( void );
+
 static void		test_addr ( void );
 
 static void		test_subr ( void );
@@ -67,6 +69,10 @@ static void		test_mul_conj ( void );
 
 static void		test_mix ( void );
 
+static void		test_ln ( void );
+
+static void		test_exp ( void );
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -80,6 +86,7 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/cplx/float/neg",			test_neg		);
 	g_test_add_func ("/crank/base/cplx/float/inverse",		test_inverse	);
 	g_test_add_func ("/crank/base/cplx/float/conjugate",	test_conjugate	);
+	g_test_add_func ("/crank/base/cplx/float/unit",			test_unit		);
 	g_test_add_func ("/crank/base/cplx/float/addr",			test_addr		);
 	g_test_add_func ("/crank/base/cplx/float/subr",			test_subr		);
 	g_test_add_func ("/crank/base/cplx/float/mulr",			test_mulr		);
@@ -92,6 +99,8 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/cplx/float/div",			test_div		);
 	g_test_add_func ("/crank/base/cplx/float/mul_conj",		test_mul_conj	);
 	g_test_add_func ("/crank/base/cplx/float/mix",			test_mix		);
+	g_test_add_func ("/crank/base/cplx/float/ln",			test_ln			);
+	g_test_add_func ("/crank/base/cplx/float/exp",			test_exp		);
 	
 	g_test_run ();
 
@@ -187,6 +196,17 @@ test_conjugate ( void )
 	
 	test_assert_float (cplx.real, 3.0f);
 	test_assert_float (cplx.imag, -4.0f);
+}
+
+static void
+test_unit ( void )
+{
+	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	
+	crank_cplx_float_unit (&cplx, &cplx);
+	
+	test_assert_float (cplx.real, 0.6f);
+	test_assert_float (cplx.imag, 0.8f);
 }
 
 static void
@@ -347,4 +367,26 @@ test_mix ( void )
 	
 	test_assert_float (a.real, 3.5f);
 	test_assert_float (a.imag, 6.0f);
+}
+
+static void
+test_ln ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	
+	crank_cplx_float_ln (&a, &a);
+	
+	test_assert_float (a.real, 1.6094f);
+	test_assert_float (a.imag, 0.9273f);
+}
+
+static void
+test_exp ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	
+	crank_cplx_float_exp (&a, &a);
+	
+	test_assert_float (a.real, -15.2008f);
+	test_assert_float (a.imag, -13.1287f);
 }

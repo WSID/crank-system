@@ -217,46 +217,25 @@ crank_cplx_float_hash (		gconstpointer	a	)
 gchar*
 crank_cplx_float_to_string (	CrankCplxFloat*	cplx	)
 {
-	return crank_cplx_float_to_string_full (	cplx,
-												"", " + ", "", "%g", "(%gi)");
+	return crank_cplx_float_to_string_full (	cplx, CRANK_CPLX_FLOAT_DEFFORMAT);
 }
 
 /**
  * crank_cplx_float_to_string_full:
  * @cplx: A Complex value.
- * @left: Left, marking start of complex.
- * @mid: Middle, separates real and imaginary parts.
- * @right: Right, marking end of complex.
- * @format_real: Format for real part - should comsume 1 float value.
- * @format_imag: Format for imaginary part - should consume 1 float value.
+ * @format: A format to stringify complex - consumes 2 parameters.
  *
  * Stringify complex value into string.
+ *
+ * It internally uses g_strdup_printf(), so @format consumes 2 float parameters.
+ * First one is real value, and second one is imaginary value.
  *
  * Returns: String representation of complex. Free with g_free()
  */
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
-												const gchar*	left,
-												const gchar*	mid,
-												const gchar*	right,
-												const gchar*	format_real,
-												const gchar*	format_imag	)
+												const gchar*	format	)
 {
-	GString*	builder = g_string_new (left);
-	gchar*		result;
-	
-	g_string_append_printf (builder, format_real, cplx->real);
-	
-	g_string_append (builder, mid);
-	
-	g_string_append_printf (builder, format_imag, cplx->imag);
-	
-	g_string_append (builder, right);
-	
-	result = builder->str;
-	
-	g_string_free (builder, FALSE);
-	
-	return result;
+	return g_strdup_printf (format, cplx->real, cplx->imag);
 }
 
 //////// Unary Operations //////////////////////////////////////////////////////
@@ -286,6 +265,22 @@ gfloat
 crank_cplx_float_get_norm (		CrankCplxFloat*	cplx	)
 {
 	return sqrtf(crank_cplx_float_get_norm_sq(cplx));
+}
+
+/**
+ * crank_cplx_float_get_arg:
+ * @cplx: A Complex.
+ *
+ * Gets argument of complex, which is angle between real axis, on complex plane.
+ *
+ * Returns: Argument of complex.
+ */
+gfloat
+crank_cplx_float_get_arg (	CrankCplxFloat*	cplx	)
+{
+	g_message ("arg: %s", crank_cplx_float_to_string(cplx));
+	g_message ("arg: >> %g", atan2f (cplx->imag, cplx->real));
+	return atan2f (cplx->imag, cplx->real);
 }
 
 /**
@@ -329,12 +324,27 @@ void
 crank_cplx_float_inverse (	CrankCplxFloat*	a,
 							CrankCplxFloat*	r	)
 {
-	gfloat norm_sq = a->real * a->real + a->imag * a->imag;
+	gfloat norm_sq = crank_cplx_float_get_norm_sq (a);
 	
 	r->real = a->real / norm_sq;
 	r->imag = -a->imag / norm_sq;
 }
 
+/**
+ * crank_cplx_float_unit:
+ * @a: A Complex
+ * @r: (out): A Complex to store result.
+ * 
+ * Gets unit complex. (@a / |@a|)
+ */
+void
+crank_cplx_float_unit (	CrankCplxFloat*	a,
+						CrankCplxFloat*	r	)
+{
+	gfloat	norm = crank_cplx_float_get_norm (a);
+	
+	crank_cplx_float_divr (a, norm, r);
+}
 
 
 //////// Cplx - Real Operations ////////////////////////////////////////////////
@@ -565,4 +575,59 @@ crank_cplx_float_mix (	CrankCplxFloat*	a,
 	
 	r->real = a->real * d + b->real * c;
 	r->imag = a->imag * d + b->imag * c;
+}
+
+
+//////// Advanced Operations ///////////////////////////////////////////////////
+
+/**
+ * crank_cplx_float_ln:
+ * @a: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets Natural log from a complex.
+ *
+ * As periodic characteristic of exponential, returned complex will have
+ * imaginary part in [0, 2 * PI} or being NAN (if @a is 0)
+ */
+void
+crank_cplx_float_ln (	CrankCplxFloat*	a,
+						CrankCplxFloat*	r	)
+{
+	gfloat	norm;
+	
+	norm = crank_cplx_float_get_norm (a);
+	
+	if (norm == 0) {
+		r->real = - INFINITY;
+		r->imag = NAN;
+	}
+	else {
+		gfloat	arg = crank_cplx_float_get_arg (a);
+		
+		r->real = logf (norm);
+		r->imag = arg;
+	}
+}
+
+/**
+ * crank_cplx_float_exp:
+ * @a: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets e-based exponential of complex.
+ */
+void		crank_cplx_float_exp (		CrankCplxFloat*	a,
+										CrankCplxFloat*	r	)
+{
+	if (a->real == - INFINITY) {
+		r->real = 0;
+		r->imag = 0;
+	}
+	else {
+		gfloat	norm = expf (a->real);
+		
+		r->real = norm * sinf (a->imag);
+		r->imag = norm * cosf (a->imag);
+	}
 }

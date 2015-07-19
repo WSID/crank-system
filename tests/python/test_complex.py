@@ -84,6 +84,14 @@ class TestVecInt(unittest.TestCase):
 		self.assertFloat (a.real, 3)
 		self.assertFloat (a.imag, -4)
 	
+	def test_unit (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.unit ()
+		
+		self.assertFloat (a.real, 0.6)
+		self.assertFloat (a.imag, 0.8)
+	
 	def test_addr (self):
 		a = CrankBase.CplxFloat.init (3, 4)
 		
@@ -185,6 +193,22 @@ class TestVecInt(unittest.TestCase):
 		
 		self.assertFloat (a.real, 3.5)
 		self.assertFloat (a.imag, 6.0)
+	
+	def test_ln (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.ln ()
+		
+		self.assertFloat (a.real, 1.6094)
+		self.assertFloat (a.imag, 0.9273)
+	
+	def test_exp (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.exp ()
+		
+		self.assertFloat (a.real, -15.2008)
+		self.assertFloat (a.imag, -13.1287)
 		
 if __name__ == '__main__':
 	unittest.main ()

@@ -129,11 +129,7 @@ gchar*			crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
 														const gchar*	vec_left,
 														const gchar*	vec_in,
 														const gchar*	vec_right,
-														const gchar*	cplx_left,
-														const gchar*	cplx_mid,
-														const gchar*	cplx_right,
-														const gchar*	cplx_format_real,
-														const gchar*	cplx_format_imag	);
+														const gchar*	format	);
 
 
 //////// Standard vector property ///////

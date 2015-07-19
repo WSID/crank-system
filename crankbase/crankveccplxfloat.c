@@ -563,7 +563,8 @@ gboolean		crank_vec_cplx_float_n_equal (	gconstpointer	a,
 gchar*
 crank_vec_cplx_float_n_to_string (	CrankVecCplxFloatN*	vec	)
 {
-	return crank_vec_cplx_float_n_to_string_full (vec, "(", ", ", ")", "", " + ", "", "%g", "(%g)");
+	return crank_vec_cplx_float_n_to_string_full (vec, "(", ", ", ")",
+			CRANK_CPLX_FLOAT_DEFFORMAT);
 }
 
 /**
@@ -583,11 +584,7 @@ crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
 										const gchar*	vec_left,
 										const gchar*	vec_in,
 										const gchar*	vec_right,
-										const gchar*	cplx_left,
-										const gchar*	cplx_mid,
-										const gchar*	cplx_right,
-										const gchar*	cplx_format_real,
-										const gchar*	cplx_format_imag	)
+										const gchar*	format	)
 {
 	GString*	strb = g_string_new (vec_left);
 	gchar*		result;
@@ -596,16 +593,12 @@ crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
 	
 	if (vec->n != 0) {
 		g_string_append (strb,
-				crank_cplx_float_to_string_full (vec->data + i,
-						cplx_left, cplx_mid, cplx_right,
-						cplx_format_real, cplx_format_imag));
+				crank_cplx_float_to_string_full (vec->data + i, format));
 		
 		for (i = 1; i < vec->n; i++) {
 			g_string_append (strb, vec_in);
 			g_string_append (strb,
-					crank_cplx_float_to_string_full (vec->data + i,
-							cplx_left, cplx_mid, cplx_right,
-							cplx_format_real, cplx_format_imag));
+					crank_cplx_float_to_string_full (vec->data + i, format));
 		}
 	}
 	g_string_append (strb, vec_right);

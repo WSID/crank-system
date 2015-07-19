@@ -77,6 +77,10 @@ namespace Crank {
 	
 	
 	public struct CplxFloat {
+	
+		[CCode (cname="CRANK_CPLX_FLOAT_DEFFORMAT")]
+		public const string	DEFFORMAT;
+	
 		public float	real;
 		public float	imag;
 		
@@ -92,18 +96,16 @@ namespace Crank {
 		public static uint	hash (CplxFloat a);
 		
 		[CCode (cname="crank_cplx_float_to_string_full")]
-		public string		to_string (	string	left = "",
-										string	mid = " + ",
-										string	right = "",
-										string	format_real = "%g",
-										string	format_imag = "(%gi)");
+		public string		to_string (	string format=DEFFORMAT);
 
 		public float		norm_sq { get; }
 		public float		norm { get; }
+		public float		arg { get; }
 		
 		public CplxFloat	conjugate ();
 		public CplxFloat	neg ();
 		public CplxFloat	inverse ();
+		public CplxFloat	unit ();
 		
 		public CplxFloat	addr (float b);
 		public CplxFloat	subr (float b);
@@ -121,6 +123,9 @@ namespace Crank {
 		public CplxFloat	mul_conj (CplxFloat	b);
 		
 		public CplxFloat	mix (CplxFloat b, float c);
+		
+		public CplxFloat	ln ();
+		public CplxFloat	exp ();
 	}
 	
 	

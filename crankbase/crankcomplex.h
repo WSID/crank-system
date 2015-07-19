@@ -33,6 +33,13 @@
 //////// Struct declaration ////////////////////////////////////////////////////
 
 /**
+ * CRANK_CPLX_FLOAT_DEFFORMAT: (value "%g + (%gi)")
+ *
+ * Default format for crank_cplx_float_to_string_full().
+ */
+#define CRANK_CPLX_FLOAT_DEFFORMAT "%g + (%gi)"
+
+/**
  * CrankCplxFloat:
  * @real: Real part of complex.
  * @imag: Imaginary part of complex.
@@ -79,24 +86,25 @@ guint		crank_cplx_float_hash (		gconstpointer	a	);
 gchar*		crank_cplx_float_to_string (		CrankCplxFloat*	cplx	);
 
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
-										const gchar*	left,
-										const gchar*	mid,
-										const gchar*	right,
-										const gchar*	format_real,
-										const gchar*	format_imag	);
+										const gchar*	format	);
 
 //////// Unary Operations //////////////////////////////////////////////////////
 gfloat		crank_cplx_float_get_norm_sq (	CrankCplxFloat*	cplx	);
 
 gfloat		crank_cplx_float_get_norm (		CrankCplxFloat*	cplx	);
 
-void		crank_cplx_float_conjugate (	CrankCplxFloat*	a,
-											CrankCplxFloat*	r	);
+gfloat		crank_cplx_float_get_arg (		CrankCplxFloat*	cplx	);
 										
 void		crank_cplx_float_neg (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
 
 void		crank_cplx_float_inverse (		CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_conjugate (	CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+											
+void		crank_cplx_float_unit (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
 
 //////// Cplx - Real Operations ////////////////////////////////////////////////
@@ -154,6 +162,15 @@ void		crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
 void		crank_cplx_float_mix (		CrankCplxFloat*	a,
 										CrankCplxFloat*	b,
 										gfloat			c,
+										CrankCplxFloat*	r	);
+
+
+//////// Advanced Operations ///////////////////////////////////////////////////
+
+void		crank_cplx_float_ln (		CrankCplxFloat*	a,
+										CrankCplxFloat*	r	);
+
+void		crank_cplx_float_exp (		CrankCplxFloat*	a,
 										CrankCplxFloat*	r	);
 
 
