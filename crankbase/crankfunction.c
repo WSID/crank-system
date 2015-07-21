@@ -59,3 +59,20 @@ crank_float_to_string (	gpointer	value,
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%g";
 	return g_strdup_printf (format, *(gfloat*)value); 
 }
+
+/**
+ * crank_pointer_to_string:
+ * @value: A pointer.
+ * @userdata: (nullable): Format for stringification.
+ *
+ * Stringify a pointer.
+ *
+ * Returns: string represents pointer. free with g_free()
+ */
+gchar*
+crank_pointer_to_string (	gpointer	value,
+						gpointer	userdata)
+{
+	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
+	return g_strdup_printf (format, value); 
+}

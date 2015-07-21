@@ -37,6 +37,7 @@ CrankBoolCplxFloatFunc
 CrankStrPtrFunc
 crank_float_equal
 crank_float_to_string
+crank_pointer_to_string
 </SECTION>
 
 <SECTION>

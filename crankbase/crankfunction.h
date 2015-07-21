@@ -144,6 +144,9 @@ gboolean	crank_float_equal (			gconstpointer	a,
 
 gchar*		crank_float_to_string (		gpointer	value,
 										gpointer	userdata	);
+
+gchar*		crank_pointer_to_string (	gpointer	value,
+										gpointer	userdata	);
 G_END_DECLS
 
 #endif
