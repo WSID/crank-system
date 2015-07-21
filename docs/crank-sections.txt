@@ -34,6 +34,9 @@ CrankBoolBoolFunc
 CrankBoolIntFunc
 CrankBoolFloatFunc
 CrankBoolCplxFloatFunc
+CrankStrPtrFunc
+crank_float_equal
+crank_float_to_string
 </SECTION>
 
 <SECTION>
@@ -952,4 +955,15 @@ crank_qr_householder_mat_float_n
 crank_qr_givens_mat_float_n
 crank_eval_power_mat_float_n
 crank_eval_qr_mat_float_n
+</SECTION>
+
+<SECTION>
+<FILE>crankbasetest</FILE>
+crank_assert_eqarray_float
+crank_assert_eqarray
+crank_assert_eqparray
+crank_assert_cmpfloat
+crank_assert_cmpfloat_d
+crank_assert_eqcplxfloat
+crank_assert_eqcplxfloat_d
 </SECTION>

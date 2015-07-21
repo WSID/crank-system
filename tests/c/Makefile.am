@@ -15,6 +15,7 @@ TEST_BASE_LDADD= \
 
 # 대상 목록
 test_programs= \
+		test_base_test \
 		test_string \
 		test_base_macro \
 		test_value \
@@ -27,7 +28,10 @@ test_programs= \
 		test_mat_float \
 		test_advmat \
 		test_digraph \
-		test_advgraph
+		test_advgraph 
+
+
+test_base_test_LDADD= $(TEST_BASE_LDADD)
 
 test_string_LDADD= $(TEST_BASE_LDADD)
 

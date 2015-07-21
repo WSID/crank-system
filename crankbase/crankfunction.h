@@ -47,6 +47,8 @@
 
 G_BEGIN_DECLS
 
+//////// Function Definitions //////////////////////////////////////////////////
+
 /**
  * CrankCallback: (skip)
  * @userdata: (closure): A userdata for callback.
@@ -119,7 +121,29 @@ typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
  */
 typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
 												gpointer		userdata	);
+												
+												
+												
+		
+/**
+ * CrankStrPtrFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gpointer and returns allocated string. It will be
+ * freed with g_free().
+ *
+ * Returns: (transfer full): A String value.
+ */
+typedef gchar*		(*CrankStrPtrFunc) (		gpointer		value,
+												gpointer		userdata	);
+												
+gboolean	crank_float_equal (			gconstpointer	a,
+										gconstpointer	b	);
 
+
+gchar*		crank_float_to_string (		gpointer	value,
+										gpointer	userdata	);
 G_END_DECLS
 
 #endif

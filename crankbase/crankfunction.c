@@ -1,6 +1,3 @@
-#ifndef CRANKBASE_H
-#define CRANKBASE_H
-
 /* Copyright (C) 2015, WSID   */
 
 /* Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,29 +21,41 @@
 
 #define _CRANKBASE_INSIDE
 
-#include "crankbasemacro.h"
-#include "crankstring.h"
-#include "crankvala.h"
-#include "crankvalue.h"
+#include <glib.h>
 
-#include "crankpermutation.h"
-#include "crankcomplex.h"
+#include "crankfunction.h"
 
-#include "crankveccommon.h"
-#include "crankvecbool.h"
-#include "crankvecint.h"
-#include "crankvecfloat.h"
-#include "crankveccplxfloat.h"
+/**
+ * crank_float_equal:
+ * @a: A Pointer pointing a float value.
+ * @b: A Pointer pointing a float value.
+ *
+ * Check equality of float values, with 0.0001f of error range.
+ *
+ * Returns: string represents of float. free with g_free()
+ */
+gboolean
+crank_float_equal (	gconstpointer	a,
+					gconstpointer	b	)
+{
+	gfloat av = *(gfloat*)a;
+	gfloat bv = *(gfloat*)b;
+	return (bv - 0.0001f < av) && (av < bv + 0.0001f);
+}
 
-#include "crankmatfloat.h"
-#include "crankadvmat.h"
-
-#include "crankdigraph.h"
-#include "crankadvgraph.h"
-
-#include "crankbasetest.h"
-
-
-#undef _CRANKBASE_INSIDE
-
-#endif /* CRANKBASE_H */
+/**
+ * crank_float_to_string:
+ * @value: A pointer pointing a float value.
+ * @userdata: (nullable): Format for stringification.
+ *
+ * Stringify a float value.
+ *
+ * Returns: string represents of float. free with g_free()
+ */
+gchar*
+crank_float_to_string (	gpointer	value,
+						gpointer	userdata)
+{
+	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%g";
+	return g_strdup_printf (format, *(gfloat*)value); 
+}
