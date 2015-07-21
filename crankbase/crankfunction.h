@@ -147,6 +147,15 @@ gchar*		crank_float_to_string (		gpointer	value,
 
 gchar*		crank_pointer_to_string (	gpointer	value,
 										gpointer	userdata	);
+										
+										
+
+gint		crank_compare_nondata_wrapf (	gconstpointer	a,
+											gconstpointer	b,
+											gpointer		userdata	);
+
+gchar*		crank_str_ptr_nondata_wrapf (	gpointer		value,
+											gpointer		userdata	);
 G_END_DECLS
 
 #endif

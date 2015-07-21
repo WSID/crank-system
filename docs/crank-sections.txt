@@ -38,6 +38,8 @@ CrankStrPtrFunc
 crank_float_equal
 crank_float_to_string
 crank_pointer_to_string
+crank_compare_nondata_wrapf
+crank_str_ptr_nondata_wrapf
 </SECTION>
 
 <SECTION>

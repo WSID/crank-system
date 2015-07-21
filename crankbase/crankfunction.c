@@ -76,3 +76,46 @@ crank_pointer_to_string (	gpointer	value,
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
 	return g_strdup_printf (format, value); 
 }
+
+/**
+ * crank_compare_nondata_wrapf:
+ * @a: A Pointer
+ * @b: A Pointer
+ * @userdata: A Function, which is #GCompareFunc
+ * 
+ * wraps a compare function which does not receive userdata.
+ *
+ * Returns: invoke result of @userdata.
+ */
+gint
+crank_compare_nondata_wrapf (	gconstpointer	a,
+								gconstpointer	b,
+								gpointer		userdata	)
+{
+	GCompareFunc	function = (GCompareFunc)userdata;
+	
+	return function (a, b);
+}
+
+/**
+ * crank_str_ptr_nondata_wrapf:
+ * @value: A Pointer.
+ * @userdata: A function, which is gchar*(*)(gconstpointer)
+ *
+ * wraps a stringification function which does not receive userdata.
+ *
+ * Wrapped function should return allocated string, so that it can be freed with
+ * g_free()
+ *
+ * Returns: Invoke result of @userdata. free with g_free()
+ */
+gchar*
+crank_str_ptr_nondata_wrapf (	gpointer	value,
+								gpointer	userdata	)
+{
+	gchar* (*function) (gpointer);
+	
+	function = (gchar* (*)(gpointer)) userdata;
+	
+	return function (value);
+}
