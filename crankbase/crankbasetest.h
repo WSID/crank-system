@@ -182,23 +182,23 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  */
 #define crank_assert_cmpfloat_d(a,cmp,b,d)	\
 		G_STMT_START { \
-			gfloat na = (a); \
-			gfloat nb = (b); \
-			gfloat diff = (nb - na); \
-			gfloat nd = (d); \
-			gint cres = (diff < -nd) - (nd < diff); \
-			if (G_UNLIKELY(! (cres cmp 0))) { \
-				gchar* message = g_strdup_printf ( \
+			gfloat _crank_na = (a); \
+			gfloat _crank_nb = (b); \
+			gfloat _crank_diff = (_crank_nb - _crank_na); \
+			gfloat _crank_nd = (d); \
+			gint _crank_cres = (_crank_diff < -_crank_nd) - (_crank_nd < _crank_diff); \
+			if (G_UNLIKELY(! (_crank_cres cmp 0))) { \
+				gchar* _crank_message = g_strdup_printf ( \
 			            "%s %s %s" \
 			            "\n\tActual: %g %s %g (with diff = %g)", \
 			            G_STRINGIFY(a), \
 			            G_STRINGIFY(cmp), \
 			            G_STRINGIFY(b), \
-						na, G_STRINGIFY(cmp), nb, diff ); \
+						_crank_na, G_STRINGIFY(cmp), _crank_nb, _crank_diff ); \
 				g_assertion_message ( \
 						G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-						message); \
-				g_free (message); \
+						_crank_message); \
+				g_free (_crank_message); \
 			} \
 		} G_STMT_END
 
@@ -312,56 +312,56 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 
 #define _crank_assert_eq_collection(G,AT,BT,a,an,aname,agetter,b,bn,bname,bgetter,eqf,strf,strfu)	\
 		G_STMT_START { \
-			gboolean	fails = FALSE; \
-			AT			na = 	(a); \
-			guint		nan = 	(an); \
-			BT			nb = 	(b); \
-			guint		nbn = 	(bn); \
-			gpointer	nstrfu = (strfu); \
-			guint i; \
-			if (nan != nbn) fails = TRUE; \
-			else for (i = 0; i < nan; i++) { \
-				if (! eqf (agetter(na,i), bgetter(nb,i))) { \
-					fails = TRUE; \
+			gboolean	_crank_fails = FALSE; \
+			AT			_crank_na = 	(a); \
+			guint		_crank_nan = 	(an); \
+			BT			_crank_nb = 	(b); \
+			guint		_crank_nbn = 	(bn); \
+			gpointer	_crank_nstrfu = (strfu); \
+			guint _crank_i; \
+			if (_crank_nan != _crank_nbn) _crank_fails = TRUE; \
+			else for (_crank_i = 0; _crank_i < _crank_nan; _crank_i++) { \
+				if (! eqf (agetter(_crank_na,_crank_i), bgetter(_crank_nb,_crank_i))) { \
+					_crank_fails = TRUE; \
 					break; \
 				} \
 			} \
-			if (fails) { \
-				GString*	msg_build = g_string_new (NULL); \
-				g_string_printf (msg_build, "%s == %s", \
-						G_STRINGIFY(a), G_STRINGIFY(b) ); \
+			if (_crank_fails) { \
+				GString*	_crank_msg_build = g_string_new (NULL); \
+				g_string_printf (_crank_msg_build, "%s == %s", \
+						aname, bname); \
 				\
-				_crank_append_collection_content( msg_build, na, nan, aname, agetter, strf, nstrfu); \
-				_crank_append_collection_content( msg_build, nb, nbn, bname, bgetter, strf, nstrfu); \
+				_crank_append_collection_content( _crank_msg_build, _crank_na, _crank_nan, aname, agetter, strf, _crank_nstrfu); \
+				_crank_append_collection_content( _crank_msg_build, _crank_nb, _crank_nbn, bname, bgetter, strf, _crank_nstrfu); \
 				g_assertion_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-					msg_build->str); \
-				g_string_free (msg_build, TRUE); \
+					_crank_msg_build->str); \
+				g_string_free (_crank_msg_build, TRUE); \
 				\
 			} \
 		} G_STMT_END
 
 #define	_crank_assert_eq_collection_imm(G,AT,a,an,aname,agetter,eqf,strf,strfu,...) \
 		G_STMT_START { \
-			G		b[] = { __VA_ARGS__ }; \
-			guint	bn = G_N_ELEMENTS (b); \
+			G		_crank_b[] = { __VA_ARGS__ }; \
+			guint	_crank_bn = G_N_ELEMENTS (_crank_b); \
 			\
 			_crank_assert_eq_collection ( \
 					G,AT,G*, \
 					a,an,aname,agetter, \
-					b,bn,"list",_crank_array_add, \
+					_crank_b,_crank_bn,"list",_crank_array_add, \
 					eqf, strf, strfu ); \
 			\
 		} G_STMT_END
 
 #define _crank_assert_eqp_collection_imm(AT,a,an,aname,agetter,eqf,strf,strfu,...) \
 		G_STMT_START { \
-			gpointer	b[] = { __VA_ARGS__ }; \
-			guint		bn = G_N_ELEMENTS (b); \
+			gpointer	_crank_b[] = { __VA_ARGS__ }; \
+			guint		_crank_bn = G_N_ELEMENTS (_crank_b); \
 			\
 			_crank_assert_eq_collection ( \
 					gpointer, AT, gpointer*, \
 					a,an,aname,agetter, \
-					b,bn,"list",_crank_array_index, \
+					_crank_b,_crank_bn,"list",_crank_array_index, \
 					eqf, strf, strfu ); \
 			\
 		} G_STMT_END
