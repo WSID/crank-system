@@ -276,9 +276,9 @@ test_eval_power (void)
 
 	crank_assert_cmpfloat (crank_eval_power_mat_float_n (&a, NULL, &evec), ==, 21.4467f);
 	
-	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 0), ==, 0.1729f);
-	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 1), ==, 0.4671f);
-	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 2), ==, 0.8671f);
+	crank_assert_eq_vecfloat_n_imm (&evec,	0.1729f,
+											0.4671f,
+											0.8671f	);
 	
 	crank_vec_float_n_fini (&evec);
 	crank_mat_float_n_fini (&a);
