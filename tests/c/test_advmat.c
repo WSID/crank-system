@@ -288,7 +288,7 @@ static void
 test_eval_qr (void)
 {
 	CrankMatFloatN	a = {0};
-	GHashTable*		t;
+	CrankVecFloatN	b = {0};
 	GHashTableIter	iter;
 	
 	gfloat*			key;
@@ -301,26 +301,10 @@ test_eval_qr (void)
 		2.0f,	4.0f,	9.0f,
 		3.0f,	9.0f,	16.0f	);
 
-	t = crank_eval_qr_mat_float_n (&a);
+	crank_eval_qr_mat_float_n (&a, &b);
 	
-	g_assert_nonnull (t);
+	crank_assert_eq_vecfloat_n_imm (&b, 21.4467f, -0.9085f, 0.4618f );
 	
-	g_hash_table_iter_init (&iter, t);
-	
-	for (i = 0; i < 3; i++) {
-		g_assert (g_hash_table_iter_next (&iter,
-				(gpointer *)&key,
-				(gpointer *)&value	));
-	
-		if ( 1.0f < *key )
-			crank_assert_cmpfloat (*key, ==, 21.4467f);
-		else if ( 0.0f < *key)
-			crank_assert_cmpfloat (*key, ==, 0.4618f);
-		else crank_assert_cmpfloat (*key, ==, -0.9085f);
-		
-		g_assert_cmpuint (GPOINTER_TO_INT (value), ==, 1);
-	}
-	
+	crank_vec_float_n_fini (&b);
 	crank_mat_float_n_fini (&a);
-	g_hash_table_unref (t);
 }

@@ -59,7 +59,8 @@ gfloat		crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 											CrankVecFloatN*	b,
 											CrankVecFloatN*	evec	);
 
-GHashTable*	crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	);
+void		crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
+										CrankVecFloatN*	evals	);
 
 G_END_DECLS
 

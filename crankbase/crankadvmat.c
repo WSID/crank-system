@@ -551,38 +551,36 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 /**
  * crank_eval_qr_mat_float_n:
  * @a: A Matrix.
- *
- * Gets a map of (eigenvalues -> multiplicity) of given matrix.
+ * @evals: (out): A Vector contains eigenvalues.
  *
  * Eigenvalues are calculated by QR Algorithm; If QR Decompisition is not
- * possible, %NULL may be returned.
- *
- * Returns: (transfer container) (element-type gfloat*, guint) (nullable):
- *		A #GHashTable of (Eigenvalues -> multiplicity)
+ * possible, an 0-sized vector is returned.
  */
-GHashTable*
-crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	)
+void
+crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
+							CrankVecFloatN*	evals	)
 {
 	CrankMatFloatN	ai = {0};
 	CrankMatFloatN	qi = {0};
 	CrankMatFloatN	ri = {0};
 	gboolean		cont;
-	GHashTable*		result;
 	
 	guint	i;
 	guint	j;
 	
 	cont = TRUE;
 	
-	if (! crank_gram_schmidt_mat_float_n (a, &qi, &ri))
-		return NULL;
+	if (! crank_gram_schmidt_mat_float_n (a, &qi, &ri)) {
+		crank_vec_float_n_fini (evals);
+		return;
+	}
 	
 	while (cont) {
 		
 		crank_mat_float_n_mul (&ri, &qi, &ai);
 		
 		cont = FALSE;
-		for (i = 0; i < a->rn; i++) {
+		for (i = 0; i < a->rn; i++) { 
 			for (j = 0; j < i; j++) {
 				// Checks for elements are smaller than reasonably small value.
 				//TODO: Make a way to adjust this value.
@@ -596,26 +594,19 @@ crank_eval_qr_mat_float_n (	CrankMatFloatN*	a	)
 		}
 		
 		if (cont) {
-			if (! crank_gram_schmidt_mat_float_n (&ai, &qi, &ri))
-				return NULL;
+			if (! crank_gram_schmidt_mat_float_n (&ai, &qi, &ri)) {
+				crank_mat_float_n_fini (&ai);
+				crank_vec_float_n_fini (evals);
+				return;
+			}
 		}
 	}
 	
-	result = g_hash_table_new_full (float_hash, float_equal, destroy_slice_float, NULL);
+	crank_mat_float_n_get_diag (&ai, evals);
 	
-	for (i = 0; i < a->rn; i++) {
-		gfloat	e = crank_mat_float_n_get (&ai, i, i);
-		guint	c = GPOINTER_TO_INT (g_hash_table_lookup (result, &e));
-		
-		if (c == 0) {
-			g_hash_table_insert (result, float_dup (e),
-					GINT_TO_POINTER (c + 1));
-		}
-		else {
-			g_hash_table_insert (result, &e, GINT_TO_POINTER (c + 1));
-		}
-	}
-	return result;
+	crank_mat_float_n_fini (&ai);
+	crank_mat_float_n_fini (&qi);
+	crank_mat_float_n_fini (&ri);
 }
 
 
