@@ -53,6 +53,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/mat/float/n/det", test_n_det);
 	GLib.Test.add_func ("/crank/base/mat/float/n/cof", test_n_cof);
 	GLib.Test.add_func ("/crank/base/mat/float/n/adj", test_n_adj);
+	GLib.Test.add_func ("/crank/base/mat/float/n/diag", test_n_diagv);
 	GLib.Test.add_func ("/crank/base/mat/float/n/neg", test_n_neg);
 	GLib.Test.add_func ("/crank/base/mat/float/n/transpose", test_n_transpose);
 	GLib.Test.add_func ("/crank/base/mat/float/n/inverse", test_n_inverse);
@@ -387,6 +388,18 @@ private void test_n_det () {
 		 {1.0f, 3.0f, 0.0f, 4.0f, 0.0f},
 		 {0.0f, 1.0f, 0.0f, 0.0f, 5.0f}} );
 	float_eq (a.det, -54.0f);
+}
+
+private void test_n_diagv () {
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{1.0f, 0.0f, 0.0f, 1.0f, 0.0f},
+		 {0.0f, 2.0f, 0.0f, 3.0f, 1.0f},
+		 {0.0f, 0.0f, 3.0f, 0.0f, 0.0f},
+		 {1.0f, 3.0f, 0.0f, 4.0f, 0.0f},
+		 {0.0f, 1.0f, 0.0f, 0.0f, 5.0f}} );
+	Crank.VecFloatN	b = a.diagv;
+	
+	Crank.assert_eq_vecfloat_n_imm (b, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
 }
 
 private void test_n_cof ()  {

@@ -70,6 +70,7 @@ static void		test_n_tr (void);
 static void		test_n_det (void);
 static void		test_n_cof (void);
 static void		test_n_adj (void);
+static void		test_n_diag (void);
 
 static void		test_n_neg (void);
 static void		test_n_transpose (void);
@@ -126,6 +127,7 @@ gint	main (gint argc, gchar** argv)
   	g_test_add_func ("/crank/base/mat/float/n/cof",			test_n_cof);
   	g_test_add_func ("/crank/base/mat/float/n/adj",			test_n_adj);
   	g_test_add_func ("/crank/base/mat/float/n/neg",			test_n_neg);
+  	g_test_add_func ("/crank/base/mat/float/n/diag",		test_n_diag);
   	g_test_add_func ("/crank/base/mat/float/n/transpose",	test_n_transpose);
   	g_test_add_func ("/crank/base/mat/float/n/inverse",		test_n_inverse);
   	g_test_add_func ("/crank/base/mat/float/n/muls",		test_n_muls);
@@ -631,6 +633,26 @@ static void
 test_n_adj (void)
 {
   	g_test_skip ("Determinent for variable size matrix is in progress.");
+}
+
+static void
+test_n_diag (void)
+{
+	CrankMatFloatN	a = {0};
+	CrankVecFloatN	b = {0};
+
+  	crank_mat_float_n_init (&a, 5, 5,
+			1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 2.0f, 0.0f, 3.0f, 1.0f,
+			0.0f, 0.0f, 3.0f, 0.0f, 0.0f,
+			1.0f, 3.0f, 0.0f, 4.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f, 5.0f);
+
+	crank_mat_float_n_get_diag (&a, &b);
+	
+	crank_assert_eq_vecfloat_n_imm (&b,	1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+
+	crank_mat_float_n_fini (&a);
 }
 
 static void

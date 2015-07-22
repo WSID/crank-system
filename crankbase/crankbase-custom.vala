@@ -1095,6 +1095,8 @@ namespace Crank {
 		public float		det { get; }
 		public MatFloatN	cof { owned get; }
 		public MatFloatN	adj { owned get; }
+		public VecFloatN	diagv {
+			[CCode(cname="crank_mat_float_n_get_diag")]owned get; }
 
 		public MatFloatN	neg ();
 		public MatFloatN	transpose ();

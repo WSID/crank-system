@@ -3474,6 +3474,33 @@ crank_mat_float_n_get_det (	CrankMatFloatN* mat	)
 }
 
 /**
+ * crank_mat_float_n_get_diag:
+ * @mat: A Matrix.
+ * @r: (out): A Diagonal vector.
+ *
+ * Gets diagonal components as vector.
+ */
+void
+crank_mat_float_n_get_diag (CrankMatFloatN*	mat,
+							CrankVecFloatN*	r	)
+{
+	if (crank_mat_float_n_is_square (mat)) {
+		guint	i;
+		
+		gfloat*	data = g_new (gfloat, mat->rn);
+		
+		for (i = 0; i < mat->rn; i++)
+			data[i] = crank_mat_float_n_get (mat, i, i);
+		
+		crank_vec_float_n_init_arr_take (r, mat->rn, data);
+	}
+	else {
+		g_warning ("MatFloatN: get_diag: non square: %u, %u", mat->rn, mat->cn);
+		crank_vec_float_n_fini (r);
+	}
+}
+
+/**
  * crank_mat_float_n_get_cof:
  * @mat: A Matrix.
  * @r: (out): A cofactor matrix.

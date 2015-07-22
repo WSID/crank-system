@@ -835,6 +835,9 @@ void		crank_mat_float_n_get_cof (	CrankMatFloatN*	mat,
 
 void		crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 										CrankMatFloatN*	r	);
+										
+void		crank_mat_float_n_get_diag (CrankMatFloatN*	mat,
+										CrankVecFloatN*	r	);
 
 //////// Unary operations ////////
 

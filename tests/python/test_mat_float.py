@@ -331,6 +331,21 @@ class TestMatFloat(unittest.TestCase):
 	def test_n_adj (self):
 		pass
 	
+	def test_n_diag (self):
+		a = CrankBase.MatFloatN.init_arr (5, 5,
+				[1, 0, 0, 1, 0,
+				 0, 2, 0, 3, 1,
+				 0, 0, 3, 0, 0,
+				 1, 3, 0, 4, 0,
+				 0, 1, 0, 0, 5]);
+				 
+		b = a.get_diag ();
+
+		self.assertFloat (b.get (0), 1)
+		self.assertFloat (b.get (1), 2)
+		self.assertFloat (b.get (2), 3)
+		self.assertFloat (b.get (3), 4)
+		self.assertFloat (b.get (4), 5)
 		
 	def test_n_neg (self):
 		a = CrankBase.MatFloatN.init_arr (2, 3,
