@@ -236,12 +236,8 @@ test_dijkstra (	TestFixtureDigraph*	ft,
 	
 	path = crank_dijkstra_digraph (ft->nodes[0], ft->nodes[1], testutil_edge_distance, NULL);
 	
-	g_assert_cmpint (g_list_length (path), ==, 5);
-	g_assert (g_list_nth_data (path, 0) == ft->nodes[0]);
-	g_assert (g_list_nth_data (path, 1) == ft->nodes[4]);
-	g_assert (g_list_nth_data (path, 2) == ft->nodes[2]);
-	g_assert (g_list_nth_data (path, 3) == ft->nodes[3]);
-	g_assert (g_list_nth_data (path, 4) == ft->nodes[1]);
+	crank_assert_eq_glist_imm (path,
+		ft->nodes[0], ft->nodes[4], ft->nodes[2], ft->nodes[3], ft->nodes[1]);
 	
 	g_list_free (path);
 }
@@ -255,13 +251,9 @@ test_astar (	TestFixtureDigraph*	ft,
 	path = crank_astar_digraph (ft->nodes[5], ft->nodes[7], 
 			testutil_edge_distance, NULL,
 			testutil_heuristic, NULL	);
-	
-	g_assert_cmpint (g_list_length (path), ==, 5);
-	g_assert (g_list_nth_data (path, 0) == ft->nodes[5]);
-	g_assert (g_list_nth_data (path, 1) == ft->nodes[2]);
-	g_assert (g_list_nth_data (path, 2) == ft->nodes[4]);
-	g_assert (g_list_nth_data (path, 3) == ft->nodes[0]);
-	g_assert (g_list_nth_data (path, 4) == ft->nodes[7]);
-	
+			
+	crank_assert_eq_glist_imm (path,
+		ft->nodes[5], ft->nodes[2], ft->nodes[4], ft->nodes[0], ft->nodes[7]);
+		
 	g_list_free (path);
 }

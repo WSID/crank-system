@@ -25,14 +25,6 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void		test_assert_float_real (	const gchar*	file,
-											const guint		line,
-											const gchar*	func,
-											const gchar*	a_str,
-											const gchar*	b_str,
-											gfloat			a,
-											gfloat			b	);
-
 static void		test_equal ( void );
 
 static void		test_get_norm ( void );
@@ -110,38 +102,6 @@ main (	gint   argc,
 
 //////// Definition ////////////////////////////////////////////////////////////
 
-
-static void
-test_assert_float_real (	const gchar*	file,
-							const guint		line,
-							const gchar*	func,
-							const gchar*	a_str,
-							const gchar*	b_str,
-							gfloat			a,
-							gfloat			b)
-{
-	if ((a < b - 0.0001f) || (b + 0.0001f < a)) {
-		g_error (
-				"%s:%u:%s: assertion failed: (%s == %s): (%g == %g)"
-				" (with diff of %g)",
-				file, line, func,
-				a_str, b_str,
-				a, b, b - a );
-	}
-}
-
-#define test_assert_float(a, b) \
-	test_assert_float_real(\
-			__FILE__, \
-			__LINE__, \
-			G_STRFUNC, \
-			G_STRINGIFY(a), \
-			G_STRINGIFY(b), \
-			a, \
-			b)
-
-
-
 static void
 test_equal ( void )
 {
@@ -158,7 +118,7 @@ test_get_norm ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
 	
-	test_assert_float (crank_cplx_float_get_norm (&cplx), 5.0f);
+	crank_assert_cmpfloat (crank_cplx_float_get_norm (&cplx), ==, 5.0f);
 }
 
 static void
@@ -168,8 +128,7 @@ test_neg ( void )
 	
 	crank_cplx_float_neg (&cplx, &cplx);
 	
-	test_assert_float (cplx.real, -3.0f);
-	test_assert_float (cplx.imag, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, -3.0f, -4.0f);
 }
 
 static void
@@ -183,8 +142,7 @@ test_inverse ( void )
 	
 	crank_cplx_float_inverse (&cplx, &cplx);
 	
-	test_assert_float (cplx.real, 0.12f);
-	test_assert_float (cplx.imag, -0.16f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 0.12f, -0.16f);
 }
 
 static void
@@ -194,8 +152,7 @@ test_conjugate ( void )
 	
 	crank_cplx_float_conjugate (&cplx, &cplx);
 	
-	test_assert_float (cplx.real, 3.0f);
-	test_assert_float (cplx.imag, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 3.0f, -4.0f);
 }
 
 static void
@@ -205,8 +162,7 @@ test_unit ( void )
 	
 	crank_cplx_float_unit (&cplx, &cplx);
 	
-	test_assert_float (cplx.real, 0.6f);
-	test_assert_float (cplx.imag, 0.8f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 0.6f, 0.8f);
 }
 
 static void
@@ -216,8 +172,7 @@ test_addr ( void )
 	
 	crank_cplx_float_addr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, 5.0f);
-	test_assert_float (cplx.imag, 4.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 5.0f, 4.0f);
 }
 
 static void
@@ -227,8 +182,7 @@ test_subr ( void )
 	
 	crank_cplx_float_subr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, 1.0f);
-	test_assert_float (cplx.imag, 4.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 1.0f, 4.0f);
 }
 
 static void
@@ -238,8 +192,7 @@ test_mulr ( void )
 	
 	crank_cplx_float_mulr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, 6.0f);
-	test_assert_float (cplx.imag, 8.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 6.0f, 8.0f);
 }
 
 static void
@@ -249,8 +202,7 @@ test_divr ( void )
 	
 	crank_cplx_float_divr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, 1.5f);
-	test_assert_float (cplx.imag, 2.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 1.5f, 2.0f);
 }
 
 static void
@@ -260,8 +212,7 @@ test_rsubr ( void )
 	
 	crank_cplx_float_rsubr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, -1.0f);
-	test_assert_float (cplx.imag, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&cplx, -1.0f, -4.0f);
 }
 
 static void
@@ -271,8 +222,7 @@ test_rdivr ( void )
 	
 	crank_cplx_float_rdivr (&cplx, 2.0f, &cplx);
 	
-	test_assert_float (cplx.real, 0.24f);
-	test_assert_float (cplx.imag, -0.32f);
+	crank_assert_eqcplxfloat_cimm(&cplx, 0.24f, -0.32f);
 }
 
 static void
@@ -283,8 +233,7 @@ test_add ( void )
 	
 	crank_cplx_float_add (&a, &b, &a);
 	
-	test_assert_float (a.real, 8.0f);
-	test_assert_float (a.imag, 16.0f);
+	crank_assert_eqcplxfloat_cimm(&a, 8.0f, 16.0f);
 }
 
 static void
@@ -295,8 +244,7 @@ test_sub ( void )
 	
 	crank_cplx_float_sub (&a, &b, &a);
 	
-	test_assert_float (a.real, -2.0f);
-	test_assert_float (a.imag, -8.0f);
+	crank_assert_eqcplxfloat_cimm(&a, -2.0f, -8.0f);
 }
 
 static void
@@ -311,8 +259,7 @@ test_mul ( void )
 	
 	crank_cplx_float_mul (&a, &b, &a);
 	
-	test_assert_float (a.real, -33.0f);
-	test_assert_float (a.imag, 56.0f);
+	crank_assert_eqcplxfloat_cimm(&a, -33.0f, 56.0f);
 }
 
 static void
@@ -337,8 +284,7 @@ test_div ( void )
 	
 	crank_cplx_float_div (&a, &b, &a);
 	
-	test_assert_float (a.real, (63.0f / 169.0f));
-	test_assert_float (a.imag, (-16.0f / 169.0f));
+	crank_assert_eqcplxfloat_cimm(&a, 63.0f / 169.0f, -16.0f / 169.0f);
 }
 
 static void
@@ -353,8 +299,7 @@ test_mul_conj ( void )
 	
 	crank_cplx_float_mul_conj (&a, &b, &a);
 	
-	test_assert_float (a.real, 63.0f);
-	test_assert_float (a.imag, -16.0f);
+	crank_assert_eqcplxfloat_cimm(&a, 63.0f, -16.0f);
 }
 
 static void
@@ -365,8 +310,7 @@ test_mix ( void )
 	
 	crank_cplx_float_mix (&a, &b, 0.25f, &a);
 	
-	test_assert_float (a.real, 3.5f);
-	test_assert_float (a.imag, 6.0f);
+	crank_assert_eqcplxfloat_cimm(&a, 3.5f, 6.0f);
 }
 
 static void
@@ -376,8 +320,7 @@ test_ln ( void )
 	
 	crank_cplx_float_ln (&a, &a);
 	
-	test_assert_float (a.real, 1.6094f);
-	test_assert_float (a.imag, 0.9273f);
+	crank_assert_eqcplxfloat_cimm(&a, 1.6094f, 0.9273f);
 }
 
 static void
@@ -387,6 +330,5 @@ test_exp ( void )
 	
 	crank_cplx_float_exp (&a, &a);
 	
-	test_assert_float (a.real, -15.2008f);
-	test_assert_float (a.imag, -13.1287f);
+	crank_assert_eqcplxfloat_cimm(&a, -15.2008f, -13.1287f);
 }

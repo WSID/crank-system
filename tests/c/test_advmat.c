@@ -25,15 +25,6 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void	test_assert_float_real (	const gchar*	file,
-										const guint		line,
-										const gchar*	func,
-										const gchar*	a_str,
-										const gchar*	b_str,
-										gfloat			a,
-										gfloat			b);
-
-
 static void	test_lu (void);
 
 static void	test_lu_p (void);
@@ -77,35 +68,6 @@ main (	gint   argc,
 
 //////// Definition ////////////////////////////////////////////////////////////
 
-static void
-test_assert_float_real (	const gchar*	file,
-							const guint		line,
-							const gchar*	func,
-							const gchar*	a_str,
-							const gchar*	b_str,
-							gfloat			a,
-							gfloat			b)
-{
-	if ((a < b - 0.0001f) || (b + 0.0001f < a)) {
-		g_error (
-				"%s:%u:%s: assertion failed: (%s == %s): (%g == %g)"
-				" (with diff of %g)",
-				file, line, func,
-				a_str, b_str,
-				a, b, b - a );
-	}
-}
-
-#define test_assert_float(a, b) \
-	test_assert_float_real(\
-			__FILE__, \
-			__LINE__, \
-			G_STRFUNC, \
-			G_STRINGIFY(a), \
-			G_STRINGIFY(b), \
-			a, \
-			b)
-
 
 static void
 test_lu (void)
@@ -123,30 +85,30 @@ test_lu (void)
 
 	g_assert (crank_lu_mat_float_n (&a, &l, &u));
 
-	test_assert_float (crank_mat_float_n_get (&l, 0, 0), 3.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 0, 1), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 0, 2), 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 0), ==,  3.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 1), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 2), ==, 0.0f);
 
-	test_assert_float (crank_mat_float_n_get (&l, 1, 0), 8.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 1, 1), 7.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 1, 2), 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 0), ==, 8.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 1), ==, 7.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 2), ==, 0.0f);
 
-	test_assert_float (crank_mat_float_n_get (&l, 2, 0), 2.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 2, 1), 8.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 2, 2), 3.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 0), ==, 2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 1), ==, 8.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 2), ==, 3.0f);
 
 
-	test_assert_float (crank_mat_float_n_get (&u, 0, 0), 1.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 0, 1), 4.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 0, 2), 7.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 0), ==, 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 1), ==, 4.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 2), ==, 7.0f);
 
-	test_assert_float (crank_mat_float_n_get (&u, 1, 0), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 1, 1), 1.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 1, 2), 4.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 0), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 1), ==, 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 2), ==, 4.0f);
 
-	test_assert_float (crank_mat_float_n_get (&u, 2, 0), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 2, 1), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 2, 2), 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 0), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 1), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 2), ==, 1.0f);
 
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&l);
@@ -173,30 +135,30 @@ test_lu_p (void)
 	g_assert_cmpuint (crank_permutation_get (&p, 1), ==, 2);
 	g_assert_cmpuint (crank_permutation_get (&p, 2), ==, 0);
 
-	test_assert_float (crank_mat_float_n_get (&l, 0, 0), 3.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 0, 1), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 0, 2), 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 0), ==, 3.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 1), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 2), ==, 0.0f);
 
-	test_assert_float (crank_mat_float_n_get (&l, 1, 0), 2.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 1, 1), 16.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 1, 2), 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 0), ==, 2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 1), ==, 16.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 2), ==, 0.0f);
 
-	test_assert_float (crank_mat_float_n_get (&l, 2, 0), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 2, 1), 4.0f);
-	test_assert_float (crank_mat_float_n_get (&l, 2, 2), 2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 0), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 1), ==, 4.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 2), ==, 2.0f);
 
 
-	test_assert_float (crank_mat_float_n_get (&u, 0, 0), 1.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 0, 1), 2.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 0, 2), 2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 0), ==, 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 1), ==, 2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 0, 2), ==, 2.0f);
 
-	test_assert_float (crank_mat_float_n_get (&u, 1, 0), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 1, 1), 1.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 1, 2), 0.25f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 0), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 1), ==, 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 1, 2), ==, 0.25f);
 
-	test_assert_float (crank_mat_float_n_get (&u, 2, 0), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 2, 1), 0.0f);
-	test_assert_float (crank_mat_float_n_get (&u, 2, 2), 1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 0), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 1), ==, 0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&u, 2, 2), ==, 1.0f);
 
 	crank_mat_float_n_fini (&a);
 	crank_permutation_fini (&p);
@@ -218,25 +180,25 @@ test_gram_schmidt (void)
 
 	g_assert (crank_gram_schmidt_mat_float_n (&a, &q, &r));
 	
-	test_assert_float (crank_mat_float_n_get (&q, 0, 0),  0.5571f);
-	test_assert_float (crank_mat_float_n_get (&q, 0, 1),  0.7459f);
-	test_assert_float (crank_mat_float_n_get (&q, 0, 2), -0.3651f);
-	test_assert_float (crank_mat_float_n_get (&q, 1, 0),  0.3714f);
-	test_assert_float (crank_mat_float_n_get (&q, 1, 1),  0.1695f);
-	test_assert_float (crank_mat_float_n_get (&q, 1, 2),  0.9129f);
-	test_assert_float (crank_mat_float_n_get (&q, 2, 0),  0.7428f);
-	test_assert_float (crank_mat_float_n_get (&q, 2, 1), -0.6442f);
-	test_assert_float (crank_mat_float_n_get (&q, 2, 2), -0.1826f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 0, 0), ==,  0.5571f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 0, 1), ==,  0.7459f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 0, 2), ==, -0.3651f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 1, 0), ==,  0.3714f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 1, 1), ==,  0.1695f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 1, 2), ==,  0.9129f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 2, 0), ==,  0.7428f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 2, 1), ==, -0.6442f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&q, 2, 2), ==, -0.1826f);
 	
-	test_assert_float (crank_mat_float_n_get (&r, 0, 0),  5.3852f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 1),  4.4567f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 2),  1.6713f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 1),  2.0342f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 2),  0.2712f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 1),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 2),  0.3651f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 0), ==,  5.3852f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 1), ==,  4.4567f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 2), ==,  1.6713f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 1), ==,  2.0342f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 2), ==,  0.2712f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 1), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 2), ==,  0.3651f);
 	
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&q);
@@ -256,15 +218,15 @@ test_qr_householder (void)
 
 	g_assert (crank_qr_householder_mat_float_n (&a, &r));
 	
-	test_assert_float (crank_mat_float_n_get (&r, 0, 0),  5.3852f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 1),  4.4567f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 2),  1.6713f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 1),  2.0342f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 2),  0.2712f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 1),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 2),  0.3651f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 0), ==,  5.3852f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 1), ==,  4.4567f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 2), ==,  1.6713f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 1), ==,  2.0342f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 2), ==,  0.2712f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 1), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 2), ==,  0.3651f);
 	
 	
 	crank_mat_float_n_fini (&a);
@@ -286,15 +248,15 @@ test_qr_givens (void)
 	
 	g_message ("%s", crank_mat_float_n_to_string (&r));
 	
-	test_assert_float (crank_mat_float_n_get (&r, 0, 0),  5.3852f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 1),  4.4567f);
-	test_assert_float (crank_mat_float_n_get (&r, 0, 2),  1.6713f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 1),  2.0342f);
-	test_assert_float (crank_mat_float_n_get (&r, 1, 2),  0.2712f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 0),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 1),  0.0f);
-	test_assert_float (crank_mat_float_n_get (&r, 2, 2),  0.3651f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 0), ==,  5.3852f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 1), ==,  4.4567f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 0, 2), ==,  1.6713f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 1), ==,  2.0342f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 1, 2), ==,  0.2712f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 0), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 1), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&r, 2, 2), ==,  0.3651f);
 	
 	
 	crank_mat_float_n_fini (&a);
@@ -312,11 +274,11 @@ test_eval_power (void)
 		2.0f,	4.0f,	9.0f,
 		3.0f,	9.0f,	16.0f	);
 
-	test_assert_float (crank_eval_power_mat_float_n (&a, NULL, &evec), 21.4467f);
+	crank_assert_cmpfloat (crank_eval_power_mat_float_n (&a, NULL, &evec), ==, 21.4467f);
 	
-	test_assert_float (crank_vec_float_n_get (&evec, 0), 0.1729f);
-	test_assert_float (crank_vec_float_n_get (&evec, 1), 0.4671f);
-	test_assert_float (crank_vec_float_n_get (&evec, 2), 0.8671f);
+	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 0), ==, 0.1729f);
+	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 1), ==, 0.4671f);
+	crank_assert_cmpfloat (crank_vec_float_n_get (&evec, 2), ==, 0.8671f);
 	
 	crank_vec_float_n_fini (&evec);
 	crank_mat_float_n_fini (&a);
@@ -351,10 +313,10 @@ test_eval_qr (void)
 				(gpointer *)&value	));
 	
 		if ( 1.0f < *key )
-			test_assert_float (*key, 21.4467f);
+			crank_assert_cmpfloat (*key, ==, 21.4467f);
 		else if ( 0.0f < *key)
-			test_assert_float (*key, 0.4618f);
-		else test_assert_float (*key, -0.9085f);
+			crank_assert_cmpfloat (*key, ==, 0.4618f);
+		else crank_assert_cmpfloat (*key, ==, -0.9085f);
 		
 		g_assert_cmpuint (GPOINTER_TO_INT (value), ==, 1);
 	}
