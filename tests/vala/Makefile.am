@@ -13,6 +13,7 @@ AM_CFLAGS= \
 
 # 대상 목록
 test_programs= \
+		test_base_test \
 		test_vala \
 		test_string \
 		test_permutation \
@@ -26,6 +27,16 @@ test_programs= \
 		test_digraph \
 		test_advgraph
 
+
+
+
+test_base_test_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_base_test_SOURCES= \
+		test_base_test.vala
+		
 
 test_vala_LDADD= \
 		$(CRANK_BASE_LIBS) \

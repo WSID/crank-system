@@ -962,11 +962,30 @@ crank_eval_qr_mat_float_n
 
 <SECTION>
 <FILE>crankbasetest</FILE>
+crank_test_add_func_expected_fail
 crank_assert_eqarray_float
-crank_assert_eqarray
-crank_assert_eqparray
+crank_assert_eqarray_float_imm
+crank_assert_eqarray_pointer
+crank_assert_eqarray_pointer_imm
+crank_assert_eq_glist_imm
+crank_assert_eq_gptrarray_imm
 crank_assert_cmpfloat
 crank_assert_cmpfloat_d
+crank_assert_lefloat
+crank_assert_eqfloat
+crank_assert_gefloat
 crank_assert_eqcplxfloat
 crank_assert_eqcplxfloat_d
+crank_assert_eqcplxfloat_cimm
+crank_assert_eqcplxfloat_d_cimm
+<SUBSECTION Private>
+_crank_array_index
+_crank_array_add
+_crank_append_collection_content
+_crank_assert_eq_collection
+_crank_assert_eq_collection_imm
+_crank_assert_eqarray
+_crank_assert_eqarray_imm
+_crank_assert_eqparray
+_crank_assert_eqparray_imm
 </SECTION>

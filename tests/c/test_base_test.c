@@ -27,17 +27,41 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void test_assert_eqarray (void);
-static void test_assert_eqarray_subprocess (void);
+static void test_always_pass (void);
+static void test_always_fail (void);
+
+
+static void test_test_expected_fail_onpass (void);
 
 static void test_assert_eqarray_float (void);
-static void test_assert_eqarray_float_subprocess (void);
+static void test_assert_eqarray_float_fail (void);
+
+static void test_assert_eqarray_float_imm (void);
+static void test_assert_eqarray_float_imm_fail (void);
+
+static void test_assert_eqarray_pointer (void);
+static void test_assert_eqarray_pointer_fail (void);
+
+static void test_assert_eqarray_pointer_imm (void);
+static void test_assert_eqarray_pointer_imm_fail (void);
+
+static void test_assert_eqarray_pointer_imm (void);
+static void test_assert_eqarray_pointer_imm_fail (void);
+
+static void test_assert_eq_glist_imm (void);
+static void test_assert_eq_glist_imm_fail (void);
+
+static void test_assert_eq_gptrarray_imm (void);
+static void test_assert_eq_gptrarray_imm_fail (void);
 
 static void	test_assert_cmpfloat (void);
-static void	test_assert_cmpfloat_subprocess (void);
+static void	test_assert_cmpfloat_fail (void);
 
 static void	test_assert_eqcplxfloat (void);
-static void	test_assert_eqcplxfloat_subprocess (void);
+static void	test_assert_eqcplxfloat_fail (void);
+
+static void	test_assert_eqcplxfloat_cimm (void);
+static void	test_assert_eqcplxfloat_cimm_fail (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
 gint
@@ -45,17 +69,103 @@ main	(gint argc, gchar** argv)
 {
 	g_test_init (&argc, &argv, NULL);
 	
-	g_test_add_func ("/crank/base/test/eqarray", test_assert_eqarray);
-	g_test_add_func ("/crank/base/test/eqarray/subprocess", test_assert_eqarray_subprocess);
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/expected_fail",
+			test_always_fail	);
 	
-	g_test_add_func ("/crank/base/test/eqarray/float", test_assert_eqarray_float);
-	g_test_add_func ("/crank/base/test/eqarray/float/subprocess", test_assert_eqarray_float_subprocess);
+	
+	g_test_add_func (
+			"/crank/base/test/expected_fail/onpass",
+			test_test_expected_fail_onpass	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/expected_fail/subprocess",
+			test_always_pass);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/float",
+			test_assert_eqarray_float	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/float/fail",
+			test_assert_eqarray_float_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/float/imm",
+			test_assert_eqarray_float_imm	);
 
-	g_test_add_func ("/crank/base/test/cmpfloat", test_assert_cmpfloat);
-	g_test_add_func ("/crank/base/test/cmpfloat/subprocess", test_assert_cmpfloat_subprocess);
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/float/imm/fail",
+			test_assert_eqarray_float_imm_fail	);
 	
-	g_test_add_func ("/crank/base/test/eqcplxfloat", test_assert_eqcplxfloat);
-	g_test_add_func ("/crank/base/test/eqcplxfloat/subprocess", test_assert_eqcplxfloat_subprocess);
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/pointer",
+			test_assert_eqarray_pointer	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/pointer/fail",
+			test_assert_eqarray_pointer_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/pointer/imm",
+			test_assert_eqarray_pointer_imm	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/pointer/imm/fail",
+			test_assert_eqarray_pointer_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/glist/imm",
+			test_assert_eq_glist_imm	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/glist/imm/fail",
+			test_assert_eq_glist_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/gptrarray/imm",
+			test_assert_eq_gptrarray_imm	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/gptrarray/imm/fail",
+			test_assert_eq_gptrarray_imm_fail	);
+			
+			
+			
+	
+	g_test_add_func (
+			"/crank/base/test/cmpfloat",
+			test_assert_cmpfloat	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/cmpfloat/fail",
+			test_assert_cmpfloat_fail	);
+	
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/cplxfloat",
+			test_assert_eqcplxfloat);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/cplxfloat/fail",
+			test_assert_eqcplxfloat_fail	);
+			
+	
+	g_test_add_func (
+			"/crank/base/test/eq/cplxfloat/cimm",
+			test_assert_eqcplxfloat_cimm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/cplxfloat/cimm/fail",
+			test_assert_eqcplxfloat_cimm_fail	);
+
 
 	g_test_run ();
 	return 0;
@@ -64,32 +174,29 @@ main	(gint argc, gchar** argv)
 
 //////// Definition ////////////////////////////////////////////////////////////
 
-static gchar*
-double_to_string (gpointer	ptr) {
-	return g_strdup_printf ("%g", *((gdouble*)ptr));
+
+static void
+test_always_pass (void) {
+	// Tests 1 + 1 == 2
+	g_assert_cmpuint ((1 + 1), ==, 2);
 }
 
 static void
-test_assert_eqarray (void) {
+test_always_fail (void) {
+	// Tests 0 == 1, which is obviously wrong.
+	g_assert_cmpuint (0, ==, 1);
+}
 
-	gdouble a[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
-	gdouble b[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
-	
-	crank_assert_eqarray (gdouble, a, 10, b, 10, g_double_equal, double_to_string, NULL);
-	
-	g_test_trap_subprocess ("/crank/base/test/eqarray/subprocess",
-			0, G_TEST_SUBPROCESS_INHERIT_STDERR	);
-	
+
+static void
+test_test_expected_fail_onpass (void) {
+	g_test_trap_subprocess (
+			"/crank/base/test/expected_fail/subprocess",
+			0,
+			G_TEST_SUBPROCESS_INHERIT_STDERR);
 	g_test_trap_assert_failed ();
 }
 
-static void
-test_assert_eqarray_subprocess (void) {
-	gdouble a[10] = { 1.0, 2.0, 3.0, 4.0, 4.9, 6.0, 7.0, 8.0, 9.0, 10.0};
-	gdouble b[10] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
-	
-	crank_assert_eqarray (gdouble, a, 10, b, 10, g_double_equal, double_to_string, NULL);
-}
 
 
 
@@ -100,16 +207,11 @@ test_assert_eqarray_float (void) {
 	gfloat b[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	
 	crank_assert_eqarray_float (a, 10, b, 10, NULL);
-	
-	g_test_trap_subprocess ("/crank/base/test/eqarray/subprocess",
-			0, G_TEST_SUBPROCESS_INHERIT_STDERR	);
-	
-	g_test_trap_assert_failed ();
 }
 
 static void
-test_assert_eqarray_float_subprocess (void) {
-	gfloat a[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
+test_assert_eqarray_float_fail (void) {
+	gfloat a[10] = { 1.0f, 2.1f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	gfloat b[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	
 	crank_assert_eqarray_float (a, 10, b, 10, NULL);
@@ -117,23 +219,179 @@ test_assert_eqarray_float_subprocess (void) {
 
 
 
+
+static void
+test_assert_eqarray_float_imm (void) {
+
+	gfloat a[4] = { 1.0f, 2.0f, 3.0f, 4.0f };
+	
+	crank_assert_eqarray_float_imm (a, 4, NULL, 1.0f, 2.0f, 3.0f, 4.0f);
+}
+
+static void
+test_assert_eqarray_float_imm_fail (void) {
+
+	gfloat a[4] = { 1.0f, 2.0f, 3.0f, 4.0f };
+	
+	crank_assert_eqarray_float_imm (a, 4, NULL, 1.0f, 2.1f, 3.0f, 4.0f);
+}
+
+
+
+static void
+test_assert_eqarray_pointer (void) {
+	gpointer a[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2222),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+	gpointer b[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2222),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+	
+	crank_assert_eqarray_pointer (a, 4, b, 4);
+}
+
+static void
+test_assert_eqarray_pointer_fail (void) {
+	gpointer a[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x1112),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+	gpointer b[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2222),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+	
+	crank_assert_eqarray_pointer (a, 4, b, 4);
+}
+
+
+
+static void
+test_assert_eqarray_pointer_imm (void) {
+	gpointer a[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2222),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+		
+	crank_assert_eqarray_pointer_imm (a, 4,
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2222),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	);
+}
+
+static void
+test_assert_eqarray_pointer_imm_fail (void) {
+	gpointer a[4] = {
+		GINT_TO_POINTER(0x1111),
+		GINT_TO_POINTER(0x2220),
+		GINT_TO_POINTER(0x3333),
+		GINT_TO_POINTER(0x4444)	};
+	
+	crank_assert_eqarray_pointer_imm (a, 4,
+			GINT_TO_POINTER(0x1111),
+			GINT_TO_POINTER(0x2222),
+			GINT_TO_POINTER(0x3333),
+			GINT_TO_POINTER(0x4444)	);
+}
+
+
+
+static void
+test_assert_eq_glist_imm (void) {
+	GList*	a = NULL;
+	
+	a = g_list_append (a, GINT_TO_POINTER(0x1000));
+	a = g_list_append (a, GINT_TO_POINTER(0x2000));
+	a = g_list_append (a, GINT_TO_POINTER(0x3000));
+	a = g_list_append (a, GINT_TO_POINTER(0x4000));
+
+	crank_assert_eq_glist_imm (a,
+			GINT_TO_POINTER(0x1000),
+			GINT_TO_POINTER(0x2000),
+			GINT_TO_POINTER(0x3000),
+			GINT_TO_POINTER(0x4000)	);
+
+	g_list_free (a);
+}
+
+static void
+test_assert_eq_glist_imm_fail (void) {
+	GList*	a = NULL;
+	
+	a = g_list_append (a, GINT_TO_POINTER(0x1000));
+	a = g_list_append (a, GINT_TO_POINTER(0x2000));
+	a = g_list_append (a, GINT_TO_POINTER(0x3100));
+	a = g_list_append (a, GINT_TO_POINTER(0x4000));
+
+	crank_assert_eq_glist_imm (a,
+			GINT_TO_POINTER(0x1000),
+			GINT_TO_POINTER(0x2000),
+			GINT_TO_POINTER(0x3000),
+			GINT_TO_POINTER(0x4000)	);
+
+	g_list_free (a);
+}
+
+
+
+static void
+test_assert_eq_gptrarray_imm (void) {
+	GPtrArray*	a = g_ptr_array_new ();
+	
+	g_ptr_array_add (a, GINT_TO_POINTER(0x1000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x2000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x3000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x4000));
+
+	crank_assert_eq_gptrarray_imm (a,
+			GINT_TO_POINTER(0x1000),
+			GINT_TO_POINTER(0x2000),
+			GINT_TO_POINTER(0x3000),
+			GINT_TO_POINTER(0x4000)	);
+
+	g_ptr_array_unref (a);
+}
+
+static void
+test_assert_eq_gptrarray_imm_fail (void) {
+	GPtrArray*	a = g_ptr_array_new ();
+	
+	g_ptr_array_add (a, GINT_TO_POINTER(0x4000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x3000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x2000));
+	g_ptr_array_add (a, GINT_TO_POINTER(0x1000));
+
+	crank_assert_eq_gptrarray_imm (a,
+			GINT_TO_POINTER(0x1000),
+			GINT_TO_POINTER(0x2000),
+			GINT_TO_POINTER(0x3000),
+			GINT_TO_POINTER(0x4000)	);
+
+	g_ptr_array_unref (a);
+}
+
+
 static void
 test_assert_cmpfloat (void) {
 	// Tests whether assertion actually allows errors within given errors.
 	crank_assert_cmpfloat_d (3.0f, ==, 3.5f, 1.0f);
 	crank_assert_cmpfloat_d (2.0f, <, 3.5f, 1.0f);
-	
-	g_test_trap_subprocess ("/crank/base/test/cmpfloat/subprocess",
-			0, G_TEST_SUBPROCESS_INHERIT_STDERR	);
-	
-	g_test_trap_assert_failed ();
 }
 
 static void
-test_assert_cmpfloat_subprocess (void) {
+test_assert_cmpfloat_fail (void) {
 	// Tests whether assertion can actually fails.
 	crank_assert_cmpfloat_d ( 7.5f, <, 3.5f, 1.0f);
 }
+
 
 static void
 test_assert_eqcplxfloat (void) {
@@ -144,18 +402,31 @@ test_assert_eqcplxfloat (void) {
 	// Tests whether assertion actually allows errors within given errors.
 	crank_assert_eqcplxfloat_d (&a, &b, 1.0f);
 	crank_assert_eqcplxfloat_d (&a, &c, 1.0f);
-	
-	g_test_trap_subprocess ("/crank/base/test/eqcplxfloat/subprocess",
-			0, G_TEST_SUBPROCESS_INHERIT_STDERR	);
-	
-	g_test_trap_assert_failed ();
 }
 
 static void
-test_assert_eqcplxfloat_subprocess (void) {
+test_assert_eqcplxfloat_fail (void) {
 	// Tests whether assertion can actually fails.
 	CrankCplxFloat	a = {3.0f, 2.0f};
 	CrankCplxFloat	b = {4.2f, 2.0f};
 	
 	crank_assert_eqcplxfloat_d (&a, &b, 1.0f);
+}
+
+
+static void
+test_assert_eqcplxfloat_cimm (void) {
+	CrankCplxFloat	a = {3.0f, 2.0f};
+	
+	// Tests whether assertion actually allows errors within given errors.
+	crank_assert_eqcplxfloat_d_cimm (&a, 3.5f, 2.1f, 1.0f);
+	crank_assert_eqcplxfloat_d_cimm (&a, 2.9f, 1.4f, 1.0f);
+}
+
+static void
+test_assert_eqcplxfloat_cimm_fail (void) {
+	// Tests whether assertion can actually fails.
+	CrankCplxFloat	a = {3.0f, 2.0f};
+	
+	crank_assert_eqcplxfloat_d_cimm (&a, 4.2f, 2.0f, 1.0f);
 }

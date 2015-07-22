@@ -1,0 +1,306 @@
+/* Copyright (C) 2015, WSID   */
+
+/* Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+ 
+int main (string[] args) {
+	GLib.Test.init (ref args);
+
+
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/expected_fail",
+										test_always_fail	);
+
+	GLib.Test.add_func				(	"/crank/base/test/expected_fail/onpass",
+										test_test_expected_fail_onpass	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/expected_fail/subprocess",
+										test_always_pass								);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/float",
+										test_assert_eqarray_float	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/float/fail",
+										test_assert_eqarray_float_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/float/imm",
+										test_assert_eqarray_float_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/float/imm/fail",
+										test_assert_eqarray_float_imm_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/pointer",
+										test_assert_eqarray_pointer	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/pointer/fail",
+										test_assert_eqarray_pointer_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/pointer/imm",
+										test_assert_eqarray_pointer_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/pointer/imm/fail",
+										test_assert_eqarray_pointer_imm_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/glist/imm",
+										test_assert_eq_glist_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/glist/imm/fail",
+										test_assert_eq_glist_imm_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/gptrarray/imm",
+										test_assert_eq_gptrarray_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/gptrarray/imm/fail",
+										test_assert_eq_gptrarray_imm_fail					);
+										
+
+
+
+	GLib.Test.add_func				(	"/crank/base/test/cmp/float",
+										test_assert_cmpfloat	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/cmp/float/fail",
+										test_assert_cmpfloat_fail					);
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/cplxfloat",
+										test_assert_eqcplxfloat	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/cplxfloat/fail",
+										test_assert_eqcplxfloat_fail					);
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/cplxfloat/cimm",
+										test_assert_eqcplxfloat_cimm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/cplxfloat/cimm/fail",
+										test_assert_eqcplxfloat_cimm_fail					);
+	GLib.Test.run ();
+	
+	return 0;
+}
+
+private void test_always_pass () {
+	assert (1 + 1 == 2);
+}
+
+private void test_always_fail () {
+	assert (0 == 1);
+}
+
+
+private void test_test_expected_fail_onpass () {
+	GLib.Test.trap_subprocess (
+			"/crank/base/test/expected_fail/subprocess",
+			0,
+			GLib.TestSubprocessFlags.STDERR );
+	GLib.Test.trap_assert_failed ();
+}
+
+
+
+private void test_assert_eqarray_float () {
+	float[] a = {1.0f, 2.0f, 3.0f, 4.0f};
+	float[] b = {1.0f, 2.0f, 3.0f, 4.0f};
+	
+	Crank.assert_eqarray_float (a, b);
+}
+
+private void test_assert_eqarray_float_fail () {
+	float[] a = {1.0f, 2.0f, 3.0f, 4.1f};
+	float[] b = {1.0f, 2.0f, 3.0f, 4.0f};
+	
+	Crank.assert_eqarray_float (a, b);
+}
+
+
+
+private void test_assert_eqarray_float_imm () {
+	float[] a = {1.0f, 2.0f, 3.0f, 4.0f};
+	
+	Crank.assert_eqarray_float_imm (a, null, 1.0f, 2.0f, 3.0f, 4.0f);
+}
+
+private void test_assert_eqarray_float_imm_fail () {
+	float[] a = {1.0f, 2.0f, 2.9f, 4.0f};
+	
+	Crank.assert_eqarray_float_imm (a, null, 1.0f, 2.0f, 3.0f, 4.0f);
+}
+
+
+
+private void test_assert_eqarray_pointer () {
+	void*[]	a = {
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+	
+	void*[]	b = {
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+
+	Crank.assert_eqarray_pointer <void*> (a, b);
+}
+
+private void test_assert_eqarray_pointer_fail () {
+	void*[]	a = {
+			(0x0004).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+	
+	void*[]	b = {
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+
+	Crank.assert_eqarray_pointer <void*> (a, b);
+}
+
+
+
+private void test_assert_eqarray_pointer_imm () {
+	void*[]	a = {
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+	
+	Crank.assert_eqarray_pointer_imm <void*> (a,
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() );
+}
+
+private void test_assert_eqarray_pointer_imm_fail () {
+	void*[]	a = {
+			(0x0004).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() };
+	
+	Crank.assert_eqarray_pointer_imm <void*> (a,
+			(0x0001).to_pointer(),
+			(0x0002).to_pointer(),
+			(0x0003).to_pointer(),
+			(0x0004).to_pointer() );
+}
+
+
+private void test_assert_eq_glist_imm () {
+	GLib.List<int>	a = new GLib.List<int> ();
+	
+	a.append (2);
+	a.append (3);
+	a.append (7);
+	
+	Crank.assert_eq_glist_imm <int> (a, 2, 3, 7);
+}
+
+private void test_assert_eq_glist_imm_fail () {
+	GLib.List<int>	a = new GLib.List<int> ();
+	
+	a.append (2);
+	a.append (3);
+	a.append (6);
+	
+	Crank.assert_eq_glist_imm <int> (a, 2, 3, 7);
+}
+
+
+
+private void test_assert_eq_gptrarray_imm () {
+	GLib.GenericArray<int>	a = new GLib.GenericArray<int> ();
+	
+	a.add (2);
+	a.add (3);
+	a.add (5);
+	a.add (8);
+	
+	Crank.assert_eq_gptrarray_imm <int> (a, 2, 3, 5, 8);
+}
+
+private void test_assert_eq_gptrarray_imm_fail () {
+	GLib.GenericArray<int>	a = new GLib.GenericArray<int> ();
+	
+	a.add (2);
+	a.add (3);
+	a.add (5);
+	a.add (8);
+	
+	Crank.assert_eq_gptrarray_imm <int> (a, 2, 3, 5, 7, 9);
+}
+
+
+private void test_assert_cmpfloat () {
+	Crank.assert_eqfloat (3.0f, 3.5f, 1.0f);
+	Crank.assert_lefloat (2.0f, 3.5f, 1.0f);
+}
+
+private void test_assert_cmpfloat_fail () {
+	Crank.assert_lefloat (7.5f, 3.5f, 1.0f);
+}
+
+
+private void test_assert_eqcplxfloat () {
+	Crank.CplxFloat	a = {3.0f, 2.0f};
+	Crank.CplxFloat	b = {3.5f, 2.1f};
+	Crank.CplxFloat c = {2.9f, 1.4f};
+	
+	Crank.assert_eqcplxfloat (a, b, 1.0f);
+	Crank.assert_eqcplxfloat (a, c, 1.0f);
+}
+
+private void test_assert_eqcplxfloat_fail () {
+	Crank.CplxFloat	a = {3.0f, 2.0f};
+	Crank.CplxFloat	b = {4.2f, 2.1f};
+	
+	Crank.assert_eqcplxfloat (a, b, 1.0f);
+}
+
+
+private void test_assert_eqcplxfloat_cimm () {
+	Crank.CplxFloat	a = {3.0f, 2.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a, 3.5f, 2.1f, 1.0f);
+	Crank.assert_eqcplxfloat_cimm (a, 2.9f, 1.4f, 1.0f);
+}
+
+private void test_assert_eqcplxfloat_cimm_fail () {
+	Crank.CplxFloat	a = {3.0f, 2.0f};
+	Crank.CplxFloat	b = {4.2f, 2.1f};
+	
+	Crank.assert_eqcplxfloat_cimm (a, 4.2f, 2.1f, 1.0f);
+}

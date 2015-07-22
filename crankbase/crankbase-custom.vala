@@ -1140,4 +1140,50 @@ namespace Crank {
 		public DigraphNode	tail { get; }
 		public DigraphNode	head { get; }
 	}
+	
+	namespace Test {
+		#if GLIB_2_26
+		public void	add_func_expected_fail (	string			path,
+												GLib.TestFunc	func	);
+		#else
+		public void	add_func_expected_fail (	string			path,
+												GLib.Callback	func	);
+		#endif
+	}
+
+	public void	assert_eqarray_float (		float[]	a,
+											float[]	b,
+											string?	format = null	);
+	
+	[CCode (sentinel="")]
+	public void	assert_eqarray_float_imm (	float[]	a,
+											string?	format,
+											...	);
+
+	[CCode (simple_generics=true)]
+	public void	assert_eqarray_pointer <G> (G[]		a,
+											G[]		b	);
+
+	[CCode (simple_generics=true, sentinel="")]
+	public void	assert_eqarray_pointer_imm <G>	(	G[]	a,
+												 	... );
+
+	[CCode (simple_generics=true, sentinel="")]
+	public void	assert_eq_glist_imm <G> (	GLib.List<G>	a,
+											...	);
+
+	[CCode (simple_generics=true, sentinel="")]
+	public void	assert_eq_gptrarray_imm <G> (	GLib.GenericArray<G>	a,
+												... );
+											
+
+	public void	assert_lefloat(	float a, float b, float d = 0.0001f	);
+	public void	assert_eqfloat(	float a, float b, float d = 0.0001f	);
+	public void	assert_gefloat(	float a, float b, float d = 0.0001f	);
+
+	[CCode (cname="crank_assert_eqcplxfloat_d")]
+	public void	assert_eqcplxfloat (CplxFloat a, CplxFloat b, float d = 0.0001f);
+
+	[CCode (cname="crank_assert_eqcplxfloat_d_cimm")]
+	public void assert_eqcplxfloat_cimm (CplxFloat a, float r, float i, float d = 0.0001f);
 }
