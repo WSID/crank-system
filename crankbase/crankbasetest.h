@@ -203,6 +203,42 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 		} G_STMT_END
 
 /**
+ * crank_assert_lefloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is less than b. (a < b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_lefloat(a,b,d)	crank_assert_cmpfloat_d(a, <, b, d)
+
+/**
+ * crank_assert_eqfloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is equal to b. (a == b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_eqfloat(a,b,d)	crank_assert_cmpfloat_d(a, ==, b, d)
+
+/**
+ * crank_assert_gefloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is greater than b. (a > b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_gefloat(a,b,d)	crank_assert_cmpfloat_d(a, >, b, d)
+
+/**
  * crank_assert_eqcplxfloat: (skip)
  * @a: (type CrankCplxFloat): A complex
  * @b: (type CrankCplxFloat): A complex
@@ -398,42 +434,6 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 				eqf, strf, strfu, __VA_ARGS__ )
 
 //////// Vala support //////////////////////////////////////////////////////////
-
-/**
- * crank_assert_lefloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is less than b. (a < b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_lefloat(a,b,d)	crank_assert_cmpfloat_d(a, <, b, d)
-
-/**
- * crank_assert_eqfloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is equal to b. (a == b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_eqfloat(a,b,d)	crank_assert_cmpfloat_d(a, ==, b, d)
-
-/**
- * crank_assert_gefloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is greater than b. (a > b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_gefloat(a,b,d)	crank_assert_cmpfloat_d(a, >, b, d)
 
 G_END_DECLS
 
