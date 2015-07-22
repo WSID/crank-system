@@ -1152,12 +1152,10 @@ namespace Crank {
 	}
 
 	public void	assert_eqarray_float (		float[]	a,
-											float[]	b,
-											string?	format = null	);
+											float[]	b	);
 	
 	[CCode (sentinel="")]
 	public void	assert_eqarray_float_imm (	float[]	a,
-											string?	format,
 											...	);
 
 	[CCode (simple_generics=true)]
@@ -1175,6 +1173,13 @@ namespace Crank {
 	[CCode (simple_generics=true, sentinel="")]
 	public void	assert_eq_gptrarray_imm <G> (	GLib.GenericArray<G>	a,
 												... );
+
+	public void assert_eq_vecfloat2_imm	( 	VecFloat2 a,	float x, float y);
+	public void assert_eq_vecfloat3_imm	( 	VecFloat2 a,	float x, float y, float z);
+	public void assert_eq_vecfloat4_imm	( 	VecFloat2 a,	float x, float y, float z, float w);
+	
+	[CCode (sentinel="")]
+	public void assert_eq_vecfloat_n_imm (	VecFloatN a,	...);
 											
 
 	public void	assert_lefloat(	float a, float b, float d = 0.0001f	);

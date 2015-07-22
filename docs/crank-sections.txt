@@ -978,6 +978,10 @@ crank_assert_eqcplxfloat
 crank_assert_eqcplxfloat_d
 crank_assert_eqcplxfloat_cimm
 crank_assert_eqcplxfloat_d_cimm
+crank_assert_eq_vecfloat2_imm
+crank_aseert_eq_vecfloat3_imm
+crank_assert_eq_vecfloat4_imm
+crank_asertt_eq_vecfloat_n_imm
 <SUBSECTION Private>
 _crank_array_index
 _crank_array_add

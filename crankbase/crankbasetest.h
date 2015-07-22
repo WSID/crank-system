@@ -57,25 +57,23 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  * @an: (type guint): Length of elements.
  * @b: (element-type gfoat) (array length=bn): A array
  * @bn: (type guint): Length of elements.
- * @format: (type gchar*): A Format.
  *
  * Asserts two float arrays are equals.
  */
-#define crank_assert_eqarray_float(a,an,b,bn,format)	\
-	_crank_assert_eqarray(gfloat,a,an,b,bn,crank_float_equal,crank_float_to_string,format)
+#define crank_assert_eqarray_float(a,an,b,bn)	\
+	_crank_assert_eqarray(gfloat,a,an,b,bn,crank_float_equal,crank_float_to_string,NULL)
 
 
 /**
  * crank_assert_eqarray_float_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
  * @an: (type guint): Length of elements.
- * @format: (type gchar*): A Format.
  * @...: Variadic list to compare with @a.
  *
  * Asserts a given float array has same element with @....
  */
-#define crank_assert_eqarray_float_imm(a,an,format,...)	\
-	_crank_assert_eqarray_imm (gfloat,a,an,crank_float_equal,crank_float_to_string,format,__VA_ARGS__)
+#define crank_assert_eqarray_float_imm(a,an,...)	\
+	_crank_assert_eqarray_imm (gfloat,a,an,crank_float_equal,crank_float_to_string,NULL,__VA_ARGS__)
 
 /**
  * crank_assert_eqarray_pointer: (skip)
@@ -127,6 +125,37 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 			((a)->pdata),((a)->len),G_STRINGIFY(a),_crank_array_index, \
 			g_direct_equal, crank_pointer_to_string, NULL, __VA_ARGS__)
 			
+
+
+/**
+ * crank_assert_eq_vecfloat2_imm: (skip)
+ * @a: (type CrankVecFloat2): A #CrankVecFloat2
+ * ...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecfloat2_imm(a,x,y) \
+	crank_assert_eqarray_float_imm((gfloat*)(a), 2, x,y)
+/**
+ * crank_assert_eq_vecfloat3_imm: (skip)
+ * @a: (type CrankVecFloat3): A #CrankVecFloat3
+ * ...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecfloat3_imm(a,x,y,z) \
+	crank_assert_eqarray_float_imm((gfloat*)(a), 3, x,y,z)
+/**
+ * crank_assert_eq_vecfloat4_imm: (skip)
+ * @a: (type CrankVecFloat4): A #CrankVecFloat4
+ * ...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecfloat4_imm(a,x,y,z,w) \
+	crank_assert_eqarray_float_imm((gfloat*)(a), 4, x,y,z,w)
+/**
+ * crank_assert_eq_vecfloat_n_imm: (skip)
+ * @a: (type CrankVecFloatN): A #CrankVecFloatN
+ * ...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecfloat_n_imm(a,...) \
+	crank_assert_eqarray_float_imm((a)->data, (a)->n, __VA_ARGS__)
+
 
 
 

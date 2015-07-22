@@ -102,6 +102,20 @@ int main (string[] args) {
 	
 	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/cplxfloat/cimm/fail",
 										test_assert_eqcplxfloat_cimm_fail					);
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/vecfloat/2/imm",
+										test_assert_eq_vecfloat2_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/vecfloat/2/imm/fail",
+										test_assert_eq_vecfloat2_imm_fail					);
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/vecfloat/n/imm",
+										test_assert_eq_vecfloat_n_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/vecfloat/n/imm/fail",
+										test_assert_eq_vecfloat_n_imm_fail					);
 	GLib.Test.run ();
 	
 	return 0;
@@ -145,13 +159,13 @@ private void test_assert_eqarray_float_fail () {
 private void test_assert_eqarray_float_imm () {
 	float[] a = {1.0f, 2.0f, 3.0f, 4.0f};
 	
-	Crank.assert_eqarray_float_imm (a, null, 1.0f, 2.0f, 3.0f, 4.0f);
+	Crank.assert_eqarray_float_imm (a, 1.0f, 2.0f, 3.0f, 4.0f);
 }
 
 private void test_assert_eqarray_float_imm_fail () {
 	float[] a = {1.0f, 2.0f, 2.9f, 4.0f};
 	
-	Crank.assert_eqarray_float_imm (a, null, 1.0f, 2.0f, 3.0f, 4.0f);
+	Crank.assert_eqarray_float_imm (a, 1.0f, 2.0f, 3.0f, 4.0f);
 }
 
 
@@ -303,4 +317,32 @@ private void test_assert_eqcplxfloat_cimm_fail () {
 	Crank.CplxFloat	b = {4.2f, 2.1f};
 	
 	Crank.assert_eqcplxfloat_cimm (a, 4.2f, 2.1f, 1.0f);
+}
+
+
+
+private void test_assert_eq_vecfloat2_imm () {
+	Crank.VecFloat2 a = {2.0f, 3.0f};
+	
+	Crank.assert_eq_vecfloat2_imm (a, 2.0f, 3.0f);
+}
+
+private void test_assert_eq_vecfloat2_imm_fail () {
+	Crank.VecFloat2 a = {2.0f, 2.9f};
+	
+	Crank.assert_eq_vecfloat2_imm (a, 2.0f, 3.0f);
+}
+
+
+
+private void test_assert_eq_vecfloat_n_imm () {
+	Crank.VecFloatN a = Crank.VecFloatN.arr ({3.0f, 4.0f, 5.0f, 12.0f});
+	
+	Crank.assert_eq_vecfloat_n_imm (a, 3.0f, 4.0f, 5.0f, 12.0f);
+}
+
+private void test_assert_eq_vecfloat_n_imm_fail () {
+	Crank.VecFloatN a = Crank.VecFloatN.arr ({3.0f, 4.0f, 5.1f, 12.0f});
+	
+	Crank.assert_eq_vecfloat_n_imm (a, 3.0f, 4.0f, 5.0f, 12.0f);
 }

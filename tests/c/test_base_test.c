@@ -63,6 +63,13 @@ static void	test_assert_eqcplxfloat_fail (void);
 static void	test_assert_eqcplxfloat_cimm (void);
 static void	test_assert_eqcplxfloat_cimm_fail (void);
 
+static void test_assert_eq_vecfloat2_imm (void);
+static void test_assert_eq_vecfloat2_imm_fail (void);
+
+static void test_assert_eq_vecfloat_n_imm (void);
+static void test_assert_eq_vecfloat_n_imm_fail (void);
+
+
 //////// Main //////////////////////////////////////////////////////////////////
 gint
 main	(gint argc, gchar** argv)
@@ -165,6 +172,17 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_expected_fail (
 			"/crank/base/test/eq/cplxfloat/cimm/fail",
 			test_assert_eqcplxfloat_cimm_fail	);
+			
+			
+	
+	g_test_add_func (
+			"/crank/base/test/eq/cplxfloat/cimm",
+			test_assert_eqcplxfloat_cimm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/cplxfloat/cimm/fail",
+			test_assert_eqcplxfloat_cimm_fail	);
+
 
 
 	g_test_run ();
@@ -206,7 +224,7 @@ test_assert_eqarray_float (void) {
 	gfloat a[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	gfloat b[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	
-	crank_assert_eqarray_float (a, 10, b, 10, NULL);
+	crank_assert_eqarray_float (a, 10, b, 10);
 }
 
 static void
@@ -214,7 +232,7 @@ test_assert_eqarray_float_fail (void) {
 	gfloat a[10] = { 1.0f, 2.1f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	gfloat b[10] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f};
 	
-	crank_assert_eqarray_float (a, 10, b, 10, NULL);
+	crank_assert_eqarray_float (a, 10, b, 10);
 }
 
 
@@ -225,7 +243,7 @@ test_assert_eqarray_float_imm (void) {
 
 	gfloat a[4] = { 1.0f, 2.0f, 3.0f, 4.0f };
 	
-	crank_assert_eqarray_float_imm (a, 4, NULL, 1.0f, 2.0f, 3.0f, 4.0f);
+	crank_assert_eqarray_float_imm (a, 4, 1.0f, 2.0f, 3.0f, 4.0f);
 }
 
 static void
@@ -233,7 +251,7 @@ test_assert_eqarray_float_imm_fail (void) {
 
 	gfloat a[4] = { 1.0f, 2.0f, 3.0f, 4.0f };
 	
-	crank_assert_eqarray_float_imm (a, 4, NULL, 1.0f, 2.1f, 3.0f, 4.0f);
+	crank_assert_eqarray_float_imm (a, 4, 1.0f, 2.1f, 3.0f, 4.0f);
 }
 
 
@@ -429,4 +447,38 @@ test_assert_eqcplxfloat_cimm_fail (void) {
 	CrankCplxFloat	a = {3.0f, 2.0f};
 	
 	crank_assert_eqcplxfloat_d_cimm (&a, 4.2f, 2.0f, 1.0f);
+}
+
+
+static void
+test_assert_eq_vecfloat2_imm (void) {
+	CrankVecFloat2	a = {3.0f, 4.0f};
+	
+	crank_assert_eq_vecfloat2_imm (&a, 3.0f, 4.0f);
+}
+
+static void
+test_assert_eq_vecfloat2_imm_fail (void) {
+	CrankVecFloat2	a = {3.0f, 4.0f};
+	
+	crank_assert_eq_vecfloat2_imm (&a, 0.0f, 0.0f);
+}
+
+
+
+
+static void
+test_assert_eq_vecfloat_n_imm (void) {
+	CrankVecFloatN	a = {0};
+	crank_vec_float_n_init (&a, 5, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+	
+	crank_assert_eq_vecfloat_n_imm (&a, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+}
+
+static void
+test_assert_eq_vecfloat_n_imm_fail (void) {
+	CrankVecFloatN	a = {0};
+	crank_vec_float_n_init (&a, 5, 2.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+	
+	crank_assert_eq_vecfloat_n_imm (&a, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
 }
