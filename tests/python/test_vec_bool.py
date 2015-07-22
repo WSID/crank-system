@@ -99,6 +99,13 @@ class TestVecBool(unittest.TestCase):
 		
 		self.assertEqual (a.get_all (), True)
 		self.assertEqual (b.get_all (), False)
+	
+	def test_2_count (self):
+		a = CrankBase.VecBool2.init (True, True)
+		b = CrankBase.VecBool2.init (True, False)
+		
+		self.assertEqual (a.get_count (), 2)
+		self.assertEqual (b.get_count (), 1)
 
 	def test_2_equal (self):
 		a = CrankBase.VecBool2.init (True, True)
@@ -213,6 +220,14 @@ class TestVecBool(unittest.TestCase):
 		
 		self.assertEqual (a.get_all (), True);
 		self.assertEqual (b.get_all (), False);
+	
+	def test_n_count (self):
+		a = CrankBase.VecBoolN.init_arr ([True, True]);
+		b = CrankBase.VecBoolN.init_arr ([True, False]);
+		
+		self.assertEqual (a.get_count (), 2);
+		self.assertEqual (b.get_count (), 1);
+
 
 	def test_n_equal (self):
 		a = CrankBase.VecBoolN.init_arr ([True, True])

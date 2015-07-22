@@ -433,8 +433,6 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 				a,an,G_STRINGIFY(a),_crank_array_index, \
 				eqf, strf, strfu, __VA_ARGS__ )
 
-//////// Vala support //////////////////////////////////////////////////////////
-
 G_END_DECLS
 
 #endif

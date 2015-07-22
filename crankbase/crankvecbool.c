@@ -278,6 +278,25 @@ crank_vec_bool2_get_all	(	CrankVecBool2*	vec	)
 }
 
 /**
+ * crank_vec_bool2_get_count:
+ * @vec: A Vector.
+ *
+ * Gets count of %TRUE in this vector.
+ *
+ * Returns: Count of %TRUE.
+ */
+guint
+crank_vec_bool2_get_count (	CrankVecBool2*	vec	)
+{
+	guint	count = 0;
+	if (vec->x) count ++;
+	if (vec->y) count ++;
+	
+	return count;
+}
+
+
+/**
  * crank_vec_bool2_foreach:
  * @vec: A vector
  * @func: (scope call): A function to iterate.
@@ -690,6 +709,24 @@ crank_vec_bool3_get_all	(	CrankVecBool3*	vec	)
 	return (vec->x && vec->y && vec->z);
 }
 
+/**
+ * crank_vec_bool3_get_count:
+ * @vec: A Vector.
+ *
+ * Gets count of %TRUE in this vector.
+ *
+ * Returns: Count of %TRUE.
+ */
+guint
+crank_vec_bool3_get_count (	CrankVecBool3*	vec	)
+{
+	guint	count = 0;
+	if (vec->x) count ++;
+	if (vec->y) count ++;
+	if (vec->z) count ++;
+	
+	return count;
+}
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -1098,6 +1135,26 @@ gboolean
 crank_vec_bool4_get_all	(	CrankVecBool4*	vec	)
 {
 	return (vec->x && vec->y && vec->z && vec->w);
+}
+
+/**
+ * crank_vec_bool4_get_count:
+ * @vec: A Vector.
+ *
+ * Gets count of %TRUE in this vector.
+ *
+ * Returns: Count of %TRUE.
+ */
+guint
+crank_vec_bool4_get_count (	CrankVecBool4*	vec	)
+{
+	guint	count = 0;
+	if (vec->x) count ++;
+	if (vec->y) count ++;
+	if (vec->z) count ++;
+	if (vec->w) count ++;
+	
+	return count;
 }
 
 
@@ -1625,6 +1682,26 @@ crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	)
 	CRANK_FOREACH_ARRAY_END
 	
 	return TRUE;
+}
+
+/**
+ * crank_vec_bool_n_get_count:
+ * @vec: A Vector.
+ *
+ * Gets count of %TRUE in this vector.
+ *
+ * Returns: Count of %TRUE.
+ */
+guint
+crank_vec_bool_n_get_count (	CrankVecBoolN*	vec	)
+{
+	guint	count = 0;
+	
+	CRANK_FOREACH_ARRAY_BEGIN(vec->data, gboolean, e, vec->n)
+		if (e) count ++;
+	CRANK_FOREACH_ARRAY_END
+	
+	return count;
 }
 
 

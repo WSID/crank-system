@@ -181,6 +181,7 @@ namespace Crank {
 		
 		public bool			any { get; }
 		public bool			all { get; }
+		public uint			count { get; }
 		
 		public static bool	equal (VecBool2 a, VecBool2 b);
 		public static uint	hash (VecBool2 vec);
@@ -217,6 +218,7 @@ namespace Crank {
 		
 		public bool			any { get; }
 		public bool			all { get; }
+		public uint			count { get; }
 		
 		public static bool	equal (VecBool3 a, VecBool3 b);
 		public static uint	hash (VecBool3 vec);
@@ -254,6 +256,7 @@ namespace Crank {
 		
 		public bool			any { get; }
 		public bool			all { get; }
+		public uint			count { get; }
 		
 		public static bool	equal (VecBool4 a, VecBool4 b);
 		public static uint	hash (VecBool4 vec);
@@ -297,6 +300,7 @@ namespace Crank {
 		
 		public bool			any { get; }
 		public bool			all { get; }
+		public uint			count { get; }
 		
 		public static bool	equal (VecBoolN a, VecBoolN b);
 		public static uint	hash (VecBoolN vec);

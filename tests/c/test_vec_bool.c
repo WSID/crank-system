@@ -38,6 +38,7 @@ static void	test_2_xor (void);
 static void	test_2_not (void);
 static void	test_2_any (void);
 static void	test_2_all (void);
+static void	test_2_count (void);
 
 static void	test_n_equal (void);
 static void	test_n_hash (void);
@@ -52,6 +53,7 @@ static void	test_n_xor (void);
 static void	test_n_not (void);
 static void	test_n_any (void);
 static void	test_n_all (void);
+static void	test_n_count (void);
 
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -72,6 +74,7 @@ main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/2/not", test_2_not);
 	g_test_add_func ("/crank/base/vec/bool/2/any", test_2_any);
 	g_test_add_func ("/crank/base/vec/bool/2/all", test_2_all);
+	g_test_add_func ("/crank/base/vec/bool/2/count", test_2_count);
 	
 	g_test_add_func ("/crank/base/vec/bool/n/equal", test_n_equal);
 	g_test_add_func ("/crank/base/vec/bool/n/hash", test_n_hash);
@@ -86,6 +89,7 @@ main (gint argc, gchar** argv)
 	g_test_add_func ("/crank/base/vec/bool/n/not", test_n_not);
 	g_test_add_func ("/crank/base/vec/bool/n/any", test_n_any);
 	g_test_add_func ("/crank/base/vec/bool/n/all", test_n_all);
+	g_test_add_func ("/crank/base/vec/bool/n/count", test_n_count);
 	
 	g_test_run ();
 	return 0;
@@ -202,6 +206,16 @@ test_2_all (void)
 
   	g_assert (crank_vec_bool2_get_all (&a) == FALSE);
   	g_assert (crank_vec_bool2_get_all (&b) == TRUE);
+}
+
+static void
+test_2_count (void)
+{
+	CrankVecBool2	a = {TRUE, FALSE};
+	CrankVecBool2	b = {TRUE, TRUE};
+
+  	g_assert_cmpuint (crank_vec_bool2_get_count (&a), ==, 1);
+  	g_assert_cmpuint (crank_vec_bool2_get_count (&b), ==, 2);
 }
 
 static void
@@ -455,6 +469,22 @@ test_n_all (void)
 	
 	g_assert (crank_vec_bool_n_get_all (&a) == FALSE);
   	g_assert (crank_vec_bool_n_get_all (&b) == TRUE);
+  	
+	crank_vec_bool_n_fini (&a);
+	crank_vec_bool_n_fini (&b);
+}
+
+static void
+test_n_count (void)
+{
+	CrankVecBoolN	a = {0};
+	CrankVecBoolN	b = {0};
+	
+	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
+	crank_vec_bool_n_init (&b, 2, TRUE, TRUE );
+	
+	g_assert_cmpuint (crank_vec_bool_n_get_count (&a), ==, 1);
+  	g_assert_cmpuint (crank_vec_bool_n_get_count (&b), ==, 2);
   	
 	crank_vec_bool_n_fini (&a);
 	crank_vec_bool_n_fini (&b);

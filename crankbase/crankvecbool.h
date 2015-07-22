@@ -125,6 +125,7 @@ gboolean		crank_vec_bool2_get_any		(	CrankVecBool2*	vec	);
 
 gboolean		crank_vec_bool2_get_all		(	CrankVecBool2*	vec	);
 
+guint			crank_vec_bool2_get_count	(	CrankVecBool2*	vec	);
 
 //////// Function as collection ////////////////////////////////////////////////
 
@@ -269,6 +270,8 @@ gchar*			crank_vec_bool3_to_string_full (CrankVecBool3*	vec,
 gboolean		crank_vec_bool3_get_any		(	CrankVecBool3*	vec	);
 
 gboolean		crank_vec_bool3_get_all		(	CrankVecBool3*	vec	);
+
+guint			crank_vec_bool3_get_count	(	CrankVecBool3*	vec	);
 
 
 //////// Function as collection ////////////////////////////////////////////////
@@ -423,6 +426,8 @@ gboolean		crank_vec_bool4_get_any		(	CrankVecBool4*	vec	);
 
 gboolean		crank_vec_bool4_get_all		(	CrankVecBool4*	vec	);
 
+guint			crank_vec_bool4_get_count	(	CrankVecBool4*	vec	);
+
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -536,6 +541,8 @@ gchar*			crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
 gboolean		crank_vec_bool_n_get_any	(	CrankVecBoolN*	vec	);
 
 gboolean		crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	);
+
+guint			crank_vec_bool_n_get_count	(	CrankVecBoolN*	vec	);
 
 
 //////// Functions as collection ///////////////////////////////////////////////
