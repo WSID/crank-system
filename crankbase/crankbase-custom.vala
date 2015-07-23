@@ -75,6 +75,13 @@ namespace Crank {
 									void*			invocation_hint = null);
 	
 	
+	[CCode (simple_generics=true)]
+	public delegate string StrPtrFunc<G> (	G	value	);
+	
+	[CCode (simple_generics=true, has_target=false)]
+	public delegate string EqualDeltaFunc<G> (	G		a,
+												G		b,
+												float	d	);
 	
 	public struct CplxFloat {
 	
