@@ -126,11 +126,7 @@ test_reverse (void)
 	
 	crank_permutation_reverse (&p, &p);
 	
-	g_assert_cmpuint (crank_permutation_get (&p, 0), ==, 4);
-	g_assert_cmpuint (crank_permutation_get (&p, 1), ==, 2);
-	g_assert_cmpuint (crank_permutation_get (&p, 2), ==, 3);
-	g_assert_cmpuint (crank_permutation_get (&p, 3), ==, 1);
-	g_assert_cmpuint (crank_permutation_get (&p, 4), ==, 0);
+	crank_assert_eq_permutation_imm (&p, 4, 2, 3, 1, 0);
 	
 	crank_permutation_fini (&p);
 }
@@ -144,11 +140,7 @@ test_inverse (void)
 	
 	crank_permutation_inverse (&p, &p);
 	
-	g_assert_cmpuint (crank_permutation_get (&p, 0), ==, 0);
-	g_assert_cmpuint (crank_permutation_get (&p, 1), ==, 1);
-	g_assert_cmpuint (crank_permutation_get (&p, 2), ==, 3);
-	g_assert_cmpuint (crank_permutation_get (&p, 3), ==, 2);
-	g_assert_cmpuint (crank_permutation_get (&p, 4), ==, 4);
+	crank_assert_eq_permutation_imm (&p, 0 ,1, 3, 2, 4);
 	
 	crank_permutation_fini (&p);
 }
@@ -164,10 +156,7 @@ test_shuffle (void)
 	
 	crank_permutation_shuffle (&p, &q, &p);
 	
-	g_assert_cmpuint (crank_permutation_get (&p, 0), ==, 1);
-	g_assert_cmpuint (crank_permutation_get (&p, 1), ==, 0);
-	g_assert_cmpuint (crank_permutation_get (&p, 2), ==, 3);
-	g_assert_cmpuint (crank_permutation_get (&p, 3), ==, 2);
+	crank_assert_eq_permutation_imm (&p, 1, 0, 3, 2);
 	
 	crank_permutation_fini (&p);
 	crank_permutation_fini (&q);
