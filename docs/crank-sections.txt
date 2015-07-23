@@ -124,6 +124,7 @@ crank_cplx_float_init_fill
 crank_cplx_float_copy
 crank_cplx_float_dup
 crank_cplx_float_equal
+crank_cplx_float_equal_delta
 crank_cplx_float_hash
 crank_cplx_float_to_string
 crank_cplx_float_to_string_full

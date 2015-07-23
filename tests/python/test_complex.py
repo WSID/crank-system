@@ -54,6 +54,14 @@ class TestVecInt(unittest.TestCase):
 		
 		assert (a.equal (b))
 		assert (not a.equal (c))
+
+	def test_equal_delta (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		b = CrankBase.CplxFloat.init (3.2, 4.1)
+		c = CrankBase.CplxFloat.init (4, 3)
+		
+		assert (a.equal_delta (b, 1))
+		assert (not a.equal_delta (c, 1))
 	
 	def test_get_norm (self):
 		a = CrankBase.CplxFloat.init (3, 4)

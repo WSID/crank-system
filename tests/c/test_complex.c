@@ -27,6 +27,8 @@
 
 static void		test_equal ( void );
 
+static void		test_equal_delta ( void );
+
 static void		test_get_norm ( void );
 
 static void		test_neg ( void );
@@ -74,6 +76,7 @@ main (	gint   argc,
 	g_test_init (&argc, &argv, NULL);
 
 	g_test_add_func ("/crank/base/cplx/float/equal",		test_equal		);
+	g_test_add_func ("/crank/base/cplx/float/equal/delta",	test_equal_delta);
 	g_test_add_func ("/crank/base/cplx/float/get_norm",		test_get_norm	);
 	g_test_add_func ("/crank/base/cplx/float/neg",			test_neg		);
 	g_test_add_func ("/crank/base/cplx/float/inverse",		test_inverse	);
@@ -111,6 +114,17 @@ test_equal ( void )
 	
 	g_assert (crank_cplx_float_equal (&a, &b));
 	g_assert (! crank_cplx_float_equal (&a, &c));
+}
+
+static void
+test_equal_delta ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b = {3.2f, 4.1f};
+	CrankCplxFloat	c = {4.0f, 3.0f};
+	
+	g_assert (crank_cplx_float_equal_delta (&a, &b, 1.0f));
+	g_assert (! crank_cplx_float_equal_delta (&a, &c, 1.0f));
 }
 
 static void

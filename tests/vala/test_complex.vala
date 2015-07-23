@@ -23,6 +23,7 @@ int main (string[] args) {
 	GLib.Test.init (ref args);
 
 	GLib.Test.add_func ("/crank/base/cplx/float/equal",		test_equal	);
+	GLib.Test.add_func ("/crank/base/cplx/float/equal/delta",test_equal_delta	);
 	GLib.Test.add_func ("/crank/base/cplx/float/get_norm",	test_get_norm	);
 	GLib.Test.add_func ("/crank/base/cplx/float/neg",		test_neg	);
 	GLib.Test.add_func ("/crank/base/cplx/float/inverse",	test_inverse	);
@@ -66,6 +67,15 @@ private void test_equal () {
 	
 	assert (Crank.CplxFloat.equal (a, b));
 	assert (! Crank.CplxFloat.equal (a, c));
+}
+
+private void test_equal_delta () {
+	Crank.CplxFloat	a = {3.0f, 4.0f};
+	Crank.CplxFloat b = {3.2f, 4.1f};
+	Crank.CplxFloat c = {4.0f, 3.0f};
+	
+	assert (Crank.CplxFloat.equal_delta (a, b, 1.0f));
+	assert (! Crank.CplxFloat.equal_delta (a, c, 1.0f));
 }
 
 private void test_get_norm () {

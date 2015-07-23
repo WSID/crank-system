@@ -183,6 +183,30 @@ crank_cplx_float_equal (	gconstpointer	a,
 }
 
 /**
+ * crank_cplx_float_equal_delta:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @d: Delta value.
+ *
+ * Checks two complexes are sufficiently equal, which means they are close to
+ * each other so that we can say they are almost equal.
+ *
+ * Differences are calculated by distance between them.
+ *
+ * Returns: whether they are equal.
+ */
+gboolean
+crank_cplx_float_equal_delta (	CrankCplxFloat*	a,
+								CrankCplxFloat*	b,
+								const gfloat	d	)
+{
+	CrankCplxFloat	diff;
+	crank_cplx_float_sub (b, a, &diff);
+	
+	return (crank_cplx_float_get_norm (&diff) <= d);
+}
+
+/**
  * crank_cplx_float_hash:
  * @a: (type CrankCplxFloat): A Complex.
  *

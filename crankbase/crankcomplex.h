@@ -80,6 +80,10 @@ CrankCplxFloat*	crank_cplx_float_dup (	CrankCplxFloat*	cplx	);
 
 gboolean	crank_cplx_float_equal (	gconstpointer	a,
 										gconstpointer	b	);
+
+gboolean	crank_cplx_float_equal_delta (	CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											const gfloat	d	);
 										
 guint		crank_cplx_float_hash (		gconstpointer	a	);
 

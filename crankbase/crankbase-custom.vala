@@ -93,6 +93,7 @@ namespace Crank {
 		public CplxFloat?	dup ();
 		
 		public static bool	equal (CplxFloat a,	CplxFloat b);
+		public static bool	equal_delta (CplxFloat a,	CplxFloat b, float d = 0.0001f);
 		public static uint	hash (CplxFloat a);
 		
 		[CCode (cname="crank_cplx_float_to_string_full")]
