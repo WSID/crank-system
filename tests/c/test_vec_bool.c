@@ -143,8 +143,7 @@ test_2_and (void)
 
 	crank_vec_bool2_and (&a, &b, &c);
 
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
+	crank_assert_eq_vecbool2_imm (&c, FALSE, TRUE);
 }
 
 static void
@@ -157,8 +156,7 @@ test_2_or (void)
 
 	crank_vec_bool2_or (&a, &b, &c);
 
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
+	crank_assert_eq_vecbool2_imm (&c, FALSE, TRUE);
 }
 
 static void
@@ -171,8 +169,7 @@ test_2_xor (void)
 
 	crank_vec_bool2_xor (&a, &b, &c);
 
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
+	crank_assert_eq_vecbool2_imm (&c, FALSE, TRUE);
 }
 
 static void
@@ -184,8 +181,7 @@ test_2_not (void)
 
 	crank_vec_bool2_not (&a, &c);
 
-  	g_assert (c.x == FALSE);
-  	g_assert (c.y == TRUE);
+	crank_assert_eq_vecbool2_imm (&c, FALSE, TRUE);
 }
 
 static void
@@ -314,13 +310,7 @@ test_n_insert (void)
 
 	crank_vec_bool_n_insert (&a, 2, TRUE);
 
-	g_assert_cmpint (crank_vec_bool_n_get_size (&a), ==, 5);
-	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
-	g_assert (crank_vec_bool_n_get (&a, 1) == FALSE);
-	g_assert (crank_vec_bool_n_get (&a, 2) == TRUE);
-	g_assert (crank_vec_bool_n_get (&a, 3) == FALSE);
-	g_assert (crank_vec_bool_n_get (&a, 4) == TRUE);
-
+	crank_assert_eq_vecbool_n_imm (&a, TRUE, FALSE, TRUE, FALSE, TRUE);
 	crank_vec_bool_n_fini (&a);
 }
 
@@ -332,11 +322,7 @@ test_n_remove (void)
 
 	crank_vec_bool_n_remove (&a, 2);
 
-	g_assert_cmpint (crank_vec_bool_n_get_size (&a), ==, 3);
-	g_assert (crank_vec_bool_n_get (&a, 0) == TRUE);
-	g_assert (crank_vec_bool_n_get (&a, 1) == FALSE);
-	g_assert (crank_vec_bool_n_get (&a, 2) == TRUE);
-
+	crank_assert_eq_vecbool_n_imm (&a, TRUE, FALSE, TRUE);
 	crank_vec_bool_n_fini (&a);
 }
 
@@ -367,9 +353,7 @@ test_n_and (void)
 
 	crank_vec_bool_n_and (&a, &b, &c);
 
-	g_assert (crank_vec_bool_n_get_size (&c) == 2);
-  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
+	crank_assert_eq_vecbool_n_imm (&c, FALSE, TRUE);
 	
 	crank_vec_bool_n_fini (&a);
 	crank_vec_bool_n_fini (&b);
@@ -389,10 +373,7 @@ test_n_or (void)
 
 	crank_vec_bool_n_or (&a, &b, &c);
 
-  	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
+	crank_assert_eq_vecbool_n_imm (&c, FALSE, TRUE, FALSE, TRUE);
 	
 	crank_vec_bool_n_fini (&a);
 	crank_vec_bool_n_fini (&b);
@@ -412,10 +393,7 @@ test_n_xor (void)
 	
 	crank_vec_bool_n_xor (&a, &b, &c);
 	
-	g_assert (crank_vec_bool_n_get (&c, 0) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == FALSE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == TRUE);
+	crank_assert_eq_vecbool_n_imm (&c, FALSE, TRUE, FALSE, TRUE);
 	
 	crank_vec_bool_n_fini (&a);
 	crank_vec_bool_n_fini (&b);
@@ -433,10 +411,7 @@ test_n_not (void)
 	
 	crank_vec_bool_n_not (&a, &c);
 	
-	g_assert (crank_vec_bool_n_get (&c, 0) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 1) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 2) == TRUE);
-  	g_assert (crank_vec_bool_n_get (&c, 3) == FALSE);
+	crank_assert_eq_vecbool_n_imm (&c, TRUE, TRUE, TRUE, FALSE);
 	
 	crank_vec_bool_n_fini (&a);
 	crank_vec_bool_n_fini (&c);
