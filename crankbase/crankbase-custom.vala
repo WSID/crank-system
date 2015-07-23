@@ -1214,6 +1214,14 @@ namespace Crank {
 	public void assert_eq_vecbool_n_imm (	VecBoolN a,	...);
 	
 
+	public void assert_eq_vecint2_imm	( 	VecInt2 a,	int x, int y);
+	public void assert_eq_vecint3_imm	( 	VecInt3 a,	int x, int y, int z);
+	public void assert_eq_vecint4_imm	( 	VecInt4 a,	int x, int y, int z, int w);
+	
+	[CCode (sentinel="")]
+	public void assert_eq_vecint_n_imm (	VecIntN a,	...);
+	
+
 	public void assert_eq_vecfloat2_imm	( 	VecFloat2 a,	float x, float y);
 	public void assert_eq_vecfloat3_imm	( 	VecFloat3 a,	float x, float y, float z);
 	public void assert_eq_vecfloat4_imm	( 	VecFloat4 a,	float x, float y, float z, float w);

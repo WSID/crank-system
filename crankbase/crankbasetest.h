@@ -259,6 +259,36 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  */
 #define crank_assert_eq_vecbool_n_imm(a,...) \
 	crank_assert_eqarray_bool_imm((a)->data, (a)->n, __VA_ARGS__)
+
+
+/**
+ * crank_assert_eq_vecint2_imm: (skip)
+ * @a: (type CrankVecInt2): A #CrankVecInt2
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecint2_imm(a,x,y) \
+	crank_assert_eqarray_int_imm((gint*)(a), 2, x,y)
+/**
+ * crank_assert_eq_vecint3_imm: (skip)
+ * @a: (type CrankVecFloat3): A #CrankVecInt3
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecint3_imm(a,x,y,z) \
+	crank_assert_eqarray_int_imm((gint*)(a), 3, x,y,z)
+/**
+ * crank_assert_eq_vecint4_imm: (skip)
+ * @a: (type CrankVecInt4): A #CrankVecInt4
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecint4_imm(a,x,y,z,w) \
+	crank_assert_eqarray_int_imm((gint*)(a), 4, x,y,z,w)
+/**
+ * crank_assert_eq_vecint_n_imm: (skip)
+ * @a: (type CrankVecIntN): A #CrankVecIntN
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecint_n_imm(a,...) \
+	crank_assert_eqarray_int_imm((a)->data, (a)->n, __VA_ARGS__)
 	
 
 /**
