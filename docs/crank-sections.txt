@@ -35,9 +35,11 @@ CrankBoolIntFunc
 CrankBoolFloatFunc
 CrankBoolCplxFloatFunc
 CrankStrPtrFunc
+CrankEqualDeltaFunc
 crank_bool_equal
 crank_uint_equal
 crank_float_equal
+crank_float_equal_delta
 crank_bool_to_string
 crank_int_to_string
 crank_uint_to_string

@@ -121,10 +121,12 @@ typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
  */
 typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
 												gpointer		userdata	);
-												
-												
-												
-		
+
+
+
+
+
+
 /**
  * CrankStrPtrFunc:
  * @value: Value for function.
@@ -137,7 +139,23 @@ typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
  */
 typedef gchar*		(*CrankStrPtrFunc) (		gpointer		value,
 												gpointer		userdata	);
-												
+
+/**
+ * CrankEqualDeltaFunc:
+ * @a: Pointer to a value.
+ * @b: Pointer to a value.
+ * @d: allowed error to determine @a and @b are same.
+ *
+ * This function compares @a and @b with given float delta. This should be
+ * declared for float-involued types, such as #CrankVecFloat3, or #CrankMatFloatN
+ *
+ * This type is frequently declared.
+ *
+ * Returns: Whether @a and @b are "sufficiently equal" - difference is less than @d
+ */
+typedef gboolean	(*CrankEqualDeltaFunc) (	gconstpointer	a,
+												gconstpointer	b,
+												const gfloat	d	);
 												
 												
 gboolean	crank_bool_equal (			gconstpointer	a,
@@ -148,6 +166,13 @@ gboolean	crank_uint_equal (			gconstpointer	a,
 
 gboolean	crank_float_equal (			gconstpointer	a,
 										gconstpointer	b	);
+
+
+
+gboolean	crank_float_equal_delta	(	gconstpointer	a,
+										gconstpointer	b,
+										const gfloat	d	);
+
 
 
 gchar*		crank_bool_to_string (		gpointer	value,

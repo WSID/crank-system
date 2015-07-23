@@ -75,10 +75,33 @@ gboolean
 crank_float_equal (	gconstpointer	a,
 					gconstpointer	b	)
 {
+	crank_float_equal_delta(a, b, 0.0001f);
+}
+
+
+
+
+/**
+ * crank_float_equal_delta:
+ * @a: A Pointer pointing a float value.
+ * @b: A Pointer pointing a float value.
+ * @d: A delta value.
+ *
+ * Checks *@a and *@b are sufficiently equal:
+ * This means (*@b - d < *@a) && (*@a < *@b + d).
+ *
+ * Returns: Whether @a and @b are sufficiently equal.
+ */
+gboolean
+crank_float_equal_delta (	gconstpointer	a,
+							gconstpointer	b,
+							const gfloat	d	)
+{
 	gfloat av = *(gfloat*)a;
 	gfloat bv = *(gfloat*)b;
-	return (bv - 0.0001f < av) && (av < bv + 0.0001f);
+	return (bv - d < av) && (av < bv + d);
 }
+
 
 
 
@@ -166,6 +189,7 @@ crank_pointer_to_string (	gpointer	value,
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
 	return g_strdup_printf (format, value); 
 }
+
 
 
 
