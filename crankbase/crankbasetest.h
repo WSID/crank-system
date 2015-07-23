@@ -230,6 +230,37 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 #define crank_assert_eq_permutation_imm(a,...) \
 	crank_assert_eqarray_uint_imm((a)->data, (a)->n, __VA_ARGS__)
 
+
+/**
+ * crank_assert_eq_vecbool2_imm: (skip)
+ * @a: (type CrankVecBool2): A #CrankVecBool2
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecbool2_imm(a,x,y) \
+	crank_assert_eqarray_bool_imm((gboolean*)(a), 2, x,y)
+/**
+ * crank_assert_eq_vecbool3_imm: (skip)
+ * @a: (type CrankVecFloat3): A #CrankVecBool3
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecbool3_imm(a,x,y,z) \
+	crank_assert_eqarray_bool_imm((gboolean*)(a), 3, x,y,z)
+/**
+ * crank_assert_eq_vecbool4_imm: (skip)
+ * @a: (type CrankVecBool4): A #CrankVecBool4
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecbool4_imm(a,x,y,z,w) \
+	crank_assert_eqarray_bool_imm((gboolean*)(a), 4, x,y,z,w)
+/**
+ * crank_assert_eq_vecbool_n_imm: (skip)
+ * @a: (type CrankVecBoolN): A #CrankVecBoolN
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_vecbool_n_imm(a,...) \
+	crank_assert_eqarray_bool_imm((a)->data, (a)->n, __VA_ARGS__)
+	
+
 /**
  * crank_assert_eq_vecfloat2_imm: (skip)
  * @a: (type CrankVecFloat2): A #CrankVecFloat2
@@ -426,6 +457,7 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 				g_free (_crank_macro_ecfd_diffstr); \
 			} \
 		} G_STMT_END
+		
 /**
  * crank_assert_eqcplxfloat_d_cimm: (skip)
  * @a: (type CrankCplxFloat): A complex

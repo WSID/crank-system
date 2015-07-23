@@ -159,6 +159,20 @@ int main (string[] args) {
 										test_assert_eq_permutation_imm_fail					);
 										
 
+	GLib.Test.add_func				(	"/crank/base/test/eq/vecbool/2/imm",
+										test_assert_eq_vecbool2_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/vecbool/2/imm/fail",
+										test_assert_eq_vecbool2_imm_fail					);
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/vecbool/n/imm",
+										test_assert_eq_vecbool_n_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/vecbool/n/imm/fail",
+										test_assert_eq_vecbool_n_imm_fail					);
+										
+
 	GLib.Test.add_func				(	"/crank/base/test/eq/vecfloat/2/imm",
 										test_assert_eq_vecfloat2_imm	);
 	
@@ -479,6 +493,33 @@ private void test_assert_eq_permutation_imm_fail () {
 	Crank.Permutation a = Crank.Permutation (4, 0, 1, 2, 3);
 	
 	Crank.assert_eq_permutation_imm (a, 0, 1, 3, 2);
+}
+
+
+private void test_assert_eq_vecbool2_imm () {
+	Crank.VecBool2 a = {true, false};
+	
+	Crank.assert_eq_vecbool2_imm (a, true, false);
+}
+
+private void test_assert_eq_vecbool2_imm_fail () {
+	Crank.VecBool2 a = {true, true};
+	
+	Crank.assert_eq_vecbool2_imm (a, true, false);
+}
+
+
+
+private void test_assert_eq_vecbool_n_imm () {
+	Crank.VecBoolN a = Crank.VecBoolN.arr ({true, false, false, true, true});
+	
+	Crank.assert_eq_vecbool_n_imm (a, true, false, false, true, true);
+}
+
+private void test_assert_eq_vecbool_n_imm_fail () {
+	Crank.VecBoolN a = Crank.VecBoolN.arr ({true, true, false, true, true});
+	
+	Crank.assert_eq_vecbool_n_imm (a, true, false, false, true, true);
 }
 
 

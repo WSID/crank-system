@@ -82,7 +82,6 @@ crank_float_equal (	gconstpointer	a,
 
 
 
-
 /**
  * crank_bool_to_string:
  * @value: A Pointer pointing a boolean value.
@@ -167,6 +166,8 @@ crank_pointer_to_string (	gpointer	value,
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
 	return g_strdup_printf (format, value); 
 }
+
+
 
 
 

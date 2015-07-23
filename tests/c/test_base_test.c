@@ -84,6 +84,12 @@ static void	test_assert_eqcplxfloat_cimm_fail (void);
 static void test_assert_eq_permutation_imm (void);
 static void test_assert_eq_permutation_imm_fail (void);
 
+static void test_assert_eq_vecbool2_imm (void);
+static void test_assert_eq_vecbool2_imm_fail (void);
+
+static void test_assert_eq_vecbool_n_imm (void);
+static void test_assert_eq_vecbool_n_imm_fail (void);
+
 static void test_assert_eq_vecfloat2_imm (void);
 static void test_assert_eq_vecfloat2_imm_fail (void);
 
@@ -256,6 +262,25 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_expected_fail (
 			"/crank/base/test/eq/permutation/imm/fail",
 			test_assert_eq_permutation_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/vecbool/2/imm",
+			test_assert_eq_vecbool2_imm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/vecbool/2/imm/fail",
+			test_assert_eq_vecbool2_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/vecbool/n/imm",
+			test_assert_eq_vecbool_n_imm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/vecbool/n/imm/fail",
+			test_assert_eq_vecbool_n_imm_fail	);
+
 	
 	
 	g_test_add_func (
@@ -669,6 +694,7 @@ test_assert_eq_permutation_imm (void) {
 	crank_permutation_init (&a, 4, 0, 1, 3, 2);
 	
 	crank_assert_eq_permutation_imm (&a, 0, 1, 3, 2);
+	crank_permutation_fini (&a);
 }
 
 static void
@@ -677,6 +703,44 @@ test_assert_eq_permutation_imm_fail (void) {
 	crank_permutation_init (&a, 4, 0, 1, 2, 3);
 	
 	crank_assert_eq_permutation_imm (&a, 0, 1, 3, 2);
+	crank_permutation_fini (&a);
+}
+
+
+
+static void
+test_assert_eq_vecbool2_imm (void) {
+	CrankVecBool2	a = {TRUE, FALSE};
+	
+	crank_assert_eq_vecbool2_imm (&a, TRUE, FALSE);
+}
+
+static void
+test_assert_eq_vecbool2_imm_fail (void) {
+	CrankVecBool2	a = {TRUE, TRUE};
+	
+	crank_assert_eq_vecbool2_imm (&a, TRUE, FALSE);
+}
+
+
+
+
+static void
+test_assert_eq_vecbool_n_imm (void) {
+	CrankVecBoolN	a = {0};
+	crank_vec_bool_n_init (&a, 5, TRUE, FALSE, FALSE, TRUE, TRUE);
+	
+	crank_assert_eq_vecbool_n_imm (&a, TRUE, FALSE, FALSE, TRUE, TRUE);
+	crank_vec_bool_n_fini (&a);
+}
+
+static void
+test_assert_eq_vecbool_n_imm_fail (void) {
+	CrankVecBoolN	a = {0};
+	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, TRUE, TRUE);
+	
+	crank_assert_eq_vecbool_n_imm (&a, TRUE, FALSE, FALSE, TRUE, TRUE);
+	crank_vec_bool_n_fini (&a);
 }
 
 
@@ -704,6 +768,7 @@ test_assert_eq_vecfloat_n_imm (void) {
 	crank_vec_float_n_init (&a, 5, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
 	
 	crank_assert_eq_vecfloat_n_imm (&a, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+	crank_vec_float_n_fini (&a);
 }
 
 static void
@@ -712,4 +777,5 @@ test_assert_eq_vecfloat_n_imm_fail (void) {
 	crank_vec_float_n_init (&a, 5, 2.0f, 2.0f, 3.0f, 4.0f, 5.0f);
 	
 	crank_assert_eq_vecfloat_n_imm (&a, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+	crank_vec_float_n_fini (&a);
 }
