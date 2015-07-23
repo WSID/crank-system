@@ -124,8 +124,7 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  *
  * Asserts two float arrays are equals.
  */
-#define crank_assert_eqarray_float(a,an,b,bn)	\
-	_crank_assert_eqarray(gfloat,a,an,b,bn,crank_float_equal,crank_float_to_string,NULL)
+#define crank_assert_eqarray_float(a,an,b,bn)	crank_assert_eqarray_float_d(a,an,b,bn,0.0001f)
 /**
  * crank_assert_eqarray_float_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
@@ -134,8 +133,37 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  *
  * Asserts a given boolean array has same element with given list
  */
-#define crank_assert_eqarray_float_imm(a,an,...)	\
-	_crank_assert_eqarray_imm (gfloat,a,an,crank_float_equal,crank_float_to_string,NULL,__VA_ARGS__)
+#define crank_assert_eqarray_float_imm(a,an,...)	crank_assert_eqarray_float_d_imm(a,an,0.0001f,__VA_ARGS__)
+
+/**
+ * crank_assert_eqarray_float_d: (skip)
+ * @a: (element-type gfloat) (array length=an): A array
+ * @an: (type gfloat): Length of elements.
+ * @b: (element-type gfloat) (array length=bn): A array
+ * @bn: (type gfloat): Length of elements.
+ * @d: (type 
+ *
+ * Asserts two float arrays are equals.
+ */
+#define crank_assert_eqarray_float_d(a,an,b,bn,d)	\
+	G_STMT_START { \
+		gfloat	_crank_eqafd_delta = (d); \
+		_crank_assert_eqarray(gfloat,a,an,b,bn,_crank_float_equal_delta,crank_float_to_string,NULL); \
+	} G_STMT_END
+		
+/**
+ * crank_assert_eqarray_float_d_imm: (skip)
+ * @a: (element-type gfloat) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ * @...: Variadic list to compare with @a.
+ *
+ * Asserts a given boolean array has same element with given list
+ */
+#define crank_assert_eqarray_float_d_imm(a,an,d,...)	\
+	G_STMT_START { \
+		gfloat	_crank_eqafd_delta = (d); \
+		_crank_assert_eqarray_imm (gfloat,a,an,_crank_float_equal_delta,crank_float_to_string,NULL,__VA_ARGS__); \
+	} G_STMT_END
 
 
 /**
@@ -419,6 +447,8 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 		
 
 //////// Private Macros ////////////////////////////////////////////////////////
+#define _crank_float_equal_delta(a,b) \
+		(((*(float*)b) - _crank_eqafd_delta < (*(float*)a)) && ((*(float*)a) < (*(float*)b) + _crank_eqafd_delta))
 
 #define	_crank_array_index(a,i)	((a)[i])
 
