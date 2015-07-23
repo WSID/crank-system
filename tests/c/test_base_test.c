@@ -81,6 +81,9 @@ static void	test_assert_eqcplxfloat_fail (void);
 static void	test_assert_eqcplxfloat_cimm (void);
 static void	test_assert_eqcplxfloat_cimm_fail (void);
 
+static void test_assert_eq_permutation_imm (void);
+static void test_assert_eq_permutation_imm_fail (void);
+
 static void test_assert_eq_vecfloat2_imm (void);
 static void test_assert_eq_vecfloat2_imm_fail (void);
 
@@ -244,16 +247,33 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_expected_fail (
 			"/crank/base/test/eq/cplxfloat/cimm/fail",
 			test_assert_eqcplxfloat_cimm_fail	);
-			
-			
+	
 	
 	g_test_add_func (
-			"/crank/base/test/eq/cplxfloat/cimm",
-			test_assert_eqcplxfloat_cimm);
+			"/crank/base/test/eq/permutation/imm",
+			test_assert_eq_permutation_imm);
 			
 	crank_test_add_func_expected_fail (
-			"/crank/base/test/eq/cplxfloat/cimm/fail",
-			test_assert_eqcplxfloat_cimm_fail	);
+			"/crank/base/test/eq/permutation/imm/fail",
+			test_assert_eq_permutation_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/vecfloat/2/imm",
+			test_assert_eq_vecfloat2_imm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/vecfloat/2/imm/fail",
+			test_assert_eq_vecfloat2_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/vecfloat/n/imm",
+			test_assert_eq_vecfloat_n_imm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/vecfloat/n/imm/fail",
+			test_assert_eq_vecfloat_n_imm_fail	);
 
 
 
@@ -641,6 +661,24 @@ test_assert_eqcplxfloat_cimm_fail (void) {
 	
 	crank_assert_eqcplxfloat_d_cimm (&a, 4.2f, 2.0f, 1.0f);
 }
+
+
+static void
+test_assert_eq_permutation_imm (void) {
+	CrankPermutation	a = {0};
+	crank_permutation_init (&a, 4, 0, 1, 3, 2);
+	
+	crank_assert_eq_permutation_imm (&a, 0, 1, 3, 2);
+}
+
+static void
+test_assert_eq_permutation_imm_fail (void) {
+	CrankPermutation	a = {0};
+	crank_permutation_init (&a, 4, 0, 1, 2, 3);
+	
+	crank_assert_eq_permutation_imm (&a, 0, 1, 3, 2);
+}
+
 
 
 static void

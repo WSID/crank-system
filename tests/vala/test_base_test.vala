@@ -152,6 +152,13 @@ int main (string[] args) {
 										test_assert_eqcplxfloat_cimm_fail					);
 										
 
+	GLib.Test.add_func				(	"/crank/base/test/eq/permutation/imm",
+										test_assert_eq_permutation_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/permutation/imm/fail",
+										test_assert_eq_permutation_imm_fail					);
+										
+
 	GLib.Test.add_func				(	"/crank/base/test/eq/vecfloat/2/imm",
 										test_assert_eq_vecfloat2_imm	);
 	
@@ -461,6 +468,18 @@ private void test_assert_eqcplxfloat_cimm_fail () {
 	Crank.assert_eqcplxfloat_cimm (a, 4.2f, 2.1f, 1.0f);
 }
 
+
+private void test_assert_eq_permutation_imm () {
+	Crank.Permutation a = Crank.Permutation (4, 0, 1, 3, 2);
+	
+	Crank.assert_eq_permutation_imm (a, 0, 1, 3, 2);
+}
+
+private void test_assert_eq_permutation_imm_fail () {
+	Crank.Permutation a = Crank.Permutation (4, 0, 1, 2, 3);
+	
+	Crank.assert_eq_permutation_imm (a, 0, 1, 3, 2);
+}
 
 
 private void test_assert_eq_vecfloat2_imm () {

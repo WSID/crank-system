@@ -1201,6 +1201,9 @@ namespace Crank {
 	public void	assert_eq_gptrarray_imm <G> (	GLib.GenericArray<G>	a,
 												... );
 
+	[CCode (sentinel="")]
+	public void assert_eq_permutation_imm (	Permutation	a,	...);
+
 	public void assert_eq_vecfloat2_imm	( 	VecFloat2 a,	float x, float y);
 	public void assert_eq_vecfloat3_imm	( 	VecFloat2 a,	float x, float y, float z);
 	public void assert_eq_vecfloat4_imm	( 	VecFloat2 a,	float x, float y, float z, float w);

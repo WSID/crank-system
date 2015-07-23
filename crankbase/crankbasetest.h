@@ -195,30 +195,38 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 //////// Crank Collection equal assertions /////////////////////////////////////
 
 /**
+ * crank_assert_eq_permutation_imm: (skip)
+ * @a: (type CrankPermutaion): A #CrankPermutaion
+ * @...: Variadic list to compare with @a.
+ */
+#define crank_assert_eq_permutation_imm(a,...) \
+	crank_assert_eqarray_uint_imm((a)->data, (a)->n, __VA_ARGS__)
+
+/**
  * crank_assert_eq_vecfloat2_imm: (skip)
  * @a: (type CrankVecFloat2): A #CrankVecFloat2
- * ...: Variadic list to compare with @a.
+ * @...: Variadic list to compare with @a.
  */
 #define crank_assert_eq_vecfloat2_imm(a,x,y) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 2, x,y)
 /**
  * crank_assert_eq_vecfloat3_imm: (skip)
  * @a: (type CrankVecFloat3): A #CrankVecFloat3
- * ...: Variadic list to compare with @a.
+ * @...: Variadic list to compare with @a.
  */
 #define crank_assert_eq_vecfloat3_imm(a,x,y,z) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 3, x,y,z)
 /**
  * crank_assert_eq_vecfloat4_imm: (skip)
  * @a: (type CrankVecFloat4): A #CrankVecFloat4
- * ...: Variadic list to compare with @a.
+ * @...: Variadic list to compare with @a.
  */
 #define crank_assert_eq_vecfloat4_imm(a,x,y,z,w) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 4, x,y,z,w)
 /**
  * crank_assert_eq_vecfloat_n_imm: (skip)
  * @a: (type CrankVecFloatN): A #CrankVecFloatN
- * ...: Variadic list to compare with @a.
+ * @...: Variadic list to compare with @a.
  */
 #define crank_assert_eq_vecfloat_n_imm(a,...) \
 	crank_assert_eqarray_float_imm((a)->data, (a)->n, __VA_ARGS__)
