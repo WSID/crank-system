@@ -91,6 +91,29 @@
 G_BEGIN_DECLS
 
 /**
+ * CRANK_UNPARENTHESIS:
+ * @...: Items.
+ *
+ * Just expands to @...
+ *
+ * This is used to removing parenthesis, so that macro can supply arbitarily
+ * count of item.
+ *
+ * |[ <-- language=C --!>
+ *    #define some_macro(A, B) \
+ *        G_STMT_START { \
+ *            do_a_vaargs (CRANK_UNPARENTHESIS A); \
+ *            do_b_vaargs (CRANK_UNPARENTHESIS B); \
+ *        } G_STMT_END
+ *
+ *    // You should pass () if nothing should be in B
+ *    some_macro((1, 2, 3), ())
+ * ]|
+ */
+#define CRANK_UNPARENTHESIS(...)	__VA_ARGS__
+
+
+/**
  * CRANK_ARRAY_DUP:
  * @a: Array to duplicate.
  * @G: Type of elements.

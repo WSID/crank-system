@@ -34,6 +34,54 @@ int main (string[] args) {
 										
 										
 
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/bool",
+										test_assert_eqarray_bool	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/bool/fail",
+										test_assert_eqarray_bool_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/bool/imm",
+										test_assert_eqarray_bool_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/bool/imm/fail",
+										test_assert_eqarray_bool_imm_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/int",
+										test_assert_eqarray_int	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/int/fail",
+										test_assert_eqarray_int_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/int/imm",
+										test_assert_eqarray_int_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/int/imm/fail",
+										test_assert_eqarray_int_imm_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/uint",
+										test_assert_eqarray_uint	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/uint/fail",
+										test_assert_eqarray_uint_fail					);
+										
+										
+
+	GLib.Test.add_func				(	"/crank/base/test/eq/array/uint/imm",
+										test_assert_eqarray_uint_imm	);
+	
+	Crank.Test.add_func_expected_fail (	"/crank/base/test/eq/array/uint/imm/fail",
+										test_assert_eqarray_uint_imm_fail					);
+										
+										
+
 	GLib.Test.add_func				(	"/crank/base/test/eq/array/float",
 										test_assert_eqarray_float	);
 	
@@ -137,6 +185,100 @@ private void test_test_expected_fail_onpass () {
 			GLib.TestSubprocessFlags.STDERR );
 	GLib.Test.trap_assert_failed ();
 }
+
+
+
+
+private void test_assert_eqarray_bool () {
+	bool[]	a = {true, true, false, false};
+	bool[]	b = {true, true, false, false};
+	
+	Crank.assert_eqarray_bool (a, b);
+}
+
+private void test_assert_eqarray_bool_fail () {
+	bool[]	a = {true, true, true, false};
+	bool[]	b = {true, true, false, false};
+	
+	Crank.assert_eqarray_bool (a, b);
+}
+
+
+
+private void test_assert_eqarray_bool_imm () {
+	bool[]	a = {true, true, false, false};
+	
+	Crank.assert_eqarray_bool_imm (a, true, true, false, false);
+}
+
+private void test_assert_eqarray_bool_imm_fail () {
+	bool[]	a = {true, true, true, false};
+	
+	Crank.assert_eqarray_bool_imm (a, true, true, false, false);
+}
+
+
+
+
+private void test_assert_eqarray_int () {
+	int[] a = {1, 2, 3, 4};
+	int[] b = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_int (a, b);
+}
+
+private void test_assert_eqarray_int_fail () {
+	int[] a = {1, 2, 3, 5};
+	int[] b = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_int (a, b);
+}
+
+
+
+private void test_assert_eqarray_int_imm () {
+	int[] a = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_int_imm (a, 1, 2, 3, 4);
+}
+
+private void test_assert_eqarray_int_imm_fail () {
+	int[] a = {1, 2, 3, 5};
+	
+	Crank.assert_eqarray_int_imm (a, 1, 2, 3, 4);
+}
+
+
+
+
+private void test_assert_eqarray_uint () {
+	uint[] a = {1, 2, 3, 4};
+	uint[] b = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_uint (a, b);
+}
+
+private void test_assert_eqarray_uint_fail () {
+	uint[] a = {1, 2, 3, 5};
+	uint[] b = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_uint (a, b);
+}
+
+
+
+private void test_assert_eqarray_uint_imm () {
+	uint[] a = {1, 2, 3, 4};
+	
+	Crank.assert_eqarray_uint_imm (a, 1, 2, 3, 4);
+}
+
+private void test_assert_eqarray_uint_imm_fail () {
+	uint[] a = {1, 2, 3, 5};
+	
+	Crank.assert_eqarray_uint_imm (a, 1, 2, 3, 4);
+}
+
 
 
 

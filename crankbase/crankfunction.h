@@ -138,9 +138,26 @@ typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
 typedef gchar*		(*CrankStrPtrFunc) (		gpointer		value,
 												gpointer		userdata	);
 												
+												
+												
+gboolean	crank_bool_equal (			gconstpointer	a,
+										gconstpointer	b	);
+										
+gboolean	crank_uint_equal (			gconstpointer	a,
+										gconstpointer	b	);
+
 gboolean	crank_float_equal (			gconstpointer	a,
 										gconstpointer	b	);
 
+
+gchar*		crank_bool_to_string (		gpointer	value,
+										gpointer	userdata	);
+										
+gchar*		crank_int_to_string (		gpointer	value,
+										gpointer	userdata	);
+										
+gchar*		crank_uint_to_string (		gpointer	value,
+										gpointer	userdata	);
 
 gchar*		crank_float_to_string (		gpointer	value,
 										gpointer	userdata	);

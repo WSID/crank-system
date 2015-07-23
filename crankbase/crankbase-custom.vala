@@ -1157,6 +1157,27 @@ namespace Crank {
 		#endif
 	}
 
+	public void	assert_eqarray_bool (		bool[]	a,
+											bool[]	b	);
+	
+	[CCode (sentinel="")]
+	public void	assert_eqarray_bool_imm (	bool[]	a,
+											...	);
+
+	public void	assert_eqarray_int (		int[]	a,
+											int[]	b	);
+	
+	[CCode (sentinel="")]
+	public void	assert_eqarray_int_imm (	int[]	a,
+											...	);
+
+	public void	assert_eqarray_uint (		uint[]	a,
+											uint[]	b	);
+	
+	[CCode (sentinel="")]
+	public void	assert_eqarray_uint_imm (	uint[]	a,
+											...	);
+
 	public void	assert_eqarray_float (		float[]	a,
 											float[]	b	);
 	

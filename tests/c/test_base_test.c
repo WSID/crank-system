@@ -33,6 +33,24 @@ static void test_always_fail (void);
 
 static void test_test_expected_fail_onpass (void);
 
+static void test_assert_eqarray_bool (void);
+static void test_assert_eqarray_bool_fail (void);
+
+static void test_assert_eqarray_bool_imm (void);
+static void test_assert_eqarray_bool_imm_fail (void);
+
+static void test_assert_eqarray_int (void);
+static void test_assert_eqarray_int_fail (void);
+
+static void test_assert_eqarray_int_imm (void);
+static void test_assert_eqarray_int_imm_fail (void);
+
+static void test_assert_eqarray_uint (void);
+static void test_assert_eqarray_uint_fail (void);
+
+static void test_assert_eqarray_uint_imm (void);
+static void test_assert_eqarray_uint_imm_fail (void);
+
 static void test_assert_eqarray_float (void);
 static void test_assert_eqarray_float_fail (void);
 
@@ -88,6 +106,60 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_expected_fail (
 			"/crank/base/test/expected_fail/subprocess",
 			test_always_pass);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/bool",
+			test_assert_eqarray_bool	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/bool/fail",
+			test_assert_eqarray_bool_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/bool/imm",
+			test_assert_eqarray_bool_imm	);
+
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/bool/imm/fail",
+			test_assert_eqarray_bool_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/int",
+			test_assert_eqarray_int	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/int/fail",
+			test_assert_eqarray_int_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/int/imm",
+			test_assert_eqarray_int_imm	);
+
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/int/imm/fail",
+			test_assert_eqarray_int_imm_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/uint",
+			test_assert_eqarray_uint	);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/uint/fail",
+			test_assert_eqarray_uint_fail	);
+	
+	
+	g_test_add_func (
+			"/crank/base/test/eq/array/uint/imm",
+			test_assert_eqarray_uint_imm	);
+
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/array/uint/imm/fail",
+			test_assert_eqarray_uint_imm_fail	);
 	
 	
 	g_test_add_func (
@@ -214,6 +286,127 @@ test_test_expected_fail_onpass (void) {
 			G_TEST_SUBPROCESS_INHERIT_STDERR);
 	g_test_trap_assert_failed ();
 }
+
+
+
+
+static void
+test_assert_eqarray_bool (void)
+{
+	gboolean a[4] = {TRUE,	TRUE,	FALSE,	FALSE};
+	gboolean b[4] = {TRUE,	TRUE,	FALSE,	FALSE};
+	
+	crank_assert_eqarray_bool (a, 4, b, 4);
+}
+
+static void
+test_assert_eqarray_bool_fail (void)
+{
+	gboolean a[4] = {TRUE,	TRUE,	TRUE,	FALSE};
+	gboolean b[4] = {TRUE,	TRUE,	FALSE,	FALSE};
+	
+	crank_assert_eqarray_bool (a, 4, b, 4);
+}
+
+
+
+
+static void
+test_assert_eqarray_bool_imm (void)
+{
+	gboolean a[4] = {TRUE,	TRUE,	FALSE,	FALSE};
+	
+	crank_assert_eqarray_bool_imm (a, 4,	TRUE, TRUE, FALSE, FALSE);
+}
+
+static void
+test_assert_eqarray_bool_imm_fail (void)
+{
+	gboolean a[4] = {TRUE,	TRUE,	TRUE,	FALSE};
+	
+	crank_assert_eqarray_bool_imm (a, 4,	TRUE, TRUE, FALSE, FALSE);
+}
+
+
+
+
+static void
+test_assert_eqarray_int (void)
+{
+	gint a[4] = {1, 1, 2, 3};
+	gint b[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_int (a, 4, b, 4);
+}
+
+static void
+test_assert_eqarray_int_fail (void)
+{
+	gint a[4] = {1, 2, 3, 5};
+	gint b[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_int (a, 4, b, 4);
+}
+
+
+
+
+static void
+test_assert_eqarray_int_imm (void)
+{
+	gint a[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_int_imm (a, 4,	1, 1, 2, 3);
+}
+
+static void
+test_assert_eqarray_int_imm_fail (void)
+{
+	gint a[4] = {1, 2, 3, 5};
+	
+	crank_assert_eqarray_int_imm (a, 4,	1, 1, 2, 3);
+}
+
+
+
+
+static void
+test_assert_eqarray_uint (void)
+{
+	guint a[4] = {1, 1, 2, 3};
+	guint b[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_uint (a, 4, b, 4);
+}
+
+static void
+test_assert_eqarray_uint_fail (void)
+{
+	guint a[4] = {1, 2, 3, 5};
+	guint b[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_uint (a, 4, b, 4);
+}
+
+
+
+
+static void
+test_assert_eqarray_uint_imm (void)
+{
+	guint a[4] = {1, 1, 2, 3};
+	
+	crank_assert_eqarray_uint_imm (a, 4,	1, 1, 2, 3);
+}
+
+static void
+test_assert_eqarray_uint_imm_fail (void)
+{
+	guint a[4] = {1, 2, 3, 5};
+	
+	crank_assert_eqarray_uint_imm (a, 4,	1, 1, 2, 3);
+}
+
 
 
 

@@ -49,31 +49,94 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 											GTestFunc		func	);
 
 
-//////// Assertions ////////////////////////////////////////////////////////////
+//////// Array equal assertions ////////////////////////////////////////////////
+
+/**
+ * crank_assert_eqarray_bool: (skip)
+ * @a: (element-type gboolean) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ * @b: (element-type gboolean) (array length=bn): A array
+ * @bn: (type guint): Length of elements.
+ *
+ * Asserts two boolean arrays are equals.
+ */
+#define crank_assert_eqarray_bool(a,an,b,bn)	\
+	_crank_assert_eqarray(gboolean,a,an,b,bn,crank_bool_equal,crank_bool_to_string,NULL)
+/**
+ * crank_assert_eqarray_bool_imm: (skip)
+ * @a: (element-type gboolean) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ *
+ * Asserts a given boolean array has same element with given list
+ */
+#define crank_assert_eqarray_bool_imm(a,an,...)	\
+	_crank_assert_eqarray_imm(gboolean,a,an,crank_bool_equal,crank_bool_to_string,NULL,__VA_ARGS__)
+
+/**
+ * crank_assert_eqarray_int: (skip)
+ * @a: (element-type gint) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ * @b: (element-type gint) (array length=bn): A array
+ * @bn: (type guint): Length of elements.
+ *
+ * Asserts two gint arrays are equals.
+ */
+#define crank_assert_eqarray_int(a,an,b,bn)	\
+	_crank_assert_eqarray(gint,a,an,b,bn,g_int_equal,crank_int_to_string,NULL)
+/**
+ * crank_assert_eqarray_int_imm: (skip)
+ * @a: (element-type gint) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ *
+ * Asserts a given gint array has same element with given list
+ */
+#define crank_assert_eqarray_int_imm(a,an,...)	\
+	_crank_assert_eqarray_imm(gint,a,an,g_int_equal,crank_int_to_string,NULL,__VA_ARGS__)
+
+/**
+ * crank_assert_eqarray_uint: (skip)
+ * @a: (element-type guint) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ * @b: (element-type guint) (array length=bn): A array
+ * @bn: (type guint): Length of elements.
+ *
+ * Asserts two guint arrays are equals.
+ */
+#define crank_assert_eqarray_uint(a,an,b,bn)	\
+	_crank_assert_eqarray(guint,a,an,b,bn,crank_uint_equal,crank_uint_to_string,NULL)
+/**
+ * crank_assert_eqarray_uint_imm: (skip)
+ * @a: (element-type guint) (array length=an): A array
+ * @an: (type guint): Length of elements.
+ *
+ * Asserts a given guint array has same element with given list
+ */
+#define crank_assert_eqarray_uint_imm(a,an,...)	\
+	_crank_assert_eqarray_imm(guint,a,an,crank_uint_equal,crank_uint_to_string,NULL,__VA_ARGS__)
+
 
 /**
  * crank_assert_eqarray_float: (skip)
  * @a: (element-type gfloat) (array length=an): A array
  * @an: (type guint): Length of elements.
- * @b: (element-type gfoat) (array length=bn): A array
+ * @b: (element-type gfloat) (array length=bn): A array
  * @bn: (type guint): Length of elements.
  *
  * Asserts two float arrays are equals.
  */
 #define crank_assert_eqarray_float(a,an,b,bn)	\
 	_crank_assert_eqarray(gfloat,a,an,b,bn,crank_float_equal,crank_float_to_string,NULL)
-
-
 /**
  * crank_assert_eqarray_float_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
  * @an: (type guint): Length of elements.
  * @...: Variadic list to compare with @a.
  *
- * Asserts a given float array has same element with @....
+ * Asserts a given boolean array has same element with given list
  */
 #define crank_assert_eqarray_float_imm(a,an,...)	\
 	_crank_assert_eqarray_imm (gfloat,a,an,crank_float_equal,crank_float_to_string,NULL,__VA_ARGS__)
+
 
 /**
  * crank_assert_eqarray_pointer: (skip)
@@ -93,11 +156,13 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  * @an: (type guint): Length of elements.
  * @...: Variadic list to compare with @a.
  *
- * Asserts a given pointer array has same elements with @....
+ * Asserts a given boolean array has same element with given list
  */
 #define crank_assert_eqarray_pointer_imm(a,an,...) \
 	_crank_assert_eqparray_imm(a,an,g_direct_equal,crank_pointer_to_string,NULL,__VA_ARGS__)
 
+
+//////// GLib Collection equal assertions //////////////////////////////////////
 
 /**
  * crank_assert_eq_glist_imm: (skip)
@@ -124,8 +189,10 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 			gpointer*, \
 			((a)->pdata),((a)->len),G_STRINGIFY(a),_crank_array_index, \
 			g_direct_equal, crank_pointer_to_string, NULL, __VA_ARGS__)
-			
 
+
+
+//////// Crank Collection equal assertions /////////////////////////////////////
 
 /**
  * crank_assert_eq_vecfloat2_imm: (skip)
@@ -432,6 +499,7 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
 				gpointer*, \
 				a,an,G_STRINGIFY(a),_crank_array_index, \
 				eqf, strf, strfu, __VA_ARGS__ )
+			
 
 G_END_DECLS
 

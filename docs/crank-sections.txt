@@ -4,6 +4,7 @@ CRANK_ARRAY_DUP
 CRANK_ARRAY_CMP
 CRANK_ARRAY_ADD
 CRANK_ARRAY_FILL
+CRANK_UNPARENTHESIS
 CRANK_FOREACH_RANGE_BEGIN
 CRANK_FOREACH_RANGE_DO
 CRANK_FOREACH_RANGE_END
@@ -35,7 +36,12 @@ CrankBoolIntFunc
 CrankBoolFloatFunc
 CrankBoolCplxFloatFunc
 CrankStrPtrFunc
+crank_bool_equal
+crank_uint_equal
 crank_float_equal
+crank_bool_to_string
+crank_int_to_string
+crank_uint_to_string
 crank_float_to_string
 crank_pointer_to_string
 crank_compare_nondata_wrapf
@@ -968,6 +974,12 @@ crank_eval_qr_mat_float_n
 <SECTION>
 <FILE>crankbasetest</FILE>
 crank_test_add_func_expected_fail
+crank_assert_eqarray_bool
+crank_assert_eqarray_bool_imm
+crank_assert_eqarray_int
+crank_assert_eqarray_int_imm
+crank_assert_eqarray_uint
+crank_assert_eqarray_uint_imm
 crank_assert_eqarray_float
 crank_assert_eqarray_float_imm
 crank_assert_eqarray_pointer

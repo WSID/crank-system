@@ -26,13 +26,50 @@
 #include "crankfunction.h"
 
 /**
+ * crank_bool_equal:
+ * @a: A Pointer pointing a boolean value.
+ * @b: A Pointer pointing a boolean value.
+ *
+ * Check equality of boolean values. Before checking, it will invert both, so
+ * that we can check only 0 or 1.
+ *
+ * Returns: whether (*@a) and (*@b) are equal.
+ */
+gboolean
+crank_bool_equal (	gconstpointer	a,
+					gconstpointer	b	)
+{
+	gboolean av = ! *(gboolean*)a;
+	gboolean bv = ! *(gboolean*)b;
+	return av == bv;
+}
+
+/**
+ * crank_uint_equal:
+ * @a: A Pointer pointing a guint value.
+ * @b: A Pointer pointing a guint value.
+ *
+ * Check equality of guint values.
+ *
+ * Returns: whether (*@a) and (*@b) are equal.
+ */
+gboolean
+crank_uint_equal (	gconstpointer	a,
+					gconstpointer	b	)
+{
+	guint av = *(guint*)a;
+	guint bv = *(guint*)b;
+	return av == bv;
+}
+
+/**
  * crank_float_equal:
  * @a: A Pointer pointing a float value.
  * @b: A Pointer pointing a float value.
  *
  * Check equality of float values, with 0.0001f of error range.
  *
- * Returns: string represents of float. free with g_free()
+ * Returns: whether (*@a) and (*@b) are equal.
  */
 gboolean
 crank_float_equal (	gconstpointer	a,
@@ -42,6 +79,60 @@ crank_float_equal (	gconstpointer	a,
 	gfloat bv = *(gfloat*)b;
 	return (bv - 0.0001f < av) && (av < bv + 0.0001f);
 }
+
+
+
+
+/**
+ * crank_bool_to_string:
+ * @value: A Pointer pointing a boolean value.
+ * @userdata: (nullable): unused.
+ *
+ * Stringify a boolean value.
+ *
+ * Returns: string represents of float. free with g_free()
+ */
+gchar*
+crank_bool_to_string (	gpointer	value,
+						gpointer	userdata	)
+{
+	return g_strdup (*(gboolean*)value ? "TRUE" : "FALSE");
+}
+
+/**
+ * crank_int_to_string:
+ * @value: A Pointer pointing a int value.
+ * @userdata: (nullable): Format for stringification.
+ *
+ * Stringify a integer value.
+ *
+ * Returns: string representf integer value. free with g_free()
+ */
+gchar*
+crank_int_to_string (	gpointer	value,
+						gpointer	userdata	)
+{
+	gchar*	format = (userdata != NULL) ? (gchar*)userdata : "%d";
+	return g_strdup_printf (format, *(gint*)value);
+}
+
+/**
+ * crank_uint_to_string:
+ * @value: A Pointer pointing a int value.
+ * @userdata: (nullable): Format for stringification.
+ *
+ * Stringify a integer value.
+ *
+ * Returns: string representf integer value. free with g_free()
+ */
+gchar*
+crank_uint_to_string (	gpointer	value,
+						gpointer	userdata	)
+{
+	gchar*	format = (userdata != NULL) ? (gchar*)userdata : "%u";
+	return g_strdup_printf (format, *(gint*)value);
+}
+
 
 /**
  * crank_float_to_string:
@@ -76,6 +167,9 @@ crank_pointer_to_string (	gpointer	value,
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
 	return g_strdup_printf (format, value); 
 }
+
+
+
 
 /**
  * crank_compare_nondata_wrapf:
