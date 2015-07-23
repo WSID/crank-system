@@ -257,23 +257,28 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  */
 #define crank_assert_cmpfloat_d(a,cmp,b,d)	\
 		G_STMT_START { \
-			gfloat _crank_na = (a); \
-			gfloat _crank_nb = (b); \
-			gfloat _crank_diff = (_crank_nb - _crank_na); \
-			gfloat _crank_nd = (d); \
-			gint _crank_cres = (_crank_diff < -_crank_nd) - (_crank_nd < _crank_diff); \
-			if (G_UNLIKELY(! (_crank_cres cmp 0))) { \
-				gchar* _crank_message = g_strdup_printf ( \
+			gfloat _crank_macro_cf_a = (a); \
+			gfloat _crank_macro_cf_b = (b); \
+			gfloat _crank_macro_cf_diff = (_crank_macro_cf_b - _crank_macro_cf_a); \
+			gfloat _crank_macro_cf_d = (d); \
+			gint _crank_macro_cf_cres = \
+					(_crank_macro_cf_diff < -_crank_macro_cf_d) - \
+					(_crank_macro_cf_d < _crank_macro_cf_diff); \
+			if (G_UNLIKELY(! (_crank_macro_cf_cres cmp 0))) { \
+				gchar* _crank_macro_cf_message = g_strdup_printf ( \
 			            "%s %s %s" \
 			            "\n\tActual: %g %s %g (with diff = %g)", \
 			            G_STRINGIFY(a), \
 			            G_STRINGIFY(cmp), \
 			            G_STRINGIFY(b), \
-						_crank_na, G_STRINGIFY(cmp), _crank_nb, _crank_diff ); \
+						_crank_macro_cf_a, \
+						G_STRINGIFY(cmp), \
+						_crank_macro_cf_b, \
+						_crank_macro_cf_diff ); \
 				g_assertion_message ( \
 						G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-						_crank_message); \
-				g_free (_crank_message); \
+						_crank_macro_cf_message); \
+				g_free (_crank_macro_cf_message); \
 			} \
 		} G_STMT_END
 
@@ -351,32 +356,46 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  */
 #define crank_assert_eqcplxfloat_d(a,b,d) \
 		G_STMT_START { \
-			CrankCplxFloat*	na; \
-			CrankCplxFloat*	nb; \
-			CrankCplxFloat	diff; \
-			gfloat nd = (d); \
-			gfloat diff_norm; \
-			na = a; \
-			nb = b; \
-			crank_cplx_float_sub (nb, na, &diff); \
-			diff_norm = crank_cplx_float_get_norm (&diff); \
-			if (G_UNLIKELY((diff_norm < - nd) || (nd < diff_norm))) { \
-				gchar*	nastr = crank_cplx_float_to_string (na); \
-				gchar*	nbstr = crank_cplx_float_to_string (nb); \
-				gchar*	diffstr = crank_cplx_float_to_string (&diff); \
-				gchar*	message = g_strdup_printf ( \
+			CrankCplxFloat*	_crank_macro_ecfd_a = (a); \
+			CrankCplxFloat*	_crank_macro_ecfd_b = (b); \
+			gfloat _crank_macro_ecfd_d = (d); \
+			\
+			if (! G_LIKELY(	crank_cplx_float_equal_delta( \
+					_crank_macro_ecfd_a, \
+					_crank_macro_ecfd_b, \
+					_crank_macro_ecfd_d))) { \
+				CrankCplxFloat	_crank_macro_ecfd_diff; \
+				\
+				crank_cplx_float_sub ( \
+						_crank_macro_ecfd_b, \
+						_crank_macro_ecfd_a, \
+						&_crank_macro_ecfd_diff); \
+				\
+				gchar*	_crank_macro_ecfd_astr = \
+					crank_cplx_float_to_string (_crank_macro_ecfd_a); \
+				\
+				gchar*	_crank_macro_ecfd_bstr = \
+					crank_cplx_float_to_string (_crank_macro_ecfd_b); \
+				\
+				gchar*	_crank_macro_ecfd_diffstr = \
+					crank_cplx_float_to_string (&_crank_macro_ecfd_diff); \
+				\
+				gchar*	_crank_macro_ecfd_message = g_strdup_printf ( \
 						"%s == %s"\
 						"\n\tActual: %s == %s (with diff = %s, norm = %g)", \
 			            G_STRINGIFY(a), \
 			            G_STRINGIFY(b), \
-			            nastr, nbstr, diffstr, diff_norm); \
+			            _crank_macro_ecfd_astr, \
+			            _crank_macro_ecfd_bstr, \
+			            _crank_macro_ecfd_diffstr, \
+			            crank_cplx_float_get_norm (&_crank_macro_ecfd_diff) ); \
 			    g_assertion_message ( \
 			    		G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-			    		message); \
-			   	g_free (message); \
-				g_free (nastr); \
-				g_free (nbstr); \
-				g_free (diffstr); \
+			    		_crank_macro_ecfd_message); \
+			   	g_free (_crank_macro_ecfd_message); \
+				g_free (_crank_macro_ecfd_astr); \
+				g_free (_crank_macro_ecfd_bstr); \
+				g_free (_crank_macro_ecfd_diffstr); \
 			} \
 		} G_STMT_END
 /**
