@@ -225,8 +225,7 @@ test_2_muls (void)
 	
 	crank_vec_int2_muls (&a, 2, &a);
 	
-	g_assert_cmpint (a.x, ==, 6);
-	g_assert_cmpint (a.y, ==, 8);
+	crank_assert_eq_vecint2_imm (&a, 6, 8);
 }
 
 
@@ -237,8 +236,7 @@ test_2_divs (void)
 	
 	crank_vec_int2_divs (&a, 2, &a);
 	
-	g_assert_cmpint (a.x, ==, 1);
-	g_assert_cmpint (a.y, ==, 2);
+	crank_assert_eq_vecint2_imm (&a, 1, 2);
 }
 
 
@@ -249,8 +247,7 @@ test_2_mods (void)
 	
 	crank_vec_int2_mods (&a, 7, &a);
 	
-	g_assert_cmpint (a.x, ==, 2);
-	g_assert_cmpint (a.y, ==, 6);
+	crank_assert_eq_vecint2_imm (&a, 2, 6);
 }
 
 
@@ -262,8 +259,7 @@ test_2_add (void)
 	
 	crank_vec_int2_add (&a, &b, &a);
 	
-	g_assert_cmpint (a.x, ==, 8);
-	g_assert_cmpint (a.y, ==, 16);
+	crank_assert_eq_vecint2_imm (&a, 8, 16);
 }
 
 
@@ -275,8 +271,7 @@ test_2_sub (void)
 	
 	crank_vec_int2_sub (&a, &b, &a);
 	
-	g_assert_cmpint (a.x, ==, -2);
-	g_assert_cmpint (a.y, ==, -8);
+	crank_assert_eq_vecint2_imm (&a, -2, -8);
 }
 
 
@@ -298,8 +293,7 @@ test_2_cmpmul (void)
 	
 	crank_vec_int2_cmpmul (&a, &b, &a);
 	
-	g_assert_cmpint (a.x, ==, 15);
-	g_assert_cmpint (a.y, ==, 48);
+	crank_assert_eq_vecint2_imm (&a, 15, 48);
 }
 
 
@@ -311,8 +305,7 @@ test_2_cmpdiv (void)
 	
 	crank_vec_int2_cmpdiv (&b, &a, &b);
 	
-	g_assert_cmpint (b.x, ==, 1);
-	g_assert_cmpint (b.y, ==, 3);
+	crank_assert_eq_vecint2_imm (&b, 1, 3);
 }
 
 
@@ -324,8 +317,7 @@ test_2_cmpmod (void)
 	
 	crank_vec_int2_cmpmod (&b, &a, &b);
 	
-	g_assert_cmpint (b.x, ==, 2);
-	g_assert_cmpint (b.y, ==, 0);
+	crank_assert_eq_vecint2_imm (&b, 2, 0);
 }
 
 
@@ -338,6 +330,7 @@ test_2_cmpless (void)
 	
 	crank_vec_int2_cmpless (&a, &b, &r);
 	
+	crank_assert_eq_vecbool2_imm (&r, TRUE, FALSE);
 	g_assert_true  (r.x);
 	g_assert_false (r.y);
 }
@@ -352,8 +345,7 @@ test_2_cmpeq (void)
 	
 	crank_vec_int2_cmpeq (&a, &b, &r);
 	
-	g_assert_false (r.x);
-	g_assert_true  (r.y);
+	crank_assert_eq_vecbool2_imm (&r, FALSE, TRUE);
 }
 
 
@@ -366,8 +358,7 @@ test_2_cmpgreater (void)
 	
 	crank_vec_int2_cmpgreater (&a, &b, &r);
 	
-	g_assert_false (r.x);
-	g_assert_true  (r.y);
+	crank_assert_eq_vecbool2_imm (&r, FALSE, TRUE);
 }
 
 
@@ -394,8 +385,7 @@ test_2_min (void)
 	
 	crank_vec_int2_min (&a, &b, &r);
 	
-	g_assert_cmpint (r.x, ==, 17);
-	g_assert_cmpint (r.y, ==, 20);
+	crank_assert_eq_vecint2_imm (&r, 17, 20);
 }
 
 
@@ -408,6 +398,7 @@ test_2_max (void)
 	
 	crank_vec_int2_max (&a, &b, &r);
 	
+	crank_assert_eq_vecint2_imm (&r, 53, 21);
 	g_assert_cmpint (r.x, ==, 53);
 	g_assert_cmpint (r.y, ==, 21);
 }
@@ -559,8 +550,7 @@ test_n_muls (void)
 
 	crank_vec_int_n_muls (&a, 2, &a);
 
-	g_assert_cmpint (a.data[0], ==, 6);
-	g_assert_cmpint (a.data[1], ==, 8);
+	crank_assert_eq_vecint_n_imm(&a, 6, 8);
 	
 	crank_vec_int_n_fini (&a);
 }
@@ -575,9 +565,7 @@ test_n_divs (void)
 	
 	crank_vec_int_n_divs (&a, 2, &a);
 	
-	g_assert_cmpint (a.data[0], ==, 1);
-	g_assert_cmpint (a.data[1], ==, 2);
-	
+	crank_assert_eq_vecint_n_imm(&a, 1, 2);
 	crank_vec_int_n_fini (&a);
 }
 
@@ -591,8 +579,7 @@ test_n_mods (void)
 	
 	crank_vec_int_n_mods (&a, 7, &a);
 	
-	g_assert_cmpint (a.data[0], ==, 4);
-	g_assert_cmpint (a.data[1], ==, 6);
+	crank_assert_eq_vecint_n_imm(&a, 4, 6);
 	
 	crank_vec_int_n_fini (&a);
 }
@@ -609,8 +596,7 @@ test_n_add (void)
 	
 	crank_vec_int_n_add (&a, &b, &a);
 	
-	g_assert_cmpint (a.data[0], ==, 8);
-	g_assert_cmpint (a.data[1], ==, 16);
+	crank_assert_eq_vecint_n_imm(&a, 8, 16);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -628,8 +614,7 @@ test_n_sub (void)
 	
 	crank_vec_int_n_sub (&a, &b, &a);
 	
-	g_assert_cmpint (a.data[0], ==, -2);
-	g_assert_cmpint (a.data[1], ==, -8);
+	crank_assert_eq_vecint_n_imm(&a, -2, -8);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -663,8 +648,7 @@ test_n_cmpmul (void)
 	
 	crank_vec_int_n_cmpmul (&a, &b, &a);
 	
-	g_assert_cmpint (a.data[0], ==, 15);
-	g_assert_cmpint (a.data[1], ==, 48);
+	crank_assert_eq_vecint_n_imm(&a, 15, 48);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -682,6 +666,7 @@ test_n_cmpdiv (void)
 	
 	crank_vec_int_n_cmpdiv (&b, &a, &b);
 	
+	crank_assert_eq_vecint_n_imm(&b, 1, 3);
 	g_assert_cmpint (b.data[0], ==, 1);
 	g_assert_cmpint (b.data[1], ==, 3);
 	
@@ -701,8 +686,7 @@ test_n_cmpmod (void)
 	
 	crank_vec_int_n_cmpmod (&b, &a, &b);
 	
-	g_assert_cmpint (b.data[0], ==, 2);
-	g_assert_cmpint (b.data[1], ==, 0);
+	crank_assert_eq_vecint_n_imm(&b, 2, 0);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -721,8 +705,7 @@ test_n_cmpless (void)
 	
 	crank_vec_int_n_cmpless (&a, &b, &r);
 	
-	g_assert_true  (r.data[0]);
-	g_assert_true  (r.data[1]);
+	crank_assert_eq_vecbool_n_imm(&r, TRUE, TRUE);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -742,8 +725,7 @@ test_n_cmpeq (void)
 	
 	crank_vec_int_n_cmpeq (&a, &b, &r);
 	
-	g_assert_false (r.data[0]);
-	g_assert_true  (r.data[1]);
+	crank_assert_eq_vecbool_n_imm(&r, FALSE, TRUE);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -763,6 +745,7 @@ test_n_cmpgreater (void)
 	
 	crank_vec_int_n_cmpgreater (&a, &b, &r);
 	
+	crank_assert_eq_vecbool_n_imm(&r, FALSE, FALSE);
 	g_assert_false (r.data[0]);
 	g_assert_false (r.data[1]);
 	
@@ -805,8 +788,7 @@ test_n_min (void)
 	
 	crank_vec_int_n_min (&a, &b, &r);
 	
-	g_assert_cmpint (r.data[0], ==, 17);
-	g_assert_cmpint (r.data[1], ==, 19);
+	crank_assert_eq_vecint_n_imm(&r, 17, 19);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
@@ -826,8 +808,7 @@ test_n_max (void)
 	
 	crank_vec_int_n_max (&a, &b, &r);
 	
-	g_assert_cmpint (r.data[0], ==, 53);
-	g_assert_cmpint (r.data[1], ==, 20);
+	crank_assert_eq_vecint_n_imm(&r, 53, 20);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
