@@ -141,8 +141,8 @@ private void test_2_equal () {
 	Crank.VecBool2 b = {true, true};
 	Crank.VecBool2 c = {true, false};
 	
-	assert (  Crank.VecBool2.equal (a, b));
-	assert (! Crank.VecBool2.equal (a, c));
+	assert (  a.equal (b));
+	assert (! a.equal (c));
 }
 
 private void test_2_hash () {
@@ -150,8 +150,8 @@ private void test_2_hash () {
 	Crank.VecBool2 b = {true, true};
 	Crank.VecBool2 c = {true, false};
 	
-	assert (Crank.VecBool2.hash (a) == Crank.VecBool2.hash (b));
-	assert (Crank.VecBool2.hash (a) != Crank.VecBool2.hash (c));
+	assert (a.hash () == b.hash ());
+	assert (a.hash () != c.hash ());
 }
 
 private void test_2_to_string () {
@@ -282,8 +282,8 @@ private void test_n_equal () {
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN c = Crank.VecBoolN (2, true, false);
 	
-	assert (  Crank.VecBoolN.equal (a, b));
-	assert (! Crank.VecBoolN.equal (a, c));
+	assert (  a.equal (b));
+	assert (! a.equal (c));
 }
 
 private void test_n_hash () {
@@ -291,8 +291,8 @@ private void test_n_hash () {
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	Crank.VecBoolN c = Crank.VecBoolN (2, true, false);
 	
-	assert (Crank.VecBoolN.hash (a) == Crank.VecBoolN.hash (b));
-	assert (Crank.VecBoolN.hash (a) != Crank.VecBoolN.hash (c));
+	assert (a.hash () == b.hash ());
+	assert (a.hash () != c.hash ());
 }
 
 private void test_n_to_string () {

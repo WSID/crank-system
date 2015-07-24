@@ -21,24 +21,53 @@
 
 * cheader_filename="crankbase.h"
 
-Permutation skip
-
 //////// Function //////////////////////////////////////////////////////////////
 
+// Generic decorated delegate types.
 StrPtrFunc		skip
 EqualDeltaFunc	skip
 
-//////// VecBool ///////////////////////////////////////////////////////////////
-VecBool* skip
-VecInt* skip
-VecFloat* skip
-VecCplxFloatN	skip
+//////// String functions //////////////////////////////////////////////////////
 
-MatFloat* skip
+str_*		parent="Crank.Str"	name="str_(.+)"
+
+
+//////// Data Structures ///////////////////////////////////////////////////////
+Permutation 		struct=true
+.data 	unowned=false
+.data	array_length_field="n"
+
+permutation_init*	skip
+
+
+
+Cplx*				struct=true
+CplxFloat.to_string_full.format default=Crank.CplxFloat.DEFFORMAT
+
+cplx_*_init*		skip
+CPLX_FLOAT_DEFFORMAT	parent="Crank.CplxFloat"
+CPLX_FLOAT_DEFFORMAT	name="DEFFORMAT"
+
+
+
+Vec*				struct=true
+
+Vec*N
+.data	unowned=false
+.data	array_length_field="n"
+
+vec_*_init*			skip
+
+
+
+
+MatFloat* 			struct=true
+
+mat_*_init*			skip
+
+
 
 //////// Digraph
 DigraphNode.get_data.value ref
 DigraphEdge.get_data.value ref
-
-CplxFloat* skip
 

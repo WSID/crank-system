@@ -50,21 +50,21 @@ private void test_read_space () {
 	uint pos = 0;
 	uint space;
 	
-	assert (Crank.str_read_space (subject, ref pos, out space));
+	assert (Crank.Str.read_space (subject, ref pos, out space));
 	assert (pos == 2);
 	assert (space == 2);
 	
-	assert (! Crank.str_read_space (subject, ref pos, out space));
+	assert (! Crank.Str.read_space (subject, ref pos, out space));
 	assert (pos == 2);
 	assert (space == 0);
 	
 	pos = 3;
-	assert (Crank.str_read_space (subject, ref pos, out space));
+	assert (Crank.Str.read_space (subject, ref pos, out space));
 	assert (pos == 4);
 	assert (space == 1);
 	
 	pos = 7;
-	assert (! Crank.str_read_space (subject, ref pos, out space));
+	assert (! Crank.Str.read_space (subject, ref pos, out space));
 	assert (pos == 7);
 	assert (space == 0);
 }
@@ -74,19 +74,19 @@ private void test_read_word () {
 	uint pos = 0;
 	string word;
 	
-	assert (Crank.str_read_word (subject, ref pos, out word));
+	assert (Crank.Str.read_word (subject, ref pos, out word));
 	assert (pos == 1);
 	assert (word == "A");
 	
-	assert (! Crank.str_read_word (subject, ref pos, out word));
+	assert (! Crank.Str.read_word (subject, ref pos, out word));
 	
 	pos = 10;
-	assert (Crank.str_read_word (subject, ref pos, out word));
+	assert (Crank.Str.read_word (subject, ref pos, out word));
 	assert (pos == 13);
 	assert (word == "own");
 	
 	pos = 20;
-	assert (Crank.str_read_word (subject, ref pos, out word));
+	assert (Crank.Str.read_word (subject, ref pos, out word));
 	assert (pos == 23);
 	assert (word == "mps");
 }
@@ -96,16 +96,16 @@ private void test_scan_char () {
 	uint pos = 0;
 	char sym;
 	
-	assert (Crank.str_scan_char (subject, ref pos, out sym));
+	assert (Crank.Str.scan_char (subject, ref pos, out sym));
 	assert (sym == '(');
 	
-	assert (Crank.str_scan_char (subject, ref pos, out sym));
+	assert (Crank.Str.scan_char (subject, ref pos, out sym));
 	assert (sym == ':');
 	
-	assert (Crank.str_scan_char (subject, ref pos, out sym));
+	assert (Crank.Str.scan_char (subject, ref pos, out sym));
 	assert (sym == ')');
 	
-	assert (! Crank.str_scan_char (subject, ref pos, out sym));
+	assert (! Crank.Str.scan_char (subject, ref pos, out sym));
 }
 
 private void test_scan_word () {
@@ -113,13 +113,13 @@ private void test_scan_word () {
 	uint pos = 0;
 	string word;
 	
-	assert (Crank.str_scan_word (subject, ref pos, out word));
+	assert (Crank.Str.scan_word (subject, ref pos, out word));
 	assert (word == "Cookie");
 	
-	assert (Crank.str_scan_word (subject, ref pos, out word));
+	assert (Crank.Str.scan_word (subject, ref pos, out word));
 	assert (word == "cake");
 	
-	assert (Crank.str_scan_word (subject, ref pos, out word));
+	assert (Crank.Str.scan_word (subject, ref pos, out word));
 	assert (word == "strawberry");
 }
 
@@ -127,11 +127,11 @@ private void test_check_char () {
 	string subject = "( : )";
 	uint pos = 0;
 	
-	assert (! Crank.str_check_char (subject, ref pos, ':'));
-	assert (Crank.str_check_char (subject, ref pos, '('));
-	assert (! Crank.str_check_char (subject, ref pos, ')'));
-	assert (Crank.str_check_char (subject, ref pos, ':'));
-	assert (Crank.str_check_char (subject, ref pos, ')'));
+	assert (! Crank.Str.check_char (subject, ref pos, ':'));
+	assert (Crank.Str.check_char (subject, ref pos, '('));
+	assert (! Crank.Str.check_char (subject, ref pos, ')'));
+	assert (Crank.Str.check_char (subject, ref pos, ':'));
+	assert (Crank.Str.check_char (subject, ref pos, ')'));
 }
 
 private void test_check_chars () {
@@ -140,10 +140,10 @@ private void test_check_chars () {
 	
 	char chars[3] = { '(', ':', ')' };
 	
-	assert (0 == Crank.str_check_chars (subject, ref pos, chars));
-	assert (1 == Crank.str_check_chars (subject, ref pos, chars));
-	assert (2 == Crank.str_check_chars (subject, ref pos, chars));
-	assert (-1 == Crank.str_check_chars (subject, ref pos, chars));
+	assert (0 == Crank.Str.check_chars (subject, ref pos, chars));
+	assert (1 == Crank.Str.check_chars (subject, ref pos, chars));
+	assert (2 == Crank.Str.check_chars (subject, ref pos, chars));
+	assert (-1 == Crank.Str.check_chars (subject, ref pos, chars));
 }
 
 private void test_check_chars_str () {
@@ -152,8 +152,8 @@ private void test_check_chars_str () {
 	
 	string chars = "(:)";
 	
-	assert (0 == Crank.str_check_chars_str (subject, ref pos, chars));
-	assert (1 == Crank.str_check_chars_str (subject, ref pos, chars));
-	assert (2 == Crank.str_check_chars_str (subject, ref pos, chars));
-	assert (-1 == Crank.str_check_chars_str (subject, ref pos, chars));
+	assert (0 == Crank.Str.check_chars_str (subject, ref pos, chars));
+	assert (1 == Crank.Str.check_chars_str (subject, ref pos, chars));
+	assert (2 == Crank.Str.check_chars_str (subject, ref pos, chars));
+	assert (-1 == Crank.Str.check_chars_str (subject, ref pos, chars));
 }

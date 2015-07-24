@@ -65,8 +65,8 @@ private void test_equal () {
 	Crank.CplxFloat b = {3.0f, 4.0f};
 	Crank.CplxFloat c = {4.0f, 3.0f};
 	
-	assert (Crank.CplxFloat.equal (a, b));
-	assert (! Crank.CplxFloat.equal (a, c));
+	assert (a.equal (b));
+	assert (! a.equal (c));
 }
 
 private void test_equal_delta () {
@@ -74,8 +74,8 @@ private void test_equal_delta () {
 	Crank.CplxFloat b = {3.2f, 4.1f};
 	Crank.CplxFloat c = {4.0f, 3.0f};
 	
-	assert (Crank.CplxFloat.equal_delta (a, b, 1.0f));
-	assert (! Crank.CplxFloat.equal_delta (a, c, 1.0f));
+	assert (a.equal_delta (b, 1.0f));
+	assert (! a.equal_delta (c, 1.0f));
 }
 
 private void test_get_norm () {

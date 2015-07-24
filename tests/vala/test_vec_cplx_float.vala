@@ -123,8 +123,8 @@ private void test_n_equal () {
 	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	Crank.VecCplxFloatN	c = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	assert (! Crank.VecCplxFloatN.equal (a, b));
-	assert (  Crank.VecCplxFloatN.equal (a, c));
+	assert (! a.equal (b));
+	assert (  a.equal (c));
 }
 
 private void test_n_magn () {

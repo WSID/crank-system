@@ -68,7 +68,7 @@ void		crank_cplx_float_init_arr (		CrankCplxFloat*	cplx,
 void		crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
 											va_list			varargs	);
 
-void			crank_cplx_float_init_fill (CrankCplxFloat*	cplx,
+void		crank_cplx_float_init_fill (CrankCplxFloat*	cplx,
 											gfloat			fill	);
 
 //////// Basic Operations //////////////////////////////////////////////////////

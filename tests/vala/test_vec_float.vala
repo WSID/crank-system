@@ -111,8 +111,8 @@ private void test_2_equal () {
 	Crank.VecFloat2	b = {5.0f, 12.0f};
 	Crank.VecFloat2	c = {3.0f, 4.0f};
 	
-	assert (! Crank.VecFloat2.equal (a, b));
-	assert (  Crank.VecFloat2.equal (a, c));
+	assert (! a.equal (b));
+	assert (  a.equal (c));
 }
 
 private void test_2_to_string () {
@@ -360,8 +360,8 @@ private void test_n_equal () {
 	Crank.VecFloatN	b = Crank.VecFloatN(2, 5.0f, 12.0f);
 	Crank.VecFloatN	c = Crank.VecFloatN(2, 3.0f, 4.0f);
 	
-	assert (! Crank.VecFloatN.equal (a, b));
-	assert (  Crank.VecFloatN.equal (a, c));
+	assert (! a.equal (b));
+	assert (  a.equal (c));
 }
 
 private void test_n_to_string () {

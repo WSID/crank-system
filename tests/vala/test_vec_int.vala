@@ -99,8 +99,8 @@ private void test_2_hash () {
 	Crank.VecInt2	b = {5, 12};
 	Crank.VecInt2	c = {3, 4};
 	
-	assert (Crank.VecInt2.hash (a) != Crank.VecInt2.hash (b));
-	assert (Crank.VecInt2.hash (a) == Crank.VecInt2.hash (c));
+	assert (a.hash () != b.hash ());
+	assert (a.hash () == c.hash ());
 }
 
 
@@ -109,8 +109,8 @@ private void test_2_equal () {
 	Crank.VecInt2	b = {5, 12};
 	Crank.VecInt2	c = {3, 4};
 	
-	assert (! Crank.VecInt2.equal (a, b));
-	assert (  Crank.VecInt2.equal (a, c));
+	assert (! a.equal (b));
+	assert (  a.equal (c));
 }
 
 private void test_2_to_string () {
@@ -331,8 +331,8 @@ private void test_n_hash () {
 	Crank.VecIntN	b = Crank.VecIntN (2, 5, 12);
 	Crank.VecIntN	c = Crank.VecIntN (2, 3, 4);
 	
-	assert (Crank.VecIntN.hash (a) != Crank.VecIntN.hash (b));
-	assert (Crank.VecIntN.hash (a) == Crank.VecIntN.hash (c));
+	assert (a.hash () != b.hash ());
+	assert (a.hash () == c.hash ());
 }
 
 
@@ -341,8 +341,8 @@ private void test_n_equal () {
 	Crank.VecIntN	b = Crank.VecIntN (2, 5, 12);
 	Crank.VecIntN	c = Crank.VecIntN (2, 3, 4);
 	
-	assert (! Crank.VecIntN.equal (a, b));
-	assert (  Crank.VecIntN.equal (a, c));
+	assert (! a.equal (b));
+	assert (  a.equal (c));
 }
 
 private void test_n_to_string () {

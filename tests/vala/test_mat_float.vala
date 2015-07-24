@@ -89,8 +89,8 @@ private void test_2_equal () {
 	Crank.MatFloat2 b = {1.0f, 2.0f,	3.0f, 4.0f};
 	Crank.MatFloat2 c = {0.0f, 0.0f,	0.0f, 0.0f};
 
-	assert (  Crank.MatFloat2.equal (a, b));
-	assert (! Crank.MatFloat2.equal (a, c));
+	assert (  a.equal (b));
+	assert (! a.equal (c));
 }
 
 private void test_2_to_string () {
@@ -293,8 +293,8 @@ private void test_n_equal () {
 		 {3.0f, 4.0f},
 		 {5.0f, 6.0f}});
 		 
-	assert (  Crank.MatFloatN.equal (a, b));
-	assert (! Crank.MatFloatN.equal (a, c));
+	assert (  a.equal (b));
+	assert (! a.equal (c));
 }
 
 private void test_n_to_string () {
