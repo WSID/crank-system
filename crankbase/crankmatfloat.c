@@ -3894,7 +3894,6 @@ crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
 	else {
 		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
 				a->rn, a->cn, p->n);
-		crank_permutation_fini (p);
 	}
 }
 
@@ -3932,7 +3931,6 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 	else {
 		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
 				a->rn, a->cn, p->n);
-		crank_permutation_fini (p);
 	}
 }
 

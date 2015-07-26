@@ -24,6 +24,18 @@ int main (string[] args) {
 	
 	GLib.Test.add_func ("/crank/base/permutation/check_valid",
 		test_check_valid );
+
+	GLib.Test.add_func ("/crank/base/permutation/hash",
+		test_hash );
+
+	GLib.Test.add_func ("/crank/base/permutation/equal",
+		test_equal );
+
+	GLib.Test.add_func ("/crank/base/permutation/to_string",
+		test_to_string );
+
+	GLib.Test.add_func ("/crank/base/permutation/slice",
+		test_slice );
 	
 	GLib.Test.add_func ("/crank/base/permutation/sign",
 		test_sign );
@@ -39,6 +51,27 @@ int main (string[] args) {
 		
 	GLib.Test.add_func ("/crank/base/permutation/shuffle",
 		test_shuffle );
+		
+	GLib.Test.add_func ("/crank/base/permutation/shuffle_sarray",
+		test_shuffle_sarray );
+		
+	GLib.Test.add_func ("/crank/base/permutation/shuffle_parray",
+		test_shuffle_parray );
+		
+	GLib.Test.add_func ("/crank/base/permutation/shuffle_array/boolean",
+		test_shuffle_array_boolean );
+		
+	GLib.Test.add_func ("/crank/base/permutation/shuffle_array/int",
+		test_shuffle_array_int );
+		
+	GLib.Test.add_func ("/crank/base/permutation/shuffle_array/float",
+		test_shuffle_array_float );
+
+	GLib.Test.add_func ("/crank/base/permutation/init/compare/sarray",
+		test_init_compare_sarray );
+
+	//GLib.Test.add_func ("/crank/base/permutation/init/compare/parray",
+	//	test_init_compare_parray );
 	
 	GLib.Test.run ();
 	
@@ -55,6 +88,40 @@ private void test_check_valid () {
 	assert (p.check_valid ());
 	assert (! q.check_valid ());
 	assert (! r.check_valid ());
+}
+
+private void test_hash () {
+	Crank.Permutation	p = Crank.Permutation (5,	0, 1, 2, 4, 3);
+	Crank.Permutation	q = Crank.Permutation (5,	0, 1, 2, 4, 3);
+	Crank.Permutation	r = Crank.Permutation (5,	0, 1, 4, 2, 3);
+	
+	assert (p.hash () == q.hash ());
+	assert (p.hash () != r.hash ());
+}
+
+private void test_equal () {
+	Crank.Permutation	p = Crank.Permutation (5,	0, 1, 2, 4, 3);
+	Crank.Permutation	q = Crank.Permutation (5,	0, 1, 2, 4, 3);
+	Crank.Permutation	r = Crank.Permutation (5,	0, 1, 4, 2, 3);
+	
+	assert (p.equal (q));
+	assert (! p.equal (r));
+}
+
+private void test_to_string () {
+	Crank.Permutation	p = Crank.Permutation (5,	0, 1, 2, 4, 3);
+	
+	assert (p.to_string () == "(0, 1, 2, 4, 3)");
+}
+
+private void test_slice () {
+	Crank.Permutation	p = Crank.Permutation (5, 	0, 1, 2, 4, 3);
+	
+	uint[]	slice = p[1:4];
+	
+	assert (slice[0] == 1);
+	assert (slice[1] == 2);
+	assert (slice[2] == 4);
 }
 
 private void test_sign () {
@@ -106,4 +173,84 @@ private void test_shuffle () {
 	assert (p[1] == 0);
 	assert (p[2] == 3);
 	assert (p[3] == 2);
+}
+
+private void test_shuffle_sarray () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	float				arr[4] = {1.0f, 2.0f, 3.0f, 4.0f};
+	float*				narr;
+	
+	narr = (float*) p.shuffle_sarray(sizeof (float), arr);
+	
+	assert (narr[0] == 1.0f);
+	assert (narr[1] == 2.0f);
+	assert (narr[2] == 4.0f);
+	assert (narr[3] == 3.0f);
+	
+	free (narr);
+}
+
+private void test_shuffle_parray () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	// TODO: Use generic pointers. This test will broke in 32-bit systems.
+	int64				arr[4] = {0, 1, 2, 3};
+	int64[]				narr;
+	
+	narr = p.shuffle_parray<int64> (arr);
+	
+	
+}
+
+
+private void test_shuffle_array_boolean () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	bool				arr[4] = {true, false, false, true};
+	bool[]				narr;
+	
+	narr = p.shuffle_array_boolean (arr);
+	
+	Crank.assert_eqarray_bool_imm (narr, 	true, false, true, false);
+}
+
+
+private void test_shuffle_array_int () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	int					arr[4] = {3, 4, 5, 12};
+	int[]				narr;
+	
+	narr = p.shuffle_array_int (arr);
+	
+	Crank.assert_eqarray_int_imm (narr, 	3, 4, 12, 5);
+}
+
+
+private void test_shuffle_array_float () {
+	Crank.Permutation	p = Crank.Permutation (4,	0, 1, 3, 2);
+	float				arr[4] = {1.1f, 2.4f, 5.9f, 4.0f};
+	float[]				narr;
+	
+	narr = p.shuffle_array_float (arr);
+	
+	Crank.assert_eqarray_float_imm (narr, 	1.1f, 2.4f, 4.0f, 5.9f);
+}
+
+
+
+private void test_init_compare_sarray () {
+	double	arr[4] = {1.5, 8.8, 4.5, 2.9};
+
+	Crank.Permutation p = Crank.Permutation.compare_sarray<double?> (
+			4, sizeof (double), (void*)arr,
+			(a, b) => ((int)(b < a) - (int)(a < b)) );
+
+	Crank.assert_eq_permutation_imm (p, 0, 3, 2, 1);
+}
+
+private void test_init_compare_parray () {
+	int? arr[4] = {4, 19, 2, 44};
+
+	Crank.Permutation p = Crank.Permutation.compare_parray<int?> (arr,
+			(a, b) => ((int)(b < a) - (int)(a < b)) );
+
+	Crank.assert_eq_permutation_imm (p, 2, 0, 1, 3);
 }

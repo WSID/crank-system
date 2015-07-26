@@ -111,8 +111,33 @@ namespace Crank {
 		public Permutation.arr_take([CCode (array_length_pos=0)]owned uint[] arr);
 		public Permutation.identity(uint n);
 		
+		[CCode (cname="crank_permutation_init_vala_compare_sarray", simple_generics=true)]
+		public static Permutation compare_sarray<G> (	uint 				n,
+														size_t				gsz,
+														void*				garr,
+														GLib.CompareFunc<G>	gcmp);
+												
+		[CCode (cname="crank_permutation_init_vala_compare_sarray_data", simple_generics=true)]
+		public static Permutation compare_sarray_data<G> (	uint 					n,
+															size_t					gsz,
+															void*					garr,
+															GLib.CompareDataFunc<G>	gcmp);
+
+		[CCode (cname="crank_permutation_init_vala_compare_parray", simple_generics=true)]
+		public static Permutation compare_parray<G> (	[CCode (array_length_pos=0)]
+														G[]						garr,
+														GLib.CompareFunc<G>		gcmp	);
+
+		[CCode (cname="crank_permutation_init_vala_compare_parray_data", simple_generics=true)]
+		public static Permutation compare_parray_data<G> (	[CCode (array_length_pos=0)]
+															G[]						garr,
+															GLib.CompareDataFunc<G>	gcmp	);
+		
 		public uint size { get; }
 		public int sign { get; }
+		
+		[CCode (simple_generics=true, cname="crank_permutation_vala_shuffle_parray")]
+		public G[] shuffle_parray <G> ([CCode (array_length=false)]G[] arr);
 	}
 	
 	

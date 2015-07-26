@@ -27,6 +27,14 @@
 
 static void		test_check_valid (void);
 
+static void		test_hash (void);
+
+static void		test_equal (void);
+
+static void 	test_to_string (void);
+
+static void		test_slice (void);
+
 static void		test_sign (void);
 
 static void		test_swap (void);
@@ -37,6 +45,20 @@ static void		test_inverse (void);
 
 static void		test_shuffle (void);
 
+static void		test_shuffle_array (void);
+
+static void		test_shuffle_parray (void);
+
+static void		test_shuffle_array_boolean (void);
+
+static void		test_shuffle_array_int (void);
+
+static void		test_shuffle_array_float (void);
+
+
+static void		test_init_compare_array_data (void);
+
+static void		test_init_compare_parray_data (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -47,6 +69,18 @@ main (gint argc, gchar** argv)
 
   	g_test_add_func ("/crank/base/permutation/check_valid",
 					test_check_valid);
+
+  	g_test_add_func ("/crank/base/permutation/hash",
+					test_hash);
+
+  	g_test_add_func ("/crank/base/permutation/equal",
+					test_equal);
+
+  	g_test_add_func ("/crank/base/permutation/to_string",
+					test_to_string);
+
+  	g_test_add_func ("/crank/base/permutation/slice",
+					test_slice);
 					
   	g_test_add_func ("/crank/base/permutation/sign",
 					test_sign);
@@ -62,7 +96,28 @@ main (gint argc, gchar** argv)
 					
   	g_test_add_func ("/crank/base/permutation/shuffle",
 					test_shuffle);
+					
+  	g_test_add_func ("/crank/base/permutation/shuffle_array",
+					test_shuffle_array);
+					
+  	g_test_add_func ("/crank/base/permutation/shuffle_parray",
+					test_shuffle_parray);
 
+	g_test_add_func ("/crank/base/permutation/shuffle_array/boolean",
+					test_shuffle_array_boolean);
+
+	g_test_add_func ("/crank/base/permutation/shuffle_array/int",
+					test_shuffle_array_int);
+
+	g_test_add_func ("/crank/base/permutation/shuffle_array/float",
+					test_shuffle_array_float);
+
+
+	g_test_add_func ("/crank/base/permutation/init/compare/array",
+					test_init_compare_array_data);
+					
+	g_test_add_func ("/crank/base/permutation/init/compare/parray",
+					test_init_compare_parray_data);
 
   	g_test_run ();
   	return 0;
@@ -73,9 +128,9 @@ main (gint argc, gchar** argv)
 static void
 test_check_valid (void)
 {
-	CrankPermutation	p = {0};
-	CrankPermutation	q = {0};
-	CrankPermutation	r = {0};
+	CrankPermutation	p;
+	CrankPermutation	q;
+	CrankPermutation	r;
 	
 	crank_permutation_init (&p, 5, 0, 1, 2, 3, 4);
 	crank_permutation_init (&q, 5, 0, 3, 0, 2, 4);
@@ -91,9 +146,89 @@ test_check_valid (void)
 }
 
 static void
+test_hash (void)
+{
+	CrankPermutation	p;
+	CrankPermutation	q;
+	CrankPermutation	r;
+	
+	guint	ph;
+	guint	qh;
+	guint	rh;
+	
+	crank_permutation_init (&p, 5, 0, 3, 2, 1, 4);
+	crank_permutation_init (&q, 5, 0, 3, 2, 1, 4);
+	crank_permutation_init (&r, 5, 1, 2, 0, 3, 4);
+	
+	ph = crank_permutation_hash (&p);
+	qh = crank_permutation_hash (&q);
+	rh = crank_permutation_hash (&r);
+	
+	g_assert_cmpuint (ph, ==, qh);
+	g_assert_cmpuint (ph, !=, rh);
+	
+	crank_permutation_fini (&p);
+	crank_permutation_fini (&q);
+	crank_permutation_fini (&r);
+}
+
+static void
+test_equal (void)
+{
+	CrankPermutation	p;
+	CrankPermutation	q;
+	CrankPermutation	r;
+	
+	crank_permutation_init (&p, 5, 0, 3, 2, 1, 4);
+	crank_permutation_init (&q, 5, 0, 3, 2, 1, 4);
+	crank_permutation_init (&r, 5, 1, 2, 0, 3, 4);
+	
+	g_assert (  crank_permutation_equal (&p, &q));
+	g_assert (! crank_permutation_equal (&p, &r));
+	
+	crank_permutation_fini (&p);
+	crank_permutation_fini (&q);
+	crank_permutation_fini (&r);
+}
+
+static void
+test_slice (void)
+{
+	CrankPermutation	p;
+	guint*				slice;
+	
+	crank_permutation_init (&p, 5, 0, 3, 2, 1, 4);
+	
+	slice = crank_permutation_slice (&p, 1, 4);
+	
+	g_assert_cmpuint (slice[0], ==, 3);
+	g_assert_cmpuint (slice[1], ==, 2);
+	g_assert_cmpuint (slice[2], ==, 1);
+	
+	g_free (slice);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_to_string (void)
+{
+	CrankPermutation	p;
+	gchar*				pstr;
+	
+	crank_permutation_init (&p, 5, 1, 2, 0, 3, 4);
+	
+	pstr = crank_permutation_to_string (&p);
+	
+	g_assert_cmpstr (pstr, ==, "(1, 2, 0, 3, 4)");
+	
+	g_free (pstr);
+	crank_permutation_fini (&p);
+}
+
+static void
 test_sign (void)
 {
-	CrankPermutation	p = {0};
+	CrankPermutation	p;
 	
 	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
 	
@@ -105,7 +240,7 @@ test_sign (void)
 static void
 test_swap (void)
 {
-	CrankPermutation	p = {0};
+	CrankPermutation	p;
 	
 	crank_permutation_init (&p, 5, 0, 1, 3, 2, 4);
 	
@@ -120,44 +255,183 @@ test_swap (void)
 static void
 test_reverse (void)
 {
-	CrankPermutation	p = {0};
+	CrankPermutation	p;
+	CrankPermutation	q;
 	
 	crank_permutation_init (&p, 5, 0, 1, 3, 2, 4);
 	
-	crank_permutation_reverse (&p, &p);
+	crank_permutation_reverse (&p, &q);
 	
-	crank_assert_eq_permutation_imm (&p, 4, 2, 3, 1, 0);
+	crank_assert_eq_permutation_imm (&q, 4, 2, 3, 1, 0);
 	
 	crank_permutation_fini (&p);
+	crank_permutation_fini (&q);
 }
 
 static void
 test_inverse (void)
 {
-	CrankPermutation	p = {0};
+	CrankPermutation	p;
+	CrankPermutation	q;
 	
 	crank_permutation_init (&p, 5, 0, 1, 3, 2, 4);
 	
-	crank_permutation_inverse (&p, &p);
+	crank_permutation_inverse (&p, &q);
 	
-	crank_assert_eq_permutation_imm (&p, 0 ,1, 3, 2, 4);
+	crank_assert_eq_permutation_imm (&q, 0 ,1, 3, 2, 4);
 	
 	crank_permutation_fini (&p);
+	crank_permutation_fini (&q);
 }
 
 static void
 test_shuffle (void)
 {
-	CrankPermutation	p = {0};
-	CrankPermutation	q = {0};
+	CrankPermutation	p;
+	CrankPermutation	q;
+	CrankPermutation	r;
 	
 	crank_permutation_init (&p, 4,	0, 1, 3, 2);
 	crank_permutation_init (&q, 4,	1, 0, 2, 3);
 	
-	crank_permutation_shuffle (&p, &q, &p);
+	crank_permutation_shuffle (&p, &q, &r);
 	
-	crank_assert_eq_permutation_imm (&p, 1, 0, 3, 2);
+	crank_assert_eq_permutation_imm (&r, 1, 0, 3, 2);
 	
 	crank_permutation_fini (&p);
 	crank_permutation_fini (&q);
+	crank_permutation_fini (&r);
+}
+
+static void
+test_shuffle_array (void)
+{
+	CrankPermutation	p;
+	gfloat				arr[4] = {1, 2, 3, 4};
+	gfloat*				narr;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	
+	narr = crank_permutation_shuffle_array (&p, gfloat, arr);
+	
+	crank_assert_eqarray_float_imm (narr, 4, 1, 2, 4, 3);
+	
+	g_free (narr);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_shuffle_parray (void)
+{
+	CrankPermutation	p;
+	gfloat				arr[4] = {1, 2, 3, 4};
+	gfloat*				parr[4] = {arr, arr+1, arr+2, arr+3};
+	gfloat**			nparr;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	
+	nparr = (gfloat**)crank_permutation_shuffle_parray (&p, (gpointer*)parr);
+	
+	crank_assert_eqarray_pointer_imm (nparr, 4, arr, arr+1, arr+3, arr+2);
+	
+	g_free (nparr);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_shuffle_array_boolean (void)
+{
+	CrankPermutation	p;
+	gboolean			arr[4] = {TRUE, FALSE, FALSE, TRUE};
+	gboolean*			narr;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	
+	narr = crank_permutation_shuffle_array_boolean (&p, arr);
+	
+	crank_assert_eqarray_bool_imm (narr, 4, TRUE, FALSE, TRUE, FALSE);
+	
+	g_free (narr);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_shuffle_array_int (void)
+{
+	CrankPermutation	p;
+	gint			arr[4] = {3, 4, 5, 12};
+	gint*			narr;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	
+	narr = crank_permutation_shuffle_array_int (&p, arr);
+	
+	crank_assert_eqarray_int_imm (narr, 4, 3, 4, 12, 5);
+	
+	g_free (narr);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_shuffle_array_float (void)
+{
+	CrankPermutation	p;
+	gfloat			arr[4] = {1.1f, 3.2f, 14.0f, 9.0f};
+	gfloat*			narr;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	
+	narr = crank_permutation_shuffle_array_float (&p, arr);
+	
+	crank_assert_eqarray_float_imm (narr, 4, 1.1f, 3.2f, 9.0f, 14.0f);
+	
+	g_free (narr);
+	crank_permutation_fini (&p);
+}
+
+
+static gint
+test_compare_double (gconstpointer	a,	gconstpointer b, gpointer userdata)
+{
+	gdouble	ad = *(gdouble*)a;
+	gdouble	bd = *(gdouble*)b;
+	
+	return (bd < ad) - (ad < bd);
+}
+
+static gint
+test_compare_ptr (gconstpointer	a,	gconstpointer b, gpointer userdata)
+{
+	gint	ad = GPOINTER_TO_INT(a);
+	gint	bd = GPOINTER_TO_INT(b);
+	
+	return (bd < ad) - (ad < bd);
+}
+
+
+static void
+test_init_compare_array_data (void) {
+	CrankPermutation	p;
+	
+	gdouble	items[4] = {1.3, 5.2, 1.0, 9.0};
+	
+	crank_permutation_init_compare_array_data(&p, 4, gdouble, items, test_compare_double, NULL);
+	
+	crank_assert_eq_permutation_imm (&p, 2, 0, 1, 3);
+}
+
+static void
+test_init_compare_parray_data (void) {
+	CrankPermutation	p;
+	
+	gpointer items[4] = {
+		GINT_TO_POINTER(0x4021),
+		GINT_TO_POINTER(0x4005),
+		GINT_TO_POINTER(0x4062),
+		GINT_TO_POINTER(0x4015)
+	};
+	
+	crank_permutation_init_compare_parray_data(&p, 4, items, test_compare_ptr, NULL);
+	
+	crank_assert_eq_permutation_imm (&p, 1, 3, 0, 2);
 }

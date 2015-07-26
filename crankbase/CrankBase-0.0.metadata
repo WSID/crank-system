@@ -21,6 +21,11 @@
 
 * cheader_filename="crankbase.h"
 
+//////// General Renaming //////////////////////////////////////////////////////
+
+*._gi_*		name="_gi_(.+)"
+
+
 //////// Function //////////////////////////////////////////////////////////////
 
 // Generic decorated delegate types.
@@ -34,8 +39,9 @@ str_*		parent="Crank.Str"	name="str_(.+)"
 
 //////// Data Structures ///////////////////////////////////////////////////////
 Permutation 		struct=true
-.data 	unowned=false
-.data	array_length_field="n"
+.data 				unowned=false	array_length_field="n"
+.shuffle_sarray		skip=false
+.vala_shuffle_array_*	skip=false	name="vala_(.+)"
 
 permutation_init*	skip
 

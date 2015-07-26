@@ -927,6 +927,8 @@ test_n_shuffle_row (void)
 	crank_permutation_init (&p, 4,
 		1, 3, 0, 2	);
 
+	g_message ("%s", crank_permutation_to_string (&p));
+
 	crank_mat_float_n_shuffle_row (&a, &p, &a);
 	
 	test_assert_float (a.data[0], 7.0f);

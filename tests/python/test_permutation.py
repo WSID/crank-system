@@ -37,6 +37,11 @@ class TestPermutation(unittest.TestCase):
 		assert (not q.check_valid ())
 		assert (not r.check_valid ())
 
+	def test_slice (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
+		
+		self.assertEqual (p.slice (1, 4), [1, 3, 4])
+
 
 	def test_sign (self):
 		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
