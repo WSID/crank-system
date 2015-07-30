@@ -1157,7 +1157,16 @@ crank_permutation__gi_slice (	CrankPermutation*	p,
 //////// Vala Support //////////////////////////////////////////////////////////
 
 
-
+/**
+ * crank_permutation_init_vala_compare_sarray: (skip)
+ * @n: Size of permutation.
+ * @gsz: Size of elements.
+ * @garr: Array of elements.
+ * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
+ * @p: (out): A Permutation.
+ *
+ * Vala specific function.
+ */ 
 void
 crank_permutation_init_vala_compare_sarray (	const guint			n,
 												const gsize			gsz,
@@ -1168,6 +1177,17 @@ crank_permutation_init_vala_compare_sarray (	const guint			n,
 	crank_permutation_init_compare_sarray (p, n, gsz, garr, gcmp);
 }
 
+/**
+ * crank_permutation_init_vala_compare_sarray_data: (skip)
+ * @n: Size of permutation.
+ * @gsz: Size of elements.
+ * @garr: Array of elements.
+ * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
+ * @userdata: (closure): Userdata for @gcmp.
+ * @p: (out): A Permutation.
+ *
+ * Vala specific function.
+ */ 
 void
 crank_permutation_init_vala_compare_sarray_data (	const guint			n,
 													const gsize			gsz,
@@ -1179,7 +1199,15 @@ crank_permutation_init_vala_compare_sarray_data (	const guint			n,
 	crank_permutation_init_compare_sarray_data (p, n, gsz, garr, gcmp, userdata);
 }
 
-
+/**
+ * crank_permutation_init_vala_compare_parray: (skip)
+ * @n: Size of permutation.
+ * @garr: (array length=n): Array of elements.
+ * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
+ * @p: (out): A Permutation.
+ *
+ * Vala specific function.
+ */ 
 void
 crank_permutation_init_vala_compare_parray (	const guint			n,
 												gpointer*			garr,
@@ -1189,6 +1217,16 @@ crank_permutation_init_vala_compare_parray (	const guint			n,
 	crank_permutation_init_compare_parray (p, n, garr, gcmp);
 }
 
+/**
+ * crank_permutation_init_vala_compare_parray_data: (skip)
+ * @n: Size of permutation.
+ * @garr: (array length=n): Array of elements.
+ * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
+ * @userdata: (closure): Userdata for @gcmp.
+ * @p: (out): A Permutation.
+ *
+ * Vala specific function.
+ */ 
 void
 crank_permutation_init_vala_compare_parray_data (	const guint			n,
 													gpointer*			garr,
