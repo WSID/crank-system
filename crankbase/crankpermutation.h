@@ -216,6 +216,13 @@ void			crank_permutation_shuffle (		CrankPermutation*	p,
 												CrankPermutation*	q,
 												CrankPermutation*	r	);
 
+void			crank_permutation_reverse_self (CrankPermutation*	p	);
+
+void			crank_permutation_inverse_self (CrankPermutation*	p	);
+
+void			crank_permutation_shuffle_self (CrankPermutation*	p,
+												CrankPermutation*	q	);
+
 
 //////// Shuffling /////////////////////////////////////////////////////////////
 

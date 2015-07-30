@@ -42,6 +42,31 @@
  * A Permutation is a placing of ordered items. In this structure, items are
  * represented in #guint, starting from 0.
  *
+ * # Validity of permutation
+ *
+ * #CrankPermutation represents a permutation of n of unsigned integer 0, ...,
+ * (n-1). But it is implemented with an array, which may have various or/and
+ * duplicated data.
+ *
+ * Therefore, validity of permutation would be checked, before shuffling.
+ *
+ * A valid permutation is,
+ * * do not contains element > (n-1)
+ * * do not contains duplicated elements.
+ *
+ * Validity can be checked by crank_permutation_check_valid()
+ *
+ * # Shuffling
+ *
+ * #CrankPermutation supports shuffling of array. for example,
+ * crank_permutation_shuffle_array_float() is used to shuffling float values.
+ *
+ * On the other hand, it is possible to initialize permutation from array and
+ * comparsion functions. In the case, comparsion function declares base ordering
+ * of element.
+ *
+ * # Supported Operations
+ *
  * <table frame="all"><title>Supported Operations</title>
  *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
  *     <colspec colname="op" />
@@ -182,7 +207,7 @@ crank_permutation_init_arr_take (	CrankPermutation*	p,
  * crank_permutation_init_valist:
  * @p: (out): A Permutation.
  * @n: Size of permutation.
- * @...: Element of permutation.
+ * @varargs: Element of permutation.
  *
  * Initialize a permutation with elements given by va_list.
  *
@@ -889,6 +914,7 @@ crank_permutation_reverse (		CrankPermutation*	p,
 	
 	g_return_if_fail (p != NULL);
 	g_return_if_fail (q != NULL);
+	g_return_if_fail (p != q);
 	
 	data = g_new (guint, p->n);
 	
@@ -921,6 +947,7 @@ crank_permutation_inverse (	CrankPermutation*	p,
 	
 	g_return_if_fail (p != NULL);
 	g_return_if_fail (q != NULL);
+	g_return_if_fail (p != q);
 	
 	data = g_new (guint, p->n);
 	
@@ -953,6 +980,8 @@ crank_permutation_shuffle (	CrankPermutation*	p,
 	
 	g_return_if_fail (p != NULL);
 	g_return_if_fail (q != NULL);
+	g_return_if_fail (r != NULL);
+	g_return_if_fail (p != r);
 	
 	if (p->n != q->n) {
 		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
@@ -966,6 +995,85 @@ crank_permutation_shuffle (	CrankPermutation*	p,
 	
 	crank_permutation_init_arr_take (r, p->n, data);
 }
+
+
+/**
+ * crank_permutation_reverse_self:
+ * @p: A Permutation
+ *
+ * Reverses a permutation. See crank_permutation_reverse().
+ */
+void
+crank_permutation_reverse_self (	CrankPermutation*	p	)
+{
+	guint 	i;
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)	data[p->n - 1 - i] = p->data[i];
+	
+	g_free (p->data);
+	p->data = data;
+}
+
+
+/**
+ * crank_permutation_inverse_self:
+ * @p: A Permutation
+ *
+ * Inverses a permutation. See crank_permutation_inverse().
+ */
+void
+crank_permutation_inverse_self (	CrankPermutation*	p	)
+{
+	guint 	i;
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)	data[p->data[i]] = i;
+	
+	g_free (p->data);
+	p->data = data;
+}
+
+
+/**
+ * crank_permutation_shuffle_self:
+ * @p: A Permutation
+ * @q: A Permutation
+ *
+ * Shuffles permutation with other permutation. See crank_permutation_shuffle().
+ */
+void
+crank_permutation_shuffle_self (CrankPermutation*	p,
+								CrankPermutation*	q	)
+{
+	guint 	i;
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	g_return_if_fail (q != NULL);
+	
+	if (p->n != q->n) {
+		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
+		return;
+	}
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)
+		data[i] = p->data[ q->data[i] ];
+	
+	g_free (p->data);
+	p->data = data;
+}
+
 
 
 //////// Shuffling /////////////////////////////////////////////////////////////

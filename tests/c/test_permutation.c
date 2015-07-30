@@ -45,6 +45,14 @@ static void		test_inverse (void);
 
 static void		test_shuffle (void);
 
+
+static void		test_reverse_self (void);
+
+static void		test_inverse_self (void);
+
+static void		test_shuffle_self (void);
+
+
 static void		test_shuffle_array (void);
 
 static void		test_shuffle_parray (void);
@@ -96,6 +104,17 @@ main (gint argc, gchar** argv)
 					
   	g_test_add_func ("/crank/base/permutation/shuffle",
 					test_shuffle);
+					
+					
+  	g_test_add_func ("/crank/base/permutation/reverse/self",
+					test_reverse_self);
+					
+  	g_test_add_func ("/crank/base/permutation/inverse/self",
+					test_inverse_self);
+					
+  	g_test_add_func ("/crank/base/permutation/shuffle/self",
+					test_shuffle_self);
+					
 					
   	g_test_add_func ("/crank/base/permutation/shuffle_array",
 					test_shuffle_array);
@@ -301,6 +320,52 @@ test_shuffle (void)
 	crank_permutation_fini (&p);
 	crank_permutation_fini (&q);
 	crank_permutation_fini (&r);
+}
+
+
+static void
+test_reverse_self (void)
+{
+	CrankPermutation	p;
+	
+	crank_permutation_init (&p, 5, 0, 1, 3, 2, 4);
+	
+	crank_permutation_reverse_self (&p);
+	
+	crank_assert_eq_permutation_imm (&p, 4, 2, 3, 1, 0);
+	
+	crank_permutation_fini (&p);
+}
+
+static void
+test_inverse_self (void)
+{
+	CrankPermutation	p;
+	
+	crank_permutation_init (&p, 5, 0, 1, 3, 2, 4);
+	
+	crank_permutation_inverse_self (&p);
+	
+	crank_assert_eq_permutation_imm (&p, 0 ,1, 3, 2, 4);
+	
+	crank_permutation_fini (&p);
+}
+
+static void
+test_shuffle_self (void)
+{
+	CrankPermutation	p;
+	CrankPermutation	q;
+	
+	crank_permutation_init (&p, 4,	0, 1, 3, 2);
+	crank_permutation_init (&q, 4,	1, 0, 2, 3);
+	
+	crank_permutation_shuffle_self (&p, &q);
+	
+	crank_assert_eq_permutation_imm (&p, 1, 0, 3, 2);
+	
+	crank_permutation_fini (&p);
+	crank_permutation_fini (&q);
 }
 
 static void

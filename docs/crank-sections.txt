@@ -52,9 +52,6 @@ crank_int_to_string
 crank_uint_to_string
 crank_float_to_string
 crank_pointer_to_string
-
-crank_compare_nondata_wrapf
-crank_str_ptr_nondata_wrapf
 </SECTION>
 
 <SECTION>
@@ -138,6 +135,10 @@ crank_permutation_swap
 crank_permutation_inverse
 crank_permutation_reverse
 crank_permutation_shuffle
+
+crank_permutation_inverse_self
+crank_permutation_reverse_self
+crank_permutation_shuffle_self
 
 crank_permutation_shuffle_sarray
 crank_permutation_shuffle_array
