@@ -30,21 +30,6 @@
 
 #include "crankcomplex.h"
 
-/**
- * SECTION: crankfunction
- * @title: Function Definitions
- * @short_description: Contains function types that frequently used.
- * @include: crankbase.h
- * @stability: unstable
- *
- * Any library usually defines their own function types, as required function
- * types are very specific to their use, and not really useful for generic uses.
- *
- * No exception to Crank System, too. Most of function type defined in Crank
- * System, are defined in their specific section. But some of function types are
- * frequently used and might be useful for generic uses.
- */
-
 G_BEGIN_DECLS
 
 //////// Function Definitions //////////////////////////////////////////////////
@@ -200,13 +185,6 @@ gchar*		crank_pointer_to_string (	gpointer	value,
 										gpointer	userdata	);
 										
 										
-
-gint		crank_compare_nondata_wrapf (	gconstpointer	a,
-											gconstpointer	b,
-											gpointer		userdata	);
-
-gchar*		crank_str_ptr_nondata_wrapf (	gpointer		value,
-											gpointer		userdata	);
 G_END_DECLS
 
 #endif

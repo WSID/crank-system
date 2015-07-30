@@ -23,8 +23,48 @@
 
 #include <glib.h>
 
+#include "crankcomplex.h"
 #include "crankfunction.h"
 
+
+/**
+ * SECTION: crankfunction
+ * @title: Function Definitions
+ * @short_description: Contains function and function types that frequently used.
+ * @include: crankbase.h
+ * @stability: unstable
+ *
+ * Any library usually defines their own function types, as required function
+ * types are very specific to their use, and not really useful for generic uses.
+ *
+ * No exception to Crank System, too. Most of function type defined in Crank
+ * System, are defined in their specific section. But some of function types are
+ * frequently used and might be useful for generic uses.
+ *
+ * # Function types
+ * 
+ * This section contains frequently used function types, for examples, boolean
+ * evaluation functions (CrankBool{Type}Func).
+ *
+ * There are three kind of function, like
+ * * Boolean evaluation function type.
+ * * String evaluation function type.
+ * * Delta-Equality function type.
+ *   (if different of two are evaluated less than delta, then assume they are
+ *   same)
+ *
+ * # Predefined Functions
+ *
+ * This section contains predefined functions, for examples, stringifies
+ * pointers to primitives like float.
+ *
+ * There are three kind of functions, like
+ * * Equality testing.
+ * * Delta-Equality testing for #gfloat.
+ * * comparsion.
+ * * stringify functions.
+ */
+ 
 /**
  * crank_bool_equal:
  * @a: A Pointer pointing a boolean value.
@@ -246,53 +286,4 @@ crank_pointer_to_string (	gpointer	value,
 {
 	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
 	return g_strdup_printf (format, value); 
-}
-
-
-
-
-
-
-
-/**
- * crank_compare_nondata_wrapf:
- * @a: A Pointer
- * @b: A Pointer
- * @userdata: A Function, which is #GCompareFunc
- * 
- * wraps a compare function which does not receive userdata.
- *
- * Returns: invoke result of @userdata.
- */
-gint
-crank_compare_nondata_wrapf (	gconstpointer	a,
-								gconstpointer	b,
-								gpointer		userdata	)
-{
-	GCompareFunc	function = (GCompareFunc)userdata;
-	
-	return function (a, b);
-}
-
-/**
- * crank_str_ptr_nondata_wrapf:
- * @value: A Pointer.
- * @userdata: A function, which is gchar*(*)(gconstpointer)
- *
- * wraps a stringification function which does not receive userdata.
- *
- * Wrapped function should return allocated string, so that it can be freed with
- * g_free()
- *
- * Returns: Invoke result of @userdata. free with g_free()
- */
-gchar*
-crank_str_ptr_nondata_wrapf (	gpointer	value,
-								gpointer	userdata	)
-{
-	gchar* (*function) (gpointer);
-	
-	function = (gchar* (*)(gpointer)) userdata;
-	
-	return function (value);
 }
