@@ -32,6 +32,22 @@
 StrPtrFunc		skip
 EqualDeltaFunc	skip
 
+bool_equal		skip
+uint_equal		skip
+float_equal		skip
+
+float_equal_delta	skip
+
+uint_compare	skip
+int_compare		skip
+float_compare	skip
+
+bool_to_string		skip
+int_to_string		skip
+uint_to_string		skip
+float_to_string		skip
+pointer_to_string	skip
+
 //////// String functions //////////////////////////////////////////////////////
 
 str_*		parent="Crank.Str"	name="str_(.+)"

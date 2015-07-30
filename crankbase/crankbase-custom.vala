@@ -26,7 +26,37 @@
 [CCode (cheader_filename="crankbase.h")]
 namespace Crank {
 
+	//////// Function //////////////////////////////////////////////////////////
+
 	public delegate void	Callback ();
+	
+	[CCode (simple_generics=true)]
+	public delegate string StrPtrFunc<G> (	G	value	);
+	
+	[CCode (simple_generics=true, has_target=false)]
+	public delegate string EqualDeltaFunc<G> (	G		a,
+												G		b,
+												float	d	);
+	
+	public GLib.EqualFunc<bool?>	bool_equal;
+	public GLib.EqualFunc<uint?>	uint_equal;
+	public GLib.EqualFunc<float?>	float_equal;
+	
+	public EqualDeltaFunc<float?>	float_equal_delta;
+	
+	public GLib.CompareFunc<uint?>		uint_compare;
+	public GLib.CompareFunc<int?>		int_compare;
+	public GLib.CompareFunc<float?>		float_compare;
+	
+	public StrPtrFunc<bool?>		bool_to_string;
+	public StrPtrFunc<int?>			int_to_string;
+	public StrPtrFunc<uint?>		uint_to_string;
+	public StrPtrFunc<float?>		float_to_string;
+	public StrPtrFunc<void*>		pointer_to_string;
+	
+	
+	
+	
 	
 	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_GET_POINTER")]
 	public GLib.Callback	func_get_pointer (Crank.Callback pointer);
@@ -74,17 +104,6 @@ namespace Crank {
 									GLib.Value[]	param_types,
 									void*			invocation_hint = null);
 	
-	
-	
-	
-	
-	[CCode (simple_generics=true)]
-	public delegate string StrPtrFunc<G> (	G	value	);
-	
-	[CCode (simple_generics=true, has_target=false)]
-	public delegate string EqualDeltaFunc<G> (	G		a,
-												G		b,
-												float	d	);
 	
 	
 	
