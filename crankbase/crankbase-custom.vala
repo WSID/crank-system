@@ -181,7 +181,7 @@ namespace Crank {
 		public int sign { get; }
 		
 		[CCode (simple_generics=true, cname="crank_permutation_vala_shuffle_parray")]
-		public G[] shuffle_parray <G> ([CCode (array_length=false)]G[] arr);
+		public (unowned G)[] shuffle_parray <G> ([CCode (array_length=false)]G[] arr);
 	}
 	
 	
