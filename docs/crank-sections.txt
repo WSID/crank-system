@@ -36,15 +36,23 @@ CrankBoolFloatFunc
 CrankBoolCplxFloatFunc
 CrankStrPtrFunc
 CrankEqualDeltaFunc
+
 crank_bool_equal
 crank_uint_equal
 crank_float_equal
+
 crank_float_equal_delta
+
+crank_int_compare
+crank_uint_compare
+crank_float_compare
+
 crank_bool_to_string
 crank_int_to_string
 crank_uint_to_string
 crank_float_to_string
 crank_pointer_to_string
+
 crank_compare_nondata_wrapf
 crank_str_ptr_nondata_wrapf
 </SECTION>
@@ -92,6 +100,7 @@ CrankPermutation
 crank_permutation_init
 crank_permutation_init_arr
 crank_permutation_init_arr_take
+crank_permutation_init_valist
 crank_permutation_init_identity
 
 crank_permutation_init_compare_sarray
@@ -100,6 +109,13 @@ crank_permutation_init_compare_parray
 crank_permutation_init_compare_parray_data
 crank_permutation_init_compare_array
 crank_permutation_init_compare_array_data
+
+crank_permutation_init_compare_array_int
+crank_permutation_init_compare_array_uint
+crank_permutation_init_compare_array_float
+crank_permutation_init_compare_array_int_data
+crank_permutation_init_compare_array_uint_data
+crank_permutation_init_compare_array_float_data
 
 crank_permutation_copy
 crank_permutation_dup

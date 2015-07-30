@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
 #include "crankpermutation.h"
 
 
@@ -89,11 +90,7 @@ struct _CrankPermutationSortData {
 	
 	GCompareDataFunc	func;
 	gpointer			userdata;
-};
-
-static void		crank_permutation_realloc (	CrankPermutation*	p,
-											const guint			n	);
-										
+};										
 
 static gint		crank_permutation_sortf (	gconstpointer	a,
 											gconstpointer	b,
@@ -129,13 +126,9 @@ crank_permutation_init (	CrankPermutation*	p,
 							...	)
 {
 	va_list	varargs;
-	guint	i;
-	
-	p->n = n;
-	p->data = g_new (guint, n);
 	va_start (varargs, n);
 	
-	for (i = 0; i < n; i++) p->data[i] = va_arg (varargs, guint);
+	crank_permutation_init_valist (p, n, varargs);
 	
 	va_end (varargs);
 }
@@ -156,8 +149,10 @@ crank_permutation_init_arr (	CrankPermutation*	p,
 								const guint			n,
 								const guint*		data	)
 {
-	p->data = g_memdup (data, n * sizeof (guint));
+	g_return_if_fail (p != NULL);
+
 	p->n = n;
+	p->data = g_memdup (data, n * sizeof (guint));
 }
 
 /**
@@ -176,9 +171,39 @@ crank_permutation_init_arr_take (	CrankPermutation*	p,
 									const guint			n,
 									guint*				data	)
 {
-	p->data = data;
+	g_return_if_fail (p != NULL);
+	
 	p->n = n;
+	p->data = data;
 }
+
+
+/**
+ * crank_permutation_init_valist:
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @...: Element of permutation.
+ *
+ * Initialize a permutation with elements given by va_list.
+ *
+ * Validity is not checked in initializing. You should check validity by
+ * crank_permutation_check_valid(), before using.
+ */
+void
+crank_permutation_init_valist (	CrankPermutation*	p,
+								const guint			n,
+								va_list				varargs	)
+{
+	guint	i;
+	
+	g_return_if_fail (p != NULL);
+	
+	p->n = n;
+	p->data = g_new (guint, n);
+	
+	for (i = 0; i < n; i++) p->data[i] = va_arg (varargs, guint);
+}
+
 
 /**
  * crank_permutation_init_identity:
@@ -194,6 +219,8 @@ crank_permutation_init_identity (	CrankPermutation*	p,
 {
 	guint	i;
 	
+	g_return_if_fail (p != NULL);
+	
 	p->n = n;
 	p->data = g_new (guint, n);
 	for (i = 0; i < n; i++)	p->data[i] = i;
@@ -201,7 +228,7 @@ crank_permutation_init_identity (	CrankPermutation*	p,
 
 
 /**
- * crank_permutation_init_compare_sarray:
+ * crank_permutation_init_compare_sarray: (skip)
  * @p: (out): A Permutation.
  * @n: Size of permutation.
  * @gsz: Size of elements.
@@ -238,7 +265,7 @@ crank_permutation_init_compare_sarray (	CrankPermutation*	p,
 
 
 /**
- * crank_permutation_init_compare_sarray_data:
+ * crank_permutation_init_compare_sarray_data: (skip)
  * @p: (out): A Permutation.
  * @n: Size of permutation.
  * @gsz: Size of elements.
@@ -246,14 +273,9 @@ crank_permutation_init_compare_sarray (	CrankPermutation*	p,
  * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
  * @userdata: (closure): A userdata for data
  *
- * Initialize a permutation with ordering of elements in array.
- *
- * This function expects base ordering given by @gcmp. If elements are in base
- * ordering, the permutation will be initialized into identity permutation.
- *
- * Note
- * This function has generic parameter in vala. Please refer to
- * crank_permutation_init_compare_sarray().
+ * Initialize a permutation with ordering of elements in array. This function
+ * is same as crank_permutation_init_compare_sarray(), except it receives
+ * @userdata.
  */
 void
 crank_permutation_init_compare_sarray_data (	CrankPermutation*	p,
@@ -264,11 +286,12 @@ crank_permutation_init_compare_sarray_data (	CrankPermutation*	p,
 												gpointer			userdata	)
 {
 	struct _CrankPermutationSortData	sdata = {garr, sizeof(gpointer),gcmp, userdata};
-
-	GArray*	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
-	
+	GArray*	arr;
 	guint	i;
+	
+	g_return_if_fail (p != NULL);
 
+	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
 
 	guint*	data = g_new (guint, n);
 	
@@ -283,16 +306,15 @@ crank_permutation_init_compare_sarray_data (	CrankPermutation*	p,
 
 
 /**
- * crank_permutation_init_compare_parray:
+ * crank_permutation_init_compare_parray: (skip)
  * @p: (out): A Permutation.
  * @n: Size of permutation.
- * @garr: Array of elements.
+ * @garr: (array length=n): Array of elements.
  * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
  *
- * Initialize a permutation with ordering of elements in array.
- *
- * This function expects base ordering given by @gcmp. If elements are in base
- * ordering, the permutation will be initialized into identity permutation.
+ * Initialize a permutation with ordering of elements in array. This function is
+ * similar to crank_permutation_init_compare_sarray(), but it works on elements
+ * rather than address of elements.
  */
 void
 crank_permutation_init_compare_parray (	CrankPermutation*	p,
@@ -306,17 +328,16 @@ crank_permutation_init_compare_parray (	CrankPermutation*	p,
 
 
 /**
- * crank_permutation_init_compare_parray_data:
+ * crank_permutation_init_compare_parray_data: (skip)
  * @p: (out): A Permutation.
  * @n: Size of permutation.
- * @garr: Array of elements.
+ * @garr: (array length=n): Array of elements.
  * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
  * @userdata: (closure): A userdata for data
  *
- * Initialize a permutation with ordering of elements in array.
- *
- * This function expects base ordering given by @gcmp. If elements are in base
- * ordering, the permutation will be initialized into identity permutation.
+ * Initialize a permutation with ordering of elements in array. This function is
+ * similar to crank_permutation_init_compare_parray(), but it receives
+ * @userdata.
  */
 void
 crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
@@ -326,13 +347,15 @@ crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
 												gpointer			userdata	)
 {
 	struct _CrankPermutationSortData	sdata = {garr, sizeof(gpointer),gcmp, userdata};
-
-	GArray*	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
+	GArray*	arr;
+	guint*	data;
 	
 	guint	i;
-
-
-	guint*	data = g_new (guint, n);
+	
+	g_return_if_fail (p != NULL);
+	
+	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
+	data = g_new (guint, n);
 	
 	for (i = 0; i < n; i++) g_array_append_val (arr, i);
 	
@@ -342,6 +365,153 @@ crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
 	
 	g_array_free (arr, FALSE);
 }
+
+
+/**
+ * crank_permutation_init_compare_array_int: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on int arrays.
+ * 
+ * This function expectes comparsion function that compares int pointers, not
+ * ints.
+ */
+void
+crank_permutation_init_compare_array_int (	CrankPermutation*	p,
+											const guint			n,
+											gint*				arr,
+											GCompareFunc		cmp	)
+{
+	if (cmp == NULL) cmp = crank_int_compare;
+	crank_permutation_init_compare_array (p, n, gint, arr, cmp);
+}
+
+/**
+ * crank_permutation_init_compare_array_uint: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on unsigned int arrays.
+ * 
+ * This function expectes comparsion function that compares uint pointers, not
+ * uints.
+ */
+void
+crank_permutation_init_compare_array_uint (	CrankPermutation*	p,
+											const guint			n,
+											guint*				arr,
+											GCompareFunc		cmp	)
+{
+	if (cmp == NULL) cmp = crank_uint_compare;
+	crank_permutation_init_compare_array (p, n, guint, arr, cmp);
+}
+
+/**
+ * crank_permutation_init_compare_array_float: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on float arrays.
+ */
+void
+crank_permutation_init_compare_array_float (	CrankPermutation*	p,
+												const guint			n,
+												gfloat*				arr,
+												GCompareFunc		cmp	)
+{
+	if (cmp == NULL) cmp = crank_float_compare;
+	crank_permutation_init_compare_array (p, n, gfloat, arr, cmp);
+}
+
+
+/**
+ * crank_permutation_init_compare_array_int_data: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ * @userdata: (closure): A userdata for @cmp
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on int arrays.
+ * 
+ * This function expectes comparsion function that compares int pointers, not
+ * ints.
+ */
+void
+crank_permutation_init_compare_array_int_data (	CrankPermutation*	p,
+												const guint			n,
+												gint*				arr,
+												GCompareDataFunc	cmp,
+												gpointer			userdata	)
+{
+	if (cmp == NULL) cmp = (GCompareDataFunc) crank_int_compare;
+	crank_permutation_init_compare_array_data (p, n, gint, arr, cmp, userdata);
+}
+
+/**
+ * crank_permutation_init_compare_array_uint_data: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ * @userdata: (closure): A userdata for @cmp
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on unsigned int arrays.
+ * 
+ * This function expectes comparsion function that compares uint pointers, not
+ * uints.
+ */
+void
+crank_permutation_init_compare_array_uint_data (	CrankPermutation*	p,
+													const guint			n,
+													guint*				arr,
+													GCompareDataFunc	cmp,
+													gpointer			userdata	)
+{
+	if (cmp == NULL) cmp = (GCompareDataFunc) crank_uint_compare;
+	crank_permutation_init_compare_array_data (p, n, guint, arr, cmp, userdata);
+}
+
+/**
+ * crank_permutation_init_compare_array_float_data: (skip)
+ * @p: (out): A Permutation.
+ * @n: Size of permutation.
+ * @arr: (array length=n): Array of elements.
+ * @cmp: (scope call) (nullable): Function to compare elements, to give ordering
+ *    of elements.
+ * @userdata: (closure): A userdata for @cmp
+ *
+ * Initialize a permutation with ordering of elements in array. This function
+ * works on float arrays.
+ */
+void
+crank_permutation_init_compare_array_float_data (	CrankPermutation*	p,
+													const guint			n,
+													gfloat*				arr,
+													GCompareDataFunc	cmp,
+													gpointer			userdata	)
+{
+	if (cmp == NULL) cmp = (GCompareDataFunc) crank_float_compare;
+	crank_permutation_init_compare_array_data (p, n, gfloat, arr, cmp, userdata);
+}
+
 
 
 /**
@@ -423,9 +593,8 @@ crank_permutation_equal (	gconstpointer		p,
 	CrankPermutation*	pp = (CrankPermutation*)p;
 	CrankPermutation*	pq = (CrankPermutation*)q;
 	
-	if (pp == NULL)
-		return pq == NULL;
-	else if (pq == NULL) return FALSE;
+	if (pp == NULL)			return pq == NULL;
+	else if (pq == NULL)	return FALSE;
 	
 	if (pp->n == pq->n) {
 		guint	i;
@@ -471,18 +640,21 @@ crank_permutation_hash (	gconstpointer		p	)
  *
  * Stringify a permutation.
  *
- * Returns: String representation of permutation.
+ * Returns: (transfer full): String representation of permutation.
  */
 gchar*
 crank_permutation_to_string (	CrankPermutation*	p	)
 {
-	GString*	builder = g_string_new ("(");
+	GString*	builder;
 	gchar*		result;
-	
 	guint		i;
 	
+	g_return_val_if_fail (p != NULL, NULL);
+	
+	builder = g_string_new ("(");
+	
 	if (0 < p->n) {
-		g_string_append_printf(builder, "%u", p->data[i]);
+		g_string_append_printf(builder, "%u", p->data[0]);
 	
 		for (i = 1; i < p->n; i++)
 			g_string_append_printf (builder, ", %u", p->data[i]);
@@ -499,6 +671,7 @@ crank_permutation_to_string (	CrankPermutation*	p	)
 
 
 
+
 //////// Collections ///////////////////////////////////////////////////////////
 
 /**
@@ -512,6 +685,8 @@ crank_permutation_to_string (	CrankPermutation*	p	)
 guint
 crank_permutation_get_size (	CrankPermutation*	p	)
 {
+	g_return_val_if_fail (p != NULL, 0);
+
 	return p->n;
 }
 
@@ -531,6 +706,9 @@ guint
 crank_permutation_get (	CrankPermutation*	p,
 						const guint			i	)
 {
+	g_return_val_if_fail (p != NULL, 0);
+	g_return_val_if_fail (i < p->n, 0);
+	
 	return p->data[i];
 }
 
@@ -549,7 +727,7 @@ crank_permutation_index_of (	CrankPermutation*	p,
 {
 	guint	i;
 	
-	if (v < p->n) return -1;
+	g_return_val_if_fail (v < p->n, -1);
 	
 	for (i = 0; i < p->n; i++)
 		if (p->data[i] == v) return i;
@@ -578,6 +756,7 @@ crank_permutation_slice (	CrankPermutation*	p,
 	guint	i;
 	guint	n;
 
+	g_return_val_if_fail (p, NULL);
 	g_return_val_if_fail (from <= to, NULL);
 	g_return_val_if_fail (to <= p->n, NULL);
 	
@@ -623,6 +802,8 @@ crank_permutation_get_sign (	CrankPermutation*	p	)
 	guint	j;
 	guint	inversion = 0;
 	
+	g_return_val_if_fail (p != NULL, 0);
+	
 	if (p->n == 0) return 0;
 	
 	for (i = 0; i < p->n; i++)
@@ -646,6 +827,8 @@ crank_permutation_check_valid (	CrankPermutation*	p	)
 {
 	guint	i;
 	guint	j;
+	
+	g_return_val_if_fail (p != NULL, FALSE);
 	
 	for (i = 0; i < p->n; i++) {
 		if (p->n <= p->data[i]) return FALSE;
@@ -673,8 +856,11 @@ crank_permutation_swap (	CrankPermutation*	p,
 							const guint			i,
 							const guint			j	)
 {
-	guint	temp = p->data[i];
+	guint	temp;
 	
+	g_return_if_fail (p != NULL);
+	
+	temp = p->data[i];
 	p->data[i] = p->data[j];
 	p->data[j] = temp;
 }
@@ -699,7 +885,12 @@ crank_permutation_reverse (		CrankPermutation*	p,
 								CrankPermutation*	q	)
 {
 	guint	i;
-	guint*	data = g_new (guint, p->n);
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	g_return_if_fail (q != NULL);
+	
+	data = g_new (guint, p->n);
 	
 	for (i = 0; i < p->n; i++)
 		data[p->n - 1 - i] = p->data[i];
@@ -726,7 +917,12 @@ crank_permutation_inverse (	CrankPermutation*	p,
 							CrankPermutation*	q	)
 {
 	guint	i;
-	guint*	data = g_new (guint, p->n);
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	g_return_if_fail (q != NULL);
+	
+	data = g_new (guint, p->n);
 	
 	for (i = 0; i < p->n; i++)
 		data[p->data[i]] = i;
@@ -753,9 +949,13 @@ crank_permutation_shuffle (	CrankPermutation*	p,
 	guint 	i;
 	guint*	data;
 	
+	crank_permutation_init (r, 0);
+	
+	g_return_if_fail (p != NULL);
+	g_return_if_fail (q != NULL);
+	
 	if (p->n != q->n) {
 		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
-		crank_permutation_fini (r);
 		return;
 	}
 	
@@ -790,6 +990,13 @@ crank_permutation_shuffle_sarray (	CrankPermutation*	p,
 	guint	i;
 	guint	j;
 	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (gsz != 0, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	arr_mem = (guint8*) arr;
+	result = g_malloc (gsz * p->n);
+	
 	for (i = 0; i < p->n; i++) {
 		j = crank_permutation_get (p, i);
 		
@@ -812,9 +1019,14 @@ gpointer*
 crank_permutation_shuffle_parray (	CrankPermutation*	p,
 									gpointer*			arr	)
 {
-	gpointer* result = g_new (gpointer, p->n);
+	gpointer* result;
 	guint	i;
 	guint	j;
+	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	result = g_new (gpointer, p->n);
 	
 	for (i = 0; i < p->n; i++) {
 		j = crank_permutation_get (p, i);
@@ -839,9 +1051,14 @@ gboolean*
 crank_permutation_shuffle_array_boolean (	CrankPermutation*	p,
 											gboolean*			arr	)
 {
-	gboolean* result = g_new (gboolean, p->n);
+	gboolean* result;
 	guint	i;
 	guint	j;
+	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	result = g_new (gboolean, p->n);
 	
 	for (i = 0; i < p->n; i++) {
 		j = crank_permutation_get (p, i);
@@ -864,9 +1081,14 @@ gint*
 crank_permutation_shuffle_array_int (	CrankPermutation*	p,
 										gint*				arr	)
 {
-	gint* result = g_new (gint, p->n);
+	gint* result;
 	guint	i;
 	guint	j;
+	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	result = g_new (gint, p->n);
 	
 	for (i = 0; i < p->n; i++) {
 		j = crank_permutation_get (p, i);
@@ -936,39 +1158,43 @@ crank_permutation__gi_slice (	CrankPermutation*	p,
 
 
 
-void		crank_permutation_init_vala_compare_sarray (	const guint			n,
-													const gsize			gsz,
-													gpointer			garr,
-													GCompareFunc		gcmp,
-													CrankPermutation*	p	)
+void
+crank_permutation_init_vala_compare_sarray (	const guint			n,
+												const gsize			gsz,
+												gpointer			garr,
+												GCompareFunc		gcmp,
+												CrankPermutation*	p	)
 {
 	crank_permutation_init_compare_sarray (p, n, gsz, garr, gcmp);
 }
 
-void		crank_permutation_init_vala_compare_sarray_data (	const guint			n,
-															const gsize			gsz,
-															gpointer			garr,
-															GCompareDataFunc	gcmp,
-															gpointer			userdata,
-															CrankPermutation*	p	)
+void
+crank_permutation_init_vala_compare_sarray_data (	const guint			n,
+													const gsize			gsz,
+													gpointer			garr,
+													GCompareDataFunc	gcmp,
+													gpointer			userdata,
+													CrankPermutation*	p	)
 {
 	crank_permutation_init_compare_sarray_data (p, n, gsz, garr, gcmp, userdata);
 }
 
 
-void		crank_permutation_init_vala_compare_parray (	const guint			n,
-													gpointer*			garr,
-													GCompareFunc		gcmp,
-													CrankPermutation*	p	)
+void
+crank_permutation_init_vala_compare_parray (	const guint			n,
+												gpointer*			garr,
+												GCompareFunc		gcmp,
+												CrankPermutation*	p	)
 {
 	crank_permutation_init_compare_parray (p, n, garr, gcmp);
 }
 
-void		crank_permutation_init_vala_compare_parray_data (	const guint			n,
-															gpointer*			garr,
-															GCompareDataFunc	gcmp,
-															gpointer			userdata,
-															CrankPermutation*	p	)
+void
+crank_permutation_init_vala_compare_parray_data (	const guint			n,
+													gpointer*			garr,
+													GCompareDataFunc	gcmp,
+													gpointer			userdata,
+													CrankPermutation*	p	)
 {
 	crank_permutation_init_compare_parray_data (p, n, garr, gcmp, userdata);
 }
@@ -1062,14 +1288,6 @@ crank_permutation_vala_shuffle_array_float (	CrankPermutation*	p,
 }
 
 //////// Internal Definition ///////////////////////////////////////////////////
-
-static void
-crank_permutation_realloc (	CrankPermutation*	p,
-							const guint			n	)
-{
-	p->data = g_renew (guint, p->data, n);
-	p->n = n;
-}
 
 static gint
 crank_permutation_sortf (	gconstpointer		a,

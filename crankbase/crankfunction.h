@@ -174,6 +174,15 @@ gboolean	crank_float_equal_delta	(	gconstpointer	a,
 										const gfloat	d	);
 
 
+gint		crank_uint_compare (		gconstpointer	a,
+										gconstpointer	b	);
+										
+gint		crank_int_compare (			gconstpointer	a,
+										gconstpointer	b	);
+										
+gint		crank_float_compare (		gconstpointer	a,
+										gconstpointer	b	);
+
 
 gchar*		crank_bool_to_string (		gpointer	value,
 										gpointer	userdata	);

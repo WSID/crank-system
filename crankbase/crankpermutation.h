@@ -26,6 +26,9 @@
 #error	crankpermutation.h cannot be included directly.
 #endif
 
+#include <stdarg.h>
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 /**
@@ -57,6 +60,11 @@ void				crank_permutation_init_arr (		CrankPermutation*	p,
 void				crank_permutation_init_arr_take (	CrankPermutation*	p,
 														const guint			n,
 														guint*				data	);
+
+void				crank_permutation_init_valist (		CrankPermutation*	p,
+														const guint			n,
+														va_list				varargs	);
+
 
 void				crank_permutation_init_identity (	CrankPermutation*	p,
 														const guint			n	);
@@ -117,6 +125,39 @@ void				crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
 																	gpointer*			garr,
 																	GCompareDataFunc	gcmp,
 																	gpointer			userdata	);
+
+void				crank_permutation_init_compare_array_int (	CrankPermutation*	p,
+																const guint			n,
+																gint*				arr,
+																GCompareFunc		cmp	);
+
+void				crank_permutation_init_compare_array_uint (	CrankPermutation*	p,
+																const guint			n,
+																guint*				arr,
+																GCompareFunc		cmp	);
+
+void				crank_permutation_init_compare_array_float (CrankPermutation*	p,
+																const guint			n,
+																gfloat*				arr,
+																GCompareFunc		cmp	);
+
+void				crank_permutation_init_compare_array_int_data (		CrankPermutation*	p,
+																		const guint			n,
+																		gint*				arr,
+																		GCompareDataFunc	cmp,
+																		gpointer			userdata	);
+
+void				crank_permutation_init_compare_array_uint_data (	CrankPermutation*	p,
+																		const guint			n,
+																		guint*				arr,
+																		GCompareDataFunc	cmp,
+																		gpointer			userdata	);
+
+void				crank_permutation_init_compare_array_float_data (	CrankPermutation*	p,
+																		const guint			n,
+																		gfloat*				arr,
+																		GCompareDataFunc	cmp,
+																		gpointer			userdata	);
 
 
 void				crank_permutation_copy (			CrankPermutation*	p,

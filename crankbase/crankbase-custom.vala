@@ -106,10 +106,35 @@ namespace Crank {
 			free_function="crank_permutation_free")]
 	public struct Permutation {
 	
-		public Permutation			(uint n,	...);
+		public Permutation		(uint n,	...);
+		public Permutation.valist (uint n, va_list	varargs);
 		public Permutation.arr 	([CCode (array_length_pos=0)]uint[] arr);
 		public Permutation.arr_take([CCode (array_length_pos=0)]owned uint[] arr);
 		public Permutation.identity(uint n);
+		
+		public Permutation.compare_array_int (	[CCode (array_length_pos=0)]
+												int[]				arr,
+												GLib.CompareFunc<int?>?	cmp	);
+												
+		public Permutation.compare_array_uint (	[CCode (array_length_pos=0)]
+												uint[]				arr,
+												GLib.CompareFunc<uint?>?	cmp	);
+												
+		public Permutation.compare_array_float ([CCode (array_length_pos=0)]
+												float[]				arr,
+												GLib.CompareFunc<float?>?	cmp	);
+		
+		public Permutation.compare_array_int_data (		[CCode (array_length_pos=0)]
+														int[]				arr,
+														GLib.CompareDataFunc<int?>?	cmp	);
+												
+		public Permutation.compare_array_uint_data (	[CCode (array_length_pos=0)]
+														uint[]				arr,
+														GLib.CompareDataFunc<uint?>?	cmp	);
+												
+		public Permutation.compare_array_float_data (	[CCode (array_length_pos=0)]
+														float[]				arr,
+														GLib.CompareDataFunc<float?>?	cmp	);
 		
 		[CCode (cname="crank_permutation_init_vala_compare_sarray", simple_generics=true)]
 		public static Permutation compare_sarray<G> (	uint 				n,

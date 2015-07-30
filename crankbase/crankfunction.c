@@ -104,6 +104,64 @@ crank_float_equal_delta (	gconstpointer	a,
 
 
 
+/**
+ * crank_int_compare:
+ * @a: A Pointer pointing a integer value.
+ * @b: A Pointer pointing a integer value.
+ *
+ * Compares *@a and *@b.
+ *
+ * Returns: Comparsion result.
+ */
+gint
+crank_int_compare (	gconstpointer	a,
+					gconstpointer	b )
+{
+	gint	av = *(gint*) a;
+	gint	bv = *(gint*) b;
+	
+	return (bv < av) - (av < bv);
+}
+
+/**
+ * crank_uint_compare:
+ * @a: A Pointer pointing a unsigned integer value.
+ * @b: A Pointer pointing a unsigned integer value.
+ *
+ * Compares *@a and *@b.
+ *
+ * Returns: Comparsion result.
+ */
+gint
+crank_uint_compare (	gconstpointer	a,
+						gconstpointer	b )
+{
+	guint	av = *(guint*) a;
+	guint	bv = *(guint*) b;
+	
+	return (bv < av) - (av < bv);
+}
+
+/**
+ * crank_float_compare:
+ * @a: A Pointer pointing a float value.
+ * @b: A Pointer pointing a float value.
+ *
+ * Compares *@a and *@b.
+ *
+ * Returns: Comparsion result.
+ */
+gint
+crank_float_compare (	gconstpointer	a,
+						gconstpointer	b )
+{
+	gfloat	av = *(gfloat*) a;
+	gfloat	bv = *(gfloat*) b;
+	
+	return (bv < av) - (av < bv);
+}
+
+
 
 /**
  * crank_bool_to_string:
