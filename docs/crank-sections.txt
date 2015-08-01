@@ -32,8 +32,10 @@ CRANK_FOREACH_GLIST_END
 CrankCallback
 CrankBoolBoolFunc
 CrankBoolIntFunc
+CrankBoolUintFunc
 CrankBoolFloatFunc
 CrankBoolCplxFloatFunc
+CrankBoolPtrFunc
 CrankStrPtrFunc
 CrankEqualDeltaFunc
 

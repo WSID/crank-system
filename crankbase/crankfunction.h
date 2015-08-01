@@ -45,6 +45,7 @@ G_BEGIN_DECLS
  */
 typedef void		(*CrankCallback) (		gpointer		userdata	);
 
+
 /**
  * CrankBoolBoolFunc:
  * @value: Value for function.
@@ -58,6 +59,21 @@ typedef void		(*CrankCallback) (		gpointer		userdata	);
  * Returns: A boolean value.
  */
 typedef gboolean	(*CrankBoolBoolFunc) (	const gboolean	value,
+											gpointer		userdata	);
+
+/**
+ * CrankBoolUintFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #guint and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean 	(*CrankBoolUintFunc) (	const guint		value,
 											gpointer		userdata	);
 
 /**
@@ -107,6 +123,21 @@ typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
 typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
 												gpointer		userdata	);
 
+
+/**
+ * CrankBoolPtrFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives any pointer and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value.
+ */
+typedef gboolean	(*CrankBoolPtrFunc) (	gconstpointer	value,
+											gpointer		userdata	);
 
 
 
