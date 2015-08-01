@@ -178,7 +178,11 @@ namespace Crank {
 															GLib.CompareDataFunc<G>	gcmp	);
 		
 		public uint size { get; }
+		public uint inversion { get; }
 		public int sign { get; }
+		public uint[] ascents { get; }
+		public uint[] descents { get; }
+		public uint[] excedances { get; }
 		
 		[CCode (simple_generics=true, cname="crank_permutation_vala_shuffle_parray")]
 		public (unowned G)[] shuffle_parray <G> ([CCode (array_length=false)]G[] arr);

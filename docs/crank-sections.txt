@@ -125,12 +125,19 @@ crank_permutation_hash
 crank_permutation_equal
 crank_permutation_to_string
 
+crank_permutation_is_empty
 crank_permutation_get_size
 crank_permutation_get
+crank_permutation_foreach
 crank_permutation_index_of
 crank_permutation_slice
 
+crank_permutation_is_identity
+crank_permutation_get_inversion
 crank_permutation_get_sign
+crank_permutation_get_ascents
+crank_permutation_get_descents
+crank_permutation_get_excedances
 
 crank_permutation_check_valid
 crank_permutation_swap
@@ -147,6 +154,7 @@ crank_permutation_shuffle_array
 crank_permutation_shuffle_parray
 crank_permutation_shuffle_array_boolean
 crank_permutation_shuffle_array_int
+crank_permutation_shuffle_array_uint
 crank_permutation_shuffle_array_float
 
 <SUBSECTION Standard>
@@ -162,6 +170,7 @@ crank_permutation_init_vala_compare_sarray_data
 crank_permutation_vala_shuffle_parray
 crank_permutation_vala_shuffle_array_boolean
 crank_permutation_vala_shuffle_array_int
+crank_permutation_vala_shuffle_array_uint
 crank_permutation_vala_shuffle_array_float
 </SECTION>
 

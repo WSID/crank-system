@@ -29,6 +29,8 @@
 #include <stdarg.h>
 #include <glib.h>
 
+#include "crankfunction.h"
+
 G_BEGIN_DECLS
 
 /**
@@ -184,6 +186,8 @@ gchar*			crank_permutation_to_string (	CrankPermutation*	p	);
 
 //////// Collections ///////////////////////////////////////////////////////////
 
+gboolean		crank_permutation_is_empty (	CrankPermutation*	p	);
+
 guint			crank_permutation_get_size (	CrankPermutation*	p	);
 
 guint			crank_permutation_get (			CrankPermutation*	p,
@@ -192,13 +196,31 @@ guint			crank_permutation_get (			CrankPermutation*	p,
 gint			crank_permutation_index_of (	CrankPermutation*	p,
 												const guint			v	);
 
+gboolean		crank_permutation_foreach (		CrankPermutation*	p,
+												CrankBoolUintFunc	func,
+												gpointer			userdata );
+
 guint*			crank_permutation_slice (		CrankPermutation*	p,
 												const guint			from,
 												const guint			to	);
 
 //////// Operations ////////////////////////////////////////////////////////////
 
+gboolean		crank_permutation_is_identity (	CrankPermutation*	p	);
+
+guint			crank_permutation_get_inversion (	CrankPermutation*	p	);
+
 gint			crank_permutation_get_sign (	CrankPermutation*	p	);
+
+guint*			crank_permutation_get_ascents (	CrankPermutation*	p,
+												guint*				rn	);
+												
+guint*			crank_permutation_get_descents (CrankPermutation*	p,
+												guint*				rn	);
+												
+guint*			crank_permutation_get_excedances (	CrankPermutation*	p,
+													guint*				rn	);
+
 
 gboolean		crank_permutation_check_valid (	CrankPermutation*	p	);
 
@@ -253,6 +275,9 @@ gboolean*		crank_permutation_shuffle_array_boolean (	CrankPermutation*	p,
 gint*			crank_permutation_shuffle_array_int (		CrankPermutation*	p,
 															gint*				arr	);
 
+guint*			crank_permutation_shuffle_array_uint (		CrankPermutation*	p,
+															guint*				arr	);
+
 gfloat*			crank_permutation_shuffle_array_float (		CrankPermutation*	p,
 															gfloat*				arr	);
 
@@ -303,6 +328,10 @@ gboolean*	crank_permutation_vala_shuffle_array_boolean (	CrankPermutation*	p,
 
 gint*		crank_permutation_vala_shuffle_array_int (	CrankPermutation*	p,
 														gint*				arr,
+														guint*				rn	);
+
+guint*		crank_permutation_vala_shuffle_array_uint (	CrankPermutation*	p,
+														guint*				arr,
 														guint*				rn	);
 
 gfloat*		crank_permutation_vala_shuffle_array_float (	CrankPermutation*	p,

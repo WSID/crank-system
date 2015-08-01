@@ -34,11 +34,29 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/permutation/to_string",
 		test_to_string );
 
+	GLib.Test.add_func ("/crank/base/permutation/is_empty",
+		test_is_empty );
+
 	GLib.Test.add_func ("/crank/base/permutation/slice",
 		test_slice );
 	
+	GLib.Test.add_func ("/crank/base/permutation/is_identity",
+		test_is_identity );
+	
+	GLib.Test.add_func ("/crank/base/permutation/inversion",
+		test_inversion );
+	
 	GLib.Test.add_func ("/crank/base/permutation/sign",
 		test_sign );
+		
+	GLib.Test.add_func ("/carnk/base/permutation/ascents",
+		test_ascents );
+	
+	GLib.Test.add_func ("/crank/base/permutation/descents",
+		test_descents );
+	
+	GLib.Test.add_func ("/crank/base/permutation/excedances",
+		test_excedances );
 	
 	GLib.Test.add_func ("/crank/base/permutation/swap",
 		test_swap );
@@ -70,8 +88,8 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/permutation/init/compare/sarray",
 		test_init_compare_sarray );
 
-	//GLib.Test.add_func ("/crank/base/permutation/init/compare/parray",
-	//	test_init_compare_parray );
+	GLib.Test.add_func ("/crank/base/permutation/init/compare/parray",
+		test_init_compare_parray );
 	
 	GLib.Test.run ();
 	
@@ -114,6 +132,16 @@ private void test_to_string () {
 	assert (p.to_string () == "(0, 1, 2, 4, 3)");
 }
 
+
+
+private void test_is_empty () {
+	Crank.Permutation	p = Crank.Permutation (1,	0);
+	assert (! p.is_empty ());
+	
+	p = Crank.Permutation (0);
+	assert (p.is_empty ());
+}
+
 private void test_slice () {
 	Crank.Permutation	p = Crank.Permutation (5, 	0, 1, 2, 4, 3);
 	
@@ -124,10 +152,51 @@ private void test_slice () {
 	assert (slice[2] == 4);
 }
 
+private void test_is_identity () {
+	Crank.Permutation	p = Crank.Permutation (3,	0, 1, 2);
+	assert (p.is_identity ());
+	
+	p = Crank.Permutation (3,	2, 1, 0);
+	assert (! p.is_identity ());
+}
+
+private void test_inversion () {
+	Crank.Permutation	p = Crank.Permutation (5,	2, 1, 3, 4, 0);
+	assert (p.inversion == 5);
+}
+
 private void test_sign () {
 	Crank.Permutation	p = Crank.Permutation (5,	2, 1, 3, 4, 0);
 	
 	assert (p.sign == -1);
+}
+
+private void test_ascents () {
+	Crank.Permutation	p = Crank.Permutation (5,	2, 1, 3, 4, 0);
+	uint[] ascents = p.ascents;
+	
+	assert (ascents.length == 2);
+	assert (ascents[0] == 1);
+	assert (ascents[1] == 2);
+}
+
+private void test_descents () {
+	Crank.Permutation	p = Crank.Permutation (5,	2, 1, 3, 4, 0);
+	uint[] descents = p.descents;
+	
+	assert (descents.length == 2);
+	assert (descents[0] == 0);
+	assert (descents[1] == 3);
+}
+
+private void test_excedances () {
+	Crank.Permutation	p = Crank.Permutation (5,	2, 1, 3, 4, 0);
+	uint[] excedances = p.excedances;
+	
+	assert (excedances.length == 3);
+	assert (excedances[0] == 0);
+	assert (excedances[1] == 2);
+	assert (excedances[2] == 3);
 }
 
 private void test_swap () {

@@ -25,6 +25,10 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
+static gboolean	test_foreach_func (const guint v,	gpointer	userdata);
+
+
+
 static void		test_check_valid (void);
 
 static void		test_hash (void);
@@ -33,9 +37,25 @@ static void		test_equal (void);
 
 static void 	test_to_string (void);
 
+
+static void		test_is_empty (void);
+
 static void		test_slice (void);
 
+static void		test_foreach (void);
+
+
+static void		test_is_identity (void);
+
+static void		test_inversion (void);
+
 static void		test_sign (void);
+
+static void		test_ascends (void);
+
+static void		test_descends (void);
+
+static void		test_excedances (void);
 
 static void		test_swap (void);
 
@@ -86,15 +106,40 @@ main (gint argc, gchar** argv)
 
   	g_test_add_func ("/crank/base/permutation/to_string",
 					test_to_string);
+					
+	
+	g_test_add_func ("/crank/base/permutation/is_empty",
+					test_is_empty);
 
   	g_test_add_func ("/crank/base/permutation/slice",
 					test_slice);
+	
+	g_test_add_func ("/crank/base/permutation/foreach",
+					test_foreach);
+	
+	
+	g_test_add_func ("/crank/base/permutation/is_identity",
+					test_is_identity);
+					
+  	g_test_add_func ("/crank/base/permutation/inversion",
+					test_inversion);
 					
   	g_test_add_func ("/crank/base/permutation/sign",
 					test_sign);
 					
+	g_test_add_func ("/crank/base/permutation/ascends",
+					test_ascends);
+
+	g_test_add_func ("/crank/base/permutation/descends",
+					test_descends);
+
+	g_test_add_func ("/crank/base/permutation/excedances",
+					test_excedances);
+					
   	g_test_add_func ("/crank/base/permutation/swap",
 					test_swap);
+					
+
 					
   	g_test_add_func ("/crank/base/permutation/reverse",
 					test_reverse);
@@ -143,6 +188,20 @@ main (gint argc, gchar** argv)
 }
 
 //////// Definition ////////////////////////////////////////////////////////////
+
+static gboolean
+test_foreach_func (	const guint	v, gpointer	userdata	)
+{
+	guint* acc = (guint*)	userdata;
+	
+	*acc += v;
+	
+	return TRUE;
+}
+
+
+
+
 
 static void
 test_check_valid (void)
@@ -211,6 +270,40 @@ test_equal (void)
 }
 
 static void
+test_to_string (void)
+{
+	CrankPermutation	p;
+	gchar*				pstr;
+	
+	crank_permutation_init (&p, 5, 1, 2, 0, 3, 4);
+	
+	pstr = crank_permutation_to_string (&p);
+	
+	g_assert_cmpstr (pstr, ==, "(1, 2, 0, 3, 4)");
+	
+	g_free (pstr);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_is_empty (void)
+{
+	CrankPermutation	p;
+	
+	crank_permutation_init (&p, 2, 0, 1);
+	
+	g_assert (! crank_permutation_is_empty (&p));
+	
+	crank_permutation_fini (&p);
+	
+	crank_permutation_init (&p, 0);
+	
+	g_assert (crank_permutation_is_empty (&p));
+	
+	crank_permutation_fini (&p);
+}
+
+static void
 test_slice (void)
 {
 	CrankPermutation	p;
@@ -229,20 +322,51 @@ test_slice (void)
 }
 
 static void
-test_to_string (void)
+test_foreach (void)
+{
+	guint				acc;
+	CrankPermutation	p;
+	
+	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
+	
+	crank_permutation_foreach (&p, test_foreach_func, &acc);
+	
+	g_assert_cmpuint (acc, ==, 10);
+	
+	crank_permutation_fini (&p);
+	
+}
+
+static void
+test_is_identity (void)
 {
 	CrankPermutation	p;
-	gchar*				pstr;
 	
-	crank_permutation_init (&p, 5, 1, 2, 0, 3, 4);
+	crank_permutation_init (&p, 2, 0, 1);
 	
-	pstr = crank_permutation_to_string (&p);
+	g_assert (crank_permutation_is_identity (&p));
 	
-	g_assert_cmpstr (pstr, ==, "(1, 2, 0, 3, 4)");
+	crank_permutation_fini (&p);
 	
-	g_free (pstr);
+	crank_permutation_init (&p, 3, 0, 2, 1);
+	
+	g_assert (! crank_permutation_is_identity (&p));
+	
 	crank_permutation_fini (&p);
 }
+
+static void
+test_inversion (void)
+{
+	CrankPermutation	p;
+	
+	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
+	
+	g_assert_cmpuint (crank_permutation_get_inversion (&p), ==, 5);
+	
+	crank_permutation_fini (&p);
+}
+
 
 static void
 test_sign (void)
@@ -253,6 +377,69 @@ test_sign (void)
 	
 	g_assert_cmpint (crank_permutation_get_sign (&p), ==, -1);
 	
+	crank_permutation_fini (&p);
+}
+
+static void
+test_ascends (void)
+{
+	CrankPermutation	p;
+	guint*				ascends;
+	guint				nascends;
+	
+	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
+	
+	ascends = crank_permutation_get_ascents(&p, &nascends);
+	
+	// TODO: Add crank_assert_eqarray_uint_imm
+	// 1,2
+	g_assert_cmpuint (nascends, ==, 2);
+	g_assert_cmpuint (ascends[0], ==, 1);
+	g_assert_cmpuint (ascends[1], ==, 2);
+	
+	g_free (ascends);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_descends (void)
+{
+	CrankPermutation	p;
+	guint*				descends;
+	guint				ndescends;
+	
+	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
+	
+	descends = crank_permutation_get_descents(&p, &ndescends);
+	
+	// TODO: Add crank_assert_eqarray_uint_imm
+	// 1,2
+	g_assert_cmpuint (ndescends, ==, 2);
+	g_assert_cmpuint (descends[0], ==, 0);
+	g_assert_cmpuint (descends[1], ==, 3);
+	
+	g_free (descends);
+	crank_permutation_fini (&p);
+}
+
+static void
+test_excedances (void)
+{
+	CrankPermutation	p;
+	guint*				excedances;
+	guint				nexcedances;
+	
+	crank_permutation_init (&p, 5, 2, 1, 3, 4, 0);
+	
+	excedances = crank_permutation_get_excedances(&p, &nexcedances);
+	
+	// TODO: Add crank_assert_eqarray_uint_imm
+	g_assert_cmpuint (nexcedances, ==, 3);
+	g_assert_cmpuint (excedances[0], ==, 0);
+	g_assert_cmpuint (excedances[1], ==, 2);
+	g_assert_cmpuint (excedances[2], ==, 3);
+	
+	g_free (excedances);
 	crank_permutation_fini (&p);
 }
 

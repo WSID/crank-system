@@ -36,6 +36,13 @@ class TestPermutation(unittest.TestCase):
 		assert (p.check_valid ())
 		assert (not q.check_valid ())
 		assert (not r.check_valid ())
+	
+	def test_is_empty (self):
+		p = CrankBase.Permutation.init_arr ([1, 0])
+		assert (not p.is_empty ())
+		
+		p = CrankBase.Permutation.init_arr ([])
+		assert (p.is_empty ())
 
 	def test_slice (self):
 		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
@@ -43,10 +50,36 @@ class TestPermutation(unittest.TestCase):
 		self.assertEqual (p.slice (1, 4), [1, 3, 4])
 
 
+	def test_is_identity (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 0])
+		assert (not p.is_identity())
+		
+		p = CrankBase.Permutation.init_arr ([0, 1, 2])
+		assert (p.is_identity ())
+
+	def test_inversion (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
+		self.assertEqual (p.get_inversion (), 5)
+
 	def test_sign (self):
 		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
 		
 		self.assertEqual (p.get_sign (), -1);
+	
+	def test_ascents (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
+		
+		self.assertEqual (p.get_ascents (), [1, 2])
+	
+	def test_descents (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
+		
+		self.assertEqual (p.get_descents (), [0, 3])
+		
+	def test_excedances (self):
+		p = CrankBase.Permutation.init_arr ([2, 1, 3, 4, 0])
+		
+		self.assertEqual (p.get_excedances (), [0, 2, 3])
 	
 	def test_swap (self):
 		p = CrankBase.Permutation.init_arr ([0, 1, 3, 2, 4])

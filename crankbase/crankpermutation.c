@@ -700,6 +700,22 @@ crank_permutation_to_string (	CrankPermutation*	p	)
 //////// Collections ///////////////////////////////////////////////////////////
 
 /**
+ * crank_permutation_is_empty:
+ * @p: A Permutation.
+ *
+ * checks whether it is empty. (has 0 element.)
+ *
+ * Returns: Whether it is empty.
+ */
+gboolean
+crank_permutation_is_empty (	CrankPermutation*	p	)
+{
+	g_return_val_if_fail (p != NULL, TRUE);
+	
+	return p->n == 0;
+}
+
+/**
  * crank_permutation_get_size:
  * @p: A Permutation.
  *
@@ -761,6 +777,32 @@ crank_permutation_index_of (	CrankPermutation*	p,
 }
 
 /**
+ * crank_permutation_foreach:
+ * @p: A Permutation.
+ * @func: (scope call): A Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a permutation with given function.
+ *
+ * By returning %TRUE, iteration continues.
+ * By returning %FALSE, iteration breaks.
+ *
+ * Returns: Whether iteration was fully done without breaking.
+ */
+gboolean
+crank_permutation_foreach (	CrankPermutation*	p,
+							CrankBoolUintFunc	func,
+							gpointer			userdata	)
+{
+	guint		i;
+	
+	for (i = 0; i < p->n; i++)
+		if (! func (p->data[i], userdata)) return FALSE;
+	
+	return TRUE;
+}
+
+/**
  * crank_permutation_slice: (skip)
  * @p: A Permutation.
  * @from: Index to start slicing.
@@ -799,22 +841,55 @@ crank_permutation_slice (	CrankPermutation*	p,
 //////// Operations ////////////////////////////////////////////////////////////
 
 /**
+ * crank_permutation_is_identity:
+ * @p: A Permutation.
+ *
+ * Checks whether it is identity permutation.
+ *
+ * Returns: Whether it is identity permutation.
+ */
+gboolean
+crank_permutation_is_identity (	CrankPermutation*	p	)
+{
+	guint i;
+
+	g_return_val_if_fail (p != NULL, FALSE);
+	
+	for (i = 0; i < p->n; i++) if (p->data[i] != i) return FALSE;
+	return TRUE;
+}
+
+
+/**
+ * crank_permutation_get_inversion:
+ * @p: A Permutation.
+ *`
+ * Gets inversion number of permutation.
+ *
+ * Returns: Inversion number of pemutation.
+ */
+guint
+crank_permutation_get_inversion (	CrankPermutation*	p	)
+{
+	guint	i;
+	guint	j;
+	guint	inversion = 0;
+	
+	g_return_val_if_fail (p != NULL, 0);
+	
+	for (i = 0; i < p->n; i++)
+		for (j = i + 1; j < p->n; j++)
+			if (p->data[i] < p->data[j]) inversion++;
+	
+	return inversion;
+}
+	
+
+/**
  * crank_permutation_get_sign:
  * @p: A Permutation
  *
  * Gets sign of permutation.
- *
- * This function counts number of smaller elements that comes after each
- * elements. If number is even, sign will be +, and for odd, -.
- *
- * The permutation {1, 3, 4, 2, 5} will have + sign.
- * * for 1, every element is larger than 1.
- * * for 3, 2 is smaller than 3.
- * * for 4, 2 is smaller than 4.
- * * for 2, every element comes after, are larger than 2.
- * * for 5, no more element comes.
- *
- * If sign is +, then 1 is returned, for -, -1 is returned.
  *
  * If @p is 0 sized permutation, 0 is returned.
  *
@@ -823,19 +898,115 @@ crank_permutation_slice (	CrankPermutation*	p,
 gint
 crank_permutation_get_sign (	CrankPermutation*	p	)
 {
-	guint	i;
-	guint	j;
-	guint	inversion = 0;
-	
 	g_return_val_if_fail (p != NULL, 0);
+	if (crank_permutation_is_empty (p)) return 0;
+	return (crank_permutation_get_inversion (p) % 2 != 0) ? -1 : 1;
+}
+
+
+/**
+ * crank_permutation_get_ascents:
+ * @p: A Permutation.
+ * @rn: Length of returned array.
+ *
+ * Gets all of indices of ascents. (increasing point - p[i] where p[i] < p[i+ 1])
+ *
+ * For permutation like (0 1 2 ... (n-1)) => ((n-1), (n-2), .... 0), it returns
+ * %NULL
+ *
+ * Returns: (array length=rn) (transfer container) (nullable):
+ *    Indices of ascents.
+ */
+guint*
+crank_permutation_get_ascents (	CrankPermutation*	p,
+								guint*				rn	)
+{
+	guint	i;
+	guint*	result;
+	guint	n = 0;
+
+	g_return_val_if_fail (rn != NULL, NULL);
+	g_return_val_if_fail (p != NULL, NULL);
 	
-	if (p->n == 0) return 0;
+	result = g_new (guint, p->n - 1);
 	
-	for (i = 0; i < p->n; i++)
-		for (j = i + 1; j < p->n; j++)
-			if (p->data[i] < p->data[j]) inversion++;
+	for (i = 0; i < p->n - 1; i++) {
+		if (p->data[i] < p->data[i+1]) {
+			result[n] = i;
+			n++;
+		}
+	}
+	*rn = n;
+	return g_renew (guint, result, n);
+}
+
+/**
+ * crank_permutation_get_descents:
+ * @p: A Permutation.
+ * @rn: Length of returned array.
+ *
+ * Gets all of indices of descents. (Decreasing point - p[i] where p[i] > p[i+ 1])
+ *
+ * For permutation like (0 1 2 ... (n-1)) => ((n-1), (n-2), .... 0), it returns
+ * %NULL
+ *
+ * Returns: (array length=rn) (transfer container) (nullable):
+ *    Indices of descents.
+ */
+guint*
+crank_permutation_get_descents (	CrankPermutation*	p,
+									guint*				rn	)
+{
+	guint	i;
+	guint*	result;
+	guint	n = 0;
+
+	g_return_val_if_fail (rn != NULL, NULL);
+	g_return_val_if_fail (p != NULL, NULL);
 	
-	return (inversion % 2 != 0) ? -1 : 1;
+	result = g_new (guint, p->n - 1);
+	
+	for (i = 0; i < p->n - 1; i++) {
+		if (p->data[i] > p->data[i+1]) {
+			result[n] = i;
+			n++;
+		}
+	}
+	*rn = n;
+	return g_renew (guint, result, n);
+}
+
+/**
+ * crank_permutation_get_excedances:
+ * @p: A Permutation.
+ * @rn: Length of returned array.
+ *
+ * Gets all of indices of excedances. (p[i], where i < p[i])
+ *
+ * Returns: (array length=rn) (transfer container) (nullable):
+ *    Indices of excedances.
+ */
+guint*
+crank_permutation_get_excedances (	CrankPermutation*	p,
+									guint*				rn	)
+{
+	guint	i;
+	guint*	result;
+	guint	n = 0;
+
+	g_return_val_if_fail (rn != NULL, NULL);
+	g_return_val_if_fail (p != NULL, NULL);
+	
+	result = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++) {
+		if (p->data[i] > i) {
+			result[n] = i;
+			n++;
+		}
+	}
+	*rn = n;
+	return g_renew (guint, result, n);
 }
 
 /**
@@ -1207,6 +1378,37 @@ crank_permutation_shuffle_array_int (	CrankPermutation*	p,
 }
 
 /**
+ * crank_permutation_shuffle_array_uint: (skip)
+ * @p: A Permutation
+ * @arr: (array): An array.
+ *
+ * Stores shuffle result into newly allocated array.
+ *
+ * Returns: (transfer container): An array holding shuffled elemets.
+ */
+guint*
+crank_permutation_shuffle_array_uint (	CrankPermutation*	p,
+										guint*				arr	)
+{
+	guint* result;
+	guint	i;
+	guint	j;
+	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	result = g_new (gint, p->n);
+	
+	for (i = 0; i < p->n; i++) {
+		j = crank_permutation_get (p, i);
+		result[j] = arr[i];
+	}
+	
+	return result;
+}
+
+
+/**
  * crank_permutation_shuffle_array_float: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
@@ -1219,9 +1421,14 @@ gfloat*
 crank_permutation_shuffle_array_float (	CrankPermutation*	p,
 										gfloat*				arr	)
 {
-	gfloat* result = g_new (gfloat, p->n);
+	gfloat* result;
 	guint	i;
 	guint	j;
+	
+	g_return_val_if_fail (p != NULL, NULL);
+	g_return_val_if_fail (arr != NULL, NULL);
+	
+	result = g_new (gfloat, p->n);
 	
 	for (i = 0; i < p->n; i++) {
 		j = crank_permutation_get (p, i);
@@ -1409,6 +1616,28 @@ crank_permutation_vala_shuffle_array_int (	CrankPermutation*	p,
 {
 	if (rn != NULL) *rn = p->n;
 	return crank_permutation_shuffle_array_int (p, arr);
+}
+
+/**
+ * crank_permutation_vala_shuffle_array_uint: (skip)
+ * @p: A Permutation
+ * @arr: (array): An array.
+ * @rn: length of returned array
+ *
+ * Stores shuffle result into newly allocated array.
+ *
+ * This function is for vala.
+ *
+ * Returns: (array length=rn) (transfer container):
+ *    An array holding shuffled elemets. Free with g_free().
+ */ 
+guint*
+crank_permutation_vala_shuffle_array_uint (	CrankPermutation*	p,
+											guint*				arr,
+											guint*				rn	)
+{
+	if (rn != NULL) *rn = p->n;
+	return crank_permutation_shuffle_array_uint (p, arr);
 }
 
 /**
