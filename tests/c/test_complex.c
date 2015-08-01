@@ -67,6 +67,20 @@ static void		test_ln ( void );
 
 static void		test_exp ( void );
 
+static void		test_pow ( void );
+
+static void		test_sinh ( void );
+
+static void 	test_cosh ( void );
+
+static void		test_tanh ( void );
+
+static void		test_sin ( void );
+
+static void		test_cos ( void );
+
+static void		test_tan ( void );
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -96,6 +110,13 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/cplx/float/mix",			test_mix		);
 	g_test_add_func ("/crank/base/cplx/float/ln",			test_ln			);
 	g_test_add_func ("/crank/base/cplx/float/exp",			test_exp		);
+	g_test_add_func ("/crank/base/cplx/float/pow",			test_pow		);
+	g_test_add_func ("/crank/base/cplx/float/sinh",			test_sinh		);
+	g_test_add_func ("/crank/base/cplx/float/cosh",			test_cosh		);
+	g_test_add_func ("/crank/base/cplx/float/tanh",			test_tanh		);
+	g_test_add_func ("/crank/base/cplx/float/sin",			test_sin		);
+	g_test_add_func ("/crank/base/cplx/float/cos",			test_cos		);
+	g_test_add_func ("/crank/base/cplx/float/tan",			test_tan		);
 	
 	g_test_run ();
 
@@ -331,18 +352,99 @@ static void
 test_ln ( void )
 {
 	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
 	
-	crank_cplx_float_ln (&a, &a);
+	crank_cplx_float_ln (&a, &b);
 	
-	crank_assert_eqcplxfloat_cimm(&a, 1.6094f, 0.9273f);
+	crank_assert_eqcplxfloat_cimm(&b, 1.6094f, 0.9273f);
 }
 
 static void
 test_exp ( void )
 {
 	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
 	
-	crank_cplx_float_exp (&a, &a);
+	crank_cplx_float_exp (&a, &b);
 	
-	crank_assert_eqcplxfloat_cimm(&a, -15.2008f, -13.1287f);
+	crank_assert_eqcplxfloat_cimm(&b, -13.1287f, -15.2008f);
+}
+
+static void
+test_pow ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b = {1.0f, 2.0f};
+	CrankCplxFloat	r;
+	
+	crank_cplx_float_pow (&a, &b, &r);
+	
+	crank_assert_eqcplxfloat_cimm (&r, -0.4198f, -0.6605f);
+}
+
+static void
+test_sinh ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_sinh (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, -6.5481f, -7.6192f);
+}
+
+static void
+test_cosh ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_cosh (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, -6.5807f, -7.5816f);
+}
+
+static void
+test_tanh ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_tanh (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, 1.0007f, 0.0049f);
+}
+
+
+static void
+test_sin ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_sin (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, 3.8537f, -27.0168f);
+}
+
+static void
+test_cos ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_cos (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, -27.0349f, -3.8512f);
+}
+
+static void
+test_tan ( void )
+{
+	CrankCplxFloat	a = {3.0f, 4.0f};
+	CrankCplxFloat	b;
+	
+	crank_cplx_float_tan (&a, &b);
+	
+	crank_assert_eqcplxfloat_cimm (&b, -0.0001f, 0.9994f);
 }

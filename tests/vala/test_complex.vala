@@ -43,6 +43,13 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/cplx/float/mix",		test_mix	);
 	GLib.Test.add_func ("/crank/base/cplx/float/ln",		test_ln	);
 	GLib.Test.add_func ("/crank/base/cplx/float/exp",		test_exp	);
+	GLib.Test.add_func ("/crank/base/cplx/float/pow",		test_pow	);
+	GLib.Test.add_func ("/crank/base/cplx/float/sinh",		test_sinh	);
+	GLib.Test.add_func ("/crank/base/cplx/float/cosh",		test_cosh	);
+	GLib.Test.add_func ("/crank/base/cplx/float/tanh",		test_tanh	);
+	GLib.Test.add_func ("/crank/base/cplx/float/sin",		test_sin	);
+	GLib.Test.add_func ("/crank/base/cplx/float/cos",		test_cos	);
+	GLib.Test.add_func ("/crank/base/cplx/float/tan",		test_tan	);
 	
 
 	GLib.Test.run ();
@@ -248,6 +255,49 @@ private void test_exp () {
 	
 	a = a.exp ();
 	
-	assert (float_eq (a.real, -15.2008f));
-	assert (float_eq (a.imag, -13.1287f));
+	assert (float_eq (a.real, -13.1287f));
+	assert (float_eq (a.imag, -15.2008f));
+}
+
+private void test_pow () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	Crank.CplxFloat b = {1.0f, 2.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.pow (b), -0.4198f, -0.6605f);
+}
+
+private void test_sinh () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.sinh (), -6.5481f, -7.6192f);
+}
+
+private void test_cosh () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.cosh (), -6.5807f, -7.5816f);
+}
+
+private void test_tanh () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.tanh (), 1.0007f, 0.0049f);
+}
+
+private void test_sin () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.sin (), 3.8537f, -27.0168f);
+}
+
+private void test_cos () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.cos (), -27.0349f, -3.8512f);
+}
+
+private void test_tan () {
+	Crank.CplxFloat a = {3.0f, 4.0f};
+	
+	Crank.assert_eqcplxfloat_cimm (a.tan (), -0.0001f, 0.9994f);
 }

@@ -68,29 +68,29 @@ void		crank_cplx_float_init_arr (		CrankCplxFloat*	cplx,
 void		crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
 											va_list			varargs	);
 
-void		crank_cplx_float_init_fill (CrankCplxFloat*	cplx,
+void		crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
 											gfloat			fill	);
 
 //////// Basic Operations //////////////////////////////////////////////////////
 
-void			crank_cplx_float_copy (	CrankCplxFloat*	cplx,
-										CrankCplxFloat*	other	);
+void		crank_cplx_float_copy (			CrankCplxFloat*	cplx,
+											CrankCplxFloat*	other	);
 									
-CrankCplxFloat*	crank_cplx_float_dup (	CrankCplxFloat*	cplx	);
+CrankCplxFloat*	crank_cplx_float_dup (		CrankCplxFloat*	cplx	);
 
-gboolean	crank_cplx_float_equal (	gconstpointer	a,
-										gconstpointer	b	);
+gboolean	crank_cplx_float_equal (		gconstpointer	a,
+											gconstpointer	b	);
 
 gboolean	crank_cplx_float_equal_delta (	CrankCplxFloat*	a,
 											CrankCplxFloat*	b,
 											const gfloat	d	);
 										
-guint		crank_cplx_float_hash (		gconstpointer	a	);
+guint		crank_cplx_float_hash (			gconstpointer	a	);
 
-gchar*		crank_cplx_float_to_string (		CrankCplxFloat*	cplx	);
+gchar*		crank_cplx_float_to_string (	CrankCplxFloat*	cplx	);
 
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
-										const gchar*	format	);
+											const gchar*	format	);
 
 //////// Unary Operations //////////////////////////////////////////////////////
 gfloat		crank_cplx_float_get_norm_sq (	CrankCplxFloat*	cplx	);
@@ -110,73 +110,134 @@ void		crank_cplx_float_conjugate (	CrankCplxFloat*	a,
 											
 void		crank_cplx_float_unit (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
+											
+										
+void		crank_cplx_float_neg_self (		CrankCplxFloat*	a	);
+
+void		crank_cplx_float_inverse_self (	CrankCplxFloat*	a	);
+
+void		crank_cplx_float_conjugate_self (	CrankCplxFloat*	a	);
+											
+void		crank_cplx_float_unit_self (	CrankCplxFloat*	a	);
 
 //////// Cplx - Real Operations ////////////////////////////////////////////////
 
-void		crank_cplx_float_addr (		CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_addr (			CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
 
-void		crank_cplx_float_subr (		CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_subr (			CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
 
-void		crank_cplx_float_mulr (		CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_mulr (			CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
 
-void		crank_cplx_float_divr (		CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_divr (			CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
+
+
+
+void		crank_cplx_float_addr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+
+void		crank_cplx_float_subr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+
+void		crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+
+void		crank_cplx_float_divr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
 
 //////// Real - Cplx Operations ////////////////////////////////////////////////
 
-void		crank_cplx_float_rsubr (	CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_rsubr (		CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
 
-void		crank_cplx_float_rdivr (	CrankCplxFloat*	a,
-										gfloat			b,
-										CrankCplxFloat*	r		);
+void		crank_cplx_float_rdivr (		CrankCplxFloat*	a,
+											gfloat			b,
+											CrankCplxFloat*	r		);
 
 //////// Cplx - Cplx Operations ////////////////////////////////////////////////
 
-void		crank_cplx_float_add (		CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_add (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 										
-void		crank_cplx_float_sub (		CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_sub (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 										
-void		crank_cplx_float_mul (		CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_mul (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 
-void		crank_cplx_float_div (		CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_div (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 
-void		crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_add_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+										
+void		crank_cplx_float_sub_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+										
+void		crank_cplx_float_mul_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+
+void		crank_cplx_float_div_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+										
+
+void		crank_cplx_float_mul_conj (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 
 //////// Ternary Operations ////////////////////////////////////////////////////
 
-void		crank_cplx_float_mix (		CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										gfloat			c,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_mix (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											gfloat			c,
+											CrankCplxFloat*	r	);
 
 
-//////// Advanced Operations ///////////////////////////////////////////////////
+//////// Exponential Operations ////////////////////////////////////////////////
 
-void		crank_cplx_float_ln (		CrankCplxFloat*	a,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_ln (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
 
-void		crank_cplx_float_exp (		CrankCplxFloat*	a,
-										CrankCplxFloat*	r	);
+void		crank_cplx_float_exp (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
 
+void		crank_cplx_float_pow (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
+
+//////// Hyperbolic Operations /////////////////////////////////////////////////
+
+void		crank_cplx_float_sinh (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+											
+void		crank_cplx_float_cosh (			CrankCplxFloat* a,
+											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_tanh (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+											
+//////// Trigonometric Operations //////////////////////////////////////////////
+
+void		crank_cplx_float_sin (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_cos (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_tan (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
 
 
 #endif

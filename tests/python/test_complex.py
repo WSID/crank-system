@@ -215,8 +215,65 @@ class TestVecInt(unittest.TestCase):
 		
 		a = a.exp ()
 		
-		self.assertFloat (a.real, -15.2008)
-		self.assertFloat (a.imag, -13.1287)
+		self.assertFloat (a.real, -13.1287)
+		self.assertFloat (a.imag, -15.2008)
+	
+	def test_pow (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		b = CrankBase.CplxFloat.init (1, 2)
+		
+		a = a.pow (b)
+		
+		self.assertFloat (a.real, -0.4198)
+		self.assertFloat (a.imag, -0.6605)
+		
+	def test_sinh (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.sinh ()
+		
+		self.assertFloat (a.real, -6.5481)
+		self.assertFloat (a.imag, -7.6192)
+		
+	def test_cosh (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.cosh ()
+		
+		self.assertFloat (a.real, -6.5807)
+		self.assertFloat (a.imag, -7.5816)
+		
+	def test_tanh (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.tanh ()
+		
+		self.assertFloat (a.real, 1.0007)
+		self.assertFloat (a.imag, 0.0049)
+		
+	def test_sin (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.sin ()
+		
+		self.assertFloat (a.real, 3.8537)
+		self.assertFloat (a.imag, -27.0168)
+		
+	def test_cos (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.cos ()
+		
+		self.assertFloat (a.real, -27.0349)
+		self.assertFloat (a.imag, -3.8512)
+		
+	def test_tan (self):
+		a = CrankBase.CplxFloat.init (3, 4)
+		
+		a = a.tan ()
+		
+		self.assertFloat (a.real, -0.0001)
+		self.assertFloat (a.imag, 0.9994)
 		
 if __name__ == '__main__':
 	unittest.main ()
