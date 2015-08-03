@@ -70,6 +70,13 @@ cplx_*_init*		skip
 CPLX_FLOAT_DEFFORMAT	parent="Crank.CplxFloat"
 CPLX_FLOAT_DEFFORMAT	name="DEFFORMAT"
 
+Quat*				struct=true
+QuatFloat.to_string_full.format default=Crank.QuatFloat.DEFFORMAT
+
+quat_*_init*		skip
+QUAT_FLOAT_DEFFORMAT	parent="Crank.QuatFloat"
+QUAT_FLOAT_DEFFORMAT	name="DEFFORMAT"
+
 
 
 Vec*				struct=true

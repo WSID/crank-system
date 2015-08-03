@@ -18,6 +18,7 @@ test_programs= \
 		test_string \
 		test_permutation \
 		test_complex \
+		test_quaternion \
 		test_vec_bool \
 		test_vec_int \
 		test_vec_float \
@@ -70,6 +71,14 @@ test_complex_LDADD= \
 
 test_complex_SOURCES= \
 		test_complex.vala
+
+		
+test_quaternion_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_quaternion_SOURCES= \
+		test_quaternion.vala
 		
 		
 test_vec_bool_LDADD= \

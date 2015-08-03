@@ -21,6 +21,7 @@ test_programs= \
 		test_value \
 		test_permutation \
 		test_complex \
+		test_quaternion \
 		test_vec_bool \
 		test_vec_int \
 		test_vec_float \
@@ -42,6 +43,8 @@ test_value_LDADD= $(TEST_BASE_LDADD)
 test_permutation_LDADD= $(TEST_BASE_LDADD)
 
 test_complex_LDADD=  $(TEST_BASE_LDADD)
+
+test_quaternion_LDADD=  $(TEST_BASE_LDADD)
 
 test_vec_bool_LDADD=  $(TEST_BASE_LDADD)
 

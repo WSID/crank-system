@@ -32,6 +32,7 @@
     <title>Data structures</title>
     <xi:include href="xml/crankpermutation.xml"/>
     <xi:include href="xml/crankcomplex.xml"/>
+    <xi:include href="xml/crankquaternion.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>

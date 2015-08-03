@@ -120,6 +120,25 @@ namespace Crank {
 		public float norm_sq { get; }
 	}
 	
+	public struct QuatFloat {
+	
+		public QuatFloat				(float	w=0.0f,	float	x=0.0f,
+										 float	y=0.0f,	float	z=0.0f);
+		
+		public QuatFloat.cplx			(CplxFloat	wx,	CplxFloat	yz);
+		
+		public QuatFloat.arr			([CCode (array_length=false)]float	parts[4]);
+		public QuatFloat.valist			(va_list	varargs);
+		public QuatFloat.valist_cplx	(va_list	varargs);
+		public QuatFloat.fill			(float		fill);
+	
+		public CplxFloat	wx { get; }
+		public CplxFloat	yz { get; }
+		public VecFloat3	imag { get; }
+		public float 		norm { get; }
+		public float 		norm_sq { get; }
+	}
+	
 	[CCode (copy_function="crank_permutation_copy",
 			destroy_function="crank_permutation_fini",
 			free_function="crank_permutation_free")]

@@ -4,6 +4,7 @@
 TESTS= \
 	test_permutation.py \
 	test_complex.py \
+	test_quaternion.py \
 	test_vec_bool.py \
 	test_vec_int.py \
 	test_vec_float.py \

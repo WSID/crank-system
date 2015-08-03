@@ -31,6 +31,7 @@
 
 #include "crankpermutation.h"
 #include "crankcomplex.h"
+#include "crankquaternion.h"
 
 #include "crankveccommon.h"
 #include "crankvecbool.h"
