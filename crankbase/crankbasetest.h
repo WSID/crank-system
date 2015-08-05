@@ -502,8 +502,8 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  */
 #define crank_assert_eqcplxfloat_d_cimm(a,r,i,d) \
 		G_STMT_START { \
-			CrankCplxFloat	b = {r,i}; \
-			crank_assert_eqcplxfloat_d (a, &b, d); \
+			CrankCplxFloat	_crank_aecfd_b = {r,i}; \
+			crank_assert_eqcplxfloat_d (a, &_crank_aecfd_b, d); \
 		} G_STMT_END
 		
 		
