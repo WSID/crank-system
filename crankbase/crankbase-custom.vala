@@ -506,6 +506,33 @@ namespace Crank {
 		public uint			col_size { get; }
 	}
 	
+
+	[CCode (	copy_function="crank_mat_float_n_copy",
+				destroy_function="crank_mat_float_n_fini",
+				free_function="crank_mat_float_n_free"	)]
+	public struct MatCplxFloatN {
+
+		public MatCplxFloatN (uint rn, uint cn, ...);
+		public MatCplxFloatN.arr ([CCode (array_length_pos=0)]CplxFloat[,] marr);
+		public MatCplxFloatN.arr_take ([CCode (array_length_pos=0)]owned CplxFloat[,] marr);
+		public MatCplxFloatN.rv (uint rn, ...);
+		public MatCplxFloatN.rvarr ([CCode (array_length_pos=0)]VecCplxFloatN[] rvarr);
+		public MatCplxFloatN.cv (uint cn, ...);
+		public MatCplxFloatN.cvarr ([CCode (array_length_pos=0)]VecCplxFloatN[] cvarr);
+		public MatCplxFloatN.diag (uint n, ...);
+		public MatCplxFloatN.diag_arr ([CCode (array_length_pos=0)]CplxFloat[] darr);
+		public MatCplxFloatN.fill (uint rn, uint cn, CplxFloat fill);
+
+		public CplxFloat		tr { owned get; }
+		public CplxFloat		det { owned get; }
+		public MatCplxFloatN	cof { owned get; }
+		public MatCplxFloatN	adj { owned get; }
+		public VecCplxFloatN	diagv {
+			[CCode(cname="crank_mat_cplx_float_n_get_diag")]owned get; }
+		
+		public uint			row_size { get; }
+		public uint			col_size { get; }
+	}
 	
 	
 	

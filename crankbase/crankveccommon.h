@@ -48,4 +48,6 @@ typedef struct _CrankMatFloat3 CrankMatFloat3;
 typedef struct _CrankMatFloat4 CrankMatFloat4;
 typedef struct _CrankMatFloatN CrankMatFloatN;
 
+typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
+
 #endif

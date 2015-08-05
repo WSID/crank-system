@@ -40,6 +40,7 @@
 #include "crankveccplxfloat.h"
 
 #include "crankmatfloat.h"
+#include "crankmatcplxfloat.h"
 #include "crankadvmat.h"
 
 #include "crankdigraph.h"

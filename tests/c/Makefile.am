@@ -27,6 +27,7 @@ test_programs= \
 		test_vec_float \
 		test_vec_cplx_float \
 		test_mat_float \
+		test_mat_cplx_float \
 		test_advmat \
 		test_digraph \
 		test_advgraph 
@@ -56,6 +57,8 @@ test_vec_cplx_float_LDADD=  $(TEST_BASE_LDADD)
 
 
 test_mat_float_LDADD=  $(TEST_BASE_LDADD)
+
+test_mat_cplx_float_LDADD=  $(TEST_BASE_LDADD)
 
 test_advmat_LDADD=  $(TEST_BASE_LDADD)
 
