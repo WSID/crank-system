@@ -106,6 +106,37 @@ namespace Crank {
 	
 	
 	
+	public struct RanUint {
+		public RanUint		(uint	start, uint		end);
+		public RanUint.diff (uint	start, uint		diff);
+		public RanUint.unit (uint	start);
+		
+		public uint	length {get;}
+	}
+	
+	public struct RanInt {
+		public RanInt		(int	start, int		end);
+		public RanInt.diff	(int	start, uint		diff);
+		public RanInt.unit	(int	start);
+		
+		public uint	length {get;}
+	}
+	
+	public struct RanFloat {
+		public RanFloat			(float	start, float		end);
+		public RanFloat.diff	(float	start, float		diff);
+		public RanFloat.unit	(float	start);
+		
+		public float	length {get;}
+	}
+	
+	public struct RanPtr {
+		public RanPtr		(void*	start,	void*	end);
+		public RanPtr.diff	(void*	start,	size_t	end);
+		
+		public size_t 	length {get;}
+		public uint		count {get;}
+	}
 	
 	
 	public struct CplxFloat {

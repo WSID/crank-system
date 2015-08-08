@@ -29,6 +29,8 @@
 #include "crankvala.h"
 #include "crankvalue.h"
 
+#include "crankrange.h"
+
 #include "crankpermutation.h"
 #include "crankcomplex.h"
 #include "crankquaternion.h"

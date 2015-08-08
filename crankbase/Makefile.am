@@ -12,20 +12,25 @@ include_HEADERS = \
 		crankvalue.h \
 		crankstring.h \
 		\
+		crankrange.h \
+		\
 		crankcomplex.h \
 		crankquaternion.h \
-		crankdigraph.h \
 		crankpermutation.h \
+		\
 		crankveccommon.h \
 		crankvecbool.h \
 		crankvecint.h \
 		crankvecfloat.h \
 		crankveccplxfloat.h \
+		\
 		crankmatfloat.h \
 		crankmatcplxfloat.h \
 		\
-		crankadvgraph.h \
 		crankadvmat.h \
+		\
+		crankdigraph.h \
+		crankadvgraph.h \
 		\
 		crankbasetest.h
 
@@ -47,6 +52,7 @@ libcrankbase_la_SOURCES= \
 		crankvalue.c \
 		crankstring.c \
 		\
+		crankrange.c \
 		crankcomplex.c \
 		crankquaternion.c \
 		crankdigraph.c \

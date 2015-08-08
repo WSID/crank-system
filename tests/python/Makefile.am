@@ -2,6 +2,7 @@
 # Python에서 Crank System을 테스트합니다.
 
 TESTS= \
+	test_range.py \
 	test_permutation.py \
 	test_complex.py \
 	test_quaternion.py \

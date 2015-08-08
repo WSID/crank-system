@@ -54,6 +54,9 @@ str_*		parent="Crank.Str"	name="str_(.+)"
 
 
 //////// Data Structures ///////////////////////////////////////////////////////
+Ran*				struct=true
+.init*				skip
+
 Permutation 		struct=true
 .data 				unowned=false	array_length_field="n"
 .shuffle_sarray		skip=false
