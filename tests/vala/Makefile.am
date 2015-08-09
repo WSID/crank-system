@@ -17,6 +17,7 @@ test_programs= \
 		test_vala \
 		test_string \
 		test_range \
+		test_iter \
 		test_permutation \
 		test_complex \
 		test_quaternion \
@@ -55,8 +56,7 @@ test_string_LDADD= \
 
 test_string_SOURCES= \
 		test_string.vala
-	
-		
+
 		
 test_range_LDADD= \
 		$(CRANK_BASE_LIBS) \
@@ -64,7 +64,14 @@ test_range_LDADD= \
 
 test_range_SOURCES= \
 		test_range.vala
-		
+
+
+test_iter_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_iter_SOURCES= \
+		test_iter.vala
 		
 test_permutation_LDADD= \
 		$(CRANK_BASE_LIBS) \

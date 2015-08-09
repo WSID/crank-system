@@ -138,6 +138,66 @@ namespace Crank {
 		public uint		count {get;}
 	}
 	
+	public struct IterMemBool {
+		public IterMemBool				(bool*	from,	bool*	to);
+		public IterMemBool.with_count	(bool*	from,	uint	count);
+		public IterMemBool.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_bool_init_with_count")]
+		public IterMemBool.with_array	(bool[]	arr);
+	}
+	
+	public struct IterMemUint {
+		public IterMemUint				(uint*	from,	uint*	to);
+		public IterMemUint.with_count	(uint*	from,	uint	count);
+		public IterMemUint.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_uint_init_with_count")]
+		public IterMemUint.with_array	(uint[]	arr);
+	}
+	
+	public struct IterMemInt {
+		public IterMemInt				(int*	from,	int*	to);
+		public IterMemInt.with_count	(int*	from,	uint	count);
+		public IterMemInt.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_int_init_with_count")]
+		public IterMemInt.with_array	(int[]	arr);
+	}
+	
+	public struct IterMemFloat {
+		public IterMemFloat				(float*	from,	float*	to);
+		public IterMemFloat.with_count	(float*	from,	uint	count);
+		public IterMemFloat.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_float_init_with_count")]
+		public IterMemFloat.with_array	(float[]	arr);
+	}
+	
+	[CCode(simple_generics=true)]
+	public struct IterMemPtr<G> {
+		public IterMemPtr				(void**	from,	void**	to);
+		public IterMemPtr.with_count	(void**	from,	uint	count);
+		public IterMemPtr.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_ptr_init_with_count")]
+		public IterMemPtr.with_array	(G[]	arr);
+		
+		public bool	is_valid ();
+		public bool	next ();
+		public unowned G	get ();
+		public bool	foreach (BoolPtrFunc<G>	func);
+	}
+	
+	public struct IterMemStruct {
+		public IterMemStruct				(void*	from,	void*	to);
+		public IterMemStruct.with_count	(void*	from,	uint	count);
+		public IterMemStruct.with_range	(RanPtr	range);
+		
+		[CCode (cname="crank_iter_mem_struct_init_with_count")]
+		public IterMemStruct.with_array	(void*[]	arr);
+	}
+	
 	
 	public struct CplxFloat {
 	

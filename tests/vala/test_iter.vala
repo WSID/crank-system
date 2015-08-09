@@ -1,6 +1,3 @@
-#ifndef CRANKBASE_H
-#define CRANKBASE_H
-
 /* Copyright (C) 2015, WSID   */
 
 /* Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,36 +19,51 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKBASE_INSIDE
+int main (string[] args) {
+	GLib.Test.init (ref args);
 
-#include "crankbasemacro.h"
-#include "crankstring.h"
-#include "crankvala.h"
-#include "crankvalue.h"
+	GLib.Test.add_func ("/crank/base/iter/uint",		test_uint	);
+	GLib.Test.add_func ("/crank/base/iter/uint/foreach",		test_uint_foreach	);
+	
+	GLib.Test.run ();
 
-#include "crankrange.h"
-#include "crankiter.h"
+	return 0;
+}
 
-#include "crankpermutation.h"
-#include "crankcomplex.h"
-#include "crankquaternion.h"
+private void test_uint () {
+	uint	array[] = {3, 9, 1, 3, 2, 5, 5, 9, 7};
+	
+	uint	prod = 1;
+	uint	sum = 0;
+	
+	Crank.IterMemUint	iter = Crank.IterMemUint.with_array (array);
+	
+	while (iter.next ()) {
+		uint val = iter.get ();
+		
+		prod *= val;
+		sum += val;
+	}
+	
+	assert (prod == 255150);
+	assert (sum == 44);
+}
 
-#include "crankveccommon.h"
-#include "crankvecbool.h"
-#include "crankvecint.h"
-#include "crankvecfloat.h"
-#include "crankveccplxfloat.h"
-
-#include "crankmatfloat.h"
-#include "crankmatcplxfloat.h"
-#include "crankadvmat.h"
-
-#include "crankdigraph.h"
-#include "crankadvgraph.h"
-
-#include "crankbasetest.h"
-
-
-#undef _CRANKBASE_INSIDE
-
-#endif /* CRANKBASE_H */
+private void test_uint_foreach () {
+	uint	array[] = {3, 9, 1, 3, 2, 5, 5, 9, 7};
+	
+	uint	prod = 1;
+	uint	sum = 0;
+	
+	Crank.IterMemUint	iter = Crank.IterMemUint.with_array (array);
+	
+	iter.foreach ( (val) => {
+		prod *= val;
+		sum += val;
+		
+		return true;
+	} );
+	
+	assert (prod == 255150);
+	assert (sum == 44);
+}

@@ -57,6 +57,15 @@ str_*		parent="Crank.Str"	name="str_(.+)"
 Ran*				struct=true
 .init*				skip
 
+IterMem*			skip=false
+
+IterMemBool.ptr		type="bool*"
+IterMemUint.ptr		type="uint*"
+IterMemInt.ptr		type="int*"
+IterMemFloat.ptr	type="float*"
+
+IterMemPtr			skip
+
 Permutation 		struct=true
 .data 				unowned=false	array_length_field="n"
 .shuffle_sarray		skip=false

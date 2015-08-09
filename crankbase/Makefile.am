@@ -13,6 +13,7 @@ include_HEADERS = \
 		crankstring.h \
 		\
 		crankrange.h \
+		crankiter.h \
 		\
 		crankcomplex.h \
 		crankquaternion.h \
@@ -53,6 +54,8 @@ libcrankbase_la_SOURCES= \
 		crankstring.c \
 		\
 		crankrange.c \
+		crankiter.c \
+		\
 		crankcomplex.c \
 		crankquaternion.c \
 		crankdigraph.c \

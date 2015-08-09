@@ -20,6 +20,7 @@ test_programs= \
 		test_base_macro \
 		test_value \
 		test_range \
+		test_iter \
 		test_permutation \
 		test_complex \
 		test_quaternion \
@@ -43,6 +44,8 @@ test_base_macro_LDADD= $(TEST_BASE_LDADD)
 test_value_LDADD= $(TEST_BASE_LDADD)
 
 test_range_LDADD= $(TEST_BASE_LDADD)
+
+test_iter_LDADD= $(TEST_BASE_LDADD)
 
 test_permutation_LDADD= $(TEST_BASE_LDADD)
 
