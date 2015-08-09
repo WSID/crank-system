@@ -40,6 +40,7 @@
 	<xi:include href="xml/crankvecfloat.xml"/>
 	<xi:include href="xml/crankveccplxfloat.xml"/>
 	<xi:include href="xml/crankmatfloat.xml"/>
+	<xi:include href="xml/crankmatcplxfloat.xml"/>
 	<xi:include href="xml/crankadvmat.xml"/>
    	<xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
