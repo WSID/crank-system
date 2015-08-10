@@ -31,6 +31,9 @@ namespace Crank {
 	public delegate void	Callback ();
 	
 	[CCode (simple_generics=true)]
+	public delegate bool BoolPtrFunc<G> (	G	value	);
+	
+	[CCode (simple_generics=true)]
 	public delegate string StrPtrFunc<G> (	G	value	);
 	
 	[CCode (simple_generics=true, has_target=false)]
@@ -189,13 +192,19 @@ namespace Crank {
 		public bool	foreach (BoolPtrFunc<G>	func);
 	}
 	
-	public struct IterMemStruct {
-		public IterMemStruct				(void*	from,	void*	to);
+	[CCode(simple_generics=true)]
+	public struct IterMemStruct<G> {
+		public IterMemStruct			(void*	from,	void*	to);
 		public IterMemStruct.with_count	(void*	from,	uint	count);
 		public IterMemStruct.with_range	(RanPtr	range);
 		
 		[CCode (cname="crank_iter_mem_struct_init_with_count")]
 		public IterMemStruct.with_array	(void*[]	arr);
+
+		public bool is_valid ();
+		public bool next ();
+		public unowned G	get ();
+		public bool foreach (BoolPtrFunc<G> func);
 	}
 	
 	

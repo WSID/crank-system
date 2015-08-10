@@ -237,6 +237,20 @@ crank_vec_int2_foreach (	CrankVecInt2*		vec,
 		return FALSE;
 }
 
+/**
+ * crank_vec_int2_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_int2_iterator (	CrankVecInt2*		vec,
+							CrankIterMemInt*	iter	)
+{
+	crank_iter_mem_int_init_with_count (iter, (gint*)vec, 2);
+}
+
 //////// Basic operation ////////
 
 /**
@@ -825,6 +839,20 @@ crank_vec_int3_foreach (	CrankVecInt3*		vec,
 		return TRUE;
 	else
 		return FALSE;
+}
+
+/**
+ * crank_vec_int3_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_int3_iterator (	CrankVecInt3*		vec,
+							CrankIterMemInt*	iter	)
+{
+	crank_iter_mem_int_init_with_count (iter, (gint*)vec, 3);
 }
 
 //////// Basic operation ////////
@@ -1470,6 +1498,20 @@ crank_vec_int4_foreach (	CrankVecInt4*		vec,
 		return TRUE;
 	else
 		return FALSE;
+}
+
+/**
+ * crank_vec_int4_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_int4_iterator (	CrankVecInt4*		vec,
+							CrankIterMemInt*	iter	)
+{
+	crank_iter_mem_int_init_with_count (iter, (gint*)vec, 4);
 }
 
 //////// Basic operation ////////
@@ -2255,6 +2297,20 @@ crank_vec_int_n_foreach (	CrankVecIntN*		vec,
 	  	if (! func(vec->data[i], userdata)) return FALSE;
 
   	return TRUE;
+}
+
+/**
+ * crank_vec_int_n_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_int_n_iterator (	CrankVecIntN*		vec,
+							CrankIterMemInt*	iter	)
+{
+	crank_iter_mem_int_init_with_count (iter, vec->data, vec->n);
 }
 
 //////// Basic operation ////////

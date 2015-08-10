@@ -30,6 +30,7 @@
 #include <glib.h>
 
 #include "crankfunction.h"
+#include "crankiter.h"
 
 G_BEGIN_DECLS
 
@@ -196,13 +197,16 @@ guint			crank_permutation_get (			CrankPermutation*	p,
 gint			crank_permutation_index_of (	CrankPermutation*	p,
 												const guint			v	);
 
-gboolean		crank_permutation_foreach (		CrankPermutation*	p,
-												CrankBoolUintFunc	func,
-												gpointer			userdata );
-
 guint*			crank_permutation_slice (		CrankPermutation*	p,
 												const guint			from,
 												const guint			to	);
+												
+void			crank_permutation_iterator (	CrankPermutation*	p,
+												CrankIterMemUint*	iter	);
+
+gboolean		crank_permutation_foreach (		CrankPermutation*	p,
+												CrankBoolUintFunc	func,
+												gpointer			userdata );
 
 //////// Operations ////////////////////////////////////////////////////////////
 

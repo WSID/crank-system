@@ -30,6 +30,7 @@
 #include <glib-object.h>
 
 #include "crankfunction.h"
+#include "crankiter.h"
 #include "crankveccommon.h"
 
 G_BEGIN_DECLS
@@ -139,6 +140,9 @@ void			crank_vec_bool2_set			(	CrankVecBool2*	vec,
 gboolean		crank_vec_bool2_foreach		(	CrankVecBool2*		vec,
 												CrankBoolBoolFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_bool2_iterator 	(	CrankVecBool2*		vec,
+												CrankIterMemBool*	iter	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -286,6 +290,9 @@ void			crank_vec_bool3_set			(	CrankVecBool3*	vec,
 gboolean		crank_vec_bool3_foreach		(	CrankVecBool3*		vec,
 												CrankBoolBoolFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_bool3_iterator 	(	CrankVecBool3*		vec,
+												CrankIterMemBool*	iter	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -441,6 +448,9 @@ void			crank_vec_bool4_set			(	CrankVecBool4*	vec,
 gboolean		crank_vec_bool4_foreach		(	CrankVecBool4*		vec,
 												CrankBoolBoolFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_bool4_iterator 	(	CrankVecBool4*		vec,
+												CrankIterMemBool*	iter	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -572,6 +582,9 @@ void			crank_vec_bool_n_remove		(	CrankVecBoolN*	vec,
 gboolean		crank_vec_bool_n_foreach	(	CrankVecBoolN*		vec,
 												CrankBoolBoolFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_bool_n_iterator 	(	CrankVecBoolN*		vec,
+												CrankIterMemBool*	iter	);
 
 
 //////// Vector - Vector Operations ////////////////////////////////////////////

@@ -264,7 +264,7 @@ void	crank_iter_mem_struct_init (			CrankIterMemStruct*	iter,
 												gsize				size		);
 
 void	crank_iter_mem_struct_init_with_count (	CrankIterMemStruct*	iter,
-												gpointer*			from,
+												gpointer			from,
 												guint				count,
 												gsize				size	);
 
@@ -297,7 +297,7 @@ gboolean	crank_iter_mem_struct_foreach (		CrankIterMemStruct*	iter,
 #define	crank_iter_mem_struct_init_with_count_typed(iter,G,from,count)	\
 		G_STMT_START {			\
 			G*	nf = from;		\
-			crank_iter_mem_struct_init_with_count(iter,from,count,sizeof(G)); \
+			crank_iter_mem_struct_init_with_count(iter,nf,count,sizeof(G)); \
 		} G_STMT_END
 
 #define crank_iter_mem_struct_init_with_range_typed(iter,G,range) \

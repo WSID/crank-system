@@ -29,6 +29,7 @@
 //////// Function //////////////////////////////////////////////////////////////
 
 // Generic decorated delegate types.
+BoolPtrFunc		skip
 StrPtrFunc		skip
 EqualDeltaFunc	skip
 
@@ -65,6 +66,7 @@ IterMemInt.ptr		type="int*"
 IterMemFloat.ptr	type="float*"
 
 IterMemPtr			skip
+IterMemStruct		skip
 
 Permutation 		struct=true
 .data 				unowned=false	array_length_field="n"
@@ -98,7 +100,6 @@ Vec*N
 .data	array_length_field="n"
 
 vec_*_init*			skip
-
 
 
 

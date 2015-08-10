@@ -101,6 +101,9 @@ void			crank_vec_int2_set			(	CrankVecInt2*	vec,
 gboolean		crank_vec_int2_foreach		(	CrankVecInt2*		vec,
 												CrankBoolIntFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_int2_iterator 	(	CrankVecInt2*		vec,
+												CrankIterMemInt*	iter	);
 
 //////// Basic operation ////////
 
@@ -278,6 +281,9 @@ void			crank_vec_int3_set			(	CrankVecInt3*	vec,
 gboolean		crank_vec_int3_foreach		(	CrankVecInt3*		vec,
 												CrankBoolIntFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_int3_iterator 	(	CrankVecInt3*		vec,
+												CrankIterMemInt*	iter	);
 
 //////// Basic operation ////////
 
@@ -469,6 +475,9 @@ void			crank_vec_int4_set			(	CrankVecInt4*	vec,
 gboolean		crank_vec_int4_foreach		(	CrankVecInt4*		vec,
 												CrankBoolIntFunc	func,
 												gpointer			userdata	);
+												
+void			crank_vec_int4_iterator 	(	CrankVecInt4*		vec,
+												CrankIterMemInt*	iter	);
 
 //////// Basic operation ////////
 
@@ -637,6 +646,9 @@ void			crank_vec_int_n_remove		(	CrankVecIntN*	vec,
 gboolean		crank_vec_int_n_foreach		(	CrankVecIntN*		vec,
 								 				CrankBoolIntFunc	func,
 								 				gpointer			userdata	);
+												
+void			crank_vec_int_n_iterator 	(	CrankVecIntN*		vec,
+												CrankIterMemInt*	iter	);
 
 //////// Basic operation ////////
 

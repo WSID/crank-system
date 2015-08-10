@@ -37,6 +37,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/permutation/is_empty",
 		test_is_empty );
 
+	GLib.Test.add_func ("/crank/base/permutation/iterator",
+		test_iterator );
+
 	GLib.Test.add_func ("/crank/base/permutation/slice",
 		test_slice );
 	
@@ -150,6 +153,18 @@ private void test_slice () {
 	assert (slice[0] == 1);
 	assert (slice[1] == 2);
 	assert (slice[2] == 4);
+}
+
+private void test_iterator () {
+	Crank.Permutation	p = Crank.Permutation (5, 	0, 1, 2, 4, 3);
+	
+	uint sum = 0;
+	
+	foreach (uint e in p) {
+		sum += e;
+	}
+	
+	assert (sum == 10);
 }
 
 private void test_is_identity () {

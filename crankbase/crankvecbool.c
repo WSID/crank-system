@@ -54,6 +54,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
+#include "crankiter.h"
 #include "crankbasemacro.h"
 #include "crankveccommon.h"
 #include "crankvecbool.h"
@@ -320,6 +322,20 @@ crank_vec_bool2_foreach (	CrankVecBool2*		vec,
 		return FALSE;
 }
 
+
+/**
+ * crank_vec_bool2_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for the vector.
+ */
+void
+crank_vec_bool2_iterator (	CrankVecBool2*		vec,
+							CrankIterMemBool*	iter	)
+{
+	crank_iter_mem_bool_init_with_count (iter, (gboolean*)vec, 2);
+}
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -788,6 +804,19 @@ crank_vec_bool3_foreach (	CrankVecBool3*		vec,
 		return FALSE;
 }
 
+/**
+ * crank_vec_bool3_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for the vector.
+ */
+void
+crank_vec_bool3_iterator (	CrankVecBool3*		vec,
+							CrankIterMemBool*	iter	)
+{
+	crank_iter_mem_bool_init_with_count (iter, (gboolean*)vec, 3);
+}
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
 
@@ -1217,6 +1246,20 @@ crank_vec_bool4_foreach (	CrankVecBool4*		vec,
 		return TRUE;
 	else
 		return FALSE;
+}
+
+/**
+ * crank_vec_bool4_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for the vector.
+ */
+void
+crank_vec_bool4_iterator (	CrankVecBool4*		vec,
+							CrankIterMemBool*	iter	)
+{
+	crank_iter_mem_bool_init_with_count (iter, (gboolean*)vec, 4);
 }
 
 //////// Vector - Vector Operations ////////////////////////////////////////////
@@ -1853,6 +1896,20 @@ crank_vec_bool_n_foreach (	CrankVecBoolN*		vec,
 	}
 
   	return TRUE;
+}
+
+/**
+ * crank_vec_bool_n_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for the vector.
+ */
+void
+crank_vec_bool_n_iterator (	CrankVecBoolN*		vec,
+							CrankIterMemBool*	iter	)
+{
+	crank_iter_mem_bool_init_with_count (iter, vec->data, vec->n);
 }
 
 

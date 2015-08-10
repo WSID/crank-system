@@ -282,9 +282,10 @@ crank_permutation_to_string
 crank_permutation_is_empty
 crank_permutation_get_size
 crank_permutation_get
-crank_permutation_foreach
 crank_permutation_index_of
 crank_permutation_slice
+crank_permutation_foreach
+crank_permutation_iterator
 
 crank_permutation_is_identity
 crank_permutation_get_inversion
@@ -471,6 +472,7 @@ crank_vec_bool2_dup
 crank_vec_bool2_get
 crank_vec_bool2_set
 crank_vec_bool2_foreach
+crank_vec_bool2_iterator
 crank_vec_bool2_and
 crank_vec_bool2_or
 crank_vec_bool2_xor
@@ -497,6 +499,7 @@ crank_vec_bool3_dup
 crank_vec_bool3_get
 crank_vec_bool3_set
 crank_vec_bool3_foreach
+crank_vec_bool3_iterator
 crank_vec_bool3_and
 crank_vec_bool3_or
 crank_vec_bool3_xor
@@ -524,6 +527,7 @@ crank_vec_bool4_dup
 crank_vec_bool4_get
 crank_vec_bool4_set
 crank_vec_bool4_foreach
+crank_vec_bool4_iterator
 crank_vec_bool4_and
 crank_vec_bool4_or
 crank_vec_bool4_xor
@@ -551,6 +555,7 @@ crank_vec_bool_n_append
 crank_vec_bool_n_insert
 crank_vec_bool_n_remove
 crank_vec_bool_n_foreach
+crank_vec_bool_n_iterator
 crank_vec_bool_n_get_size
 crank_vec_bool_n_and
 crank_vec_bool_n_or
@@ -603,6 +608,7 @@ crank_vec_int2_init_from_vb
 crank_vec_int2_get
 crank_vec_int2_set
 crank_vec_int2_foreach
+crank_vec_int2_iterator
 crank_vec_int2_copy
 crank_vec_int2_dup
 crank_vec_int2_hash
@@ -647,6 +653,7 @@ crank_vec_int3_to_string_full
 crank_vec_int3_get
 crank_vec_int3_set
 crank_vec_int3_foreach
+crank_vec_int3_iterator
 crank_vec_int3_get_magn
 crank_vec_int3_get_magn_sq
 crank_vec_int3_neg
@@ -688,6 +695,7 @@ crank_vec_int4_to_string_full
 crank_vec_int4_get
 crank_vec_int4_set
 crank_vec_int4_foreach
+crank_vec_int4_iterator
 crank_vec_int4_get_magn
 crank_vec_int4_get_magn_sq
 crank_vec_int4_neg
@@ -728,6 +736,7 @@ crank_vec_int_n_append
 crank_vec_int_n_insert
 crank_vec_int_n_remove
 crank_vec_int_n_foreach
+crank_vec_int_n_iterator
 crank_vec_int_n_get_magn
 crank_vec_int_n_get_magn_sq
 crank_vec_int_n_neg
@@ -775,6 +784,7 @@ crank_vec_float2_dup
 crank_vec_float2_get
 crank_vec_float2_set
 crank_vec_float2_foreach
+crank_vec_float2_iterator
 crank_vec_float2_hash
 crank_vec_float2_equal
 crank_vec_float2_to_string
@@ -815,6 +825,7 @@ crank_vec_float3_dup
 crank_vec_float3_get
 crank_vec_float3_set
 crank_vec_float3_foreach
+crank_vec_float3_iterator
 crank_vec_float3_hash
 crank_vec_float3_equal
 crank_vec_float3_to_string
@@ -857,6 +868,7 @@ crank_vec_float4_dup
 crank_vec_float4_get
 crank_vec_float4_set
 crank_vec_float4_foreach
+crank_vec_float4_iterator
 crank_vec_float4_hash
 crank_vec_float4_equal
 crank_vec_float4_to_string
@@ -901,6 +913,7 @@ crank_vec_float_n_append
 crank_vec_float_n_insert
 crank_vec_float_n_remove
 crank_vec_float_n_foreach
+crank_vec_float_n_iterator
 crank_vec_float_n_hash
 crank_vec_float_n_equal
 crank_vec_float_n_to_string
@@ -962,6 +975,7 @@ crank_vec_cplx_float_n_get_size
 crank_vec_cplx_float_n_get
 crank_vec_cplx_float_n_set
 crank_vec_cplx_float_n_foreach
+crank_vec_cplx_float_n_iterator
 crank_vec_cplx_float_n_prepend
 crank_vec_cplx_float_n_append
 crank_vec_cplx_float_n_insert

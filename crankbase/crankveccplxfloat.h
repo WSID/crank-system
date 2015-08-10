@@ -116,6 +116,9 @@ gboolean		crank_vec_cplx_float_n_foreach	(	CrankVecCplxFloatN*		vec,
 													CrankBoolCplxFloatFunc	func,
 													gpointer				userdata	);
 
+void			crank_vec_cplx_float_n_iterator (	CrankVecCplxFloatN*	vec,
+													CrankIterMemStruct*	iter	);
+
 //////// Basic operation ////////
 
 guint			crank_vec_cplx_float_n_hash		(	gconstpointer	a	);

@@ -771,7 +771,7 @@ crank_iter_mem_struct_init (	CrankIterMemStruct*		iter,
  */
 void
 crank_iter_mem_struct_init_with_count (	CrankIterMemStruct*	iter,
-										gpointer*			from,
+										gpointer			from,
 										guint				count,
 										gsize				size	)
 {

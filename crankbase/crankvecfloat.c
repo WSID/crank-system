@@ -29,6 +29,7 @@
 
 #include "crankbasemacro.h"
 #include "crankfunction.h"
+#include "crankiter.h"
 #include "crankveccommon.h"
 #include "crankvecbool.h"
 #include "crankvecint.h"
@@ -254,6 +255,20 @@ crank_vec_float2_foreach (	CrankVecFloat2*		vec,
 		return TRUE;
   	else
 	  	return FALSE;
+}
+
+/**
+ * crank_vec_float2_iterator:
+ * @vec: A Vector
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_float2_iterator (	CrankVecFloat2*		vec,
+							CrankIterMemFloat*	iter	)
+{
+	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 2);
 }
 
 //////// Basic operation ////////
@@ -917,6 +932,21 @@ crank_vec_float3_foreach (	CrankVecFloat3*		vec,
   	else
 	  	return FALSE;
 }
+
+/**
+ * crank_vec_float3_iterator:
+ * @vec: A Vector
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_float3_iterator (	CrankVecFloat3*		vec,
+							CrankIterMemFloat*	iter	)
+{
+	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 3);
+}
+
 
 //////// Basic operation ////////
 
@@ -1636,6 +1666,21 @@ crank_vec_float4_foreach (	CrankVecFloat4*		vec,
   	else
 	  	return FALSE;
 }
+
+/**
+ * crank_vec_float4_iterator:
+ * @vec: A Vector
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_float4_iterator (	CrankVecFloat4*		vec,
+							CrankIterMemFloat*	iter	)
+{
+	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 4);
+}
+
 
 //////// Basic operation ////////
 
@@ -2524,6 +2569,21 @@ crank_vec_float_n_foreach (	CrankVecFloatN*		vec,
 
 	return TRUE;
 }
+
+/**
+ * crank_vec_float_n_iterator:
+ * @vec: A Vector
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_float_n_iterator (	CrankVecFloatN*		vec,
+								CrankIterMemFloat*	iter	)
+{
+	crank_iter_mem_float_init_with_count (iter, vec->data, vec->n);
+}
+
 
 //////// Basic operation ////////
 

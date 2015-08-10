@@ -496,6 +496,20 @@ crank_vec_cplx_float_n_foreach (	CrankVecCplxFloatN*		vec,
 	return TRUE;
 }
 
+/**
+ * crank_vec_cplx_float_n_iterator:
+ * @vec: A Vector.
+ * @iter: (out): A Iterator.
+ *
+ * Initialize a iterator for a vector.
+ */
+void
+crank_vec_cplx_float_n_iterator (	CrankVecCplxFloatN*	vec,
+									CrankIterMemStruct*	iter	)
+{
+	crank_iter_mem_struct_init_with_count_typed (iter, CrankCplxFloat, vec->data, vec->n);
+}
+
 //////// Basic operation ////////
 
 /**

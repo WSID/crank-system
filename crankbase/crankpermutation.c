@@ -29,6 +29,7 @@
 #include <glib-object.h>
 
 #include "crankfunction.h"
+#include "crankiter.h"
 #include "crankpermutation.h"
 
 
@@ -82,7 +83,7 @@
  *         <entry>arguments, array, identity, order of elements in array</entry>
  *       </row>
  *       <row>
- *         <entry>Properties</entry>
+ *         <entry>Attributes</entry>
  *         <entry>sign</entry>
  *       </row>
  *       <row>
@@ -777,32 +778,6 @@ crank_permutation_index_of (	CrankPermutation*	p,
 }
 
 /**
- * crank_permutation_foreach:
- * @p: A Permutation.
- * @func: (scope call): A Function to iterate over.
- * @userdata: (closure): Userdata for @func.
- *
- * Iterates over a permutation with given function.
- *
- * By returning %TRUE, iteration continues.
- * By returning %FALSE, iteration breaks.
- *
- * Returns: Whether iteration was fully done without breaking.
- */
-gboolean
-crank_permutation_foreach (	CrankPermutation*	p,
-							CrankBoolUintFunc	func,
-							gpointer			userdata	)
-{
-	guint		i;
-	
-	for (i = 0; i < p->n; i++)
-		if (! func (p->data[i], userdata)) return FALSE;
-	
-	return TRUE;
-}
-
-/**
  * crank_permutation_slice: (skip)
  * @p: A Permutation.
  * @from: Index to start slicing.
@@ -835,6 +810,46 @@ crank_permutation_slice (	CrankPermutation*	p,
 	}
 	
 	return result;
+}
+
+/**
+ * crank_permutation_iterator:
+ * @p: A Permutation.
+ * @iter: (out): A Iterator.
+ *
+ * Initializes a iterator for a permutation.
+ */
+void
+crank_permutation_iterator (	CrankPermutation*	p,
+								CrankIterMemUint*	iter )
+{
+	crank_iter_mem_uint_init_with_count (iter, p->data, p->n);
+}
+
+/**
+ * crank_permutation_foreach:
+ * @p: A Permutation.
+ * @func: (scope call): A Function to iterate over.
+ * @userdata: (closure): Userdata for @func.
+ *
+ * Iterates over a permutation with given function.
+ *
+ * By returning %TRUE, iteration continues.
+ * By returning %FALSE, iteration breaks.
+ *
+ * Returns: Whether iteration was fully done without breaking.
+ */
+gboolean
+crank_permutation_foreach (	CrankPermutation*	p,
+							CrankBoolUintFunc	func,
+							gpointer			userdata	)
+{
+	guint		i;
+	
+	for (i = 0; i < p->n; i++)
+		if (! func (p->data[i], userdata)) return FALSE;
+	
+	return TRUE;
 }
 
 
