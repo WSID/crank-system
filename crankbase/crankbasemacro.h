@@ -91,6 +91,30 @@
 G_BEGIN_DECLS
 
 /**
+ * CRANK_PTR_ADD:
+ * @p: A Pointer to add.
+ * @sz: A size.
+ *
+ * Performs airthmetic on pointer, which is @p + @sz.
+ *
+ * Returns: Addition of pointer and size.
+ */
+#define CRANK_PTR_ADD(p,sz)	(gpointer)((gsize)(p) + (sz))
+
+/**
+ * CRANK_PTR_ADD2:
+ * @p: A Pointer to add
+ * @sz: A size.
+ * @n: Multiplication cofactor; count of @sz.
+ *
+ * Performs airthmetic on pointer, which is @p + (@sz * @n). This will be useful
+ * when dealing with arrays.
+ *
+ * Returns: Addition of pointer and size.
+ */
+#define CRANK_PTR_ADD2(p,sz,n) CRANK_PTR_ADD(p,(sz)*(n))
+
+/**
  * CRANK_ARRAY_DUP:
  * @a: Array to duplicate.
  * @G: Type of elements.
