@@ -295,39 +295,42 @@ static void
 test_2_neg (void)
 {
 	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
+	CrankMatFloat2 r;
 
-  	crank_mat_float2_neg (&a, &a);
+  	crank_mat_float2_neg (&a, &r);
 
-  	test_assert_float (a.m00, -1.0f);
-  	test_assert_float (a.m01, -2.0f);
-  	test_assert_float (a.m10, -3.0f);
-  	test_assert_float (a.m11, -4.0f);
+  	test_assert_float (r.m00, -1.0f);
+  	test_assert_float (r.m01, -2.0f);
+  	test_assert_float (r.m10, -3.0f);
+  	test_assert_float (r.m11, -4.0f);
 }
 
 static void
 test_2_transpose (void)
 {
 	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
+	CrankMatFloat2 r;
 
-  	crank_mat_float2_transpose (&a, &a);
+  	crank_mat_float2_transpose (&a, &r);
 
-  	test_assert_float (a.m00, 1.0f);
-  	test_assert_float (a.m01, 3.0f);
-  	test_assert_float (a.m10, 2.0f);
-  	test_assert_float (a.m11, 4.0f);
+  	test_assert_float (r.m00, 1.0f);
+  	test_assert_float (r.m01, 3.0f);
+  	test_assert_float (r.m10, 2.0f);
+  	test_assert_float (r.m11, 4.0f);
 }
 
 static void
 test_2_inverse (void)
 {
   	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
+  	CrankMatFloat2 r;
 
-  	crank_mat_float2_inverse (&a, &a);
+  	crank_mat_float2_inverse (&a, &r);
 
-  	test_assert_float (a.m00, -2.0f);
-  	test_assert_float (a.m01,  1.0f);
-  	test_assert_float (a.m10,  1.5f);
-  	test_assert_float (a.m11, -0.5f);
+  	test_assert_float (r.m00, -2.0f);
+  	test_assert_float (r.m01,  1.0f);
+  	test_assert_float (r.m10,  1.5f);
+  	test_assert_float (r.m11, -0.5f);
 }
 
 
@@ -335,26 +338,28 @@ static void
 test_2_muls (void)
 {
 	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
+  	CrankMatFloat2 r;
 
-  	crank_mat_float2_muls (&a, 2.0f, &a);
+  	crank_mat_float2_muls (&a, 2.0f, &r);
 
-  	test_assert_float (a.m00, 2.0f);
-  	test_assert_float (a.m01, 4.0f);
-  	test_assert_float (a.m10, 6.0f);
-  	test_assert_float (a.m11, 8.0f);
+  	test_assert_float (r.m00, 2.0f);
+  	test_assert_float (r.m01, 4.0f);
+  	test_assert_float (r.m10, 6.0f);
+  	test_assert_float (r.m11, 8.0f);
 }
 
 static void
 test_2_divs (void)
 {
 	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
+  	CrankMatFloat2 r;
 
-  	crank_mat_float2_divs (&a, 2.0f, &a);
+  	crank_mat_float2_divs (&a, 2.0f, &r);
 
-  	test_assert_float (a.m00, 0.5f);
-  	test_assert_float (a.m01, 1.0f);
-  	test_assert_float (a.m10, 1.5f);
-  	test_assert_float (a.m11, 2.0f);
+  	test_assert_float (r.m00, 0.5f);
+  	test_assert_float (r.m01, 1.0f);
+  	test_assert_float (r.m10, 1.5f);
+  	test_assert_float (r.m11, 2.0f);
 }
 
 static void
@@ -362,11 +367,12 @@ test_2_mulv (void)
 {
   	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
   	CrankVecFloat2 b = {3.0f, 4.0f};
+  	CrankVecFloat2 r;
 
-  	crank_mat_float2_mulv (&a, &b, &b);
+  	crank_mat_float2_mulv (&a, &b, &r);
 
-  	test_assert_float (b.x, 11.0f);
-  	test_assert_float (b.y, 25.0f);
+  	test_assert_float (r.x, 11.0f);
+  	test_assert_float (r.y, 25.0f);
 }
 
 static void
@@ -374,13 +380,14 @@ test_2_add (void)
 {
   	CrankMatFloat2	a = {1.0f, 2.0f,	3.0f, 4.0f};
   	CrankMatFloat2	b = {2.0f, 3.0f,	5.0f, 7.0f};
+  	CrankMatFloat2	r;
 
-  	crank_mat_float2_add (&a, &b, &a);
+  	crank_mat_float2_add (&a, &b, &r);
 
-  	test_assert_float (a.m00, 3.0f);
-  	test_assert_float (a.m01, 5.0f);
-  	test_assert_float (a.m10, 8.0f);
-  	test_assert_float (a.m11, 11.0f);
+  	test_assert_float (r.m00, 3.0f);
+  	test_assert_float (r.m01, 5.0f);
+  	test_assert_float (r.m10, 8.0f);
+  	test_assert_float (r.m11, 11.0f);
 }
 
 static void
@@ -388,13 +395,14 @@ test_2_sub (void)
 {
   	CrankMatFloat2	a = {1.0f, 2.0f,	3.0f, 4.0f};
   	CrankMatFloat2	b = {2.0f, 3.0f,	5.0f, 7.0f};
+  	CrankMatFloat2	r;
 
-  	crank_mat_float2_sub (&a, &b, &a);
+  	crank_mat_float2_sub (&a, &b, &r);
 
-  	test_assert_float (a.m00, -1.0f);
-  	test_assert_float (a.m01, -1.0f);
-  	test_assert_float (a.m10, -2.0f);
-  	test_assert_float (a.m11, -3.0f);
+  	test_assert_float (r.m00, -1.0f);
+  	test_assert_float (r.m01, -1.0f);
+  	test_assert_float (r.m10, -2.0f);
+  	test_assert_float (r.m11, -3.0f);
 }
 
 
@@ -403,13 +411,14 @@ test_2_mul (void)
 {
   	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
   	CrankMatFloat2 b = {3.0f, 6.0f,		9.0f, 12.0f};
+  	CrankMatFloat2 r;
 
-  	crank_mat_float2_mul (&a, &b, &a);
+  	crank_mat_float2_mul (&a, &b, &r);
 
-  	test_assert_float (a.m00, 21.0f);
-  	test_assert_float (a.m01, 30.0f);
-  	test_assert_float (a.m10, 45.0f);
-  	test_assert_float (a.m11, 66.0f);
+  	test_assert_float (r.m00, 21.0f);
+  	test_assert_float (r.m01, 30.0f);
+  	test_assert_float (r.m10, 45.0f);
+  	test_assert_float (r.m11, 66.0f);
 }
 
 static void
@@ -417,13 +426,14 @@ test_2_mixs (void)
 {
   	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
   	CrankMatFloat2 b = {3.0f, 6.0f,		9.0f, 12.0f};
+  	CrankMatFloat2 r;
 
-	crank_mat_float2_mixs (&a, &b, 0.5f, &a);
+	crank_mat_float2_mixs (&a, &b, 0.5f, &r);
 
-  	test_assert_float (a.m00, 2.0f);
-  	test_assert_float (a.m01, 4.0f);
-  	test_assert_float (a.m10, 6.0f);
-  	test_assert_float (a.m11, 8.0f);
+  	test_assert_float (r.m00, 2.0f);
+  	test_assert_float (r.m01, 4.0f);
+  	test_assert_float (r.m10, 6.0f);
+  	test_assert_float (r.m11, 8.0f);
 }
 
 static void
@@ -432,13 +442,14 @@ test_2_mix (void)
   	CrankMatFloat2 a = {1.0f, 2.0f,		3.0f, 4.0f};
   	CrankMatFloat2 b = {3.0f, 6.0f,		9.0f, 12.0f};
   	CrankMatFloat2 c = {0.0f, 0.25f,	0.5f, 0.75f};
+  	CrankMatFloat2 r;
 
-	crank_mat_float2_mix (&a, &b, &c, &a);
+	crank_mat_float2_mix (&a, &b, &c, &r);
 
-  	test_assert_float (a.m00, 1.0f);
-  	test_assert_float (a.m01, 3.0f);
-  	test_assert_float (a.m10, 6.0f);
-  	test_assert_float (a.m11, 10.0f);
+  	test_assert_float (r.m00, 1.0f);
+  	test_assert_float (r.m01, 3.0f);
+  	test_assert_float (r.m10, 6.0f);
+  	test_assert_float (r.m11, 10.0f);
 }
 
 
@@ -659,21 +670,23 @@ static void
 test_n_neg (void)
 {
 	CrankMatFloatN	a = {0};
+  	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
 		4.0f, 5.0f, 6.0f);
 	
-	crank_mat_float_n_neg (&a, &a);
+	crank_mat_float_n_neg (&a, &r);
 	
-	test_assert_float (a.data[0], -1.0f);
-	test_assert_float (a.data[1], -2.0f);
-	test_assert_float (a.data[2], -3.0f);
-	test_assert_float (a.data[3], -4.0f);
-	test_assert_float (a.data[4], -5.0f);
-	test_assert_float (a.data[5], -6.0f);
+	test_assert_float (r.data[0], -1.0f);
+	test_assert_float (r.data[1], -2.0f);
+	test_assert_float (r.data[2], -3.0f);
+	test_assert_float (r.data[3], -4.0f);
+	test_assert_float (r.data[4], -5.0f);
+	test_assert_float (r.data[5], -6.0f);
 	
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -681,24 +694,26 @@ test_n_transpose (void)
 {
 	
 	CrankMatFloatN	a = {0};
+  	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
 		4.0f, 5.0f, 6.0f);
 	
-	crank_mat_float_n_transpose (&a, &a);
+	crank_mat_float_n_transpose (&a, &r);
 	
-	g_assert_cmpuint (a.rn, ==, 3);
-	g_assert_cmpuint (a.cn, ==, 2);
+	g_assert_cmpuint (r.rn, ==, 3);
+	g_assert_cmpuint (r.cn, ==, 2);
 	
-	test_assert_float (a.data[0], 1.0f);
-	test_assert_float (a.data[1], 4.0f);
-	test_assert_float (a.data[2], 2.0f);
-	test_assert_float (a.data[3], 5.0f);
-	test_assert_float (a.data[4], 3.0f);
-	test_assert_float (a.data[5], 6.0f);
+	test_assert_float (r.data[0], 1.0f);
+	test_assert_float (r.data[1], 4.0f);
+	test_assert_float (r.data[2], 2.0f);
+	test_assert_float (r.data[3], 5.0f);
+	test_assert_float (r.data[4], 3.0f);
+	test_assert_float (r.data[5], 6.0f);
 	
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -711,42 +726,46 @@ static void
 test_n_muls (void)
 {
 	CrankMatFloatN	a = {0};
+	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
 		4.0f, 5.0f, 6.0f);
 	
-	crank_mat_float_n_muls (&a, 3, &a);
+	crank_mat_float_n_muls (&a, 3, &r);
 	
-	test_assert_float (a.data[0], 3.0f);
-	test_assert_float (a.data[1], 6.0f);
-	test_assert_float (a.data[2], 9.0f);
-	test_assert_float (a.data[3], 12.0f);
-	test_assert_float (a.data[4], 15.0f);
-	test_assert_float (a.data[5], 18.0f);
+	test_assert_float (r.data[0], 3.0f);
+	test_assert_float (r.data[1], 6.0f);
+	test_assert_float (r.data[2], 9.0f);
+	test_assert_float (r.data[3], 12.0f);
+	test_assert_float (r.data[4], 15.0f);
+	test_assert_float (r.data[5], 18.0f);
 	
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void
 test_n_divs (void)
 {
 	CrankMatFloatN	a = {0};
+	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
 		4.0f, 5.0f, 6.0f);
 	
-	crank_mat_float_n_muls (&a, 0.5, &a);
+	crank_mat_float_n_muls (&a, 0.5, &r);
 	
-	test_assert_float (a.data[0], 0.5f);
-	test_assert_float (a.data[1], 1.0f);
-	test_assert_float (a.data[2], 1.5f);
-	test_assert_float (a.data[3], 2.0f);
-	test_assert_float (a.data[4], 2.5f);
-	test_assert_float (a.data[5], 3.0f);
+	test_assert_float (r.data[0], 0.5f);
+	test_assert_float (r.data[1], 1.0f);
+	test_assert_float (r.data[2], 1.5f);
+	test_assert_float (r.data[3], 2.0f);
+	test_assert_float (r.data[4], 2.5f);
+	test_assert_float (r.data[5], 3.0f);
 	
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -775,6 +794,7 @@ test_n_add (void)
 {
   	CrankMatFloatN	a = {0};
   	CrankMatFloatN	b = {0};
+  	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 			1.0f, 2.0f, 3.0f,
@@ -783,17 +803,18 @@ test_n_add (void)
 			10.0f, 8.0f, 1.0f,
 			2.0f, 5.0f, 7.0f	);
 
-  	crank_mat_float_n_add (&a, &b, &a);
+  	crank_mat_float_n_add (&a, &b, &r);
 
-  	test_assert_float (a.data[0], 11.0f);
-  	test_assert_float (a.data[1], 10.0f);
-  	test_assert_float (a.data[2], 4.0f);
-  	test_assert_float (a.data[3], 6.0f);
-  	test_assert_float (a.data[4], 10.0f);
-  	test_assert_float (a.data[5], 13.0f);
+  	test_assert_float (r.data[0], 11.0f);
+  	test_assert_float (r.data[1], 10.0f);
+  	test_assert_float (r.data[2], 4.0f);
+  	test_assert_float (r.data[3], 6.0f);
+  	test_assert_float (r.data[4], 10.0f);
+  	test_assert_float (r.data[5], 13.0f);
 
   	crank_mat_float_n_fini (&a);
   	crank_mat_float_n_fini (&b);
+  	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -801,6 +822,7 @@ test_n_sub (void)
 {
   	CrankMatFloatN	a = {0};
   	CrankMatFloatN	b = {0};
+  	CrankMatFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 			1.0f, 2.0f, 3.0f,
@@ -809,17 +831,18 @@ test_n_sub (void)
 			10.0f, 8.0f, 1.0f,
 			2.0f, 5.0f, 7.0f	);
 
-  	crank_mat_float_n_sub (&a, &b, &a);
+  	crank_mat_float_n_sub (&a, &b, &r);
 
-  	test_assert_float (a.data[0], -9.0f);
-  	test_assert_float (a.data[1], -6.0f);
-  	test_assert_float (a.data[2], 2.0f);
-  	test_assert_float (a.data[3], 2.0f);
-  	test_assert_float (a.data[4], 0.0f);
-  	test_assert_float (a.data[5], -1.0f);
+  	test_assert_float (r.data[0], -9.0f);
+  	test_assert_float (r.data[1], -6.0f);
+  	test_assert_float (r.data[2], 2.0f);
+  	test_assert_float (r.data[3], 2.0f);
+  	test_assert_float (r.data[4], 0.0f);
+  	test_assert_float (r.data[5], -1.0f);
 
   	crank_mat_float_n_fini (&a);
   	crank_mat_float_n_fini (&b);
+  	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -827,6 +850,7 @@ test_n_mul (void)
 {
 	CrankMatFloatN	a = {0};
 	CrankMatFloatN	b = {0};
+	CrankMatFloatN	r;
 	
 	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
@@ -837,19 +861,20 @@ test_n_mul (void)
 		2.0f, 1.0f, 0.0f,
 		1.0f, 0.0f, -1.0f);
 
-	crank_mat_float_n_mul (&a, &b, &a);
+	crank_mat_float_n_mul (&a, &b, &r);
 	
-	g_assert_cmpuint (a.rn, ==, 2);
-	g_assert_cmpuint (a.cn, ==, 3);
-	test_assert_float (a.data[0], 10.0f);
-	test_assert_float (a.data[1], 4.0f);
-	test_assert_float (a.data[2], -2.0f);
-	test_assert_float (a.data[3], 28.0f);
-	test_assert_float (a.data[4], 13.0f);
-	test_assert_float (a.data[5], -2.0f);
+	g_assert_cmpuint (r.rn, ==, 2);
+	g_assert_cmpuint (r.cn, ==, 3);
+	test_assert_float (r.data[0], 10.0f);
+	test_assert_float (r.data[1], 4.0f);
+	test_assert_float (r.data[2], -2.0f);
+	test_assert_float (r.data[3], 28.0f);
+	test_assert_float (r.data[4], 13.0f);
+	test_assert_float (r.data[5], -2.0f);
 	
-	crank_mat_float_n_fini (&b);
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&b);
+  	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -857,6 +882,7 @@ test_n_mixs (void)
 {
 	CrankMatFloatN	a = {0};
 	CrankMatFloatN	b = {0};
+	CrankMatFloatN	r;
 
 	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
@@ -866,17 +892,18 @@ test_n_mixs (void)
 		3.0f, 6.0f, 9.0f,
 		12.0f, 15.0f, 18.0f);
 
-	crank_mat_float_n_mixs (&a, &b, 0.5, &a);
+	crank_mat_float_n_mixs (&a, &b, 0.5, &r);
 	
-	test_assert_float (a.data[0], 2.0f);
-	test_assert_float (a.data[1], 4.0f);
-	test_assert_float (a.data[2], 6.0f);
-	test_assert_float (a.data[3], 8.0f);
-	test_assert_float (a.data[4], 10.0f);
-	test_assert_float (a.data[5], 12.0f);
+	test_assert_float (r.data[0], 2.0f);
+	test_assert_float (r.data[1], 4.0f);
+	test_assert_float (r.data[2], 6.0f);
+	test_assert_float (r.data[3], 8.0f);
+	test_assert_float (r.data[4], 10.0f);
+	test_assert_float (r.data[5], 12.0f);
 	
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&b);
+  	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -885,6 +912,7 @@ test_n_mix (void)
 	CrankMatFloatN	a = {0};
 	CrankMatFloatN	b = {0};
 	CrankMatFloatN	c = {0};
+	CrankMatFloatN	r;
 	
 	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
@@ -898,18 +926,19 @@ test_n_mix (void)
 		0.0f, 0.2f, 0.4f,
 		0.6f, 0.8f, 1.0f);
 
-	crank_mat_float_n_mix (&a, &b, &c, &a);
+	crank_mat_float_n_mix (&a, &b, &c, &r);
 	
-	test_assert_float (a.data[0], 1.0f);
-	test_assert_float (a.data[1], 2.8f);
-	test_assert_float (a.data[2], 5.4f);
-	test_assert_float (a.data[3], 8.8f);
-	test_assert_float (a.data[4], 13.0f);
-	test_assert_float (a.data[5], 18.0f);
+	test_assert_float (r.data[0], 1.0f);
+	test_assert_float (r.data[1], 2.8f);
+	test_assert_float (r.data[2], 5.4f);
+	test_assert_float (r.data[3], 8.8f);
+	test_assert_float (r.data[4], 13.0f);
+	test_assert_float (r.data[5], 18.0f);
 	
 	crank_mat_float_n_fini (&a);
 	crank_mat_float_n_fini (&b);
 	crank_mat_float_n_fini (&c);
+  	crank_mat_float_n_fini (&r);
 }
 
 static void

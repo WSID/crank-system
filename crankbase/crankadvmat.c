@@ -267,8 +267,8 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 		crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
 		
 		for (i = 0; i < a->rn; i++) {
-			CrankVecFloatN	ac = {0};
-			CrankVecFloatN	u = {0};
+			CrankVecFloatN	ac;
+			CrankVecFloatN	u;
 			
 			// u = a.col[i]
 			crank_mat_float_n_get_col (a, i, &ac);
@@ -277,7 +277,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 			// u -= proj(a.col[i], e[0..(i-1)])
 			// r = a.col[i] dot e
 			for (j = 0; j < i; j++) {
-				CrankVecFloatN	proj = {0};
+				CrankVecFloatN	proj;
 				gfloat			dot;
 				dot = crank_vec_float_n_dot (e + j, &ac);
 				
@@ -294,7 +294,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 				
 				crank_vec_float_n_muls (e + j, dot, &proj);
 				
-				crank_vec_float_n_sub (&u, &proj, &u);
+				crank_vec_float_n_sub_self (&u, &proj);
 				crank_mat_float_n_set (r, j, i, dot);
 			}
 		
@@ -367,7 +367,7 @@ crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 					crank_vec_float_n_get (&an, 0) -
 					crank_vec_float_n_get_magn (&an));
 
-			crank_vec_float_n_unit (&an, &an);
+			crank_vec_float_n_unit_self (&an);
 			
 			// Initialize qi			
 			crank_mat_float_n_init_fill (&qi, a->rn - i, a->rn - i, 0.0f);
@@ -518,7 +518,8 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 								CrankVecFloatN*	evec	)
 {
 	if (crank_mat_float_n_is_square (a)) {
-		CrankVecFloatN	bs = {0};
+		CrankVecFloatN	bs;
+		CrankVecFloatN	bsmv;
 		gfloat			magn = 0;
 		gfloat			magnp = 0;
 		
@@ -531,9 +532,11 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 		
 		do {
 			magnp = magn;
-			crank_mat_float_n_mulv (a, &bs, &bs);
-			magn = crank_vec_float_n_get_magn (&bs);
-			crank_vec_float_n_divs (&bs, magn, &bs);
+			crank_mat_float_n_mulv (a, &bs, &bsmv);
+			magn = crank_vec_float_n_get_magn (&bsmv);
+			crank_vec_float_n_divs (&bsmv, magn, &bs);
+			
+			crank_vec_float_n_fini (&bsmv);
 		}
 		while (0.0001f < ABS (magn - magnp));
 		

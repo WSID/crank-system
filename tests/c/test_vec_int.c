@@ -414,7 +414,7 @@ test_2_max (void)
 static void
 test_n_get (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
 	
 	crank_vec_int_n_init (&a, 2, 3, 4);
 		
@@ -427,7 +427,7 @@ test_n_get (void)
 static void
 test_n_insert (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
   	crank_vec_int_n_insert (&a, 1, 12);
@@ -442,7 +442,7 @@ test_n_insert (void)
 static void
 test_n_remove (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
   	crank_vec_int_n_remove (&a, 1);
@@ -456,7 +456,7 @@ test_n_remove (void)
 static void
 test_n_foreach (void)
 {
-  	CrankVecIntN	a = {0};
+  	CrankVecIntN	a;
   	gint			sum = 0;
 
   	crank_vec_int_n_init (&a, 2, 3, 4);
@@ -471,9 +471,9 @@ test_n_foreach (void)
 static void
 test_n_hash (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecIntN	c = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 	
 	crank_vec_int_n_init (&a, 2, g_test_rand_int (), g_test_rand_int ());
 	crank_vec_int_n_init (&b, 2, g_test_rand_int (), g_test_rand_int ());
@@ -495,9 +495,9 @@ test_n_hash (void)
 static void
 test_n_equal (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecIntN	c = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 	
 	crank_vec_int_n_init (&a, 2, g_test_rand_int (), g_test_rand_int ());
 	crank_vec_int_n_init (&b, 2, g_test_rand_int (), g_test_rand_int ());
@@ -515,7 +515,7 @@ test_n_equal (void)
 static void
 test_n_to_string (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
 	
 	crank_vec_int_n_init (&a, 5, 3, 4, 5, 6, 7);
 	
@@ -530,7 +530,7 @@ test_n_to_string (void)
 static void
 test_n_magn (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
 	
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	
@@ -544,88 +544,99 @@ test_n_magn (void)
 static void
 test_n_muls (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
 	
 	crank_vec_int_n_init (&a, 2, 3, 4);
 
-	crank_vec_int_n_muls (&a, 2, &a);
+	crank_vec_int_n_muls (&a, 2, &b);
 
-	crank_assert_eq_vecint_n_imm(&a, 6, 8);
+	crank_assert_eq_vecint_n_imm(&b, 6, 8);
 	
 	crank_vec_int_n_fini (&a);
+	crank_vec_int_n_fini (&b);
 }
 
 
 static void
 test_n_divs (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
 	
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	
-	crank_vec_int_n_divs (&a, 2, &a);
+	crank_vec_int_n_divs (&a, 2, &b);
 	
-	crank_assert_eq_vecint_n_imm(&a, 1, 2);
+	crank_assert_eq_vecint_n_imm(&b, 1, 2);
+	
 	crank_vec_int_n_fini (&a);
+	crank_vec_int_n_fini (&b);
 }
 
 
 static void
 test_n_mods (void)
 {
-	CrankVecIntN	a = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
 	
 	crank_vec_int_n_init (&a, 2, 32, 48);
 	
-	crank_vec_int_n_mods (&a, 7, &a);
+	crank_vec_int_n_mods (&a, 7, &b);
 	
-	crank_assert_eq_vecint_n_imm(&a, 4, 6);
+	crank_assert_eq_vecint_n_imm(&b, 4, 6);
 	
 	crank_vec_int_n_fini (&a);
+	crank_vec_int_n_fini (&b);
 }
 
 
 static void
 test_n_add (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
 	
-	crank_vec_int_n_add (&a, &b, &a);
+	crank_vec_int_n_add (&a, &b, &c);
 	
-	crank_assert_eq_vecint_n_imm(&a, 8, 16);
+	crank_assert_eq_vecint_n_imm(&c, 8, 16);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
+	crank_vec_int_n_fini (&c);
 }
 
 
 static void
 test_n_sub (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
 	
-	crank_vec_int_n_sub (&a, &b, &a);
+	crank_vec_int_n_sub (&a, &b, &c);
 	
-	crank_assert_eq_vecint_n_imm(&a, -2, -8);
+	crank_assert_eq_vecint_n_imm(&c, -2, -8);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
+	crank_vec_int_n_fini (&c);
 }
 
 
 static void
 test_n_dot (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
@@ -640,65 +651,69 @@ test_n_dot (void)
 static void
 test_n_cmpmul (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
 	
-	crank_vec_int_n_cmpmul (&a, &b, &a);
+	crank_vec_int_n_cmpmul (&a, &b, &c);
 	
-	crank_assert_eq_vecint_n_imm(&a, 15, 48);
+	crank_assert_eq_vecint_n_imm(&c, 15, 48);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
+	crank_vec_int_n_fini (&c);
 }
 
 
 static void
 test_n_cmpdiv (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
 	
-	crank_vec_int_n_cmpdiv (&b, &a, &b);
+	crank_vec_int_n_cmpdiv (&b, &a, &c);
 	
-	crank_assert_eq_vecint_n_imm(&b, 1, 3);
-	g_assert_cmpint (b.data[0], ==, 1);
-	g_assert_cmpint (b.data[1], ==, 3);
+	crank_assert_eq_vecint_n_imm(&c, 1, 3);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
+	crank_vec_int_n_fini (&c);
 }
 
 
 static void
 test_n_cmpmod (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	c;
 
 	crank_vec_int_n_init (&a, 2, 3, 4);
 	crank_vec_int_n_init (&b, 2, 5, 12);
 	
-	crank_vec_int_n_cmpmod (&b, &a, &b);
+	crank_vec_int_n_cmpmod (&b, &a, &c);
 	
-	crank_assert_eq_vecint_n_imm(&b, 2, 0);
+	crank_assert_eq_vecint_n_imm(&c, 2, 0);
 	
 	crank_vec_int_n_fini (&a);
 	crank_vec_int_n_fini (&b);
+	crank_vec_int_n_fini (&c);
 }
 
 
 static void
 test_n_cmpless (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecBoolN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecBoolN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 19);
 	crank_vec_int_n_init (&b, 2, 53, 20);
@@ -716,9 +731,9 @@ test_n_cmpless (void)
 static void
 test_n_cmpeq (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecBoolN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecBoolN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 20);
 	crank_vec_int_n_init (&b, 2, 53, 20);
@@ -736,9 +751,9 @@ test_n_cmpeq (void)
 static void
 test_n_cmpgreater (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecBoolN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecBoolN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 19);
 	crank_vec_int_n_init (&b, 2, 53, 20);
@@ -758,9 +773,9 @@ test_n_cmpgreater (void)
 static void
 test_n_cmpcmp (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecIntN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 19);
 	crank_vec_int_n_init (&b, 2, 53, 20);
@@ -779,9 +794,9 @@ test_n_cmpcmp (void)
 static void
 test_n_min (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecIntN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 19);
 	crank_vec_int_n_init (&b, 2, 53, 20);
@@ -799,9 +814,9 @@ test_n_min (void)
 static void
 test_n_max (void)
 {
-	CrankVecIntN	a = {0};
-	CrankVecIntN	b = {0};
-	CrankVecIntN	r = {0};
+	CrankVecIntN	a;
+	CrankVecIntN	b;
+	CrankVecIntN	r;
 	
 	crank_vec_int_n_init (&a, 2, 17, 19);
 	crank_vec_int_n_init (&b, 2, 53, 20);

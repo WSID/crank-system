@@ -25,6 +25,8 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/quat/float/equal",		test_equal	);
 	GLib.Test.add_func ("/crank/base/quat/float/equal/delta",test_equal_delta	);
 	GLib.Test.add_func ("/crank/base/quat/float/get_norm",	test_get_norm	);
+	GLib.Test.add_func ("/crank/base/quat/float/get_rangle",test_get_rangle	);
+	GLib.Test.add_func ("/crank/base/quat/float/get_raxis",	test_get_raxis	);
 	GLib.Test.add_func ("/crank/base/quat/float/neg",		test_neg	);
 	GLib.Test.add_func ("/crank/base/quat/float/inverse",	test_inverse	);
 	GLib.Test.add_func ("/crank/base/quat/float/conjgate",	test_conjugate	);
@@ -46,6 +48,7 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/quat/float/ln",		test_ln	);
 	GLib.Test.add_func ("/crank/base/quat/float/exp",		test_exp	);
 	GLib.Test.add_func ("/crank/base/quat/float/powr",		test_powr	);
+	GLib.Test.add_func ("/crank/base/quat/float/rotatev",	test_rotatev);
 	
 
 	GLib.Test.run ();
@@ -85,6 +88,20 @@ private void test_get_norm () {
 	Crank.QuatFloat a = {3.0f, 4.0f, 5.0f, 12.0f};
 	
 	assert (float_eq (a.norm, 13.9284f));
+}
+
+
+private void test_get_rangle () {
+	Crank.QuatFloat a = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	
+	Crank.assert_eqfloat (a.rangle, 2.1416f);
+}
+
+
+private void test_get_raxis () {
+	Crank.QuatFloat a = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	
+	Crank.assert_eq_vecfloat3_imm (a.raxis, 0.5774f, 0.5774f, 0.5774f);
 }
 
 private void test_neg () {
@@ -324,4 +341,13 @@ private void test_powr () {
 	assert (float_eq (a.x, -51.1662f));
 	assert (float_eq (a.y, -63.9578f));
 	assert (float_eq (a.z, -153.4986f, 0.0005f));
+}
+
+private void test_rotatev () {
+	Crank.QuatFloat a = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	Crank.VecFloat3	vec	= {1.0f, 2.0f, 3.0f};
+	
+	Crank.VecFloat3 rvec = a.rotatev (vec);
+	
+	Crank.assert_eq_vecfloat3_imm (rvec, 3.0264f, 1.0285f, 1.9455f);
 }

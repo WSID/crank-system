@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbasemacro.h"
 #include "crankrange.h"
 
 /**
@@ -36,7 +37,72 @@
  * @include: crankbase.h
  *
  * Crank System provides simple range representations for convenience.
- */ 
+ *
+ * Ranges can be used for requirements of values, specifying memory block, and
+ * basic of shape processing.
+ *
+ * <table frame="all"><title>Supported Operations</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ *     <colspec colname="op" />
+ *     <thead>
+ *       <row>
+ *         <entry>Operations</entry>
+ *         <entry>Detailed</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row>
+ *         <entry>Initialization</entry>
+ *         <entry>basic, lengthened, unit</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Attributes</entry>
+ *         <entry>length</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Value Operations</entry>
+ *         <entry>Contains, get, index of, clamp</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Raneg Operations</entry>
+ *         <entry>Intersection</entry>
+ *       </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ 
+ * # Get and Index of
+ *
+ * Getting operations on range can be thought as mix operation of start and end
+ * point.
+ *
+ * Index of operations on range can be thought as inverse operations of get
+ * operations.
+ *
+ * # Differece of contains and clamp in meaning of range.
+ *
+ * The range represents a range with one open end, which is in form of [a, b).
+ * As a result, contains function will return %FALSE on end point.
+ *
+ * But, for clamp, it would not work as we cannot determine valid value when
+ * value is out of range at end side. so for clamp operation, it will work as if
+ * range was [a, b], instead of [a, b).
+ *
+ * This will make some wicked point that a clamped value might still out of
+ * range.
+ *
+ * # Pointer Range
+ *
+ * Pointer ranges are generally used for memory block. So this has more
+ * operations, specialized for pointers. Note that they all also requires
+ * size of chunk/steps.
+ * <itemizedlist>
+ *   <listitem>count: number of chunk in range.</listitem>
+ *   <listitem>get_step: get value after steps with given size (which probably
+ *              size of element type)</listitem>
+ *   <listitem>n_step: get index of step with given size.</listitem>
+ * </itemizedlist>
+ */
 
 G_DEFINE_BOXED_TYPE(CrankRanUint, crank_ran_uint, crank_ran_uint_dup, g_free)
 G_DEFINE_BOXED_TYPE(CrankRanInt, crank_ran_int, crank_ran_int_dup, g_free)
@@ -119,7 +185,7 @@ crank_ran_uint_copy (	CrankRanUint*	ran,
  * crank_ran_uint_dup:
  * @ran: A Range
  *
- * Allocates new range and copied on it.
+ * Allocates new range and copies on it.
  *
  * Returns: (transfer full): Copied range, free with g_free()
  */
@@ -440,7 +506,7 @@ crank_ran_int_copy (	CrankRanInt*	ran,
  * crank_ran_int_dup:
  * @ran: A Range
  *
- * Allocates new range and copied on it.
+ * Allocates new range and copies on it.
  *
  * Returns: (transfer full): Copied range, free with g_free()
  */
@@ -759,7 +825,7 @@ crank_ran_float_copy (	CrankRanFloat*	ran,
  * crank_ran_float_dup:
  * @ran: A Range
  *
- * Allocates new range and copied on it.
+ * Allocates new range and copies on it.
  *
  * Returns: (transfer full): Copied range, free with g_free()
  */
@@ -1119,7 +1185,7 @@ crank_ran_ptr_init_diff (	CrankRanPtr*	ran,
 							gpointer		start,
 							gsize			diff	)
 {
-	crank_ran_ptr_init (ran, start, (gpointer)((gchar*)start + diff));
+	crank_ran_ptr_init (ran, start, CRANK_PTR_ADD (start, diff));
 }
 
 //////// Basic Functions ///////////////////////////////////////////////////////
@@ -1142,7 +1208,7 @@ crank_ran_ptr_copy (	CrankRanPtr*	ran,
  * crank_ran_ptr_dup:
  * @ran: A Range
  *
- * Allocates new range and copied on it.
+ * Allocates new range and copies on it.
  *
  * Returns: (transfer full): Copied range, free with g_free()
  */
@@ -1252,7 +1318,7 @@ crank_ran_ptr_is_empty (	CrankRanPtr*	ran		)
 gsize
 crank_ran_ptr_get_length (	CrankRanPtr*	ran	)
 {
-	return (gsize)ran->end - (gsize)ran->start;
+	return CRANK_PTR_DIFF(ran->end, ran->start);
 }
 
 //////// Range function ////////////////////////////////////////////////////////
@@ -1309,8 +1375,7 @@ crank_ran_ptr_get (	CrankRanPtr*	ran,
 {
 	gsize	len = crank_ran_ptr_get_length (ran);
 	
-	gsize	soff = (gsize)ran->start + (gsize)(len * index);
-	return	(gpointer)soff;
+	return CRANK_PTR_ADD(ran->start, (gsize)(len * index));
 }
 
 /**
@@ -1371,7 +1436,7 @@ crank_ran_ptr_get_step (	CrankRanPtr*	ran,
 							const guint		step,
 							const gsize		step_size	)
 {
-	return (gpointer)((gsize)ran->start + (step_size * step));
+	return CRANK_PTR_ADD2 (ran->start, step_size, step);
 }
 
 /**

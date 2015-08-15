@@ -179,6 +179,12 @@ void		crank_mat_float2_transpose (	CrankMatFloat2*	a,
 void		crank_mat_float2_inverse (	CrankMatFloat2*	a,
 										CrankMatFloat2*	r	);
 
+void		crank_mat_float2_neg_self (	CrankMatFloat2*	a	);
+
+void		crank_mat_float2_transpose_self (	CrankMatFloat2*	a	);
+
+void		crank_mat_float2_inverse_self (	CrankMatFloat2*	a	);
+
 //////// Scalar operations ////////
 
 void		crank_mat_float2_muls (	CrankMatFloat2*	a,
@@ -188,6 +194,12 @@ void		crank_mat_float2_muls (	CrankMatFloat2*	a,
 void		crank_mat_float2_divs (	CrankMatFloat2*	a,
 									const gfloat	b,
 									CrankMatFloat2*	r	);
+
+void		crank_mat_float2_muls_self (	CrankMatFloat2*	a,
+											const gfloat	b	);
+
+void		crank_mat_float2_divs_self (	CrankMatFloat2*	a,
+											const gfloat	b	);
 
 //////// Vector operations ////////
 
@@ -208,6 +220,15 @@ void		crank_mat_float2_sub (	CrankMatFloat2*	a,
 void		crank_mat_float2_mul (	CrankMatFloat2*	a,
 									CrankMatFloat2*	b,
 									CrankMatFloat2* r	);
+
+void		crank_mat_float2_add_self (	CrankMatFloat2*	a,
+										CrankMatFloat2*	b	);
+
+void		crank_mat_float2_sub_self (	CrankMatFloat2*	a,
+										CrankMatFloat2*	b	);
+
+void		crank_mat_float2_mul_self (	CrankMatFloat2*	a,
+										CrankMatFloat2*	b	);
 
 //////// Ternary operaions ////////
 
@@ -243,9 +264,11 @@ struct _CrankMatFloat3 {
 	gfloat	m00;
 	gfloat	m01;
   	gfloat	m02;
+  	
 	gfloat	m10;
 	gfloat	m11;
   	gfloat	m12;
+  	
   	gfloat	m20;
   	gfloat	m21;
   	gfloat	m22;
@@ -393,6 +416,12 @@ void		crank_mat_float3_transpose (	CrankMatFloat3*	a,
 void		crank_mat_float3_inverse (	CrankMatFloat3*	a,
 										CrankMatFloat3*	r	);
 
+void		crank_mat_float3_neg_self (	CrankMatFloat3*	a	);
+
+void		crank_mat_float3_transpose_self (	CrankMatFloat3*	a	);
+
+void		crank_mat_float3_inverse_self (	CrankMatFloat3*	a	);
+
 //////// Scalar operations ////////
 
 void		crank_mat_float3_muls (	CrankMatFloat3*	a,
@@ -402,6 +431,12 @@ void		crank_mat_float3_muls (	CrankMatFloat3*	a,
 void		crank_mat_float3_divs (	CrankMatFloat3*	a,
 									const gfloat	b,
 									CrankMatFloat3*	r	);
+
+void		crank_mat_float3_muls_self (	CrankMatFloat3*	a,
+											const gfloat	b	);
+
+void		crank_mat_float3_divs_self (	CrankMatFloat3*	a,
+											const gfloat	b	);
 
 //////// Vector operations ////////
 
@@ -422,6 +457,15 @@ void		crank_mat_float3_sub (	CrankMatFloat3*	a,
 void		crank_mat_float3_mul (	CrankMatFloat3*	a,
 									CrankMatFloat3*	b,
 									CrankMatFloat3* r	);
+
+void		crank_mat_float3_add_self (	CrankMatFloat3*	a,
+										CrankMatFloat3*	b	);
+
+void		crank_mat_float3_sub_self (	CrankMatFloat3*	a,
+										CrankMatFloat3*	b	);
+
+void		crank_mat_float3_mul_self (	CrankMatFloat3*	a,
+										CrankMatFloat3*	b	);
 
 //////// Ternary operaions ////////
 
@@ -466,14 +510,17 @@ struct _CrankMatFloat4 {
 	gfloat	m01;
   	gfloat	m02;
   	gfloat	m03;
+  	
 	gfloat	m10;
 	gfloat	m11;
   	gfloat	m12;
   	gfloat	m13;
+  	
   	gfloat	m20;
   	gfloat	m21;
   	gfloat	m22;
   	gfloat	m23;
+  	
   	gfloat	m30;
   	gfloat	m31;
   	gfloat	m32;
@@ -634,6 +681,12 @@ void		crank_mat_float4_transpose (	CrankMatFloat4*	a,
 void		crank_mat_float4_inverse (	CrankMatFloat4*	a,
 										CrankMatFloat4*	r	);
 
+void		crank_mat_float4_neg_self (	CrankMatFloat4*	a	);
+
+void		crank_mat_float4_transpose_self (	CrankMatFloat4*	a	);
+
+void		crank_mat_float4_inverse_self (	CrankMatFloat4*	a	);
+
 //////// Scalar operations ////////
 
 void		crank_mat_float4_muls (	CrankMatFloat4*	a,
@@ -643,6 +696,12 @@ void		crank_mat_float4_muls (	CrankMatFloat4*	a,
 void		crank_mat_float4_divs (	CrankMatFloat4*	a,
 									const gfloat	b,
 									CrankMatFloat4*	r	);
+
+void		crank_mat_float4_muls_self (	CrankMatFloat4*	a,
+											const gfloat	b	);
+
+void		crank_mat_float4_divs_self (	CrankMatFloat4*	a,
+											const gfloat	b	);
 
 //////// Vector operations ////////
 
@@ -663,6 +722,15 @@ void		crank_mat_float4_sub (	CrankMatFloat4*	a,
 void		crank_mat_float4_mul (	CrankMatFloat4*	a,
 									CrankMatFloat4*	b,
 									CrankMatFloat4* r	);
+
+void		crank_mat_float4_add_self (	CrankMatFloat4*	a,
+										CrankMatFloat4*	b	);
+
+void		crank_mat_float4_sub_self (	CrankMatFloat4*	a,
+										CrankMatFloat4*	b	);
+
+void		crank_mat_float4_mul_self (	CrankMatFloat4*	a,
+										CrankMatFloat4*	b	);
 
 //////// Ternary operaions ////////
 
@@ -850,21 +918,33 @@ void		crank_mat_float_n_transpose (	CrankMatFloatN*	a,
 void		crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 										CrankMatFloatN*	r	);
 
+void		crank_mat_float_n_neg_self (	CrankMatFloatN*	a	);
+
+void		crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	);
+
+void		crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	);
+
 //////// Scalar operations ////////
 
-void		crank_mat_float_n_muls (	CrankMatFloatN*	a,
-									const gfloat	b,
-									CrankMatFloatN*	r	);
+void		crank_mat_float_n_muls (		CrankMatFloatN*	a,
+											const gfloat	b,
+											CrankMatFloatN*	r	);
 
-void		crank_mat_float_n_divs (	CrankMatFloatN*	a,
-									const gfloat	b,
-									CrankMatFloatN*	r	);
+void		crank_mat_float_n_divs (		CrankMatFloatN*	a,
+											const gfloat	b,
+											CrankMatFloatN*	r	);
+
+void		crank_mat_float_n_muls_self (	CrankMatFloatN*	a,
+											const gfloat	b	);
+
+void		crank_mat_float_n_divs_self (	CrankMatFloatN*	a,
+											const gfloat	b	);
 
 //////// Vector operations ////////
 
 void		crank_mat_float_n_mulv (	CrankMatFloatN*	a,
-									CrankVecFloatN*	b,
-									CrankVecFloatN*	r	);
+										CrankVecFloatN*	b,
+										CrankVecFloatN*	r	);
 
 //////// Matrix operations ////////
 
@@ -879,6 +959,15 @@ void		crank_mat_float_n_sub (	CrankMatFloatN*	a,
 void		crank_mat_float_n_mul (	CrankMatFloatN*	a,
 									CrankMatFloatN*	b,
 									CrankMatFloatN* r	);
+
+void		crank_mat_float_n_add_self (	CrankMatFloatN*	a,
+											CrankMatFloatN*	b	);
+
+void		crank_mat_float_n_sub_self (	CrankMatFloatN*	a,
+											CrankMatFloatN*	b	);
+
+void		crank_mat_float_n_mul_self (	CrankMatFloatN*	a,
+											CrankMatFloatN*	b	);
 
 //////// Ternary operaions ////////
 

@@ -203,15 +203,16 @@ static void	test_n_magn (void)
 static void	test_n_unit (void)
 {
 	CrankVecCplxFloatN	a = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	crank_vec_cplx_float_n_unit (&a, &a);
+	crank_vec_cplx_float_n_unit (&a, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 0.2154f, 0.2872f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 0.3590f, 0.8615f);
 }
 
@@ -220,15 +221,16 @@ static void	test_n_muls (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankCplxFloat		b = {2.0f, 3.0f};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	crank_vec_cplx_float_n_muls (&a, &b, &a);
+	crank_vec_cplx_float_n_muls (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, -6.0f, 17.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, -26.0f, 39.0f);
 }
 
@@ -237,15 +239,16 @@ static void	test_n_divs (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankCplxFloat		b = {2.0f, 3.0f};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	crank_vec_cplx_float_n_divs (&a, &b, &a);
+	crank_vec_cplx_float_n_divs (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 1.3846f, -0.0769f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 3.5385f, 0.6923f);
 }
 
@@ -253,15 +256,16 @@ static void	test_n_divs (void)
 static void	test_n_mulrs (void)
 {
 	CrankVecCplxFloatN	a = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	crank_vec_cplx_float_n_mulrs (&a, 2.0f, &a);
+	crank_vec_cplx_float_n_mulrs (&a, 2.0f, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 6.0f, 8.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 10.0f, 24.0f);
 }
 
@@ -269,15 +273,16 @@ static void	test_n_mulrs (void)
 static void	test_n_divrs (void)
 {
 	CrankVecCplxFloatN	a = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
-	crank_vec_cplx_float_n_divrs (&a, 2.0f, &a);
+	crank_vec_cplx_float_n_divrs (&a, 2.0f, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 1.5f, 2.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 2.5f, 6.0f);
 }
 
@@ -286,16 +291,17 @@ static void	test_n_add (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	crank_vec_cplx_float_n_init_imm (&b, 2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
-	crank_vec_cplx_float_n_add (&a, &b, &a);
+	crank_vec_cplx_float_n_add (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 5.0f, 7.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 10.0f, 22.0f);
 }
 
@@ -304,16 +310,17 @@ static void	test_n_sub (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	crank_vec_cplx_float_n_init_imm (&b, 2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
-	crank_vec_cplx_float_n_sub (&a, &b, &a);
+	crank_vec_cplx_float_n_sub (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 1.0f, 1.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 0.0f, 2.0f);
 }
 
@@ -336,16 +343,17 @@ static void	test_n_cmpmul (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	crank_vec_cplx_float_n_init_imm (&b, 2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
-	crank_vec_cplx_float_n_cmpmul (&a, &b, &a);
+	crank_vec_cplx_float_n_cmpmul (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, -6.0f, 17.0f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, -95.0f, 110.0f);
 }
 
@@ -354,16 +362,17 @@ static void	test_n_cmpdiv (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
+	CrankVecCplxFloatN	r;
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 	crank_vec_cplx_float_n_init_imm (&b, 2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
-	crank_vec_cplx_float_n_cmpdiv (&a, &b, &a);
+	crank_vec_cplx_float_n_cmpdiv (&a, &b, &r);
 	
-	crank_vec_cplx_float_n_get (&a, 0, &v);
+	crank_vec_cplx_float_n_get (&r, 0, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 1.3846f, -0.0769f);
 	
-	crank_vec_cplx_float_n_get (&a, 1, &v);
+	crank_vec_cplx_float_n_get (&r, 1, &v);
 	crank_assert_eqcplxfloat_cimm (&v, 1.16f, 0.08f);
 }
 	
@@ -372,7 +381,7 @@ static void	test_n_cmpeq (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
-	CrankVecBoolN	r = {0};
+	CrankVecBoolN		r = {0};
 	crank_vec_cplx_float_n_init_imm (&a, 3, 2.0f, 3.0f, 4.0f, 6.0f, 17.0f, 20.0f);
 	crank_vec_cplx_float_n_init_imm (&b, 3, 2.0f, 2.0f, 4.0f, 6.0f, 53.0f, 55.0f);
 	
@@ -407,7 +416,7 @@ static void	test_n_mixs (void)
 static void	test_n_mulrm (void)
 {
 	CrankVecCplxFloatN	a = {0};
-	CrankMatFloatN	b = {0};
+	CrankMatFloatN		b = {0};
 	CrankVecCplxFloatN	r = {0};
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 3, 3.0f, 4.0f, 5.0f, 12.0f, 2.0f, 3.0f);
@@ -434,7 +443,7 @@ static void	test_n_mix (void)
 {
 	CrankVecCplxFloatN	a = {0};
 	CrankVecCplxFloatN	b = {0};
-	CrankVecFloatN	c = {0};
+	CrankVecFloatN		c = {0};
 	CrankVecCplxFloatN	r = {0};
 	CrankCplxFloat		v;
 	crank_vec_cplx_float_n_init_imm (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);

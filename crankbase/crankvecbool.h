@@ -128,6 +128,8 @@ gboolean		crank_vec_bool2_get_all		(	CrankVecBool2*	vec	);
 
 guint			crank_vec_bool2_get_count	(	CrankVecBool2*	vec	);
 
+gfloat			crank_vec_bool2_get_ratio	(	CrankVecBool2*	vec	);
+
 //////// Function as collection ////////////////////////////////////////////////
 
 gboolean		crank_vec_bool2_get			(	CrankVecBool2*	vec,
@@ -162,6 +164,18 @@ void			crank_vec_bool2_xor			(	CrankVecBool2*	a,
 void			crank_vec_bool2_not			(	CrankVecBool2*	a,
 												CrankVecBool2*	r	);
 
+void			crank_vec_bool2_and_self	(	CrankVecBool2*	a,
+												CrankVecBool2*	b	);
+
+void			crank_vec_bool2_or_self		(	CrankVecBool2*	a,
+												CrankVecBool2*	b	);
+
+void			crank_vec_bool2_xor_self	(	CrankVecBool2*	a,
+												CrankVecBool2*	b	);
+
+void			crank_vec_bool2_not_self	(	CrankVecBool2*	a	);
+												
+
 void			crank_vec_bool2_andv		(	CrankVecBool2*	a,
 												CrankVecBool2*	b,
 												CrankVecBool2*	r	);
@@ -172,8 +186,6 @@ void			crank_vec_bool2_orv			(	CrankVecBool2*	a,
 
 void			crank_vec_bool2_notv		(	CrankVecBool2*	a,
 												CrankVecBool2*	r	);
-
-
 
 
 
@@ -277,6 +289,8 @@ gboolean		crank_vec_bool3_get_all		(	CrankVecBool3*	vec	);
 
 guint			crank_vec_bool3_get_count	(	CrankVecBool3*	vec	);
 
+gfloat			crank_vec_bool3_get_ratio	(	CrankVecBool3*	vec	);
+
 
 //////// Function as collection ////////////////////////////////////////////////
 
@@ -311,6 +325,19 @@ void			crank_vec_bool3_xor			(	CrankVecBool3*	a,
 
 void			crank_vec_bool3_not			(	CrankVecBool3*	a,
 												CrankVecBool3*	r	);
+												
+
+void			crank_vec_bool3_and_self	(	CrankVecBool3*	a,
+												CrankVecBool3*	b	);
+
+void			crank_vec_bool3_or_self		(	CrankVecBool3*	a,
+												CrankVecBool3*	b	);
+
+void			crank_vec_bool3_xor_self	(	CrankVecBool3*	a,
+												CrankVecBool3*	b	);
+
+void			crank_vec_bool3_not_self	(	CrankVecBool3*	a	);
+
 
 void			crank_vec_bool3_andv		(	CrankVecBool3*	a,
 												CrankVecBool3*	b,
@@ -435,6 +462,8 @@ gboolean		crank_vec_bool4_get_all		(	CrankVecBool4*	vec	);
 
 guint			crank_vec_bool4_get_count	(	CrankVecBool4*	vec	);
 
+gfloat			crank_vec_bool4_get_ratio	(	CrankVecBool4*	vec	);
+
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -469,6 +498,19 @@ void			crank_vec_bool4_xor			(	CrankVecBool4*	a,
 
 void			crank_vec_bool4_not			(	CrankVecBool4*	a,
 												CrankVecBool4*	r	);
+												
+
+void			crank_vec_bool4_and_self	(	CrankVecBool4*	a,
+												CrankVecBool4*	b	);
+
+void			crank_vec_bool4_or_self		(	CrankVecBool4*	a,
+												CrankVecBool4*	b	);
+
+void			crank_vec_bool4_xor_self	(	CrankVecBool4*	a,
+												CrankVecBool4*	b	);
+
+void			crank_vec_bool4_not_self	(	CrankVecBool4*	a	);
+
 
 
 void			crank_vec_bool4_andv		(	CrankVecBool4*	a,
@@ -554,6 +596,8 @@ gboolean		crank_vec_bool_n_get_all	(	CrankVecBoolN*	vec	);
 
 guint			crank_vec_bool_n_get_count	(	CrankVecBoolN*	vec	);
 
+gfloat			crank_vec_bool_n_get_ratio	(	CrankVecBoolN*	vec	);
+
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -603,6 +647,19 @@ void			crank_vec_bool_n_xor		(	CrankVecBoolN*	a,
 
 void			crank_vec_bool_n_not		(	CrankVecBoolN*	a,
 												CrankVecBoolN*	r	);
+
+
+void			crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
+												CrankVecBoolN*	b	);
+
+void			crank_vec_bool_n_or_self	(	CrankVecBoolN*	a,
+												CrankVecBoolN*	b	);
+
+void			crank_vec_bool_n_xor_self	(	CrankVecBoolN*	a,
+												CrankVecBoolN*	b	);
+
+void			crank_vec_bool_n_not_self	(	CrankVecBoolN*	a	);
+
 
 
 void			crank_vec_bool_n_andv		(	CrankVecBoolN*	a,

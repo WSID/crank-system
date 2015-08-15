@@ -133,6 +133,7 @@ gfloat			crank_vec_int2_get_magn			(	CrankVecInt2*	vec	);
 void			crank_vec_int2_neg			(	CrankVecInt2*	a,
 												CrankVecInt2*	r	);
 
+void			crank_vec_int2_neg_self		(	CrankVecInt2*	a	);
 
 //////// Scalar operations ////////
 
@@ -148,6 +149,15 @@ void			crank_vec_int2_mods			(	CrankVecInt2*	a,
 												const gint		b,
 												CrankVecInt2*	r	);
 
+void			crank_vec_int2_muls_self	(	CrankVecInt2*	a,
+												const gint		b	);
+
+void			crank_vec_int2_divs_self	(	CrankVecInt2*	a,
+												const gint		b	);
+
+void			crank_vec_int2_mods_self	(	CrankVecInt2*	a,
+												const gint		b	);
+
 
 //////// Standard vector operations ////////
 
@@ -160,6 +170,12 @@ void			crank_vec_int2_sub			(	CrankVecInt2*	a,
 												CrankVecInt2*	r	);
 
 gint			crank_vec_int2_dot			(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+
+void			crank_vec_int2_add_self		(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+
+void			crank_vec_int2_sub_self		(	CrankVecInt2*	a,
 												CrankVecInt2*	b	);
 
 //////// Component vector operations ////////
@@ -199,6 +215,15 @@ void			crank_vec_int2_min	(			CrankVecInt2*	a,
 void			crank_vec_int2_max	(			CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
+
+void			crank_vec_int2_cmpmul_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+												
+void			crank_vec_int2_cmpdiv_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+
+void			crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
 
 
 
@@ -313,6 +338,8 @@ gfloat			crank_vec_int3_get_magn			(	CrankVecInt3*	vec	);
 void			crank_vec_int3_neg			(	CrankVecInt3*	a,
 												CrankVecInt3*	r	);
 
+void			crank_vec_int3_neg_self		(	CrankVecInt3*	a	);
+
 
 //////// Scalar operations ////////
 
@@ -327,6 +354,15 @@ void			crank_vec_int3_divs			(	CrankVecInt3*	a,
 void			crank_vec_int3_mods			(	CrankVecInt3*	a,
 												const gint		b,
 												CrankVecInt3*	r	);
+
+void			crank_vec_int3_muls_self	(	CrankVecInt3*	a,
+												const gint		b	);
+
+void			crank_vec_int3_divs_self	(	CrankVecInt3*	a,
+												const gint		b	);
+
+void			crank_vec_int3_mods_self	(	CrankVecInt3*	a,
+												const gint		b	);
 
 
 //////// Standard vector operations ////////
@@ -345,6 +381,15 @@ gint			crank_vec_int3_dot			(	CrankVecInt3*	a,
 void			crank_vec_int3_crs			(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+
+void			crank_vec_int3_add_self		(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
+
+void			crank_vec_int3_sub_self		(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
+
+void			crank_vec_int3_crs_self		(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 
 //////// Component vector operations ////////
 
@@ -383,6 +428,16 @@ void			crank_vec_int3_min	(			CrankVecInt3*	a,
 void			crank_vec_int3_max	(			CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+												
+
+void			crank_vec_int3_cmpmul_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
+												
+void			crank_vec_int3_cmpdiv_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
+
+void			crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 
 
 
@@ -507,6 +562,8 @@ gfloat			crank_vec_int4_get_magn			(	CrankVecInt4*	vec	);
 void			crank_vec_int4_neg			(	CrankVecInt4*	a,
 												CrankVecInt4*	r	);
 
+void			crank_vec_int4_neg_self		(	CrankVecInt4*	a	);
+
 
 //////// Scalar operations ////////
 
@@ -522,6 +579,15 @@ void			crank_vec_int4_mods			(	CrankVecInt4*	a,
 												const gint		b,
 												CrankVecInt4*	r	);
 
+void			crank_vec_int4_muls_self	(	CrankVecInt4*	a,
+												const gint		b	);
+
+void			crank_vec_int4_divs_self	(	CrankVecInt4*	a,
+												const gint		b	);
+
+void			crank_vec_int4_mods_self	(	CrankVecInt4*	a,
+												const gint		b	);
+
 
 //////// Standard vector operations ////////
 
@@ -534,6 +600,13 @@ void			crank_vec_int4_sub			(	CrankVecInt4*	a,
 												CrankVecInt4*	r	);
 
 gint			crank_vec_int4_dot			(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
+												
+
+void			crank_vec_int4_add_self		(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
+
+void			crank_vec_int4_sub_self		(	CrankVecInt4*	a,
 												CrankVecInt4*	b	);
 
 //////// Component vector operations ////////
@@ -573,6 +646,15 @@ void			crank_vec_int4_min	(			CrankVecInt4*	a,
 void			crank_vec_int4_max	(			CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
+
+void			crank_vec_int4_cmpmul_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
+												
+void			crank_vec_int4_cmpdiv_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
+
+void			crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
 
 
 
@@ -678,21 +760,33 @@ gfloat			crank_vec_int_n_get_magn		(	CrankVecIntN*	vec	);
 void			crank_vec_int_n_neg			(	CrankVecIntN*	a,
 												CrankVecIntN*	r	);
 
+void			crank_vec_int_n_neg_self	(	CrankVecIntN*	a	);
+
 
 //////// Scalar operations ////////
 
-void			crank_vec_int_n_muls			(	CrankVecIntN*	a,
+void			crank_vec_int_n_muls		(	CrankVecIntN*	a,
 												const gint		b,
 												CrankVecIntN*	r	);
 
-void			crank_vec_int_n_divs			(	CrankVecIntN*	a,
+void			crank_vec_int_n_divs		(	CrankVecIntN*	a,
 												const gint		b,
 												CrankVecIntN*	r	);
 
-void			crank_vec_int_n_mods			(	CrankVecIntN*	a,
+void			crank_vec_int_n_mods		(	CrankVecIntN*	a,
 												const gint		b,
 												CrankVecIntN*	r	);
 
+
+void			crank_vec_int_n_muls_self	(	CrankVecIntN*	a,
+												const gint		b	);
+
+void			crank_vec_int_n_divs_self	(	CrankVecIntN*	a,
+												const gint		b	);
+
+void			crank_vec_int_n_mods_self	(	CrankVecIntN*	a,
+												const gint		b	);
+												
 
 //////// Standard vector operations ////////
 
@@ -705,6 +799,12 @@ void			crank_vec_int_n_sub			(	CrankVecIntN*	a,
 												CrankVecIntN*	r	);
 
 gint			crank_vec_int_n_dot			(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+
+void			crank_vec_int_n_add_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+
+void			crank_vec_int_n_sub_self	(	CrankVecIntN*	a,
 												CrankVecIntN*	b	);
 
 //////// Component vector operations ////////
@@ -744,6 +844,17 @@ void			crank_vec_int_n_min	(			CrankVecIntN*	a,
 void			crank_vec_int_n_max	(			CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
+												
+
+void			crank_vec_int_n_cmpmul_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+												
+void			crank_vec_int_n_cmpdiv_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+
+void			crank_vec_int_n_cmpmod_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+
 
 G_END_DECLS
 

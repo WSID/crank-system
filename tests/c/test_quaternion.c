@@ -31,6 +31,10 @@ static void		test_equal_delta ( void );
 
 static void		test_get_norm ( void );
 
+static void		test_get_rangle ( void );
+
+static void		test_get_raxis ( void );
+
 static void		test_neg ( void );
 
 static void		test_inverse ( void );
@@ -73,6 +77,8 @@ static void		test_exp ( void );
 
 static void		test_powr ( void );
 
+static void		test_rotatev (void);
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -84,6 +90,8 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/quat/float/equal",		test_equal		);
 	g_test_add_func ("/crank/base/quat/float/equal/delta",	test_equal_delta);
 	g_test_add_func ("/crank/base/quat/float/get_norm",		test_get_norm	);
+	g_test_add_func ("/crank/base/quat/float/get_rangle",	test_get_rangle	);
+	g_test_add_func ("/crank/base/quat/float/get_raxis",	test_get_raxis	);
 	g_test_add_func ("/crank/base/quat/float/neg",			test_neg		);
 	g_test_add_func ("/crank/base/quat/float/inverse",		test_inverse	);
 	g_test_add_func ("/crank/base/quat/float/conjugate",	test_conjugate	);
@@ -105,6 +113,7 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/quat/float/ln",			test_ln			);
 	g_test_add_func ("/crank/base/quat/float/exp",			test_exp		);
 	g_test_add_func ("/crank/base/quat/float/powr",			test_powr		);
+	g_test_add_func ("/crank/base/quat/float/rotatev",		test_rotatev	);
 	
 	g_test_run ();
 
@@ -142,6 +151,25 @@ test_get_norm ( void )
 	CrankQuatFloat	quat = {3.0f, 4.0f, 5.0f, 12.0f};
 	
 	crank_assert_cmpfloat (crank_quat_float_get_norm (&quat), ==, 13.9284f);
+}
+
+static void
+test_get_rangle ( void )
+{
+	CrankQuatFloat	quat = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	
+	crank_assert_cmpfloat (crank_quat_float_get_rangle (&quat), ==, 2.1416f);
+}
+
+static void
+test_get_raxis ( void )
+{
+	CrankQuatFloat	quat = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	CrankVecFloat3	axis;
+	
+	crank_quat_float_get_raxis (&quat, &axis);
+	
+	crank_assert_eq_vecfloat3_imm (&axis, 0.5774f, 0.5774f, 0.5774f);
 }
 
 static void
@@ -449,4 +477,15 @@ test_powr ( void )
 	crank_assert_cmpfloat (b.x, ==, -51.1662f);
 	crank_assert_cmpfloat (b.y, ==, -63.9578f);
 	crank_assert_cmpfloat_d (b.z, ==, -153.4986f, 0.0005f);
+}
+
+static void
+test_rotatev (void)
+{
+	CrankQuatFloat	quat = {0.4794f, 0.5067f, 0.5067f, 0.5067f};
+	CrankVecFloat3	vec	= {1.0f, 2.0f, 3.0f};
+	CrankVecFloat3	rvec;
+	
+	crank_quat_float_rotatev (&quat, &vec, &rvec);
+	crank_assert_eq_vecfloat3_imm (&rvec, 3.0264f, 1.0285f, 1.9455f);
 }

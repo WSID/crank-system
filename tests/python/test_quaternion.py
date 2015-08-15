@@ -72,6 +72,21 @@ class TestQuaternion(unittest.TestCase):
 		self.assertFloat (a.get_norm (), 13.9284)
 	
 	
+	def test_get_rangle (self):
+		a = CrankBase.QuatFloat.init (0.4794, 0.5067, 0.5067, 0.5067)
+		
+		self.assertFloat (a.get_rangle (), 2.1416)
+	
+	
+	def test_get_raxis (self):
+		a = CrankBase.QuatFloat.init (0.4794, 0.5067, 0.5067, 0.5067)
+		axis = a.get_raxis ()
+		
+		self.assertFloat (axis.x, 0.5774);
+		self.assertFloat (axis.y, 0.5774);
+		self.assertFloat (axis.z, 0.5774);
+	
+	
 	def test_neg (self):
 		a = CrankBase.QuatFloat.init (3, 4, 5, 12)
 		
@@ -309,6 +324,17 @@ class TestQuaternion(unittest.TestCase):
 		self.assertFloat (a.x, -51.1662)
 		self.assertFloat (a.y, -63.9578)
 		self.assertFloat (a.z, -153.4986, 0.0005)
+		
+	
+	def test_rotatev (self):
+		a = CrankBase.QuatFloat.init (0.4794, 0.5067, 0.5067, 0.5067)
+		v = CrankBase.VecFloat3.init (1, 2, 3)
+		
+		rv = a.rotatev (v)
+		
+		self.assertFloat (rv.x, 3.0264)
+		self.assertFloat (rv.y, 1.0285)
+		self.assertFloat (rv.z, 1.9455)
 		
 if __name__ == '__main__':
 	unittest.main ()

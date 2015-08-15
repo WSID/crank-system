@@ -45,7 +45,7 @@ G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_f
 
 /**
  * SECTION: crankmatfloat
- * @title: Float Matrices.
+ * @title: Float Matrices
  * @short_description: Float valued matrices.
  * @stability: unstable
  * @include: crankbase.h
@@ -85,6 +85,24 @@ G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_f
  * get its property. Therefore, we need to use advanced operations to decompose
  * matrices to more simpler form.
  * For example: Crank System uses LU Decomposition to get determinent of matrices.
+ *
+ * # #CrankMatFloat3 as Rotation representation.
+ *
+ * A 3x3 Matrix can handle linear transform and it is sometime used for
+ * rotation representations. but itself is not useful so much, so  4x4 Matrices
+ * are used more for rotations.
+ *
+ * # #CrankMatFloat4 as Rotation representation.
+ *
+ * A 4x4 Matrix can handle affine transform in 3D Space. (includes translation)
+ * And sometime it is used for rotation representation. This has some advantages.
+ *
+ * * Unified transformation representation.
+ *
+ *   4x4 Matrix can represent not only rotation, but also translate, scale and
+ *   even projections.
+ *   This means it can be combined with other transforms like translation and
+ *   scales, and so on, in arbitarily order.
  */
 
 
@@ -565,7 +583,7 @@ crank_mat_float2_get_adj (	CrankMatFloat2*	mat,
 						  	CrankMatFloat2*	r	)
 {
 	crank_mat_float2_get_cof (mat, r);
-  	crank_mat_float2_transpose (r, r);
+  	crank_mat_float2_transpose_self (r);
 }
 
 /**
@@ -596,19 +614,10 @@ void
 crank_mat_float2_transpose (	CrankMatFloat2*	a,
 								CrankMatFloat2*	r	)
 {
-  	if (a != r) {
-		r->m00 = a->m00;
-	  	r->m01 = a->m10;
-	  	r->m10 = a->m01;
-	  	r->m11 = a->m11;
-	}
-  	else {
-	  	gfloat temp;
-
-	  	temp = a->m01;
-	  	a->m01 = a->m10;
-	  	a->m10 = temp;
-	}
+	r->m00 = a->m00;
+  	r->m01 = a->m10;
+  	r->m10 = a->m01;
+  	r->m11 = a->m11;
 }
 
 /**
@@ -623,24 +632,65 @@ void
 crank_mat_float2_inverse (	CrankMatFloat2*	a,
 						  	CrankMatFloat2*	r	)
 {
-  	gfloat	det = crank_mat_float2_get_det (a);
+  	gfloat	detinv = 1 / crank_mat_float2_get_det (a);
 
-	if (a != r) {
-		r->m00 = a->m11 / det;
-		r->m11 = a->m00 / det;
-		r->m01 = - a->m01 / det;
-		r->m10 = - a->m10 / det;
-	}
-  	else {
-		gfloat temp;
+	r->m00 = a->m11 * detinv;
+	r->m11 = a->m00 * detinv;
+	r->m01 = - a->m01 * detinv;
+	r->m10 = - a->m10 * detinv;
+}
 
-		temp = a->m00 / det;
-	  	a->m00 = a->m11 / det;
-	  	a->m11 = temp;
+/**
+ * crank_mat_float2_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float2_neg_self (	CrankMatFloat2*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+}
 
-	  	a->m01 /= -det;
-	  	a->m10 /= -det;
-	}
+/**
+ * crank_mat_float2_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float2_transpose_self (	CrankMatFloat2*	a	)
+{
+  	gfloat temp;
+
+  	temp = a->m01;
+  	a->m01 = a->m10;
+  	a->m10 = temp;
+}
+
+/**
+ * crank_mat_float2_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float2_inverse_self (	CrankMatFloat2*	a	)
+{
+  	gfloat	detinv = 1 / crank_mat_float2_get_det (a);
+
+	gfloat temp;
+
+	temp = a->m00 * detinv;
+  	a->m00 = a->m11 * detinv;
+  	a->m11 = temp;
+
+  	a->m01 *= -detinv;
+  	a->m10 *= -detinv;
 }
 
 /**
@@ -680,6 +730,41 @@ crank_mat_float2_divs (	CrankMatFloat2*	a,
 	r->m10 = a->m10 / b;
 	r->m11 = a->m11 / b;
 }
+
+/**
+ * crank_mat_float2_muls_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Multiplies a matrix by scalar.
+ */
+void
+crank_mat_float2_muls_self (	CrankMatFloat2*	a,
+					   			const gfloat	b	)
+{
+	a->m00 *= b;
+	a->m01 *= b;
+	a->m10 *= b;
+	a->m11 *= b;
+}
+
+/**
+ * crank_mat_float2_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float2_divs_self (	CrankMatFloat2*	a,
+							   	const gfloat	b	)
+{
+	a->m00 /= b;
+	a->m01 /= b;
+	a->m10 /= b;
+	a->m11 /= b;
+}
+
 
 
 /**
@@ -761,6 +846,61 @@ crank_mat_float2_mul (	CrankMatFloat2*	a,
   	nr.m11 = (a->m10 * b->m01) + (a->m11 * b->m11);
 
   	crank_mat_float2_init_arr (r, (gfloat*)&nr);
+}
+
+/**
+ * crank_mat_float2_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float2_add_self (	CrankMatFloat2*	a,
+						  	CrankMatFloat2*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+}
+
+/**
+ * crank_mat_float2_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float2_sub_self (	CrankMatFloat2*	a,
+					  		CrankMatFloat2*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
+}
+
+/**
+ * crank_mat_float2_mul_self:
+ * @a: A Matrix.
+ * @b: A Matrix.
+ *
+ * Multiplies two matrices.
+ */
+void
+crank_mat_float2_mul_self (	CrankMatFloat2*	a,
+					  		CrankMatFloat2* b	)
+{
+	CrankMatFloat2	nr;
+
+  	nr.m00 = (a->m00 * b->m00) + (a->m01 * b->m10);
+  	nr.m01 = (a->m00 * b->m01) + (a->m01 * b->m11);
+  	nr.m10 = (a->m10 * b->m00) + (a->m11 * b->m10);
+  	nr.m11 = (a->m10 * b->m01) + (a->m11 * b->m11);
+
+  	crank_mat_float2_copy (&nr, a);
 }
 
 /**
@@ -1364,7 +1504,7 @@ crank_mat_float3_get_adj (	CrankMatFloat3*	mat,
 						  	CrankMatFloat3*	r	)
 {
 	crank_mat_float3_get_cof (mat, r);
-  	crank_mat_float3_transpose (r, r);
+  	crank_mat_float3_transpose_self (r);
 }
 
 /**
@@ -1400,32 +1540,15 @@ void
 crank_mat_float3_transpose (	CrankMatFloat3*	a,
 								CrankMatFloat3*	r	)
 {
-  	if (a != r) {
-		r->m00 = a->m00;
-	  	r->m01 = a->m10;
-	  	r->m02 = a->m20;
-	  	r->m10 = a->m01;
-	  	r->m11 = a->m11;
-	  	r->m12 = a->m21;
-	  	r->m20 = a->m02;
-	  	r->m21 = a->m12;
-	  	r->m22 = a->m22;
-	}
-  	else {
-	  	gfloat temp;
-
-	  	temp = a->m01;
-	  	a->m01 = a->m10;
-	  	a->m10 = temp;
-
-	  	temp = a->m02;
-	  	a->m02 = a->m20;
-	  	a->m20 = temp;
-
-	  	temp = a->m12;
-	  	a->m12 = a->m21;
-	  	a->m21 = temp;
-	}
+	r->m00 = a->m00;
+  	r->m01 = a->m10;
+  	r->m02 = a->m20;
+  	r->m10 = a->m01;
+  	r->m11 = a->m11;
+  	r->m12 = a->m21;
+  	r->m20 = a->m02;
+  	r->m21 = a->m12;
+  	r->m22 = a->m22;
 }
 
 /**
@@ -1446,6 +1569,69 @@ crank_mat_float3_inverse (	CrankMatFloat3*	a,
   	crank_mat_float3_get_adj (a, &adj);
 	crank_mat_float3_divs (&adj, det, r);
 }
+
+/**
+ * crank_mat_float3_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float3_neg_self (	CrankMatFloat3*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m02 = - a->m02;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+  	a->m12 = - a->m12;
+	a->m20 = - a->m20;
+  	a->m21 = - a->m21;
+  	a->m22 = - a->m22;
+}
+
+/**
+ * crank_mat_float3_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float3_transpose_self (	CrankMatFloat3*	a	)
+{
+  	gfloat temp;
+
+  	temp = a->m01;
+  	a->m01 = a->m10;
+  	a->m10 = temp;
+
+  	temp = a->m02;
+  	a->m02 = a->m20;
+  	a->m20 = temp;
+
+  	temp = a->m12;
+  	a->m12 = a->m21;
+  	a->m21 = temp;
+}
+
+/**
+ * crank_mat_float3_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float3_inverse_self (	CrankMatFloat3*	a	)
+{
+  	CrankMatFloat3	adj;
+  	gfloat	det = crank_mat_float3_get_det (a);
+
+  	crank_mat_float3_get_adj (a, &adj);
+	crank_mat_float3_divs (&adj, det, a);
+}
+
+
 
 /**
  * crank_mat_float3_muls:
@@ -1493,6 +1679,50 @@ crank_mat_float3_divs (	CrankMatFloat3*	a,
 	r->m20 = a->m20 / b;
 	r->m21 = a->m21 / b;
   	r->m22 = a->m22 / b;
+}
+
+/**
+ * crank_mat_float3_muls_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Multiplies a matrix by scalar.
+ */
+void
+crank_mat_float3_muls_self (	CrankMatFloat3*	a,
+							   	const gfloat	b	)
+{
+	a->m00 *= b;
+	a->m01 *= b;
+  	a->m02 *= b;
+	a->m10 *= b;
+	a->m11 *= b;
+  	a->m12 *= b;
+	a->m20 *= b;
+	a->m21 *= b;
+  	a->m22 *= b;
+}
+
+/**
+ * crank_mat_float3_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float3_divs_self (	CrankMatFloat3*	a,
+					   			const gfloat	b	)
+{
+	a->m00 /= b;
+	a->m01 /= b;
+  	a->m02 /= b;
+	a->m10 /= b;
+	a->m11 /= b;
+  	a->m12 /= b;
+	a->m20 /= b;
+	a->m21 /= b;
+  	a->m22 /= b;
 }
 
 
@@ -1593,8 +1823,84 @@ crank_mat_float3_mul (	CrankMatFloat3*	a,
   	nr.m21 = (a->m20 * b->m01) + (a->m21 * b->m11) + (a->m22 * b->m21);
   	nr.m22 = (a->m20 * b->m02) + (a->m21 * b->m12) + (a->m22 * b->m22);
 
-  	crank_mat_float3_copy (r, &nr);
+  	crank_mat_float3_copy (&nr, r);
 }
+
+
+/**
+ * crank_mat_float3_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float3_add_self (	CrankMatFloat3*	a,
+					  		CrankMatFloat3*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m02 += b->m02;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+  	a->m12 += b->m12;
+  	a->m20 += b->m20;
+  	a->m21 += b->m21;
+  	a->m22 += b->m22;
+}
+
+/**
+ * crank_mat_float3_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float3_sub_self (	CrankMatFloat3*	a,
+					  		CrankMatFloat3*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m02 -= b->m02;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
+  	a->m12 -= b->m12;
+  	a->m20 -= b->m20;
+  	a->m21 -= b->m21;
+  	a->m22 -= b->m22;
+}
+
+/**
+ * crank_mat_float3_mul_self:
+ * @a: A Matrix.
+ * @b: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Multiplies two matrices.
+ */
+void
+crank_mat_float3_mul_self (	CrankMatFloat3*	a,
+					  		CrankMatFloat3* b	)
+{
+	CrankMatFloat3	nr;
+
+  	nr.m00 = (a->m00 * b->m00) + (a->m01 * b->m10) + (a->m02 * b->m20);
+  	nr.m01 = (a->m00 * b->m01) + (a->m01 * b->m11) + (a->m02 * b->m21);
+  	nr.m02 = (a->m00 * b->m02) + (a->m01 * b->m12) + (a->m02 * b->m22);
+
+  	nr.m10 = (a->m10 * b->m00) + (a->m11 * b->m10) + (a->m12 * b->m20);
+  	nr.m11 = (a->m10 * b->m01) + (a->m11 * b->m11) + (a->m12 * b->m21);
+  	nr.m12 = (a->m10 * b->m02) + (a->m11 * b->m12) + (a->m12 * b->m22);
+
+  	nr.m20 = (a->m20 * b->m00) + (a->m21 * b->m10) + (a->m22 * b->m20);
+  	nr.m21 = (a->m20 * b->m01) + (a->m21 * b->m11) + (a->m22 * b->m21);
+  	nr.m22 = (a->m20 * b->m02) + (a->m21 * b->m12) + (a->m22 * b->m22);
+
+  	crank_mat_float3_copy (&nr, a);
+}
+
+
 
 /**
  * crank_mat_float3_mixs:
@@ -2319,7 +2625,7 @@ crank_mat_float4_get_adj (	CrankMatFloat4*	mat,
 						  	CrankMatFloat4*	r	)
 {
 	crank_mat_float4_get_cof (mat, r);
-  	crank_mat_float4_transpose (r, r);
+  	crank_mat_float4_transpose_self (r);
 }
 
 /**
@@ -2429,6 +2735,86 @@ crank_mat_float4_inverse (	CrankMatFloat4*	a,
 }
 
 /**
+ * crank_mat_float4_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float4_neg_self (	CrankMatFloat4*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m02 = - a->m02;
+  	a->m03 = - a->m03;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+  	a->m12 = - a->m12;
+  	a->m13 = - a->m13;
+	a->m20 = - a->m20;
+  	a->m21 = - a->m21;
+  	a->m22 = - a->m22;
+  	a->m23 = - a->m23;
+	a->m30 = - a->m30;
+  	a->m31 = - a->m31;
+  	a->m32 = - a->m32;
+  	a->m33 = - a->m33;
+}
+
+/**
+ * crank_mat_float4_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float4_transpose_self (	CrankMatFloat4*	a	)
+{
+  	gfloat temp;
+
+  	temp = a->m01;
+  	a->m01 = a->m10;
+  	a->m10 = temp;
+
+  	temp = a->m02;
+  	a->m02 = a->m20;
+  	a->m20 = temp;
+
+  	temp = a->m03;
+  	a->m03 = a->m30;
+  	a->m30 = temp;
+
+  	temp = a->m12;
+  	a->m12 = a->m21;
+  	a->m21 = temp;
+
+  	temp = a->m13;
+  	a->m13 = a->m31;
+  	a->m31 = temp;
+
+  	temp = a->m23;
+  	a->m23 = a->m32;
+  	a->m32 = temp;
+}
+
+/**
+ * crank_mat_float4_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float4_inverse_self (	CrankMatFloat4*	a	)
+{
+  	CrankMatFloat4	adj;
+  	gfloat	det = crank_mat_float4_get_det (a);
+
+  	crank_mat_float4_get_adj (a, &adj);
+	crank_mat_float4_divs (&adj, det, a);
+}
+
+/**
  * crank_mat_float4_muls:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -2473,6 +2859,49 @@ crank_mat_float4_divs (	CrankMatFloat4*	a,
 					   	CrankMatFloat4*	r	)
 {
   	crank_mat_float4_muls (a, 1 / b, r);
+}
+
+/**
+ * crank_mat_float4_muls_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Multiplies a matrix by scalar.
+ */
+void
+crank_mat_float4_muls_self (	CrankMatFloat4*	a,
+					   			const gfloat	b	)
+{
+	a->m00 *= b;
+	a->m01 *= b;
+  	a->m02 *= b;
+  	a->m03 *= b;
+	a->m10 *= b;
+	a->m11 *= b;
+  	a->m12 *= b;
+  	a->m13 *= b;
+	a->m20 *= b;
+	a->m21 *= b;
+  	a->m22 *= b;
+  	a->m23 *= b;
+	a->m30 *= b;
+	a->m31 *= b;
+  	a->m32 *= b;
+  	a->m33 *= b;
+}
+
+/**
+ * crank_mat_float4_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float4_divs_self (	CrankMatFloat4*	a,
+					   			const gfloat	b	)
+{
+  	crank_mat_float4_muls_self (a, 1 / b);
 }
 
 
@@ -2603,6 +3032,102 @@ crank_mat_float4_mul (	CrankMatFloat4*	a,
 }
 
 /**
+ * crank_mat_float4_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float4_add_self (	CrankMatFloat4*	a,
+					  		CrankMatFloat4*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m02 += b->m02;
+  	a->m03 += b->m03;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+  	a->m12 += b->m12;
+  	a->m13 += b->m13;
+  	a->m20 += b->m20;
+  	a->m21 += b->m21;
+  	a->m22 += b->m22;
+  	a->m23 += b->m23;
+  	a->m30 += b->m30;
+  	a->m31 += b->m31;
+  	a->m32 += b->m32;
+  	a->m33 += b->m33;
+}
+
+/**
+ * crank_mat_float4_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float4_sub_self (	CrankMatFloat4*	a,
+					  		CrankMatFloat4*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m02 -= b->m02;
+  	a->m03 -= b->m03;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
+  	a->m12 -= b->m12;
+  	a->m13 -= b->m13;
+  	a->m20 -= b->m20;
+  	a->m21 -= b->m21;
+  	a->m22 -= b->m22;
+  	a->m23 -= b->m23;
+  	a->m30 -= b->m30;
+  	a->m31 -= b->m31;
+  	a->m32 -= b->m32;
+  	a->m33 -= b->m33;
+}
+
+
+/**
+ * crank_mat_float4_mul_self:
+ * @a: A Matrix.
+ * @b: A Matrix.
+ *
+ * Multiplies two matrices.
+ */
+void
+crank_mat_float4_mul_self (	CrankMatFloat4*	a,
+						  	CrankMatFloat4* b	)
+{
+	CrankMatFloat4	nr;
+
+  	nr.m00 = (a->m00 * b->m00) + (a->m01 * b->m10) + (a->m02 * b->m20) + (a->m03 * b->m30);
+  	nr.m01 = (a->m00 * b->m01) + (a->m01 * b->m11) + (a->m02 * b->m21) + (a->m03 * b->m31);
+  	nr.m02 = (a->m00 * b->m02) + (a->m01 * b->m12) + (a->m02 * b->m22) + (a->m03 * b->m32);
+  	nr.m02 = (a->m00 * b->m03) + (a->m01 * b->m13) + (a->m02 * b->m23) + (a->m03 * b->m33);
+
+  	nr.m10 = (a->m10 * b->m00) + (a->m11 * b->m10) + (a->m12 * b->m20) + (a->m13 * b->m30);
+  	nr.m11 = (a->m10 * b->m01) + (a->m11 * b->m11) + (a->m12 * b->m21) + (a->m13 * b->m31);
+  	nr.m12 = (a->m10 * b->m02) + (a->m11 * b->m12) + (a->m12 * b->m22) + (a->m13 * b->m32);
+  	nr.m12 = (a->m10 * b->m03) + (a->m11 * b->m13) + (a->m12 * b->m23) + (a->m13 * b->m33);
+
+  	nr.m20 = (a->m20 * b->m00) + (a->m21 * b->m10) + (a->m22 * b->m20) + (a->m23 * b->m30);
+  	nr.m21 = (a->m20 * b->m01) + (a->m21 * b->m11) + (a->m22 * b->m21) + (a->m23 * b->m31);
+  	nr.m22 = (a->m20 * b->m02) + (a->m21 * b->m12) + (a->m22 * b->m22) + (a->m23 * b->m32);
+  	nr.m22 = (a->m20 * b->m03) + (a->m21 * b->m13) + (a->m22 * b->m23) + (a->m23 * b->m33);
+
+  	nr.m30 = (a->m30 * b->m00) + (a->m31 * b->m10) + (a->m32 * b->m20) + (a->m33 * b->m30);
+  	nr.m31 = (a->m30 * b->m01) + (a->m31 * b->m11) + (a->m32 * b->m21) + (a->m33 * b->m31);
+  	nr.m32 = (a->m30 * b->m02) + (a->m31 * b->m12) + (a->m32 * b->m22) + (a->m33 * b->m32);
+  	nr.m32 = (a->m30 * b->m03) + (a->m31 * b->m13) + (a->m32 * b->m23) + (a->m33 * b->m33);
+
+  	crank_mat_float4_copy (&nr, a);
+}
+
+
+/**
  * crank_mat_float4_mixs:
  * @a: A Matrix.
  * @b: A Matrix.
@@ -2714,7 +3239,7 @@ crank_mat_float_n_init (	CrankMatFloatN*	mat,
   	va_list	varargs;
   	guint	i;
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
 
   	va_start (varargs, cn);
 
@@ -2741,7 +3266,7 @@ crank_mat_float_n_init_arr (	CrankMatFloatN* mat,
 {
   	guint	count = rn*cn;
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
 
 	memcpy (mat->data, marr, sizeof(gfloat) * count);
 }
@@ -2761,7 +3286,6 @@ crank_mat_float_n_init_arr_take (	CrankMatFloatN* mat,
 									const guint		cn,
 								   	gfloat*	marr	)
 {
-  	g_free (mat->data);
   	mat->data = marr;
   	mat->rn = rn;
  	mat->cn = cn;
@@ -2798,7 +3322,7 @@ crank_mat_float_n_init_rv (	CrankMatFloatN*	mat,
   	va_end (varargs_cn);
 
   	// Phase 2: Copy actual data to matrix data.
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
 
   	for (i = 0; i < rn; i++) {
 	 	CrankVecFloatN*	rv = va_arg (varargs_data, CrankVecFloatN*);
@@ -2826,7 +3350,7 @@ crank_mat_float_n_init_rvarr (	CrankMatFloatN*		mat,
 
   	for (i = 0; i < rn; i++) cn = MAX(cn, rvarr[i]->n);
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < rn; i++)
 	  	memcpy (mat->data + (i * cn), rvarr[i]->data, rvarr[i]->n);
 }
@@ -2861,7 +3385,7 @@ crank_mat_float_n_init_cv (	CrankMatFloatN*	mat,
 	}
   	va_end (varargs_rn);
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < cn; i++) {
 		CrankVecFloatN*	cv = va_arg (varargs_data, CrankVecFloatN*);
 
@@ -2892,7 +3416,7 @@ crank_mat_float_n_init_cvarr (	CrankMatFloatN* 	mat,
 
   	for (i = 0; i < cn; i++) rn = MAX (rn, cvarr[i]->n);
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < cn; i++) {
 	  	for (j = 0; j < cvarr[i]->n; j++) {
 	  		mat->data[(rn * j) + i] = cvarr[i]->data[j];
@@ -2919,7 +3443,7 @@ crank_mat_float_n_init_diag (	CrankMatFloatN*	mat,
 
   	va_start (varargs, n);
 
-  	crank_mat_float_n_realloc (mat, n, n);
+	CRANK_MAT_ALLOC(mat, gfloat, n, n);
  	for (i = 0; i < n; i++)
 	 	mat->data[(n * i) + i] = va_arg (varargs, gdouble);
 
@@ -2942,7 +3466,7 @@ crank_mat_float_n_init_diag_arr (	CrankMatFloatN*	mat,
 {
   	guint	i;
 
-  	crank_mat_float_n_realloc (mat, n, n);
+	CRANK_MAT_ALLOC(mat, gfloat, n, n);
  	for (i = 0; i < n; i++)
 	 	mat->data[(n * i) + i] = darr[i];
 }
@@ -3611,6 +4135,58 @@ crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 }
 
 /**
+ * crank_mat_float_n_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float_n_neg_self (	CrankMatFloatN*	a	)
+{
+  	guint	i;
+  	guint	j;
+  	guint	n = a->rn * a->cn;
+
+	for (i = 0; i < n; i ++) 	a->data[i] =  - a->data[i];
+}
+
+/**
+ * crank_mat_float_n_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
+{
+  	guint	i;
+  	guint	j;
+
+  	gfloat*	data = g_new (gfloat, a->rn * a->cn);
+
+  	for (i = 0; i < a->rn; i++)
+	  	for (j = 0; j < a->cn; j++)
+	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
+
+	g_free (a->data);
+  	crank_mat_float_n_init_arr_take (a, a->cn, a->rn, data);
+}
+
+/**
+ * crank_mat_float_n_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	)
+{
+  	g_warning ("Not Implemented function.");
+  	return;
+}
+
+/**
  * crank_mat_float_n_muls:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -3647,6 +4223,39 @@ crank_mat_float_n_divs (	CrankMatFloatN*	a,
 						   	CrankMatFloatN*	r	)
 {
   	crank_mat_float_n_muls (a, 1 / b, r);
+}
+
+/**
+ * crank_mat_float_n_muls_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Multiplies a matrix by scalar.
+ */
+void
+crank_mat_float_n_muls_self (	CrankMatFloatN*	a,
+					 	  		const gfloat	b	)
+{
+	guint	i;
+  	guint	j;
+  	guint	n = a->rn * a->cn;
+
+  	for (i = 0; i < n; i++)
+  		a->data[i] *= b;
+}
+
+/**
+ * crank_mat_float_n_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float_n_divs_self (	CrankMatFloatN*	a,
+							   	const gfloat	b	)
+{
+  	crank_mat_float_n_muls_self (a, 1 / b);
 }
 
 
@@ -3779,6 +4388,88 @@ crank_mat_float_n_mul (	CrankMatFloatN*	a,
 	}
 
   	crank_mat_float_n_init_arr_take (r, a->rn, b->cn, data);
+}
+
+
+/**
+ * crank_mat_float_n_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float_n_add_self (	CrankMatFloatN*	a,
+					  			CrankMatFloatN*	b	)
+{
+  	guint	i;
+  	guint	n;
+
+	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "add-self", a, b);
+
+	n = a->rn * a->cn;
+
+  	for (i = 0; i < n; i++) 	a->data[i] += b->data[i];
+}
+
+/**
+ * crank_mat_float_n_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float_n_sub_self (	CrankMatFloatN*	a,
+					  			CrankMatFloatN*	b	)
+{
+  	guint	i;
+  	guint	n;
+
+	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub-self", a, b);
+
+	n = a->rn * a->cn;
+
+  	for (i = 0; i < n; i++) 	a->data[i] -= b->data[i];
+}
+
+/**
+ * crank_mat_float_n_mul_self:
+ * @a: A Matrix.
+ * @b: A Matrix.
+ *
+ * Multiplies two matrices.
+ */
+void
+crank_mat_float_n_mul_self (	CrankMatFloatN*	a,
+						  		CrankMatFloatN* b	)
+{
+  	guint	i;
+  	guint	j;
+  	guint	k;
+
+  	gfloat*	data;
+
+	if (G_UNLIKELY(a->cn != b->rn)) {
+		g_warning ("MatFloatN: mul: Size Mismatch: %ux%u, %ux%u",
+					a->rn, a->cn,	b->rn, b->cn	);
+		return;
+	}
+
+  	data = g_new0 (gfloat, a->rn * b->cn);
+
+  	for (i = 0; i < a->rn; i++) {
+		for (j = 0; j < b->cn; j++) {
+			for (k = 0; k < a->cn; k++) {
+				data[(b->cn * i) + j] +=
+					a->data[(a->cn * i) + k] *
+					b->data[(b->cn * k) + j];
+			}
+		}
+	}
+
+	g_free (a->data);
+  	crank_mat_float_n_init_arr_take (a, a->rn, b->cn, data);
 }
 
 /**

@@ -36,7 +36,7 @@
 //////// Struct declaration ////////////////////////////////////////////////////
 
 /**
- * CRANK_QUAT_FLOAT_DEFFORMAT: (value "%g + (%gi) + (&gj) + (%gk)"):
+ * CRANK_QUAT_FLOAT_DEFFORMAT:
  *
  * Default format for crank_quat_float_to_string_full().
  */
@@ -87,6 +87,16 @@ void		crank_quat_float_init_valist_cplx (	CrankQuatFloat*	quat,
 void		crank_quat_float_init_fill (	CrankQuatFloat*	quat,
 											gfloat			fill	);
 
+void		crank_quat_float_init_rot 	(	CrankQuatFloat*	quat,
+											const gfloat	angle,
+											CrankVecFloat3*	axis	);
+
+void		crank_quat_float_init_rotimm (	CrankQuatFloat*	quat,
+											const gfloat	angle,
+											const gfloat	x,
+											const gfloat	y,
+											const gfloat	z		);
+
 //////// Basic Operations //////////////////////////////////////////////////////
 
 void		crank_quat_float_copy (			CrankQuatFloat*	quat,
@@ -108,7 +118,8 @@ gchar*		crank_quat_float_to_string (	CrankQuatFloat*	quat	);
 gchar*		crank_quat_float_to_string_full (	CrankQuatFloat*	quat,
 												const gchar*	format	);
 
-//////// Unary Operations //////////////////////////////////////////////////////
+//////// Attributes ////////////////////////////////////////////////////////////
+
 void		crank_quat_float_get_wx (		CrankQuatFloat*	quat,
 											CrankCplxFloat*	wx	);
 											
@@ -117,6 +128,11 @@ void		crank_quat_float_get_yz (		CrankQuatFloat*	quat,
 
 void		crank_quat_float_get_imag (		CrankQuatFloat*	quat,
 											CrankVecFloat3*	imag	);
+
+gfloat		crank_quat_float_get_rangle (	CrankQuatFloat*	quat	);
+
+void		crank_quat_float_get_raxis (	CrankQuatFloat*	quat,
+											CrankVecFloat3*	axis	);
 											
 void		crank_quat_float_set_wx (		CrankQuatFloat*	quat,
 											CrankCplxFloat*	wx	);
@@ -126,6 +142,8 @@ void		crank_quat_float_set_yz (		CrankQuatFloat*	quat,
 
 void		crank_quat_float_set_imag (		CrankQuatFloat*	quat,
 											CrankVecFloat3*	imag	);
+
+//////// Unary Operations //////////////////////////////////////////////////////
 
 gfloat		crank_quat_float_get_norm_sq (	CrankQuatFloat*	quat	);
 
@@ -264,6 +282,13 @@ void		crank_quat_float_exp (			CrankQuatFloat*	a,
 void		crank_quat_float_powr (			CrankQuatFloat*	a,
 											const gfloat	b,
 											CrankQuatFloat*	r	);
+											
+											
+//////// Rotation Operations ///////////////////////////////////////////////////
 
+void		crank_quat_float_rotatev (	CrankQuatFloat*	quat,
+										CrankVecFloat3*	vec,
+										CrankVecFloat3*	r		);
+											
 
 #endif

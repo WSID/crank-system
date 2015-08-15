@@ -256,9 +256,9 @@ test_2_to_string (void)
 static void
 test_n_equal (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
+	CrankVecBoolN	c;
 	
 	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
@@ -271,9 +271,9 @@ test_n_equal (void)
 static void
 test_n_hash (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
+	CrankVecBoolN	c;
 	
 	crank_vec_bool_n_init (&a, 3, TRUE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 3, TRUE, FALSE, TRUE);
@@ -289,7 +289,7 @@ test_n_hash (void)
 static void
 test_n_get (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	
 	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, FALSE, TRUE);
 	
@@ -305,7 +305,7 @@ test_n_get (void)
 static void
 test_n_insert (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	crank_vec_bool_n_init (&a, 4, TRUE, FALSE, FALSE, TRUE);
 
 	crank_vec_bool_n_insert (&a, 2, TRUE);
@@ -317,7 +317,7 @@ test_n_insert (void)
 static void
 test_n_remove (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	crank_vec_bool_n_init (&a, 4, TRUE, FALSE, FALSE, TRUE);
 
 	crank_vec_bool_n_remove (&a, 2);
@@ -329,7 +329,7 @@ test_n_remove (void)
 static void
 test_n_foreach (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	guint			count = 0;
 
 	crank_vec_bool_n_init (&a, 5, TRUE, TRUE, FALSE, FALSE, TRUE);
@@ -343,10 +343,10 @@ test_n_foreach (void)
 static void
 test_n_and (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	c;
 
 	crank_vec_bool_n_init (&a, 2, TRUE, TRUE);
 	crank_vec_bool_n_init (&b, 2, FALSE, TRUE);
@@ -363,10 +363,10 @@ test_n_and (void)
 static void
 test_n_or (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	c;
 
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 4, FALSE, TRUE, FALSE, FALSE);
@@ -383,10 +383,10 @@ test_n_or (void)
 static void
 test_n_xor (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 	
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	c;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 4, FALSE, TRUE, FALSE, FALSE);
@@ -403,9 +403,9 @@ test_n_xor (void)
 static void
 test_n_not (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	
-	CrankVecBoolN	c = {0};
+	CrankVecBoolN	c;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	
@@ -420,8 +420,8 @@ test_n_not (void)
 static void
 test_n_any (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 2, FALSE, FALSE );
@@ -436,8 +436,8 @@ test_n_any (void)
 static void
 test_n_all (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 2, TRUE, TRUE );
@@ -452,8 +452,8 @@ test_n_all (void)
 static void
 test_n_count (void)
 {
-	CrankVecBoolN	a = {0};
-	CrankVecBoolN	b = {0};
+	CrankVecBoolN	a;
+	CrankVecBoolN	b;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);
 	crank_vec_bool_n_init (&b, 2, TRUE, TRUE );
@@ -468,7 +468,7 @@ test_n_count (void)
 static void
 test_n_to_string (void)
 {
-	CrankVecBoolN	a = {0};
+	CrankVecBoolN	a;
 	gchar*			astr;
 	
 	crank_vec_bool_n_init (&a, 4, FALSE, FALSE, FALSE, TRUE);

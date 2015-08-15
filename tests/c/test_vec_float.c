@@ -203,30 +203,33 @@ static void	test_2_magn (void)
 static void	test_2_unit (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_unit (&a, &a);
+	crank_vec_float2_unit (&a, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, 0.6f, 0.8f);
+	crank_assert_eq_vecfloat2_imm (&r, 0.6f, 0.8f);
 }
 
 
 static void	test_2_muls (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_muls (&a, 2.0f, &a);
+	crank_vec_float2_muls (&a, 2.0f, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, 6.0f, 8.0f);
+	crank_assert_eq_vecfloat2_imm (&r, 6.0f, 8.0f);
 }
 
 
 static void	test_2_divs (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_divs (&a, 2.0f, &a);
+	crank_vec_float2_divs (&a, 2.0f, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, 1.5f, 2.0f);
+	crank_assert_eq_vecfloat2_imm (&r, 1.5f, 2.0f);
 }
 
 
@@ -234,10 +237,11 @@ static void	test_2_add (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
 	CrankVecFloat2	b = {5.0f, 12.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_add (&a, &b, &a);
+	crank_vec_float2_add (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, 8.0f, 16.0f);
+	crank_assert_eq_vecfloat2_imm (&r, 8.0f, 16.0f);
 }
 
 
@@ -245,10 +249,11 @@ static void	test_2_sub (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
 	CrankVecFloat2	b = {5.0f, 12.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_sub (&a, &b, &a);
+	crank_vec_float2_sub (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, -2.0f, -8.0f);
+	crank_assert_eq_vecfloat2_imm (&r, -2.0f, -8.0f);
 }
 
 
@@ -265,10 +270,11 @@ static void	test_2_cmpmul (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
 	CrankVecFloat2	b = {5.0f, 12.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_cmpmul (&a, &b, &a);
+	crank_vec_float2_cmpmul (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&a, 15.0f, 48.0f);
+	crank_assert_eq_vecfloat2_imm (&r, 15.0f, 48.0f);
 }
 
 
@@ -276,10 +282,11 @@ static void	test_2_cmpdiv (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
 	CrankVecFloat2	b = {5.0f, 12.0f};
+	CrankVecFloat2	r;
 	
-	crank_vec_float2_cmpdiv (&b, &a, &b);
+	crank_vec_float2_cmpdiv (&b, &a, &r);
 	
-	crank_assert_eq_vecfloat2_imm (&b, (5.0f / 3.0f), 3.0f);
+	crank_assert_eq_vecfloat2_imm (&r, (5.0f / 3.0f), 3.0f);
 }
 
 
@@ -363,10 +370,11 @@ static void test_2_mulm (void)
 {
 	CrankVecFloat2	a = {3.0f, 4.0f};
   	CrankMatFloat2	b = {1.0f, 2.0f,	3.0f, 4.0f};
+	CrankVecFloat2	r;
 
-  	crank_vec_float2_mulm (&a, &b, &a);
+  	crank_vec_float2_mulm (&a, &b, &r);
 
-	crank_assert_eq_vecfloat2_imm (&a, 15.0f, 22.0f);
+	crank_assert_eq_vecfloat2_imm (&r, 15.0f, 22.0f);
 }
 
 
@@ -400,39 +408,45 @@ static void	test_2_mix (void)
 
 static void	test_n_get (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
 	crank_assert_cmpfloat (crank_vec_float_n_get (&a, 0), ==, 3.0f);
 	crank_assert_cmpfloat (crank_vec_float_n_get (&a, 1), ==, 4.0f);
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void test_n_insert (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 
   	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
   	crank_vec_float_n_insert (&a, 1, 12.0f);
 
 	crank_assert_eq_vecfloat_n_imm (&a, 3.0f, 12.0f, 4.0f);
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void test_n_remove (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 
   	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
   	crank_vec_float_n_remove (&a, 1);
 
 	crank_assert_eq_vecfloat_n_imm (&a, 3.0f);
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void test_n_foreach (void)
 {
-	CrankVecFloatN 	a = {0};
+	CrankVecFloatN 	a;
   	gfloat			sum = 0.0f;
 
   	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
@@ -440,14 +454,16 @@ static void test_n_foreach (void)
   	g_assert (crank_vec_float_n_foreach (&a, test_accumulation, &sum));
 
   	crank_assert_cmpfloat (sum, ==, 7.0f);
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void	test_n_equal (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
-	CrankVecFloatN	c = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	c;
 
 	crank_vec_float_n_init (&a, 2,
 			g_test_rand_double (),
@@ -459,238 +475,309 @@ static void	test_n_equal (void)
 	
 	g_assert (! crank_vec_float_n_equal (&a, &b));
 	g_assert (  crank_vec_float_n_equal (&a, &c));
+	
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&c);
 }
 
 
 static void	test_n_to_string (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
 	gchar*			astr = crank_vec_float_n_to_string (&a);
 	
 	g_assert_cmpstr (astr, ==, "(3, 4)");
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void	test_n_magn (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
 	crank_assert_cmpfloat (crank_vec_float_n_get_magn_sq (&a), ==, 25.0f);
 	crank_assert_cmpfloat (crank_vec_float_n_get_magn (&a), ==, 5.0f);
+
+	crank_vec_float_n_fini (&a);
 }
 
 
 static void	test_n_unit (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
-	crank_vec_float_n_unit (&a, &a);
+	crank_vec_float_n_unit (&a, &r);
 	
-	crank_assert_eq_vecfloat_n_imm(&a, 0.6f, 0.8f);
+	crank_assert_eq_vecfloat_n_imm(&r, 0.6f, 0.8f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_muls (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
-	crank_vec_float_n_muls (&a, 2.0f, &a);
+	crank_vec_float_n_muls (&a, 2.0f, &r);
 	
-	crank_assert_eq_vecfloat_n_imm(&a, 6.0f, 8.0f);
+	crank_assert_eq_vecfloat_n_imm(&r, 6.0f, 8.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_divs (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	
-	crank_vec_float_n_divs (&a, 2.0f, &a);
+	crank_vec_float_n_divs (&a, 2.0f, &r);
 	
-	crank_assert_eq_vecfloat_n_imm(&a, 1.5f, 2.0f);
+	crank_assert_eq_vecfloat_n_imm(&r, 1.5f, 2.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_add (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	crank_vec_float_n_init (&b, 2, 5.0f, 12.0f);
 	
-	crank_vec_float_n_add (&a, &b, &a);
+	crank_vec_float_n_add (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat_n_imm(&a, 8.0f, 16.0f);
+	crank_assert_eq_vecfloat_n_imm(&r, 8.0f, 16.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_sub (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	crank_vec_float_n_init (&b, 2, 5.0f, 12.0f);
 	
-	crank_vec_float_n_sub (&a, &b, &a);
+	crank_vec_float_n_sub (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat_n_imm(&a, -2.0f, -8.0f);
+	crank_assert_eq_vecfloat_n_imm(&r, -2.0f, -8.0f);
+	
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_dot (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	crank_vec_float_n_init (&b, 2, 5.0f, 12.0f);
 	
 	crank_assert_cmpfloat (crank_vec_float_n_dot (&a, &b), ==, 63.0f);
+	
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
 }
 
 
 static void	test_n_cmpmul (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	crank_vec_float_n_init (&b, 2, 5.0f, 12.0f);
 	
-	crank_vec_float_n_cmpmul (&a, &b, &a);
+	crank_vec_float_n_cmpmul (&a, &b, &r);
 	
-	crank_assert_eq_vecfloat_n_imm (&a, 15.0f, 48.0f);
+	crank_assert_eq_vecfloat_n_imm (&r, 15.0f, 48.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_cmpdiv (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 2, 3.0f, 4.0f);
 	crank_vec_float_n_init (&b, 2, 5.0f, 12.0f);
 	
-	crank_vec_float_n_cmpdiv (&b, &a, &b);
+	crank_vec_float_n_cmpdiv (&b, &a, &r);
 	
-	crank_assert_eq_vecfloat_n_imm((&b), (5.0f / 3.0f), 3.0f);
+	crank_assert_eq_vecfloat_n_imm(&r, (5.0f / 3.0f), 3.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_cmpless (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecBoolN	r = {0};
+	CrankVecBoolN	r;
 	
 	crank_vec_float_n_cmpless (&a, &b, &r);
 	
 	g_assert_true  (r.data[0]);
 	g_assert_false (r.data[1]);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_bool_n_fini (&r);
 }
 	
 
 static void	test_n_cmpeq (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 20.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecBoolN	r = {0};
+	CrankVecBoolN	r;
 	
 	crank_vec_float_n_cmpeq (&a, &b, &r);
 	
 	g_assert_false (r.data[0]);
 	g_assert_true  (r.data[1]);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_bool_n_fini (&r);
 }
 
 
 static void	test_n_cmpgreater (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecBoolN	r = {0};
+	CrankVecBoolN	r;
 	
 	crank_vec_float_n_cmpgreater (&a, &b, &r);
 	
 	g_assert_false (r.data[0]);
 	g_assert_true  (r.data[1]);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_bool_n_fini (&r);
 }
 
 
 static void	test_n_cmpcmp (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecIntN	r = {0};
+	CrankVecIntN	r;
 	
 	crank_vec_float_n_cmpcmp (&a, &b, &r);
 	
 	g_assert_cmpint (r.data[0], <, 0);
 	g_assert_cmpint (r.data[1], >, 0);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_int_n_fini (&r);
 }
 
 
 static void	test_n_min (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecFloatN	r = {0};
+	CrankVecFloatN	r;
 	
 	crank_vec_float_n_min (&a, &b, &r);
 	
 	crank_assert_eq_vecfloat_n_imm(&r, 17.0f, 20.0f);
+	
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_max (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 53.0f, 20.0f);
-	CrankVecFloatN	r = {0};
+	CrankVecFloatN	r;
 	
 	crank_vec_float_n_max (&a, &b, &r);
 	
 	crank_assert_eq_vecfloat_n_imm(&r, 53.0f, 21.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_mixs (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 32.0f, 11.0f);
-	CrankVecFloatN	r = {0};
+	CrankVecFloatN	r;
 	
 	crank_vec_float_n_mixs (&a, &b, 0.2f, &r);
 	
 	crank_assert_eq_vecfloat_n_imm(&r, 20.0f, 19.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&r);
 }
 
 
 static void	test_n_mulm (void)
 {
-	CrankVecFloatN	a = {0};
+	CrankVecFloatN	a;
 	CrankMatFloatN	b = {0};
+	CrankVecFloatN	r;
 	crank_vec_float_n_init (&a, 3, 2.0f, 5.0f, 7.0f);
 	crank_mat_float_n_init (&b, 3, 2,
 			1.0f, 2.0f,
 			3.0f, 4.0f,
 			5.0f, 6.0f	);
-	CrankVecFloatN	r = {0};
 
 	crank_vec_float_n_mulm (&a, &b, &r);
 
@@ -704,16 +791,21 @@ static void	test_n_mulm (void)
 
 static void	test_n_mix (void)
 {
-	CrankVecFloatN	a = {0};
-	CrankVecFloatN	b = {0};
-	CrankVecFloatN	c = {0};
+	CrankVecFloatN	a;
+	CrankVecFloatN	b;
+	CrankVecFloatN	c;
 	crank_vec_float_n_init (&a, 2, 17.0f, 21.0f);
 	crank_vec_float_n_init (&b, 2, 32.0f, 11.0f);
 	crank_vec_float_n_init (&c, 2, 0.6f, 0.5f);
-	CrankVecFloatN	r = {0};
+	CrankVecFloatN	r;
 	
 	crank_vec_float_n_mix (&a, &b, &c, &r);
 	
 	crank_assert_eq_vecfloat_n_imm(&r, 26.0f, 16.0f);
+
+	crank_vec_float_n_fini (&a);
+	crank_vec_float_n_fini (&b);
+	crank_vec_float_n_fini (&c);
+	crank_vec_float_n_fini (&r);
 }
 

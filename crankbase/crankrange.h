@@ -102,24 +102,28 @@ GType	crank_ran_ptr_get_type (void);
 
 /**
  * CRANK_RAN_UINT_DEFFORMAT:
+ *
  * A default format which is used in crank_ran_uint_to_string()
  */
 #define	CRANK_RAN_UINT_DEFFORMAT	"[%u, %u)"
 
 /**
  * CRANK_RAN_INT_DEFFORMAT:
+ *
  * A default format which is used in crank_ran_int_to_string()
  */
 #define	CRANK_RAN_INT_DEFFORMAT		"[%d, %d)"
 
 /**
  * CRANK_RAN_FLOAT_DEFFORMAT:
+ *
  * A default format which is used in crank_ran_float_to_string()
  */
 #define	CRANK_RAN_FLOAT_DEFFORMAT	"[%g, %g)"
 
 /**
  * CRANK_RAN_PTR_DEFFORMAT:
+ *
  * A default format which is used in crank_ran_ptr_to_string()
  */
 #define CRANK_RAN_PTR_DEFFORMAT		"[%p, %p)"

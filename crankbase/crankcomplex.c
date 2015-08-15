@@ -27,11 +27,12 @@
 #include <glib-object.h>
 
 #include "crankcomplex.h"
+#include "crankquaternion.h"
 
 /**
  * SECTION: crankcomplex
  * @title: Complex value
- * @short_description: Complex values.
+ * @short_description: Complex values
  * @usability: unstable
  * @includes: crankbase.h
  *
@@ -39,8 +40,6 @@
  * entities for quaternions.
  *
  * Currently, only float complex type is provided.
- *
- * # Supported Operations
  *
  * <table frame="all"><title>Supported Operations</title>
  *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
@@ -71,6 +70,10 @@
  *       <row>
  *         <entry>Swapped Binary Operations with real values</entry>
  *         <entry>rsub, rdiv</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Binary Operations with quaternions</entry>
+ *         <entry>sub, mul</entry>
  *       </row>
  *       <row>
  *         <entry>Ternary Operations</entry>
@@ -787,15 +790,59 @@ crank_cplx_float_div_self (	CrankCplxFloat*	a,
  *
  * Multiplies @a with conjugate of @b.
  */
-void		crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
-										CrankCplxFloat*	b,
-										CrankCplxFloat*	r	)
+void
+crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
+							CrankCplxFloat*	b,
+							CrankCplxFloat*	r	)
 {
 	gfloat nr = a->real * b->real + a->imag * b->imag;
 	gfloat ni = - a->real * b->imag + a->imag * b->real;
 	r->real = nr;
 	r->imag = ni;
 }
+
+//////// Cplx - Quat Operations ////////////////////////////////////////////////
+
+/**
+ * crank_cplx_float_subq:
+ * @a: A Complex.
+ * @b: A Quaternion.
+ * @r: (out): A Quaterion to store result.
+ *
+ * Applies a subtraction by a quaternion.
+ */
+void
+crank_cplx_float_subq (	CrankCplxFloat*	a,
+						CrankQuatFloat*	b,
+						CrankQuatFloat*	r	)
+{
+	r->w = a->real - b->w;
+	r->x = a->imag - b->x;
+	r->y = - b->y;
+	r->z = - b->z;
+}
+
+/**
+ * crank_cplx_float_mulq:
+ * @a: A Complex.
+ * @b: A Quaternion.
+ * @r: (out): A Quaterion to store result.
+ *
+ * Applies a multiplication by a quaternion.
+ *
+ * This is because multiplication of quaternion is not commutative.
+ */
+void
+crank_cplx_float_mulq (	CrankCplxFloat*	a,
+						CrankQuatFloat*	b,
+						CrankQuatFloat*	r	)
+{
+	r->w = (a->real * b->w) - (a->imag * b->x);
+	r->x = (a->imag * b->w) + (a->real * b->x);
+	r->y = (a->real * b->y) - (a->imag * b->z);
+	r->z = (a->imag * b->y) + (a->real * b->z);
+}
+
 
 //////// Ternary Operations ////////////////////////////////////////////////////
 

@@ -43,31 +43,6 @@
  * A Permutation is a placing of ordered items. In this structure, items are
  * represented in #guint, starting from 0.
  *
- * # Validity of permutation
- *
- * #CrankPermutation represents a permutation of n of unsigned integer 0, ...,
- * (n-1). But it is implemented with an array, which may have various or/and
- * duplicated data.
- *
- * Therefore, validity of permutation would be checked, before shuffling.
- *
- * A valid permutation is,
- * * do not contains element > (n-1)
- * * do not contains duplicated elements.
- *
- * Validity can be checked by crank_permutation_check_valid()
- *
- * # Shuffling
- *
- * #CrankPermutation supports shuffling of array. for example,
- * crank_permutation_shuffle_array_float() is used to shuffling float values.
- *
- * On the other hand, it is possible to initialize permutation from array and
- * comparsion functions. In the case, comparsion function declares base ordering
- * of element.
- *
- * # Supported Operations
- *
  * <table frame="all"><title>Supported Operations</title>
  *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
  *     <colspec colname="op" />
@@ -105,6 +80,33 @@
  *     </tbody>
  *   </tgroup>
  * </table>
+ *
+ * # Validity of permutation
+ *
+ * #CrankPermutation represents a permutation of n of unsigned integer 0, ...,
+ * (n-1). But it is implemented with an array, which may have various or/and
+ * duplicated data.
+ *
+ * Therefore, validity of permutation should be checked, before shuffling.
+ *
+ * A valid permutation is,
+ * * do not contains element > (n-1)
+ * * do not contains duplicated elements.
+ *
+ * Validity can be checked by crank_permutation_check_valid()
+ *
+ * # Shuffling
+ *
+ * #CrankPermutation supports shuffling of array. for example,
+ * crank_permutation_shuffle_array_float() is used to shuffling float values.
+ *
+ * Some collective items are available to be shuffled.
+ *
+ * # Initialization by comparsion.
+ *
+ * On the other hand, it is possible to initialize permutation from array and
+ * comparsion functions. In the case, base ordering is determined by comparsion
+ * and permutation will be reordering to shuffle from base ordering.
  */
 
 

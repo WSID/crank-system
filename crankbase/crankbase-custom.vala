@@ -194,9 +194,9 @@ namespace Crank {
 	
 	[CCode(simple_generics=true)]
 	public struct IterMemStruct<G> {
-		public IterMemStruct			(void*	from,	void*	to);
-		public IterMemStruct.with_count	(void*	from,	uint	count);
-		public IterMemStruct.with_range	(RanPtr	range);
+		public IterMemStruct			(void*	from,	void*	to,	size_t size);
+		public IterMemStruct.with_count	(void*	from,	uint	count, size_t size);
+		public IterMemStruct.with_range	(RanPtr	range,	size_t	size);
 		
 		[CCode (cname="crank_iter_mem_struct_init_with_count")]
 		public IterMemStruct.with_array	(void*[]	arr);
@@ -231,12 +231,21 @@ namespace Crank {
 		public QuatFloat.valist			(va_list	varargs);
 		public QuatFloat.valist_cplx	(va_list	varargs);
 		public QuatFloat.fill			(float		fill);
+
+		public QuatFloat.rot			(float		angle,
+										 VecFloat3	axis	);
+		public QuatFloat.rotimm			(float		angle,
+										 float		x,
+										 float		y,
+										 float		z	);
 	
 		public CplxFloat	wx { get; }
 		public CplxFloat	yz { get; }
 		public VecFloat3	imag { get; }
 		public float 		norm { get; }
 		public float 		norm_sq { get; }
+		public float		rangle { get; }
+		public VecFloat3	raxis { get; }
 	}
 	
 	[CCode (copy_function="crank_permutation_copy",
@@ -320,6 +329,7 @@ namespace Crank {
 		public bool			any { get; }
 		public bool			all { get; }
 		public uint			count { get; }
+		public float		ratio { get; }
 	}
 	
 	[CCode (copy_function="crank_vec_bool3_copy")]
@@ -333,6 +343,7 @@ namespace Crank {
 		public bool			any { get; }
 		public bool			all { get; }
 		public uint			count { get; }
+		public float		ratio { get; }
 		
 	}
 	
@@ -347,6 +358,7 @@ namespace Crank {
 		public bool			any { get; }
 		public bool			all { get; }
 		public uint			count { get; }
+		public float		ratio { get; }
 
 	}
 	
@@ -365,6 +377,7 @@ namespace Crank {
 		public bool			any { get; }
 		public bool			all { get; }
 		public uint			count { get; }
+		public float		ratio { get; }
 	}
 	
 	
@@ -518,6 +531,11 @@ namespace Crank {
 		public uint			size { get; }
 		public float		magn_sq {get;}
 		public float		magn {get;}
+
+		public VecFloatN	real {get; set;}
+		public VecFloatN	imag {get; set;}
+		
+		public IterMemStruct<CplxFloat?>	iterator ();
 	}
 	
 

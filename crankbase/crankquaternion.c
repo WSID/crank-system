@@ -34,19 +34,13 @@
 /**
  * SECTION: crankquaternion
  * @title: Quaternion value
- * @short_description: Quaternion values.
+ * @short_description: Quaternion values
  * @usability: unstable
  * @includes: crankbase.h
  *
  * A Crank System provides quaternions, for various purpose.
  *
  * Currently, only float quaternion type is provided.
- *
- * # Rotation Representation
- *
- * Quaternions are frequently used, for rotation representation. BLAHBLAH
- *
- * # Supported Operations
  *
  * <table frame="all"><title>Supported Operations</title>
  *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
@@ -60,11 +54,11 @@
  *     <tbody>
  *       <row>
  *         <entry>Initialization</entry>
- *         <entry>arguments, complex arguments, array, valist, complex valist, fill</entry>
+ *         <entry>arguments, complex arguments, array, valist, complex valist, fill, rotation</entry>
  *       </row>
  *       <row>
  *         <entry>Attributes</entry>
- *         <entry>wx, yz, imag, norm, norm_sq</entry>
+ *         <entry>wx, yz, imag, norm, norm_sq, rangle, raxis</entry>
  *       </row>
  *       <row>
  *         <entry>Unary Operations</entry>
@@ -94,9 +88,29 @@
  *         <entry>Exponential</entry>
  *         <entry>ln, exp, pow</entry>
  *       </row>
+ *       <row>
+ *         <entry>Rotation</entry>
+ *         <entry>rotate vector</entry>
+ *       </row>
  *     </tbody>
  *   </tgroup>
  * </table>
+ *
+ * # Rotation Representation
+ *
+ * Quaternions are frequently used, for rotation representation. Quaternions has
+ * advantages over other representations.
+ *
+ * <itemizedlist>
+ *   <listitem>Reasonably compact (requires 4 floats)</listitem>
+ *   <listitem>Simple calculations</listitem>
+ *   <listitem>Gimbal-lock free</listitem>
+ * </itemizedlist>
+ *
+ * ## Condition to represent rotation.
+ * In order to represent rotation, quaternion should be unit.
+ *
+ * For composited rotations, use crank_quat_float_mul().
  */
 
 
@@ -1163,4 +1177,123 @@ crank_quat_float_powr (	CrankQuatFloat*	a,
 	r->x = norm_b * s * a->x / norm_imag;
 	r->y = norm_b * s * a->y / norm_imag;
 	r->z = norm_b * s * a->z / norm_imag;
+}
+											
+											
+//////// Rotation Operations ///////////////////////////////////////////////////
+
+/**
+ * crank_quat_float_init_rot:
+ * @quat: (out): A Quaternion.
+ * @angle: Rotation angle.
+ * @axis: Rotation axis.
+ *
+ * Initialize a quaternion by given rotation.
+ */
+void
+crank_quat_float_init_rot (	CrankQuatFloat*	quat,
+							const gfloat	angle,
+							CrankVecFloat3*	axis	)
+{
+	gfloat hangle = angle * 0.5f;
+	gfloat factor = cosf (hangle) / crank_vec_float3_get_magn (axis);
+	
+	quat->w = sinf (hangle);
+	crank_vec_float3_muls (axis, factor, (CrankVecFloat3*) &(quat->x));
+}
+
+/**
+ * crank_quat_float_init_rotimm:
+ * @quat: (out): A Quaternion.
+ * @angle: Rotation angle.
+ * @x: X component of rotation axis.
+ * @y: Y component of rotation axis.
+ * @z: Z component of rotation axis.
+ *
+ * Initialize a quaternion by given rotation.
+ */
+void
+crank_quat_float_init_rotimm (	CrankQuatFloat*	quat,
+								const gfloat	angle,
+								const gfloat	x,
+								const gfloat	y,
+								const gfloat	z	)
+{
+	CrankVecFloat3	axis = {x, y, z};
+	
+	crank_quat_float_init_rot (quat, angle, &axis);
+}
+
+
+/**
+ * crank_quat_float_get_rangle:
+ * @quat: A Quaternion.
+ *
+ * Gets rotation amount of quaternion.
+ *
+ * Returns: Rotation angle of quaternion.
+ */
+gfloat
+crank_quat_float_get_rangle (	CrankQuatFloat*	quat	)
+{
+	return acos (quat->w) * 2;
+}
+
+/**
+ * crank_quat_float_get_raxis:
+ * @quat: A Quaternion.
+ * @axis: (out): A Rotation axis
+ *
+ * Gets rotation axis of quaternion, as unit vector.
+ *
+ * Returns: Rotation axis of quaternion.
+ */
+void
+crank_quat_float_get_raxis (	CrankQuatFloat*	quat,
+								CrankVecFloat3*	axis	)
+{
+	crank_vec_float3_unit ((CrankVecFloat3*) &(quat->x), axis);
+}
+
+/**
+ * crank_quat_float_rotatev:
+ * @quat: A Quaternion.
+ * @vec: A Vector to rotate.
+ * @r: (out): A Vector to store result.
+ *
+ * Apply a rotation represented by a quaternion, to a vector.
+ */
+void
+crank_quat_float_rotatev (	CrankQuatFloat*	quat,
+							CrankVecFloat3*	vec,
+							CrankVecFloat3*	r		)
+{
+	gfloat	ww	= quat->w * quat->w;
+	gfloat	xx	= quat->x * quat->x;
+	gfloat	yy	= quat->y * quat->y;
+	gfloat	zz	= quat->z * quat->z;
+	
+	gfloat	wz	= quat->w * quat->z;
+	gfloat	xy	= quat->x * quat->y;
+	
+	gfloat	wy	= quat->w * quat->y;
+	gfloat	xz	= quat->x * quat->z;
+	
+	gfloat	wx	= quat->w * quat->x;
+	gfloat	yz	= quat->y * quat->z;
+	
+	r->x =
+			(ww + xx - yy - zz) *	vec->x +
+			2 * (xy - wz) *			vec->y +
+			2 * (wy + xz) *			vec->z;
+
+	r->y =
+			2 * (wz + xy) *			vec->x +
+			(ww - xx + yy - zz) *	vec->y +
+			2 * (yz - wx) *		vec->z;
+
+	r->z =
+			2 * (xz - wy) *		vec->x +
+			2 * (wx + yz) *			vec->y +
+			(ww - xx - yy + zz) *	vec->z;
 }

@@ -115,6 +115,20 @@ G_BEGIN_DECLS
 #define CRANK_PTR_ADD2(p,sz,n) CRANK_PTR_ADD(p,(sz)*(n))
 
 /**
+ * CRANK_PTR_DIFF:
+ * @p: A Pointer.
+ * @q: Another pointer.
+ *
+ * Performes airthmetic subtract on pointer, which is @p - @q. This will be
+ * useful.
+ *
+ * Returns: Subtraction of pointer, in type of gsize.
+ */
+#define CRANK_PTR_DIFF(p,q) ((gsize)(p) - (gsize)(q))
+
+
+
+/**
  * CRANK_ARRAY_DUP:
  * @a: Array to duplicate.
  * @G: Type of elements.

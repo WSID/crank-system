@@ -30,6 +30,11 @@
 #include <glib.h>
 #include <glib-object.h>
 
+//////// External typedefs /////////////////////////////////////////////////////
+
+typedef struct _CrankQuatFloat	CrankQuatFloat;
+
+
 //////// Struct declaration ////////////////////////////////////////////////////
 
 /**
@@ -196,6 +201,16 @@ void		crank_cplx_float_div_self (		CrankCplxFloat*	a,
 void		crank_cplx_float_mul_conj (		CrankCplxFloat*	a,
 											CrankCplxFloat*	b,
 											CrankCplxFloat*	r	);
+
+//////// Cplx - Quat Operations ////////////////////////////////////////////////
+										
+void		crank_cplx_float_subq (			CrankCplxFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
+										
+void		crank_cplx_float_mulq (			CrankCplxFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
 
 //////// Ternary Operations ////////////////////////////////////////////////////
 

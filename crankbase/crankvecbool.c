@@ -22,7 +22,7 @@
 
 /**
  * SECTION: crankvecbool
- * @title: Boolean vector
+ * @title: Boolean Vectors
  * @short_description: Vectors that have boolean elements.
  * @stability: Unstable
  * @include: crankbase.h
@@ -30,16 +30,41 @@
  * Represents vectors that have boolean elements.
  *
  * In mathematics, %TRUE and %FALSE cannot be composed as elements of vector,
- * as they cannot form a field. Anyway because of characteristic of #gboolean,
- * 'Boolean vectors' have differences from float vectors.
+ * as they cannot form a field. As elements are #gboolean, 'Boolean vectors'
+ * have differences from float vectors.
  *
  * * Boolean vectors have logical operations while float ones have airthmetic operations
  * * Boolean vectors have any, all property while float ones have magnitude/norm.
  *
- * * Componentwise Operations
- *    * and, or, xor, not
- * * Property
- *    * all, any
+ * <table frame="all"><title>Supported Operations</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ *     <colspec colname="op" />
+ *     <thead>
+ *       <row>
+ *         <entry>Operations</entry>
+ *         <entry>Detailed</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row>
+ *         <entry>Initialization</entry>
+ *         <entry>arguments, array, va_list, fill</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Attributes</entry>
+ *         <entry>any, all, count, ratio</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Collection</entry>
+ *         <entry>get, set, foreach, iterator</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Vector - Vector Operations</entry>
+ *         <entry>and, or, xor, not</entry>
+ *       </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  *
  * Provided macros are following
  *
@@ -297,6 +322,20 @@ crank_vec_bool2_get_count (	CrankVecBool2*	vec	)
 	return count;
 }
 
+/**
+ * crank_vec_bool2_get_ratio:
+ * @vec: A Vector.
+ *
+ * Gets ratio of %TRUE in this vector.
+ *
+ * Returns: Ratio of %TRUE.
+ */
+gfloat
+crank_vec_bool2_get_ratio (	CrankVecBool2*	vec	)
+{
+	return crank_vec_bool2_get_count (vec) * 0.5f;
+}
+
 
 /**
  * crank_vec_bool2_foreach:
@@ -416,7 +455,7 @@ crank_vec_bool2_or	(	CrankVecBool2*	a,
  * @b: A vector.
  * @r: (out): A vector to store result.
  * 
- * Gets Component of exclusive or of @a and @b.
+ * Gets Component XOR of @a and @b.
  */
 void
 crank_vec_bool2_xor	(	CrankVecBool2*	a,
@@ -441,6 +480,66 @@ crank_vec_bool2_not	(	CrankVecBool2*	a,
 {
 	r->x = ! a->x;
 	r->y = ! a->y;
+}
+
+
+/**
+ * crank_vec_bool2_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool2_and_self	(	CrankVecBool2*	a,
+								CrankVecBool2*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+}
+
+/**
+ * crank_vec_bool2_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool2_or_self (	CrankVecBool2*	a,
+							CrankVecBool2*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
+}
+
+/**
+ * crank_vec_bool2_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool2_xor_self (	CrankVecBool2*	a,
+							CrankVecBool2*	b	)
+{
+	a->x = a->x != b->x;
+	a->y = a->y != b->y;
+}
+
+
+/**
+ * crank_vec_bool2_not_self:
+ * @a: A vector.
+ * 
+ * Apply Component NOT to @a.
+ */
+void
+crank_vec_bool2_not_self (	CrankVecBool2*	a	)
+{
+	a->x = ! a->x;
+	a->y = ! a->y;
 }
 
 /**
@@ -744,6 +843,20 @@ crank_vec_bool3_get_count (	CrankVecBool3*	vec	)
 	return count;
 }
 
+/**
+ * crank_vec_bool3_get_ratio:
+ * @vec: A Vector.
+ *
+ * Gets ratio of %TRUE in this vector.
+ *
+ * Returns: Ratio of %TRUE.
+ */
+gfloat
+crank_vec_bool3_get_ratio (	CrankVecBool3*	vec	)
+{
+	return crank_vec_bool3_get_count (vec) / 3.0f;
+}
+
 //////// Functions as collection ///////////////////////////////////////////////
 
 
@@ -863,7 +976,7 @@ crank_vec_bool3_or	(	CrankVecBool3*	a,
  * @b: A vector.
  * @r: (out): A vector to store result.
  * 
- * Gets Component of exclusive OR of @a and @b.
+ * Gets Component XOR of @a and @b.
  */
 void
 crank_vec_bool3_xor	(	CrankVecBool3*	a,
@@ -888,6 +1001,70 @@ crank_vec_bool3_not	(	CrankVecBool3*	a,
 {
 	r->x = ! a->x;
 	r->y = ! a->y;
+}
+
+
+/**
+ * crank_vec_bool3_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool3_and_self	(	CrankVecBool3*	a,
+								CrankVecBool3*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+	a->z = a->z && b->z;
+}
+
+/**
+ * crank_vec_bool3_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool3_or_self (	CrankVecBool3*	a,
+							CrankVecBool3*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
+	a->z = a->z || b->z;
+}
+
+/**
+ * crank_vec_bool3_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool3_xor_self (	CrankVecBool3*	a,
+							CrankVecBool3*	b	)
+{
+	a->x = a->x != b->x;
+	a->y = a->y != b->y;
+	a->z = a->z != b->z;
+}
+
+
+/**
+ * crank_vec_bool3_not_self:
+ * @a: A vector.
+ * 
+ * Apply Component NOT to @a.
+ */
+void
+crank_vec_bool3_not_self (	CrankVecBool3*	a	)
+{
+	a->x = ! a->x;
+	a->y = ! a->y;
+	a->z = ! a->z;
 }
 
 /**
@@ -1039,7 +1216,7 @@ void
 crank_vec_bool4_copy	(	CrankVecBool4*	vec,
 							CrankVecBool4*	other	)
 {
-	return (CrankVecBool4*) g_memdup (vec, sizeof (CrankVecBool4));
+	memcpy (other, vec, sizeof (CrankVecBool4));
 }
 
 
@@ -1184,6 +1361,20 @@ crank_vec_bool4_get_count (	CrankVecBool4*	vec	)
 	if (vec->w) count ++;
 	
 	return count;
+}
+
+/**
+ * crank_vec_bool4_get_ratio:
+ * @vec: A Vector.
+ *
+ * Gets ratio of %TRUE in this vector.
+ *
+ * Returns: Ratio of %TRUE.
+ */
+gfloat
+crank_vec_bool4_get_ratio (	CrankVecBool4*	vec	)
+{
+	return crank_vec_bool4_get_count (vec) * 0.25f;
 }
 
 
@@ -1338,6 +1529,75 @@ crank_vec_bool4_not	(	CrankVecBool4*	a,
 	r->z = ! a->z;
 	r->w = ! a->w;
 }
+
+
+/**
+ * crank_vec_bool4_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool4_and_self	(	CrankVecBool4*	a,
+								CrankVecBool4*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+	a->z = a->z && b->z;
+	a->w = a->w && b->w;
+}
+
+/**
+ * crank_vec_bool4_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool4_or_self (	CrankVecBool4*	a,
+							CrankVecBool4*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
+	a->z = a->z || b->z;
+	a->w = a->w || b->w;
+}
+
+/**
+ * crank_vec_bool4_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool4_xor_self (	CrankVecBool4*	a,
+							CrankVecBool4*	b	)
+{
+	a->x = a->x != b->x;
+	a->y = a->y != b->y;
+	a->z = a->z != b->z;
+	a->w = a->w != b->w;
+}
+
+
+/**
+ * crank_vec_bool4_not_self:
+ * @a: A vector.
+ * 
+ * Apply Component NOT to @a.
+ */
+void
+crank_vec_bool4_not_self (	CrankVecBool4*	a	)
+{
+	a->x = ! a->x;
+	a->y = ! a->y;
+	a->z = ! a->z;
+	a->w = ! a->w;
+}
+
 /**
  * crank_vec_bool4_andv:
  * @a: A vector.
@@ -1463,7 +1723,6 @@ crank_vec_bool_n_init_arr	(	CrankVecBoolN*	vec,
 								const guint		n,
 								gboolean*		arr	)
 {
-	g_free (vec->data);
 	vec->data = CRANK_ARRAY_DUP(arr, gboolean, n);
 	vec->n = n;
 }
@@ -1484,8 +1743,7 @@ crank_vec_bool_n_init_valist	(	CrankVecBoolN*	vec,
 {
 	guint	i;
 
-  	crank_vec_bool_n_realloc (vec, n);
-
+	CRANK_VEC_ALLOC(vec,gboolean,n);
 	for (i = 0; i < n; i++) vec->data[i] = va_arg (varargs, gboolean);
 
 }
@@ -1506,8 +1764,7 @@ crank_vec_bool_n_init_fill	(	CrankVecBoolN*	vec,
 {
 	guint	i;
 
-  	crank_vec_bool_n_realloc (vec, n);
-
+	CRANK_VEC_ALLOC(vec,gboolean,n);
 	for (i = 0; i < n; i++) vec->data[i] = fill;
 
 }
@@ -1747,6 +2004,20 @@ crank_vec_bool_n_get_count (	CrankVecBoolN*	vec	)
 	return count;
 }
 
+/**
+ * crank_vec_bool_n_get_ratio:
+ * @vec: A Vector.
+ *
+ * Gets ratio of %TRUE in this vector.
+ *
+ * Returns: Ratio of %TRUE.
+ */
+gfloat
+crank_vec_bool_n_get_ratio (	CrankVecBoolN*	vec	)
+{
+	return crank_vec_bool_n_get_count (vec) / vec->n;
+}
+
 
 //////// Functions as collection ///////////////////////////////////////////////
 
@@ -1930,14 +2201,13 @@ crank_vec_bool_n_and	(	CrankVecBoolN*	a,
 							CrankVecBoolN*	r	)
 {
 	guint i;
-
-  	if (a->n == b->n) {
-	  	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
-
-		for (i = 0; i < a->n; i++)
-			r->data[i] = (a->data[i]) && (b->data[i]);
-  	}
-  	else g_warning ("VecBoolN: and: size mismatch: %u, %u", a->n, b->n);
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "and", a, b);
+	
+	CRANK_VEC_ALLOC (r,gboolean,a->n);
+	for (i = 0; i < a->n; i++)	r->data[i] = (a->data[i]) && (b->data[i]);
 }
 
 
@@ -1956,13 +2226,12 @@ crank_vec_bool_n_or	(	CrankVecBoolN*	a,
 {
 	guint i;
 
-  	if (a->n == b->n) {
-	 	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
-
-		for (i = 0; i < a->n; i++)
-			r->data[i] = a->data[i] || b->data[i] ;
-	}
-  	else g_warning ("VecBoolN: or: size mismatch: %u, %u", a->n, b->n);
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "or", a, b);
+	
+	CRANK_VEC_ALLOC (r,gboolean,a->n);
+	for (i = 0; i < a->n; i++)	r->data[i] = a->data[i] || b->data[i] ;
 }
 /**
  * crank_vec_bool_n_xor:
@@ -1979,13 +2248,12 @@ crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
 {
 	guint i;
 
-  	if (a->n == b->n) {
-	 	if ((r != a) && (r != b)) crank_vec_bool_n_realloc (r, a->n);
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "xor", a, b);
 
-		for (i = 0; i < a->n; i++)
-			r->data[i] = (a->data[i] != b->data[i]);
-	}
-  	else g_warning ("VecBoolN: or: size mismatch: %u, %u", a->n, b->n);
+	CRANK_VEC_ALLOC (r,gboolean,a->n);
+	for (i = 0; i < a->n; i++)	r->data[i] = (a->data[i] != b->data[i]);
 }
 
 
@@ -2002,9 +2270,78 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
 {
 	guint i;
 	
- 	if (r != a) crank_vec_bool_n_realloc (r, a->n);
-
+	CRANK_VEC_ALLOC (r,gboolean,a->n);
 	for (i = 0; i < r->n; i++) r->data[i] = !(a->data[i]);
+}
+
+
+/**
+ * crank_vec_bool_n_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
+								CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "and-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] && b->data[i]);
+}
+
+/**
+ * crank_vec_bool_n_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool_n_or_self (	CrankVecBoolN*	a,
+							CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "or-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] || b->data[i]);
+}
+
+/**
+ * crank_vec_bool_n_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool_n_xor_self (	CrankVecBoolN*	a,
+							CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "xor-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] != b->data[i]);
+}
+
+
+/**
+ * crank_vec_bool_n_not_self:
+ * @a: A vector.
+ * 
+ * Apply Component NOT to @a.
+ */
+void
+crank_vec_bool_n_not_self (	CrankVecBoolN*	a	)
+{
+	guint	i;
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = ! a->data[i];
 }
 
 /**
@@ -2054,15 +2391,4 @@ crank_vec_bool_n_notv (	CrankVecBoolN*	a,
 						CrankVecBoolN*	r	)
 {
 	crank_vec_bool_n_not (a, r);
-}
-
-
-
-//////// Internal Definition ///////////////////////////////////////////////////
-
-void
-crank_vec_bool_n_realloc (	CrankVecBoolN*	vec, const guint n	)
-{
-	vec->data = g_renew (gboolean, vec->data, n);
- 	vec->n = n;
 }

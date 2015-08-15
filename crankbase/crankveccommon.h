@@ -50,4 +50,122 @@ typedef struct _CrankMatFloatN CrankMatFloatN;
 
 typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 
+
+//////// Allocator /////////////////////////////////////////////////////////////
+
+/**
+ * CRNAK_VEC_ALLOC:
+ * @v: Variable sized vector item.
+ * @G: Type of vector type.
+ * @_n: Size of vector.
+ *
+ * Allocates variable size vector's storage.
+ */
+#define CRANK_VEC_ALLOC(v,G,_n)												\
+	G_STMT_START {															\
+		(v)->data = g_new (G, _n);											\
+		(v)->n = _n;														\
+	} G_STMT_END
+
+/**
+ * CRNAK_MAT_ALLOC:
+ * @v: Variable sized vector item.
+ * @G: Type of vector type.
+ * @_rn: Size of vector.
+ * @_cn: Size of vector.
+ *
+ * Allocates variable size vector's storage.
+ */
+#define CRANK_MAT_ALLOC(m,G,_rn,_cn)										\
+	G_STMT_START {															\
+		(m)->data = g_new (G, _rn * _cn);									\
+		(m)->rn = _rn;														\
+		(m)->cn = _cn;														\
+	} G_STMT_END
+
+//////// Warning macro /////////////////////////////////////////////////////////
+/**
+ * CRANK_VEC_WARN_IF_SIZE_MISMATCH2:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized vector item.
+ * @b: Variable sized vector item.
+ *
+ * Warns and return if two given vector has different size.
+ */
+#define CRANK_VEC_WARN_IF_SIZE_MISMATCH2(t,op,a,b)							\
+	G_STMT_START { 															\
+		if (G_UNLIKELY((a)->n != (b)->n)) {									\
+			g_warning ("%s: %s: size mismatch: %u, %u", t, op, a->n, b->n);	\
+			return; 														\
+		}																	\
+	} G_STMT_END
+
+/**
+ * CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized vector item.
+ * @b: Variable sized vector item.
+ * @r: Return values.
+ *
+ * Warns and return if two given vector has different size.
+ */
+#define CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET(t,op,a,b,r)					\
+	G_STMT_START { 															\
+		if (G_UNLIKELY((a)->n != (b)->n)) {									\
+			g_warning ("%s: %s: size mismatch: %u, %u", t, op, a->n, b->n);	\
+			return (r);														\
+		}																	\
+	} G_STMT_END
+
+/**
+ * CRANK_VEC_WARN_IF_SIZE_MISMATCH3:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized vector item.
+ * @b: Variable sized vector item.
+ * @c: Variable sized vector item.
+ *
+ * Warns and return if three given vector has different size.
+ */
+#define CRANK_VEC_WARN_IF_SIZE_MISMATCH3(t,op,a,b,c)						\
+	G_STMT_START { 															\
+		if (G_UNLIKELY(((a)->n != (b)->n) && ((a)->n != (c)->n))) {			\
+			g_warning ("%s: %s: size mismatch: %u, %u, %u",					\
+						t, op, (a)->n, (b)->n, (c)->n	);					\
+			return; 														\
+		}																	\
+	} G_STMT_END
+
+/**
+ * CRANK_VEC_WARN_IF_SIZE_MISMATCH3_RET:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized vector item.
+ * @b: Variable sized vector item.
+ * @c: Variable sized vector item.
+ * @r: Return values.
+ *
+ * Warns and return if three given vector has different size.
+ */
+#define CRANK_VEC_WARN_IF_SIZE_MISMATCH3_RET(t,op,a,b,c,r)					\
+	G_STMT_START { 															\
+		if (G_UNLIKELY(((a)->n != (b)->n) && ((a)->n != (c)->n))) {			\
+			g_warning ("%s: %s: size mismatch: %u, %u, %u",					\
+						t, op, (a)->n, (b)->n, (c)->n	);					\
+			return (r);														\
+		}																	\
+	} G_STMT_END
+
+
+#define CRANK_MAT_WARN_IF_SIZE_MISMATCH2(t,op,a,b)							\
+	G_STMT_START { 															\
+		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn))) {		\
+			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u",				\
+						t, op, (a)->rn, (a)->cn, (b)->rn, (b)->cn	);		\
+			return; 														\
+		}																	\
+	} G_STMT_END
+
 #endif

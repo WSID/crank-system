@@ -140,6 +140,10 @@ void			crank_vec_float2_neg			(	CrankVecFloat2*	a,
 void			crank_vec_float2_unit			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	r	);
 
+void			crank_vec_float2_neg_self		(	CrankVecFloat2*	a	);
+
+void			crank_vec_float2_unit_self		(	CrankVecFloat2*	a	);
+
 
 //////// Scalar operations ////////
 
@@ -150,6 +154,12 @@ void			crank_vec_float2_muls			(	CrankVecFloat2*	a,
 void			crank_vec_float2_divs			(	CrankVecFloat2*	a,
 													const gfloat	b,
 													CrankVecFloat2*	r	);
+
+void			crank_vec_float2_muls_self		(	CrankVecFloat2*	a,
+													const gfloat	b	);
+
+void			crank_vec_float2_divs_self		(	CrankVecFloat2*	a,
+													const gfloat	b	);
 
 //////// Standard vector operations ////////
 
@@ -164,6 +174,12 @@ void			crank_vec_float2_sub			(	CrankVecFloat2*	a,
 gfloat			crank_vec_float2_dot			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	b	);
 
+void			crank_vec_float2_add_self		(	CrankVecFloat2*	a,
+													CrankVecFloat2*	b	);
+
+void			crank_vec_float2_sub_self		(	CrankVecFloat2*	a,
+													CrankVecFloat2*	b	);
+
 //////// Component vector operations ////////
 
 void			crank_vec_float2_cmpmul		(	CrankVecFloat2*	a,
@@ -173,6 +189,12 @@ void			crank_vec_float2_cmpmul		(	CrankVecFloat2*	a,
 void			crank_vec_float2_cmpdiv		(	CrankVecFloat2*	a,
 												CrankVecFloat2*	b,
 												CrankVecFloat2*	r	);
+
+void			crank_vec_float2_cmpmul_self(	CrankVecFloat2*	a,
+												CrankVecFloat2*	b	);
+												
+void			crank_vec_float2_cmpdiv_self(	CrankVecFloat2*	a,
+												CrankVecFloat2*	b	);
 
 void			crank_vec_float2_cmpless	(	CrankVecFloat2*	a,
 												CrankVecFloat2*	b,
@@ -203,6 +225,9 @@ void			crank_vec_float2_max	(		CrankVecFloat2*	a,
 void			crank_vec_float2_mulm (			CrankVecFloat2*	a,
 							  					CrankMatFloat2*	b,
 							  					CrankVecFloat2*	r	);
+
+void			crank_vec_float2_mulm_self (	CrankVecFloat2*	a,
+							  					CrankMatFloat2*	b	);
 
 
 //////// Ternary Operations ////////
@@ -336,6 +361,11 @@ void			crank_vec_float3_neg			(	CrankVecFloat3*	a,
 
 void			crank_vec_float3_unit			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	r	);
+													
+
+void			crank_vec_float3_neg_self		(	CrankVecFloat3*	a	);
+
+void			crank_vec_float3_unit_self		(	CrankVecFloat3*	a	);
 
 
 //////// Scalar operations ////////
@@ -347,6 +377,12 @@ void			crank_vec_float3_muls			(	CrankVecFloat3*	a,
 void			crank_vec_float3_divs			(	CrankVecFloat3*	a,
 													const gfloat	b,
 													CrankVecFloat3*	r	);
+
+void			crank_vec_float3_muls_self		(	CrankVecFloat3*	a,
+													const gfloat	b	);
+
+void			crank_vec_float3_divs_self		(	CrankVecFloat3*	a,
+													const gfloat	b	);
 
 //////// Standard vector operations ////////
 
@@ -365,6 +401,17 @@ void			crank_vec_float3_crs			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b,
 													CrankVecFloat3*	r	);
 
+
+void			crank_vec_float3_add_self		(	CrankVecFloat3*	a,
+													CrankVecFloat3*	b	);
+
+void			crank_vec_float3_sub_self		(	CrankVecFloat3*	a,
+													CrankVecFloat3*	b	);
+
+void			crank_vec_float3_crs_self		(	CrankVecFloat3*	a,
+													CrankVecFloat3*	b	);
+
+
 //////// Component vector operations ////////
 
 void			crank_vec_float3_cmpmul		(	CrankVecFloat3*	a,
@@ -374,6 +421,13 @@ void			crank_vec_float3_cmpmul		(	CrankVecFloat3*	a,
 void			crank_vec_float3_cmpdiv		(	CrankVecFloat3*	a,
 												CrankVecFloat3*	b,
 												CrankVecFloat3*	r	);
+
+void			crank_vec_float3_cmpmul_self(	CrankVecFloat3*	a,
+												CrankVecFloat3*	b	);
+												
+void			crank_vec_float3_cmpdiv_self(	CrankVecFloat3*	a,
+												CrankVecFloat3*	b	);
+												
 
 void			crank_vec_float3_cmpless	(	CrankVecFloat3*	a,
 												CrankVecFloat3*	b,
@@ -404,6 +458,9 @@ void			crank_vec_float3_max	(		CrankVecFloat3*	a,
 void			crank_vec_float3_mulm	(		CrankVecFloat3*	a,
 							  					CrankMatFloat3*	b,
 							  					CrankVecFloat3*	r	);
+
+void			crank_vec_float3_mulm_self(		CrankVecFloat3*	a,
+							  					CrankMatFloat3*	b	);
 
 
 //////// Ternary Operations ////////
@@ -548,6 +605,10 @@ void			crank_vec_float4_neg			(	CrankVecFloat4*	a,
 void			crank_vec_float4_unit			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	r	);
 
+void			crank_vec_float4_neg_self		(	CrankVecFloat4*	a	);
+
+void			crank_vec_float4_unit_self		(	CrankVecFloat4*	a	);
+
 
 //////// Scalar operations ////////
 
@@ -558,6 +619,12 @@ void			crank_vec_float4_muls			(	CrankVecFloat4*	a,
 void			crank_vec_float4_divs			(	CrankVecFloat4*	a,
 													const gfloat	b,
 													CrankVecFloat4*	r	);
+
+void			crank_vec_float4_muls_self		(	CrankVecFloat4*	a,
+													const gfloat	b	);
+
+void			crank_vec_float4_divs_self		(	CrankVecFloat4*	a,
+													const gfloat	b	);
 
 //////// Standard vector operations ////////
 
@@ -572,6 +639,12 @@ void			crank_vec_float4_sub			(	CrankVecFloat4*	a,
 gfloat			crank_vec_float4_dot			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	b	);
 
+void			crank_vec_float4_add_self		(	CrankVecFloat4*	a,
+													CrankVecFloat4*	b	);
+
+void			crank_vec_float4_sub_self		(	CrankVecFloat4*	a,
+													CrankVecFloat4*	b	);
+
 //////// Component vector operations ////////
 
 void			crank_vec_float4_cmpmul		(	CrankVecFloat4*	a,
@@ -581,6 +654,13 @@ void			crank_vec_float4_cmpmul		(	CrankVecFloat4*	a,
 void			crank_vec_float4_cmpdiv		(	CrankVecFloat4*	a,
 												CrankVecFloat4*	b,
 												CrankVecFloat4*	r	);
+
+void			crank_vec_float4_cmpmul_self(	CrankVecFloat4*	a,
+												CrankVecFloat4*	b	);
+												
+void			crank_vec_float4_cmpdiv_self(	CrankVecFloat4*	a,
+												CrankVecFloat4*	b	);
+
 
 void			crank_vec_float4_cmpless	(	CrankVecFloat4*	a,
 												CrankVecFloat4*	b,
@@ -611,6 +691,9 @@ void			crank_vec_float4_max	(		CrankVecFloat4*	a,
 void			crank_vec_float4_mulm	(		CrankVecFloat4*	a,
 							  					CrankMatFloat4*	b,
 							  					CrankVecFloat4*	r	);
+
+void			crank_vec_float4_mulm_self(		CrankVecFloat4*	a,
+							  					CrankMatFloat4*	b	);
 
 //////// Ternary Operations ////////
 
@@ -739,6 +822,10 @@ void			crank_vec_float_n_neg			(	CrankVecFloatN*	a,
 void			crank_vec_float_n_unit			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	r	);
 
+void			crank_vec_float_n_neg_self		(	CrankVecFloatN*	a	);
+
+void			crank_vec_float_n_unit_self		(	CrankVecFloatN*	a	);
+
 
 //////// Scalar operations ////////
 
@@ -749,6 +836,12 @@ void			crank_vec_float_n_muls			(	CrankVecFloatN*	a,
 void			crank_vec_float_n_divs			(	CrankVecFloatN*	a,
 													const gfloat	b,
 													CrankVecFloatN*	r	);
+
+void			crank_vec_float_n_muls_self		(	CrankVecFloatN*	a,
+													const gfloat	b	);
+
+void			crank_vec_float_n_divs_self		(	CrankVecFloatN*	a,
+													const gfloat	b	);
 
 //////// Standard vector operations ////////
 
@@ -763,15 +856,29 @@ void			crank_vec_float_n_sub			(	CrankVecFloatN*	a,
 gfloat			crank_vec_float_n_dot			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	b	);
 
+
+void			crank_vec_float_n_add_self		(	CrankVecFloatN*	a,
+													CrankVecFloatN*	b	);
+
+void			crank_vec_float_n_sub_self		(	CrankVecFloatN*	a,
+													CrankVecFloatN*	b	);
+
 //////// Component vector operations ////////
 
-void			crank_vec_float_n_cmpmul		(	CrankVecFloatN*	a,
+void			crank_vec_float_n_cmpmul	(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
 												CrankVecFloatN*	r	);
 												
-void			crank_vec_float_n_cmpdiv		(	CrankVecFloatN*	a,
+void			crank_vec_float_n_cmpdiv	(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
 												CrankVecFloatN*	r	);
+
+void			crank_vec_float_n_cmpmul_self(	CrankVecFloatN*	a,
+												CrankVecFloatN*	b	);
+												
+void			crank_vec_float_n_cmpdiv_self(	CrankVecFloatN*	a,
+												CrankVecFloatN*	b	);
+												
 
 void			crank_vec_float_n_cmpless	(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
@@ -802,6 +909,9 @@ void			crank_vec_float_n_max	(		CrankVecFloatN*	a,
 void			crank_vec_float_n_mulm	(		CrankVecFloatN*	a,
 							  					CrankMatFloatN*	b,
 							  					CrankVecFloatN*	r	);
+
+void			crank_vec_float_n_mulm_self(	CrankVecFloatN*	a,
+							  					CrankMatFloatN*	b	);
 
 //////// Ternary Operations ////////
 

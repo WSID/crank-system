@@ -38,7 +38,48 @@
  * @include: crankbase.h
  *
  * Crank System provides simple iterators.
- */ 
+ *
+ * <table frame="all"><title>Supported Operations</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ *     <colspec colname="op" />
+ *     <thead>
+ *       <row>
+ *         <entry>Operations</entry>
+ *         <entry>Detailed</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row>
+ *         <entry>Initialization</entry>
+ *         <entry>strat and end point, start and count, range</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Attributes</entry>
+ *         <entry>validity</entry>
+ *       </row>
+ *       <row>
+ *         <entry>Operations</entry>
+ *         <entry>next, get, foreach</entry>
+ *       </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * # Basic protocol
+ *
+ * There are some way to define protocol of iterators,
+ * <itemizedlist>
+ *   <listitem>T? next (): Retrieve value by next () till it returns %NULL
+ *             - python, vala (uses next_value () instead)
+ *   </listitem>
+ *   <listitem>bool next (), T get (): Proceed by next (), get value by get ()
+ *             - Java Collection, vala (supports two protocols)
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * Crank System follows second protocol, as it enables iterators on primitive
+ * collections.
+ */
 
 //////// Boolean Memory Iterators //////////////////////////////////////////////
 //////// Initialization ////////////////////////////////////////////////////////

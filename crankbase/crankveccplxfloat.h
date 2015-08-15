@@ -141,14 +141,35 @@ gfloat			crank_vec_cplx_float_n_get_magn_sq		(	CrankVecCplxFloatN*	vec	);
 
 gfloat			crank_vec_cplx_float_n_get_magn			(	CrankVecCplxFloatN*	vec	);
 
+void			crank_vec_cplx_float_n_get_real			(	CrankVecCplxFloatN*	vec,
+															CrankVecFloatN*		real	);
+
+void			crank_vec_cplx_float_n_get_imag			(	CrankVecCplxFloatN*	vec,
+															CrankVecFloatN*		imag	);
+
+void			crank_vec_cplx_float_n_set_real			(	CrankVecCplxFloatN*	vec,
+															CrankVecFloatN*		real	);
+
+void			crank_vec_cplx_float_n_set_imag			(	CrankVecCplxFloatN*	vec,
+															CrankVecFloatN*		imag	);
+
 
 //////// Standard unary operations ////////
 
 void			crank_vec_cplx_float_n_neg			(	CrankVecCplxFloatN*	a,
-													CrankVecCplxFloatN*	r	);
+														CrankVecCplxFloatN*	r	);
 
 void			crank_vec_cplx_float_n_unit			(	CrankVecCplxFloatN*	a,
-													CrankVecCplxFloatN*	r	);
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_conjugate	(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_neg_self		(	CrankVecCplxFloatN*	a	);
+
+void			crank_vec_cplx_float_n_unit_self	(	CrankVecCplxFloatN*	a	);
+
+void			crank_vec_cplx_float_n_conjugate_self(	CrankVecCplxFloatN*	a	);
 
 
 //////// Scalar operations ////////
@@ -169,6 +190,18 @@ void			crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*		a,
 													const gfloat			b,
 													CrankVecCplxFloatN*		r	);
 
+void			crank_vec_cplx_float_n_muls_self(	CrankVecCplxFloatN*		a,
+													CrankCplxFloat*			b	);
+
+void			crank_vec_cplx_float_n_divs_self(	CrankVecCplxFloatN*		a,
+													CrankCplxFloat*			b	);
+
+void			crank_vec_cplx_float_n_mulrs_self(	CrankVecCplxFloatN*		a,
+													const gfloat			b	);
+
+void			crank_vec_cplx_float_n_divrs_self(	CrankVecCplxFloatN*		a,
+													const gfloat			b	);
+
 //////// Standard vector operations ////////
 
 void			crank_vec_cplx_float_n_add			(	CrankVecCplxFloatN*	a,
@@ -183,6 +216,27 @@ void			crank_vec_cplx_float_n_dot			(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b,
 														CrankCplxFloat*		r	);
 
+void			crank_vec_cplx_float_n_add_self		(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
+
+void			crank_vec_cplx_float_n_sub_self		(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
+
+
+void			crank_vec_cplx_float_n_addr			(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_subr			(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_addr_self	(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b	);
+
+void			crank_vec_cplx_float_n_subr_self	(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b	);
+
 //////// Component vector operations ////////
 
 void			crank_vec_cplx_float_n_cmpmul		(	CrankVecCplxFloatN*	a,
@@ -192,15 +246,46 @@ void			crank_vec_cplx_float_n_cmpmul		(	CrankVecCplxFloatN*	a,
 void			crank_vec_cplx_float_n_cmpdiv		(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b,
 														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_cmpmul_self	(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
+												
+void			crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
+
+void			crank_vec_cplx_float_n_cmpmulr		(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b,
+														CrankVecCplxFloatN*	r	);
+												
+void			crank_vec_cplx_float_n_cmpdivr		(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b	);
+												
+void			crank_vec_cplx_float_n_cmpdivr_self	(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b	);
+												
 												
 void			crank_vec_cplx_float_n_cmpeq		(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b,
 														CrankVecBoolN*	r	);
 //////// Matrix operations ////////
 
+void			crank_vec_cplx_float_n_mulm		(	CrankVecCplxFloatN*	a,
+								  					CrankMatCplxFloatN*	b,
+								  					CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_mulm_self(	CrankVecCplxFloatN*	a,
+								  					CrankMatCplxFloatN*	b	);
+
 void			crank_vec_cplx_float_n_mulrm	(	CrankVecCplxFloatN*	a,
 								  					CrankMatFloatN*	b,
 								  					CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_mulrm_self	(	CrankVecCplxFloatN*	a,
+								  						CrankMatFloatN*	b	);
 
 //////// Ternary Operations ////////
 

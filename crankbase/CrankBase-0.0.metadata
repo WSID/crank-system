@@ -99,6 +99,9 @@ Vec*N
 .data	unowned=false
 .data	array_length_field="n"
 
+VecCplxFloatN
+.iterator			skip
+
 vec_*_init*			skip
 
 
