@@ -180,6 +180,30 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 
 
 /**
+ * CRANK_MAT_WARN_IF_SIZE_MISMATCH3:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized matrix item.
+ * @b: Variable sized matrix item.
+ * @c: Variable sized matrix item.
+ *
+ * Warns and return if three matrices has different size.
+ */
+#define CRANK_MAT_WARN_IF_SIZE_MISMATCH3(t,op,a,b,c)						\
+	G_STMT_START { 															\
+		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn) &&		\
+						((a)->rn != (c)->rn) && ((a)->cn != (c)->cn) )) {	\
+			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u, %ux%u",		\
+						t, op,												\
+						(a)->rn, (a)->cn,									\
+						(b)->rn, (b)->cn,									\
+						(c)->rn, (c)->cn	);								\
+			return; 														\
+		}																	\
+	} G_STMT_END
+
+
+/**
  * CRANK_MAT_WARN_IF_NON_SQUARE:
  * @t: (type gchar*): Type name that operation takes places of.
  * @op: (type gchar*): Operation name that checks size.

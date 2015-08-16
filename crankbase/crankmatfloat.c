@@ -706,6 +706,8 @@ crank_mat_float2_muls (	CrankMatFloat2*	a,
 					   	const gfloat	b,
 					   	CrankMatFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->m00 = a->m00 * b;
 	r->m01 = a->m01 * b;
 	r->m10 = a->m10 * b;
@@ -725,6 +727,8 @@ crank_mat_float2_divs (	CrankMatFloat2*	a,
 					   	const gfloat	b,
 					   	CrankMatFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->m00 = a->m00 / b;
 	r->m01 = a->m01 / b;
 	r->m10 = a->m10 / b;
@@ -780,8 +784,13 @@ crank_mat_float2_mulv (	CrankMatFloat2*	a,
 					   	CrankVecFloat2*	b,
 					   	CrankVecFloat2*	r	)
 {
-	gfloat nx = a->m00 * b->x + a->m01 * b->y;
-  	gfloat ny = a->m10 * b->x + a->m11 * b->y;
+	gfloat nx;
+  	gfloat ny;
+
+	g_return_if_fail (b != r);
+	
+	nx = a->m00 * b->x + a->m01 * b->y;
+	ny = a->m10 * b->x + a->m11 * b->y;
 
   	r->x = nx;
   	r->y = ny;
@@ -800,6 +809,9 @@ crank_mat_float2_add (	CrankMatFloat2*	a,
 					  	CrankMatFloat2*	b,
 					  	CrankMatFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->m00 = a->m00 + b->m00;
   	r->m01 = a->m01 + b->m01;
   	r->m10 = a->m10 + b->m10;
@@ -819,6 +831,9 @@ crank_mat_float2_sub (	CrankMatFloat2*	a,
 					  	CrankMatFloat2*	b,
 					  	CrankMatFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->m00 = a->m00 - b->m00;
   	r->m01 = a->m01 - b->m01;
   	r->m10 = a->m10 - b->m10;
@@ -839,6 +854,9 @@ crank_mat_float2_mul (	CrankMatFloat2*	a,
 					  	CrankMatFloat2* r	)
 {
 	CrankMatFloat2	nr;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 
   	nr.m00 = (a->m00 * b->m00) + (a->m01 * b->m10);
   	nr.m01 = (a->m00 * b->m01) + (a->m01 * b->m11);
@@ -921,7 +939,13 @@ crank_mat_float2_mixs (	CrankMatFloat2* a,
 					  	const gfloat	c,
 					  	CrankMatFloat2*	r	)
 {
-  	gfloat d = 1 - c;
+  	gfloat d;
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+  	
+  	d = 1 - c;
 
 	r->m00 = (a->m00 * d) + (b->m00 * c);
 	r->m01 = (a->m01 * d) + (b->m01 * c);
@@ -947,6 +971,10 @@ crank_mat_float2_mix (	CrankMatFloat2*	a,
 					  	CrankMatFloat2*	c,
 					  	CrankMatFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+	
 	r->m00 = (a->m00 * (1 - c->m00)) + (b->m00 * c->m00);
 	r->m01 = (a->m01 * (1 - c->m01)) + (b->m01 * c->m01);
 	r->m10 = (a->m10 * (1 - c->m10)) + (b->m10 * c->m10);
@@ -1646,6 +1674,8 @@ crank_mat_float3_muls (	CrankMatFloat3*	a,
 					   	const gfloat	b,
 					   	CrankMatFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->m00 = a->m00 * b;
 	r->m01 = a->m01 * b;
   	r->m02 = a->m02 * b;
@@ -1670,6 +1700,8 @@ crank_mat_float3_divs (	CrankMatFloat3*	a,
 					   	const gfloat	b,
 					   	CrankMatFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->m00 = a->m00 / b;
 	r->m01 = a->m01 / b;
   	r->m02 = a->m02 / b;
@@ -1739,9 +1771,15 @@ crank_mat_float3_mulv (	CrankMatFloat3*	a,
 					   	CrankVecFloat3*	b,
 					   	CrankVecFloat3*	r	)
 {
-  	gfloat nx = (a->m00 * b->x) + (a->m01 * b->y) + (a->m02 * b->z);
-  	gfloat ny = (a->m10 * b->x) + (a->m11 * b->y) + (a->m12 * b->z);
-  	gfloat nz = (a->m20 * b->x) + (a->m21 * b->y) + (a->m22 * b->z);
+	gfloat nx;
+	gfloat ny;
+	gfloat nz;
+	
+	g_return_if_fail (b != r);
+
+  	nx = (a->m00 * b->x) + (a->m01 * b->y) + (a->m02 * b->z);
+  	ny = (a->m10 * b->x) + (a->m11 * b->y) + (a->m12 * b->z);
+  	nz = (a->m20 * b->x) + (a->m21 * b->y) + (a->m22 * b->z);
 
   	r->x = nx;
   	r->y = ny;
@@ -1761,6 +1799,9 @@ crank_mat_float3_add (	CrankMatFloat3*	a,
 					  	CrankMatFloat3*	b,
 					  	CrankMatFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->m00 = a->m00 + b->m00;
   	r->m01 = a->m01 + b->m01;
   	r->m02 = a->m02 + b->m02;
@@ -1785,6 +1826,9 @@ crank_mat_float3_sub (	CrankMatFloat3*	a,
 					  	CrankMatFloat3*	b,
 					  	CrankMatFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->m00 = a->m00 - b->m00;
   	r->m01 = a->m01 - b->m01;
   	r->m02 = a->m02 - b->m02;
@@ -1810,6 +1854,9 @@ crank_mat_float3_mul (	CrankMatFloat3*	a,
 					  	CrankMatFloat3* r	)
 {
 	CrankMatFloat3	nr;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 
   	nr.m00 = (a->m00 * b->m00) + (a->m01 * b->m10) + (a->m02 * b->m20);
   	nr.m01 = (a->m00 * b->m01) + (a->m01 * b->m11) + (a->m02 * b->m21);
@@ -1920,7 +1967,12 @@ crank_mat_float3_mixs (	CrankMatFloat3* a,
 					  	const gfloat	c,
 					  	CrankMatFloat3*	r	)
 {
-  	gfloat d = 1 - c;
+  	gfloat d;
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+  	
+  	d = 1 - c;
 
 	r->m00 = (a->m00 * d) + (b->m00 * c);
 	r->m01 = (a->m01 * d) + (b->m01 * c);
@@ -1951,6 +2003,10 @@ crank_mat_float3_mix (	CrankMatFloat3*	a,
 					  	CrankMatFloat3*	c,
 					  	CrankMatFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+	
 	r->m00 = (a->m00 * (1 - c->m00)) + (b->m00 * c->m00);
 	r->m01 = (a->m01 * (1 - c->m01)) + (b->m01 * c->m01);
 	r->m02 = (a->m02 * (1 - c->m02)) + (b->m02 * c->m02);
@@ -3940,7 +3996,7 @@ crank_mat_float_n_get_tr (	CrankMatFloatN*	mat	)
   	gfloat	tr = 0.0f;
 	guint	i;
 
-	g_return_val_if_fail (crank_mat_float_n_is_square (mat), 0.0f);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatFloatN", "tr", mat, 0.0f);
 
 	for (i = 0; i < mat->rn; i++)
 		tr += mat->data [(mat->cn * i) + i];
@@ -4185,6 +4241,8 @@ crank_mat_float_n_muls (	CrankMatFloatN*	a,
 {
 	guint	i;
   	guint	j;
+  	
+	g_return_if_fail (a != r);
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
@@ -4206,6 +4264,8 @@ crank_mat_float_n_divs (	CrankMatFloatN*	a,
 						   	const gfloat	b,
 						   	CrankMatFloatN*	r	)
 {
+  	
+	g_return_if_fail (a != r);
   	crank_mat_float_n_muls (a, 1 / b, r);
 }
 
@@ -4222,7 +4282,9 @@ crank_mat_float_n_muls_self (	CrankMatFloatN*	a,
 {
 	guint	i;
   	guint	j;
-  	guint	n = a->rn * a->cn;
+  	guint	n;
+  	
+  	n = a->rn * a->cn;
 
   	for (i = 0; i < n; i++)
   		a->data[i] *= b;
@@ -4261,6 +4323,7 @@ crank_mat_float_n_mulv (	CrankMatFloatN*	a,
 
   	gfloat*	data;
 
+	g_return_if_fail (b != r);
   	g_return_if_fail (a->cn == b->n);
 
   	data = g_new0 (gfloat, a->rn);
@@ -4291,10 +4354,10 @@ crank_mat_float_n_add (	CrankMatFloatN*	a,
 {
   	guint	i;
   	guint	j;
-
-  	g_return_if_fail (a->rn == b->rn);
-  	g_return_if_fail (a->cn == b->cn);
-
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
@@ -4322,9 +4385,9 @@ crank_mat_float_n_sub (	CrankMatFloatN*	a,
   	guint	i;
   	guint	j;
 
-  	g_return_if_fail (a->rn == b->rn);
-  	g_return_if_fail (a->cn == b->cn);
-  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
@@ -4354,6 +4417,9 @@ crank_mat_float_n_mul (	CrankMatFloatN*	a,
   	guint	k;
 
   	gfloat*	data;
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 
   	g_return_if_fail (a->cn == b->rn);
 
@@ -4474,10 +4540,12 @@ crank_mat_float_n_mixs (	CrankMatFloatN* a,
 {
 	guint	i;
   	guint	j;
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 
-  	g_return_if_fail (a->rn == b->rn);
-  	g_return_if_fail (a->cn == b->cn);
-
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "mix-scalar", a, b);
+  	
   	gfloat d = 1 - c;
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
@@ -4512,10 +4580,11 @@ crank_mat_float_n_mix (	CrankMatFloatN*	a,
 	guint	i;
   	guint	j;
 
-  	g_return_if_fail (a->rn == b->rn);
-  	g_return_if_fail (a->cn == b->cn);
-  	g_return_if_fail (a->rn == c->rn);
-  	g_return_if_fail (a->cn == c->cn);
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH3("MatFloatN", "mix", a, b, c);
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 

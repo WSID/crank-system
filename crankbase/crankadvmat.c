@@ -456,7 +456,7 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 					return FALSE;
 				}
 				
-				crank_vec_float2_unit (&x, &x);
+				crank_vec_float2_unit_self (&x);
 				
 				// Multiplies Givens rotation matrix.
 				//

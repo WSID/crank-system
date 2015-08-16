@@ -773,6 +773,7 @@ test_n_mulv (void)
 {
 	CrankMatFloatN	a = {0};
 	CrankVecFloatN	b = {0};
+	CrankVecFloatN	r;
 
   	crank_mat_float_n_init (&a, 2, 3,
 		1.0f, 2.0f, 3.0f,
@@ -780,10 +781,10 @@ test_n_mulv (void)
 		
 	crank_vec_float_n_init (&b, 3, 2.0f, 3.0f, 5.0f);
 
-	crank_mat_float_n_mulv (&a, &b, &b);
+	crank_mat_float_n_mulv (&a, &b, &r);
 	
-	test_assert_float (b.data[0], 23.0f);
-	test_assert_float (b.data[1], 53.0f);
+	test_assert_float (r.data[0], 23.0f);
+	test_assert_float (r.data[1], 53.0f);
 	
 	crank_vec_float_n_fini (&b);
 	crank_mat_float_n_fini (&a);

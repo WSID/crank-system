@@ -428,6 +428,9 @@ crank_vec_bool2_and	(	CrankVecBool2*	a,
 						CrankVecBool2*	b,
 						CrankVecBool2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x && b->x;
 	r->y = a->y && b->y;
 }
@@ -445,6 +448,9 @@ crank_vec_bool2_or	(	CrankVecBool2*	a,
 						CrankVecBool2*	b,
 						CrankVecBool2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x || b->x;
 	r->y = a->y || b->y;
 }
@@ -462,6 +468,9 @@ crank_vec_bool2_xor	(	CrankVecBool2*	a,
 						CrankVecBool2*	b,
 						CrankVecBool2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x != b->x;
 	r->y = a->y != b->y;
 }
@@ -478,6 +487,8 @@ void
 crank_vec_bool2_not	(	CrankVecBool2*	a,
 						CrankVecBool2*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = ! a->x;
 	r->y = ! a->y;
 }
@@ -947,6 +958,9 @@ crank_vec_bool3_and	(	CrankVecBool3*	a,
 						CrankVecBool3*	b,
 						CrankVecBool3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x && b->x;
 	r->y = a->y && b->y;
 	r->z = a->z && b->z;
@@ -965,6 +979,9 @@ crank_vec_bool3_or	(	CrankVecBool3*	a,
 						CrankVecBool3*	b,
 						CrankVecBool3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x || b->x;
 	r->y = a->y || b->y;
 	r->z = a->z || b->z;
@@ -983,6 +1000,9 @@ crank_vec_bool3_xor	(	CrankVecBool3*	a,
 						CrankVecBool3*	b,
 						CrankVecBool3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x != b->x;
 	r->y = a->y != b->y;
 	r->z = a->z != b->z;
@@ -999,6 +1019,8 @@ void
 crank_vec_bool3_not	(	CrankVecBool3*	a,
 						CrankVecBool3*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = ! a->x;
 	r->y = ! a->y;
 }
@@ -1469,6 +1491,9 @@ crank_vec_bool4_and	(	CrankVecBool4*	a,
 						CrankVecBool4*	b,
 						CrankVecBool4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x && b->x;
 	r->y = a->y && b->y;
 	r->z = a->z && b->z;
@@ -1488,6 +1513,9 @@ crank_vec_bool4_or	(	CrankVecBool4*	a,
 						CrankVecBool4*	b,
 						CrankVecBool4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x || b->x;
 	r->y = a->y || b->y;
 	r->z = a->z || b->z;
@@ -1507,6 +1535,9 @@ crank_vec_bool4_xor	(	CrankVecBool4*	a,
 						CrankVecBool4*	b,
 						CrankVecBool4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x != b->x;
 	r->y = a->y != b->y;
 	r->z = a->z != b->z;
@@ -1524,6 +1555,8 @@ void
 crank_vec_bool4_not	(	CrankVecBool4*	a,
 						CrankVecBool4*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = ! a->x;
 	r->y = ! a->y;
 	r->z = ! a->z;
@@ -1805,7 +1838,7 @@ crank_vec_bool_n_dup	(	CrankVecBoolN*	vec	)
 {
 	CrankVecBoolN* result = g_new0 (CrankVecBoolN, 1);
 
-	crank_vec_bool_n_init_arr (result, vec->n, vec->data);
+	crank_vec_bool_n_copy (vec, result);
 	return result;
 }
 
@@ -2264,6 +2297,8 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
 							CrankVecBoolN*	r	)
 {
 	guint i;
+
+	g_return_if_fail (a != r);
 	
 	CRANK_VEC_ALLOC (r,gboolean,a->n);
 	for (i = 0; i < r->n; i++) r->data[i] = !(a->data[i]);

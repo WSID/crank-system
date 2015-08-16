@@ -222,10 +222,11 @@ static void
 test_2_muls (void)
 {
 	CrankVecInt2	a = {3, 4};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_muls (&a, 2, &a);
+	crank_vec_int2_muls (&a, 2, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, 6, 8);
+	crank_assert_eq_vecint2_imm (&r, 6, 8);
 }
 
 
@@ -233,10 +234,11 @@ static void
 test_2_divs (void)
 {
 	CrankVecInt2	a = {3, 4};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_divs (&a, 2, &a);
+	crank_vec_int2_divs (&a, 2, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, 1, 2);
+	crank_assert_eq_vecint2_imm (&r, 1, 2);
 }
 
 
@@ -244,10 +246,11 @@ static void
 test_2_mods (void)
 {
 	CrankVecInt2	a = {9, 13};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_mods (&a, 7, &a);
+	crank_vec_int2_mods (&a, 7, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, 2, 6);
+	crank_assert_eq_vecint2_imm (&r, 2, 6);
 }
 
 
@@ -256,10 +259,11 @@ test_2_add (void)
 {
 	CrankVecInt2	a = {3, 4};
 	CrankVecInt2	b = {5, 12};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_add (&a, &b, &a);
+	crank_vec_int2_add (&a, &b, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, 8, 16);
+	crank_assert_eq_vecint2_imm (&r, 8, 16);
 }
 
 
@@ -268,10 +272,11 @@ test_2_sub (void)
 {
 	CrankVecInt2	a = {3, 4};
 	CrankVecInt2	b = {5, 12};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_sub (&a, &b, &a);
+	crank_vec_int2_sub (&a, &b, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, -2, -8);
+	crank_assert_eq_vecint2_imm (&r, -2, -8);
 }
 
 
@@ -290,10 +295,11 @@ test_2_cmpmul (void)
 {
 	CrankVecInt2	a = {3, 4};
 	CrankVecInt2	b = {5, 12};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_cmpmul (&a, &b, &a);
+	crank_vec_int2_cmpmul (&a, &b, &r);
 	
-	crank_assert_eq_vecint2_imm (&a, 15, 48);
+	crank_assert_eq_vecint2_imm (&r, 15, 48);
 }
 
 
@@ -302,10 +308,11 @@ test_2_cmpdiv (void)
 {
 	CrankVecInt2	a = {3, 4};
 	CrankVecInt2	b = {5, 12};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_cmpdiv (&b, &a, &b);
+	crank_vec_int2_cmpdiv (&b, &a, &r);
 	
-	crank_assert_eq_vecint2_imm (&b, 1, 3);
+	crank_assert_eq_vecint2_imm (&r, 1, 3);
 }
 
 
@@ -314,10 +321,11 @@ test_2_cmpmod (void)
 {
 	CrankVecInt2	a = {3, 4};
 	CrankVecInt2	b = {5, 12};
+	CrankVecInt2	r;
 	
-	crank_vec_int2_cmpmod (&b, &a, &b);
+	crank_vec_int2_cmpmod (&b, &a, &r);
 	
-	crank_assert_eq_vecint2_imm (&b, 2, 0);
+	crank_assert_eq_vecint2_imm (&r, 2, 0);
 }
 
 

@@ -450,6 +450,8 @@ crank_vec_int2_muls	(	CrankVecInt2*	a,
 						const gint		b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x * b;
 	r->y = a->y * b;
 }
@@ -467,6 +469,8 @@ crank_vec_int2_divs	(	CrankVecInt2*	a,
 						const gint		b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x / b;
 	r->y = a->y / b;
 }
@@ -484,6 +488,8 @@ crank_vec_int2_mods	(	CrankVecInt2*	a,
 						const gint		b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x % b;
 	r->y = a->y % b;
 }
@@ -548,6 +554,9 @@ crank_vec_int2_add			(	CrankVecInt2*	a,
 								CrankVecInt2*	b,
 								CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 }
@@ -565,6 +574,9 @@ crank_vec_int2_sub	(	CrankVecInt2*	a,
 						CrankVecInt2*	b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 }
@@ -630,6 +642,9 @@ crank_vec_int2_cmpmul	(	CrankVecInt2*	a,
 							CrankVecInt2*	b,
 							CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 }
@@ -647,6 +662,9 @@ crank_vec_int2_cmpdiv	(	CrankVecInt2*	a,
 							CrankVecInt2*	b,
 							CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 }
@@ -664,6 +682,9 @@ crank_vec_int2_cmpmod	(	CrankVecInt2*	a,
 							CrankVecInt2*	b,
 							CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x % b->x;
 	r->y = a->y % b->y;
 }
@@ -732,6 +753,9 @@ crank_vec_int2_cmpcmp	(		CrankVecInt2*	a,
 								CrankVecInt2*	b,
 								CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = CMP(a->x, b->x);
 	r->y = CMP(a->y, b->y);
 }
@@ -749,6 +773,9 @@ crank_vec_int2_min (	CrankVecInt2*	a,
 						CrankVecInt2*	b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 }
@@ -766,6 +793,9 @@ crank_vec_int2_max (	CrankVecInt2*	a,
 						CrankVecInt2*	b,
 						CrankVecInt2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 }
@@ -1198,6 +1228,8 @@ crank_vec_int3_muls	(	CrankVecInt3*	a,
 						const gint		b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x * b;
 	r->y = a->y * b;
 	r->z = a->z * b;
@@ -1216,6 +1248,8 @@ crank_vec_int3_divs	(	CrankVecInt3*	a,
 						const gint		b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x / b;
 	r->y = a->y / b;
 	r->z = a->z / b;
@@ -1234,6 +1268,8 @@ crank_vec_int3_mods	(	CrankVecInt3*	a,
 						const gint		b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x % b;
 	r->y = a->y % b;
 	r->z = a->z % b;
@@ -1303,6 +1339,9 @@ crank_vec_int3_add			(	CrankVecInt3*	a,
 								CrankVecInt3*	b,
 								CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 	r->z = a->z + b->z;
@@ -1321,6 +1360,9 @@ crank_vec_int3_sub	(	CrankVecInt3*	a,
 						CrankVecInt3*	b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
@@ -1359,6 +1401,9 @@ crank_vec_int3_crs	(	CrankVecInt3*	a,
 						CrankVecInt3*	b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	guint	nx = (a->y * b->z) - (a->z * b->y);
 	guint	ny = (a->z * b->x) - (a->x * b->z);
 	guint	nz = (a->x * b->y) - (a->y * b->x);
@@ -1439,6 +1484,9 @@ crank_vec_int3_cmpmul	(	CrankVecInt3*	a,
 							CrankVecInt3*	b,
 							CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 	r->z = a->z * b->z;
@@ -1457,6 +1505,9 @@ crank_vec_int3_cmpdiv	(	CrankVecInt3*	a,
 							CrankVecInt3*	b,
 							CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
@@ -1475,6 +1526,9 @@ crank_vec_int3_cmpmod	(	CrankVecInt3*	a,
 							CrankVecInt3*	b,
 							CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x % b->x;
 	r->y = a->y % b->y;
 	r->z = a->z % b->z;
@@ -1547,6 +1601,9 @@ crank_vec_int3_cmpcmp	(		CrankVecInt3*	a,
 								CrankVecInt3*	b,
 								CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = CMP(a->x, b->x);
 	r->y = CMP(a->y, b->y);
 	r->z = CMP(a->z, b->z);
@@ -1565,6 +1622,9 @@ crank_vec_int3_min (	CrankVecInt3*	a,
 						CrankVecInt3*	b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 	r->z = MIN (a->z, b->z);
@@ -1583,6 +1643,9 @@ crank_vec_int3_max (	CrankVecInt3*	a,
 						CrankVecInt3*	b,
 						CrankVecInt3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 	r->z = MAX (a->z, b->z);
@@ -2033,6 +2096,8 @@ crank_vec_int4_muls	(	CrankVecInt4*	a,
 						const gint		b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x * b;
 	r->y = a->y * b;
 	r->z = a->z * b;
@@ -2052,6 +2117,8 @@ crank_vec_int4_divs	(	CrankVecInt4*	a,
 						const gint		b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x / b;
 	r->y = a->y / b;
 	r->z = a->z / b;
@@ -2071,6 +2138,8 @@ crank_vec_int4_mods	(	CrankVecInt4*	a,
 						const gint		b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x % b;
 	r->y = a->y % b;
 	r->z = a->z % b;
@@ -2143,6 +2212,9 @@ crank_vec_int4_add			(	CrankVecInt4*	a,
 								CrankVecInt4*	b,
 								CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 	r->z = a->z + b->z;
@@ -2162,6 +2234,9 @@ crank_vec_int4_sub	(	CrankVecInt4*	a,
 						CrankVecInt4*	b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
@@ -2236,6 +2311,9 @@ crank_vec_int4_cmpmul	(	CrankVecInt4*	a,
 							CrankVecInt4*	b,
 							CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 	r->z = a->z * b->z;
@@ -2255,6 +2333,9 @@ crank_vec_int4_cmpdiv	(	CrankVecInt4*	a,
 							CrankVecInt4*	b,
 							CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
@@ -2274,6 +2355,9 @@ crank_vec_int4_cmpmod	(	CrankVecInt4*	a,
 							CrankVecInt4*	b,
 							CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x % b->x;
 	r->y = a->y % b->y;
 	r->z = a->z % b->z;
@@ -2350,6 +2434,9 @@ crank_vec_int4_cmpcmp	(		CrankVecInt4*	a,
 								CrankVecInt4*	b,
 								CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = CMP(a->x, b->x);
 	r->y = CMP(a->y, b->y);
 	r->z = CMP(a->z, b->z);
@@ -2369,6 +2456,9 @@ crank_vec_int4_min (	CrankVecInt4*	a,
 						CrankVecInt4*	b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 	r->z = MIN (a->z, b->z);
@@ -2388,6 +2478,9 @@ crank_vec_int4_max (	CrankVecInt4*	a,
 						CrankVecInt4*	b,
 						CrankVecInt4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 	r->z = MAX (a->z, b->z);
@@ -2977,6 +3070,8 @@ crank_vec_int_n_muls	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	
 	CRANK_VEC_ALLOC(r,gint,a->n);
 	
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] * b;
@@ -2997,6 +3092,7 @@ crank_vec_int_n_divs	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 	
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] / b;
@@ -3017,6 +3113,7 @@ crank_vec_int_n_mods	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 	
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] % b;
@@ -3085,6 +3182,8 @@ crank_vec_int_n_add			(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "add", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3106,6 +3205,8 @@ crank_vec_int_n_sub	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "sub", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3152,6 +3253,8 @@ crank_vec_int_n_cmpmul	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmul", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3173,6 +3276,8 @@ crank_vec_int_n_cmpdiv	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpdiv", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3194,6 +3299,8 @@ crank_vec_int_n_cmpmod	(	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmod", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3277,6 +3384,8 @@ crank_vec_int_n_cmpcmp	(		CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpcmp", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3300,6 +3409,8 @@ crank_vec_int_n_min (	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "min", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
@@ -3323,6 +3434,8 @@ crank_vec_int_n_max (	CrankVecIntN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "max", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 

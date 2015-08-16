@@ -207,7 +207,7 @@ testutil_edge_distance (CrankDigraphEdge*	edge,
 			&disp,
 			(gint*)	crank_digraph_node_get_boxed (head)	);
 
-	crank_vec_int2_sub (&disp, (CrankVecInt2*) crank_digraph_node_get_boxed (tail), &disp);
+	crank_vec_int2_sub_self (&disp, (CrankVecInt2*) crank_digraph_node_get_boxed (tail));
 	
 	return crank_vec_int2_get_magn (&disp);
 }
@@ -223,7 +223,7 @@ testutil_heuristic (CrankDigraphNode*	from,
 			&disp,
 			(gint*)	crank_digraph_node_get_boxed (to)	);
 
-	crank_vec_int2_sub (&disp, (CrankVecInt2*) crank_digraph_node_get_boxed (from), &disp);
+	crank_vec_int2_sub_self (&disp, (CrankVecInt2*) crank_digraph_node_get_boxed (from));
 	
 	return crank_vec_int2_get_magn (&disp);
 }

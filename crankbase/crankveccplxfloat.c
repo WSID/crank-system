@@ -833,6 +833,7 @@ crank_vec_cplx_float_n_muls	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
 	CRANK_VEC_ALLOC(r,CrankCplxFloat,a->n);
 	
 	for (i = 0; i < a->n; i++) crank_cplx_float_mul (a->data + i, b, r->data + i);
@@ -853,6 +854,7 @@ crank_vec_cplx_float_n_divs	(	CrankVecCplxFloatN*	a,
 {
 	CrankCplxFloat	binv;
 	
+	g_return_if_fail (a != r);
 	crank_cplx_float_inverse (b, &binv);
 	
 	crank_vec_cplx_float_n_muls (a, &binv, r);
@@ -873,6 +875,7 @@ crank_vec_cplx_float_n_mulrs	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
 	CRANK_VEC_ALLOC(r, CrankCplxFloat, a->n);
 	
 	for (i = 0; i < a->n; i++) crank_cplx_float_mulr (a->data + i, b, r->data + i);
@@ -891,6 +894,7 @@ crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*	a,
 									const gfloat		b,
 									CrankVecCplxFloatN*	r	)
 {
+	g_return_if_fail (a != r);
 	crank_vec_cplx_float_n_mulrs (a, 1.0f / b, r);
 }
 
@@ -975,6 +979,8 @@ void			crank_vec_cplx_float_n_add			(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "add", a, b);
 	CRANK_VEC_ALLOC(r, CrankCplxFloat, a->n);
 
@@ -997,6 +1003,8 @@ crank_vec_cplx_float_n_sub	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "sub", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 
@@ -1167,6 +1175,8 @@ crank_vec_cplx_float_n_cmpmul	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 		
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
@@ -1189,6 +1199,8 @@ crank_vec_cplx_float_n_cmpdiv	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
@@ -1247,6 +1259,7 @@ crank_vec_cplx_float_n_cmpmulr	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 		
+	g_return_if_fail (a != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmulr", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
@@ -1269,6 +1282,7 @@ crank_vec_cplx_float_n_cmpdivr	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 
+	g_return_if_fail (a != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdivr", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);		
 	
@@ -1354,6 +1368,8 @@ crank_vec_cplx_float_n_mulm (	CrankVecCplxFloatN*	a,
 								CrankMatCplxFloatN*	b,
 								CrankVecCplxFloatN*	r	)
 {
+	g_return_if_fail (a != r);
+	
   	if (a->n == b->rn) {
 		guint	i;
 	  	guint	j;
@@ -1422,6 +1438,7 @@ crank_vec_cplx_float_n_mulrm (	CrankVecCplxFloatN*	a,
 								CrankMatFloatN*		b,
 								CrankVecCplxFloatN*	r	)
 {
+	g_return_if_fail (a != r);
   	if (a->n == b->rn) {
 		guint	i;
 	  	guint	j;
@@ -1498,6 +1515,8 @@ crank_vec_cplx_float_n_mixs (	CrankVecCplxFloatN*	a,
 	guint	i;
 	gfloat d = 1.0f - c;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "mix-scalar", a, b);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 
@@ -1529,6 +1548,8 @@ crank_vec_cplx_float_n_mix (	CrankVecCplxFloatN*	a,
 	gfloat	d;
 	guint	i;	
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH3 ("VecCplxFloatN", "mix-scalar", a, b, c);
 	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 

@@ -502,6 +502,8 @@ crank_vec_float2_muls	(	CrankVecFloat2*	a,
 							const gfloat		b,
 							CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x * b;
 	r->y = a->y * b;
 }
@@ -519,6 +521,8 @@ crank_vec_float2_divs	(	CrankVecFloat2*	a,
 						const gfloat		b,
 						CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->x = a->x / b;
 	r->y = a->y / b;
 }
@@ -569,6 +573,9 @@ crank_vec_float2_add	(	CrankVecFloat2*	a,
 							CrankVecFloat2*	b,
 							CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 }
@@ -583,9 +590,12 @@ crank_vec_float2_add	(	CrankVecFloat2*	a,
  */
 void
 crank_vec_float2_sub	(	CrankVecFloat2*	a,
-						CrankVecFloat2*	b,
-						CrankVecFloat2*	r	)
+							CrankVecFloat2*	b,
+							CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 }
@@ -652,6 +662,9 @@ crank_vec_float2_cmpmul	(	CrankVecFloat2*	a,
 							CrankVecFloat2*	b,
 							CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 }
@@ -669,6 +682,9 @@ crank_vec_float2_cmpdiv	(	CrankVecFloat2*	a,
 							CrankVecFloat2*	b,
 							CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 }
@@ -785,6 +801,9 @@ crank_vec_float2_min (	CrankVecFloat2*	a,
 						CrankVecFloat2*	b,
 						CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 }
@@ -802,6 +821,9 @@ crank_vec_float2_max (	CrankVecFloat2*	a,
 						CrankVecFloat2*	b,
 						CrankVecFloat2*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 }
@@ -821,6 +843,8 @@ crank_vec_float2_mulm (	CrankVecFloat2*	a,
 					   	CrankVecFloat2*	r	)
 {
   	gfloat nx, ny;
+  	
+	g_return_if_fail (a != r);
 
 	nx = (a->x * b->m00) + (a->y * b->m10);
 	ny = (a->x * b->m01) + (a->y * b->m11);
@@ -870,6 +894,9 @@ crank_vec_float2_mixs (	CrankVecFloat2*	a,
 {
 	gfloat d = 1.0f - c;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x * d + b->x * c;
 	r->y = a->y * d + b->y * c;
 }
@@ -893,7 +920,14 @@ crank_vec_float2_mix (	CrankVecFloat2*	a,
 						CrankVecFloat2*	c,
 						CrankVecFloat2*	r	)
 {
-	CrankVecFloat2 d = {1.0f - c->x, 1.0f - c->y};
+	CrankVecFloat2 d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+
+	d.x = 1.0f - c->x;
+	d.y = 1.0f - c->y;
 	
 	r->x = a->x * d.x + b->x * c->x;
 	r->y = a->y * d.y + b->y * c->y;
@@ -1329,6 +1363,8 @@ crank_vec_float3_muls	(	CrankVecFloat3*	a,
 							const gfloat		b,
 							CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = a->x * b;
 	r->y = a->y * b;
 	r->z = a->z * b;
@@ -1347,6 +1383,8 @@ crank_vec_float3_divs	(	CrankVecFloat3*	a,
 						const gfloat		b,
 						CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = a->x / b;
 	r->y = a->y / b;
 	r->z = a->z / b;
@@ -1400,6 +1438,9 @@ crank_vec_float3_add	(	CrankVecFloat3*	a,
 							CrankVecFloat3*	b,
 							CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 	r->z = a->z + b->z;
@@ -1418,6 +1459,9 @@ crank_vec_float3_sub	(	CrankVecFloat3*	a,
 							CrankVecFloat3*	b,
 							CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
@@ -1452,9 +1496,16 @@ crank_vec_float3_crs	(	CrankVecFloat3*	a,
 							CrankVecFloat3*	b,
 							CrankVecFloat3*	r	)
 {
-	gfloat	nx = (a->y * b->z) - (a->z * b->y);
-	gfloat	ny = (a->z * b->x) - (a->x * b->z);
-	gfloat	nz = (a->x * b->y) - (a->y * b->x);
+	gfloat	nx;
+	gfloat	ny;
+	gfloat	nz;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	nx = (a->y * b->z) - (a->z * b->y);
+	ny = (a->z * b->x) - (a->x * b->z);
+	nz = (a->x * b->y) - (a->y * b->x);
 
 	r->x = nx;
 	r->y = ny;
@@ -1528,6 +1579,9 @@ crank_vec_float3_cmpmul	(	CrankVecFloat3*	a,
 							CrankVecFloat3*	b,
 							CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 	r->z = a->z * b->z;
@@ -1546,6 +1600,9 @@ crank_vec_float3_cmpdiv	(	CrankVecFloat3*	a,
 							CrankVecFloat3*	b,
 							CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
@@ -1668,6 +1725,9 @@ crank_vec_float3_min (	CrankVecFloat3*	a,
 						CrankVecFloat3*	b,
 						CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 	r->z = MIN (a->z, b->z);
@@ -1686,6 +1746,9 @@ crank_vec_float3_max (	CrankVecFloat3*	a,
 						CrankVecFloat3*	b,
 						CrankVecFloat3*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 	r->z = MAX (a->z, b->z);
@@ -1706,6 +1769,8 @@ crank_vec_float3_mulm (	CrankVecFloat3*	a,
 					   	CrankVecFloat3*	r	)
 {
   	gfloat nx, ny, nz;
+  	
+	g_return_if_fail (a != r);
 
 	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
 	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
@@ -1757,7 +1822,12 @@ crank_vec_float3_mixs (	CrankVecFloat3*	a,
 						const gfloat	c,
 						CrankVecFloat3*	r	)
 {
-	gfloat d = 1.0f - c;
+	gfloat d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	d = 1.0f - c;
 	
 	r->x = a->x * d + b->x * c;
 	r->y = a->y * d + b->y * c;
@@ -1783,7 +1853,15 @@ crank_vec_float3_mix (	CrankVecFloat3*	a,
 						CrankVecFloat3*	c,
 						CrankVecFloat3*	r	)
 {
-	CrankVecFloat3 d = {1.0f - c->x, 1.0f - c->y, 1.0f - c->z};
+	CrankVecFloat3 d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+	
+	d.x = 1.0f - c->x;
+	d.y = 1.0f - c->y;
+	d.z = 1.0f - c->z;
 	
 	r->x = a->x * d.x + b->x * c->x;
 	r->y = a->y * d.y + b->y * c->y;
@@ -2238,6 +2316,8 @@ crank_vec_float4_muls	(	CrankVecFloat4*	a,
 							const gfloat		b,
 							CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = a->x * b;
 	r->y = a->y * b;
 	r->z = a->z * b;
@@ -2257,6 +2337,8 @@ crank_vec_float4_divs	(	CrankVecFloat4*	a,
 						const gfloat		b,
 						CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	r->x = a->x / b;
 	r->y = a->y / b;
 	r->z = a->z / b;
@@ -2313,6 +2395,9 @@ crank_vec_float4_add	(	CrankVecFloat4*	a,
 							CrankVecFloat4*	b,
 							CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x + b->x;
 	r->y = a->y + b->y;
 	r->z = a->z + b->z;
@@ -2332,6 +2417,9 @@ crank_vec_float4_sub	(	CrankVecFloat4*	a,
 							CrankVecFloat4*	b,
 							CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
@@ -2407,6 +2495,9 @@ crank_vec_float4_cmpmul	(	CrankVecFloat4*	a,
 							CrankVecFloat4*	b,
 							CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x * b->x;
 	r->y = a->y * b->y;
 	r->z = a->z * b->z;
@@ -2426,6 +2517,9 @@ crank_vec_float4_cmpdiv	(	CrankVecFloat4*	a,
 							CrankVecFloat4*	b,
 							CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
@@ -2556,6 +2650,9 @@ crank_vec_float4_min (	CrankVecFloat4*	a,
 						CrankVecFloat4*	b,
 						CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = MIN (a->x, b->x);
 	r->y = MIN (a->y, b->y);
 	r->z = MIN (a->z, b->z);
@@ -2575,6 +2672,9 @@ crank_vec_float4_max (	CrankVecFloat4*	a,
 						CrankVecFloat4*	b,
 						CrankVecFloat4*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	r->x = MAX (a->x, b->x);
 	r->y = MAX (a->y, b->y);
 	r->z = MAX (a->z, b->z);
@@ -2596,6 +2696,8 @@ crank_vec_float4_mulm (	CrankVecFloat4*	a,
 					   	CrankVecFloat4*	r	)
 {
   	gfloat nx, ny, nz, nw;
+  	
+	g_return_if_fail (a != r);
 
 	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
 	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
@@ -2650,7 +2752,12 @@ crank_vec_float4_mixs (	CrankVecFloat4*	a,
 						const gfloat	c,
 						CrankVecFloat4*	r	)
 {
-	gfloat d = 1.0f - c;
+	gfloat d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	d = 1.0f - c;
 	
 	r->x = a->x * d + b->x * c;
 	r->y = a->y * d + b->y * c;
@@ -2677,7 +2784,16 @@ crank_vec_float4_mix (	CrankVecFloat4*	a,
 						CrankVecFloat4*	c,
 						CrankVecFloat4*	r	)
 {
-	CrankVecFloat4 d = {1.0f - c->x, 1.0f - c->y, 1.0f - c->z};
+	CrankVecFloat4 d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
+	
+	d.x = 1.0f - c->x;
+	d.y = 1.0f - c->y;
+	d.z = 1.0f - c->z;
+	d.w = 1.0f - c->w;
 	
 	r->x = a->x * d.x + b->x * c->x;
 	r->y = a->y * d.y + b->y * c->y;
@@ -3283,6 +3399,8 @@ crank_vec_float_n_muls	(	CrankVecFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	
 	CRANK_VEC_ALLOC(r,gfloat,a->n);
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * b;
 }
@@ -3301,6 +3419,8 @@ crank_vec_float_n_divs	(	CrankVecFloatN*	a,
 						CrankVecFloatN*	r	)
 {
 	guint	i;
+	
+	g_return_if_fail (a != r);
 	
 	CRANK_VEC_ALLOC(r,gfloat,a->n);
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b;
@@ -3356,6 +3476,9 @@ crank_vec_float_n_add	(	CrankVecFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
 
@@ -3376,6 +3499,9 @@ crank_vec_float_n_sub	(	CrankVecFloatN*	a,
 							CrankVecFloatN*	r	)
 {
 	guint	i;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 		
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
@@ -3458,6 +3584,9 @@ crank_vec_float_n_cmpmul	(	CrankVecFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
 
@@ -3478,6 +3607,9 @@ crank_vec_float_n_cmpdiv	(	CrankVecFloatN*	a,
 								CrankVecFloatN*	r	)
 {
 	guint	i;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpdiv", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
@@ -3618,6 +3750,9 @@ crank_vec_float_n_min (	CrankVecFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "min", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
 
@@ -3639,6 +3774,9 @@ crank_vec_float_n_max (	CrankVecFloatN*	a,
 {
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "max", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
 
@@ -3659,6 +3797,8 @@ crank_vec_float_n_mulm (	CrankVecFloatN*	a,
 							CrankMatFloatN*	b,
 							CrankVecFloatN*	r	)
 {
+	g_return_if_fail (a != r);
+	
   	if (a->n == b->rn) {
 		guint	i;
 	  	guint	j;
@@ -3723,7 +3863,12 @@ crank_vec_float_n_mixs (	CrankVecFloatN*	a,
 							CrankVecFloatN*	r	)
 {
 	guint	i;
-	gfloat d = 1.0f - c;
+	gfloat	d;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	d = 1.0f - c;
 	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "mixs", a, b);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
@@ -3753,6 +3898,9 @@ crank_vec_float_n_mix (	CrankVecFloatN*	a,
 	gfloat	d;
 	guint	i;
 	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	g_return_if_fail (c != r);
 	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH3 ("VecFloatN", "mix", a, b, c);
 	CRANK_VEC_ALLOC(r, gfloat, a->n);

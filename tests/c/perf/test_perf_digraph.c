@@ -97,9 +97,8 @@ cost_edge_func (	CrankDigraphEdge*	edge,
 	
 	crank_vec_int3_init_arr (&diff, (gint*) crank_digraph_node_get_boxed (head));
 	
-	crank_vec_int3_sub (	&diff,
-							(CrankVecInt3*) crank_digraph_node_get_boxed (tail),
-							&diff	);
+	crank_vec_int3_sub_self (	&diff,
+								(CrankVecInt3*) crank_digraph_node_get_boxed (tail)	);
 	
 	return crank_vec_int3_get_magn (&diff);
 }
@@ -113,9 +112,8 @@ heuristic_func (	CrankDigraphNode*	from,
 	
 	crank_vec_int3_init_arr (&diff, (gint*) crank_digraph_node_get_boxed (to));
 	
-	crank_vec_int3_sub (	&diff,
-							(CrankVecInt3*) crank_digraph_node_get_boxed (from),
-							&diff	);
+	crank_vec_int3_sub_self (	&diff,
+								(CrankVecInt3*) crank_digraph_node_get_boxed (from)	);
 	
 	return crank_vec_int3_get_magn (&diff);
 }
