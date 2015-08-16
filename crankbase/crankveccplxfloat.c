@@ -62,19 +62,6 @@ G_DEFINE_BOXED_TYPE (
 
 //////// Private functions ////////
 
-void		crank_vec_cplx_float_n_realloc	(	CrankVecCplxFloatN*	vec, const guint n	);
-
-
-
-void
-crank_vec_cplx_float_n_realloc (	CrankVecCplxFloatN*	vec,
-								const guint		n	)
-{
-	vec->data = g_renew (CrankCplxFloat, vec->data, n);
-	vec->n = n;
-}
-
-
 
 /**
  * crank_vec_cplx_float_n_init:
@@ -1341,10 +1328,7 @@ crank_vec_cplx_float_n_cmpeq	(	CrankVecCplxFloatN*	a,
 	if (a->n == b->n) {
 		guint	i;
 		
-		if (r->n != a->n) {
-			r->data = g_renew (gboolean, r->data, a->n);
-			r->n = a->n;
-		}
+		CRANK_VEC_ALLOC(r, gboolean, a->n);
 	
 		for (i = 0; i < a->n; i++)
 			r->data[i] = crank_cplx_float_equal (a->data + i, b->data + i);
@@ -1512,7 +1496,7 @@ crank_vec_cplx_float_n_mixs (	CrankVecCplxFloatN*	a,
 		guint	i;
 		gfloat d = 1.0f - c;
 		
-		if ((a != r) && (b != r)) crank_vec_cplx_float_n_realloc (r, a->n);
+		CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
 		for (i = 0; i < a->n; i++) {
 			r->data[i].real = a->data[i].real * d + b->data[i].real * c;
@@ -1545,7 +1529,7 @@ crank_vec_cplx_float_n_mix (	CrankVecCplxFloatN*	a,
 		gfloat	d;
 		guint	i;
 		
-		if ((a != r) && (b != r)) crank_vec_cplx_float_n_realloc (r, a->n);
+		CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
 		for (i = 0; i < a->n; i++) {
 			crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);

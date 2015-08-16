@@ -3209,13 +3209,6 @@ crank_mat_float4_mix (	CrankMatFloat4*	a,
 
 
 
-//////// Internal Declaration //////////////////////////////////////////////////
-
-void		crank_mat_float_n_realloc	(	CrankMatFloatN*	mat,
-								 			const guint		rn,
-								 			const guint		cn	);
-
-
 
 G_DEFINE_BOXED_TYPE(CrankMatFloatN, crank_mat_float_n,
 					crank_mat_float_n_dup,\
@@ -3502,12 +3495,12 @@ crank_mat_float_n_init_fill (	CrankMatFloatN*	mat,
 								const gfloat	fill	)
 {
   	guint	i;
-  	guint	j;
+  	guint	n = rn * cn;
 
-  	crank_mat_float_n_realloc (mat, rn, cn);
-  	for (i = 0; i < rn; i++)
-		for (j = 0; j < cn; j++)
-			mat->data[(cn * i) + j] = fill;
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
+	
+  	for (i = 0; i < n; i++)
+		mat->data[i] = fill;
 }
 
 /**
@@ -4085,7 +4078,7 @@ crank_mat_float_n_neg (	CrankMatFloatN*	a,
   	guint	i;
   	guint	j;
 
-  	if (a != r) crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
 	for (i = 0; i < a->rn; i ++) {
 		for (j = 0; j < a->cn; j ++) {
@@ -4202,7 +4195,7 @@ crank_mat_float_n_muls (	CrankMatFloatN*	a,
 	guint	i;
   	guint	j;
 
-	if (a != r) crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++)
 	  	for (j = 0; j < a->cn; j++)
@@ -4311,8 +4304,7 @@ crank_mat_float_n_add (	CrankMatFloatN*	a,
   	g_return_if_fail (a->rn == b->rn);
   	g_return_if_fail (a->cn == b->cn);
 
-  	if ((r != a) && (r != b))
-	  	crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
 	  	for (j = 0; j < a->cn; j++) {
@@ -4341,9 +4333,8 @@ crank_mat_float_n_sub (	CrankMatFloatN*	a,
 
   	g_return_if_fail (a->rn == b->rn);
   	g_return_if_fail (a->cn == b->cn);
-
-  	if ((r != a) && (r != b))
-	  	crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
 	  	for (j = 0; j < a->cn; j++) {
@@ -4498,7 +4489,7 @@ crank_mat_float_n_mixs (	CrankMatFloatN* a,
 
   	gfloat d = 1 - c;
 
-  	if ((a != r) && (b != r)) crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
 	  	for (j = 0; j < a->cn; j++) {
@@ -4535,7 +4526,7 @@ crank_mat_float_n_mix (	CrankMatFloatN*	a,
   	g_return_if_fail (a->rn == c->rn);
   	g_return_if_fail (a->cn == c->cn);
 
-  	if ((a != r) && (b != r) && (c != r)) crank_mat_float_n_realloc (r, a->rn, a->cn);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
   	for (i = 0; i < a->rn; i++) {
 	  	for (j = 0; j < a->cn; j++) {
@@ -4623,16 +4614,4 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
 				a->rn, a->cn, p->n);
 	}
-}
-
-//////// Internal Definition ///////////////////////////////////////////////////
-
-void
-crank_mat_float_n_realloc (CrankMatFloatN *mat,
-                           const guint     rn,
-                           const guint     cn)
-{
-	mat->data = g_renew (gfloat, mat->data, rn * cn);
- 	mat->rn = rn;
-  	mat->cn = cn;
 }

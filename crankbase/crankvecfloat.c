@@ -2695,20 +2695,6 @@ crank_vec_float4_mix (	CrankVecFloat4*	a,
 
 G_DEFINE_BOXED_TYPE (CrankVecFloatN, crank_vec_float_n, crank_vec_float_n_dup, g_free)
 
-//////// Private functions ////////
-
-void		crank_vec_float_n_realloc	(	CrankVecFloatN*	vec, const guint n	);
-
-
-
-void
-crank_vec_float_n_realloc (	CrankVecFloatN*	vec,
-							const guint		n	)
-{
-	vec->data = g_renew (gfloat, vec->data, n);
-	vec->n = n;
-}
-
 
 
 /**
@@ -3231,7 +3217,7 @@ crank_vec_float_n_neg (	CrankVecFloatN*	a,
 {
 	guint	i;
 	
-	if (a != r) crank_vec_float_n_realloc (r, a->n);
+	CRANK_VEC_ALLOC (r, gfloat, a->n);
 	
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i];
 }

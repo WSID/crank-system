@@ -1679,11 +1679,6 @@ G_DEFINE_BOXED_TYPE (CrankVecBoolN, crank_vec_bool_n,
 		crank_vec_bool_n_dup,
 		crank_vec_bool_n_free)
 
-//////// Internal Declarations /////////////////////////////////////////////////
-
-static void	crank_vec_bool_n_realloc	(	CrankVecBoolN*	vec,
-							   				const guint		n	);
-
 //////// Initialization and finalization ///////////////////////////////////////
 
 /**
