@@ -256,7 +256,6 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 									CrankMatFloatN*		r	)
 {
 	CrankVecFloatN*		e;
-	CrankVecFloatN**	ep;
 	
 	guint	i;
 	guint	j;
@@ -303,17 +302,13 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 			crank_vec_float_n_unit (&u, e + i);
 			crank_vec_float_n_fini (&u);
 		}
-		
-		ep = g_new (CrankVecFloatN*, a->rn);
-		for (i = 0; i < a->rn; i++) ep[i] = e + i;
 
-		crank_mat_float_n_init_cvarr (q, a->rn, ep);
+		crank_mat_float_n_init_cvarr (q, a->rn, e);
 
 		for (i = 0; i < a->rn; i++) {
 			crank_vec_float_n_fini (e + i);
 		}
 		g_free (e);
-		g_free (ep);
 		
 		return TRUE;
 	}

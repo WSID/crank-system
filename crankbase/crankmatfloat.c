@@ -169,10 +169,24 @@ crank_mat_float2_init_rv (	CrankMatFloat2*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_float2_init_rvarr (	CrankMatFloat2*		mat,
- 								CrankVecFloat2**	rvarr	)
+crank_mat_float2_init_rvarr (	CrankMatFloat2*	mat,
+ 								CrankVecFloat2*	rvarr	)
 {
-	crank_mat_float2_init_rv (mat, rvarr[0], rvarr[1]);
+	crank_mat_float2_init_arr (mat, (gfloat*)rvarr);
+}
+
+/**
+ * crank_mat_float2_init_rvparr:
+ * @mat: (out): A Matrix.
+ * @rvparr: (array fixed-size=2): An array of row vectors.
+ *
+ * Initialize a matrix with array of row vectors.
+ */
+void
+crank_mat_float2_init_rvparr (	CrankMatFloat2*		mat,
+ 								CrankVecFloat2**	rvparr	)
+{
+	crank_mat_float2_init_rv (mat, rvparr[0], rvparr[1]);
 }
 
 /**
@@ -202,10 +216,24 @@ crank_mat_float2_init_cv (	CrankMatFloat2*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_float2_init_cvarr (	CrankMatFloat2* 	mat,
-							 	CrankVecFloat2**	cvarr	)
+crank_mat_float2_init_cvarr (	CrankMatFloat2* mat,
+							 	CrankVecFloat2*	cvarr	)
 {
-	crank_mat_float2_init_cv (mat, cvarr[0], cvarr[1]);
+	crank_mat_float2_init_cv (mat, cvarr, cvarr + 1);
+}
+
+/**
+ * crank_mat_float2_init_cvparr:
+ * @mat: (out): A Matrix.
+ * @cvparr: (array fixed-size=2): An array of column vectors.
+ *
+ * Initialize a matrix with an array of column vectors.
+ */
+void
+crank_mat_float2_init_cvparr (	CrankMatFloat2* 	mat,
+							 	CrankVecFloat2**	cvparr	)
+{
+	crank_mat_float2_init_cv (mat, cvparr[0], cvparr[1]);
 }
 
 /**
@@ -1069,11 +1097,26 @@ crank_mat_float3_init_rv (	CrankMatFloat3*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_float3_init_rvarr (	CrankMatFloat3*		mat,
- 								CrankVecFloat3**	rvarr	)
+crank_mat_float3_init_rvarr (	CrankMatFloat3*	mat,
+ 								CrankVecFloat3*	rvarr	)
 {
-	crank_mat_float3_init_rv (mat, rvarr[0], rvarr[1], rvarr[2]);
+	crank_mat_float3_init_rv (mat, rvarr, rvarr + 1, rvarr + 2);
 }
+
+/**
+ * crank_mat_float3_init_rvparr:
+ * @mat: (out): A Matrix.
+ * @rvparr: (array fixed-size=3): An array of row vectors.
+ *
+ * Initialize a matrix with array of row vectors.
+ */
+void
+crank_mat_float3_init_rvparr (	CrankMatFloat3*		mat,
+ 								CrankVecFloat3**	rvparr	)
+{
+	crank_mat_float3_init_rv (mat, rvparr[0], rvparr[1], rvparr[2]);
+}
+
 
 /**
  * crank_mat_float3_init_cv:
@@ -1109,10 +1152,24 @@ crank_mat_float3_init_cv (	CrankMatFloat3*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_float3_init_cvarr (	CrankMatFloat3* 	mat,
-							 	CrankVecFloat3**	cvarr	)
+crank_mat_float3_init_cvarr (	CrankMatFloat3*	mat,
+							 	CrankVecFloat3*	cvarr	)
 {
-	crank_mat_float3_init_cv (mat, cvarr[0], cvarr[1], cvarr[2]);
+	crank_mat_float3_init_cv (mat, cvarr, cvarr + 1, cvarr + 2);
+}
+
+/**
+ * crank_mat_float3_init_cvparr:
+ * @mat: (out): A Matrix.
+ * @cvparr: (array fixed-size=3): An array of column vectors.
+ *
+ * Initialize a matrix with an array of column vectors.
+ */
+void
+crank_mat_float3_init_cvparr (	CrankMatFloat3* 	mat,
+							 	CrankVecFloat3**	cvparr	)
+{
+	crank_mat_float3_init_cv (mat, cvparr[0], cvparr[1], cvparr[2]);
 }
 
 /**
@@ -2129,10 +2186,24 @@ crank_mat_float4_init_rv (	CrankMatFloat4*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_float4_init_rvarr (	CrankMatFloat4*		mat,
- 								CrankVecFloat4**	rvarr	)
+crank_mat_float4_init_rvarr (	CrankMatFloat4*	mat,
+ 								CrankVecFloat4*	rvarr	)
 {
-	crank_mat_float4_init_rv (mat, rvarr[0], rvarr[1], rvarr[2], rvarr[3]);
+	crank_mat_float4_init_rv (mat, rvarr, rvarr + 1, rvarr + 2, rvarr + 3);
+}
+
+/**
+ * crank_mat_float4_init_rvparr:
+ * @mat: (out): A Matrix.
+ * @rvparr: (array fixed-size=4): An array of row vectors.
+ *
+ * Initialize a matrix with array of row vectors.
+ */
+void
+crank_mat_float4_init_rvparr (	CrankMatFloat4*		mat,
+ 								CrankVecFloat4**	rvparr	)
+{
+	crank_mat_float4_init_rv (mat, rvparr[0], rvparr[1], rvparr[2], rvparr[3]);
 }
 
 /**
@@ -2178,10 +2249,25 @@ crank_mat_float4_init_cv (	CrankMatFloat4*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_float4_init_cvarr (	CrankMatFloat4* 	mat,
-							 	CrankVecFloat4**	cvarr	)
+crank_mat_float4_init_cvarr (	CrankMatFloat4* mat,
+							 	CrankVecFloat4*	cvarr	)
 {
-	crank_mat_float4_init_cv (mat, cvarr[0], cvarr[1], cvarr[2], cvarr[3]);
+	crank_mat_float4_init_cv (mat, cvarr, cvarr + 1, cvarr + 2, cvarr + 3);
+}
+
+
+/**
+ * crank_mat_float4_init_cvparr:
+ * @mat: (out): A Matrix.
+ * @cvparr: (array fixed-size=4): An array of column vectors.
+ *
+ * Initialize a matrix with an array of column vectors.
+ */
+void
+crank_mat_float4_init_cvparr (	CrankMatFloat4* 	mat,
+							 	CrankVecFloat4**	cvparr	)
+{
+	crank_mat_float4_init_cv (mat, cvparr[0], cvparr[1], cvparr[2], cvparr[3]);
 }
 
 /**
@@ -3389,18 +3475,41 @@ crank_mat_float_n_init_rv (	CrankMatFloatN*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_float_n_init_rvarr (	CrankMatFloatN*		mat,
-							  	const guint			rn,
- 								CrankVecFloatN**	rvarr	)
+crank_mat_float_n_init_rvarr (	CrankMatFloatN*	mat,
+							  	const guint		rn,
+ 								CrankVecFloatN*	rvarr	)
 {
   	guint	i;
   	guint	cn = 0;
 
-  	for (i = 0; i < rn; i++) cn = MAX(cn, rvarr[i]->n);
+  	for (i = 0; i < rn; i++) cn = MAX(cn, rvarr[i].n);
 
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), rvarr[i]->data, rvarr[i]->n);
+	  	memcpy (mat->data + (i * cn), rvarr[i].data, rvarr[i].n);
+}
+
+/**
+ * crank_mat_float_n_init_rvparr:
+ * @mat: (out): A Matrix.
+ * @rn: Row count.
+ * @rvparr: (array length=rn): An array of row vectors.
+ *
+ * Initialize a matrix with array of row vectors.
+ */
+void
+crank_mat_float_n_init_rvparr (	CrankMatFloatN*		mat,
+							  	const guint			rn,
+ 								CrankVecFloatN**	rvparr	)
+{
+  	guint	i;
+  	guint	cn = 0;
+
+  	for (i = 0; i < rn; i++) cn = MAX(cn, rvparr[i]->n);
+
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
+  	for (i = 0; i < rn; i++)
+	  	memcpy (mat->data + (i * cn), rvparr[i]->data, rvparr[i]->n);
 }
 
 /**
@@ -3445,6 +3554,7 @@ crank_mat_float_n_init_cv (	CrankMatFloatN*	mat,
 
 }
 
+
 /**
  * crank_mat_float_n_init_cvarr:
  * @mat: (out): A Matrix.
@@ -3454,20 +3564,47 @@ crank_mat_float_n_init_cv (	CrankMatFloatN*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_float_n_init_cvarr (	CrankMatFloatN* 	mat,
-							 	const guint			cn,
-							 	CrankVecFloatN**	cvarr	)
+crank_mat_float_n_init_cvarr (	CrankMatFloatN* mat,
+							 	const guint		cn,
+							 	CrankVecFloatN*	cvarr	)
 {
   	guint	rn = 0;
   	guint	i;
   	guint	j;
 
-  	for (i = 0; i < cn; i++) rn = MAX (rn, cvarr[i]->n);
+  	for (i = 0; i < cn; i++) rn = MAX (rn, cvarr[i].n);
 
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < cn; i++) {
-	  	for (j = 0; j < cvarr[i]->n; j++) {
-	  		mat->data[(rn * j) + i] = cvarr[i]->data[j];
+	  	for (j = 0; j < cvarr[i].n; j++) {
+	  		mat->data[(rn * j) + i] = cvarr[i].data[j];
+		}
+	}
+}
+
+/**
+ * crank_mat_float_n_init_cvparr:
+ * @mat: (out): A Matrix.
+ * @cn: Column count.
+ * @cvparr: (array length=cn): An array of column vectors.
+ *
+ * Initialize a matrix with an array of column vectors.
+ */
+void
+crank_mat_float_n_init_cvparr (	CrankMatFloatN* 	mat,
+							 	const guint			cn,
+							 	CrankVecFloatN**	cvparr	)
+{
+  	guint	rn = 0;
+  	guint	i;
+  	guint	j;
+
+  	for (i = 0; i < cn; i++) rn = MAX (rn, cvparr[i]->n);
+
+	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
+  	for (i = 0; i < cn; i++) {
+	  	for (j = 0; j < cvparr[i]->n; j++) {
+	  		mat->data[(rn * j) + i] = cvparr[i]->data[j];
 		}
 	}
 }

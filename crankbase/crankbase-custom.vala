@@ -544,8 +544,10 @@ namespace Crank {
 		public MatFloat2.arr (float marr[4]);
 		public MatFloat2.rv (VecFloat2 rv0, VecFloat2 rv1);
 		public MatFloat2.rvarr (VecFloat2 rvarr[2]);
+		public MatFloat2.rvparr (VecFloat2? rvparr[2]);
 		public MatFloat2.cv (VecFloat2 cv0, VecFloat2 cv1);
 		public MatFloat2.cvarr (VecFloat2 cvarr[2]);
+		public MatFloat2.cvparr (VecFloat2? cvparr[2]);
 		public MatFloat2.diag (float m00, float m11);
 		public MatFloat2.diag_arr (float darr[2]);
 		public MatFloat2.fill (float fill);
@@ -564,8 +566,10 @@ namespace Crank {
 		public MatFloat3.arr (float marr[9]);
 		public MatFloat3.rv (VecFloat3 rv0, VecFloat3 rv1, VecFloat3 rv2);
 		public MatFloat3.rvarr (VecFloat3 rvarr[3]);
+		public MatFloat3.rvparr (VecFloat3? rvparr[3]);
 		public MatFloat3.cv (VecFloat3 cv0, VecFloat3 cv1, VecFloat3 cv2);
 		public MatFloat3.cvarr (VecFloat3 cvarr[3]);
+		public MatFloat3.cvparr (VecFloat3? cvparr[3]);
 		public MatFloat3.diag (float m00, float m11, float m22);
 		public MatFloat3.diag_arr (float darr[3]);
 		public MatFloat3.fill (float fill);
@@ -585,8 +589,10 @@ namespace Crank {
 		public MatFloat4.arr (float marr[16]);
 		public MatFloat4.rv (VecFloat4 rv0, VecFloat4 rv1, VecFloat4 rv2, VecFloat4 rv3);
 		public MatFloat4.rvarr (VecFloat4 rvarr[4]);
+		public MatFloat4.rvparr (VecFloat4? rvparr[4]);
 		public MatFloat4.cv (VecFloat4 cv0, VecFloat4 cv1, VecFloat4 cv2, VecFloat4 cv3);
 		public MatFloat4.cvarr (VecFloat4 cvarr[4]);
+		public MatFloat4.cvparr (VecFloat4? cvparr[4]);
 		public MatFloat4.diag (float m00, float m11, float m22, float m33);
 		public MatFloat4.diag_arr (float darr[4]);
 		public MatFloat4.fill (float fill);
@@ -607,8 +613,10 @@ namespace Crank {
 		public MatFloatN.arr_take ([CCode (array_length_pos=0)]owned float[,] marr);
 		public MatFloatN.rv (uint rn, ...);
 		public MatFloatN.rvarr ([CCode (array_length_pos=0)]VecFloat4[] rvarr);
+		public MatFloatN.rvparr ([CCode (array_length_pos=0)]VecFloat4?[] rvparr);
 		public MatFloatN.cv (uint cn, ...);
 		public MatFloatN.cvarr ([CCode (array_length_pos=0)]VecFloat4[] cvarr);
+		public MatFloatN.cvparr ([CCode (array_length_pos=0)]VecFloat4?[] cvparr);
 		public MatFloatN.diag (uint n, ...);
 		public MatFloatN.diag_arr ([CCode (array_length_pos=0)]float[] darr);
 		public MatFloatN.fill (uint rn, uint cn, float fill);
@@ -635,8 +643,10 @@ namespace Crank {
 		public MatCplxFloatN.arr_take ([CCode (array_length_pos=0)]owned CplxFloat[,] marr);
 		public MatCplxFloatN.rv (uint rn, ...);
 		public MatCplxFloatN.rvarr ([CCode (array_length_pos=0)]VecCplxFloatN[] rvarr);
+		public MatCplxFloatN.rvparr ([CCode (array_length_pos=0)]VecCplxFloatN?[] rvparr);
 		public MatCplxFloatN.cv (uint cn, ...);
 		public MatCplxFloatN.cvarr ([CCode (array_length_pos=0)]VecCplxFloatN[] cvarr);
+		public MatCplxFloatN.cvparr ([CCode (array_length_pos=0)]VecCplxFloatN?[] cvparr);
 		public MatCplxFloatN.diag (uint n, ...);
 		public MatCplxFloatN.diag_arr ([CCode (array_length_pos=0)]CplxFloat[] darr);
 		public MatCplxFloatN.fill (uint rn, uint cn, CplxFloat fill);
