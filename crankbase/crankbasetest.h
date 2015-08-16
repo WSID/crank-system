@@ -141,7 +141,7 @@ void	crank_test_add_func_expected_fail (	const gchar* 	path,
  * @an: (type gfloat): Length of elements.
  * @b: (element-type gfloat) (array length=bn): A array
  * @bn: (type gfloat): Length of elements.
- * @d: (type 
+ * @d: (type gfloat): Delta value.
  *
  * Asserts two float arrays are equals.
  */

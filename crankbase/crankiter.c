@@ -730,7 +730,7 @@ crank_iter_mem_ptr_next (	CrankIterMemPtr*	iter	)
  *
  * Retrieve value positioned at iterator's position.
  *
- * Returns: (nullable): A Value or %NULL if invalid.
+ * Returns: (transfer none) (nullable): A Value or %NULL if invalid.
  */
 gpointer
 crank_iter_mem_ptr_get (	CrankIterMemPtr*	iter	)
@@ -877,7 +877,7 @@ crank_iter_mem_struct_next (	CrankIterMemStruct*	iter	)
  *
  * Retrieve address of value, where iterator is positioned.
  *
- * Returns: (nullable): A Value, or %NULL if it is invalid.
+ * Returns: (transfer none) (nullable): A Value, or %NULL if it is invalid.
  */
 gpointer
 crank_iter_mem_struct_get (	CrankIterMemStruct*	iter	)

@@ -1922,7 +1922,6 @@ crank_mat_float3_sub_self (	CrankMatFloat3*	a,
  * crank_mat_float3_mul_self:
  * @a: A Matrix.
  * @b: A Matrix.
- * @r: (out): A Matrix to store result.
  *
  * Multiplies two matrices.
  */

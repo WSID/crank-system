@@ -38,7 +38,7 @@ typedef struct _CrankQuatFloat	CrankQuatFloat;
 //////// Struct declaration ////////////////////////////////////////////////////
 
 /**
- * CRANK_CPLX_FLOAT_DEFFORMAT: (value "%g + (%gi)")
+ * CRANK_CPLX_FLOAT_DEFFORMAT:
  *
  * Default format for crank_cplx_float_to_string_full().
  */

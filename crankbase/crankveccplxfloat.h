@@ -129,9 +129,9 @@ gboolean		crank_vec_cplx_float_n_equal		(	gconstpointer	a,
 gchar*			crank_vec_cplx_float_n_to_string	(	CrankVecCplxFloatN*	vec	);
 
 gchar*			crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
-														const gchar*	vec_left,
-														const gchar*	vec_in,
-														const gchar*	vec_right,
+														const gchar*	left,
+														const gchar*	in,
+														const gchar*	right,
 														const gchar*	format	);
 
 

@@ -1309,7 +1309,7 @@ crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
 }
 
 /**
- * crank_vec_cplx_float_n_cmpdiv_self:
+ * crank_vec_cplx_float_n_cmpdivr_self:
  * @a: A vector.
  * @b: A vector.
  * 
