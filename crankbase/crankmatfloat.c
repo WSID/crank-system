@@ -3959,35 +3959,31 @@ crank_mat_float_n_get_tr (	CrankMatFloatN*	mat	)
 gfloat
 crank_mat_float_n_get_det (	CrankMatFloatN* mat	)
 {
-	if (mat->rn == mat->cn) {
-		CrankMatFloatN		l = {0};
-		CrankMatFloatN		u = {0};
-		CrankPermutation	p = {0};
+	CrankMatFloatN		l = {0};
+	CrankMatFloatN		u = {0};
+	CrankPermutation	p = {0};
 		
-		gfloat	det;
+	gfloat	det;
+	
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("MatFloatN", "det", mat, 0.0f);
 		
-		if (crank_lu_p_mat_float_n (mat, &p, &l, &u)) {
-			gint	sign = crank_permutation_get_sign (&p);
-			guint	i;
-			
-			det = sign;
-			
-			for (i = 0; i < mat->rn; i++) {
-				det *= crank_mat_float_n_get (&l, i, i);
-				det *= crank_mat_float_n_get (&u, i, i);
-			}
-			
-			crank_permutation_fini (&p);
-			crank_mat_float_n_fini (&l);
-			crank_mat_float_n_fini (&u);
+	if (crank_lu_p_mat_float_n (mat, &p, &l, &u)) {
+		gint	sign = crank_permutation_get_sign (&p);
+		guint	i;
+		
+		det = sign;
+		
+		for (i = 0; i < mat->rn; i++) {
+			det *= crank_mat_float_n_get (&l, i, i);
+			det *= crank_mat_float_n_get (&u, i, i);
 		}
 		
-		return det;
+		crank_permutation_fini (&p);
+		crank_mat_float_n_fini (&l);
+		crank_mat_float_n_fini (&u);
 	}
-	else {
-		g_warning ("MatFloatN: get_det: non square: %u, %u", mat->rn, mat->cn);
-		return 0.0f;
-	}
+	
+	return det;
 }
 
 /**
@@ -4001,20 +3997,15 @@ void
 crank_mat_float_n_get_diag (CrankMatFloatN*	mat,
 							CrankVecFloatN*	r	)
 {
-	if (crank_mat_float_n_is_square (mat)) {
-		guint	i;
-		
-		gfloat*	data = g_new (gfloat, mat->rn);
-		
-		for (i = 0; i < mat->rn; i++)
-			data[i] = crank_mat_float_n_get (mat, i, i);
-		
-		crank_vec_float_n_init_arr_take (r, mat->rn, data);
-	}
-	else {
-		g_warning ("MatFloatN: get_diag: non square: %u, %u", mat->rn, mat->cn);
-		crank_vec_float_n_fini (r);
-	}
+	guint	i;
+	
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "diag", mat);
+	gfloat*	data = g_new (gfloat, mat->rn);
+	
+	for (i = 0; i < mat->rn; i++)
+		data[i] = crank_mat_float_n_get (mat, i, i);
+	
+	crank_vec_float_n_init_arr_take (r, mat->rn, data);
 }
 
 /**
@@ -4043,6 +4034,7 @@ void
 crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 						  	CrankMatFloatN*	r	)
 {
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "diag", mat);
 	crank_mat_float_n_get_cof (mat, r);
   	crank_mat_float_n_transpose (r, r);
 }
@@ -4107,7 +4099,6 @@ crank_mat_float_n_transpose (	CrankMatFloatN*	a,
 	  	for (j = 0; j < a->cn; j++)
 	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
 
-	g_message ("%u, %u", a->cn, a->rn);
   	crank_mat_float_n_init_arr_take (r, a->cn, a->rn, data);
 }
 
@@ -4574,7 +4565,7 @@ crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
 	}
 	
 	else {
-		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
+		g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
 				a->rn, a->cn, p->n);
 	}
 }
@@ -4611,7 +4602,7 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 	}
 	
 	else {
-		g_warning ("MatFloatN: shuffle row: size mismatch: [%u, %u], %u",
+		g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
 				a->rn, a->cn, p->n);
 	}
 }

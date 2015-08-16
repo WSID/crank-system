@@ -159,12 +159,58 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 	} G_STMT_END
 
 
+
+/**
+ * CRANK_MAT_WARN_IF_SIZE_MISMATCH2:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized matrix item.
+ * @b: Variable sized matrix item.
+ *
+ * Warns and return if two matrices has different size.
+ */
 #define CRANK_MAT_WARN_IF_SIZE_MISMATCH2(t,op,a,b)							\
 	G_STMT_START { 															\
 		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn))) {		\
 			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u",				\
 						t, op, (a)->rn, (a)->cn, (b)->rn, (b)->cn	);		\
 			return; 														\
+		}																	\
+	} G_STMT_END
+
+
+/**
+ * CRANK_MAT_WARN_IF_NON_SQUARE:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized matrix item.
+ *
+ * Warns and return if the matrix is not square.
+ */
+#define CRANK_MAT_WARN_IF_NON_SQUARE(t,op,a)							\
+	G_STMT_START { 															\
+		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
+			g_warning ("%s: %s: non square: %ux%u",				\
+						t, op, (a)->rn, (a)->cn);		\
+			return; 														\
+		}																	\
+	} G_STMT_END
+
+/**
+ * CRANK_MAT_WARN_IF_NON_SQUARE_RET:
+ * @t: (type gchar*): Type name that operation takes places of.
+ * @op: (type gchar*): Operation name that checks size.
+ * @a: Variable sized matrix item.
+ * @r: Return value
+ *
+ * Warns and return if the matrix is not square.
+ */
+#define CRANK_MAT_WARN_IF_NON_SQUARE_RET(t,op,a,r)							\
+	G_STMT_START { 															\
+		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
+			g_warning ("%s: %s: non square: %ux%u",				\
+						t, op, (a)->rn, (a)->cn);		\
+			return (r); 														\
 		}																	\
 	} G_STMT_END
 

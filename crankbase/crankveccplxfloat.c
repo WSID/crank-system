@@ -1190,7 +1190,7 @@ crank_vec_cplx_float_n_cmpdiv	(	CrankVecCplxFloatN*	a,
 	guint	i;
 
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv", a, b);
-	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);		
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 	
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_div (a->data + i, b->data + i, r->data + i);
@@ -1209,6 +1209,7 @@ crank_vec_cplx_float_n_cmpmul_self	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul-self", a, b);
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_mul_self (a->data + i, b->data + i);
 }
@@ -1226,6 +1227,7 @@ crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv-self", a, b);
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_div_self (a->data + i, b->data + i);
 }
@@ -1287,6 +1289,7 @@ crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmulr-self", a, b);
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_mulr_self (a->data + i, b->data[i]);
 }
@@ -1304,6 +1307,7 @@ crank_vec_cplx_float_n_cmpdivr_self	(	CrankVecCplxFloatN*	a,
 {
 	guint	i;
 	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdivr-self", a, b);
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_divr_self (a->data + i, b->data[i]);
 }
@@ -1325,15 +1329,14 @@ crank_vec_cplx_float_n_cmpeq	(	CrankVecCplxFloatN*	a,
 									CrankVecCplxFloatN*	b,
 									CrankVecBoolN*	r	)
 {
-	if (a->n == b->n) {
-		guint	i;
-		
-		CRANK_VEC_ALLOC(r, gboolean, a->n);
 	
-		for (i = 0; i < a->n; i++)
-			r->data[i] = crank_cplx_float_equal (a->data + i, b->data + i);
-	}
-	else g_warning ("VecCplxFloatN: cmpeq: size mismatch: %u, %u", a->n, b->n);
+	guint	i;
+		
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpeq", a, b);
+	CRANK_VEC_ALLOC(r, gboolean, a->n);
+
+	for (i = 0; i < a->n; i++)
+		r->data[i] = crank_cplx_float_equal (a->data + i, b->data + i);
 }
 
 
@@ -1492,18 +1495,16 @@ crank_vec_cplx_float_n_mixs (	CrankVecCplxFloatN*	a,
 								const gfloat	c,
 								CrankVecCplxFloatN*	r	)
 {
-	if (a->n == b->n) {
-		guint	i;
-		gfloat d = 1.0f - c;
-		
-		CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+	guint	i;
+	gfloat d = 1.0f - c;
 	
-		for (i = 0; i < a->n; i++) {
-			r->data[i].real = a->data[i].real * d + b->data[i].real * c;
-			r->data[i].imag = a->data[i].imag * d + b->data[i].imag * c;
-		}
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "mix-scalar", a, b);
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+
+	for (i = 0; i < a->n; i++) {
+		r->data[i].real = a->data[i].real * d + b->data[i].real * c;
+		r->data[i].imag = a->data[i].imag * d + b->data[i].imag * c;
 	}
-	else g_warning ("VecCplxFloatN: min: size mismatch: %u, %u", a->n, b->n);
 }
 
 
@@ -1525,15 +1526,13 @@ crank_vec_cplx_float_n_mix (	CrankVecCplxFloatN*	a,
 								CrankVecFloatN*	c,
 								CrankVecCplxFloatN*	r	)
 {
-	if ((a->n == b->n) && (a->n == c->n)) {
-		gfloat	d;
-		guint	i;
-		
-		CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+	gfloat	d;
+	guint	i;	
 	
-		for (i = 0; i < a->n; i++) {
-			crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);
-		}
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH3 ("VecCplxFloatN", "mix-scalar", a, b, c);
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+
+	for (i = 0; i < a->n; i++) {
+		crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);
 	}
-	else g_warning ("VecCplxFloatN: min: size mismatch: %u, %u, %u", a->n, b->n, c->n);
 }

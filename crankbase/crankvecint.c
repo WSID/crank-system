@@ -3322,6 +3322,7 @@ crank_vec_int_n_max (	CrankVecIntN*	a,
 						CrankVecIntN*	r	)
 {
 	guint	i;
+	
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "max", a, b);
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
