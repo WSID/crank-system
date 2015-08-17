@@ -217,6 +217,7 @@ namespace Crank {
 		public CplxFloat.arr	([CCode (array_length=false)]float	parts[2]);
 		public CplxFloat.valist	(va_list	varargs);
 		public CplxFloat.fill	(float		fill);
+		public CplxFloat.polar	(float		norm,	float		arg);
 	
 		public float arg { get; }
 		public float norm { get; }

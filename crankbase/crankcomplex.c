@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
 #include "crankcomplex.h"
 #include "crankquaternion.h"
 
@@ -41,8 +42,8 @@
  *
  * Currently, only float complex type is provided.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ * <table><title>Supported Operations</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="0">
  *     <colspec colname="op" />
  *     <thead>
  *       <row>
@@ -51,46 +52,89 @@
  *       </row>
  *     </thead>
  *     <tbody>
+ *
  *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, array, valist, fill</entry>
- *       </row>
+ *         <entry morerows="3">Initialization</entry>
+ *            <entry>arguments</entry></row>
+ *       <row><entry>array</entry></row>
+ *       <row><entry>va_list</entry></row>
+ *       <row><entry>fill</entry></row>
+ *
  *       <row>
- *         <entry>Attributes</entry>
- *         <entry>arg, norm, norm_sq</entry>
- *       </row>
+ *         <entry morerows="4">Basic operations</entry>
+ *            <entry>hash</entry></row>
+ *       <row><entry>hash1</entry></row>
+ *       <row><entry>equal</entry></row>
+ *       <row><entry>to string</entry></row>
+ *       <row><entry>to string with format</entry></row>
+ *
  *       <row>
- *         <entry>Unary Operations</entry>
- *         <entry>Negate, Inverse, Conjugate, Unit</entry>
- *       </row>
+ *         <entry morerows="5">Classification</entry>
+ *            <entry>is zero</entry></row>
+ *       <row><entry>is one</entry></row>
+ *       <row><entry>is pure real</entry></row>
+ *       <row><entry>is pure imaginary</entry></row>
+ *       <row><entry>has nan</entry></row>
+ *       <row><entry>has infinity</entry></row>
+ *
  *       <row>
- *         <entry>Binary Operations with real values</entry>
- *         <entry>add, sub, mul, div</entry>
- *       </row>
+ *         <entry morerows="2">Attributes</entry>
+ *            <entry>arg</entry></row>
+ *       <row><entry>norm</entry></row>
+ *       <row><entry>norm_sq</entry></row>
+ *
  *       <row>
- *         <entry>Swapped Binary Operations with real values</entry>
- *         <entry>rsub, rdiv</entry>
- *       </row>
+ *         <entry morerows="3">Unary Operations</entry>
+ *            <entry>Negate(self)</entry></row>
+ *       <row><entry>Inverse(self)</entry></row>
+ *       <row><entry>Conjugate(self)</entry></row>
+ *       <row><entry>Unit(self)</entry></row>
+ *
  *       <row>
- *         <entry>Binary Operations with quaternions</entry>
- *         <entry>sub, mul</entry>
- *       </row>
+ *         <entry morerows="3">Binary Operations with real values</entry>
+ *            <entry>add(self)</entry></row>
+ *       <row><entry>sub(self)</entry></row>
+ *       <row><entry>mul(self)</entry></row>
+ *       <row><entry>div(self)</entry></row>
+ *
+ *       <row>
+ *         <entry morerows="1">Swapped Binary Operations with real values</entry>
+ *            <entry>rsub</entry></row>
+ *       <row><entry>rdiv</entry></row>
+ *
+ *       <row>
+ *         <entry morerows="3">Binary Operations with complex values</entry>
+ *            <entry>add(self)</entry></row>
+ *       <row><entry>sub(self)</entry></row>
+ *       <row><entry>mul(self)</entry></row>
+ *       <row><entry>div(self)</entry></row>
+ *
+ *       <row>
+ *         <entry morerows="1">Binary Operations with quaternions</entry>
+ *            <entry>sub</entry></row>
+ *       <row><entry>mul</entry></row>
+ *
  *       <row>
  *         <entry>Ternary Operations</entry>
- *         <entry>mix</entry>
- *       </row>
+ *            <entry>mix</entry></row>
+ *
  *       <row>
- *         <entry>Exponential</entry>
- *         <entry>ln, exp, pow</entry>
- *       </row>
+ *         <entry morerows="2">Exponential</entry>
+ *            <entry>ln</entry></row>
+ *       <row><entry>exp</entry></row>
+ *       <row><entry>pow</entry></row>
+ *
  *       <row>
- *         <entry>Hyperbolic</entry>
- *         <entry>sinh, cosh, tanh</entry>
- *       </row>
+ *         <entry morerows="2">Hyperbolic</entry>
+ *            <entry>sinh</entry></row>
+ *       <row><entry>cosh</entry></row>
+ *       <row><entry>tanh</entry></row>
+ *
  *       <row>
- *         <entry>Trigonometric</entry>
- *         <entry>sin, cos, tan</entry>
- *       </row>
+ *         <entry morerows="2">Trigonometric</entry>
+ *            <entry>sin</entry></row>
+ *       <row><entry>cos</entry></row>
+ *       <row><entry>tan</entry></row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -166,6 +210,31 @@ crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
 {
 	cplx->real = fill;
 	cplx->imag = fill;
+}
+
+/**
+ * crank_cplx_float_init_polar:
+ * @cplx: (out): A Complex to initialize.
+ * @norm: Norm of complex.
+ * @arg: Argument of complex.
+ *
+ * Initialize a complex by polar form.
+ */
+void
+crank_cplx_float_init_polar (	CrankCplxFloat* cplx,
+								const gfloat	norm,
+								const gfloat	arg	)
+{
+	if (norm == 0) {
+		// If we check norm to initialize 0 complex,
+		// we can prevent NaN propagating.
+		cplx->real = 0;
+		cplx->imag = 0;
+	}
+	else {
+		cplx->real = norm * cosf (arg);
+		cplx->imag = norm * sinf (arg);
+	}
 }
 
 //////// Basic Operations //////////////////////////////////////////////////////
@@ -253,17 +322,33 @@ crank_cplx_float_equal_delta (	CrankCplxFloat*	a,
  * Returns hash value of complex. This is useful when using Complex values
  * with #GHashTable.
  *
- * Returns: A hash value.s
+ * Returns: A hash value
  */
 guint
 crank_cplx_float_hash (		gconstpointer	a	)
 {
 	CrankCplxFloat*	ac = (CrankCplxFloat*)a;
 	
-	gdouble	r = ac->real;
-	gdouble i = ac->imag;
+	return	crank_float_hash (& ac->real) * 33 +
+			crank_float_hash (& ac->imag);
+}
+
+/**
+ * crank_cplx_float_hash1:
+ * @a: (type CrankCplxFloat): A Complex.
+ *
+ * Returns hash value of complex. This is useful when dealing with Complex value
+ * near 0.
+ *
+ * Returns: A hash value
+ */
+guint
+crank_cplx_float_hash1 (		gconstpointer	a	)
+{
+	CrankCplxFloat*	ac = (CrankCplxFloat*)a;
 	
-	return g_double_hash (&r) + g_double_hash (&i);
+	return	crank_float_hash1 (& ac->real) * 33 +
+			crank_float_hash1 (& ac->imag);
 }
 
 /**
@@ -302,7 +387,99 @@ gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
 	return g_strdup_printf (format, cplx->real, cplx->imag);
 }
 
-//////// Unary Operations //////////////////////////////////////////////////////
+//////// Attributes ////////////////////////////////////////////////////////////
+
+/**
+ * crank_cplx_float_is_zero:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex is zero.
+ *
+ * Returns: Whether "@cplx == 0".
+ */
+gboolean
+crank_cplx_float_is_zero (	CrankCplxFloat*	cplx	)
+{
+	return (cplx->real == 0) && (cplx->imag == 0);
+}
+
+/**
+ * crank_cplx_float_is_one:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex is one, which is "1 + 0i".
+ *
+ * Returns: Whether "@cplx == 1".
+ */
+gboolean
+crank_cplx_float_is_one (	CrankCplxFloat*	cplx	)
+{
+	return (cplx->real == 1) && (cplx->imag == 0);
+}
+
+/**
+ * crank_cplx_float_is_pure_real:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex is real value, and has 0 of imaginary part.
+ *
+ * Returns: Whether @cplx is real.
+ */
+gboolean
+crank_cplx_float_is_pure_real (	CrankCplxFloat*	cplx	)
+{
+	return (cplx->imag == 0);
+}
+
+/**
+ * crank_cplx_float_is_pure_imag:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex is pure imaginary value, and has 0 of real part.
+ *
+ * Returns: Whether @cplx is pure imaginary.
+ */
+gboolean
+crank_cplx_float_is_pure_imag (	CrankCplxFloat* cplx	)
+{
+	return (cplx->real == 0);
+}
+
+
+/**
+ * crank_cplx_float_has_nan:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex has NaN value. Sometimes NaN value propagates to both part
+ * of result, as (NaN) + (NaN)i.
+ *
+ * Individual part can be checked by <function>isnanf</function>.
+ *
+ * Returns: Whether @cplx has (NaN) in any part of it.
+ */
+gboolean
+crank_cplx_float_has_nan (	CrankCplxFloat*	cplx	)
+{
+	return isnanf (cplx->real) || isnanf (cplx->imag);
+}
+
+/**
+ * crank_cplx_float_has_inf:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex has infinite value. Sometimes infinite value propagates to
+ * both part of result, as ±(inf) ± (inf)i.
+ *
+ * Individual part can be checked by <function>isinff</function>.
+ *
+ * Returns: Whether @cplx has infinite in any part of it.
+ */
+gboolean
+crank_cplx_float_has_inf (	CrankCplxFloat*	cplx	)
+{
+	return isinff (cplx->real) || isinff (cplx->imag);
+}
+
 /**
  * crank_cplx_float_get_norm_sq:
  * @cplx: A Complex.
@@ -345,6 +522,8 @@ crank_cplx_float_get_arg (	CrankCplxFloat*	cplx	)
 	return atan2f (cplx->imag, cplx->real);
 }
 
+//////// Unary Operations //////////////////////////////////////////////////////
+
 /**
  * crank_cplx_float_conjugate:
  * @a: A Complex.
@@ -356,6 +535,8 @@ void
 crank_cplx_float_conjugate (	CrankCplxFloat*	a,
 								CrankCplxFloat*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->real = a->real;
 	r->imag = - a->imag;
 }
@@ -371,6 +552,8 @@ void
 crank_cplx_float_neg (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
+	g_return_if_fail (a != r);
+
 	r->real = - a->real;
 	r->imag = - a->imag;
 }
@@ -386,7 +569,11 @@ void
 crank_cplx_float_inverse (	CrankCplxFloat*	a,
 							CrankCplxFloat*	r	)
 {
-	gfloat norm_sq = crank_cplx_float_get_norm_sq (a);
+	gfloat	norm_sq;
+
+	g_return_if_fail (a != r);
+
+	norm_sq = crank_cplx_float_get_norm_sq (a);
 	
 	r->real = a->real / norm_sq;
 	r->imag = -a->imag / norm_sq;
@@ -403,7 +590,11 @@ void
 crank_cplx_float_unit (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
-	gfloat	norm = crank_cplx_float_get_norm (a);
+	gfloat	norm;
+	
+	g_return_if_fail (a != r);
+
+	norm = crank_cplx_float_get_norm (a);
 	
 	crank_cplx_float_divr (a, norm, r);
 }
@@ -472,13 +663,15 @@ crank_cplx_float_unit_self (	CrankCplxFloat*	a	)
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets a addition of complex and scalar.
+ * Gets a addition of complex and real.
  */
 void
 crank_cplx_float_addr (	CrankCplxFloat*	a,
 						gfloat			b,
 						CrankCplxFloat*	r		)
 {
+	g_return_if_fail (a != r);
+
 	r->real = a->real + b;
 	r->imag = a->imag;
 }
@@ -489,13 +682,15 @@ crank_cplx_float_addr (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets a subtration of complex by scalar.
+ * Gets a subtration of complex by real.
  */
 void
 crank_cplx_float_subr (	CrankCplxFloat*	a,
 						gfloat			b,
 						CrankCplxFloat*	r		)
 {
+	g_return_if_fail (a != r);
+
 	r->real = a->real - b;
 	r->imag = a->imag;
 }
@@ -506,13 +701,15 @@ crank_cplx_float_subr (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets a multiplication of complex by scalar.
+ * Gets a multiplication of complex by real.
  */
 void
 crank_cplx_float_mulr (	CrankCplxFloat*	a,
 						gfloat			b,
 						CrankCplxFloat*	r		)
 {
+	g_return_if_fail (a != r);
+
 	r->real = a->real * b;
 	r->imag = a->imag * b;
 }
@@ -523,13 +720,15 @@ crank_cplx_float_mulr (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets a division of complex by scalar.
+ * Gets a division of complex by real.
  */
 void
 crank_cplx_float_divr (	CrankCplxFloat*	a,
 						gfloat			b,
 						CrankCplxFloat*	r		)
 {
+	g_return_if_fail (a != r);
+
 	r->real = a->real / b;
 	r->imag = a->imag / b;
 }
@@ -542,7 +741,7 @@ crank_cplx_float_divr (	CrankCplxFloat*	a,
  * @a: A Complex.
  * @b: A real value.
  *
- * Applies a addition by scalar to a complex.
+ * Applies a addition by real to a complex.
  */
 void
 crank_cplx_float_addr_self (	CrankCplxFloat*	a,
@@ -556,7 +755,7 @@ crank_cplx_float_addr_self (	CrankCplxFloat*	a,
  * @a: A Complex.
  * @b: A real value.
  *
- * Applies a subtration by scalar to a complex.
+ * Applies a subtration by real to a complex.
  */
 void
 crank_cplx_float_subr_self (	CrankCplxFloat*	a,
@@ -570,7 +769,7 @@ crank_cplx_float_subr_self (	CrankCplxFloat*	a,
  * @a: A Complex.
  * @b: A real value.
  *
- * Applies a multiplication by scalar to a complex.
+ * Applies a multiplication by real to a complex.
  */
 void
 crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
@@ -585,7 +784,7 @@ crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
  * @a: A Complex.
  * @b: A real value.
  *
- * Applies a division by scalar to a complex.
+ * Applies a division by real to a complex.
  */
 void
 crank_cplx_float_divr_self (	CrankCplxFloat*	a,
@@ -603,13 +802,15 @@ crank_cplx_float_divr_self (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets subtraction of scalar by complex.
+ * Gets subtraction of real by complex.
  */
 void
 crank_cplx_float_rsubr (	CrankCplxFloat*	a,
 							gfloat			b,
 							CrankCplxFloat*	r		)
 {
+	g_return_if_fail (a != r);
+
 	r->real = b - a->real;
 	r->imag = - a->imag;
 }
@@ -620,20 +821,21 @@ crank_cplx_float_rsubr (	CrankCplxFloat*	a,
  * @b: A real value.
  * @r: (out): A Complex to store result.
  *
- * Gets division of scalar by complex.
+ * Gets division of real by complex.
  */
 void
 crank_cplx_float_rdivr (	CrankCplxFloat*	a,
 							gfloat			b,
 							CrankCplxFloat*	r		)
 {
-	gfloat	anorm_sq = crank_cplx_float_get_norm_sq (a);
+	gfloat	anorm_sq;
 	
-	gfloat nr = (b * a->real) / anorm_sq;
-	gfloat ni = (- b * a->imag) / anorm_sq;
+	g_return_if_fail (a != r);
+
+	anorm_sq = crank_cplx_float_get_norm_sq (a);
 	
-	r->real = nr;
-	r->imag = ni;
+	r->real = (b * a->real) / anorm_sq;
+	r->imag = (- b * a->imag) / anorm_sq;
 }
 
 //////// Cplx - Cplx Operations ////////////////////////////////////////////////
@@ -651,6 +853,9 @@ crank_cplx_float_add (	CrankCplxFloat*	a,
 						CrankCplxFloat*	b,
 						CrankCplxFloat*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->real = a->real + b->real;
 	r->imag = a->imag + b->imag;
 }
@@ -668,6 +873,9 @@ crank_cplx_float_sub (	CrankCplxFloat*	a,
 						CrankCplxFloat*	b,
 						CrankCplxFloat*	r	)
 {
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
 	r->real = a->real - b->real;
 	r->imag = a->imag - b->imag;
 }
@@ -685,10 +893,11 @@ crank_cplx_float_mul (	CrankCplxFloat*	a,
 						CrankCplxFloat*	b,
 						CrankCplxFloat*	r	)
 {
-	gfloat nr = a->real * b->real - a->imag * b->imag;
-	gfloat ni = a->real * b->imag + a->imag * b->real;
-	r->real = nr;
-	r->imag = ni;
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	r->real = a->real * b->real - a->imag * b->imag;
+	r->imag = a->real * b->imag + a->imag * b->real;
 }
 
 /**
@@ -704,13 +913,15 @@ crank_cplx_float_div (	CrankCplxFloat*	a,
 						CrankCplxFloat*	b,
 						CrankCplxFloat*	r	)
 {
-	gfloat	bnorm_sq = crank_cplx_float_get_norm_sq (b);
+	gfloat	bnorm_sq;
 	
-	gfloat nr = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
-	gfloat ni = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
 	
-	r->real = nr;
-	r->imag = ni;
+	bnorm_sq = crank_cplx_float_get_norm_sq (b);
+	
+	r->real = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
+	r->imag = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
 }
 
 
@@ -795,10 +1006,11 @@ crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
 							CrankCplxFloat*	b,
 							CrankCplxFloat*	r	)
 {
-	gfloat nr = a->real * b->real + a->imag * b->imag;
-	gfloat ni = - a->real * b->imag + a->imag * b->real;
-	r->real = nr;
-	r->imag = ni;
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	r->real = a->real * b->real + a->imag * b->imag;
+	r->imag = - a->real * b->imag + a->imag * b->real;
 }
 
 //////// Cplx - Quat Operations ////////////////////////////////////////////////
@@ -816,6 +1028,8 @@ crank_cplx_float_subq (	CrankCplxFloat*	a,
 						CrankQuatFloat*	b,
 						CrankQuatFloat*	r	)
 {
+	g_return_if_fail (b != r);
+
 	r->w = a->real - b->w;
 	r->x = a->imag - b->x;
 	r->y = - b->y;
@@ -837,6 +1051,8 @@ crank_cplx_float_mulq (	CrankCplxFloat*	a,
 						CrankQuatFloat*	b,
 						CrankQuatFloat*	r	)
 {
+	g_return_if_fail (b != r);
+
 	r->w = (a->real * b->w) - (a->imag * b->x);
 	r->x = (a->imag * b->w) + (a->real * b->x);
 	r->y = (a->real * b->y) - (a->imag * b->z);
@@ -850,7 +1066,7 @@ crank_cplx_float_mulq (	CrankCplxFloat*	a,
  * crank_cplx_float_mix:
  * @a: A Complex.
  * @b: A Complex.
- * @c: A scalar.
+ * @c: A real.
  * @r: (out): A Complex to store result.
  *
  * Gets a mixture of two complex.
@@ -861,7 +1077,12 @@ crank_cplx_float_mix (	CrankCplxFloat*	a,
 						gfloat			c,
 						CrankCplxFloat*	r	)
 {
-	gfloat	d = 1 - c;
+	gfloat	d;
+
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	d = 1 - c;
 	
 	r->real = a->real * d + b->real * c;
 	r->imag = a->imag * d + b->imag * c;
@@ -885,6 +1106,8 @@ crank_cplx_float_ln (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
 	gfloat	norm;
+
+	g_return_if_fail (a != r);
 	
 	norm = crank_cplx_float_get_norm (a);
 	
@@ -911,6 +1134,8 @@ void
 crank_cplx_float_exp (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
+	g_return_if_fail (a != r);
+	
 	if (a->real == - INFINITY) {
 		r->real = 0;
 		r->imag = 0;
@@ -918,8 +1143,7 @@ crank_cplx_float_exp (	CrankCplxFloat*	a,
 	else {
 		gfloat	norm = expf (a->real);
 		
-		r->real = norm * cosf (a->imag);
-		r->imag = norm * sinf (a->imag);
+		crank_cplx_float_init_polar (r, norm, a->imag);
 	}
 }
 
@@ -942,6 +1166,8 @@ crank_cplx_float_pow (	CrankCplxFloat*	a,
 	// nb := ln(a)
 	// nb :*= b
 	CrankCplxFloat	nb;
+	
+	g_return_if_fail (a != r);
 	
 	crank_cplx_float_ln (a, &nb);
 	crank_cplx_float_mul_self (&nb, b);
@@ -966,6 +1192,8 @@ crank_cplx_float_sinh (	CrankCplxFloat*	a,
 	CrankCplxFloat	e_p;
 	CrankCplxFloat	e_m;
 	
+	g_return_if_fail (a != r);
+	
 	crank_cplx_float_exp (a, &e_p);
 	crank_cplx_float_inverse (&e_p, &e_m);
 	
@@ -987,6 +1215,8 @@ crank_cplx_float_cosh (	CrankCplxFloat*	a,
 {
 	CrankCplxFloat	e_p;
 	CrankCplxFloat	e_m;
+	
+	g_return_if_fail (a != r);
 	
 	crank_cplx_float_exp (a, &e_p);
 	crank_cplx_float_inverse (&e_p, &e_m);
@@ -1010,6 +1240,8 @@ crank_cplx_float_tanh (	CrankCplxFloat*	a,
 	CrankCplxFloat	e_m;
 	CrankCplxFloat	divisor;
 	
+	g_return_if_fail (a != r);
+	
 	crank_cplx_float_exp (a, &e_p);
 	crank_cplx_float_inverse (&e_p, &e_m);
 	
@@ -1032,10 +1264,17 @@ void
 crank_cplx_float_sin (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
-	gfloat	sr	= sinf (a->real);
-	gfloat	cr	= cosf (a->real);
-	gfloat	shi	= sinhf (a->imag);
-	gfloat	chi	= coshf (a->imag);
+	gfloat	sr;
+	gfloat	cr;
+	gfloat	shi;
+	gfloat	chi;
+
+	g_return_if_fail (a != r);
+	
+	sr	= sinf (a->real);
+	cr	= cosf (a->real);
+	shi	= sinhf (a->imag);
+	chi	= coshf (a->imag);
 	
 	r->real =	(sr * chi);
 	r->imag =	(cr * shi);
@@ -1052,10 +1291,17 @@ void
 crank_cplx_float_cos (	CrankCplxFloat*	a,
 						CrankCplxFloat*	r	)
 {
-	gfloat	sr	= sinf (a->real);
-	gfloat	cr	= cosf (a->real);
-	gfloat	shi	= sinhf (a->imag);
-	gfloat	chi	= coshf (a->imag);
+	gfloat	sr;
+	gfloat	cr;
+	gfloat	shi;
+	gfloat	chi;
+
+	g_return_if_fail (a != r);
+	
+	sr	= sinf (a->real);
+	cr	= cosf (a->real);
+	shi	= sinhf (a->imag);
+	chi	= coshf (a->imag);
 	
 	r->real =	(cr * chi);
 	r->imag =	-(sr * shi);

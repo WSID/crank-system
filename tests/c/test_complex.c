@@ -160,10 +160,11 @@ static void
 test_neg ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_neg (&cplx, &cplx);
+	crank_cplx_float_neg (&cplx, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, -3.0f, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&r, -3.0f, -4.0f);
 }
 
 static void
@@ -174,90 +175,99 @@ test_inverse ( void )
 	//	1
 	
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_inverse (&cplx, &cplx);
+	crank_cplx_float_inverse (&cplx, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 0.12f, -0.16f);
+	crank_assert_eqcplxfloat_cimm(&r, 0.12f, -0.16f);
 }
 
 static void
 test_conjugate ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_conjugate (&cplx, &cplx);
+	crank_cplx_float_conjugate (&cplx, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 3.0f, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 3.0f, -4.0f);
 }
 
 static void
 test_unit ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_unit (&cplx, &cplx);
+	crank_cplx_float_unit (&cplx, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 0.6f, 0.8f);
+	crank_assert_eqcplxfloat_cimm(&r, 0.6f, 0.8f);
 }
 
 static void
 test_addr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_addr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_addr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 5.0f, 4.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 5.0f, 4.0f);
 }
 
 static void
 test_subr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_subr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_subr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 1.0f, 4.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 1.0f, 4.0f);
 }
 
 static void
 test_mulr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_mulr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_mulr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 6.0f, 8.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 6.0f, 8.0f);
 }
 
 static void
 test_divr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_divr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_divr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 1.5f, 2.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 1.5f, 2.0f);
 }
 
 static void
 test_rsubr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_rsubr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_rsubr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, -1.0f, -4.0f);
+	crank_assert_eqcplxfloat_cimm(&r, -1.0f, -4.0f);
 }
 
 static void
 test_rdivr ( void )
 {
 	CrankCplxFloat	cplx = {3.0f, 4.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_rdivr (&cplx, 2.0f, &cplx);
+	crank_cplx_float_rdivr (&cplx, 2.0f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&cplx, 0.24f, -0.32f);
+	crank_assert_eqcplxfloat_cimm(&r, 0.24f, -0.32f);
 }
 
 static void
@@ -265,10 +275,11 @@ test_add ( void )
 {
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_add (&a, &b, &a);
+	crank_cplx_float_add (&a, &b, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, 8.0f, 16.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 8.0f, 16.0f);
 }
 
 static void
@@ -276,10 +287,11 @@ test_sub ( void )
 {
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_sub (&a, &b, &a);
+	crank_cplx_float_sub (&a, &b, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, -2.0f, -8.0f);
+	crank_assert_eqcplxfloat_cimm(&r, -2.0f, -8.0f);
 }
 
 static void
@@ -291,10 +303,11 @@ test_mul ( void )
 	
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_mul (&a, &b, &a);
+	crank_cplx_float_mul (&a, &b, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, -33.0f, 56.0f);
+	crank_assert_eqcplxfloat_cimm(&r, -33.0f, 56.0f);
 }
 
 static void
@@ -316,10 +329,11 @@ test_div ( void )
 	
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_div (&a, &b, &a);
+	crank_cplx_float_div (&a, &b, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, 63.0f / 169.0f, -16.0f / 169.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 63.0f / 169.0f, -16.0f / 169.0f);
 }
 
 static void
@@ -331,10 +345,11 @@ test_mul_conj ( void )
 	
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_mul_conj (&a, &b, &a);
+	crank_cplx_float_mul_conj (&a, &b, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, 63.0f, -16.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 63.0f, -16.0f);
 }
 
 static void
@@ -342,10 +357,11 @@ test_mix ( void )
 {
 	CrankCplxFloat	a = {3.0f, 4.0f};
 	CrankCplxFloat	b = {5.0f, 12.0f};
+	CrankCplxFloat	r;
 	
-	crank_cplx_float_mix (&a, &b, 0.25f, &a);
+	crank_cplx_float_mix (&a, &b, 0.25f, &r);
 	
-	crank_assert_eqcplxfloat_cimm(&a, 3.5f, 6.0f);
+	crank_assert_eqcplxfloat_cimm(&r, 3.5f, 6.0f);
 }
 
 static void

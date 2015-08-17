@@ -92,17 +92,34 @@ gboolean	crank_cplx_float_equal_delta (	CrankCplxFloat*	a,
 										
 guint		crank_cplx_float_hash (			gconstpointer	a	);
 
+guint		crank_cplx_float_hash1 (		gconstpointer	a	);
+
 gchar*		crank_cplx_float_to_string (	CrankCplxFloat*	cplx	);
 
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
 											const gchar*	format	);
 
-//////// Unary Operations //////////////////////////////////////////////////////
+//////// Attributes ////////////////////////////////////////////////////////////
+
+gboolean	crank_cplx_float_is_zero (		CrankCplxFloat*	cplx	);
+
+gboolean	crank_cplx_float_is_one (		CrankCplxFloat*	cplx	);
+
+gboolean	crank_cplx_float_is_pure_real (	CrankCplxFloat*	cplx	);
+
+gboolean	crank_cplx_float_is_pure_imag (	CrankCplxFloat* cplx	);
+
+gboolean	crank_cplx_float_has_nan (		CrankCplxFloat*	cplx	);
+
+gboolean	crank_cplx_float_has_inf (		CrankCplxFloat*	cplx	);
+
 gfloat		crank_cplx_float_get_norm_sq (	CrankCplxFloat*	cplx	);
 
 gfloat		crank_cplx_float_get_norm (		CrankCplxFloat*	cplx	);
 
 gfloat		crank_cplx_float_get_arg (		CrankCplxFloat*	cplx	);
+
+//////// Unary Operations //////////////////////////////////////////////////////
 										
 void		crank_cplx_float_neg (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
