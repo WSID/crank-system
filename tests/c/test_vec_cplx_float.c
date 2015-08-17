@@ -97,7 +97,7 @@ test_accumulation (	CrankCplxFloat*	value,
 				   	gpointer		userdata	)
 {
 	CrankCplxFloat* subject = (CrankCplxFloat*) userdata;
-	crank_cplx_float_add (value, subject, subject);
+	crank_cplx_float_add_self (subject, value);
   	return TRUE;
 }
 
