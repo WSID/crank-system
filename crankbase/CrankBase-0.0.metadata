@@ -33,6 +33,9 @@ BoolPtrFunc		skip
 StrPtrFunc		skip
 EqualDeltaFunc	skip
 
+float_hash		skip
+float_hash1		skip
+
 bool_equal		skip
 uint_equal		skip
 float_equal		skip

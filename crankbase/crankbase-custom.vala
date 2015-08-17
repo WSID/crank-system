@@ -41,6 +41,9 @@ namespace Crank {
 												G		b,
 												float	d	);
 	
+	public GLib.HashFunc<float?>	float_hash;
+	public GLib.HashFunc<float?>	float_hash1;
+	
 	public GLib.EqualFunc<bool?>	bool_equal;
 	public GLib.EqualFunc<uint?>	uint_equal;
 	public GLib.EqualFunc<float?>	float_equal;

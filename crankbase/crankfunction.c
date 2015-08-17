@@ -64,7 +64,52 @@
  * * comparsion.
  * * stringify functions.
  */
- 
+
+/**
+ * crank_float_hash:
+ * @a: (type gfloat*): A Pointer pointing a float value.
+ *
+ * Hashs a float value that suitable for normal float values.
+ *
+ * Handles [%G_MININT, %G_MAXINT], with over 1 of distance between neighborhood.
+ *
+ * If value is less than %G_MININT, then hash will be %G_MININT value, and
+ * in case of greater than %G_MAXINT, hash will be %G_MAXINT.
+ *
+ * Returns: Hash of float values.
+ */
+guint
+crank_float_hash (	gconstpointer	a	)
+{
+	gfloat	fvalue = *(gfloat*)a;
+	gint 	ivalue = 	(fvalue < G_MININT) ? G_MININT :
+						(G_MAXINT < fvalue) ? G_MAXINT :
+						/*default*/			  (gint)fvalue;
+	
+	return (guint) ivalue;
+}
+
+/**
+ * crank_float_hash1:
+ * @a: (type gfloat*): A Pointer pointing a float value.
+ *
+ * Hashs a float value that suitable for float values that near 1 or 0.
+ *
+ * Current implementation just multiply by 1048576 on value and hashes.
+ *
+ * Returns: Hash of float values.
+ */
+guint
+crank_float_hash1 (	gconstpointer	a	)
+{
+	gfloat	fvalue = *(gfloat*)a * 1048576;
+	gint 	ivalue = 	(fvalue < G_MININT) ? G_MININT :
+						(G_MAXINT < fvalue) ? G_MAXINT :
+						/*default*/			  (gint)fvalue;
+	
+	return (guint) ivalue;
+}
+
 /**
  * crank_bool_equal:
  * @a: A Pointer pointing a boolean value.

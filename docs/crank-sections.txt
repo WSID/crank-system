@@ -41,6 +41,9 @@ CrankBoolPtrFunc
 CrankStrPtrFunc
 CrankEqualDeltaFunc
 
+crank_float_hash
+crank_float_hash1
+
 crank_bool_equal
 crank_uint_equal
 crank_float_equal

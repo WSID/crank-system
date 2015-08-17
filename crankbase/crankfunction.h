@@ -173,6 +173,11 @@ typedef gboolean	(*CrankEqualDeltaFunc) (	gconstpointer	a,
 												gconstpointer	b,
 												const gfloat	d	);
 												
+
+guint		crank_float_hash (			gconstpointer	a	);
+
+guint		crank_float_hash1 (			gconstpointer	a	);
+
 												
 gboolean	crank_bool_equal (			gconstpointer	a,
 										gconstpointer	b	);
