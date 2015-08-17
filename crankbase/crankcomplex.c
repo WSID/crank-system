@@ -79,9 +79,9 @@
  *
  *       <row>
  *         <entry morerows="2">Attributes</entry>
- *            <entry>arg</entry></row>
- *       <row><entry>norm</entry></row>
- *       <row><entry>norm_sq</entry></row>
+ *            <entry>arg: get</entry></row>
+ *       <row><entry>norm: get</entry></row>
+ *       <row><entry>norm_sq: get</entry></row>
  *
  *       <row>
  *         <entry morerows="3">Unary Operations</entry>
@@ -138,13 +138,43 @@
  *     </tbody>
  *   </tgroup>
  * </table>
+ *
+ * # GValue Transformation
+ *
+ * Transformations for complex types are available.
+ *
+ * <table><title>Transform types</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="0">
+ *     <colspec colname="op" />
+ *     <thead>
+ *       <row>
+ *         <entry>Type</entry>
+ *         <entry>Related function</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row><entry>from #gfloat</entry>
+ *            <entry>crank_cplx_float_init()</entry></row>
+ *
+ *       <row><entry morerows="1">to #gchar*</entry>
+ *            <entry>crank_cplx_to_string()</entry></row>
+ *       <row><entry>crank_cplx_to_string_full()</entry></row>
+ *
+ *       <row><entry>to #CrankQuatFloat</entry>
+ *            <entry>crank_quat_float_init_cplx()</entry></row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
 
 //////// GValue converters /////////////////////////////////////////////////////
 
-static void crank_cplx_float_transform_string (	const GValue*	src,
-												GValue*			dest	);
+static void crank_cplx_float_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_cplx_float_transform_from_float (	const GValue*	src,
+													GValue*			dest	);
 
 
 //////// Type function declaration /////////////////////////////////////////////
@@ -155,7 +185,10 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankCplxFloat,
 								g_free,
 	{
 		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
-				crank_cplx_float_transform_string	);
+				crank_cplx_float_transform_to_string	);
+
+		g_value_register_transform_func (G_TYPE_FLOAT, g_define_type_id,
+				crank_cplx_float_transform_from_float	);
 	}	);
 
 //////// Initialization ////////////////////////////////////////////////////////
@@ -1341,9 +1374,17 @@ crank_cplx_float_tan (	CrankCplxFloat*	a,
 //////// GValue Converter //////////////////////////////////////////////////////
 
 static void
-crank_cplx_float_transform_string (	const GValue*	src,
-									GValue*			dest	)
+crank_cplx_float_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
 {
 	CrankCplxFloat*	cplx = (CrankCplxFloat*) g_value_get_boxed (src);
 	g_value_take_string (dest, crank_cplx_float_to_string (cplx));
+}
+
+static void
+crank_cplx_float_transform_from_float (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankCplxFloat	cplx = {g_value_get_float (src), 0};
+	g_value_set_boxed (dest, &cplx);
 }
