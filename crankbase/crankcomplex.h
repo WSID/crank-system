@@ -105,6 +105,8 @@ gboolean	crank_cplx_float_is_zero (		CrankCplxFloat*	cplx	);
 
 gboolean	crank_cplx_float_is_one (		CrankCplxFloat*	cplx	);
 
+gboolean	crank_cplx_float_is_unit (		CrankCplxFloat*	cplx	);
+
 gboolean	crank_cplx_float_is_pure_real (	CrankCplxFloat*	cplx	);
 
 gboolean	crank_cplx_float_is_pure_imag (	CrankCplxFloat* cplx	);

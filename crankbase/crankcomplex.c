@@ -72,6 +72,7 @@
  *         <entry morerows="5">Classification</entry>
  *            <entry>is zero</entry></row>
  *       <row><entry>is one</entry></row>
+ *       <row><entry>is unit</entry></row>
  *       <row><entry>is pure real</entry></row>
  *       <row><entry>is pure imaginary</entry></row>
  *       <row><entry>has nan</entry></row>
@@ -458,6 +459,22 @@ gboolean
 crank_cplx_float_is_one (	CrankCplxFloat*	cplx	)
 {
 	return (cplx->real == 1) && (cplx->imag == 0);
+}
+
+/**
+ * crank_cplx_float_is_unit:
+ * @cplx: A Complex value.
+ *
+ * Checks the complex is unit complex, whose norm is 1.
+ *
+ * Returns: Whether "|@cplx| == 1".
+ */
+gboolean
+crank_cplx_float_is_unit (	CrankCplxFloat*	cplx	)
+{
+	gfloat	norm_sq =	crank_cplx_float_get_norm_sq (cplx);
+	
+	return (0.9999f <= norm_sq) && (norm_sq <= 1.0001f);
 }
 
 /**

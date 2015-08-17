@@ -355,6 +355,7 @@ crank_cplx_float_to_string
 crank_cplx_float_to_string_full
 crank_cplx_float_is_zero
 crank_cplx_float_is_one
+crank_cplx_float_is_unit
 crank_cplx_float_is_pure_real
 crank_cplx_float_is_pure_imag
 crank_cplx_float_has_nan
