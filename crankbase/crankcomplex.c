@@ -141,12 +141,22 @@
  */
 
 
+//////// GValue converters /////////////////////////////////////////////////////
+
+static void crank_cplx_float_transform_string (	const GValue*	src,
+												GValue*			dest	);
+
+
 //////// Type function declaration /////////////////////////////////////////////
 
-G_DEFINE_BOXED_TYPE (	CrankCplxFloat,
-						crank_cplx_float,
-						crank_cplx_float_dup,
-						g_free	);
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankCplxFloat,
+								crank_cplx_float,
+								crank_cplx_float_dup,
+								g_free,
+	{
+		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
+				crank_cplx_float_transform_string	);
+	}	);
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -1325,4 +1335,15 @@ crank_cplx_float_tan (	CrankCplxFloat*	a,
 	crank_cplx_float_cos (a, &c);
 	
 	crank_cplx_float_div (&s, &c, r);
+}
+
+
+//////// GValue Converter //////////////////////////////////////////////////////
+
+static void
+crank_cplx_float_transform_string (	const GValue*	src,
+									GValue*			dest	)
+{
+	CrankCplxFloat*	cplx = (CrankCplxFloat*) g_value_get_boxed (src);
+	g_value_take_string (dest, crank_cplx_float_to_string (cplx));
 }
