@@ -205,7 +205,10 @@
  *         <entry>From #CrankCplxFloat</entry><entry>crank_quat_float_init_cplx()</entry>
  *       </row>
  *       <row>
- *         <entry>To string.</entry><entry>crank_quat_float_to_string()</entry>
+ *         <entry morerows="1">To string</entry><entry>crank_quat_float_to_string()</entry>
+ *       </row>
+ *       <row>
+ *             <entry>crank_quat_float_to_string_full()</entry>
  *       </row>
  *     </tbody>
  *   </tgroup>
