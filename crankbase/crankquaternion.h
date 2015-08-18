@@ -112,11 +112,29 @@ gboolean	crank_quat_float_equal_delta (	CrankQuatFloat*	a,
 											const gfloat	d	);
 										
 guint		crank_quat_float_hash (			gconstpointer	a	);
+										
+guint		crank_quat_float_hash1 (		gconstpointer	a	);
 
 gchar*		crank_quat_float_to_string (	CrankQuatFloat*	quat	);
 
 gchar*		crank_quat_float_to_string_full (	CrankQuatFloat*	quat,
 												const gchar*	format	);
+												
+//////// Classification ////////////////////////////////////////////////////////
+
+gboolean	crank_quat_float_is_zero (		CrankQuatFloat* quat	);
+
+gboolean	crank_quat_float_is_one (		CrankQuatFloat* quat	);
+
+gboolean	crank_quat_float_is_unit (		CrankQuatFloat* quat	);
+
+gboolean	crank_quat_float_is_pure_real (	CrankQuatFloat* quat	);
+
+gboolean	crank_quat_float_is_pure_imag (	CrankQuatFloat* quat	);
+
+gboolean	crank_quat_float_has_nan (		CrankQuatFloat*	quat	);
+
+gboolean	crank_quat_float_has_inf (		CrankQuatFloat*	quat	);
 
 //////// Attributes ////////////////////////////////////////////////////////////
 
@@ -143,13 +161,13 @@ void		crank_quat_float_set_yz (		CrankQuatFloat*	quat,
 void		crank_quat_float_set_imag (		CrankQuatFloat*	quat,
 											CrankVecFloat3*	imag	);
 
-//////// Unary Operations //////////////////////////////////////////////////////
-
 gfloat		crank_quat_float_get_norm_sq (	CrankQuatFloat*	quat	);
 
 gfloat		crank_quat_float_get_norm (		CrankQuatFloat*	quat	);
 										
 void		crank_quat_float_neg (			CrankQuatFloat*	a,
+
+//////// Unary Operations //////////////////////////////////////////////////////
 											CrankQuatFloat*	r	);
 
 void		crank_quat_float_inverse (		CrankQuatFloat*	a,

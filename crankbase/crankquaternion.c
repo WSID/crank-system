@@ -38,46 +38,63 @@
  * @usability: unstable
  * @includes: crankbase.h
  *
- * A Crank System provides quaternions, for various purpose.
+ * A Crank System provides quaternions. A Quaternion consist of one real part
+ * and 3 imaginary parts.
+ *
+ * Quaternion is used mainly for representing rotations. See the descroption
+ * for detailed explaination.
  *
  * Currently, only float quaternion type is provided.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ * <table><title>Supported Operations</title>
+ *   <tgroup cols="3" align="left">
  *     <colspec colname="op" />
  *     <thead>
  *       <row>
  *         <entry>Operations</entry>
  *         <entry>Detailed</entry>
+ *         <entry>Remarks</entry>
  *       </row>
  *     </thead>
  *     <tbody>
  *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, complex arguments, array, valist, complex valist, fill, rotation</entry>
+ *         <entry morerows="7">Initialization</entry>
+ *            <entry>arguments</entry></row>
+ *       <row><entry>Complex arguments</entry></row>
+ *       <row><entry>array</entry></row>
+ *       <row><entry>valist</entry></row>
+ *       <row><entry>complex valist</entry></row>
+ *       <row><entry>fill</entry></row>
+ *       <row><entry>rotation</entry></row>
+ *       <row><entry>rotation imm</entry></row>
+ *
+ *       <row>
+ *         <entry morerows="2">Attributes</entry>
+ *              <entry>wx, yz, imag</entry><entry>get, set</entry></row>
+ *         <row><entry>norm, norm_sq</entry><entry>get</entry></row>
+ *         <row><entry>rangle, raxis</entry><entry>get</entry></row>
+ *
+ *       <row>
+ *         <entry morerows="3">Unary Operations</entry>
+ *            <entry>Negate</entry><entry>self</entry></row>
+ *       <row><entry>Inverse</entry><entry>self</entry></row>
+ *       <row><entry>Conjugate</entry><entry>self</entry></row>
+ *       <row><entry>Unit</entry><entry>self</entry></row>
+ *
+ *       <row>
+ *         <entry>Airthmetics with real values</entry>
+ *         <entry>add, sub, mul, div</entry><entry>self</entry></row>
+ *
+ *       <row>
+ *         <entry>Swapped airthmetics with real values</entry>
+ *         <entry>rsub, rdiv</entry></row>
+ *
+ *       <row>
+ *         <entry>Airthmetics with Complex values</entry>
+ *         <entry>add, sub, mul</entry><entry>self</entry>
  *       </row>
  *       <row>
- *         <entry>Attributes</entry>
- *         <entry>wx, yz, imag, norm, norm_sq, rangle, raxis</entry>
- *       </row>
- *       <row>
- *         <entry>Unary Operations</entry>
- *         <entry>Negate, Inverse, Conjugate, Unit</entry>
- *       </row>
- *       <row>
- *         <entry>Binary Operations with real values</entry>
- *         <entry>add, sub, mul, div</entry>
- *       </row>
- *       <row>
- *         <entry>Swapped Binary Operations with real values</entry>
- *         <entry>rsub, rdiv</entry>
- *       </row>
- *       <row>
- *         <entry>Binary Operations with Complex values</entry>
- *         <entry>add, sub, mul</entry>
- *       </row>
- *       <row>
- *         <entry>Binary Operations with Quaternion values</entry>
+ *         <entry>Airthmetics with Quaternion values</entry>
  *         <entry>add, sub, mul</entry>
  *       </row>
  *       <row>
@@ -96,30 +113,133 @@
  *   </tgroup>
  * </table>
  *
+ * # Breakage of commutative law of multiplication.
+ *
+ * Quaternion has 3 imaginary component defined like, breaking commutative law
+ * in multiplication.
+ *
+ * 1. i<superscript>2</superscript> = j<superscript>2</superscript> = k<superscript>2</superscript> = -1
+ * 2. ij = k, jk = i, ki = j
+ * 3. ji = -k, ik = -j, kj = -i
+ *
+ * As a result, multiplication of quaternion may has different result if
+ * multiplication position is swapped.
+ *
  * # Rotation Representation
  *
  * Quaternions are frequently used, for rotation representation. Quaternions has
  * advantages over other representations.
  *
- * <itemizedlist>
- *   <listitem>Reasonably compact (requires 4 floats)</listitem>
- *   <listitem>Simple calculations</listitem>
- *   <listitem>Gimbal-lock free</listitem>
- * </itemizedlist>
+ * * Reasonably compact (requires 4 floats)
+ * * Numerically stable
+ * * Gimbal lock free
+ *
+ * But it introduces some disadvantages too.
+ *
+ * * Complex rotation opreations.
  *
  * ## Condition to represent rotation.
- * In order to represent rotation, quaternion should be unit.
+ * In order to represent rotation, quaternions should be unit quaternions.
+ * You may use crank_quat_float_is_unit() to check it represents a rotation.
  *
- * For composited rotations, use crank_quat_float_mul().
+ *
+ * ## Initialize by rotation.
+ *
+ * Quaternion types has init_rot/init_rotimm initializer.
+ *
+ * See: crank_quat_float_init_rot(), crank_quat_float_init_rotimm()
+ *
+ *
+ * ## Getting rotation attributes.
+ *
+ * Quaterion types has rangle, raxis attributes. This is computed by.
+ *
+ * <programlisting>
+ *    w =   cos (rangle/2);
+ *    xyz = sin (rangle/2) * raxis;
+ *
+ *    rangle = acos (w) * 2;
+ *    raxis =  xyz.unit ();
+ * </programlisting>
+ *
+ * See: crank_quat_float_get_rangle(), crank_quat_float_get_raxis()
+ *
+ *
+ * ## Rotating a #CrankVecFloat3.
+ *
+ * Quaternion types has rotatev functions, which computes,
+ *
+ * <programlisting>
+ *    p.w = 0, p.xyz = (position)
+ *    
+ *    pr = (p rotated by q)
+ *       = q * p * q.conjugate()
+ * </programlisting>
+ *
+ * See: crank_quat_float_rotatev()
+ *
+ *
+ * ## Composited Rotations and inverted rotations.
+ * To composited rotations, you can multiply two quaternion, and cancel a rotation,
+ * inverse a quaternion.
+ *
+ * You may use crank_quat_float_mul() and crank_quat_float_inverse() for this
+ * purpose.
+ *
+ * # Conversion to other types.
+ *
+ * <table><title>Conversion of #CrankQuatFloat</title>
+ *   <tgroup cols="3">
+ *     <thead>
+ *       <row>
+ *         <entry>Type</entry>
+ *         <entry>Related Functions</entry>
+ *         <entry>Remarks</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row>
+ *         <entry>From #gfloat</entry><entry>crank_quat_float_init()</entry>
+ *       </row>
+ *       <row>
+ *         <entry>From #CrankCplxFloat</entry><entry>crank_quat_float_init_cplx()</entry>
+ *       </row>
+ *       <row>
+ *         <entry>To string.</entry><entry>crank_quat_float_to_string()</entry>
+ *       </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
+
+//////// GValue Converters /////////////////////////////////////////////////////
+
+static void	crank_quat_float_transform_from_gfloat (const GValue*	src,
+													GValue*			dest	);
+
+static void	crank_quat_float_transform_from_cplx_float (const GValue*	src,
+														GValue*			dest	);
+
+static void crank_quat_float_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
 
 
 //////// Type function declaration /////////////////////////////////////////////
 
-G_DEFINE_BOXED_TYPE (	CrankQuatFloat,
-						crank_quat_float,
-						crank_quat_float_dup,
-						g_free	);
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankQuatFloat,
+								crank_quat_float,
+								crank_quat_float_dup,
+								g_free,
+	{
+		g_value_register_transform_func (G_TYPE_FLOAT, g_define_type_id,
+				crank_quat_float_transform_from_gfloat);
+		
+		g_value_register_transform_func (CRANK_TYPE_CPLX_FLOAT, g_define_type_id,
+				crank_quat_float_transform_from_cplx_float);
+
+		g_value_register_transform_func	(g_define_type_id, G_TYPE_STRING,
+				crank_quat_float_transform_to_string);
+	}	);
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -331,16 +451,32 @@ crank_quat_float_hash (		gconstpointer	a	)
 {
 	CrankQuatFloat*	ac = (CrankQuatFloat*)a;
 	
-	gdouble	w = ac->w;
-	gdouble x = ac->x;
-	gdouble y = ac->y;
-	gdouble z = ac->z;
-	
-	return ( ( (g_double_hash (&w) * 33 +
-			     g_double_hash (&x)) * 33 +
-			      g_double_hash (&y)) * 33 +
-			       g_double_hash (&z));
+	return ( ( (crank_float_hash (& ac->w) * 33 +
+			     crank_float_hash (& ac->x)) * 33 +
+			      crank_float_hash (& ac->y)) * 33 +
+			       crank_float_hash (& ac->z));
 }
+
+/**
+ * crank_quat_float_hash1:
+ * @a: (type CrankQuatFloat): A Quaternion.
+ *
+ * Returns hash value of quaternion. This is useful when using Quaternion values
+ * near 0.
+ *
+ * Returns: A hash value.
+ */
+guint
+crank_quat_float_hash1 (		gconstpointer	a	)
+{
+	CrankQuatFloat*	ac = (CrankQuatFloat*)a;
+	
+	return ( ( (crank_float_hash1 (& ac->w) * 33 +
+			     crank_float_hash1 (& ac->x)) * 33 +
+			      crank_float_hash1 (& ac->y)) * 33 +
+			       crank_float_hash1 (& ac->z));
+}
+
 
 /**
  * crank_quat_float_to_string:
@@ -376,6 +512,120 @@ gchar*		crank_quat_float_to_string_full (	CrankQuatFloat*	quat,
 												const gchar*	format	)
 {
 	return g_strdup_printf (format, quat->w, quat->x, quat->y, quat->z);
+}
+
+												
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_quat_float_is_zero:
+ * @quat: A Quaternion.
+ *
+ * Checks the quaternion is zero.
+ *
+ * Returns: Whether "@quat == 0".
+ */
+gboolean
+crank_quat_float_is_zero (	CrankQuatFloat* quat	)
+{
+	return (quat->w == 0) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+}
+
+/**
+ * crank_quat_float_is_one:
+ * @quat: A Quaternion.
+ *
+ * Checks the quaternion is one.
+ *
+ * Returns: Whether "@quat == 1".
+ */
+gboolean
+crank_quat_float_is_one (	CrankQuatFloat* quat	)
+{
+	return (quat->w == 1) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+}
+
+/**
+ * crank_quat_float_is_unit:
+ * @quat: A Quaternion.
+ *
+ * Checks the quaternion is unit quaternion.
+ *
+ * Returns: Whether "|@quat| == 1".
+ */
+gboolean
+crank_quat_float_is_unit (	CrankQuatFloat* quat	)
+{
+	gfloat	norm_sq = crank_quat_float_get_norm_sq (quat);
+	return (0.9999f < norm_sq) && (norm_sq < 1.0001f);
+}
+
+/**
+ * crank_quat_float_is_pure_real:
+ * @quat: A Quaternion.
+ *
+ * Checks the quaternion is real value and has 0-vector as imaginary parts.
+ *
+ * Returns: Whether @quat represents real value.
+ */
+gboolean
+crank_quat_float_is_pure_real (	CrankQuatFloat* quat	)
+{
+	return (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+}
+
+/**
+ * crank_quat_float_is_pure_real:
+ * @quat: A Quaternion.
+ *
+ * Checks the quaternion is pure imaginary value and has 0 real part.
+ *
+ * Returns: Whether @quat is pure imaginary value.
+ */
+gboolean
+crank_quat_float_is_pure_imag (	CrankQuatFloat* quat	)
+{
+	return (quat->w == 0);
+}
+
+/**
+ * crank_quat_float_has_nan:
+ * @quat: A Complex value.
+ *
+ * Checks the complex has NaN value. Sometimes NaN value propagates to all 4
+ * parts of result, as (NaN) + (NaN)i + (NaN)j + (NaN)k.
+ *
+ * Individual part can be checked by <function>isnanf</function>.
+ *
+ * Returns: Whether @quat has (NaN) in any part of it.
+ */
+gboolean
+crank_quat_float_has_nan (	CrankQuatFloat*	quat	)
+{
+	return	isnanf(quat->w) &&
+			isnanf(quat->x) &&
+			isnanf(quat->y) &&
+			isnanf(quat->z);
+}
+
+/**
+ * crank_quat_float_has_inf:
+ * @quat: A Complex value.
+ *
+ * Checks the complex has NaN value. Sometimes infinite value propagates to all
+ * 4 parts of result, as ±(inf) ± (inf)i ± (inf)j ± (inf)k.
+ *
+ * Individual part can be checked by <function>isinff</function>.
+ *
+ * Returns: Whether @quat has (inf) in any part of it.
+ */
+gboolean
+crank_quat_float_has_inf (	CrankQuatFloat*	quat	)
+{
+	return	isinff(quat->w) &&
+			isinff(quat->x) &&
+			isinff(quat->y) &&
+			isinff(quat->z);
 }
 
 //////// Unary Operations //////////////////////////////////////////////////////
@@ -1296,4 +1546,38 @@ crank_quat_float_rotatev (	CrankQuatFloat*	quat,
 			2 * (xz - wy) *		vec->x +
 			2 * (wx + yz) *			vec->y +
 			(ww - xx - yy + zz) *	vec->z;
+}
+
+//////// GValue Conversion /////////////////////////////////////////////////////
+
+static void
+crank_quat_float_transform_from_gfloat (	const GValue*	src,
+											GValue*			dest	)
+{
+	CrankQuatFloat quat = {g_value_get_float (src), 0, 0, 0};
+	g_value_set_boxed (dest, &quat);
+}
+
+static void
+crank_quat_float_transform_from_cplx_float (	const GValue*	src,
+												GValue*			dest)
+{
+	CrankCplxFloat*	cplx;
+	CrankQuatFloat	quat;
+
+	cplx = (CrankCplxFloat*) g_value_get_boxed (src);
+	
+	crank_quat_float_init_cplx (&quat, cplx, NULL);
+	g_value_set_boxed (dest, &quat);
+}
+
+static void
+crank_quat_float_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankQuatFloat* quat;
+	
+	quat = (CrankQuatFloat*) g_value_get_boxed (src);
+	
+	g_value_take_string (dest, crank_quat_float_to_string (quat));
 }
