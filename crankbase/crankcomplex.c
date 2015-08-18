@@ -140,17 +140,16 @@
  *   </tgroup>
  * </table>
  *
- * # GValue Transformation
+ * # Conversion to other types
  *
- * Transformations for complex types are available.
- *
- * <table><title>Transform types</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="0">
+ * <table><title>Conversion of #CrankCplxFloat</title>
+ *   <tgroup cols="3" align="left" colsep="1" rowsep="0">
  *     <colspec colname="op" />
  *     <thead>
  *       <row>
  *         <entry>Type</entry>
- *         <entry>Related function</entry>
+ *         <entry>Related Functions</entry>
+ *         <entry>Remarks</entry>
  *       </row>
  *     </thead>
  *     <tbody>
@@ -158,11 +157,12 @@
  *            <entry>crank_cplx_float_init()</entry></row>
  *
  *       <row><entry morerows="1">to #gchar*</entry>
- *            <entry>crank_cplx_to_string()</entry></row>
- *       <row><entry>crank_cplx_to_string_full()</entry></row>
+ *            <entry>crank_cplx_float_to_string()</entry></row>
+ *       <row><entry>crank_cplx_float_to_string_full()</entry></row>
  *
  *       <row><entry>to #CrankQuatFloat</entry>
- *            <entry>crank_quat_float_init_cplx()</entry></row>
+ *            <entry>crank_quat_float_init_cplx()</entry>
+ *            <entry>Defined at #CrankQuatFloat</entry></row>
  *     </tbody>
  *   </tgroup>
  * </table>
