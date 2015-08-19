@@ -36,8 +36,8 @@
  * * Boolean vectors have logical operations while float ones have airthmetic operations
  * * Boolean vectors have any, all property while float ones have magnitude/norm.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
+ * <table><title>Supported Operations</title>
+ *   <tgroup cols="2" align="left">
  *     <colspec colname="op" />
  *     <thead>
  *       <row>
@@ -72,6 +72,95 @@
  * * I, J, K, L: Initialization list that one of element is %TRUE.
  *
  * Compared to bvec in GLSL.
+ *
+ * # Type Conversion.
+ * 
+ * Boolean vector types are seldomly used, but for convenience, it can be
+ * converted to numeric value type.
+ *
+ * For fixed-sized types, it can be converted to variadic sized vector types.
+ *
+ * <table><title>Type Conversion of #CrankVecBool2</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_bool2_to_string()</entry> </row>
+ *       <row> <entry>crank_vec_bool2_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecBoolN.</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>cast vector into array.
+ * 
+ *                    Defined in #CrankVecBoolN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecBool3</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_bool3_to_string()</entry> </row>
+ *       <row> <entry>crank_vec_bool3_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecBoolN.</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>cast vector into array.
+ * 
+ *                    Defined in #CrankVecBoolN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecBool4</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_bool4_to_string()</entry> </row>
+ *       <row> <entry>crank_vec_bool4_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecBoolN.</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>cast vector into array.
+ * 
+ *                    Defined in #CrankVecBoolN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecBoolN</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBool2</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecBool3</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecBool4</entry>
+ *             <entry>crank_vec_bool_n_init_arr()</entry>
+ *             <entry>Cast vector into array</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_bool_n_to_string()</entry> </row>
+ *       <row> <entry>crank_vec_bool_n_to_string_full()</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
 #include <stdarg.h>
@@ -85,7 +174,19 @@
 #include "crankveccommon.h"
 #include "crankvecbool.h"
 
-G_DEFINE_BOXED_TYPE (CrankVecBool2, crank_vec_bool2, crank_vec_bool2_dup, g_free)
+
+
+//////// GValue converter //////////////////////////////////////////////////////
+
+static void crank_vec_bool2_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankVecBool2, crank_vec_bool2, crank_vec_bool2_dup, g_free,
+	{
+		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
+				crank_vec_bool2_transform_to_string	);
+	}	)
 
 
 //////// Initialization ////////////////////////////////////////////////////////
@@ -602,11 +703,30 @@ crank_vec_bool2_notv (	CrankVecBool2*	a,
 	crank_vec_bool2_not (a, r);
 }
 
+//////// GValue conversions ////////////////////////////////////////////////////
+
+static void
+crank_vec_bool2_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool2*	vec = g_value_get_boxed (src);
+	g_value_take_string (dest, crank_vec_bool2_to_string (vec));
+}
 
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecBool3, crank_vec_bool3, crank_vec_bool3_dup, g_free)
+
+
+static void crank_vec_bool3_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankVecBool3, crank_vec_bool3, crank_vec_bool3_dup, g_free,
+	{
+		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
+				crank_vec_bool3_transform_to_string	);
+	}	)
 
 
 //////// Initialization ////////////////////////////////////////////////////////
@@ -1138,12 +1258,31 @@ crank_vec_bool3_notv (	CrankVecBool3*	a,
 	crank_vec_bool3_not (a, r);
 }
 
+//////// GValue conversions ////////////////////////////////////////////////////
+
+static void
+crank_vec_bool3_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool3*	vec = g_value_get_boxed (src);
+	g_value_take_string (dest, crank_vec_bool3_to_string (vec));
+}
 
 
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecBool4, crank_vec_bool4, crank_vec_bool4_dup, g_free)
+
+
+static void crank_vec_bool4_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankVecBool4, crank_vec_bool4, crank_vec_bool4_dup, g_free,
+	{
+		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
+				crank_vec_bool4_transform_to_string	);
+	}	)
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -1700,6 +1839,15 @@ crank_vec_bool4_equal	(	gconstpointer	a,
 			(veca->w == vecb->w);
 }
 
+//////// GValue conversions ////////////////////////////////////////////////////
+
+static void
+crank_vec_bool4_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool4*	vec = g_value_get_boxed (src);
+	g_value_take_string (dest, crank_vec_bool4_to_string (vec));
+}
 
 
 
@@ -1708,9 +1856,35 @@ crank_vec_bool4_equal	(	gconstpointer	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecBoolN, crank_vec_bool_n,
-		crank_vec_bool_n_dup,
-		crank_vec_bool_n_free)
+
+
+static void crank_vec_bool_n_transform_from_v2 (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_vec_bool_n_transform_from_v3 (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_vec_bool_n_transform_from_v4 (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_vec_bool_n_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankVecBoolN, crank_vec_bool_n, crank_vec_bool_n_dup, crank_vec_bool_n_free,
+	{
+		g_value_register_transform_func (CRANK_TYPE_VEC_BOOL2, g_define_type_id,
+				crank_vec_bool_n_transform_from_v2	);
+				
+		g_value_register_transform_func (CRANK_TYPE_VEC_BOOL3, g_define_type_id,
+				crank_vec_bool_n_transform_from_v3	);
+
+		g_value_register_transform_func (CRANK_TYPE_VEC_BOOL4, g_define_type_id,
+				crank_vec_bool_n_transform_from_v4	);
+				
+		g_value_register_transform_func (g_define_type_id, G_TYPE_STRING,
+				crank_vec_bool_n_transform_to_string	);
+	}	)
 
 //////// Initialization and finalization ///////////////////////////////////////
 
@@ -2474,4 +2648,47 @@ crank_vec_bool_n_notv (	CrankVecBoolN*	a,
 						CrankVecBoolN*	r	)
 {
 	crank_vec_bool_n_not (a, r);
+}
+
+//////// GValue conversions ////////////////////////////////////////////////////
+
+static void
+crank_vec_bool_n_transform_from_v2 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool2*	v2 = g_value_get_boxed (src);
+	CrankVecBoolN*	vec = g_new (CrankVecBoolN, 1);
+	
+	crank_vec_bool_n_init_arr (vec, 2, (gboolean*)v2);
+	g_value_take_boxed (dest, vec);
+}
+
+static void
+crank_vec_bool_n_transform_from_v3 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool3*	v3 = g_value_get_boxed (src);
+	CrankVecBoolN*	vec = g_new (CrankVecBoolN, 1);
+	
+	crank_vec_bool_n_init_arr (vec, 3, (gboolean*)v3);
+	g_value_take_boxed (dest, vec);
+}
+
+static void
+crank_vec_bool_n_transform_from_v4 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBool4*	v4 = g_value_get_boxed (src);
+	CrankVecBoolN*	vec = g_new (CrankVecBoolN, 1);
+	
+	crank_vec_bool_n_init_arr (vec, 4, (gboolean*)v4);
+	g_value_take_boxed (dest, vec);
+}
+
+static void
+crank_vec_bool_n_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecBoolN*	vec = g_value_get_boxed (src);
+	g_value_take_string (dest, crank_vec_bool_n_to_string (vec));
 }
