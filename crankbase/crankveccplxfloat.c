@@ -611,6 +611,152 @@ crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
 	return result;
 }
 
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_vec_cplx_float_n_is_zero:
+ * @vec: A Vector
+ *
+ * Checks whether the vector is "Zero Vector", whose all components are 0.
+ *
+ * Returns: Whether the vector has all components as 0.
+ */
+gboolean
+crank_vec_cplx_float_n_is_zero	(	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (! crank_cplx_float_is_zero (vec->data + i)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_cplx_float_n_is_one:
+ * @vec: A Vector.
+ *
+ * Check whether the vector has all components as 1.
+ *
+ * Returns: Whether the vector has all components as 1.
+ */
+gboolean
+crank_vec_cplx_float_n_is_one	(	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (! crank_cplx_float_is_one (vec->data + i)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_cplx_float_n_is_unit:
+ * @vec: A Vector.
+ *
+ * Check whether the vector is unit vector.
+ *
+ * Returns: whether the vector is unit vector.
+ */
+gboolean
+crank_vec_cplx_float_n_is_unit	(	CrankVecCplxFloatN*	vec	)
+{
+	gfloat magnsq = crank_vec_cplx_float_n_get_magn_sq (vec);
+	
+	return (0.9999f <= magnsq) && (1.0001f <= magnsq);
+}
+
+/**
+ * crank_vec_cplx_float_n_is_empty:
+ * @vec: A Vector.
+ *
+ * Checks whether the vector is empty vector.
+ *
+ * Returns: Whether the vector is empty.
+ */
+gboolean
+crank_vec_cplx_float_n_is_empty	(	CrankVecCplxFloatN*	vec	)
+{
+	return vec->n == 0;
+}
+
+/**
+ * crank_vec_cplx_float_n_is_pure_real:
+ * @vec: A Vector.
+ *
+ * Checks a vector is a real vector, whose all component has 0 imaginary part.
+ *
+ * Returns: Whether a vector is pure real.
+ */
+gboolean
+crank_vec_cplx_float_n_is_pure_real	(	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (! crank_cplx_float_is_pure_real (vec->data + i)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_cplx_float_n_is_pure_imag:
+ * @vec: A Vector.
+ *
+ * Checks a vector is a pure imaginary vector, whose all component has 0 real
+ * part.
+ *
+ * Returns: Whether a vector is pure imaginary.
+ */
+gboolean
+crank_vec_cplx_float_n_is_pure_imag	(	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (! crank_cplx_float_is_pure_imag (vec->data + i)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_cplx_float_n_has_nan:
+ * @vec: A Vector
+ *
+ * Check a vector has NaN in either real and imaginary part.
+ *
+ * Returns: Whether a vector has NaN.
+ */
+gboolean
+crank_vec_cplx_float_n_has_nan (	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (crank_cplx_float_has_nan (vec->data + i)) return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * crank_vec_cplx_float_n_has_inf:
+ * @vec: A Vector
+ *
+ * Check a vector has infinity in either real and imaginary part.
+ *
+ * Returns: Whether a vector has infinity.
+ */
+gboolean
+crank_vec_cplx_float_n_has_inf	(	CrankVecCplxFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (crank_cplx_float_has_inf (vec->data + i)) return TRUE;
+	}
+	return FALSE;
+}
 
 //////// Standard vector property ///////
 

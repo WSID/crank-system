@@ -806,6 +806,19 @@ gchar*			crank_vec_float_n_to_string_full (	CrankVecFloatN*	vec,
 												const gchar*	right,
 												const gchar*	format	);
 
+//////// Classification ////////////////////////////////////////////////////////
+
+gboolean		crank_vec_float_n_is_zero 			(	CrankVecFloatN*	vec	);
+
+gboolean		crank_vec_float_n_is_one 			(	CrankVecFloatN*	vec	);
+
+gboolean		crank_vec_float_n_is_unit 			(	CrankVecFloatN*	vec	);
+
+gboolean		crank_vec_float_n_is_empty 			(	CrankVecFloatN*	vec	);
+
+gboolean		crank_vec_float_n_has_nan 			(	CrankVecFloatN*	vec	);
+
+gboolean		crank_vec_float_n_has_inf			(	CrankVecFloatN*	vec	);
 
 //////// Standard vector property ///////
 

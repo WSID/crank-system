@@ -3279,6 +3279,114 @@ crank_vec_float_n_to_string_full (	CrankVecFloatN*	vec,
 }
 
 
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_vec_float_n_is_zero:
+ * @vec: A Vector
+ * 
+ * Checks whether the vector is "Zero Vector", whose all components are 0.
+ *
+ * Returns: Whether the vector is "zero vector".
+ */
+gboolean
+crank_vec_float_n_is_zero (	CrankVecFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (vec->data[i] != 0) return FALSE;
+	}
+	
+	return TRUE;
+}
+
+/**
+ * crank_vec_float_n_is_one:
+ * @vec: A Vector
+ * 
+ * Checks whether the vector has all components as 1.
+ *
+ * Returns: Whether the vector has all components as 1.
+ */
+gboolean
+crank_vec_float_n_is_one (	CrankVecFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (vec->data[i] != 1) return FALSE;
+	}
+	
+	return TRUE;
+}
+
+/**
+ * crank_vec_float_n_is_unit:
+ * @vec: A Vector
+ * 
+ * Checks whether the magnitude of vector is 1.
+ *
+ * Returns: Whether the magnitude of vector is 1.
+ */
+gboolean
+crank_vec_float_n_is_unit (	CrankVecFloatN*	vec	)
+{
+	gfloat	magnsq = crank_vec_float_n_get_magn_sq (vec);
+	
+	return (0.9999f <= magnsq) && (magnsq <= 1.0001f);
+}
+
+/**
+ * crank_vec_float_n_is_empty:
+ * @vec: A Vector
+ *
+ * Checks whether the vector is empty.
+ *
+ * Returns: Whether the vector is empty.
+ */
+gboolean
+crank_vec_float_n_is_empty ( CrankVecFloatN* vec	)
+{
+	return vec->n == 0;
+}
+
+/**
+ * crank_vec_float_n_has_nan:
+ *
+ * Chechks whether the vector has NaN.
+ *
+ * Returns: Whether the vector has NaN.
+ */
+gboolean
+crank_vec_float_n_has_nan ( CrankVecFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (isnanf (vec->data[i])) return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * crank_vec_float_n_has_inf:
+ *
+ * Chechks whether the vector has infinity.
+ *
+ * Returns: Whether the vector has (inf).
+ */
+gboolean
+crank_vec_float_n_has_inf ( CrankVecFloatN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (isinff (vec->data[i])) return TRUE;
+	}
+	return FALSE;
+}
+
 //////// Standard vector property ///////
 
 /**

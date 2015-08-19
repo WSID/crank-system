@@ -1973,6 +1973,59 @@ crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
 }
 
 
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_vec_bool_n_is_false:
+ * @vec: A Vector.
+ *
+ * Checks the vector is filled with %FALSE.
+ *
+ * Returns: Whether this is "false vector".
+ */
+gboolean
+crank_vec_bool_n_is_false (	CrankVecBoolN*	vec	)
+{
+	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
+		if (e) return FALSE;
+	CRANK_FOREACH_ARRAY_END
+	
+	return TRUE;
+}
+
+/**
+ * crank_vec_bool_n_is_true:
+ * @vec: A Vector.
+ *
+ * Checks the vector is filled with %TRUE.
+ *
+ * Returns: Whether this is "true vector".
+ */
+gboolean
+crank_vec_bool_n_is_true (	CrankVecBoolN*	vec	)
+{
+	CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
+		if (!e) return TRUE;
+	CRANK_FOREACH_ARRAY_END
+	
+	return FALSE;
+}
+
+/**
+ * crank_vec_bool_n_is_empty:
+ * @vec: A Vector.
+ *
+ * Checks the vector is empty.
+ *
+ * Returns: Whether this is empty.
+ */
+gboolean
+crank_vec_bool_n_is_empty	( CrankVecBoolN*	vec	)
+{
+	return vec->n == 0;
+}
+
+
 //////// Basic Properties //////////////////////////////////////////////////////
 
 

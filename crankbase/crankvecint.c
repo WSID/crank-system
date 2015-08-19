@@ -2976,6 +2976,60 @@ crank_vec_int_n_to_string_full (	CrankVecIntN*	vec,
 	return result;
 }
 
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_vec_int_n_is_zero:
+ * @vec: A Vector.
+ * 
+ * Checks whether the vector is "Zero vector", whose all components are 0.
+ *
+ * Returns: whether the vector is "zero vector".
+ */
+gboolean
+crank_vec_int_n_is_zero (	CrankVecIntN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (vec->data[i] != 0) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_int_n_is_one:
+ * @vec: A Vector.
+ * 
+ * Checks whether the vector has all components as 1. This kind of vectors are
+ * often identity in component-wise operations.
+ *
+ * Returns: whether the vector has all component as 1.
+ */
+gboolean
+crank_vec_int_n_is_one (	CrankVecIntN*	vec	)
+{
+	guint	i;
+	
+	for (i = 0; i < vec->n; i++) {
+		if (vec->data[i] != 1) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_vec_int_n_is_empty:
+ * @vec: A Vector.
+ * 
+ * Checks whether the vector is empty.
+ *
+ * Returns: whether the vector is empty.
+ */
+gboolean
+crank_vec_int_n_is_empty (	CrankVecIntN*	vec	)
+{
+	return vec->n == 0;
+}
 
 //////// Standard vector property ///////
 

@@ -587,6 +587,13 @@ gchar*			crank_vec_bool_n_to_string_full (CrankVecBoolN*	vec,
 												const gchar*	on_true,
 												const gchar* 	on_false	);
 
+//////// Classification ////////////////////////////////////////////////////////
+
+gboolean		crank_vec_bool_n_is_false (		CrankVecBoolN*	vec	);
+
+gboolean		crank_vec_bool_n_is_true (		CrankVecBoolN*	vec	);
+
+gboolean		crank_vec_bool_n_is_empty (		CrankVecBoolN*	vec );
 
 //////// Basic Properties //////////////////////////////////////////////////////
 

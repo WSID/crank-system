@@ -135,6 +135,25 @@ gchar*			crank_vec_cplx_float_n_to_string_full (	CrankVecCplxFloatN*	vec,
 														const gchar*	format	);
 
 
+//////// Classification ////////////////////////////////////////////////////////
+
+gboolean		crank_vec_cplx_float_n_is_zero			(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_is_one			(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_is_unit			(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_is_empty			(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_is_pure_real		(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_is_pure_imag		(	CrankVecCplxFloatN*	vec	);
+
+
+gboolean		crank_vec_cplx_float_n_has_nan			(	CrankVecCplxFloatN*	vec	);
+
+gboolean		crank_vec_cplx_float_n_has_inf			(	CrankVecCplxFloatN*	vec	);
+
 //////// Standard vector property ///////
 
 gfloat			crank_vec_cplx_float_n_get_magn_sq		(	CrankVecCplxFloatN*	vec	);

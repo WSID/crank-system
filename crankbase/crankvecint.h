@@ -747,6 +747,14 @@ gchar*			crank_vec_int_n_to_string_full (	CrankVecIntN*	vec,
 												const gchar*	right,
 												const gchar*	format	);
 
+//////// Classification ////////////////////////////////////////////////////////
+
+gboolean		crank_vec_int_n_is_zero 		(	CrankVecIntN*	vec	);
+
+gboolean		crank_vec_int_n_is_one			(	CrankVecIntN*	vec	);
+
+gboolean		crank_vec_int_n_is_empty		(	CrankVecIntN*	vec	);
+
 
 //////// Standard vector property ///////
 
