@@ -20,6 +20,7 @@
  */
 #define _CRANKBASE_INSIDE
 
+#include <math.h>
 #include <string.h>
 
 #include <glib.h>
@@ -4116,6 +4117,228 @@ crank_mat_float_n_slice (	CrankMatFloatN*	mat,
 	crank_mat_float_n_init_arr_take (r, rn, cn, data);
 }
 
+
+//////// Classification ////////////////////////////////////////////////////////
+
+/**
+ * crank_mat_float_n_is_square:
+ * @mat: A Matrix.
+ *
+ * Checks whether the matrix is square matrix.
+ *
+ * Returns: Whether the matrix is square matrix.
+ */
+gboolean
+crank_mat_float_n_is_square (	CrankMatFloatN*	mat	)
+{
+	return (mat->rn == mat->cn);
+}
+
+/**
+ * crank_mat_float_n_is_zero:
+ * @mat: A Matrix.
+ *
+ * Checks whether the matrix is zero matrix, whose all components are 0.
+ *
+ * Returns: Whether the matrix is zero matrix.
+ */
+gboolean
+crank_mat_float_n_is_zero (	CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint n;
+	
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (mat->data[i] != 0) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_is_identity:
+ * @mat: A Matrix
+ *
+ * Checks whether the matrix is identity matrix.
+ *
+ * A Identity matrix has its all diagonal components as 1, while rest components
+ * are 0.
+ *
+ * Returns: Whether the matrix is identity matrix.
+ */
+gboolean
+crank_mat_float_n_is_identity (	CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint j;
+	
+	if (! crank_mat_float_n_is_square (mat)) return FALSE;
+	
+	for (i = 0; i < mat->rn; i++)	for (j = 0; j < mat->cn; j++) {
+		if (crank_mat_float_n_get (mat, i, j) != (i == j ? 1 : 0)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_is_upper_tri:
+ * @mat: A Matrix.
+ *
+ * Checks whether the matrix is upper triangular matrix.
+ *
+ * In an upper triangular matrix, All component in lower part under diagonal are
+ * 0.
+ *
+ * Returns: Whether the matrix is upper triangular matrix.
+ */
+gboolean
+crank_mat_float_n_is_upper_tri (CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint j;
+	
+	if (! crank_mat_float_n_is_square (mat)) return FALSE;
+	
+	for (i = 1; i < mat->rn; i++)	for (j = 0; j < i; j++) {
+		if (crank_mat_float_n_get (mat, i, j) != 0) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_is_lower_tri:
+ * @mat: A Matrix.
+ *
+ * Checks whether the matrix is lower triangular matrix.
+ *
+ * In an lower triangular matrix, All component in upper part under diagonal are
+ * 0.
+ *
+ * Returns: Whether the matrix is lower triangular matrix.
+ */
+gboolean
+crank_mat_float_n_is_lower_tri (CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint j;
+	
+	if (! crank_mat_float_n_is_square (mat)) return FALSE;
+	
+	guint rne = mat->rn - 1;
+	for (i = 0; i < rne; i++)	for (j = i+1; j < mat->cn; j++) {
+		if (crank_mat_float_n_get (mat, i, j) != 0) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_is_diag:
+ * @mat: A Matrix.
+ *
+ * Checkes whether the matrix is diagonal matrix.
+ *
+ * A diagonal matrix has 0 as non-diagonal componenets.
+ *
+ * Returns: Whether the matrix is diagonal matrix.
+ */
+gboolean
+crank_mat_float_n_is_diag (		CrankMatFloatN* mat	)
+{
+	guint i;
+	guint rn1;
+	guint n;
+	
+	if (! crank_mat_float_n_is_square (mat)) return FALSE;
+	
+	rn1 = mat->rn + 1;
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (i % rn1 == 0) continue;
+		
+		if (mat->data[i] != 0) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_is_symmetry:
+ * @mat: A Matrix.
+ *
+ * Checks whether the matrix is symmetry matrix.
+ *
+ * A symmetry matrix is symmetry along its diagonal, thus its transpose is same
+ * to itself.
+ *
+ * Returns: Whether the matrix is symmetry matrix.
+ */
+gboolean
+crank_mat_float_n_is_symmetry ( CrankMatFloatN*	mat	)
+{
+	guint	i;
+	guint	j;
+	
+	if (! crank_mat_float_n_is_square (mat)) return FALSE;
+	
+	for (i = 0; i < mat->rn; i++)	for (j = i + 1; j < mat->cn; j++) {
+		if (	crank_mat_float_n_get (mat, i, j) !=
+				crank_mat_float_n_get (mat, j, i) )	return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_float_n_has_nan:
+ * @mat: A Matrix
+ * 
+ * Checks whether the matrix has NaN value.
+ *
+ * If matrix has NaN value, operations results in scalar NaN, or vector/matrices
+ * contain NaN values.
+ *
+ * Returns: Whether the matrix has NaN value.
+ */
+gboolean
+crank_mat_float_n_has_nan (		CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint n;
+	
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (isnanf (mat->data[i])) return FALSE;
+	}
+	return FALSE;
+}
+
+/**
+ * crank_mat_float_n_has_inf:
+ * @mat: A Matrix
+ * 
+ * Checks whether the matrix has infinity.
+ *
+ * If matrix has NaN value, operations results in scalar infinity, or vector/
+ * matrices contain infinity values.
+ *
+ * Returns: Whether the matrix has infinity.
+ */
+gboolean
+crank_mat_float_n_has_inf (		CrankMatFloatN*	mat	)
+{
+	guint i;
+	guint n;
+	
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (isinff (mat->data[i])) return FALSE;
+	}
+	return FALSE;
+}
+
+
 /**
  * crank_mat_float_n_get_tr:
  * @mat: A Matrix
@@ -4229,23 +4452,6 @@ crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "diag", mat);
 	crank_mat_float_n_get_cof (mat, r);
   	crank_mat_float_n_transpose (r, r);
-}
-
-/**
- * crank_mat_float_n_is_square:
- * @mat: A Matrix.
- *
- * Checks it is a square matrix.
- *
- * A Square matrix have trace, determinent.
- * And may have inverse matrix.
- *
- * Returns: Whether this is a square matrix.
- */
-gboolean
-crank_mat_float_n_is_square (	CrankMatFloatN*	a	)
-{
-	return (a->rn == a->cn);
 }
 
 /**

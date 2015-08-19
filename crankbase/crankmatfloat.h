@@ -915,10 +915,27 @@ void		crank_mat_float_n_slice (	CrankMatFloatN*	mat,
 										const guint		col_end,
 										CrankMatFloatN*	r		);
 
-
-//////// Property of matrices ////////
+//////// Classification ////////////////////////////////////////////////////////
 
 gboolean	crank_mat_float_n_is_square (	CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_is_zero (		CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_is_identity (	CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_is_upper_tri (CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_is_lower_tri (CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_is_diag (		CrankMatFloatN* mat	);
+
+gboolean	crank_mat_float_n_is_symmetry ( CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_has_nan (		CrankMatFloatN*	mat	);
+
+gboolean	crank_mat_float_n_has_inf (		CrankMatFloatN*	mat	);
+
+//////// Property of matrices ////////
 
 gfloat		crank_mat_float_n_get_tr (	CrankMatFloatN*	mat	);
 
