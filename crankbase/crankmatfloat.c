@@ -4444,14 +4444,43 @@ crank_mat_float_n_get_cof (	CrankMatFloatN*	mat,
  * @r: (out): A adjugate matrix.
  *
  * Gets a adjugate matrix.
+ *
+ * For variable sized matrix, this is calculated from inverse matrix.
  */
 void
 crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 						  	CrankMatFloatN*	r	)
 {
-	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "diag", mat);
-	crank_mat_float_n_get_cof (mat, r);
-  	crank_mat_float_n_transpose (r, r);
+	CrankMatFloatN	l;
+	CrankMatFloatN	u;
+	
+	CrankMatFloatN	linv;
+	CrankMatFloatN	uinv;
+	
+	guint			i;
+	gfloat			det = 1.0f;
+	
+	g_return_if_fail (mat != r);
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "adj", mat);
+	
+	crank_lu_mat_float_n (mat, &l, &u);
+	
+	crank_mat_float_n_lower_tri_invserse (&l, &linv);
+	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	
+	crank_mat_float_n_mul (&uinv, &linv, r);
+	
+	for (i = 0; i < mat->rn; i++) {
+		det *=	crank_mat_float_n_get (&l, i, i)
+			*	crank_mat_float_n_get (&u, i, i);
+	}
+	
+	crank_mat_float_n_muls_self (r, det);
+	
+	crank_mat_float_n_fini (&l);
+	crank_mat_float_n_fini (&u);
+	crank_mat_float_n_fini (&linv);
+	crank_mat_float_n_fini (&uinv);
 }
 
 /**

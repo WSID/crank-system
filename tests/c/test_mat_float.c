@@ -651,7 +651,27 @@ test_n_cof (void)
 static void
 test_n_adj (void)
 {
-  	g_test_skip ("Determinent for variable size matrix is in progress.");
+	CrankMatFloatN	a;
+	CrankMatFloatN	r;
+	
+	CrankVecFloatN	rv;
+	
+	crank_mat_float_n_init (&a, 5, 5,
+		4.0f, 3.0f, 2.0f, 1.0f, 4.0f,
+		3.0f, 4.0f, 3.0f, 2.0f, 1.0f,
+		2.0f, 3.0f, 4.0f, 3.0f, 2.0f,
+		1.0f, 2.0f, 3.0f, 4.0f, 3.0f,
+		4.0f, 1.0f, 2.0f, 3.0f, 4.0f	);
+	
+	crank_mat_float_n_get_adj (&a, &r);
+	
+	crank_mat_float_n_get_row (&r, 3, &rv);
+	
+	crank_assert_eq_vecfloat_n_imm (&rv, 40, -48, 64, -48, -24);
+	
+	crank_vec_float_n_fini (&rv);
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void

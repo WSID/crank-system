@@ -407,7 +407,18 @@ private void test_n_cof ()  {
 }
 
 private void test_n_adj ()  {
-	GLib.Test.skip ("");
+	Crank.MatFloatN a = Crank.MatFloatN.arr (
+		{{4.0f, 3.0f, 2.0f, 1.0f, 4.0f},
+		 {3.0f, 4.0f, 3.0f, 2.0f, 1.0f},
+		 {2.0f, 3.0f, 4.0f, 3.0f, 2.0f},
+		 {1.0f, 2.0f, 3.0f, 4.0f, 3.0f},
+		 {4.0f, 1.0f, 2.0f, 3.0f, 4.0f}} );
+	
+	Crank.MatFloatN r = a.adj;
+	
+	Crank.VecFloatN rv = r.get_row (3);
+	
+	Crank.assert_eq_vecfloat_n_imm (rv, 40, -48, 64, -48, -24);
 }
 
 private void test_n_neg () {
