@@ -377,9 +377,23 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat(a.get (2, 0), 3)
 		self.assertFloat(a.get (2, 1), 6)
 		
-	@unittest.skip ("Determinent for variable size matrix is in progress.")
 	def test_n_inverse (self):
-		pass
+		a = CrankBase.MatFloatN.init_arr (5, 5,
+				[4, 3, 2, 1, 4,
+				 3, 4, 3, 2, 1,
+				 2, 3, 4, 3, 2,
+				 1, 2, 3, 4, 3,
+				 4, 1, 2, 3, 4])
+
+		r = a.inverse ()
+		
+		rv = r.get_row (3)
+		
+		self.assertFloat (rv.get[0], -0.3125);
+		self.assertFloat (rv.get[1], 0.375);
+		self.assertFloat (rv.get[2], -0.5);
+		self.assertFloat (rv.get[3], 0.375);
+		self.assertFloat (rv.get[4], 0.1875);
 	
 	def test_n_muls (self):
 		a = CrankBase.MatFloatN.init_arr (2, 3,

@@ -88,6 +88,10 @@ static void		test_n_mix (void);
 static void		test_n_shuffle_row (void);
 static void		test_n_shuffle_col (void);
 
+static void		test_n_upper_tri_inverse (void);
+static void		test_n_lower_tri_inverse (void);
+static void 	test_n_diag_inverse (void);
+
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -141,6 +145,10 @@ gint	main (gint argc, gchar** argv)
   	
   	g_test_add_func ("/crank/base/mat/float/n/shuffle/row",	test_n_shuffle_row);
   	g_test_add_func ("/crank/base/mat/float/n/shuffle/col",	test_n_shuffle_col);
+  	
+  	g_test_add_func ("/crank/base/mat/float/n/supple/inverse/upper", test_n_upper_tri_inverse);  	
+  	g_test_add_func ("/crank/base/mat/float/n/supple/inverse/lower", test_n_lower_tri_inverse);
+  	g_test_add_func ("/crank/base/mat/float/n/supple/inverse/diag", test_n_diag_inverse);
 
   	g_test_run ();
   	return 0;
@@ -719,7 +727,27 @@ test_n_transpose (void)
 static void
 test_n_inverse (void)
 {
-	g_test_skip ("Determinent for variable size matrix is in progress.");
+	CrankMatFloatN	a;
+	CrankMatFloatN	r;
+	
+	CrankVecFloatN	rv;
+	
+	crank_mat_float_n_init (&a, 5, 5,
+		4.0f, 3.0f, 2.0f, 1.0f, 4.0f,
+		3.0f, 4.0f, 3.0f, 2.0f, 1.0f,
+		2.0f, 3.0f, 4.0f, 3.0f, 2.0f,
+		1.0f, 2.0f, 3.0f, 4.0f, 3.0f,
+		4.0f, 1.0f, 2.0f, 3.0f, 4.0f	);
+	
+	crank_mat_float_n_inverse (&a, &r);
+	
+	crank_mat_float_n_get_row (&r, 3, &rv);
+	
+	crank_assert_eq_vecfloat_n_imm (&rv, -0.3125f, 0.375f, -0.5f, 0.375f, 0.1875f);
+	
+	crank_vec_float_n_fini (&rv);
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&r);
 }
 
 static void
@@ -957,8 +985,6 @@ test_n_shuffle_row (void)
 	crank_permutation_init (&p, 4,
 		1, 3, 0, 2	);
 
-	g_message ("%s", crank_permutation_to_string (&p));
-
 	crank_mat_float_n_shuffle_row (&a, &p, &a);
 	
 	test_assert_float (a.data[0], 7.0f);
@@ -1000,4 +1026,79 @@ test_n_shuffle_col (void)
 
 	crank_mat_float_n_fini (&a);
 	crank_permutation_fini (&p);
+}
+
+static void
+test_n_upper_tri_inverse (void)
+{
+	CrankMatFloatN		a;
+	CrankMatFloatN		b;
+	CrankVecFloatN		r;
+	
+	crank_mat_float_n_init (&a, 5, 5,
+			4.0f, 4.0f, 2.0f, 1.0f, 1.0f,
+			0.0f, 4.0f, 4.0f, 2.0f, 1.0f,
+			0.0f, 0.0f, 4.0f, 4.0f, 2.0f,
+			0.0f, 0.0f, 0.0f, 4.0f, 4.0f,
+			0.0f, 0.0f, 0.0f, 0.0f, 4.0f	);
+
+	crank_mat_float_n_upper_tri_invserse (&a, &b);
+	
+	crank_mat_float_n_get_row (&b, 0, &r);
+	
+	crank_assert_eq_vecfloat_n_imm (&r, 0.25f, -0.25f, 0.125f, -0.0625f, 0.0f);
+	
+	crank_vec_float_n_fini (&r);
+	crank_mat_float_n_fini (&b);
+	crank_mat_float_n_fini (&a);
+}
+
+static void
+test_n_lower_tri_inverse (void)
+{
+	CrankMatFloatN		a;
+	CrankMatFloatN		b;
+	CrankVecFloatN		r;
+	
+	crank_mat_float_n_init (&a, 5, 5,
+			4.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+			4.0f, 4.0f, 0.0f, 0.0f, 0.0f,
+			2.0f, 4.0f, 4.0f, 0.0f, 0.0f,
+			1.0f, 2.0f, 4.0f, 4.0f, 0.0f,
+			1.0f, 1.0f, 2.0f, 4.0f, 4.0f	);
+
+	crank_mat_float_n_lower_tri_invserse (&a, &b);
+	
+	crank_mat_float_n_get_col (&b, 0, &r);
+	
+	crank_assert_eq_vecfloat_n_imm (&r, 0.25f, -0.25f, 0.125f, -0.0625f, 0.0f);
+	
+	crank_vec_float_n_fini (&r);
+	crank_mat_float_n_fini (&b);
+	crank_mat_float_n_fini (&a);
+}
+
+static void
+test_n_diag_inverse (void)
+{
+	CrankMatFloatN		a;
+	CrankMatFloatN		b;
+	CrankVecFloatN		r;
+	
+	crank_mat_float_n_init (&a, 5, 5,
+			4.0f, 4.0f, 2.0f, 1.0f, 1.0f,
+			0.0f, 4.0f, 4.0f, 2.0f, 1.0f,
+			0.0f, 0.0f, 4.0f, 4.0f, 2.0f,
+			0.0f, 0.0f, 0.0f, 4.0f, 4.0f,
+			0.0f, 0.0f, 0.0f, 0.0f, 4.0f	);
+
+	crank_mat_float_n_diag_invserse (&a, &b);
+	
+	crank_mat_float_n_get_diag (&b, &r);
+	
+	crank_assert_eq_vecfloat_n_imm (&r, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f);
+	
+	crank_vec_float_n_fini (&r);
+	crank_mat_float_n_fini (&b);
+	crank_mat_float_n_fini (&a);
 }

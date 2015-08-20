@@ -4507,13 +4507,33 @@ crank_mat_float_n_transpose (	CrankMatFloatN*	a,
  *
  * Gets an inverse of matrix.
  * If the matrix is singular, then NaN matrix may be returned.
+ *
+ * Current implementation make uses LU Decomposition.
  */
 void
 crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 						  	CrankMatFloatN*	r	)
 {
-  	g_warning ("Not Implemented function.");
-  	return;
+	CrankMatFloatN	l;
+	CrankMatFloatN	u;
+	
+	CrankMatFloatN	linv;
+	CrankMatFloatN	uinv;
+
+	g_return_if_fail (a != r);
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "inverse", a);
+	
+	crank_lu_mat_float_n (a, &l, &u);
+	
+	crank_mat_float_n_lower_tri_invserse (&l, &linv);
+	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	
+	crank_mat_float_n_mul (&uinv, &linv, r);
+	
+	crank_mat_float_n_fini (&l);
+	crank_mat_float_n_fini (&u);
+	crank_mat_float_n_fini (&linv);
+	crank_mat_float_n_fini (&uinv);
 }
 
 /**
@@ -4564,8 +4584,25 @@ crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
 void
 crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	)
 {
-  	g_warning ("Not Implemented function.");
-  	return;
+	CrankMatFloatN	l;
+	CrankMatFloatN	u;
+	
+	CrankMatFloatN	linv;
+	CrankMatFloatN	uinv;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "inverse", a);
+	
+	crank_lu_mat_float_n (a, &l, &u);
+	
+	crank_mat_float_n_lower_tri_invserse (&l, &linv);
+	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	
+	crank_mat_float_n_mul (&uinv, &linv, a);
+	
+	crank_mat_float_n_fini (&l);
+	crank_mat_float_n_fini (&u);
+	crank_mat_float_n_fini (&linv);
+	crank_mat_float_n_fini (&uinv);
 }
 
 /**
@@ -5015,5 +5052,117 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 	else {
 		g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
 				a->rn, a->cn, p->n);
+	}
+}
+
+
+//////// Supplement Operations /////////////////////////////////////////////////
+
+/**
+ * crank_mat_float_n_upper_tri_invserse:
+ * @a: A Matrix
+ * @r: (out): A Matrix.
+ *
+ * Calculates inverse of upper triangular components.
+ *
+ * This is used to calculating inverse with decompositions.
+ */
+void
+crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
+										CrankMatFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "upper-triangular-inverse", a);
+	
+	crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
+	
+	
+	// Initialize diagonal components.
+	for (i = 0; i < a->rn; i++) {
+		crank_mat_float_n_set (r, i, i,
+				1 / crank_mat_float_n_get (a, i, i));
+	}
+	
+	for (i = 1; i < a->rn; i++) {
+		for (j = 0; j < a->rn - i; j++) {
+			gfloat	sum = 0;
+			for (k = 1; k <= i; k++) {
+				sum +=	crank_mat_float_n_get (a, j, j + k) *
+						crank_mat_float_n_get (r, j + k, j + i);
+			}
+			crank_mat_float_n_set (r, j, j + i,
+					-sum / crank_mat_float_n_get (a, j, j));
+		}
+	}
+}
+
+
+/**
+ * crank_mat_float_n_lower_tri_invserse:
+ * @a: A Matrix
+ * @r: (out): A Matrix.
+ *
+ * Calculates inverse of lower triangular components.
+ *
+ * This is used to calculating inverse with decompositions.
+ */
+void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
+													CrankMatFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "lower-triangular-inverse", a);
+	
+	crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
+	
+	
+	// Initialize diagonal components.
+	for (i = 0; i < a->rn; i++) {
+		crank_mat_float_n_set (r, i, i,
+				1 / crank_mat_float_n_get (a, i, i));
+	}
+	
+	for (i = 1; i < a->rn; i++) {
+		for (j = 0; j < a->rn - i; j++) {
+			gfloat	sum = 0;
+			for (k = 1; k <= i; k++) {
+				sum +=	crank_mat_float_n_get (a, j + k, j) *
+						crank_mat_float_n_get (r, j + i, j + k);
+			}
+			crank_mat_float_n_set (r, j + i, j,
+					-sum / crank_mat_float_n_get (a, j, j));
+		}
+	}
+}
+
+
+/**
+ * crank_mat_float_n_diag_invserse:
+ * @a: A Matrix
+ * @r: (out): A Matrix.
+ *
+ * Calculates inverse of diagonal components.
+ *
+ * This is used to calculating inverse with decompositions.
+ */
+void
+crank_mat_float_n_diag_invserse (	CrankMatFloatN*	a,
+									CrankMatFloatN*	r	)
+{
+	guint	i;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "diag-inverse", a);
+	
+	crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
+	
+	// Initialize diagonal components.
+	for (i = 0; i < a->rn; i++) {
+		crank_mat_float_n_set (r, i, i,
+				1 / crank_mat_float_n_get (a, i, i));
 	}
 }

@@ -1034,6 +1034,18 @@ void		crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 											CrankPermutation*	p,
 											CrankMatFloatN*		r	);
 
+
+//////// Supplement Operations /////////////////////////////////////////////////
+
+void		crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
+													CrankMatFloatN*	r	);
+
+void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
+													CrankMatFloatN*	r	);
+
+void		crank_mat_float_n_diag_invserse (	CrankMatFloatN*	a,
+												CrankMatFloatN*	r	);
+
 G_END_DECLS
 
 #endif //CRANKMATFLOAT_H
