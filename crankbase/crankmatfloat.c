@@ -4434,8 +4434,8 @@ void
 crank_mat_float_n_get_cof (	CrankMatFloatN*	mat,
 						  	CrankMatFloatN*	r	)
 {
-  	g_warning ("Function not implemented.");
-  	return;
+	crank_mat_float_n_get_adj (mat, r);
+	crank_mat_float_n_transpose_self (r);
 }
 
 /**

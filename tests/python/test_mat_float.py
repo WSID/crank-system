@@ -323,9 +323,23 @@ class TestMatFloat(unittest.TestCase):
 
 		self.assertFloat (a.get_det (), -54)
 	
-	@unittest.skip ("Determinent for variable size matrix is in progress.")
 	def test_n_cof (self):
-		pass
+		a = CrankBase.MatFloatN.init_arr (5, 5,
+				[4, 3, 2, 1, 4,
+				 3, 4, 3, 2, 1,
+				 2, 3, 4, 3, 2,
+				 1, 2, 3, 4, 3,
+				 4, 1, 2, 3, 4])
+
+		r = a.get_cof ()
+		
+		rv = r.get_row (3)
+		
+		self.assertFloat (rv.get[0], 40);
+		self.assertFloat (rv.get[1], -48);
+		self.assertFloat (rv.get[2], 64);
+		self.assertFloat (rv.get[3], -48);
+		self.assertFloat (rv.get[4], -24);
 	
 	def test_n_adj (self):
 		a = CrankBase.MatFloatN.init_arr (5, 5,
