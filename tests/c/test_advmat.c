@@ -39,6 +39,10 @@ static void test_eval_power (void);
 
 static void test_eval_qr (void);
 
+static void	test_lu_cplx (void);
+
+static void test_gram_schmidt_cplx (void);
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -60,6 +64,10 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/eval/power/mat/float/n", test_eval_power);
 	
 	g_test_add_func ("/crank/base/advmat/eval/qr/mat/float/n", test_eval_qr);
+
+	g_test_add_func ("/crank/base/advmat/lu/mat/cplx/float/n", test_lu_cplx);
+
+	g_test_add_func ("/crank/base/advmat/qr/gram_schmidt/mat/cplx/float/n", test_gram_schmidt_cplx);
 	g_test_run ();
 
 	return 0;
@@ -307,4 +315,52 @@ test_eval_qr (void)
 	
 	crank_vec_float_n_fini (&b);
 	crank_mat_float_n_fini (&a);
+}
+
+
+
+
+static void
+test_lu_cplx (void)
+{
+	CrankMatCplxFloatN	a;
+  	CrankMatCplxFloatN	l;
+  	CrankMatCplxFloatN	u;
+  	
+  	CrankCplxFloat		v;
+
+  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
+		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
+		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
+
+	g_assert (crank_lu_mat_cplx_float_n (&a, &l, &u));
+
+	crank_mat_cplx_float_n_get (&l, 1, 0, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 6, 2);
+
+	crank_mat_cplx_float_n_get (&l, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 2, 5);
+
+	crank_mat_cplx_float_n_get (&l, 2, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 6, 0);
+
+	crank_mat_cplx_float_n_get (&u, 0, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 5, 5);
+
+	crank_mat_cplx_float_n_get (&u, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 1, 0);
+
+	crank_mat_cplx_float_n_get (&u, 1, 2, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 2, 5);
+
+	crank_mat_cplx_float_n_fini (&a);
+	crank_mat_cplx_float_n_fini (&l);
+	crank_mat_cplx_float_n_fini (&u);
+}
+
+static void
+test_gram_schmidt_cplx (void)
+{
+	g_test_skip ("QR Decomposition may result different by algorithm.");
 }

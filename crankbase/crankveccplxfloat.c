@@ -117,8 +117,7 @@ void
 crank_vec_cplx_float_n_init_arr_take (	CrankVecCplxFloatN*	vec,
 								 		const guint		n,
 								 		CrankCplxFloat*			arr	)
-{
-  	g_free (vec->data);
+{;
   	vec->n = n;
   	vec->data = arr;
 }

@@ -27,7 +27,9 @@
 #include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankvecfloat.h"
+#include "crankveccplxfloat.h"
 #include "crankmatfloat.h"
+#include "crankmatcplxfloat.h"
 #include "crankadvmat.h"
 
 /**
@@ -569,4 +571,270 @@ crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
 	crank_mat_float_n_fini (&ai);
 	crank_mat_float_n_fini (&qi);
 	crank_mat_float_n_fini (&ri);
+}
+
+
+/**
+ * crank_lu_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @l: (out): Lower triangular factor.
+ * @u: (out): Upper triangular factor.
+ *
+ * Try to get LU decomposition of @a.
+ *
+ * This implementation uses Crout's Method. So all diagonal elements of @u will
+ * be 1.
+ *
+ * Note that this does not perform pivoting. If pivoting is required, then use
+ * crank_lu_p_mat_cplx_float_n().
+ *
+ * Returns: Whether @a has LU Decomposition.
+ */
+gboolean
+crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+						  	CrankMatCplxFloatN*	l,
+						  	CrankMatCplxFloatN*	u	)
+{
+	guint	i;
+  	guint	j;
+  	guint	k;
+
+  	guint	n;
+  	
+  	static CrankCplxFloat	ZERO = {0, 0};
+  	static CrankCplxFloat	ONE = {1, 0};
+  	
+  	g_return_val_if_fail (a != l, FALSE);
+  	g_return_val_if_fail (a != u, FALSE);
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatCplxFloatN", "lu", a, FALSE);
+
+  	n = a->rn;
+
+  	if (n == 0) return TRUE;
+
+  	if (n == 1) {
+	  	if (! crank_cplx_float_is_zero (a->data)) {
+			crank_mat_cplx_float_n_init (l, 1, 1, a->data + 0);
+			crank_mat_cplx_float_n_init_cimm (u, 1, 1, 1.0f, 0.0f);
+		  	return TRUE;
+		}
+		// If a == [[0]] then a is singular and cannot be defactorized.
+		else return FALSE;
+	}
+
+	crank_mat_cplx_float_n_init_fill (l, n, n, &ZERO);
+	crank_mat_cplx_float_n_init_fill (u, n, n, &ZERO);
+	
+  	for (i = 0; i < n; i++) {
+	  	// l: column i
+		for (j = i; j < n; j++) {
+			CrankCplxFloat	sum = {0.0f, 0.0f};
+			CrankCplxFloat	lpart;
+			CrankCplxFloat	upart;
+			CrankCplxFloat	lupart;
+			CrankCplxFloat	apart;
+			
+			for (k = 0; k < i; k++) {
+				crank_mat_cplx_float_n_get (l, j, k, &lpart);
+				crank_mat_cplx_float_n_get (u, k, i, &upart);
+				
+				crank_cplx_float_mul (&lpart, &upart, &lupart);
+				crank_cplx_float_add_self (&sum, &lupart);
+			}
+			
+			crank_mat_cplx_float_n_get (a, j, i, &apart);
+			crank_cplx_float_sub_self (&apart, &sum);
+			crank_mat_cplx_float_n_set (l, j, i, &apart);
+			
+			g_message ("L[%u, %u] := %s", j, i, crank_cplx_float_to_string(&apart));
+		}
+
+
+		// u: row i
+		crank_mat_cplx_float_n_set (u, i, i, &ONE);
+	  	for (j = i + 1; j < n; j++) {
+			CrankCplxFloat	sum = {0.0f, 0.0f};
+			CrankCplxFloat	lpart;
+			CrankCplxFloat	upart;
+			CrankCplxFloat	lupart;
+			CrankCplxFloat	apart;
+			
+			CrankCplxFloat	ldpart;
+
+	  		crank_mat_cplx_float_n_get (l, i, i, &ldpart);
+
+			if (crank_cplx_float_is_zero (&ldpart)) {
+			  	crank_mat_cplx_float_n_fini (l);
+			  	crank_mat_cplx_float_n_fini (u);
+			  	return FALSE;
+			}
+
+	  		for (k = 0; k < i; k++) {
+	  			crank_mat_cplx_float_n_get (l, i, k, &lpart);
+	  			crank_mat_cplx_float_n_get (u, k, j, &upart);	
+	  			crank_cplx_float_mul (&lpart, &upart, &lupart);
+				crank_cplx_float_add_self (&sum, &lupart);
+			}
+			
+			crank_mat_cplx_float_n_get (a, i, j, &apart);
+			crank_cplx_float_sub_self (&apart, &sum);
+			crank_cplx_float_div_self (&apart, &ldpart);
+			crank_mat_cplx_float_n_set (u, i, j, &apart);
+			
+			g_message ("U[%u, %u] := %s", i, j, crank_cplx_float_to_string(&apart));
+		}
+	}
+
+  	return TRUE;
+}
+
+
+/**
+ * crank_lu_p_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @p: (out): Pivoting result.
+ * @l: (out): Lower triangular factor.
+ * @u: (out): Upper triangular factor.
+ *
+ * Try to get LU decomposition of @a, with pivoting.
+ *
+ * Sometimes, some matrices are not able to be factorized, even not being
+ * singular matrices. In this case, pivoting enables these matrices to be
+ * decomposited.
+ *
+ * Generally, the decompositions are expressed with permutation matrices, but
+ * in this function, the pivot result is returned as #CrankPermutation.
+ *
+ * For implementation detail, please see crank_lu_mat_float_n().
+ *
+ * Returns: Whether @a has LU Decomposition.
+ */
+gboolean
+crank_lu_p_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
+								CrankPermutation*		p,
+								CrankMatCplxFloatN*		l,
+								CrankMatCplxFloatN*		u	)
+{
+	guint				i;
+	guint				j;
+	CrankMatCplxFloatN	na;
+  	
+  	g_return_val_if_fail (a != l, FALSE);
+  	g_return_val_if_fail (a != u, FALSE);
+	
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatCplxFloatN", "lu-pivot", a, FALSE);
+	
+	// Do pivoting.
+	// Maximaze diagnoal component.
+	crank_permutation_init_identity (p, a->rn);
+	
+	for (i = 0; i < a->rn; i++) {
+		CrankCplxFloat	max;
+		gfloat			max_normsq;
+		guint			max_index = i;
+
+		crank_mat_cplx_float_n_get (a,	crank_permutation_get (p, i), i, &max);
+		max_normsq = crank_cplx_float_get_norm_sq (&max);
+				
+		for (j = i + 1; j < a->rn; j++) {
+			CrankCplxFloat	cur;
+			gfloat			cur_normsq;
+			
+			crank_mat_cplx_float_n_get (a, 	crank_permutation_get (p, j), i, &cur);
+			cur_normsq = crank_cplx_float_get_norm_sq (&cur);
+			if (max_normsq < cur_normsq) {
+				max_index = j;
+				max_normsq = cur_normsq;
+			}
+		}
+	
+		crank_permutation_swap (p, i, max_index);
+	}
+	
+	// Do LU Decomposition.
+	crank_mat_cplx_float_n_shuffle_row (a, p, &na);
+	return crank_lu_mat_cplx_float_n (&na, l, u);
+}
+
+/**
+ * crank_gram_schmidt_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @q: (out): A Resulting Orthogonal Matrix.
+ * @r: (out): The upper triangular.
+ *
+ * Gets QR Decomposition by Gram Schmidt process.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
+										CrankMatCplxFloatN*		q,
+										CrankMatCplxFloatN*		r	)
+{
+	CrankVecCplxFloatN*		e;
+	
+	static CrankCplxFloat	ZERO = {0.0f, 0.0f};
+	static CrankCplxFloat	ONE = {1.0f, 0.0f};
+	
+	guint	i;
+	guint	j;
+	guint	k;
+	
+	g_return_val_if_fail (a != q, FALSE);
+	g_return_val_if_fail (a != r, FALSE);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatCplxFloatN", "gram-schmidt", a, FALSE);
+	
+	e = g_new (CrankVecCplxFloatN, a->rn);
+	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+	
+	for (i = 0; i < a->rn; i++) {
+		CrankVecCplxFloatN	ac;
+		CrankVecCplxFloatN	u;
+		CrankCplxFloat		ii;
+		
+		// u = a.col[i]
+		crank_mat_cplx_float_n_get_col (a, i, &ac);
+		crank_vec_cplx_float_n_copy (&ac, &u);
+	
+		// u -= proj(a.col[i], e[0..(i-1)])
+		// r = a.col[i] dot e
+		for (j = 0; j < i; j++) {
+			CrankVecCplxFloatN	proj;
+			CrankCplxFloat		dot;
+			crank_vec_cplx_float_n_dot (&ac, e + j, &dot);
+			
+			// If QR decomposition is not possible, return.
+			if (crank_cplx_float_is_zero (&dot)) {
+				for (k = 0; k < i; k++) crank_vec_cplx_float_n_fini (e + k);
+				g_free (e);
+				crank_vec_cplx_float_n_fini (&ac);
+				crank_vec_cplx_float_n_fini (&u);
+				crank_mat_cplx_float_n_fini (q);
+				crank_mat_cplx_float_n_fini (r);
+				return FALSE;
+			}
+			
+			crank_vec_cplx_float_n_muls (e + j, &dot, &proj);
+			
+			crank_vec_cplx_float_n_sub_self (&u, &proj);
+			crank_mat_cplx_float_n_set (r, j, i, &dot);
+		}
+	
+		// e[i] = u.unit
+		
+		crank_cplx_float_init (&ii, crank_vec_cplx_float_n_get_magn (&u), 0);
+		crank_mat_cplx_float_n_set (r, i, i, &ii);
+		crank_vec_cplx_float_n_unit (&u, e + i);
+		crank_vec_cplx_float_n_fini (&u);
+	}
+
+	crank_mat_cplx_float_n_init_cvarr (q, a->rn, e);
+
+	for (i = 0; i < a->rn; i++) {
+		crank_vec_cplx_float_n_fini (e + i);
+	}
+	g_free (e);
+	
+	return TRUE;
 }

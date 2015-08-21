@@ -62,6 +62,20 @@ gfloat		crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 void		crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
 										CrankVecFloatN*	evals	);
 
+
+gboolean	crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+										CrankMatCplxFloatN*	l,
+										CrankMatCplxFloatN*	u	);
+
+gboolean	crank_lu_p_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+											CrankPermutation*	p,
+											CrankMatCplxFloatN*	l,
+											CrankMatCplxFloatN*	u	);
+
+gboolean	crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+													CrankMatCplxFloatN*	q,
+													CrankMatCplxFloatN*	r	);
+
 G_END_DECLS
 
 #endif /* CRANKADVMAT_H */

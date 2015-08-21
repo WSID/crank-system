@@ -1401,6 +1401,9 @@ crank_mat_float_n_mixs
 crank_mat_float_n_mix
 crank_mat_float_n_shuffle_row
 crank_mat_float_n_shuffle_col
+crank_mat_float_n_diag_invserse
+crank_mat_float_n_lower_tri_invserse
+crank_mat_float_n_upper_tri_invserse
 <SUBSECTION Standard>
 CRANK_TYPE_MAT_FLOAT2
 CRANK_TYPE_MAT_FLOAT3
@@ -1606,6 +1609,8 @@ crank_qr_householder_mat_float_n
 crank_qr_givens_mat_float_n
 crank_eval_power_mat_float_n
 crank_eval_qr_mat_float_n
+crank_lu_mat_cplx_float_n
+crank_lu_p_mat_cplx_float_n
 </SECTION>
 
 <SECTION>
