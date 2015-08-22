@@ -43,6 +43,10 @@ static void	test_lu_cplx (void);
 
 static void test_gram_schmidt_cplx (void);
 
+static void test_qr_householder_cplx (void);
+
+static void test_qr_givens_cplx (void);
+
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -68,6 +72,10 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/lu/mat/cplx/float/n", test_lu_cplx);
 
 	g_test_add_func ("/crank/base/advmat/qr/gram_schmidt/mat/cplx/float/n", test_gram_schmidt_cplx);
+
+	g_test_add_func ("/crank/base/advmat/qr/householder/mat/cplx/float/n", test_qr_householder_cplx);
+
+	g_test_add_func ("/crank/base/advmat/qr/givens/mat/cplx/float/n", test_qr_givens_cplx);
 	g_test_run ();
 
 	return 0;
@@ -362,5 +370,94 @@ test_lu_cplx (void)
 static void
 test_gram_schmidt_cplx (void)
 {
-	g_test_skip ("QR Decomposition may result different by algorithm.");
+	CrankMatCplxFloatN	a;
+  	CrankMatCplxFloatN	q;
+  	CrankMatCplxFloatN	r;
+  	
+  	CrankCplxFloat		v;
+
+  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
+		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
+		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
+
+	g_assert (crank_gram_schmidt_mat_cplx_float_n (&a, &q, &r));
+
+	crank_mat_cplx_float_n_get (&q, 1, 0, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 0.8402f, 0.2801f);
+
+	crank_mat_cplx_float_n_get (&q, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 0.0284f, 0.2584f);
+
+	crank_mat_cplx_float_n_get (&q, 2, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 0.9258f, -0.0625f);
+
+	crank_mat_cplx_float_n_get (&r, 0, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 2, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+
+	crank_mat_cplx_float_n_fini (&a);
+	crank_mat_cplx_float_n_fini (&q);
+	crank_mat_cplx_float_n_fini (&r);
+}
+
+static void
+test_qr_householder_cplx (void)
+{
+	CrankMatCplxFloatN	a;
+  	CrankMatCplxFloatN	r;
+  	
+  	CrankCplxFloat		v;
+
+  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
+		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
+		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
+
+	g_assert (crank_qr_householder_mat_cplx_float_n (&a, &r));
+
+	crank_mat_cplx_float_n_get (&r, 0, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 2, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+
+	crank_mat_cplx_float_n_fini (&a);
+	crank_mat_cplx_float_n_fini (&r);
+}
+
+static void
+test_qr_givens_cplx (void)
+{
+	CrankMatCplxFloatN	a;
+  	CrankMatCplxFloatN	r;
+  	
+  	CrankCplxFloat		v;
+
+  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
+		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
+		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
+
+	g_assert (crank_qr_givens_mat_cplx_float_n (&a, &r));
+
+	crank_mat_cplx_float_n_get (&r, 0, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 1, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+
+	crank_mat_cplx_float_n_get (&r, 1, 2, &v);
+	crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+
+	crank_mat_cplx_float_n_fini (&a);
+	crank_mat_cplx_float_n_fini (&r);
 }

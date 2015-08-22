@@ -21,6 +21,8 @@
 
 #define _CRANKBASE_INSIDE
 
+#include <math.h>
+
 #include <glib.h>
 #include <glib-object.h>
 
@@ -838,3 +840,225 @@ crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
 	
 	return TRUE;
 }
+
+/**
+ * crank_qr_householder_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @r: (out): A Lower triangular matrix.
+ *
+ * Performs QR Decomposition by householder method.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_qr_householder_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+										CrankMatCplxFloatN*	r	)
+{
+	guint			i;
+	guint			j;
+	guint			k;
+	
+	CrankMatCplxFloatN	pa = {0};
+	CrankMatCplxFloatN	qi = {0};
+	CrankMatCplxFloatN	qpai = {0};
+	CrankCplxFloat		ancomp;
+	
+	static CrankCplxFloat	ZERO = {0.0f, 0.0f};
+	static CrankCplxFloat	ONE = {1.0f, 0.0f};
+	
+	
+	g_return_val_if_fail (a != r, FALSE);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatCplxFloatN", "qr-householder", a, FALSE);
+	
+	if (a->rn == 1) {
+		crank_mat_cplx_float_n_init (r, 1, 1, &ZERO);
+		return TRUE;
+	}
+
+
+	// Setup initial state.
+	crank_mat_cplx_float_n_copy (a, &pa);
+	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+	
+	for (i = 0; i < a->rn - 1; i++) {
+		CrankVecCplxFloatN	an;
+		CrankVecCplxFloatN	u;
+		CrankCplxFloat		factor;
+		CrankCplxFloat		factor_a;
+		CrankCplxFloat		factor_b;
+	
+		// Initialize an
+		crank_mat_cplx_float_n_get_col (&pa, 0, &an);
+		crank_vec_cplx_float_n_copy (&an, &u);
+
+		crank_vec_cplx_float_n_get (&an, 0, &ancomp);
+		crank_cplx_float_subr_self (&ancomp, crank_vec_cplx_float_n_get_magn (&an));
+		crank_vec_cplx_float_n_set (&u, 0, &ancomp);
+
+		crank_vec_cplx_float_n_unit_self (&u);
+		
+		// Initialize qi			
+		crank_mat_cplx_float_n_init_fill (&qi, a->rn - i, a->rn - i, &ZERO);
+				
+		crank_vec_cplx_float_n_dot (&u, &an, &factor_a);
+		crank_vec_cplx_float_n_dot (&an, &u, &factor_b);
+		
+		crank_cplx_float_div (&factor_a, &factor_b, &factor);
+		crank_cplx_float_addr_self (&factor, 1.0f);
+		crank_cplx_float_neg_self (&factor);
+		
+		
+		for (j = 0; j < a->rn - i; j++) {
+			for (k = 0; k < a->rn - i; k++) {
+				CrankCplxFloat	ujcomp;
+				CrankCplxFloat	ukcomp;
+				CrankCplxFloat	qicomp;
+				crank_vec_cplx_float_n_get (&u, j, &ujcomp);
+				crank_vec_cplx_float_n_get (&u, k, &ukcomp);
+				crank_cplx_float_mul_conj (&ujcomp, &ukcomp, &qicomp);
+				crank_cplx_float_mul_self (&qicomp, &factor);
+				
+				crank_mat_cplx_float_n_set (&qi, j, k, &qicomp);
+			}
+			
+			CrankCplxFloat	qjcomp;
+			
+			crank_mat_cplx_float_n_get (&qi, j, j, &qjcomp);
+			crank_cplx_float_addr_self (&qjcomp, 1.0f);
+			crank_mat_cplx_float_n_set (&qi, j, j, &qjcomp);
+		}
+		
+		crank_mat_cplx_float_n_mul (&qi, &pa, &qpai);
+		
+		// Resulting row 0 of qpai is part of r
+		// and rest part is next pa
+		for (j = 0; j < a->rn - i; j++) {
+			crank_mat_cplx_float_n_set (r, i, i + j,
+					crank_mat_cplx_float_n_peek (&qpai, 0, j));
+		}
+		crank_mat_cplx_float_n_slice (&qpai, 1, 1, qpai.rn, qpai.cn, &pa);
+		crank_vec_cplx_float_n_fini (&an);
+		crank_vec_cplx_float_n_fini (&u);
+	}
+	// Fill last part of r
+	crank_mat_cplx_float_n_get (&qpai, 1, 1, &ancomp);
+	crank_cplx_float_init (&ancomp, crank_cplx_float_get_norm (&ancomp), 0.0f);
+	
+	crank_mat_cplx_float_n_set(r, (a->rn - 1), (a->rn - 1), &ancomp);
+	
+	crank_mat_cplx_float_n_fini (&pa);
+	crank_mat_cplx_float_n_fini (&qi);
+	crank_mat_cplx_float_n_fini (&qpai);
+	return TRUE;
+}
+
+
+
+/**
+ * crank_qr_givens_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @r: (out): A Lower triangular matrix.
+ *
+ * Performs QR Decomposition by Givens rotation.
+ *
+ * Returns: %TRUE if @a has QR Decomposition.
+ */
+gboolean
+crank_qr_givens_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+									CrankMatCplxFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+	
+	CrankMatCplxFloatN	pa;
+	CrankCplxFloat		last;
+	
+	
+	static CrankCplxFloat	ZERO = {0.0f, 0.0f};
+	static CrankCplxFloat	ONE = {1.0f, 0.0f};
+	
+	
+	g_return_val_if_fail (a != r, FALSE);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatCplxFloatN", "qr-givens", a, FALSE);
+	
+	if (a->rn == 1) {
+		crank_mat_cplx_float_n_init (r, 1, 1,
+				crank_mat_cplx_float_n_peek (a, 0, 0));
+		return TRUE;
+	}
+	
+	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+	crank_mat_cplx_float_n_copy (a, &pa);
+	
+	for (i = 0; i < a->rn - 1; i++) {
+		guint	n = a->rn - i;
+		
+		for (j = n - 1; 0 < j; j--) {
+			CrankCplxFloat 	x;
+			CrankCplxFloat 	y;
+			
+			gfloat			magn;
+			
+			crank_mat_cplx_float_n_get (&pa, j - 1, 0, &x);
+			crank_mat_cplx_float_n_get (&pa, j, 0, &y);
+			
+			if (crank_cplx_float_is_zero (&x) || crank_cplx_float_is_zero (&y)) {
+				crank_mat_cplx_float_n_fini (&pa);
+				crank_mat_cplx_float_n_fini (r);
+				
+				return FALSE;
+			}
+			
+			magn = sqrtf ( 	crank_cplx_float_get_norm_sq (&x) +
+							crank_cplx_float_get_norm_sq (&y) );
+
+			crank_cplx_float_divr_self (&x, magn);
+			crank_cplx_float_divr_self (&y, magn);
+			
+			// Multiplies Givens rotation matrix.
+			//
+			// We don't build up Full givens rotation matrix,
+			// instead we apply this with sin, cos value.
+			for (k = 0; k < n; k++) {
+				CrankCplxFloat	e;
+				CrankCplxFloat	f;
+				
+				CrankCplxFloat	ea;
+				CrankCplxFloat	fa;
+				CrankCplxFloat	addment;
+			
+				crank_mat_cplx_float_n_get (&pa, j - 1, k, &e);
+				crank_mat_cplx_float_n_get (&pa, j, k, &f);
+				
+				crank_cplx_float_mul_conj (&e, &x, &ea);
+				crank_cplx_float_mul_conj (&f, &y, &fa);
+				crank_cplx_float_add (&ea, &fa, &addment);
+				
+				crank_mat_cplx_float_n_set (&pa, j-1, k, &addment);
+				
+				crank_cplx_float_mul (&e, &y, &ea);
+				crank_cplx_float_mul (&f, &x, &fa);
+				crank_cplx_float_sub (&fa, &ea, &addment);
+						
+				crank_mat_cplx_float_n_set (&pa, j, k, &addment);
+			}
+		}
+		
+		for (j = 0; j < n; j++) {
+			crank_mat_cplx_float_n_set (r, i, i + j,
+				crank_mat_cplx_float_n_peek (&pa, 0, j));
+		}
+		
+		crank_mat_cplx_float_n_slice (&pa, 1, 1, pa.rn, pa.cn, &pa);
+	}
+	
+	crank_cplx_float_init (&last, crank_cplx_float_get_norm (pa.data + 0), 0.0f);
+	
+	crank_mat_cplx_float_n_set (r, a->rn - 1, a->rn - 1, &last);
+	
+	crank_mat_cplx_float_n_fini (&pa);
+	
+	return TRUE;
+}
+
