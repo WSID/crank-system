@@ -654,7 +654,9 @@ namespace Crank {
 		public MatCplxFloatN.diag (uint n, ...);
 		public MatCplxFloatN.diag_arr ([CCode (array_length_pos=0)]CplxFloat[] darr);
 		public MatCplxFloatN.fill (uint rn, uint cn, CplxFloat fill);
-
+		public MatCplxFloatN.cimm (uint rn, uint cn, ...);
+		public MatCplxFloatN.cuarr (uint rn, uint cn, [CCode (array_length=false)]float[] cuarr);
+		
 		public CplxFloat		tr { owned get; }
 		public CplxFloat		det { owned get; }
 		public MatCplxFloatN	cof { owned get; }

@@ -26,6 +26,7 @@ test_programs= \
 		test_vec_float \
 		test_vec_cplx_float \
 		test_mat_float \
+		test_mat_cplx_float \
 		test_advmat \
 		test_digraph \
 		test_advgraph
@@ -135,6 +136,15 @@ test_mat_float_LDADD= \
 
 test_mat_float_SOURCES= \
 		test_mat_float.vala
+
+
+test_mat_cplx_float_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la
+
+test_mat_cplx_float_SOURCES= \
+		test_mat_cplx_float.vala
+		
 
 test_advmat_LDADD= \
 		$(CRANK_BASE_LIBS) \

@@ -11,6 +11,7 @@ TESTS= \
 	test_vec_float.py \
 	test_vec_cplx_float.py \
 	test_mat_float.py \
+	test_mat_cplx_float.py \
 	test_advmat.py \
 	test_digraph.py \
 	test_advgraph.py 
