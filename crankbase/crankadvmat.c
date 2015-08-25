@@ -474,8 +474,10 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 {
 	CrankVecFloatN	bs;
 	CrankVecFloatN	bsmv;
-	gfloat			magn = 0;
-	gfloat			magnp = 0;
+	gfloat			diff = INFINITY;
+	gfloat			diffp = INFINITY;
+	gfloat			magn = INFINITY;
+	gfloat			magnp = INFINITY;
 	
 	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatFloatN", "power-method", a, 0.0f);
 	
@@ -488,11 +490,18 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 	
 	do {
 		magnp = magn;
+		diffp = diff;
+		
 		crank_mat_float_n_mulv (a, &bs, &bsmv);
 		magn = crank_vec_float_n_get_magn (&bsmv);
 		crank_vec_float_n_divs (&bsmv, magn, &bs);
 		
 		crank_vec_float_n_fini (&bsmv);
+		diff = ABS (magn - magnp);
+		
+		if (diffp < diff) {
+			return NAN;
+		}
 	}
 	while (0.0001f < ABS (magn - magnp));
 	
