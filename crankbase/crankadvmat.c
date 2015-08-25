@@ -266,17 +266,6 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 			gfloat			dot;
 			dot = crank_vec_float_n_dot (e + j, &ac);
 			
-			// If QR decomposition is not possible, return.
-			if (dot == 0.0f) {
-				for (k = 0; k < i; k++) crank_vec_float_n_fini (e + k);
-				g_free (e);
-				crank_vec_float_n_fini (&ac);
-				crank_vec_float_n_fini (&u);
-				crank_mat_float_n_fini (q);
-				crank_mat_float_n_fini (r);
-				return FALSE;
-			}
-			
 			crank_vec_float_n_muls (e + j, dot, &proj);
 			
 			crank_vec_float_n_sub_self (&u, &proj);
@@ -648,8 +637,6 @@ crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 			crank_mat_cplx_float_n_get (a, j, i, &apart);
 			crank_cplx_float_sub_self (&apart, &sum);
 			crank_mat_cplx_float_n_set (l, j, i, &apart);
-			
-			g_message ("L[%u, %u] := %s", j, i, crank_cplx_float_to_string(&apart));
 		}
 
 
@@ -683,8 +670,6 @@ crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 			crank_cplx_float_sub_self (&apart, &sum);
 			crank_cplx_float_div_self (&apart, &ldpart);
 			crank_mat_cplx_float_n_set (u, i, j, &apart);
-			
-			g_message ("U[%u, %u] := %s", i, j, crank_cplx_float_to_string(&apart));
 		}
 	}
 
@@ -805,17 +790,6 @@ crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
 			CrankVecCplxFloatN	proj;
 			CrankCplxFloat		dot;
 			crank_vec_cplx_float_n_dot (&ac, e + j, &dot);
-			
-			// If QR decomposition is not possible, return.
-			if (crank_cplx_float_is_zero (&dot)) {
-				for (k = 0; k < i; k++) crank_vec_cplx_float_n_fini (e + k);
-				g_free (e);
-				crank_vec_cplx_float_n_fini (&ac);
-				crank_vec_cplx_float_n_fini (&u);
-				crank_mat_cplx_float_n_fini (q);
-				crank_mat_cplx_float_n_fini (r);
-				return FALSE;
-			}
 			
 			crank_vec_cplx_float_n_muls (e + j, &dot, &proj);
 			
