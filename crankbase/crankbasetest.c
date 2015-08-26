@@ -101,7 +101,6 @@ crank_test_meta_timeout (	gconstpointer	userdata	)
 		meta->func ();
 	}
 	else {
-		g_message ("Timeout: %llu usec", meta->time);
 		g_test_trap_subprocess (NULL, meta->time,
 				G_TEST_SUBPROCESS_INHERIT_STDOUT |
 				G_TEST_SUBPROCESS_INHERIT_STDERR );

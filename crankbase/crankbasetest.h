@@ -514,7 +514,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
 
 //////// Private Macros ////////////////////////////////////////////////////////
 #define _crank_float_equal_delta(a,b) \
-		(((*(float*)b) - _crank_eqafd_delta < (*(float*)a)) && ((*(float*)a) < (*(float*)b) + _crank_eqafd_delta))
+		(isnanf(*(float*)a) ? isnanf(*(float*)b) : (((*(float*)b) - _crank_eqafd_delta < (*(float*)a)) && ((*(float*)a) < (*(float*)b) + _crank_eqafd_delta)))
 
 #define	_crank_array_index(a,i)	((a)[i])
 
