@@ -4465,8 +4465,8 @@ crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 	
 	crank_lu_mat_float_n (mat, &l, &u);
 	
-	crank_mat_float_n_lower_tri_invserse (&l, &linv);
-	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	crank_mat_float_n_lower_tri_inverse (&l, &linv);
+	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
 	crank_mat_float_n_mul (&uinv, &linv, r);
 	
@@ -4554,8 +4554,8 @@ crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 	
 	crank_lu_mat_float_n (a, &l, &u);
 	
-	crank_mat_float_n_lower_tri_invserse (&l, &linv);
-	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	crank_mat_float_n_lower_tri_inverse (&l, &linv);
+	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
 	crank_mat_float_n_mul (&uinv, &linv, r);
 	
@@ -4623,8 +4623,8 @@ crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	)
 	
 	crank_lu_mat_float_n (a, &l, &u);
 	
-	crank_mat_float_n_lower_tri_invserse (&l, &linv);
-	crank_mat_float_n_upper_tri_invserse (&u, &uinv);
+	crank_mat_float_n_lower_tri_inverse (&l, &linv);
+	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
 	crank_mat_float_n_mul (&uinv, &linv, a);
 	
@@ -5088,7 +5088,7 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 //////// Supplement Operations /////////////////////////////////////////////////
 
 /**
- * crank_mat_float_n_upper_tri_invserse:
+ * crank_mat_float_n_upper_tri_inverse:
  * @a: A Matrix
  * @r: (out): A Matrix.
  *
@@ -5097,7 +5097,7 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
  * This is used to calculating inverse with decompositions.
  */
 void
-crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
+crank_mat_float_n_upper_tri_inverse (	CrankMatFloatN*	a,
 										CrankMatFloatN*	r	)
 {
 	guint	i;
@@ -5130,7 +5130,7 @@ crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
 
 
 /**
- * crank_mat_float_n_lower_tri_invserse:
+ * crank_mat_float_n_lower_tri_inverse:
  * @a: A Matrix
  * @r: (out): A Matrix.
  *
@@ -5138,7 +5138,7 @@ crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
  *
  * This is used to calculating inverse with decompositions.
  */
-void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
+void		crank_mat_float_n_lower_tri_inverse (	CrankMatFloatN*	a,
 													CrankMatFloatN*	r	)
 {
 	guint	i;
@@ -5171,7 +5171,7 @@ void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
 
 
 /**
- * crank_mat_float_n_diag_invserse:
+ * crank_mat_float_n_diag_inverse:
  * @a: A Matrix
  * @r: (out): A Matrix.
  *
@@ -5180,7 +5180,7 @@ void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
  * This is used to calculating inverse with decompositions.
  */
 void
-crank_mat_float_n_diag_invserse (	CrankMatFloatN*	a,
+crank_mat_float_n_diag_inverse (	CrankMatFloatN*	a,
 									CrankMatFloatN*	r	)
 {
 	guint	i;

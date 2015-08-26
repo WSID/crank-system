@@ -1082,7 +1082,7 @@ test_n_upper_tri_inverse (void)
 			0.0f, 0.0f, 0.0f, 4.0f, 4.0f,
 			0.0f, 0.0f, 0.0f, 0.0f, 4.0f	);
 
-	crank_mat_float_n_upper_tri_invserse (&a, &b);
+	crank_mat_float_n_upper_tri_inverse (&a, &b);
 	
 	crank_mat_float_n_get_row (&b, 0, &r);
 	
@@ -1107,7 +1107,7 @@ test_n_lower_tri_inverse (void)
 			1.0f, 2.0f, 4.0f, 4.0f, 0.0f,
 			1.0f, 1.0f, 2.0f, 4.0f, 4.0f	);
 
-	crank_mat_float_n_lower_tri_invserse (&a, &b);
+	crank_mat_float_n_lower_tri_inverse (&a, &b);
 	
 	crank_mat_float_n_get_col (&b, 0, &r);
 	
@@ -1132,7 +1132,7 @@ test_n_diag_inverse (void)
 			0.0f, 0.0f, 0.0f, 4.0f, 4.0f,
 			0.0f, 0.0f, 0.0f, 0.0f, 4.0f	);
 
-	crank_mat_float_n_diag_invserse (&a, &b);
+	crank_mat_float_n_diag_inverse (&a, &b);
 	
 	crank_mat_float_n_get_diag (&b, &r);
 	

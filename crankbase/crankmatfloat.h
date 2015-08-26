@@ -1037,10 +1037,10 @@ void		crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 
 //////// Supplement Operations /////////////////////////////////////////////////
 
-void		crank_mat_float_n_upper_tri_invserse (	CrankMatFloatN*	a,
+void		crank_mat_float_n_upper_tri_inverse (	CrankMatFloatN*	a,
 													CrankMatFloatN*	r	);
 
-void		crank_mat_float_n_lower_tri_invserse (	CrankMatFloatN*	a,
+void		crank_mat_float_n_lower_tri_inverse (	CrankMatFloatN*	a,
 													CrankMatFloatN*	r	);
 
 void		crank_mat_float_n_diag_invserse (	CrankMatFloatN*	a,
