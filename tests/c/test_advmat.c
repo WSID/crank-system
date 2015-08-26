@@ -18,6 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include <math.h>
 
 #include <glib.h>
 
@@ -37,7 +38,11 @@ static void test_qr_givens (void);
 
 static void test_eval_power (void);
 
+static void test_eval_power_nan (void);
+
 static void test_eval_qr (void);
+
+static void test_eval_qr_nan (void);
 
 static void	test_lu_cplx (void);
 
@@ -65,9 +70,21 @@ main (	gint   argc,
 	
 	g_test_add_func ("/crank/base/advmat/qr/givens/mat/float/n", test_qr_givens);
 	
-	g_test_add_func ("/crank/base/advmat/eval/power/mat/float/n", test_eval_power);
+	crank_test_add_func_timeout (
+			"/crank/base/advmat/eval/power/mat/float/n",
+			test_eval_power, G_USEC_PER_SEC);
+			
+	crank_test_add_func_timeout (
+			"/crank/base/advmat/eval/power/mat/float/n/nan",
+			test_eval_power_nan, G_USEC_PER_SEC);
 	
-	g_test_add_func ("/crank/base/advmat/eval/qr/mat/float/n", test_eval_qr);
+	crank_test_add_func_timeout (
+			"/crank/base/advmat/eval/qr/mat/float/n",
+			test_eval_qr, G_USEC_PER_SEC);
+	
+	crank_test_add_func_timeout (
+			"/crank/base/advmat/eval/qr/mat/float/n/nan",
+			test_eval_qr_nan, G_USEC_PER_SEC);
 
 	g_test_add_func ("/crank/base/advmat/lu/mat/cplx/float/n", test_lu_cplx);
 
@@ -301,11 +318,27 @@ test_eval_power (void)
 }
 
 static void
+test_eval_power_nan (void)
+{
+	CrankMatFloatN	a = {0};
+	CrankVecFloatN	evec = {0};
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		0.0f,	6.0f,	2.0f,
+		-6.0f,	0.0f,	-4.0f,
+		-2.0f,	4.0f,	0.0f	);
+
+	g_assert (isnanf (crank_eval_power_mat_float_n (&a, NULL, &evec)));
+	
+	crank_vec_float_n_fini (&evec);
+	crank_mat_float_n_fini (&a);
+}
+
+static void
 test_eval_qr (void)
 {
 	CrankMatFloatN	a = {0};
 	CrankVecFloatN	b = {0};
-	GHashTableIter	iter;
 	
 	gfloat*			key;
 	guint*			value;
@@ -320,6 +353,30 @@ test_eval_qr (void)
 	crank_eval_qr_mat_float_n (&a, &b);
 	
 	crank_assert_eq_vecfloat_n_imm (&b, 21.4467f, -0.9085f, 0.4618f );
+	
+	crank_vec_float_n_fini (&b);
+	crank_mat_float_n_fini (&a);
+}
+
+static void
+test_eval_qr_nan (void)
+{
+	CrankMatFloatN	a = {0};
+	CrankVecFloatN	b = {0};
+	
+	gfloat*			key;
+	guint*			value;
+	
+	guint			i;
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		 0.0f,	6.0f,	 2.0f,
+		-6.0f,	0.0f,	-4.0f,
+		-2.0f,	4.0f,	 0.0f	);
+
+	crank_eval_qr_mat_float_n (&a, &b);
+	
+	crank_assert_eq_vecfloat_n_imm (&b, NAN, NAN, 0.0f);
 	
 	crank_vec_float_n_fini (&b);
 	crank_mat_float_n_fini (&a);

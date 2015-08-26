@@ -44,6 +44,9 @@ gboolean	crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 										CrankMatFloatN*		l,
 										CrankMatFloatN*		u	);
 
+gboolean	crank_ch_mat_float_n (	CrankMatFloatN*	a,
+									CrankMatFloatN*	l	);
+
 
 gboolean	crank_gram_schmidt_mat_float_n (	CrankMatFloatN*	a,
 												CrankMatFloatN*	q,
@@ -80,7 +83,7 @@ gboolean	crank_qr_householder_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 													CrankMatCplxFloatN*	r	);
 
 gboolean	crank_qr_givens_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-													CrankMatCplxFloatN*	r	);
+												CrankMatCplxFloatN*	r	);
 
 G_END_DECLS
 

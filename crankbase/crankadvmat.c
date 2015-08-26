@@ -28,6 +28,7 @@
 
 #include "crankpermutation.h"
 #include "crankveccommon.h"
+#include "crankvecbool.h"
 #include "crankvecfloat.h"
 #include "crankveccplxfloat.h"
 #include "crankmatfloat.h"
@@ -474,10 +475,12 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 {
 	CrankVecFloatN	bs;
 	CrankVecFloatN	bsmv;
-	gfloat			diff = INFINITY;
-	gfloat			diffp = INFINITY;
 	gfloat			magn = INFINITY;
-	gfloat			magnp = INFINITY;
+	
+	gfloat			dsp = INFINITY;
+	gfloat			ds = INFINITY;
+	
+	CrankVecFloatN	diff;
 	
 	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatFloatN", "power-method", a, 0.0f);
 	
@@ -488,26 +491,38 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 		crank_mat_float_n_get_col (a, 0, &bs);
 	}
 	
+	crank_vec_float_n_init_fill (&diff, a->rn, INFINITY);
+	
 	do {
-		magnp = magn;
-		diffp = diff;
+		dsp = ds;
+		crank_vec_float_n_copy (&bs, &diff);
 		
 		crank_mat_float_n_mulv (a, &bs, &bsmv);
 		magn = crank_vec_float_n_get_magn (&bsmv);
 		crank_vec_float_n_divs (&bsmv, magn, &bs);
-		
 		crank_vec_float_n_fini (&bsmv);
-		diff = ABS (magn - magnp);
 		
-		if (diffp < diff) {
+		crank_vec_float_n_sub_self (&diff, &bs);
+		
+		ds = crank_vec_float_n_get_magn_sq (&diff);
+		
+		if (dsp < ds) {
+			crank_vec_float_n_fini (&bs);
 			return NAN;
 		}
 	}
-	while (0.0001f < ABS (magn - magnp));
+	while (0.0000001f < (dsp - ds));
 	
-	if (evec != NULL) crank_vec_float_n_copy (&bs, evec);
-	crank_vec_float_n_fini (&bs);
-	return magn;
+	if (ds > 0.0000001f) {
+		if (evec != NULL) crank_vec_float_n_init_arr_take (evec, 0, NULL);
+		crank_vec_float_n_fini (&bs);
+		return NAN;
+	}
+	else {
+		if (evec != NULL) crank_vec_float_n_copy (&bs, evec);
+		crank_vec_float_n_fini (&bs);
+		return magn;
+	}
 }
 
 /**
@@ -517,6 +532,9 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
  *
  * Eigenvalues are calculated by QR Algorithm; If QR Decompisition is not
  * possible, an 0-sized vector is returned.
+ *
+ * If the matrix has complex eigenvalues, this function will fill NAN in that
+ * place.
  */
 void
 crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
@@ -525,31 +543,41 @@ crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
 	CrankMatFloatN	ai;
 	CrankMatFloatN	qi;
 	CrankMatFloatN	ri;
+	
+	CrankVecFloatN	offdiag;
+	CrankVecBoolN	nonconv;
 	gboolean		cont;
 	
 	guint	i;
 	guint	j;
 	
-	CRANK_MAT_WARN_IF_NON_SQUARE ("Advmat-MatFloatN", "power-method", a);
+	CRANK_MAT_WARN_IF_NON_SQUARE ("Advmat-MatFloatN", "qr-iteration", a);
+	
+	crank_vec_float_n_init_fill (&offdiag, a->rn - 1, INFINITY);
+	crank_vec_bool_n_init_fill (&nonconv, a->rn - 1, FALSE);
 	
 	cont = TRUE;
 	
-	if (! crank_gram_schmidt_mat_float_n (a, &qi, &ri)) {
-		crank_vec_float_n_fini (evals);
-		return;
-	}
+	crank_mat_float_n_copy (a, &ai);
 	
 	while (cont) {
+		if (! crank_gram_schmidt_mat_float_n (&ai, &qi, &ri)) {
+			crank_mat_float_n_fini (&ai);
+			crank_vec_float_n_fini (evals);
+			return;
+		}
 		
+		crank_mat_float_n_fini (&ai);
 		crank_mat_float_n_mul (&ri, &qi, &ai);
 		
 		cont = FALSE;
 		for (i = 0; i < a->rn; i++) { 
-			for (j = 0; j < i; j++) {
+			for (j = 0; j + 1 < i; j++) {
+				gfloat e = crank_mat_float_n_get (&ai, i, j);
 				// Checks for elements are smaller than reasonably small value.
 				//TODO: Make a way to adjust this value.
 				
-				if (0.0001f < crank_mat_float_n_get (&ai, i, j)) {
+				if (e < -0.0001f || 0.0001f < e) {
 					cont = TRUE;
 					break;
 				}
@@ -557,17 +585,38 @@ crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
 			if (cont) break;
 		}
 		
-		if (cont) {
-			if (! crank_gram_schmidt_mat_float_n (&ai, &qi, &ri)) {
-				crank_mat_float_n_fini (&ai);
-				crank_vec_float_n_fini (evals);
-				return;
+		if (! cont) {
+			for (i = 0; i < a->rn - 1; i++) {
+				if (! crank_vec_bool_n_get (&nonconv, i)) {
+				
+					gfloat e = ABS (crank_mat_float_n_get (&ai, i+1, i));
+
+					if (crank_vec_float_n_get (&offdiag, i) < e)
+						crank_vec_bool_n_set (&nonconv, i, TRUE);
+					
+					else {
+						crank_vec_float_n_set (&offdiag, i, e);
+						if (0.0001f < e) {
+							cont = TRUE;
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
 	
 	crank_mat_float_n_get_diag (&ai, evals);
 	
+	for (i = 0; i < a->rn - 1; i++) {
+		if (crank_vec_bool_n_get (&nonconv, i)) {
+			crank_vec_float_n_set (evals, i, NAN);
+			crank_vec_float_n_set (evals, i + 1, NAN);
+			i++;
+		}
+	}
+	
+	crank_vec_bool_n_fini (&nonconv);
 	crank_mat_float_n_fini (&ai);
 	crank_mat_float_n_fini (&qi);
 	crank_mat_float_n_fini (&ri);
