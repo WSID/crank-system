@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<refentry id="crank-basic-data-abbreviation">
+  <refmeta>
+    <refentrytitle>Abbreviation for types</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>Crank System</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Abbreviation for types</refname>
+    <refpurpose>Description for abbreviations used in Crank Base.</refpurpose>
+  </refnamediv>
+
+  <refsect1 id="reason">
+    <title>Abbreviation Reasons</title>
+    <para>
+      In Crank Base, there are many structures are used frequently, and 
+      different types of data are used together. Unfortunately, in C, it is not
+      possible in general, and have to use different names on it. But we cannot
+      use full name of types for operations, as they would get uselessly long
+      names. As a result, we have abbreviations for each types.
+      
+      <note>
+        <title>Notes for C11 Generic Selector</title>
+        <para>
+          If C11 is supported, some operation function may have companion macro,
+          which expands to generic selector, so that user may provide any type
+          that supported by the operations.
+        </para>
+        <para>
+          In Crank System itself, these macros are not used, as some compiler
+          does not support C11 Generic Selectors.
+        </para>
+      </note>
+    </para>
+  </refsect1>
+
+  <refsect1 id="rules">
+    <title>Suffixing rules</title>
+    <para>
+      On Crank Base, functions will be suffixed with the rules below.
+      <itemizedlist>
+        <listitem>If function is sole function of the operation, and only the 
+                  given type makes sense, then it will not be suffixed.
+        </listitem>
+        <listitem>Suffixes only different characteristic, if instance and
+                  operand types are different.
+                  <para>Operation on CrankMatFloatN and gfloat, then suffix with
+                        "s", not "rsf" as they share "r"eal, and "f"loat</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </refsect1>
+
+  <refsect1 id="unrolled">
+    <title>Unrolled Entity</title>
+    <para>
+      Sometimes, it is convenient to have functions to receive unrolled entities
+      to reduce programmer's effort to initializing grouped entity in his code.
+      For this, we add extra 'u' for suffixes.
+      <note>
+        If some operation requires vectors of unrolled complex, it means that
+        it requires two vector entity, one for real, other for imaginary parts.
+      </note>
+    </para>
+  </refsect1>
+  
+  <table><title>Abbreviation of types used as suffixes</title>
+    <tgroup cols="5">
+      <tbody>
+        <row><entry>m: Matrix</entry>
+             <entry>v: Vector</entry>
+             <entry>s: Scalar</entry>
+             <entry>um: Unrolled Matrix</entry>
+             <entry>uv: Unrolled Vector</entry></row>
+             
+        <row><entry>r: Real</entry>
+             <entry>c: Complex</entry>
+             <entry>q: Quaternion</entry>
+             <entry>uc: Unrolled Complex</entry>
+             <entry>uq: Unrolled Quaternion</entry></row>
+             
+        <row><entry>b: gboolean</entry>
+             <entry>i: gint</entry>
+             <entry>u: guint</entry>
+             <entry>f: gfloat</entry></row>
+      </tbody>
+    </tgroup>
+  </table>
+
+</refentry>

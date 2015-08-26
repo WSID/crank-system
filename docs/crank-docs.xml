@@ -38,6 +38,7 @@
   
   <chapter>
     <title>Basic Data Structures</title>
+    <xi:include href="crank-basic-data-abbreviation.xml"/>
     <xi:include href="xml/crankrange.xml"/>
 	<xi:include href="xml/crankiter.xml"/>
     <xi:include href="xml/crankpermutation.xml"/>
