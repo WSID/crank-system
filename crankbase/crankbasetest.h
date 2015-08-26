@@ -48,6 +48,10 @@ G_BEGIN_DECLS
 void	crank_test_add_func_expected_fail (	const gchar* 	path,
 											GTestFunc		func	);
 
+void	crank_test_add_func_timeout		(	const gchar* 	path,
+											GTestFunc		func,
+											const guint64	time	);
+
 
 //////// Array equal assertions ////////////////////////////////////////////////
 

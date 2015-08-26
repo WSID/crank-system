@@ -33,6 +33,8 @@ static void test_always_fail (void);
 
 static void test_test_expected_fail_onpass (void);
 
+static void test_test_timeout_1000 (void);
+
 static void test_assert_eqarray_bool (void);
 static void test_assert_eqarray_bool_fail (void);
 
@@ -121,6 +123,20 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_expected_fail (
 			"/crank/base/test/expected_fail/subprocess",
 			test_always_pass);
+
+	
+	crank_test_add_func_timeout (
+			"/crank/base/test/timeout",
+			test_test_timeout_1000,
+			10000	);
+			
+	g_test_add_func (
+			"/crank/base/test/eq/vecfloat/n/imm",
+			test_assert_eq_vecfloat_n_imm);
+			
+	crank_test_add_func_expected_fail (
+			"/crank/base/test/eq/vecfloat/n/imm/fail",
+			test_assert_eq_vecfloat_n_imm_fail	);
 	
 	
 	g_test_add_func (
@@ -358,6 +374,11 @@ test_test_expected_fail_onpass (void) {
 }
 
 
+static void
+test_test_timeout_1000 (void) {
+	// Sleep for 0.001 sec
+	g_usleep (1000);
+}
 
 
 static void
