@@ -22,8 +22,8 @@
 int main (string[] args) {
 	GLib.Test.init (ref args);
 	
-	GLib.Test.add_func ("/crank/base/permutation/check_valid",
-		test_check_valid );
+	GLib.Test.add_func ("/crank/base/permutation/is_valid",
+		test_is_valid );
 
 	GLib.Test.add_func ("/crank/base/permutation/hash",
 		test_hash );
@@ -101,14 +101,14 @@ int main (string[] args) {
 
 
 
-private void test_check_valid () {
+private void test_is_valid () {
 	Crank.Permutation	p = Crank.Permutation (5,	0, 1, 2, 3, 4);
 	Crank.Permutation	q = Crank.Permutation (5,	0, 3, 0, 1, 2);
 	Crank.Permutation	r = Crank.Permutation (5,	0, 7, 4, 3, 6);
 	
-	assert (p.check_valid ());
-	assert (! q.check_valid ());
-	assert (! r.check_valid ());
+	assert (p.is_valid ());
+	assert (! q.is_valid ());
+	assert (! r.is_valid ());
 }
 
 private void test_hash () {
@@ -321,11 +321,11 @@ private void test_shuffle_array_float () {
 
 
 private void test_init_compare_sarray () {
-	double	arr[4] = {1.5, 8.8, 4.5, 2.9};
+	double			arr[4] = {1.5, 8.8, 4.5, 2.9};
+	GLib.CompareFunc<double?>	cmp = (a, b) => ((int)(b < a) - (int)(a < b));
 
-	Crank.Permutation p = Crank.Permutation.compare_sarray<double?> (
-			4, sizeof (double), (void*)arr,
-			(a, b) => ((int)(b < a) - (int)(a < b)) );
+	Crank.Permutation p = Crank.Permutation.compare_sarray (
+			4, sizeof (double), (void*)arr, cmp );
 
 	Crank.assert_eq_permutation_imm (p, 0, 3, 2, 1);
 }

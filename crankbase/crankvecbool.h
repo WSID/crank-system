@@ -51,35 +51,6 @@ struct _CrankVecBool2 {
 #define CRANK_TYPE_VEC_BOOL2	(crank_vec_bool2_get_type ())
 GType			crank_vec_bool2_get_type	(void);
 
-/**
- * CRANK_VEC_BOOL2_FALSE:
- *
- * Initialization list that all elements are %FALSE.
- */
-#define CRANK_VEC_BOOL2_FALSE	{FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL2_TRUE:
- *
- * Initialization list that all elements are %TRUE.
- */
-#define CRANK_VEC_BOOL2_TRUE	{TRUE, TRUE}
-
-/**
- * CRANK_VEC_BOOL2_I:
- *
- * Initialization list that only first vector element is %TRUE
- */
-#define CRANK_VEC_BOOL2_I		{TRUE, FALSE}
-
-/**
- * CRANK_VEC_BOOL2_J:
- *
- * Initialization list that only second vector element is %TRUE
- */
-#define CRANK_VEC_BOOL2_J		{FALSE, TRUE}
-
-
 //////// Initialization ////////////////////////////////////////////////////////
 
 void			crank_vec_bool2_init 		(	CrankVecBool2*	vec,
@@ -152,26 +123,25 @@ void			crank_vec_bool2_iterator 	(	CrankVecBool2*		vec,
 void			crank_vec_bool2_and			(	CrankVecBool2*	a,
 												CrankVecBool2*	b,
 												CrankVecBool2*	r	);
+void			crank_vec_bool2_and_self	(	CrankVecBool2*	a,
+												CrankVecBool2*	b	);
 
 void			crank_vec_bool2_or			(	CrankVecBool2*	a,
 												CrankVecBool2*	b,
 												CrankVecBool2*	r	);
+												
+void			crank_vec_bool2_or_self		(	CrankVecBool2*	a,
+												CrankVecBool2*	b	);
 
 void			crank_vec_bool2_xor			(	CrankVecBool2*	a,
 												CrankVecBool2*	b,
 												CrankVecBool2*	r	);
 
-void			crank_vec_bool2_not			(	CrankVecBool2*	a,
-												CrankVecBool2*	r	);
-
-void			crank_vec_bool2_and_self	(	CrankVecBool2*	a,
-												CrankVecBool2*	b	);
-
-void			crank_vec_bool2_or_self		(	CrankVecBool2*	a,
-												CrankVecBool2*	b	);
-
 void			crank_vec_bool2_xor_self	(	CrankVecBool2*	a,
 												CrankVecBool2*	b	);
+
+void			crank_vec_bool2_not			(	CrankVecBool2*	a,
+												CrankVecBool2*	r	);
 
 void			crank_vec_bool2_not_self	(	CrankVecBool2*	a	);
 												
@@ -205,42 +175,6 @@ struct _CrankVecBool3 {
 
 #define CRANK_TYPE_VEC_BOOL3	(crank_vec_bool3_get_type ())
 GType			crank_vec_bool3_get_type	(void);
-
-/**
- * CRANK_VEC_BOOL3_FALSE:
- *
- * Initialization list that all elements are %FALSE.
- */
-#define CRANK_VEC_BOOL3_FALSE	{FALSE, FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL3_TRUE:
- *
- * Initialization list that all elements are %TRUE.
- */
-#define CRANK_VEC_BOOL3_TRUE	{TRUE, TRUE, TRUE}
-
-/**
- * CRANK_VEC_BOOL3_I:
- *
- * Initialization list that only first vector element is %TRUE
- */
-#define CRANK_VEC_BOOL3_I		{TRUE, FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL3_J:
- *
- * Initialization list that only second vector element is %TRUE
- */
-#define CRANK_VEC_BOOL3_J		{FALSE, TRUE, FALSE}
-
-/**
- * CRANK_VEC_BOOL3_K:
- *
- * Initialization list that only third vector element is %TRUE
- */
-#define CRANK_VEC_BOOL3_K		{FALSE, FALSE, TRUE}
-
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -315,27 +249,26 @@ void			crank_vec_bool3_and			(	CrankVecBool3*	a,
 												CrankVecBool3*	b,
 												CrankVecBool3*	r	);
 
+void			crank_vec_bool3_and_self	(	CrankVecBool3*	a,
+												CrankVecBool3*	b	);
+
 void			crank_vec_bool3_or			(	CrankVecBool3*	a,
 												CrankVecBool3*	b,
 												CrankVecBool3*	r	);
+
+void			crank_vec_bool3_or_self		(	CrankVecBool3*	a,
+												CrankVecBool3*	b	);
 
 void			crank_vec_bool3_xor			(	CrankVecBool3*	a,
 												CrankVecBool3*	b,
 												CrankVecBool3*	r	);
 
-void			crank_vec_bool3_not			(	CrankVecBool3*	a,
-												CrankVecBool3*	r	);
-												
-
-void			crank_vec_bool3_and_self	(	CrankVecBool3*	a,
-												CrankVecBool3*	b	);
-
-void			crank_vec_bool3_or_self		(	CrankVecBool3*	a,
-												CrankVecBool3*	b	);
-
 void			crank_vec_bool3_xor_self	(	CrankVecBool3*	a,
 												CrankVecBool3*	b	);
 
+void			crank_vec_bool3_not			(	CrankVecBool3*	a,
+												CrankVecBool3*	r	);
+												
 void			crank_vec_bool3_not_self	(	CrankVecBool3*	a	);
 
 
@@ -370,49 +303,6 @@ struct _CrankVecBool4 {
 
 #define CRANK_TYPE_VEC_BOOL4	(crank_vec_bool4_get_type ())
 GType			crank_vec_bool4_get_type	(void);
-
-/**
- * CRANK_VEC_BOOL4_FALSE:
- *
- * Initialization list that all elements are %FALSE.
- */
-#define CRANK_VEC_BOOL4_FALSE	{FALSE, FALSE, FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL4_TRUE:
- *
- * Initialization list that all elements are %TRUE.
- */
-#define CRANK_VEC_BOOL4_TRUE	{TRUE, TRUE, TRUE, TRUE}
-
-/**
- * CRANK_VEC_BOOL4_I:
- *
- * Initialization list that only first vector element is %TRUE
- */
-#define CRANK_VEC_BOOL4_I		{TRUE, FALSE, FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL4_J:
- *
- * Initialization list that only second vector element is %TRUE
- */
-#define CRANK_VEC_BOOL4_J		{FALSE, TRUE, FALSE, FALSE}
-
-/**
- * CRANK_VEC_BOOL4_K:
- *
- * Initialization list that only third vector element is %TRUE
- */
-#define CRANK_VEC_BOOL4_K		{FALSE, FALSE, TRUE, FALSE}
-
-/**
- * CRANK_VEC_BOOL4_L:
- *
- * Initialization list that only fourth vector element is %TRUE
- */
-#define CRANK_VEC_BOOL4_L		{FALSE, FALSE, FALSE, TRUE}
-
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -488,27 +378,26 @@ void			crank_vec_bool4_and			(	CrankVecBool4*	a,
 												CrankVecBool4*	b,
 												CrankVecBool4*	r	);
 
+void			crank_vec_bool4_and_self	(	CrankVecBool4*	a,
+												CrankVecBool4*	b	);
+
 void			crank_vec_bool4_or			(	CrankVecBool4*	a,
 												CrankVecBool4*	b,
 												CrankVecBool4*	r	);
+
+void			crank_vec_bool4_or_self		(	CrankVecBool4*	a,
+												CrankVecBool4*	b	);
 
 void			crank_vec_bool4_xor			(	CrankVecBool4*	a,
 												CrankVecBool4*	b,
 												CrankVecBool4*	r	);
 
-void			crank_vec_bool4_not			(	CrankVecBool4*	a,
-												CrankVecBool4*	r	);
-												
-
-void			crank_vec_bool4_and_self	(	CrankVecBool4*	a,
-												CrankVecBool4*	b	);
-
-void			crank_vec_bool4_or_self		(	CrankVecBool4*	a,
-												CrankVecBool4*	b	);
-
 void			crank_vec_bool4_xor_self	(	CrankVecBool4*	a,
 												CrankVecBool4*	b	);
 
+void			crank_vec_bool4_not			(	CrankVecBool4*	a,
+												CrankVecBool4*	r	);
+												
 void			crank_vec_bool4_not_self	(	CrankVecBool4*	a	);
 
 
@@ -644,26 +533,25 @@ void			crank_vec_bool_n_and		(	CrankVecBoolN*	a,
 												CrankVecBoolN*	b,
 												CrankVecBoolN*	r	);
 
+void			crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
+												CrankVecBoolN*	b	);
+
 void			crank_vec_bool_n_or			(	CrankVecBoolN*	a,
 												CrankVecBoolN*	b,
 												CrankVecBoolN*	r	);
+
+void			crank_vec_bool_n_or_self	(	CrankVecBoolN*	a,
+												CrankVecBoolN*	b	);
 
 void			crank_vec_bool_n_xor		(	CrankVecBoolN*	a,
 												CrankVecBoolN*	b,
 												CrankVecBoolN*	r	);
 
-void			crank_vec_bool_n_not		(	CrankVecBoolN*	a,
-												CrankVecBoolN*	r	);
-
-
-void			crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
-												CrankVecBoolN*	b	);
-
-void			crank_vec_bool_n_or_self	(	CrankVecBoolN*	a,
-												CrankVecBoolN*	b	);
-
 void			crank_vec_bool_n_xor_self	(	CrankVecBoolN*	a,
 												CrankVecBoolN*	b	);
+
+void			crank_vec_bool_n_not		(	CrankVecBoolN*	a,
+												CrankVecBoolN*	r	);
 
 void			crank_vec_bool_n_not_self	(	CrankVecBoolN*	a	);
 

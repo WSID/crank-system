@@ -19,6 +19,7 @@
  * THE SOFTWARE.
  */
 
+#define _CRANK_INTERNAL
 #define _CRANKBASE_INSIDE
 
 #include <stdarg.h>
@@ -41,77 +42,10 @@
  * A Crank System provides quaternions. A Quaternion consist of one real part
  * and 3 imaginary parts.
  *
- * Quaternion is used mainly for representing rotations. See the descroption
+ * Quaternions are used mainly for representing rotations. See the description
  * for detailed explaination.
  *
  * Currently, only float quaternion type is provided.
- *
- * <table><title>Supported Operations</title>
- *   <tgroup cols="3" align="left">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *         <entry>Remarks</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *       <row>
- *         <entry morerows="7">Initialization</entry>
- *            <entry>arguments</entry></row>
- *       <row><entry>Complex arguments</entry></row>
- *       <row><entry>array</entry></row>
- *       <row><entry>valist</entry></row>
- *       <row><entry>complex valist</entry></row>
- *       <row><entry>fill</entry></row>
- *       <row><entry>rotation</entry></row>
- *       <row><entry>rotation imm</entry></row>
- *
- *       <row>
- *         <entry morerows="2">Attributes</entry>
- *              <entry>wx, yz, imag</entry><entry>get, set</entry></row>
- *         <row><entry>norm, norm_sq</entry><entry>get</entry></row>
- *         <row><entry>rangle, raxis</entry><entry>get</entry></row>
- *
- *       <row>
- *         <entry morerows="3">Unary Operations</entry>
- *            <entry>Negate</entry><entry>self</entry></row>
- *       <row><entry>Inverse</entry><entry>self</entry></row>
- *       <row><entry>Conjugate</entry><entry>self</entry></row>
- *       <row><entry>Unit</entry><entry>self</entry></row>
- *
- *       <row>
- *         <entry>Airthmetics with real values</entry>
- *         <entry>add, sub, mul, div</entry><entry>self</entry></row>
- *
- *       <row>
- *         <entry>Swapped airthmetics with real values</entry>
- *         <entry>rsub, rdiv</entry></row>
- *
- *       <row>
- *         <entry>Airthmetics with Complex values</entry>
- *         <entry>add, sub, mul</entry><entry>self</entry>
- *       </row>
- *       <row>
- *         <entry>Airthmetics with Quaternion values</entry>
- *         <entry>add, sub, mul</entry>
- *       </row>
- *       <row>
- *         <entry>Ternary Operations</entry>
- *         <entry>mix</entry>
- *       </row>
- *       <row>
- *         <entry>Exponential</entry>
- *         <entry>ln, exp, pow</entry>
- *       </row>
- *       <row>
- *         <entry>Rotation</entry>
- *         <entry>rotate vector</entry>
- *       </row>
- *     </tbody>
- *   </tgroup>
- * </table>
  *
  * # Breakage of commutative law of multiplication.
  *
@@ -122,17 +56,15 @@
  * 2. ij = k, jk = i, ki = j
  * 3. ji = -k, ik = -j, kj = -i
  *
- * As a result, multiplication of quaternion may has different result if
- * multiplication position is swapped.
+ * As a result, different order of multiplication results in different values.
  *
- * # Rotation Representation
+ * # #CrankQuatFloat as Rotation Representation
  *
  * Quaternions are frequently used, for rotation representation. Quaternions has
  * advantages over other representations.
  *
  * * Reasonably compact (requires 4 floats)
  * * Numerically stable
- * * Gimbal lock free
  *
  * But it introduces some disadvantages too.
  *
@@ -145,9 +77,9 @@
  *
  * ## Initialize by rotation.
  *
- * Quaternion types has init_rot/init_rotimm initializer.
+ * Quaternion types has init_rot/init_urot initializer.
  *
- * See: crank_quat_float_init_rot(), crank_quat_float_init_rotimm()
+ * See: crank_quat_float_init_rot(), crank_quat_float_init_urot()
  *
  *
  * ## Getting rotation attributes.
@@ -180,8 +112,8 @@
  *
  *
  * ## Composited Rotations and inverted rotations.
- * To composited rotations, you can multiply two quaternion, and cancel a rotation,
- * inverse a quaternion.
+ * To composited rotations, you can multiply two quaternion. To cancel a
+ * rotation inverse a quaternion.
  *
  * You may use crank_quat_float_mul() and crank_quat_float_inverse() for this
  * purpose.
@@ -200,12 +132,14 @@
  *     <tbody>
  *       <row>
  *         <entry>From #gfloat</entry><entry>crank_quat_float_init()</entry>
- *       </row>
+ *         <entry>GValue Transform</entry></row>
  *       <row>
  *         <entry>From #CrankCplxFloat</entry><entry>crank_quat_float_init_cplx()</entry>
+ *         <entry>GValue Transform</entry>
  *       </row>
  *       <row>
  *         <entry morerows="1">To string</entry><entry>crank_quat_float_to_string()</entry>
+ *         <entry>GValue Transform</entry>
  *       </row>
  *       <row>
  *             <entry>crank_quat_float_to_string_full()</entry>
@@ -502,7 +436,7 @@ crank_quat_float_to_string (	CrankQuatFloat*	quat	)
 /**
  * crank_quat_float_to_string_full:
  * @quat: A Quaternion value.
- * @format: A format to stringify quaternion - consumes 2 parameters.
+ * @format: A format to stringify quaternion - consumes 4 parameters.
  *
  * Stringify quaternion value into string.
  *
@@ -1456,7 +1390,7 @@ crank_quat_float_init_rot (	CrankQuatFloat*	quat,
 }
 
 /**
- * crank_quat_float_init_rotimm:
+ * crank_quat_float_init_urot:
  * @quat: (out): A Quaternion.
  * @angle: Rotation angle.
  * @x: X component of rotation axis.
@@ -1466,7 +1400,7 @@ crank_quat_float_init_rot (	CrankQuatFloat*	quat,
  * Initialize a quaternion by given rotation.
  */
 void
-crank_quat_float_init_rotimm (	CrankQuatFloat*	quat,
+crank_quat_float_init_urot (	CrankQuatFloat*	quat,
 								const gfloat	angle,
 								const gfloat	x,
 								const gfloat	y,

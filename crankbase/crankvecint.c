@@ -46,45 +46,111 @@
  *
  * It is compared to vec in GLSL
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
+ * # Type Conversion.
+ * 
+ * Integer vector types are seldomly used, but for convenience, it can be
+ * converted to other types
+ *
+ * For fixed-sized types, it can be converted to variadic sized vector types.
+ *
+ * <table><title>Type Conversion of #CrankVecInt2</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, array, va_list, fill</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>magn square, magn</entry>
- *       </row>
- *       <row>
- *         <entry>Collection</entry>
- *         <entry>get, set, foreach, iterator</entry>
- *       </row>
- *       <row>
- *         <entry>Unary Operations</entry>
- *         <entry>neg</entry>
- *       </row>
- *       <row>
- *         <entry>Vector - Scalar Operations</entry>
- *         <entry>mul, div, mod</entry>
- *       </row>
- *       <row>
- *         <entry>Vector - Vector Operations</entry>
- *         <entry>add, sub, dot, crs</entry>
- *       </row>
- *       <row>
- *         <entry>Component Operations</entry>
- *         <entry>cmpmul, cmpdiv, cmpmod, cmpeq, cmpless, cmpgreater, cmpcmp,
- *                min, max</entry>
- *       </row>
+ *       <row> <entry>From #CrankVecBool2</entry>
+ *             <entry>crank_vec_int2_init_from_vb()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_int2_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_int2_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecIntN.</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecIntN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecInt3</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBool3</entry>
+ *             <entry>crank_vec_int3_init_from_vb()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_int3_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_int3_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecIntN.</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecIntN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecInt4</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBool4</entry>
+ *             <entry>crank_vec_int4_init_from_vb()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_int4_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_int4_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecIntN.</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecIntN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecIntN</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrnakVecBoolN</entry>
+ *             <entry>crank_vec_int_n_init_from_vb()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt2</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt3</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt4</entry>
+ *             <entry>crank_vec_int_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_int_n_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_vec_int_n_to_string_full()</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -93,7 +159,27 @@
 
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
-G_DEFINE_BOXED_TYPE (CrankVecInt2, crank_vec_int2, crank_vec_int2_dup, g_free)
+
+static void	crank_vec_int2_transform_from_b (	const GValue*	src,
+												GValue*			dest	);
+												
+static void crank_vec_int2_transform_to_string (const GValue*	src,
+												GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecInt2,
+		crank_vec_int2,
+		crank_vec_int2_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL2,
+												g_define_type_id,
+												crank_vec_int2_transform_from_b	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_int2_transform_to_string	);
+		} )
 
 /**
  * crank_vec_int2_init:
@@ -457,6 +543,21 @@ crank_vec_int2_muls	(	CrankVecInt2*	a,
 }
 
 /**
+ * crank_vec_int2_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_int2_muls_self	(	CrankVecInt2*	a,
+								const gint		b	)
+{
+	a->x *= b;
+	a->y *= b;
+}
+
+/**
  * crank_vec_int2_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -476,6 +577,22 @@ crank_vec_int2_divs	(	CrankVecInt2*	a,
 }
 
 /**
+ * crank_vec_int2_divs_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar division.
+ */
+void
+crank_vec_int2_divs_self	(	CrankVecInt2*	a,
+								const gint		b	)
+{
+	a->x /= b;
+	a->y /= b;
+}
+
+
+/**
  * crank_vec_int2_mods:
  * @a: A vector.
  * @b: A scalar.
@@ -493,37 +610,6 @@ crank_vec_int2_mods	(	CrankVecInt2*	a,
 	r->x = a->x % b;
 	r->y = a->y % b;
 }
-
-/**
- * crank_vec_int2_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_int2_muls_self	(	CrankVecInt2*	a,
-								const gint		b	)
-{
-	a->x *= b;
-	a->y *= b;
-}
-
-/**
- * crank_vec_int2_divs_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar division.
- */
-void
-crank_vec_int2_divs_self	(	CrankVecInt2*	a,
-								const gint		b	)
-{
-	a->x /= b;
-	a->y /= b;
-}
-
 /**
  * crank_vec_int2_mods_self:
  * @a: A vector.
@@ -562,6 +648,21 @@ crank_vec_int2_add			(	CrankVecInt2*	a,
 }
 
 /**
+ * crank_vec_int2_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Applies addition to a vector.
+ */
+void
+crank_vec_int2_add_self	(	CrankVecInt2*	a,
+							CrankVecInt2*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+}
+
+/**
  * crank_vec_int2_sub:
  * @a: A vector.
  * @b: A vector.
@@ -582,37 +683,6 @@ crank_vec_int2_sub	(	CrankVecInt2*	a,
 }
 
 /**
- * crank_vec_int2_dot:
- * @a: A vector
- * @b: A vector
- *
- * Gets dot product of two vectors.
- *
- * Returns: dot product of two vectors.
- */
-gint
-crank_vec_int2_dot	(	CrankVecInt2*	a,
-						CrankVecInt2*	b	)
-{
-	return (a->x) * (b->x) + (a->y) * (b->y);
-}
-
-/**
- * crank_vec_int2_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Applies addition to a vector.
- */
-void
-crank_vec_int2_add_self	(	CrankVecInt2*	a,
-							CrankVecInt2*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-}
-
-/**
  * crank_vec_int2_sub_self:
  * @a: A vector.
  * @b: A vector.
@@ -627,6 +697,21 @@ crank_vec_int2_sub_self	(	CrankVecInt2*	a,
 	a->y -= b->y;
 }
 
+/**
+ * crank_vec_int2_dot:
+ * @a: A vector
+ * @b: A vector
+ *
+ * Gets dot product of two vectors.
+ *
+ * Returns: dot product of two vectors.
+ */
+gint
+crank_vec_int2_dot	(	CrankVecInt2*	a,
+						CrankVecInt2*	b	)
+{
+	return (a->x) * (b->x) + (a->y) * (b->y);
+}
 //////// Component vector operations ////////
 
 /**
@@ -650,6 +735,22 @@ crank_vec_int2_cmpmul	(	CrankVecInt2*	a,
 }
 
 /**
+ * crank_vec_int2_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Applies component-wise multiplication on a vector.
+ */
+void
+crank_vec_int2_cmpmul_self	(	CrankVecInt2*	a,
+								CrankVecInt2*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+}
+
+
+/**
  * crank_vec_int2_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -670,6 +771,21 @@ crank_vec_int2_cmpdiv	(	CrankVecInt2*	a,
 }
 
 /**
+ * crank_vec_int2_cmpdiv_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Applies component-wise division on a vector.
+ */
+void
+crank_vec_int2_cmpdiv_self	(	CrankVecInt2*	a,
+								CrankVecInt2*	b	)
+{
+	a->x /= b->x;
+	a->y /= b->y;
+}
+
+/**
  * crank_vec_int2_cmpmod:
  * @a: A vector.
  * @b: A vector.
@@ -687,6 +803,21 @@ crank_vec_int2_cmpmod	(	CrankVecInt2*	a,
 
 	r->x = a->x % b->x;
 	r->y = a->y % b->y;
+}
+
+/**
+ * crank_vec_int2_cmpmod_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Applies component-wise modular on a vector.
+ */
+void
+crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
+								CrankVecInt2*	b	)
+{
+	a->x %= b->x;
+	a->y %= b->y;
 }
 
 /**
@@ -802,49 +933,23 @@ crank_vec_int2_max (	CrankVecInt2*	a,
 
 
 
-/**
- * crank_vec_int2_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Applies component-wise multiplication on a vector.
- */
-void
-crank_vec_int2_cmpmul_self	(	CrankVecInt2*	a,
-								CrankVecInt2*	b	)
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_vec_int2_transform_from_b (	const GValue*	src,
+									GValue*			dest	)
 {
-	a->x *= b->x;
-	a->y *= b->y;
+	CrankVecInt2*	res = g_new (CrankVecInt2, 1);
+	crank_vec_int2_init_from_vb (res, (CrankVecBool2*) g_value_get_boxed (src));
+	g_value_take_boxed (dest, res);
 }
 
-/**
- * crank_vec_int2_cmpdiv_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Applies component-wise division on a vector.
- */
-void
-crank_vec_int2_cmpdiv_self	(	CrankVecInt2*	a,
-								CrankVecInt2*	b	)
+static void
+crank_vec_int2_transform_to_string (const GValue*	src,
+									GValue*			dest	)
 {
-	a->x /= b->x;
-	a->y /= b->y;
-}
-
-/**
- * crank_vec_int2_cmpmod_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Applies component-wise modular on a vector.
- */
-void
-crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
-								CrankVecInt2*	b	)
-{
-	a->x %= b->x;
-	a->y %= b->y;
+	g_value_take_string (dest,
+			crank_vec_int2_to_string ((CrankVecInt2*) g_value_get_boxed (src)));
 }
 
 
@@ -853,9 +958,26 @@ crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
 
 
 
+static void	crank_vec_int3_transform_from_b (	const GValue*	src,
+												GValue*			dest	);
+												
+static void crank_vec_int3_transform_to_string (const GValue*	src,
+												GValue*			dest	);
 
-
-G_DEFINE_BOXED_TYPE (CrankVecInt3, crank_vec_int3, crank_vec_int3_dup, g_free)
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecInt3,
+		crank_vec_int3,
+		crank_vec_int3_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL3,
+												g_define_type_id,
+												crank_vec_int3_transform_from_b	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_int3_transform_to_string	);
+		} )
 
 /**
  * crank_vec_int3_init:
@@ -1236,6 +1358,22 @@ crank_vec_int3_muls	(	CrankVecInt3*	a,
 }
 
 /**
+ * crank_vec_int3_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication on a vector.
+ */
+void
+crank_vec_int3_muls_self	(	CrankVecInt3*	a,
+								const gint		b	)
+{
+	a->x *= b;
+	a->y *= b;
+	a->z *= b;
+}
+
+/**
  * crank_vec_int3_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -1256,6 +1394,22 @@ crank_vec_int3_divs	(	CrankVecInt3*	a,
 }
 
 /**
+ * crank_vec_int3_divs_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar division on a vector.
+ */
+void
+crank_vec_int3_divs_self	(	CrankVecInt3*	a,
+								const gint		b	)
+{
+	a->x /= b;
+	a->y /= b;
+	a->z /= b;
+}
+
+/**
  * crank_vec_int3_mods:
  * @a: A vector.
  * @b: A scalar.
@@ -1273,39 +1427,6 @@ crank_vec_int3_mods	(	CrankVecInt3*	a,
 	r->x = a->x % b;
 	r->y = a->y % b;
 	r->z = a->z % b;
-}
-
-
-/**
- * crank_vec_int3_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication on a vector.
- */
-void
-crank_vec_int3_muls_self	(	CrankVecInt3*	a,
-								const gint		b	)
-{
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
-}
-
-/**
- * crank_vec_int3_divs_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar division on a vector.
- */
-void
-crank_vec_int3_divs_self	(	CrankVecInt3*	a,
-								const gint		b	)
-{
-	a->x /= b;
-	a->y /= b;
-	a->z /= b;
 }
 
 /**
@@ -1348,6 +1469,22 @@ crank_vec_int3_add			(	CrankVecInt3*	a,
 }
 
 /**
+ * crank_vec_int3_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_int3_add_self	(	CrankVecInt3*	a,
+							CrankVecInt3*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+	a->z += b->z;
+}
+
+/**
  * crank_vec_int3_sub:
  * @a: A vector.
  * @b: A vector.
@@ -1366,6 +1503,22 @@ crank_vec_int3_sub	(	CrankVecInt3*	a,
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
+}
+
+/**
+ * crank_vec_int3_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_int3_sub_self	(	CrankVecInt3*	a,
+							CrankVecInt3*	b	)
+{
+	a->x -= b->x;
+	a->y -= b->y;
+	a->z -= b->z;
 }
 
 /**
@@ -1392,7 +1545,7 @@ crank_vec_int3_dot	(	CrankVecInt3*	a,
  * @b: A vector
  * @r: (out): A vector to store result.
  *
- * Gets dot product of two vectors.
+ * Gets cross product of two vectors.
  *
  * Returns: dot product of two vectors.
  */
@@ -1414,43 +1567,11 @@ crank_vec_int3_crs	(	CrankVecInt3*	a,
 }
 
 /**
- * crank_vec_int3_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_int3_add_self	(	CrankVecInt3*	a,
-							CrankVecInt3*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
-}
-
-/**
- * crank_vec_int3_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_int3_sub_self	(	CrankVecInt3*	a,
-							CrankVecInt3*	b	)
-{
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
-}
-
-/**
  * crank_vec_int3_crs_self:
  * @a: A vector
  * @b: A vector
  *
- * Gets dot product of two vectors.
+ * Gets cross product of two vectors.
  *
  * Returns: dot product of two vectors.
  */
@@ -1493,6 +1614,23 @@ crank_vec_int3_cmpmul	(	CrankVecInt3*	a,
 }
 
 /**
+ * crank_vec_int3_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_int3_cmpmul_self	(	CrankVecInt3*	a,
+								CrankVecInt3*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+	a->z *= b->z;
+}
+
+
+/**
  * crank_vec_int3_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -1514,6 +1652,22 @@ crank_vec_int3_cmpdiv	(	CrankVecInt3*	a,
 }
 
 /**
+ * crank_vec_int3_cmpdiv_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise division.
+ */
+void
+crank_vec_int3_cmpdiv_self	(	CrankVecInt3*	a,
+								CrankVecInt3*	b	)
+{
+	a->x /= b->x;
+	a->y /= b->y;
+	a->z /= b->z;
+}
+
+/**
  * crank_vec_int3_cmpmod:
  * @a: A vector.
  * @b: A vector.
@@ -1532,6 +1686,22 @@ crank_vec_int3_cmpmod	(	CrankVecInt3*	a,
 	r->x = a->x % b->x;
 	r->y = a->y % b->y;
 	r->z = a->z % b->z;
+}
+
+/**
+ * crank_vec_int3_cmpmod_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise modular.
+ */
+void
+crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
+								CrankVecInt3*	b	)
+{
+	a->x %= b->x;
+	a->y %= b->y;
+	a->z %= b->z;
 }
 
 /**
@@ -1651,54 +1821,23 @@ crank_vec_int3_max (	CrankVecInt3*	a,
 	r->z = MAX (a->z, b->z);
 }
 
+//////// GValue Transformation /////////////////////////////////////////////////
 
-
-/**
- * crank_vec_int3_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_int3_cmpmul_self	(	CrankVecInt3*	a,
-								CrankVecInt3*	b	)
+static void
+crank_vec_int3_transform_from_b (	const GValue*	src,
+									GValue*			dest	)
 {
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
+	CrankVecInt3*	res = g_new (CrankVecInt3, 1);
+	crank_vec_int3_init_from_vb (res, (CrankVecBool3*) g_value_get_boxed (src));
+	g_value_take_boxed (dest, res);
 }
 
-/**
- * crank_vec_int3_cmpdiv_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise division.
- */
-void
-crank_vec_int3_cmpdiv_self	(	CrankVecInt3*	a,
-								CrankVecInt3*	b	)
+static void
+crank_vec_int3_transform_to_string (const GValue*	src,
+									GValue*			dest	)
 {
-	a->x /= b->x;
-	a->y /= b->y;
-	a->z /= b->z;
-}
-
-/**
- * crank_vec_int3_cmpmod_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise modular.
- */
-void
-crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
-								CrankVecInt3*	b	)
-{
-	a->x %= b->x;
-	a->y %= b->y;
-	a->z %= b->z;
+	g_value_take_string (dest,
+			crank_vec_int3_to_string ((CrankVecInt3*) g_value_get_boxed (src)));
 }
 
 
@@ -1708,7 +1847,26 @@ crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecInt4, crank_vec_int4, crank_vec_int4_dup, g_free)
+static void	crank_vec_int4_transform_from_b (	const GValue*	src,
+												GValue*			dest	);
+												
+static void crank_vec_int4_transform_to_string (const GValue*	src,
+												GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecInt4,
+		crank_vec_int4,
+		crank_vec_int4_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL4,
+												g_define_type_id,
+												crank_vec_int4_transform_from_b	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_int4_transform_to_string	);
+		} )
 
 /**
  * crank_vec_int4_init:
@@ -2105,6 +2263,23 @@ crank_vec_int4_muls	(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_int4_muls_self	(	CrankVecInt4*	a,
+								const gint		b	)
+{
+	a->x *= b;
+	a->y *= b;
+	a->z *= b;
+	a->w *= b;
+}
+
+/**
  * crank_vec_int4_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -2126,6 +2301,23 @@ crank_vec_int4_divs	(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_divs_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar division.
+ */
+void
+crank_vec_int4_divs_self	(	CrankVecInt4*	a,
+								const gint		b	)
+{
+	a->x /= b;
+	a->y /= b;
+	a->z /= b;
+	a->w /= b;
+}
+
+/**
  * crank_vec_int4_mods:
  * @a: A vector.
  * @b: A scalar.
@@ -2144,40 +2336,6 @@ crank_vec_int4_mods	(	CrankVecInt4*	a,
 	r->y = a->y % b;
 	r->z = a->z % b;
 	r->w = a->w % b;
-}
-
-/**
- * crank_vec_int4_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_int4_muls_self	(	CrankVecInt4*	a,
-								const gint		b	)
-{
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
-	a->w *= b;
-}
-
-/**
- * crank_vec_int4_divs_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar division.
- */
-void
-crank_vec_int4_divs_self	(	CrankVecInt4*	a,
-								const gint		b	)
-{
-	a->x /= b;
-	a->y /= b;
-	a->z /= b;
-	a->w /= b;
 }
 
 /**
@@ -2222,6 +2380,23 @@ crank_vec_int4_add			(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_int4_add_self	(	CrankVecInt4*	a,
+							CrankVecInt4*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+	a->z += b->z;
+	a->w += b->w;
+}
+
+/**
  * crank_vec_int4_sub:
  * @a: A vector.
  * @b: A vector.
@@ -2244,6 +2419,23 @@ crank_vec_int4_sub	(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_int4_sub_self	(	CrankVecInt4*	a,
+							CrankVecInt4*	b	)
+{
+	a->x -= b->x;
+	a->y -= b->y;
+	a->z -= b->z;
+	a->w -= b->w;
+}
+
+/**
  * crank_vec_int4_dot:
  * @a: A vector
  * @b: A vector
@@ -2260,40 +2452,6 @@ crank_vec_int4_dot	(	CrankVecInt4*	a,
 			(a->y) * (b->y) +
 			(a->z) * (b->z) +
 			(a->w) * (b->w);
-}
-
-/**
- * crank_vec_int4_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_int4_add_self	(	CrankVecInt4*	a,
-							CrankVecInt4*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
-	a->w += b->w;
-}
-
-/**
- * crank_vec_int4_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_int4_sub_self	(	CrankVecInt4*	a,
-							CrankVecInt4*	b	)
-{
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
-	a->w -= b->w;
 }
 
 //////// Component vector operations ////////
@@ -2321,6 +2479,23 @@ crank_vec_int4_cmpmul	(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_int4_cmpmul_self	(	CrankVecInt4*	a,
+								CrankVecInt4*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+	a->z *= b->z;
+	a->w *= b->w;
+}
+
+/**
  * crank_vec_int4_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -2343,6 +2518,23 @@ crank_vec_int4_cmpdiv	(	CrankVecInt4*	a,
 }
 
 /**
+ * crank_vec_int4_cmpdiv_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise division.
+ */
+void
+crank_vec_int4_cmpdiv_self	(	CrankVecInt4*	a,
+								CrankVecInt4*	b	)
+{
+	a->x /= b->x;
+	a->y /= b->y;
+	a->z /= b->z;
+	a->w /= b->w;
+}
+
+/**
  * crank_vec_int4_cmpmod:
  * @a: A vector.
  * @b: A vector.
@@ -2362,6 +2554,23 @@ crank_vec_int4_cmpmod	(	CrankVecInt4*	a,
 	r->y = a->y % b->y;
 	r->z = a->z % b->z;
 	r->w = a->w % b->w;
+}
+
+/**
+ * crank_vec_int4_cmpmod_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise modular.
+ */
+void
+crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
+								CrankVecInt4*	b	)
+{
+	a->x %= b->x;
+	a->y %= b->y;
+	a->z %= b->z;
+	a->w %= b->w;
 }
 
 /**
@@ -2487,55 +2696,23 @@ crank_vec_int4_max (	CrankVecInt4*	a,
 	r->w = MAX (a->w, b->w);
 }
 
-/**
- * crank_vec_int4_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_int4_cmpmul_self	(	CrankVecInt4*	a,
-								CrankVecInt4*	b	)
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_vec_int4_transform_from_b (	const GValue*	src,
+									GValue*			dest	)
 {
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
-	a->w *= b->w;
+	CrankVecInt4*	res = g_new (CrankVecInt4, 1);
+	crank_vec_int4_init_from_vb (res, (CrankVecBool4*) g_value_get_boxed (src));
+	g_value_take_boxed (dest, res);
 }
 
-/**
- * crank_vec_int4_cmpdiv_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise division.
- */
-void
-crank_vec_int4_cmpdiv_self	(	CrankVecInt4*	a,
-								CrankVecInt4*	b	)
+static void
+crank_vec_int4_transform_to_string (const GValue*	src,
+									GValue*			dest	)
 {
-	a->x /= b->x;
-	a->y /= b->y;
-	a->z /= b->z;
-	a->w /= b->w;
-}
-
-/**
- * crank_vec_int4_cmpmod_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise modular.
- */
-void
-crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
-								CrankVecInt4*	b	)
-{
-	a->x %= b->x;
-	a->y %= b->y;
-	a->z %= b->z;
-	a->w %= b->w;
+	g_value_take_string (dest,
+			crank_vec_int4_to_string ((CrankVecInt4*) g_value_get_boxed (src)));
 }
 
 
@@ -2544,8 +2721,48 @@ crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
 
 
 
+static void	crank_vec_int_n_transform_from_b (	const GValue*	src,
+												GValue*			dest	);
+												
+static void	crank_vec_int_n_transform_from_v2 (	const GValue*	src,
+												GValue*			dest	);
+												
+static void	crank_vec_int_n_transform_from_v3 (	const GValue*	src,
+												GValue*			dest	);
+												
+static void	crank_vec_int_n_transform_from_v4 (	const GValue*	src,
+												GValue*			dest	);
+												
+static void crank_vec_int_n_transform_to_string (const GValue*	src,
+												GValue*			dest	);
 
-G_DEFINE_BOXED_TYPE (CrankVecIntN, crank_vec_int_n, crank_vec_int_n_dup, crank_vec_int_n_free)
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecIntN,
+		crank_vec_int_n,
+		crank_vec_int_n_dup,
+		crank_vec_int_n_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL_N,
+												g_define_type_id,
+												crank_vec_int_n_transform_from_b	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT2,
+												g_define_type_id,
+												crank_vec_int_n_transform_from_v2	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT3,
+												g_define_type_id,
+												crank_vec_int_n_transform_from_v3	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT4,
+												g_define_type_id,
+												crank_vec_int_n_transform_from_v4	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_int_n_transform_to_string	);
+		} )
 
 /**
  * crank_vec_int_n_init:
@@ -3132,6 +3349,21 @@ crank_vec_int_n_muls	(	CrankVecIntN*	a,
 }
 
 /**
+ * crank_vec_int_n_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_int_n_muls_self	(	CrankVecIntN*	a,
+								const gint		b	)
+{
+	guint	i;
+	for (i = 0; i < a->n; i++)		a->data[i] *= b;
+}
+
+/**
  * crank_vec_int_n_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -3153,6 +3385,22 @@ crank_vec_int_n_divs	(	CrankVecIntN*	a,
 }
 
 /**
+ * crank_vec_int_n_divs_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar division.
+ */
+void
+crank_vec_int_n_divs_self	(	CrankVecIntN*	a,
+								const gint		b	)
+{
+	guint	i;
+	
+	for (i = 0; i < a->n; i++)		a->data[i] /= b;
+}
+
+/**
  * crank_vec_int_n_mods:
  * @a: A vector.
  * @b: A scalar.
@@ -3171,37 +3419,6 @@ crank_vec_int_n_mods	(	CrankVecIntN*	a,
 	CRANK_VEC_ALLOC(r,gint,a->n);
 	
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] % b;
-}
-
-/**
- * crank_vec_int_n_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_int_n_muls_self	(	CrankVecIntN*	a,
-								const gint		b	)
-{
-	guint	i;
-	for (i = 0; i < a->n; i++)		a->data[i] *= b;
-}
-
-/**
- * crank_vec_int_n_divs_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar division.
- */
-void
-crank_vec_int_n_divs_self	(	CrankVecIntN*	a,
-								const gint		b	)
-{
-	guint	i;
-	
-	for (i = 0; i < a->n; i++)		a->data[i] /= b;
 }
 
 /**
@@ -3316,6 +3533,24 @@ crank_vec_int_n_cmpmul	(	CrankVecIntN*	a,
 }
 
 /**
+ * crank_vec_int_n_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply component-wise multiplication.
+ */
+void
+crank_vec_int_n_cmpmul_self	(	CrankVecIntN*	a,
+								CrankVecIntN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmul-self", a, b);
+
+	for (i = 0; i < a->n; i++)		a->data[i] *= b->data[i];
+}
+
+/**
  * crank_vec_int_n_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -3339,6 +3574,24 @@ crank_vec_int_n_cmpdiv	(	CrankVecIntN*	a,
 }
 
 /**
+ * crank_vec_int_n_cmpdiv_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply component-wise multiplication.
+ */
+void
+crank_vec_int_n_cmpdiv_self	(	CrankVecIntN*	a,
+								CrankVecIntN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpdiv-self", a, b);
+
+	for (i = 0; i < a->n; i++)		a->data[i] /= b->data[i];
+}
+
+/**
  * crank_vec_int_n_cmpmod:
  * @a: A vector.
  * @b: A vector.
@@ -3359,6 +3612,24 @@ crank_vec_int_n_cmpmod	(	CrankVecIntN*	a,
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] % b->data[i];
+}
+
+/**
+ * crank_vec_int_n_cmpmod_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply component-wise multiplication.
+ */
+void
+crank_vec_int_n_cmpmod_self	(	CrankVecIntN*	a,
+								CrankVecIntN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmod-self", a, b);
+
+	for (i = 0; i < a->n; i++)		a->data[i] %= b->data[i];
 }
 
 /**
@@ -3498,8 +3769,54 @@ crank_vec_int_n_max (	CrankVecIntN*	a,
 	}
 }
 
+//////// GValue Transformation /////////////////////////////////////////////////
 
+static void
+crank_vec_int_n_transform_from_b (	const GValue*	src,
+									GValue*			dest	)
+{
+	CrankVecIntN*	res = g_new (CrankVecIntN, 1);
+	crank_vec_int_n_init_from_vb (res, (CrankVecBoolN*) g_value_get_boxed (src));
+	g_value_take_boxed (dest, res);
+}
 
+static void
+crank_vec_int_n_transform_from_v2 (	const GValue*	src,
+									GValue*			dest	)
+{
+	CrankVecIntN*	res = g_new (CrankVecIntN, 1);
+	crank_vec_int_n_init_arr (res, 2, (gint*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, res);
+}
+
+static void
+crank_vec_int_n_transform_from_v3 (	const GValue*	src,
+									GValue*			dest	)
+{
+	CrankVecIntN*	res = g_new (CrankVecIntN, 1);
+	crank_vec_int_n_init_arr (res, 3, (gint*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, res);
+}
+
+static void
+crank_vec_int_n_transform_from_v4 (	const GValue*	src,
+									GValue*			dest	)
+{
+	CrankVecIntN*	res = g_new (CrankVecIntN, 1);
+	crank_vec_int_n_init_arr (res, 4, (gint*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, res);
+}
+
+static void
+crank_vec_int_n_transform_to_string (const GValue*	src,
+									GValue*			dest	)
+{
+	g_value_take_string (dest,
+			crank_vec_int_n_to_string ((CrankVecIntN*) g_value_get_boxed (src)));
+}
 
 
 

@@ -36,36 +36,6 @@
  * * Boolean vectors have logical operations while float ones have airthmetic operations
  * * Boolean vectors have any, all property while float ones have magnitude/norm.
  *
- * <table><title>Supported Operations</title>
- *   <tgroup cols="2" align="left">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, array, va_list, fill</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>any, all, count, ratio</entry>
- *       </row>
- *       <row>
- *         <entry>Collection</entry>
- *         <entry>get, set, foreach, iterator</entry>
- *       </row>
- *       <row>
- *         <entry>Vector - Vector Operations</entry>
- *         <entry>and, or, xor, not</entry>
- *       </row>
- *     </tbody>
- *   </tgroup>
- * </table>
- *
  * Provided macros are following
  *
  * * TRUE, FALSE: Initialization list that all elements are %TRUE or %FALSE.
@@ -87,14 +57,19 @@
  *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
  *       <row> <entry morerows="1">To string.</entry>
- *             <entry>crank_vec_bool2_to_string()</entry> </row>
+ *             <entry>crank_vec_bool2_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
  *       <row> <entry>crank_vec_bool2_to_string_full()</entry> </row>
  *
  *       <row> <entry>To #CrankVecBoolN.</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>cast vector into array.
- * 
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
  *                    Defined in #CrankVecBoolN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecInt2</entry>
+ *             <entry>crank_vec_int2_init_from_vb()</entry>
+ *             <entry>GValue Transform, Defined in #CrankVecInt2</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -106,14 +81,19 @@
  *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
  *       <row> <entry morerows="1">To string.</entry>
- *             <entry>crank_vec_bool3_to_string()</entry> </row>
+ *             <entry>crank_vec_bool3_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
  *       <row> <entry>crank_vec_bool3_to_string_full()</entry> </row>
  *
  *       <row> <entry>To #CrankVecBoolN.</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>cast vector into array.
- * 
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
  *                    Defined in #CrankVecBoolN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecInt3</entry>
+ *             <entry>crank_vec_int3_init_from_vb()</entry>
+ *             <entry>GValue Transform, Defined in #CrankVecInt3</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -125,14 +105,19 @@
  *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
  *       <row> <entry morerows="1">To string.</entry>
- *             <entry>crank_vec_bool4_to_string()</entry> </row>
+ *             <entry>crank_vec_bool4_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
  *       <row> <entry>crank_vec_bool4_to_string_full()</entry> </row>
  *
  *       <row> <entry>To #CrankVecBoolN.</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>cast vector into array.
- * 
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
  *                    Defined in #CrankVecBoolN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecInt4</entry>
+ *             <entry>crank_vec_int4_init_from_vb()</entry>
+ *             <entry>GValue Transform, Defined in #CrankVecInt4</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -145,18 +130,23 @@
  *     <tbody>
  *       <row> <entry>From #CrankVecBool2</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>Cast vector into array</entry> </row>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
  *
  *       <row> <entry>From #CrankVecBool3</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>Cast vector into array</entry> </row>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
  *
  *       <row> <entry>From #CrankVecBool4</entry>
  *             <entry>crank_vec_bool_n_init_arr()</entry>
- *             <entry>Cast vector into array</entry> </row>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecIntN</entry>
+ *             <entry>crank_vec_int_n_init_from_vb()</entry>
+ *             <entry>GValue Transform, Defined in #CrankVecIntN</entry> </row>
  *
  *       <row> <entry morerows="1">To string.</entry>
- *             <entry>crank_vec_bool_n_to_string()</entry> </row>
+ *             <entry>crank_vec_bool_n_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
  *       <row> <entry>crank_vec_bool_n_to_string_full()</entry> </row>
  *     </tbody>
  *   </tgroup>
@@ -537,6 +527,22 @@ crank_vec_bool2_and	(	CrankVecBool2*	a,
 }
 
 /**
+ * crank_vec_bool2_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool2_and_self	(	CrankVecBool2*	a,
+								CrankVecBool2*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+}
+
+
+/**
  * crank_vec_bool2_or:
  * @a: A vector.
  * @b: A vector.
@@ -554,6 +560,21 @@ crank_vec_bool2_or	(	CrankVecBool2*	a,
 	
 	r->x = a->x || b->x;
 	r->y = a->y || b->y;
+}
+
+/**
+ * crank_vec_bool2_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool2_or_self (	CrankVecBool2*	a,
+							CrankVecBool2*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
 }
 
 /**
@@ -576,6 +597,20 @@ crank_vec_bool2_xor	(	CrankVecBool2*	a,
 	r->y = a->y != b->y;
 }
 
+/**
+ * crank_vec_bool2_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool2_xor_self (	CrankVecBool2*	a,
+							CrankVecBool2*	b	)
+{
+	a->x = a->x != b->x;
+	a->y = a->y != b->y;
+}
 
 /**
  * crank_vec_bool2_not:
@@ -593,53 +628,6 @@ crank_vec_bool2_not	(	CrankVecBool2*	a,
 	r->x = ! a->x;
 	r->y = ! a->y;
 }
-
-
-/**
- * crank_vec_bool2_and_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component AND to @a.
- */
-void
-crank_vec_bool2_and_self	(	CrankVecBool2*	a,
-								CrankVecBool2*	b	)
-{
-	a->x = a->x && b->x;
-	a->y = a->y && b->y;
-}
-
-/**
- * crank_vec_bool2_or_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component OR to @a.
- */
-void
-crank_vec_bool2_or_self (	CrankVecBool2*	a,
-							CrankVecBool2*	b	)
-{
-	a->x = a->x || b->x;
-	a->y = a->y || b->y;
-}
-
-/**
- * crank_vec_bool2_xor_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component XOR to @a.
- */
-void
-crank_vec_bool2_xor_self (	CrankVecBool2*	a,
-							CrankVecBool2*	b	)
-{
-	a->x = a->x != b->x;
-	a->y = a->y != b->y;
-}
-
 
 /**
  * crank_vec_bool2_not_self:
@@ -1087,6 +1075,22 @@ crank_vec_bool3_and	(	CrankVecBool3*	a,
 }
 
 /**
+ * crank_vec_bool3_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool3_and_self	(	CrankVecBool3*	a,
+								CrankVecBool3*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+	a->z = a->z && b->z;
+}
+
+/**
  * crank_vec_bool3_or:
  * @a: A vector.
  * @b: A vector.
@@ -1105,6 +1109,22 @@ crank_vec_bool3_or	(	CrankVecBool3*	a,
 	r->x = a->x || b->x;
 	r->y = a->y || b->y;
 	r->z = a->z || b->z;
+}
+
+/**
+ * crank_vec_bool3_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool3_or_self (	CrankVecBool3*	a,
+							CrankVecBool3*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
+	a->z = a->z || b->z;
 }
 
 /**
@@ -1129,56 +1149,6 @@ crank_vec_bool3_xor	(	CrankVecBool3*	a,
 }
 
 /**
- * crank_vec_bool3_not:
- * @a: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets Component NOT of @a.
- */
-void
-crank_vec_bool3_not	(	CrankVecBool3*	a,
-						CrankVecBool3*	r	)
-{
-	g_return_if_fail (a != r);
-	
-	r->x = ! a->x;
-	r->y = ! a->y;
-}
-
-
-/**
- * crank_vec_bool3_and_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component AND to @a.
- */
-void
-crank_vec_bool3_and_self	(	CrankVecBool3*	a,
-								CrankVecBool3*	b	)
-{
-	a->x = a->x && b->x;
-	a->y = a->y && b->y;
-	a->z = a->z && b->z;
-}
-
-/**
- * crank_vec_bool3_or_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component OR to @a.
- */
-void
-crank_vec_bool3_or_self (	CrankVecBool3*	a,
-							CrankVecBool3*	b	)
-{
-	a->x = a->x || b->x;
-	a->y = a->y || b->y;
-	a->z = a->z || b->z;
-}
-
-/**
  * crank_vec_bool3_xor_self:
  * @a: A vector.
  * @b: A vector.
@@ -1194,6 +1164,22 @@ crank_vec_bool3_xor_self (	CrankVecBool3*	a,
 	a->z = a->z != b->z;
 }
 
+/**
+ * crank_vec_bool3_not:
+ * @a: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets Component NOT of @a.
+ */
+void
+crank_vec_bool3_not	(	CrankVecBool3*	a,
+						CrankVecBool3*	r	)
+{
+	g_return_if_fail (a != r);
+	
+	r->x = ! a->x;
+	r->y = ! a->y;
+}
 
 /**
  * crank_vec_bool3_not_self:
@@ -1640,6 +1626,23 @@ crank_vec_bool4_and	(	CrankVecBool4*	a,
 }
 
 /**
+ * crank_vec_bool4_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool4_and_self	(	CrankVecBool4*	a,
+								CrankVecBool4*	b	)
+{
+	a->x = a->x && b->x;
+	a->y = a->y && b->y;
+	a->z = a->z && b->z;
+	a->w = a->w && b->w;
+}
+
+/**
  * crank_vec_bool4_or:
  * @a: A vector.
  * @b: A vector.
@@ -1659,6 +1662,23 @@ crank_vec_bool4_or	(	CrankVecBool4*	a,
 	r->y = a->y || b->y;
 	r->z = a->z || b->z;
 	r->w = a->w || b->w;
+}
+
+/**
+ * crank_vec_bool4_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool4_or_self (	CrankVecBool4*	a,
+							CrankVecBool4*	b	)
+{
+	a->x = a->x || b->x;
+	a->y = a->y || b->y;
+	a->z = a->z || b->z;
+	a->w = a->w || b->w;
 }
 
 /**
@@ -1684,6 +1704,24 @@ crank_vec_bool4_xor	(	CrankVecBool4*	a,
 }
 
 /**
+ * crank_vec_bool4_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool4_xor_self (	CrankVecBool4*	a,
+							CrankVecBool4*	b	)
+{
+	a->x = a->x != b->x;
+	a->y = a->y != b->y;
+	a->z = a->z != b->z;
+	a->w = a->w != b->w;
+}
+
+
+/**
  * crank_vec_bool4_not:
  * @a: A vector.
  * @r: (out): A vector to store result.
@@ -1701,59 +1739,6 @@ crank_vec_bool4_not	(	CrankVecBool4*	a,
 	r->z = ! a->z;
 	r->w = ! a->w;
 }
-
-
-/**
- * crank_vec_bool4_and_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component AND to @a.
- */
-void
-crank_vec_bool4_and_self	(	CrankVecBool4*	a,
-								CrankVecBool4*	b	)
-{
-	a->x = a->x && b->x;
-	a->y = a->y && b->y;
-	a->z = a->z && b->z;
-	a->w = a->w && b->w;
-}
-
-/**
- * crank_vec_bool4_or_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component OR to @a.
- */
-void
-crank_vec_bool4_or_self (	CrankVecBool4*	a,
-							CrankVecBool4*	b	)
-{
-	a->x = a->x || b->x;
-	a->y = a->y || b->y;
-	a->z = a->z || b->z;
-	a->w = a->w || b->w;
-}
-
-/**
- * crank_vec_bool4_xor_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component XOR to @a.
- */
-void
-crank_vec_bool4_xor_self (	CrankVecBool4*	a,
-							CrankVecBool4*	b	)
-{
-	a->x = a->x != b->x;
-	a->y = a->y != b->y;
-	a->z = a->z != b->z;
-	a->w = a->w != b->w;
-}
-
 
 /**
  * crank_vec_bool4_not_self:
@@ -2465,6 +2450,23 @@ crank_vec_bool_n_and	(	CrankVecBoolN*	a,
 	for (i = 0; i < a->n; i++)	r->data[i] = (a->data[i]) && (b->data[i]);
 }
 
+/**
+ * crank_vec_bool_n_and_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component AND to @a.
+ */
+void
+crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
+								CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "and-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] && b->data[i]);
+}
 
 /**
  * crank_vec_bool_n_or:
@@ -2488,6 +2490,25 @@ crank_vec_bool_n_or	(	CrankVecBoolN*	a,
 	CRANK_VEC_ALLOC (r,gboolean,a->n);
 	for (i = 0; i < a->n; i++)	r->data[i] = a->data[i] || b->data[i] ;
 }
+
+/**
+ * crank_vec_bool_n_or_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component OR to @a.
+ */
+void
+crank_vec_bool_n_or_self (	CrankVecBoolN*	a,
+							CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "or-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] || b->data[i]);
+}
+
 /**
  * crank_vec_bool_n_xor:
  * @a: A vector.
@@ -2511,6 +2532,23 @@ crank_vec_bool_n_xor	(	CrankVecBoolN*	a,
 	for (i = 0; i < a->n; i++)	r->data[i] = (a->data[i] != b->data[i]);
 }
 
+/**
+ * crank_vec_bool_n_xor_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Apply Component XOR to @a.
+ */
+void
+crank_vec_bool_n_xor_self (	CrankVecBoolN*	a,
+							CrankVecBoolN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "xor-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] != b->data[i]);
+}
 
 /**
  * crank_vec_bool_n_not:
@@ -2530,62 +2568,6 @@ crank_vec_bool_n_not	(	CrankVecBoolN*	a,
 	CRANK_VEC_ALLOC (r,gboolean,a->n);
 	for (i = 0; i < r->n; i++) r->data[i] = !(a->data[i]);
 }
-
-
-/**
- * crank_vec_bool_n_and_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component AND to @a.
- */
-void
-crank_vec_bool_n_and_self	(	CrankVecBoolN*	a,
-								CrankVecBoolN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "and-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] && b->data[i]);
-}
-
-/**
- * crank_vec_bool_n_or_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component OR to @a.
- */
-void
-crank_vec_bool_n_or_self (	CrankVecBoolN*	a,
-							CrankVecBoolN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "or-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] || b->data[i]);
-}
-
-/**
- * crank_vec_bool_n_xor_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Apply Component XOR to @a.
- */
-void
-crank_vec_bool_n_xor_self (	CrankVecBoolN*	a,
-							CrankVecBoolN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecBoolN", "xor-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] = (a->data[i] != b->data[i]);
-}
-
 
 /**
  * crank_vec_bool_n_not_self:

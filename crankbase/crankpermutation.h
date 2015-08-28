@@ -210,6 +210,8 @@ gboolean		crank_permutation_foreach (		CrankPermutation*	p,
 
 //////// Operations ////////////////////////////////////////////////////////////
 
+gboolean		crank_permutation_is_valid (	CrankPermutation*	p	);
+
 gboolean		crank_permutation_is_identity (	CrankPermutation*	p	);
 
 guint			crank_permutation_get_inversion (	CrankPermutation*	p	);
@@ -226,25 +228,24 @@ guint*			crank_permutation_get_excedances (	CrankPermutation*	p,
 													guint*				rn	);
 
 
-gboolean		crank_permutation_check_valid (	CrankPermutation*	p	);
-
 void			crank_permutation_swap (		CrankPermutation*	p,
 												const guint			i,
 												const guint			j	);
+												
 
 void			crank_permutation_reverse (		CrankPermutation*	p,
 												CrankPermutation*	q	);
 
+void			crank_permutation_reverse_self (CrankPermutation*	p	);
+
 void			crank_permutation_inverse (		CrankPermutation*	p,
 												CrankPermutation*	q	);
+
+void			crank_permutation_inverse_self (CrankPermutation*	p	);
 
 void			crank_permutation_shuffle (		CrankPermutation*	p,
 												CrankPermutation*	q,
 												CrankPermutation*	r	);
-
-void			crank_permutation_reverse_self (CrankPermutation*	p	);
-
-void			crank_permutation_inverse_self (CrankPermutation*	p	);
 
 void			crank_permutation_shuffle_self (CrankPermutation*	p,
 												CrankPermutation*	q	);
@@ -296,13 +297,13 @@ guint*		crank_permutation__gi_slice (	CrankPermutation*	p,
 //////// Vala Support //////////////////////////////////////////////////////////
 
 
-void		crank_permutation_init_vala_compare_sarray (	const guint			n,
+void		crank_permutation__vala_init_compare_sarray (	const guint			n,
 													const gsize			gsz,
 													gpointer			garr,
 													GCompareFunc		gcmp,
 													CrankPermutation*	p	);
 
-void		crank_permutation_init_vala_compare_sarray_data (	const guint			n,
+void		crank_permutation__vala_init_compare_sarray_data (	const guint			n,
 															const gsize			gsz,
 															gpointer			garr,
 															GCompareDataFunc	gcmp,
@@ -310,35 +311,35 @@ void		crank_permutation_init_vala_compare_sarray_data (	const guint			n,
 															CrankPermutation*	p	);
 
 
-void		crank_permutation_init_vala_compare_parray (	const guint			n,
+void		crank_permutation__vala_init_compare_parray (	const guint			n,
 													gpointer*			garr,
 													GCompareFunc		gcmp,
 													CrankPermutation*	p	);
 
-void		crank_permutation_init_vala_compare_parray_data (	const guint			n,
+void		crank_permutation__vala_init_compare_parray_data (	const guint			n,
 															gpointer*			garr,
 															GCompareDataFunc	gcmp,
 															gpointer			userdata,
 															CrankPermutation*	p	);
 
 
-gpointer*	crank_permutation_vala_shuffle_parray (	CrankPermutation*	p,
+gpointer*	crank_permutation__vala_shuffle_parray (	CrankPermutation*	p,
 													gpointer*			arr,
 													guint*				rn	);
 
-gboolean*	crank_permutation_vala_shuffle_array_boolean (	CrankPermutation*	p,
+gboolean*	crank_permutation__vala_shuffle_array_boolean (	CrankPermutation*	p,
 														gboolean*			arr,
 														guint*				rn	);
 
-gint*		crank_permutation_vala_shuffle_array_int (	CrankPermutation*	p,
+gint*		crank_permutation__vala_shuffle_array_int (	CrankPermutation*	p,
 														gint*				arr,
 														guint*				rn	);
 
-guint*		crank_permutation_vala_shuffle_array_uint (	CrankPermutation*	p,
+guint*		crank_permutation__vala_shuffle_array_uint (	CrankPermutation*	p,
 														guint*				arr,
 														guint*				rn	);
 
-gfloat*		crank_permutation_vala_shuffle_array_float (	CrankPermutation*	p,
+gfloat*		crank_permutation__vala_shuffle_array_float (	CrankPermutation*	p,
 														gfloat*				arr,
 														guint*				rn	);
 

@@ -115,8 +115,8 @@ crank_float_hash1 (	gconstpointer	a	)
  * @a: A Pointer pointing a boolean value.
  * @b: A Pointer pointing a boolean value.
  *
- * Check equality of boolean values. Before checking, it will invert both, so
- * that we can check only 0 or 1.
+ * Check equality of boolean values. This function will work for non-normalized
+ * values. (other values rather than 0 or 1)
  *
  * Returns: whether (*@a) and (*@b) are equal.
  */
@@ -173,7 +173,7 @@ crank_float_equal (	gconstpointer	a,
  * @d: A delta value.
  *
  * Checks *@a and *@b are sufficiently equal:
- * This means (*@b - d < *@a) && (*@a < *@b + d).
+ * This means (*@b - @d < *@a) && (*@a < *@b + @d).
  *
  * Returns: Whether @a and @b are sufficiently equal.
  */

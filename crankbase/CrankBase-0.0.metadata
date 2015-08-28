@@ -74,7 +74,7 @@ IterMemStruct		skip
 Permutation 		struct=true
 .data 				unowned=false	array_length_field="n"
 .shuffle_sarray		skip=false
-.vala_shuffle_array_*	skip=false	name="vala_(.+)"
+._vala_shuffle_array_*	skip=false	name="_vala_(.+)"
 
 permutation_init*	skip
 

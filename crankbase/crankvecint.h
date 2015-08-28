@@ -49,26 +49,7 @@ struct _CrankVecInt2 {
 #define CRANK_TYPE_VEC_INT2	(crank_vec_int2_get_type ())
 GType			crank_vec_int2_get_type	(void);
 
-/**
- * CRANK_VEC_INT2_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_INT2_0	{0, 0}
 
-/**
- * CRANK_VEC_INT2_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT2_I	{1, 0}
-
-/**
- * CRANK_VEC_INT2_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT2_J	{0, 1)
 
 void			crank_vec_int2_init			(	CrankVecInt2*	vec,
 												gint			x,
@@ -165,17 +146,17 @@ void			crank_vec_int2_add			(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
 
+void			crank_vec_int2_add_self		(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+
 void			crank_vec_int2_sub			(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
 
-gint			crank_vec_int2_dot			(	CrankVecInt2*	a,
-												CrankVecInt2*	b	);
-
-void			crank_vec_int2_add_self		(	CrankVecInt2*	a,
-												CrankVecInt2*	b	);
-
 void			crank_vec_int2_sub_self		(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
+
+gint			crank_vec_int2_dot			(	CrankVecInt2*	a,
 												CrankVecInt2*	b	);
 
 //////// Component vector operations ////////
@@ -183,14 +164,23 @@ void			crank_vec_int2_sub_self		(	CrankVecInt2*	a,
 void			crank_vec_int2_cmpmul		(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
+
+void			crank_vec_int2_cmpmul_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
 												
 void			crank_vec_int2_cmpdiv		(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
+												
+void			crank_vec_int2_cmpdiv_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
 
 void			crank_vec_int2_cmpmod		(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
+
+void			crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
+												CrankVecInt2*	b	);
 
 void			crank_vec_int2_cmpless		(	CrankVecInt2*	a,
 												CrankVecInt2*	b,
@@ -216,15 +206,6 @@ void			crank_vec_int2_max	(			CrankVecInt2*	a,
 												CrankVecInt2*	b,
 												CrankVecInt2*	r	);
 
-void			crank_vec_int2_cmpmul_self	(	CrankVecInt2*	a,
-												CrankVecInt2*	b	);
-												
-void			crank_vec_int2_cmpdiv_self	(	CrankVecInt2*	a,
-												CrankVecInt2*	b	);
-
-void			crank_vec_int2_cmpmod_self	(	CrankVecInt2*	a,
-												CrankVecInt2*	b	);
-
 
 
 
@@ -246,33 +227,7 @@ struct _CrankVecInt3 {
 #define CRANK_TYPE_VEC_INT3	(crank_vec_int3_get_type ())
 GType			crank_vec_int3_get_type	(void);
 
-/**
- * CRANK_VEC_INT3_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_INT3_0	{0, 0, 0}
 
-/**
- * CRANK_VEC_INT3_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT3_I	{1, 0, 0}
-
-/**
- * CRANK_VEC_INT3_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT3_J	{0, 1, 0)
-
-/**
- * CRANK_VEC_INT3_k:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT3_k	{0, 0, 1)
 
 void			crank_vec_int3_init			(	CrankVecInt3*	vec,
 												gint			x,
@@ -371,9 +326,15 @@ void			crank_vec_int3_add			(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
 
+void			crank_vec_int3_add_self		(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
+
 void			crank_vec_int3_sub			(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+
+void			crank_vec_int3_sub_self		(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 
 gint			crank_vec_int3_dot			(	CrankVecInt3*	a,
 												CrankVecInt3*	b	);
@@ -381,13 +342,6 @@ gint			crank_vec_int3_dot			(	CrankVecInt3*	a,
 void			crank_vec_int3_crs			(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
-
-void			crank_vec_int3_add_self		(	CrankVecInt3*	a,
-												CrankVecInt3*	b	);
-
-void			crank_vec_int3_sub_self		(	CrankVecInt3*	a,
-												CrankVecInt3*	b	);
-
 void			crank_vec_int3_crs_self		(	CrankVecInt3*	a,
 												CrankVecInt3*	b	);
 
@@ -396,14 +350,23 @@ void			crank_vec_int3_crs_self		(	CrankVecInt3*	a,
 void			crank_vec_int3_cmpmul		(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+
+void			crank_vec_int3_cmpmul_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 												
 void			crank_vec_int3_cmpdiv		(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+												
+void			crank_vec_int3_cmpdiv_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 
 void			crank_vec_int3_cmpmod		(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
 												CrankVecInt3*	r	);
+
+void			crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
+												CrankVecInt3*	b	);
 
 void			crank_vec_int3_cmpless		(	CrankVecInt3*	a,
 												CrankVecInt3*	b,
@@ -430,16 +393,6 @@ void			crank_vec_int3_max	(			CrankVecInt3*	a,
 												CrankVecInt3*	r	);
 												
 
-void			crank_vec_int3_cmpmul_self	(	CrankVecInt3*	a,
-												CrankVecInt3*	b	);
-												
-void			crank_vec_int3_cmpdiv_self	(	CrankVecInt3*	a,
-												CrankVecInt3*	b	);
-
-void			crank_vec_int3_cmpmod_self	(	CrankVecInt3*	a,
-												CrankVecInt3*	b	);
-
-
 
 
 
@@ -462,40 +415,7 @@ struct _CrankVecInt4 {
 #define CRANK_TYPE_VEC_INT4	(crank_vec_int4_get_type ())
 GType			crank_vec_int4_get_type	(void);
 
-/**
- * CRANK_VEC_INT4_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_INT4_0	{0, 0, 0, 0}
 
-/**
- * CRANK_VEC_INT4_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT4_I	{1, 0, 0, 0}
-
-/**
- * CRANK_VEC_INT4_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT4_J	{0, 1, 0, 0}
-
-/**
- * CRANK_VEC_INT4_K:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT4_K	{0, 0, 1, 0}
-
-/**
- * CRANK_VEC_INT4_L:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_INT4_L	{0, 0, 0, 1}
 
 void			crank_vec_int4_init			(	CrankVecInt4*	vec,
 												gint			x,
@@ -571,20 +491,20 @@ void			crank_vec_int4_muls			(	CrankVecInt4*	a,
 												const gint		b,
 												CrankVecInt4*	r	);
 
+void			crank_vec_int4_muls_self	(	CrankVecInt4*	a,
+												const gint		b	);
+
 void			crank_vec_int4_divs			(	CrankVecInt4*	a,
 												const gint		b,
 												CrankVecInt4*	r	);
 
-void			crank_vec_int4_mods			(	CrankVecInt4*	a,
-												const gint		b,
-												CrankVecInt4*	r	);
-
-void			crank_vec_int4_muls_self	(	CrankVecInt4*	a,
-												const gint		b	);
-
 void			crank_vec_int4_divs_self	(	CrankVecInt4*	a,
 												const gint		b	);
 
+void			crank_vec_int4_mods			(	CrankVecInt4*	a,
+												const gint		b,
+												CrankVecInt4*	r	);
+												
 void			crank_vec_int4_mods_self	(	CrankVecInt4*	a,
 												const gint		b	);
 
@@ -595,18 +515,17 @@ void			crank_vec_int4_add			(	CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
 
-void			crank_vec_int4_sub			(	CrankVecInt4*	a,
-												CrankVecInt4*	b,
-												CrankVecInt4*	r	);
-
-gint			crank_vec_int4_dot			(	CrankVecInt4*	a,
-												CrankVecInt4*	b	);
-												
-
 void			crank_vec_int4_add_self		(	CrankVecInt4*	a,
 												CrankVecInt4*	b	);
 
+void			crank_vec_int4_sub			(	CrankVecInt4*	a,
+												CrankVecInt4*	b,
+												CrankVecInt4*	r	);
+												
 void			crank_vec_int4_sub_self		(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
+
+gint			crank_vec_int4_dot			(	CrankVecInt4*	a,
 												CrankVecInt4*	b	);
 
 //////// Component vector operations ////////
@@ -614,14 +533,23 @@ void			crank_vec_int4_sub_self		(	CrankVecInt4*	a,
 void			crank_vec_int4_cmpmul		(	CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
+
+void			crank_vec_int4_cmpmul_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
 												
 void			crank_vec_int4_cmpdiv		(	CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
+												
+void			crank_vec_int4_cmpdiv_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
 
 void			crank_vec_int4_cmpmod		(	CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
+
+void			crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
+												CrankVecInt4*	b	);
 
 void			crank_vec_int4_cmpless		(	CrankVecInt4*	a,
 												CrankVecInt4*	b,
@@ -646,15 +574,6 @@ void			crank_vec_int4_min	(			CrankVecInt4*	a,
 void			crank_vec_int4_max	(			CrankVecInt4*	a,
 												CrankVecInt4*	b,
 												CrankVecInt4*	r	);
-
-void			crank_vec_int4_cmpmul_self	(	CrankVecInt4*	a,
-												CrankVecInt4*	b	);
-												
-void			crank_vec_int4_cmpdiv_self	(	CrankVecInt4*	a,
-												CrankVecInt4*	b	);
-
-void			crank_vec_int4_cmpmod_self	(	CrankVecInt4*	a,
-												CrankVecInt4*	b	);
 
 
 
@@ -802,17 +721,17 @@ void			crank_vec_int_n_add			(	CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
 
-void			crank_vec_int_n_sub			(	CrankVecIntN*	a,
-												CrankVecIntN*	b,
-												CrankVecIntN*	r	);
-
-gint			crank_vec_int_n_dot			(	CrankVecIntN*	a,
-												CrankVecIntN*	b	);
-
 void			crank_vec_int_n_add_self	(	CrankVecIntN*	a,
 												CrankVecIntN*	b	);
 
+void			crank_vec_int_n_sub			(	CrankVecIntN*	a,
+												CrankVecIntN*	b,
+												CrankVecIntN*	r	);
+												
 void			crank_vec_int_n_sub_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
+
+gint			crank_vec_int_n_dot			(	CrankVecIntN*	a,
 												CrankVecIntN*	b	);
 
 //////// Component vector operations ////////
@@ -820,14 +739,23 @@ void			crank_vec_int_n_sub_self	(	CrankVecIntN*	a,
 void			crank_vec_int_n_cmpmul		(	CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
+
+void			crank_vec_int_n_cmpmul_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
 												
 void			crank_vec_int_n_cmpdiv		(	CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
+												
+void			crank_vec_int_n_cmpdiv_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
 
 void			crank_vec_int_n_cmpmod		(	CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
+
+void			crank_vec_int_n_cmpmod_self	(	CrankVecIntN*	a,
+												CrankVecIntN*	b	);
 
 void			crank_vec_int_n_cmpless		(	CrankVecIntN*	a,
 												CrankVecIntN*	b,
@@ -853,15 +781,6 @@ void			crank_vec_int_n_max	(			CrankVecIntN*	a,
 												CrankVecIntN*	b,
 												CrankVecIntN*	r	);
 												
-
-void			crank_vec_int_n_cmpmul_self	(	CrankVecIntN*	a,
-												CrankVecIntN*	b	);
-												
-void			crank_vec_int_n_cmpdiv_self	(	CrankVecIntN*	a,
-												CrankVecIntN*	b	);
-
-void			crank_vec_int_n_cmpmod_self	(	CrankVecIntN*	a,
-												CrankVecIntN*	b	);
 
 
 G_END_DECLS

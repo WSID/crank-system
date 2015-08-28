@@ -91,7 +91,7 @@ void		crank_quat_float_init_rot 	(	CrankQuatFloat*	quat,
 											const gfloat	angle,
 											CrankVecFloat3*	axis	);
 
-void		crank_quat_float_init_rotimm (	CrankQuatFloat*	quat,
+void		crank_quat_float_init_urot (	CrankQuatFloat*	quat,
 											const gfloat	angle,
 											const gfloat	x,
 											const gfloat	y,
@@ -138,89 +138,131 @@ gboolean	crank_quat_float_has_inf (		CrankQuatFloat*	quat	);
 
 //////// Attributes ////////////////////////////////////////////////////////////
 
+void		crank_quat_float_get_imag (		CrankQuatFloat*	quat,
+											CrankVecFloat3*	imag	);
+
+void		crank_quat_float_set_imag (		CrankQuatFloat*	quat,
+											CrankVecFloat3*	imag	);
+
 void		crank_quat_float_get_wx (		CrankQuatFloat*	quat,
+											CrankCplxFloat*	wx	);
+											
+void		crank_quat_float_set_wx (		CrankQuatFloat*	quat,
 											CrankCplxFloat*	wx	);
 											
 void		crank_quat_float_get_yz (		CrankQuatFloat*	quat,
 											CrankCplxFloat*	yz	);
-
-void		crank_quat_float_get_imag (		CrankQuatFloat*	quat,
-											CrankVecFloat3*	imag	);
+											
+void		crank_quat_float_set_yz (		CrankQuatFloat*	quat,
+											CrankCplxFloat*	yz	);
 
 gfloat		crank_quat_float_get_rangle (	CrankQuatFloat*	quat	);
 
 void		crank_quat_float_get_raxis (	CrankQuatFloat*	quat,
 											CrankVecFloat3*	axis	);
-											
-void		crank_quat_float_set_wx (		CrankQuatFloat*	quat,
-											CrankCplxFloat*	wx	);
-											
-void		crank_quat_float_set_yz (		CrankQuatFloat*	quat,
-											CrankCplxFloat*	yz	);
-
-void		crank_quat_float_set_imag (		CrankQuatFloat*	quat,
-											CrankVecFloat3*	imag	);
 
 gfloat		crank_quat_float_get_norm_sq (	CrankQuatFloat*	quat	);
 
 gfloat		crank_quat_float_get_norm (		CrankQuatFloat*	quat	);
-										
-void		crank_quat_float_neg (			CrankQuatFloat*	a,
 
 //////// Unary Operations //////////////////////////////////////////////////////
+										
+void		crank_quat_float_neg (			CrankQuatFloat*	a,
 											CrankQuatFloat*	r	);
+											
+void		crank_quat_float_neg_self (		CrankQuatFloat*	a	);
 
 void		crank_quat_float_inverse (		CrankQuatFloat*	a,
 											CrankQuatFloat*	r	);
 
+void		crank_quat_float_inverse_self (	CrankQuatFloat*	a	);
+
 void		crank_quat_float_conjugate (	CrankQuatFloat*	a,
 											CrankQuatFloat*	r	);
+
+void		crank_quat_float_conjugate_self (	CrankQuatFloat*	a	);
 											
 void		crank_quat_float_unit (			CrankQuatFloat*	a,
 											CrankQuatFloat*	r	);
 											
-										
-void		crank_quat_float_neg_self (		CrankQuatFloat*	a	);
-
-void		crank_quat_float_inverse_self (	CrankQuatFloat*	a	);
-
-void		crank_quat_float_conjugate_self (	CrankQuatFloat*	a	);
-											
 void		crank_quat_float_unit_self (	CrankQuatFloat*	a	);
 
-//////// Quat - Real Operations ////////////////////////////////////////////////
+//////// Airthmetics ///////////////////////////////////////////////////////////
 
 void		crank_quat_float_addr (			CrankQuatFloat*	a,
 											gfloat			b,
 											CrankQuatFloat*	r		);
 
+void		crank_quat_float_addc (			CrankQuatFloat*	a,
+											CrankCplxFloat*	b,
+											CrankQuatFloat*	r	);
+
+void		crank_quat_float_add (			CrankQuatFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
+
+void		crank_quat_float_addr_self (	CrankQuatFloat*	a,
+											gfloat			b	);
+											
+void		crank_quat_float_addc_self (	CrankQuatFloat*	a,
+											CrankCplxFloat*	b	);
+
+void		crank_quat_float_add_self (		CrankQuatFloat*	a,
+											CrankQuatFloat*	b	);
+
+
 void		crank_quat_float_subr (			CrankQuatFloat*	a,
 											gfloat			b,
 											CrankQuatFloat*	r		);
+
+void		crank_quat_float_subc (			CrankQuatFloat*	a,
+											CrankCplxFloat*	b,
+											CrankQuatFloat*	r	);
+										
+void		crank_quat_float_sub (			CrankQuatFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
+
+void		crank_quat_float_subr_self (	CrankQuatFloat*	a,
+											gfloat			b	);
+
+void		crank_quat_float_subc_self (	CrankQuatFloat*	a,
+											CrankCplxFloat*	b	);
+											
+void		crank_quat_float_sub_self (		CrankQuatFloat*	a,
+											CrankQuatFloat*	b	);
+
 
 void		crank_quat_float_mulr (			CrankQuatFloat*	a,
 											gfloat			b,
 											CrankQuatFloat*	r		);
 
-void		crank_quat_float_divr (			CrankQuatFloat*	a,
-											gfloat			b,
-											CrankQuatFloat*	r		);
-
-
-
-void		crank_quat_float_addr_self (	CrankQuatFloat*	a,
-											gfloat			b	);
-
-void		crank_quat_float_subr_self (	CrankQuatFloat*	a,
-											gfloat			b	);
+void		crank_quat_float_mulc (			CrankQuatFloat*	a,
+											CrankCplxFloat*	b,
+											CrankQuatFloat*	r	);
+										
+void		crank_quat_float_mul (			CrankQuatFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
 
 void		crank_quat_float_mulr_self (	CrankQuatFloat*	a,
 											gfloat			b	);
 
+void		crank_quat_float_mulc_self (	CrankQuatFloat*	a,
+											CrankCplxFloat*	b	);
+
+void		crank_quat_float_mul_self (		CrankQuatFloat*	a,
+											CrankQuatFloat*	b	);
+
+
+void		crank_quat_float_divr (			CrankQuatFloat*	a,
+											gfloat			b,
+											CrankQuatFloat*	r		);
+
 void		crank_quat_float_divr_self (	CrankQuatFloat*	a,
 											gfloat			b	);
 
-//////// Real - Quat Operations ////////////////////////////////////////////////
+//////// Swappped Airthmetics //////////////////////////////////////////////////
 
 void		crank_quat_float_rsubr (		CrankQuatFloat*	a,
 											gfloat			b,
@@ -230,53 +272,7 @@ void		crank_quat_float_rdivr (		CrankQuatFloat*	a,
 											gfloat			b,
 											CrankQuatFloat*	r		);
 
-//////// Quat - Cplx Operations ////////////////////////////////////////////////
-
-void		crank_quat_float_addc (			CrankQuatFloat*	a,
-											CrankCplxFloat*	b,
-											CrankQuatFloat*	r	);
-
-void		crank_quat_float_subc (			CrankQuatFloat*	a,
-											CrankCplxFloat*	b,
-											CrankQuatFloat*	r	);
-
-void		crank_quat_float_mulc (			CrankQuatFloat*	a,
-											CrankCplxFloat*	b,
-											CrankQuatFloat*	r	);
-
-void		crank_quat_float_addc_self (	CrankQuatFloat*	a,
-											CrankCplxFloat*	b	);
-
-void		crank_quat_float_subc_self (	CrankQuatFloat*	a,
-											CrankCplxFloat*	b	);
-
-void		crank_quat_float_mulc_self (	CrankQuatFloat*	a,
-											CrankCplxFloat*	b	);
-
-
-//////// Quat - Quat Operations ////////////////////////////////////////////////
-
-void		crank_quat_float_add (			CrankQuatFloat*	a,
-											CrankQuatFloat*	b,
-											CrankQuatFloat*	r	);
-										
-void		crank_quat_float_sub (			CrankQuatFloat*	a,
-											CrankQuatFloat*	b,
-											CrankQuatFloat*	r	);
-										
-void		crank_quat_float_mul (			CrankQuatFloat*	a,
-											CrankQuatFloat*	b,
-											CrankQuatFloat*	r	);
-
-void		crank_quat_float_add_self (		CrankQuatFloat*	a,
-											CrankQuatFloat*	b	);
-										
-void		crank_quat_float_sub_self (		CrankQuatFloat*	a,
-											CrankQuatFloat*	b	);
-										
-void		crank_quat_float_mul_self (		CrankQuatFloat*	a,
-											CrankQuatFloat*	b	);
-
+//////// Misc Operations ///////////////////////////////////////////////////////
 void		crank_quat_float_mul_conj (		CrankQuatFloat*	a,
 											CrankQuatFloat*	b,
 											CrankQuatFloat*	r	);
@@ -307,6 +303,51 @@ void		crank_quat_float_powr (			CrankQuatFloat*	a,
 void		crank_quat_float_rotatev (	CrankQuatFloat*	quat,
 										CrankVecFloat3*	vec,
 										CrankVecFloat3*	r		);
-											
+
+//////// Generic Selectors /////////////////////////////////////////////////////
+
+#if ! defined (_CRANK_INTERNAL) && (__STDC_VERSION__ >= 201112L) // On C11, we will have Generic selectors.
+#define crank_quat_float_add(a, b, r) \
+		_Generic((b),	gfloat:				crank_quat_float_addr,	\
+						CrankCplxFloat*:	crank_quat_float_addc,	\
+						CrankQuatFloat*:	crank_quat_float_add)	\
+				(a, b, r)
+				
+#define crank_quat_float_add_self(a, b) \
+		_Generic((b),	gfloat:				crank_quat_float_addr_self,	\
+						CrankCplxFloat*:	crank_quat_float_addc_self,	\
+						CrankQuatFloat*:	crank_quat_float_add_self)	\
+				(a, b)
+
+
+
+#define crank_quat_float_sub(a, b, r) \
+		_Generic((b),	gfloat:				crank_quat_float_subr,	\
+						CrankCplxFloat*:	crank_quat_float_subc,	\
+						CrankQuatFloat*:	crank_quat_float_sub)	\
+				(a, b, r)
+				
+#define crank_quat_float_sub_self(a, b) \
+		_Generic((b),	gfloat:				crank_quat_float_subr_self,	\
+						CrankCplxFloat*:	crank_quat_float_subc_self,	\
+						CrankQuatFloat*:	crank_quat_float_sub_self)	\
+				(a, b)
+
+
+
+#define crank_quat_float_mul(a, b, r) \
+		_Generic((b),	gfloat:				crank_quat_float_mulr,	\
+						CrankCplxFloat*:	crank_quat_float_mulc,	\
+						CrankQuatFloat*:	crank_quat_float_mul)	\
+				(a, b, r)
+				
+#define crank_quat_float_mul_self(a, b) \
+		_Generic((b),	gfloat:				crank_quat_float_mulr_self,	\
+						CrankCplxFloat*:	crank_quat_float_mulc_self,	\
+						CrankQuatFloat*:	crank_quat_float_mul_self)	\
+				(a, b)
+
+				
+#endif
 
 #endif

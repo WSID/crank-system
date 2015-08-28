@@ -39,32 +39,6 @@
  *
  * Crank System provides simple iterators.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>strat and end point, start and count, range</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>validity</entry>
- *       </row>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>next, get, foreach</entry>
- *       </row>
- *     </tbody>
- *   </tgroup>
- * </table>
- *
  * # Basic protocol
  *
  * There are some way to define protocol of iterators,

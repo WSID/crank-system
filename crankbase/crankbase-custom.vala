@@ -287,24 +287,22 @@ namespace Crank {
 														float[]				arr,
 														GLib.CompareDataFunc<float?>?	cmp	);
 		
-		[CCode (cname="crank_permutation_init_vala_compare_sarray", simple_generics=true)]
-		public static Permutation compare_sarray<G> (	uint 				n,
-														size_t				gsz,
-														void*				garr,
-														GLib.CompareFunc<G>	gcmp);
+		public Permutation.compare_sarray (			uint 				n,
+													size_t				gsz,
+													void*				garr,
+													GLib.CompareFunc	gcmp	);
 												
-		[CCode (cname="crank_permutation_init_vala_compare_sarray_data", simple_generics=true)]
-		public static Permutation compare_sarray_data<G> (	uint 					n,
-															size_t					gsz,
-															void*					garr,
-															GLib.CompareDataFunc<G>	gcmp);
+		public Permutation.compare_sarray_data (	uint 					n,
+													size_t					gsz,
+													void*					garr,
+													GLib.CompareDataFunc	gcmp);
 
-		[CCode (cname="crank_permutation_init_vala_compare_parray", simple_generics=true)]
+		[CCode (cname="crank_permutation__vala_init_compare_parray", simple_generics=true)]
 		public static Permutation compare_parray<G> (	[CCode (array_length_pos=0)]
 														G[]						garr,
 														GLib.CompareFunc<G>		gcmp	);
 
-		[CCode (cname="crank_permutation_init_vala_compare_parray_data", simple_generics=true)]
+		[CCode (cname="crank_permutation__vala_init_compare_parray_data", simple_generics=true)]
 		public static Permutation compare_parray_data<G> (	[CCode (array_length_pos=0)]
 															G[]						garr,
 															GLib.CompareDataFunc<G>	gcmp	);
@@ -316,7 +314,7 @@ namespace Crank {
 		public uint[] descents { get; }
 		public uint[] excedances { get; }
 		
-		[CCode (simple_generics=true, cname="crank_permutation_vala_shuffle_parray")]
+		[CCode (simple_generics=true, cname="crank_permutation__vala_shuffle_parray")]
 		public (unowned G)[] shuffle_parray <G> ([CCode (array_length=false)]G[] arr);
 	}
 	

@@ -43,44 +43,6 @@
  * A Permutation is a placing of ordered items. In this structure, items are
  * represented in #guint, starting from 0.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, array, identity, order of elements in array</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>sign</entry>
- *       </row>
- *       <row>
- *         <entry>Unary Operations</entry>
- *         <entry>Reverse, Inverse</entry>
- *       </row>
- *       <row>
- *         <entry>Binary Operations</entry>
- *         <entry>Shuffle</entry>
- *       </row>
- *       <row>
- *         <entry>Modification</entry>
- *         <entry>swap</entry>
- *       </row>
- *       <row>
- *         <entry>Shuffling</entry>
- *         <entry>arrays, pointer arrays</entry>
- *       </row>
- *     </tbody>
- *   </tgroup>
- * </table>
- *
  * # Validity of permutation
  *
  * #CrankPermutation represents a permutation of n of unsigned integer 0, ...,
@@ -90,17 +52,17 @@
  * Therefore, validity of permutation should be checked, before shuffling.
  *
  * A valid permutation is,
- * * do not contains element > (n-1)
+ * * do not contains element larger than (n-1)
  * * do not contains duplicated elements.
  *
- * Validity can be checked by crank_permutation_check_valid()
+ * Validity can be checked by crank_permutation_is_valid()
  *
  * # Shuffling
  *
  * #CrankPermutation supports shuffling of array. for example,
  * crank_permutation_shuffle_array_float() is used to shuffling float values.
  *
- * Some collective items are available to be shuffled.
+ * Some collective types has shuffling functions.
  *
  * # Initialization by comparsion.
  *
@@ -146,7 +108,7 @@ G_DEFINE_BOXED_TYPE (
  * Initialize a permutation with given elements.
  *
  * Validity is not checked in initializing. You should check validity by
- * crank_permutation_check_valid(), before using.
+ * crank_permutation_is_valid(), before using.
  */
 void
 crank_permutation_init (	CrankPermutation*	p,
@@ -170,7 +132,7 @@ crank_permutation_init (	CrankPermutation*	p,
  * Initialize a permutation with given elements.
  *
  * Validity is not checked in initializing. You should check validity by
- * crank_permutation_check_valid(), before using.
+ * crank_permutation_is_valid(), before using.
  */
 void
 crank_permutation_init_arr (	CrankPermutation*	p,
@@ -192,7 +154,7 @@ crank_permutation_init_arr (	CrankPermutation*	p,
  * Initialize a permutation with given elements.
  *
  * Validity is not checked in initializing. You should check validity by
- * crank_permutation_check_valid(), before using.
+ * crank_permutation_is_valid(), before using.
  */
 void
 crank_permutation_init_arr_take (	CrankPermutation*	p,
@@ -215,7 +177,7 @@ crank_permutation_init_arr_take (	CrankPermutation*	p,
  * Initialize a permutation with elements given by va_list.
  *
  * Validity is not checked in initializing. You should check validity by
- * crank_permutation_check_valid(), before using.
+ * crank_permutation_is_valid(), before using.
  */
 void
 crank_permutation_init_valist (	CrankPermutation*	p,
@@ -267,18 +229,6 @@ crank_permutation_init_identity (	CrankPermutation*	p,
  *
  * This function expects base ordering given by @gcmp. If elements are in base
  * ordering, the permutation will be initialized into identity permutation.
- *
- * Note
- * In Vala, this function has generic paramter, still have to pass size and
- * length of array.
- *
- * |[
- *    GCompareFunc<float?> float_compare = ...;
- *
- *    float array[5] = {...};
- *    Crank.Permutation p = Crank.Permutation.compare_sarray<float?> (
- *            5, sizeof(float), (void*)array, float_compare);
- * ]| 
  */
 void
 crank_permutation_init_compare_sarray (	CrankPermutation*	p,
@@ -858,6 +808,34 @@ crank_permutation_foreach (	CrankPermutation*	p,
 //////// Operations ////////////////////////////////////////////////////////////
 
 /**
+ * crank_permutation_is_valid:
+ * @p: A Permutation.
+ *
+ * Checks whether the permutation is valid permutation.
+ * This means permutation has no duplicate, and has 0 ~ (n-1) as element.
+ *
+ * Returns: Whether @p is valid permutation.
+ */
+gboolean
+crank_permutation_is_valid (	CrankPermutation*	p	)
+{
+	guint	i;
+	guint	j;
+	
+	g_return_val_if_fail (p != NULL, FALSE);
+	
+	for (i = 0; i < p->n; i++) {
+		if (p->n <= p->data[i]) return FALSE;
+	
+		for (j = i + 1; j < p->n; j++)
+			if (p->data[i] == p->data[j]) return FALSE;
+	}
+	
+	return TRUE;
+}
+ 
+ 
+/**
  * crank_permutation_is_identity:
  * @p: A Permutation.
  *
@@ -880,7 +858,7 @@ crank_permutation_is_identity (	CrankPermutation*	p	)
 /**
  * crank_permutation_get_inversion:
  * @p: A Permutation.
- *`
+ *
  * Gets inversion number of permutation.
  *
  * Returns: Inversion number of pemutation.
@@ -1027,34 +1005,6 @@ crank_permutation_get_excedances (	CrankPermutation*	p,
 }
 
 /**
- * crank_permutation_check_valid:
- * @p: A Permutation.
- *
- * Checks whether the permutation is valid permutation.
- * This means permutation has no duplicate, and has 0 ~ (n-1) as element.
- *
- * Returns: Whether @p is valid permutation.
- */
-gboolean
-crank_permutation_check_valid (	CrankPermutation*	p	)
-{
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, FALSE);
-	
-	for (i = 0; i < p->n; i++) {
-		if (p->n <= p->data[i]) return FALSE;
-	
-		for (j = i + 1; j < p->n; j++)
-			if (p->data[i] == p->data[j]) return FALSE;
-	}
-	
-	return TRUE;
-}
- 
-
-/**
  * crank_permutation_swap:
  * @p: A Permutation.
  * @i: Index.
@@ -1113,6 +1063,29 @@ crank_permutation_reverse (		CrankPermutation*	p,
 }
 
 /**
+ * crank_permutation_reverse_self:
+ * @p: A Permutation
+ *
+ * Reverses a permutation. See crank_permutation_reverse().
+ */
+void
+crank_permutation_reverse_self (	CrankPermutation*	p	)
+{
+	guint 	i;
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)	data[p->n - 1 - i] = p->data[i];
+	
+	g_free (p->data);
+	p->data = data;
+}
+
+
+/**
  * crank_permutation_inverse:
  * @p: A Permutation.
  * @q: (out): A Permutation to store result.
@@ -1143,6 +1116,28 @@ crank_permutation_inverse (	CrankPermutation*	p,
 		data[p->data[i]] = i;
 
 	crank_permutation_init_arr_take (q, p->n, data);
+}
+
+/**
+ * crank_permutation_inverse_self:
+ * @p: A Permutation
+ *
+ * Inverses a permutation. See crank_permutation_inverse().
+ */
+void
+crank_permutation_inverse_self (	CrankPermutation*	p	)
+{
+	guint 	i;
+	guint*	data;
+	
+	g_return_if_fail (p != NULL);
+	
+	data = g_new (guint, p->n);
+	
+	for (i = 0; i < p->n; i++)	data[p->data[i]] = i;
+	
+	g_free (p->data);
+	p->data = data;
 }
 
 
@@ -1183,53 +1178,6 @@ crank_permutation_shuffle (	CrankPermutation*	p,
 	
 	crank_permutation_init_arr_take (r, p->n, data);
 }
-
-
-/**
- * crank_permutation_reverse_self:
- * @p: A Permutation
- *
- * Reverses a permutation. See crank_permutation_reverse().
- */
-void
-crank_permutation_reverse_self (	CrankPermutation*	p	)
-{
-	guint 	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)	data[p->n - 1 - i] = p->data[i];
-	
-	g_free (p->data);
-	p->data = data;
-}
-
-
-/**
- * crank_permutation_inverse_self:
- * @p: A Permutation
- *
- * Inverses a permutation. See crank_permutation_inverse().
- */
-void
-crank_permutation_inverse_self (	CrankPermutation*	p	)
-{
-	guint 	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)	data[p->data[i]] = i;
-	
-	g_free (p->data);
-	p->data = data;
-}
-
 
 /**
  * crank_permutation_shuffle_self:
@@ -1487,52 +1435,8 @@ crank_permutation__gi_slice (	CrankPermutation*	p,
 
 
 //////// Vala Support //////////////////////////////////////////////////////////
-
-
 /**
- * crank_permutation_init_vala_compare_sarray: (skip)
- * @n: Size of permutation.
- * @gsz: Size of elements.
- * @garr: Array of elements.
- * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
- * @p: (out): A Permutation.
- *
- * Vala specific function.
- */ 
-void
-crank_permutation_init_vala_compare_sarray (	const guint			n,
-												const gsize			gsz,
-												gpointer			garr,
-												GCompareFunc		gcmp,
-												CrankPermutation*	p	)
-{
-	crank_permutation_init_compare_sarray (p, n, gsz, garr, gcmp);
-}
-
-/**
- * crank_permutation_init_vala_compare_sarray_data: (skip)
- * @n: Size of permutation.
- * @gsz: Size of elements.
- * @garr: Array of elements.
- * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
- * @userdata: (closure): Userdata for @gcmp.
- * @p: (out): A Permutation.
- *
- * Vala specific function.
- */ 
-void
-crank_permutation_init_vala_compare_sarray_data (	const guint			n,
-													const gsize			gsz,
-													gpointer			garr,
-													GCompareDataFunc	gcmp,
-													gpointer			userdata,
-													CrankPermutation*	p	)
-{
-	crank_permutation_init_compare_sarray_data (p, n, gsz, garr, gcmp, userdata);
-}
-
-/**
- * crank_permutation_init_vala_compare_parray: (skip)
+ * crank_permutation__vala_init_compare_parray: (skip)
  * @n: Size of permutation.
  * @garr: (array length=n): Array of elements.
  * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
@@ -1541,7 +1445,7 @@ crank_permutation_init_vala_compare_sarray_data (	const guint			n,
  * Vala specific function.
  */ 
 void
-crank_permutation_init_vala_compare_parray (	const guint			n,
+crank_permutation__vala_init_compare_parray (	const guint			n,
 												gpointer*			garr,
 												GCompareFunc		gcmp,
 												CrankPermutation*	p	)
@@ -1550,7 +1454,7 @@ crank_permutation_init_vala_compare_parray (	const guint			n,
 }
 
 /**
- * crank_permutation_init_vala_compare_parray_data: (skip)
+ * crank_permutation__vala_init_compare_parray_data: (skip)
  * @n: Size of permutation.
  * @garr: (array length=n): Array of elements.
  * @gcmp: (scope call): Function to compare elements, to give ordering of elements.
@@ -1560,7 +1464,7 @@ crank_permutation_init_vala_compare_parray (	const guint			n,
  * Vala specific function.
  */ 
 void
-crank_permutation_init_vala_compare_parray_data (	const guint			n,
+crank_permutation__vala_init_compare_parray_data (	const guint			n,
 													gpointer*			garr,
 													GCompareDataFunc	gcmp,
 													gpointer			userdata,
@@ -1570,7 +1474,7 @@ crank_permutation_init_vala_compare_parray_data (	const guint			n,
 }
 															
 /**
- * crank_permutation_vala_shuffle_parray: (skip)
+ * crank_permutation__vala_shuffle_parray: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
  * @rn: length of returned array
@@ -1583,7 +1487,7 @@ crank_permutation_init_vala_compare_parray_data (	const guint			n,
  *    An array holding shuffled elemets. Free with g_free().
  */ 
 gpointer*
-crank_permutation_vala_shuffle_parray (	CrankPermutation*	p,
+crank_permutation__vala_shuffle_parray (	CrankPermutation*	p,
 										gpointer*			arr,
 										guint*				rn	)
 {
@@ -1592,7 +1496,7 @@ crank_permutation_vala_shuffle_parray (	CrankPermutation*	p,
 }
 
 /**
- * crank_permutation_vala_shuffle_array_boolean: (skip)
+ * crank_permutation__vala_shuffle_array_boolean: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
  * @rn: length of returned array
@@ -1605,7 +1509,7 @@ crank_permutation_vala_shuffle_parray (	CrankPermutation*	p,
  *    An array holding shuffled elemets. Free with g_free().
  */ 
 gboolean*
-crank_permutation_vala_shuffle_array_boolean (	CrankPermutation*	p,
+crank_permutation__vala_shuffle_array_boolean (	CrankPermutation*	p,
 												gboolean*			arr,
 												guint*				rn	)
 {
@@ -1614,7 +1518,7 @@ crank_permutation_vala_shuffle_array_boolean (	CrankPermutation*	p,
 }
 
 /**
- * crank_permutation_vala_shuffle_array_int: (skip)
+ * crank_permutation__vala_shuffle_array_int: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
  * @rn: length of returned array
@@ -1627,16 +1531,16 @@ crank_permutation_vala_shuffle_array_boolean (	CrankPermutation*	p,
  *    An array holding shuffled elemets. Free with g_free().
  */ 
 gint*
-crank_permutation_vala_shuffle_array_int (	CrankPermutation*	p,
-												gint*				arr,
-												guint*				rn	)
+crank_permutation__vala_shuffle_array_int (	CrankPermutation*	p,
+											gint*				arr,
+											guint*				rn	)
 {
 	if (rn != NULL) *rn = p->n;
 	return crank_permutation_shuffle_array_int (p, arr);
 }
 
 /**
- * crank_permutation_vala_shuffle_array_uint: (skip)
+ * crank_permutation__vala_shuffle_array_uint: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
  * @rn: length of returned array
@@ -1649,16 +1553,16 @@ crank_permutation_vala_shuffle_array_int (	CrankPermutation*	p,
  *    An array holding shuffled elemets. Free with g_free().
  */ 
 guint*
-crank_permutation_vala_shuffle_array_uint (	CrankPermutation*	p,
-											guint*				arr,
-											guint*				rn	)
+crank_permutation__vala_shuffle_array_uint (	CrankPermutation*	p,
+												guint*				arr,
+												guint*				rn	)
 {
 	if (rn != NULL) *rn = p->n;
 	return crank_permutation_shuffle_array_uint (p, arr);
 }
 
 /**
- * crank_permutation_vala_shuffle_array_float: (skip)
+ * crank_permutation__vala_shuffle_array_float: (skip)
  * @p: A Permutation
  * @arr: (array): An array.
  * @rn: length of returned array
@@ -1671,7 +1575,7 @@ crank_permutation_vala_shuffle_array_uint (	CrankPermutation*	p,
  *    An array holding shuffled elemets. Free with g_free().
  */ 
 gfloat*
-crank_permutation_vala_shuffle_array_float (	CrankPermutation*	p,
+crank_permutation__vala_shuffle_array_float (	CrankPermutation*	p,
 												gfloat*				arr,
 												guint*				rn	)
 {

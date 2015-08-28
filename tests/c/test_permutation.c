@@ -29,7 +29,7 @@ static gboolean	test_foreach_func (const guint v,	gpointer	userdata);
 
 
 
-static void		test_check_valid (void);
+static void		test_is_valid (void);
 
 static void		test_hash (void);
 
@@ -95,8 +95,8 @@ main (gint argc, gchar** argv)
 {
 	g_test_init (&argc, &argv, NULL);
 
-  	g_test_add_func ("/crank/base/permutation/check_valid",
-					test_check_valid);
+  	g_test_add_func ("/crank/base/permutation/is_valid",
+					test_is_valid);
 
   	g_test_add_func ("/crank/base/permutation/hash",
 					test_hash);
@@ -204,7 +204,7 @@ test_foreach_func (	const guint	v, gpointer	userdata	)
 
 
 static void
-test_check_valid (void)
+test_is_valid (void)
 {
 	CrankPermutation	p;
 	CrankPermutation	q;
@@ -214,9 +214,9 @@ test_check_valid (void)
 	crank_permutation_init (&q, 5, 0, 3, 0, 2, 4);
 	crank_permutation_init (&r, 5, 0, 6, 3, 4, 7);
 	
-	g_assert (  crank_permutation_check_valid (&p));
-	g_assert (! crank_permutation_check_valid (&q));
-	g_assert (! crank_permutation_check_valid (&r));
+	g_assert (  crank_permutation_is_valid (&p));
+	g_assert (! crank_permutation_is_valid (&q));
+	g_assert (! crank_permutation_is_valid (&r));
 	
 	crank_permutation_fini (&p);
 	crank_permutation_fini (&q);

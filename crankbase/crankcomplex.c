@@ -20,6 +20,7 @@
  */
 
 #define _CRANKBASE_INSIDE
+#define _CRANK_INTERNAL
 
 #include <stdarg.h>
 #include <math.h>
@@ -41,105 +42,7 @@
  * entities for quaternions.
  *
  * Currently, only float complex type is provided.
- *
- * <table><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="0">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *
- *       <row>
- *         <entry morerows="3">Initialization</entry>
- *            <entry>arguments</entry></row>
- *       <row><entry>array</entry></row>
- *       <row><entry>va_list</entry></row>
- *       <row><entry>fill</entry></row>
- *
- *       <row>
- *         <entry morerows="4">Basic operations</entry>
- *            <entry>hash</entry></row>
- *       <row><entry>hash1</entry></row>
- *       <row><entry>equal</entry></row>
- *       <row><entry>to string</entry></row>
- *       <row><entry>to string with format</entry></row>
- *
- *       <row>
- *         <entry morerows="5">Classification</entry>
- *            <entry>is zero</entry></row>
- *       <row><entry>is one</entry></row>
- *       <row><entry>is unit</entry></row>
- *       <row><entry>is pure real</entry></row>
- *       <row><entry>is pure imaginary</entry></row>
- *       <row><entry>has nan</entry></row>
- *       <row><entry>has infinity</entry></row>
- *
- *       <row>
- *         <entry morerows="2">Attributes</entry>
- *            <entry>arg: get</entry></row>
- *       <row><entry>norm: get</entry></row>
- *       <row><entry>norm_sq: get</entry></row>
- *
- *       <row>
- *         <entry morerows="3">Unary Operations</entry>
- *            <entry>Negate(self)</entry></row>
- *       <row><entry>Inverse(self)</entry></row>
- *       <row><entry>Conjugate(self)</entry></row>
- *       <row><entry>Unit(self)</entry></row>
- *
- *       <row>
- *         <entry morerows="3">Binary Operations with real values</entry>
- *            <entry>add(self)</entry></row>
- *       <row><entry>sub(self)</entry></row>
- *       <row><entry>mul(self)</entry></row>
- *       <row><entry>div(self)</entry></row>
- *
- *       <row>
- *         <entry morerows="1">Swapped Binary Operations with real values</entry>
- *            <entry>rsub</entry></row>
- *       <row><entry>rdiv</entry></row>
- *
- *       <row>
- *         <entry morerows="3">Binary Operations with complex values</entry>
- *            <entry>add(self)</entry></row>
- *       <row><entry>sub(self)</entry></row>
- *       <row><entry>mul(self)</entry></row>
- *       <row><entry>div(self)</entry></row>
- *
- *       <row>
- *         <entry morerows="1">Binary Operations with quaternions</entry>
- *            <entry>sub</entry></row>
- *       <row><entry>mul</entry></row>
- *
- *       <row>
- *         <entry>Ternary Operations</entry>
- *            <entry>mix</entry></row>
- *
- *       <row>
- *         <entry morerows="2">Exponential</entry>
- *            <entry>ln</entry></row>
- *       <row><entry>exp</entry></row>
- *       <row><entry>pow</entry></row>
- *
- *       <row>
- *         <entry morerows="2">Hyperbolic</entry>
- *            <entry>sinh</entry></row>
- *       <row><entry>cosh</entry></row>
- *       <row><entry>tanh</entry></row>
- *
- *       <row>
- *         <entry morerows="2">Trigonometric</entry>
- *            <entry>sin</entry></row>
- *       <row><entry>cos</entry></row>
- *       <row><entry>tan</entry></row>
- *     </tbody>
- *   </tgroup>
- * </table>
- *
+ 
  * # Conversion to other types
  *
  * <table><title>Conversion of #CrankCplxFloat</title>
@@ -154,15 +57,17 @@
  *     </thead>
  *     <tbody>
  *       <row><entry>from #gfloat</entry>
- *            <entry>crank_cplx_float_init()</entry></row>
+ *            <entry>crank_cplx_float_init()</entry>
+ *            <entry>GValue Transform</entry></row>
  *
  *       <row><entry morerows="1">to #gchar*</entry>
- *            <entry>crank_cplx_float_to_string()</entry></row>
+ *            <entry>crank_cplx_float_to_string()</entry>
+ *            <entry>GValue Transform</entry></row>
  *       <row><entry>crank_cplx_float_to_string_full()</entry></row>
  *
  *       <row><entry>to #CrankQuatFloat</entry>
  *            <entry>crank_quat_float_init_cplx()</entry>
- *            <entry>Defined at #CrankQuatFloat</entry></row>
+ *            <entry>GValue Transform, Defined at #CrankQuatFloat</entry></row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -246,7 +151,8 @@ crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
  * @cplx: (out): A Complex to initialize.
  * @fill: A filling element.
  *
- * Initialize a complex by filling given value.
+ * Initialize a complex by filling given value, so that the complex will be
+ * @fill * (1 + i).
  */
 void
 crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
@@ -262,7 +168,8 @@ crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
  * @norm: Norm of complex.
  * @arg: Argument of complex.
  *
- * Initialize a complex by polar form.
+ * Initialize a complex by polar form, so that the complex will be
+ * @norm * (cos @arg + i sin @arg).
  */
 void
 crank_cplx_float_init_polar (	CrankCplxFloat* cplx,
@@ -602,6 +509,19 @@ crank_cplx_float_conjugate (	CrankCplxFloat*	a,
 }
 
 /**
+ * crank_cplx_float_conjugate_self:
+ * @a: A Complex.
+ *
+ * Sets @a as conjugate of itself.
+ */
+void
+crank_cplx_float_conjugate_self (	CrankCplxFloat*	a	)
+{
+	a->imag = - a->imag;
+}
+
+
+/**
  * crank_cplx_float_neg:
  * @a: A Complex.
  * @r: (out): A Complex to store result.
@@ -617,6 +537,20 @@ crank_cplx_float_neg (	CrankCplxFloat*	a,
 	r->real = - a->real;
 	r->imag = - a->imag;
 }
+
+/**
+ * crank_cplx_float_neg_self:
+ * @a: A Complex.
+ *
+ * Sets @a as negation of itself. (- @a)
+ */
+void
+crank_cplx_float_neg_self (	CrankCplxFloat*	a	)
+{
+	a->real = - a->real;
+	a->imag = - a->imag;
+}
+
 
 /**
  * crank_cplx_float_inverse:
@@ -640,6 +574,22 @@ crank_cplx_float_inverse (	CrankCplxFloat*	a,
 }
 
 /**
+ * crank_cplx_float_inverse_self:
+ * @a: A Complex.
+ *
+ * Sets @a as invert of self. (1 / @a)
+ */
+void
+crank_cplx_float_inverse_self (	CrankCplxFloat*	a	)
+{
+	gfloat norm_sq = crank_cplx_float_get_norm_sq (a);
+	
+	a->real = a->real / norm_sq;
+	a->imag = -a->imag / norm_sq;
+}
+
+
+/**
  * crank_cplx_float_unit:
  * @a: A Complex
  * @r: (out): A Complex to store result.
@@ -657,48 +607,6 @@ crank_cplx_float_unit (	CrankCplxFloat*	a,
 	norm = crank_cplx_float_get_norm (a);
 	
 	crank_cplx_float_divr (a, norm, r);
-}
-
-
-
-/**
- * crank_cplx_float_conjugate_self:
- * @a: A Complex.
- *
- * Sets @a as conjugate of itself.
- */
-void
-crank_cplx_float_conjugate_self (	CrankCplxFloat*	a	)
-{
-	a->imag = - a->imag;
-}
-
-/**
- * crank_cplx_float_neg_self:
- * @a: A Complex.
- *
- * Sets @a as negation of itself. (- @a)
- */
-void
-crank_cplx_float_neg_self (	CrankCplxFloat*	a	)
-{
-	a->real = - a->real;
-	a->imag = - a->imag;
-}
-
-/**
- * crank_cplx_float_inverse_self:
- * @a: A Complex.
- *
- * Sets @a as invert of self. (1 / @a)
- */
-void
-crank_cplx_float_inverse_self (	CrankCplxFloat*	a	)
-{
-	gfloat norm_sq = crank_cplx_float_get_norm_sq (a);
-	
-	a->real = a->real / norm_sq;
-	a->imag = -a->imag / norm_sq;
 }
 
 /**
@@ -737,6 +645,26 @@ crank_cplx_float_addr (	CrankCplxFloat*	a,
 }
 
 /**
+ * crank_cplx_float_add:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets a addition of two complex.
+ */
+void
+crank_cplx_float_add (	CrankCplxFloat*	a,
+						CrankCplxFloat*	b,
+						CrankCplxFloat*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	r->real = a->real + b->real;
+	r->imag = a->imag + b->imag;
+}
+
+/**
  * crank_cplx_float_subr:
  * @a: A Complex.
  * @b: A real value.
@@ -754,6 +682,48 @@ crank_cplx_float_subr (	CrankCplxFloat*	a,
 	r->real = a->real - b;
 	r->imag = a->imag;
 }
+										
+/**
+ * crank_cplx_float_sub:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets a subtration of two complex.
+ */
+void
+crank_cplx_float_sub (	CrankCplxFloat*	a,
+						CrankCplxFloat*	b,
+						CrankCplxFloat*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	r->real = a->real - b->real;
+	r->imag = a->imag - b->imag;
+}
+
+/**
+ * crank_cplx_float_subq:
+ * @a: A Complex.
+ * @b: A Quaternion.
+ * @r: (out): A Quaterion to store result.
+ *
+ * Applies a subtraction by a quaternion.
+ */
+void
+crank_cplx_float_subq (	CrankCplxFloat*	a,
+						CrankQuatFloat*	b,
+						CrankQuatFloat*	r	)
+{
+	g_return_if_fail (b != r);
+
+	r->w = a->real - b->w;
+	r->x = a->imag - b->x;
+	r->y = - b->y;
+	r->z = - b->z;
+}
+
 
 /**
  * crank_cplx_float_mulr:
@@ -775,6 +745,50 @@ crank_cplx_float_mulr (	CrankCplxFloat*	a,
 }
 
 /**
+ * crank_cplx_float_mul:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets a multiplication of two complex.
+ */
+void
+crank_cplx_float_mul (	CrankCplxFloat*	a,
+						CrankCplxFloat*	b,
+						CrankCplxFloat*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+
+	r->real = a->real * b->real - a->imag * b->imag;
+	r->imag = a->real * b->imag + a->imag * b->real;
+}
+
+/**
+ * crank_cplx_float_mulq:
+ * @a: A Complex.
+ * @b: A Quaternion.
+ * @r: (out): A Quaterion to store result.
+ *
+ * Applies a multiplication by a quaternion.
+ *
+ * This is because multiplication of quaternion is not commutative.
+ */
+void
+crank_cplx_float_mulq (	CrankCplxFloat*	a,
+						CrankQuatFloat*	b,
+						CrankQuatFloat*	r	)
+{
+	g_return_if_fail (b != r);
+
+	r->w = (a->real * b->w) - (a->imag * b->x);
+	r->x = (a->imag * b->w) + (a->real * b->x);
+	r->y = (a->real * b->y) - (a->imag * b->z);
+	r->z = (a->imag * b->y) + (a->real * b->z);
+}
+
+
+/**
  * crank_cplx_float_divr:
  * @a: A Complex.
  * @b: A real value.
@@ -793,7 +807,29 @@ crank_cplx_float_divr (	CrankCplxFloat*	a,
 	r->imag = a->imag / b;
 }
 
-
+/**
+ * crank_cplx_float_div:
+ * @a: A Complex.
+ * @b: A Complex.
+ * @r: (out): A Complex to store result.
+ *
+ * Gets a division of two complex.
+ */
+void
+crank_cplx_float_div (	CrankCplxFloat*	a,
+						CrankCplxFloat*	b,
+						CrankCplxFloat*	r	)
+{
+	gfloat	bnorm_sq;
+	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	bnorm_sq = crank_cplx_float_get_norm_sq (b);
+	
+	r->real = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
+	r->imag = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
+}
 
 
 /**
@@ -811,6 +847,21 @@ crank_cplx_float_addr_self (	CrankCplxFloat*	a,
 }
 
 /**
+ * crank_cplx_float_add_self:
+ * @a: A Complex.
+ * @b: A Complex.
+ *
+ * Applies a addition by a complex.
+ */
+void
+crank_cplx_float_add_self (	CrankCplxFloat*	a,
+							CrankCplxFloat*	b	)
+{
+	a->real += b->real;
+	a->imag += b->imag;
+}
+
+/**
  * crank_cplx_float_subr_self:
  * @a: A Complex.
  * @b: A real value.
@@ -822,6 +873,21 @@ crank_cplx_float_subr_self (	CrankCplxFloat*	a,
 								gfloat			b		)
 {
 	a->real -= b;
+}
+									
+/**
+ * crank_cplx_float_sub_self:
+ * @a: A Complex.
+ * @b: A Complex.
+ *
+ * Applies a subtration by a complex.
+ */
+void
+crank_cplx_float_sub_self (	CrankCplxFloat*	a,
+							CrankCplxFloat*	b	)
+{
+	a->real -= b->real;
+	a->imag -= b->imag;
 }
 
 /**
@@ -837,6 +903,23 @@ crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
 {
 	a->real *= b;
 	a->imag *= b;
+}
+	
+/**
+ * crank_cplx_float_mul_self:
+ * @a: A Complex.
+ * @b: A Complex.
+ *
+ * Applies a multiplication by a complex.
+ */
+void
+crank_cplx_float_mul_self (	CrankCplxFloat*	a,
+							CrankCplxFloat*	b	)
+{
+	gfloat nr = a->real * b->real - a->imag * b->imag;
+	gfloat ni = a->real * b->imag + a->imag * b->real;
+	a->real = nr;
+	a->imag = ni;
 }
 
 /**
@@ -854,7 +937,28 @@ crank_cplx_float_divr_self (	CrankCplxFloat*	a,
 	a->imag /= b;
 }
 
-//////// Real - Cplx Operations ////////////////////////////////////////////////
+/**
+ * crank_cplx_float_div_self:
+ * @a: A Complex.
+ * @b: A Complex.
+ *
+ * Applies a division by a complex.
+ */
+void
+crank_cplx_float_div_self (	CrankCplxFloat*	a,
+							CrankCplxFloat*	b	)
+{
+	gfloat	bnorm_sq = crank_cplx_float_get_norm_sq (b);
+	
+	gfloat nr = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
+	gfloat ni = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
+	
+	a->real = nr;
+	a->imag = ni;
+}
+
+
+//////// Swapped Airthmetics ///////////////////////////////////////////////////
 
 /**
  * crank_cplx_float_rsubr:
@@ -898,160 +1002,7 @@ crank_cplx_float_rdivr (	CrankCplxFloat*	a,
 	r->imag = (- b * a->imag) / anorm_sq;
 }
 
-//////// Cplx - Cplx Operations ////////////////////////////////////////////////
-
-/**
- * crank_cplx_float_add:
- * @a: A Complex.
- * @b: A Complex.
- * @r: (out): A Complex to store result.
- *
- * Gets a addition of two complex.
- */
-void
-crank_cplx_float_add (	CrankCplxFloat*	a,
-						CrankCplxFloat*	b,
-						CrankCplxFloat*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-
-	r->real = a->real + b->real;
-	r->imag = a->imag + b->imag;
-}
-										
-/**
- * crank_cplx_float_sub:
- * @a: A Complex.
- * @b: A Complex.
- * @r: (out): A Complex to store result.
- *
- * Gets a subtration of two complex.
- */
-void
-crank_cplx_float_sub (	CrankCplxFloat*	a,
-						CrankCplxFloat*	b,
-						CrankCplxFloat*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-
-	r->real = a->real - b->real;
-	r->imag = a->imag - b->imag;
-}
-
-/**
- * crank_cplx_float_mul:
- * @a: A Complex.
- * @b: A Complex.
- * @r: (out): A Complex to store result.
- *
- * Gets a multiplication of two complex.
- */
-void
-crank_cplx_float_mul (	CrankCplxFloat*	a,
-						CrankCplxFloat*	b,
-						CrankCplxFloat*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-
-	r->real = a->real * b->real - a->imag * b->imag;
-	r->imag = a->real * b->imag + a->imag * b->real;
-}
-
-/**
- * crank_cplx_float_div:
- * @a: A Complex.
- * @b: A Complex.
- * @r: (out): A Complex to store result.
- *
- * Gets a division of two complex.
- */
-void
-crank_cplx_float_div (	CrankCplxFloat*	a,
-						CrankCplxFloat*	b,
-						CrankCplxFloat*	r	)
-{
-	gfloat	bnorm_sq;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	bnorm_sq = crank_cplx_float_get_norm_sq (b);
-	
-	r->real = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
-	r->imag = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
-}
-
-
-/**
- * crank_cplx_float_add_self:
- * @a: A Complex.
- * @b: A Complex.
- *
- * Applies a addition by a complex.
- */
-void
-crank_cplx_float_add_self (	CrankCplxFloat*	a,
-							CrankCplxFloat*	b	)
-{
-	a->real += b->real;
-	a->imag += b->imag;
-}
-										
-/**
- * crank_cplx_float_sub_self:
- * @a: A Complex.
- * @b: A Complex.
- *
- * Applies a subtration by a complex.
- */
-void
-crank_cplx_float_sub_self (	CrankCplxFloat*	a,
-							CrankCplxFloat*	b	)
-{
-	a->real -= b->real;
-	a->imag -= b->imag;
-}
-
-/**
- * crank_cplx_float_mul_self:
- * @a: A Complex.
- * @b: A Complex.
- *
- * Applies a multiplication by a complex.
- */
-void
-crank_cplx_float_mul_self (	CrankCplxFloat*	a,
-							CrankCplxFloat*	b	)
-{
-	gfloat nr = a->real * b->real - a->imag * b->imag;
-	gfloat ni = a->real * b->imag + a->imag * b->real;
-	a->real = nr;
-	a->imag = ni;
-}
-
-/**
- * crank_cplx_float_div_self:
- * @a: A Complex.
- * @b: A Complex.
- *
- * Applies a division by a complex.
- */
-void
-crank_cplx_float_div_self (	CrankCplxFloat*	a,
-							CrankCplxFloat*	b	)
-{
-	gfloat	bnorm_sq = crank_cplx_float_get_norm_sq (b);
-	
-	gfloat nr = (a->real * b->real + a->imag * b->imag) / bnorm_sq;
-	gfloat ni = (b->real * a->imag - a->real * b->imag) / bnorm_sq;
-	
-	a->real = nr;
-	a->imag = ni;
-}
-
+//////// Misc Operations ///////////////////////////////////////////////////////
 
 /**
  * crank_cplx_float_mul_conj:
@@ -1072,53 +1023,6 @@ crank_cplx_float_mul_conj (	CrankCplxFloat*	a,
 	r->real = a->real * b->real + a->imag * b->imag;
 	r->imag = - a->real * b->imag + a->imag * b->real;
 }
-
-//////// Cplx - Quat Operations ////////////////////////////////////////////////
-
-/**
- * crank_cplx_float_subq:
- * @a: A Complex.
- * @b: A Quaternion.
- * @r: (out): A Quaterion to store result.
- *
- * Applies a subtraction by a quaternion.
- */
-void
-crank_cplx_float_subq (	CrankCplxFloat*	a,
-						CrankQuatFloat*	b,
-						CrankQuatFloat*	r	)
-{
-	g_return_if_fail (b != r);
-
-	r->w = a->real - b->w;
-	r->x = a->imag - b->x;
-	r->y = - b->y;
-	r->z = - b->z;
-}
-
-/**
- * crank_cplx_float_mulq:
- * @a: A Complex.
- * @b: A Quaternion.
- * @r: (out): A Quaterion to store result.
- *
- * Applies a multiplication by a quaternion.
- *
- * This is because multiplication of quaternion is not commutative.
- */
-void
-crank_cplx_float_mulq (	CrankCplxFloat*	a,
-						CrankQuatFloat*	b,
-						CrankQuatFloat*	r	)
-{
-	g_return_if_fail (b != r);
-
-	r->w = (a->real * b->w) - (a->imag * b->x);
-	r->x = (a->imag * b->w) + (a->real * b->x);
-	r->y = (a->real * b->y) - (a->imag * b->z);
-	r->z = (a->imag * b->y) + (a->real * b->z);
-}
-
 
 //////// Ternary Operations ////////////////////////////////////////////////////
 

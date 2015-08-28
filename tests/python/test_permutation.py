@@ -28,14 +28,14 @@ from gi.repository import CrankBase
 
 class TestPermutation(unittest.TestCase):
 
-	def test_check_valid (self):
+	def test_is_valid (self):
 		p = CrankBase.Permutation.init_arr ([0, 1, 2, 3, 4])
 		q = CrankBase.Permutation.init_arr ([0, 3, 0, 2, 4])
 		r = CrankBase.Permutation.init_arr ([0, 6, 3, 4, 7])
 		
-		assert (p.check_valid ())
-		assert (not q.check_valid ())
-		assert (not r.check_valid ())
+		assert (p.is_valid ())
+		assert (not q.is_valid ())
+		assert (not r.is_valid ())
 	
 	def test_is_empty (self):
 		p = CrankBase.Permutation.init_arr ([1, 0])

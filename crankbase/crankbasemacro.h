@@ -95,7 +95,7 @@ G_BEGIN_DECLS
  * @p: A Pointer to add.
  * @sz: A size.
  *
- * Performs airthmetic on pointer, which is @p + @sz.
+ * Performs airthmetic addition on pointer, which is @p + @sz.
  *
  * Returns: Addition of pointer and size.
  */
@@ -107,8 +107,8 @@ G_BEGIN_DECLS
  * @sz: A size.
  * @n: Multiplication cofactor; count of @sz.
  *
- * Performs airthmetic on pointer, which is @p + (@sz * @n). This will be useful
- * when dealing with arrays.
+ * Performs airthmetic addition on pointer, which is @p + (@sz * @n). This will
+ * be useful when dealing with arrays.
  *
  * Returns: Addition of pointer and size.
  */
@@ -147,7 +147,7 @@ G_BEGIN_DECLS
  * @G: Type of elements.
  * @n: Length of @a and @b.
  *
- * Compares same sized array using <function>memcmp</function>.
+ * Compares same sized array using <function>memcmp<!-- -->()</function>.
  *
  * Returns: (type gint): Comparsion result.
  */
@@ -161,10 +161,11 @@ G_BEGIN_DECLS
  * @c: allocated length of @a.
  * @I: (type T): Item to append.
  *
- * Note:
+ * <note><para>
  * #GArray and #GPtrArray provides more convinient functions and macros to
  * manipulate. You are advised to use them, rather than using triplet of pointer,
  * length, alloc-size.
+ * </para></note>
  *
  * Append item in array. If allocation size is sufficient, then reallocates
  * array by g_renew()

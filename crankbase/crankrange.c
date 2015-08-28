@@ -41,36 +41,6 @@
  * Ranges can be used for requirements of values, specifying memory block, and
  * basic of shape processing.
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
- *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>basic, lengthened, unit</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>length</entry>
- *       </row>
- *       <row>
- *         <entry>Value Operations</entry>
- *         <entry>Contains, get, index of, clamp</entry>
- *       </row>
- *       <row>
- *         <entry>Raneg Operations</entry>
- *         <entry>Intersection</entry>
- *       </row>
- *     </tbody>
- *   </tgroup>
- * </table>
- 
  * # Get and Index of
  *
  * Getting operations on range can be thought as mix operation of start and end

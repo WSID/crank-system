@@ -97,7 +97,7 @@ guint		crank_cplx_float_hash1 (		gconstpointer	a	);
 gchar*		crank_cplx_float_to_string (	CrankCplxFloat*	cplx	);
 
 gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
-											const gchar*	format	);
+												const gchar*	format	);
 
 //////// Attributes ////////////////////////////////////////////////////////////
 
@@ -144,39 +144,73 @@ void		crank_cplx_float_conjugate_self (	CrankCplxFloat*	a	);
 											
 void		crank_cplx_float_unit_self (	CrankCplxFloat*	a	);
 
-//////// Cplx - Real Operations ////////////////////////////////////////////////
+//////// Airthmetics  //////////////////////////////////////////////////////////
 
 void		crank_cplx_float_addr (			CrankCplxFloat*	a,
 											gfloat			b,
 											CrankCplxFloat*	r		);
 
+void		crank_cplx_float_add (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_addr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+
+void		crank_cplx_float_add_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+
 void		crank_cplx_float_subr (			CrankCplxFloat*	a,
 											gfloat			b,
 											CrankCplxFloat*	r		);
+										
+void		crank_cplx_float_sub (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
+										
+void		crank_cplx_float_subq (			CrankCplxFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
+
+void		crank_cplx_float_subr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+										
+void		crank_cplx_float_sub_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
 
 void		crank_cplx_float_mulr (			CrankCplxFloat*	a,
 											gfloat			b,
 											CrankCplxFloat*	r		);
+										
+void		crank_cplx_float_mul (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
+										
+void		crank_cplx_float_mulq (			CrankCplxFloat*	a,
+											CrankQuatFloat*	b,
+											CrankQuatFloat*	r	);
+							
+void		crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
+											gfloat			b	);
+										
+void		crank_cplx_float_mul_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
 
 void		crank_cplx_float_divr (			CrankCplxFloat*	a,
 											gfloat			b,
 											CrankCplxFloat*	r		);
 
-
-
-void		crank_cplx_float_addr_self (	CrankCplxFloat*	a,
-											gfloat			b	);
-
-void		crank_cplx_float_subr_self (	CrankCplxFloat*	a,
-											gfloat			b	);
-
-void		crank_cplx_float_mulr_self (	CrankCplxFloat*	a,
-											gfloat			b	);
+void		crank_cplx_float_div (			CrankCplxFloat*	a,
+											CrankCplxFloat*	b,
+											CrankCplxFloat*	r	);
 
 void		crank_cplx_float_divr_self (	CrankCplxFloat*	a,
 											gfloat			b	);
 
-//////// Real - Cplx Operations ////////////////////////////////////////////////
+void		crank_cplx_float_div_self (		CrankCplxFloat*	a,
+											CrankCplxFloat*	b	);
+
+//////// Swapped Operations ////////////////////////////////////////////////////
 
 void		crank_cplx_float_rsubr (		CrankCplxFloat*	a,
 											gfloat			b,
@@ -186,50 +220,12 @@ void		crank_cplx_float_rdivr (		CrankCplxFloat*	a,
 											gfloat			b,
 											CrankCplxFloat*	r		);
 
-//////// Cplx - Cplx Operations ////////////////////////////////////////////////
-
-void		crank_cplx_float_add (			CrankCplxFloat*	a,
-											CrankCplxFloat*	b,
-											CrankCplxFloat*	r	);
-										
-void		crank_cplx_float_sub (			CrankCplxFloat*	a,
-											CrankCplxFloat*	b,
-											CrankCplxFloat*	r	);
-										
-void		crank_cplx_float_mul (			CrankCplxFloat*	a,
-											CrankCplxFloat*	b,
-											CrankCplxFloat*	r	);
-
-void		crank_cplx_float_div (			CrankCplxFloat*	a,
-											CrankCplxFloat*	b,
-											CrankCplxFloat*	r	);
-
-void		crank_cplx_float_add_self (		CrankCplxFloat*	a,
-											CrankCplxFloat*	b	);
-										
-void		crank_cplx_float_sub_self (		CrankCplxFloat*	a,
-											CrankCplxFloat*	b	);
-										
-void		crank_cplx_float_mul_self (		CrankCplxFloat*	a,
-											CrankCplxFloat*	b	);
-
-void		crank_cplx_float_div_self (		CrankCplxFloat*	a,
-											CrankCplxFloat*	b	);
+//////// Misc Operations ///////////////////////////////////////////////////////
 										
 
 void		crank_cplx_float_mul_conj (		CrankCplxFloat*	a,
 											CrankCplxFloat*	b,
 											CrankCplxFloat*	r	);
-
-//////// Cplx - Quat Operations ////////////////////////////////////////////////
-										
-void		crank_cplx_float_subq (			CrankCplxFloat*	a,
-											CrankQuatFloat*	b,
-											CrankQuatFloat*	r	);
-										
-void		crank_cplx_float_mulq (			CrankCplxFloat*	a,
-											CrankQuatFloat*	b,
-											CrankQuatFloat*	r	);
 
 //////// Ternary Operations ////////////////////////////////////////////////////
 
@@ -273,5 +269,53 @@ void		crank_cplx_float_cos (			CrankCplxFloat*	a,
 void		crank_cplx_float_tan (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
 
+//////// Generic Selectors /////////////////////////////////////////////////////
+
+#if ! defined (_CRANK_INTERNAL) && (__STDC_VERSION__ >= 201112L) // On C11, we will have Generic selectors.
+#define crank_cplx_float_add(a, b, r) \
+		_Generic((b),	gfloat:				crank_cplx_float_addr,	\
+						CrankCplxFloat*:	crank_cplx_float_add)	\
+				(a, b, r)
+				
+#define crank_cplx_float_add_self(a, b) \
+		_Generic((b),	gfloat:				crank_cplx_float_addr_self,	\
+						CrankCplxFloat*:	crank_cplx_float_add_self)	\
+				(a, b)
+
+#define crank_cplx_float_sub(a, b, r) \
+		_Generic((b),	gfloat:				crank_cplx_float_subr,	\
+						CrankCplxFloat*:	crank_cplx_float_sub,	\
+						CrankQuatFloat*:	crank_cplx_float_subq)	\
+				(a, b, r)
+				
+#define crank_cplx_float_sub_self(a, b) \
+		_Generic((b),	gfloat:				crank_cplx_float_subr_self,	\
+						CrankCplxFloat*:	crank_cplx_float_sub_self)	\
+				(a, b)
+
+#define crank_cplx_float_mul(a, b, r) \
+		_Generic((b),	gfloat:				crank_cplx_float_mulr,	\
+						CrankCplxFloat*:	crank_cplx_float_mul,	\
+						CrankQuatFloat*:	crank_cplx_float_mulq)	\
+				(a, b, r)
+				
+#define crank_cplx_float_mul_self(a, b) \
+		_Generic((b),	gfloat:				crank_cplx_float_mulr_self,	\
+						CrankCplxFloat*:	crank_cplx_float_mul_self)	\
+				(a, b)
+
+
+
+#define crank_cplx_float_div(a, b, r) \
+		_Generic((b),	gfloat:			crank_cplx_float_divr,	\
+						CrankCplxFloat*:	crank_cplx_float_div)	\
+				(a, b, r)
+				
+#define crank_cplx_float_div_self(a, b) \
+		_Generic((b),	gfloat:				crank_cplx_float_divr_self,	\
+						CrankCplxFloat*:	crank_cplx_float_div_self)	\
+				(a, b)
+				
+#endif
 
 #endif
