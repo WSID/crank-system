@@ -318,7 +318,8 @@ crank_vec_cplx_float_n_init_arruc (CrankVecCplxFloatN* vec,
 
   CRANK_VEC_ALLOC (vec, CrankCplxFloat, n);
 
-  for (i = 0; i < n; i++)	crank_cplx_float_init (vec->data + i, arr[2*n], arr[2*n + 1]);
+  for (i = 0; i < n; i++)
+	crank_cplx_float_init (vec->data + i, arr[2*i], arr[2*i + 1]);
 }
 
 /**
@@ -364,10 +365,10 @@ crank_vec_cplx_float_n_init_ucv (CrankVecCplxFloatN*	vec,
   n = MAX (real != NULL ? real->n : 0,
 		   imag != NULL ? imag->n : 0);
 
-  CRANK_VEC_ALLOC(vec, CrankCplxFloat, n);
+  CRANK_VEC_ALLOC0(vec, CrankCplxFloat, n);
 
   for (i = 0; i < real->n; i++)	vec->data[i].real = real->data[i];
-  for (i = 0; i < imag->n; i++)	vec->data[i].real = imag->data[i];
+  for (i = 0; i < imag->n; i++)	vec->data[i].imag = imag->data[i];
 }
 
 

@@ -24,14 +24,6 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void		test_assert_float_real (	const gchar*	file,
-											const guint		line,
-											const gchar*	func,
-											const gchar*	a_str,
-											const gchar*	b_str,
-											gfloat			a,
-											gfloat			b	);
-
 static gboolean	test_accumulation (			CrankCplxFloat*	value,
 							   				gpointer		userdata	);
 
@@ -56,6 +48,11 @@ static void	test_n_cmpeq (void);
 static void	test_n_mulrm (void);
 static void	test_n_mixs (void);
 static void	test_n_mix (void);
+
+static void test_n_init_arruc (void);
+static void test_n_init_ucarr (void);
+static void test_n_init_ucv (void);
+static void test_n_init_filluc (void);
 
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -83,6 +80,11 @@ main (	gint argc, gchar** argv	)
   	g_test_add_func ("/crank/base/vec/cplx/float/n/mulrm", test_n_mulrm);
 	g_test_add_func ("/crank/base/vec/cplx/float/n/mixs", test_n_mixs);
 	g_test_add_func ("/crank/base/vec/cplx/float/n/mix", test_n_mix);
+	
+	g_test_add_func ("/crank/base/vec/cplx/float/n/init/arruc", test_n_init_arruc);
+	g_test_add_func ("/crank/base/vec/cplx/float/n/init/ucarr", test_n_init_ucarr);
+	g_test_add_func ("/crank/base/vec/cplx/float/n/init/ucv", test_n_init_ucv);
+	g_test_add_func ("/crank/base/vec/cplx/float/n/init/filluc", test_n_init_filluc);
 	
 	g_test_run ();
 	return 0;
@@ -459,3 +461,68 @@ static void	test_n_mix (void)
 	crank_assert_eqcplxfloat_cimm (&v, 5.0f, 11.0f);
 }
 
+static void
+test_n_init_arruc (void)
+{
+	CrankVecCplxFloatN a;
+	gfloat e[6] = {2.0f, 4.0f,		1.0f, 3.0f,		6.0f, 4.0f};
+			
+	crank_vec_cplx_float_n_init_arruc (&a, 3, e);
+	
+	crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+	
+	crank_vec_cplx_float_n_fini (&a);
+}
+
+static void
+test_n_init_ucarr (void)
+{
+  CrankVecCplxFloatN a;
+  gfloat r[3] = {2.0f, 1.0f, 6.0f};
+  gfloat i[3] = {4.0f, 3.0f, 4.0f};
+  
+  crank_vec_cplx_float_n_init_ucarr (&a, 3, r, i);
+	
+	crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+	
+	crank_vec_cplx_float_n_fini (&a);
+}
+
+static void
+test_n_init_ucv (void)
+{
+  CrankVecCplxFloatN a;
+  CrankVecFloatN r;
+  CrankVecFloatN i;
+  
+  crank_vec_float_n_init (&r, 3, 2.0f, 1.0f, 6.0f);
+  crank_vec_float_n_init (&i, 3, 4.0f, 3.0f, 4.0f);
+  
+  crank_vec_cplx_float_n_init_ucv (&a, &r, &i);
+	
+	crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+
+  crank_vec_cplx_float_n_fini (&a);
+  crank_vec_float_n_fini (&r);
+  crank_vec_float_n_fini (&i);
+}
+
+static void
+test_n_init_filluc (void)
+{
+  CrankVecCplxFloatN a;
+  
+  crank_vec_cplx_float_n_init_filluc (&a, 3, 2.0f, 5.0f);
+	
+	crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 5.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 1, 2.0f, 5.0f);
+	crank_assert_eqcplxfloat_cimm (a.data + 2, 2.0f, 5.0f);
+	
+	crank_vec_cplx_float_n_fini (&a);
+}

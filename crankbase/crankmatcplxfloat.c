@@ -384,7 +384,7 @@ crank_mat_cplx_float_n_init_diag_arr (	CrankMatCplxFloatN*	mat,
 {
   	guint	i;
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, n, n);
+	CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
 	
  	for (i = 0; i < n; i++)
  		crank_cplx_float_copy (darr + i, mat->data + (n*i) + i);
@@ -685,7 +685,7 @@ crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
 
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-  for (i = 0; i < rn; i++)
+  for (i = 0; i < cn; i++)
 	{
 	  CrankVecFloatN* rv = va_arg (varargs, CrankVecFloatN*);
 	  CrankVecFloatN* iv = va_arg (varargs, CrankVecFloatN*);
@@ -721,7 +721,7 @@ crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
   
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
   
-  for (i = 0; i < rn; i++)
+  for (i = 0; i < cn; i++)
     {
       CrankVecFloatN* rv = carrucv + (2 * i);
       CrankVecFloatN* iv = rv + 1;
