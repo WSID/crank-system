@@ -279,7 +279,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 		crank_vec_float_n_fini (&u);
 	}
 
-	crank_mat_float_n_init_cvarr (q, a->rn, e);
+	crank_mat_float_n_init_carrv (q, a->rn, e);
 
 	for (i = 0; i < a->rn; i++) {
 		crank_vec_float_n_fini (e + i);
@@ -863,7 +863,7 @@ crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
 		crank_vec_cplx_float_n_fini (&u);
 	}
 
-	crank_mat_cplx_float_n_init_cvarr (q, a->rn, e);
+	crank_mat_cplx_float_n_init_carrv (q, a->rn, e);
 
 	for (i = 0; i < a->rn; i++) {
 		crank_vec_cplx_float_n_fini (e + i);

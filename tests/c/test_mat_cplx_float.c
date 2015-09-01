@@ -60,10 +60,10 @@ static void		test_n_init_arruc (void);
 static void		test_n_init_ucm (void);
 static void		test_n_init_rucv (void);
 static void		test_n_init_rarrucv (void);
-static void		test_n_init_rarrucvp (void);
+static void		test_n_init_rarrucpv (void);
 static void		test_n_init_cucv (void);
 static void		test_n_init_carrucv (void);
-static void		test_n_init_carrucvp (void);
+static void		test_n_init_carrucpv (void);
 
 static void		test_n_init_diaguc (void);
 static void 	test_n_init_diagarruc (void);
@@ -108,10 +108,10 @@ gint	main (gint argc, gchar** argv)
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/ucm",	test_n_init_ucm);
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/rucv",	test_n_init_rucv);
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/rarrucv",	test_n_init_rarrucv);
-  	g_test_add_func ("/crank/base/mat/cplx/float/n/init/rarrucvp",	test_n_init_rarrucvp);
+  	g_test_add_func ("/crank/base/mat/cplx/float/n/init/rarrucpv",	test_n_init_rarrucpv);
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/cucv",	test_n_init_cucv);
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/carrucv",	test_n_init_carrucv);
-  	g_test_add_func ("/crank/base/mat/cplx/float/n/init/carrucvp",	test_n_init_carrucvp);
+  	g_test_add_func ("/crank/base/mat/cplx/float/n/init/carrucpv",	test_n_init_carrucpv);
   	
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/diaguc",	test_n_init_diaguc);
   	g_test_add_func ("/crank/base/mat/cplx/float/n/init/diagucarr",	test_n_init_diagucarr);
@@ -856,7 +856,7 @@ test_n_init_rarrucv (void)
 }
 
 static void
-test_n_init_rarrucvp (void)
+test_n_init_rarrucpv (void)
 {
   CrankMatCplxFloatN	a;
   CrankVecFloatN*		rows[4];
@@ -872,7 +872,7 @@ test_n_init_rarrucvp (void)
   crank_vec_float_n_init (rows[2], 3, 1.0f, 4.0f, 7.0f);
   crank_vec_float_n_init (rows[3], 3, 0.0f, 3.0f, 0.0f);
   
-  crank_mat_cplx_float_n_init_rarrucvp (&a, 2, rows);
+  crank_mat_cplx_float_n_init_rarrucpv (&a, 2, rows);
   
   crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 8.0f);
   crank_assert_eqcplxfloat_cimm (a.data + 1, 3.0f, 9.0f);
@@ -963,7 +963,7 @@ test_n_init_carrucv (void)
 }
 
 static void
-test_n_init_carrucvp (void)
+test_n_init_carrucpv (void)
 {
   CrankMatCplxFloatN	a;
   CrankVecFloatN*		cols[6];
@@ -984,7 +984,7 @@ test_n_init_carrucvp (void)
   crank_vec_float_n_init (cols[4], 2, 5.0f, 7.0f);
   crank_vec_float_n_init (cols[5], 2, 2.0f, 0.0f);
   
-  crank_mat_cplx_float_n_init_carrucvp (&a, 3, cols);
+  crank_mat_cplx_float_n_init_carrucpv (&a, 3, cols);
   
   crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 8.0f);
   crank_assert_eqcplxfloat_cimm (a.data + 1, 3.0f, 9.0f);

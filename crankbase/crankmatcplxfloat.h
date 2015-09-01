@@ -73,25 +73,25 @@ void		crank_mat_cplx_float_n_init_rv (	CrankMatCplxFloatN*	mat,
 												const guint		rn,
 												...	);
 
-void		crank_mat_cplx_float_n_init_rvarr (	CrankMatCplxFloatN*		mat,
+void		crank_mat_cplx_float_n_init_rarrv (	CrankMatCplxFloatN*		mat,
 												const guint 			rn,
-												CrankVecCplxFloatN*		rvarr	);
+												CrankVecCplxFloatN*		rarrv	);
 
-void		crank_mat_cplx_float_n_init_rvparr (	CrankMatCplxFloatN*		mat,
+void		crank_mat_cplx_float_n_init_rarrpv (	CrankMatCplxFloatN*		mat,
 													const guint 			rn,
-													CrankVecCplxFloatN**	rvparr	);
+													CrankVecCplxFloatN**	rarrpv	);
 
 void		crank_mat_cplx_float_n_init_cv (	CrankMatCplxFloatN*			mat,
 												const guint				cn,
 												...);
 
-void		crank_mat_cplx_float_n_init_cvarr (	CrankMatCplxFloatN*		mat,
+void		crank_mat_cplx_float_n_init_carrv (	CrankMatCplxFloatN*		mat,
 												const guint				cn,
-												CrankVecCplxFloatN*		cvarr );
+												CrankVecCplxFloatN*		carrv );
 
-void		crank_mat_cplx_float_n_init_cvparr (	CrankMatCplxFloatN*		mat,
+void		crank_mat_cplx_float_n_init_carrpv (	CrankMatCplxFloatN*		mat,
 													const guint				cn,
-													CrankVecCplxFloatN**	cvparr );
+													CrankVecCplxFloatN**	carrpv );
 
 void		crank_mat_cplx_float_n_init_diag (	CrankMatCplxFloatN*	mat,
 												const guint			n,
@@ -138,9 +138,9 @@ void		crank_mat_cplx_float_n_init_rarrucv (CrankMatCplxFloatN* mat,
 												  const guint		  rn,
 												  CrankVecFloatN*	  rarrucv);
 
-void		crank_mat_cplx_float_n_init_rarrucvp (CrankMatCplxFloatN* mat,
+void		crank_mat_cplx_float_n_init_rarrucpv (CrankMatCplxFloatN* mat,
 												  const guint		  rn,
-												  CrankVecFloatN**	  rarrucvp);
+												  CrankVecFloatN**	  rarrucpv);
 
 void		crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
 											  const guint		  cn,
@@ -150,9 +150,9 @@ void		crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
 												  const guint		  cn,
 												  CrankVecFloatN*	  carrucv);
 
-void		crank_mat_cplx_float_n_init_carrucvp (CrankMatCplxFloatN* mat,
+void		crank_mat_cplx_float_n_init_carrucpv (CrankMatCplxFloatN* mat,
 												  const guint		  cn,
-												  CrankVecFloatN**	  carrucvp);
+												  CrankVecFloatN**	  carrucpv);
 
 void		crank_mat_cplx_float_n_init_diaguc (CrankMatCplxFloatN*	mat,
 										  		const guint			n,
@@ -479,17 +479,17 @@ void		crank_mat_cplx_float_n__gi_init_rarrucv (CrankMatCplxFloatN* mat,
 													   const guint		  rn,
 													   CrankVecFloatN*	  rarrucv);
 
-void		crank_mat_cplx_float_n__gi_init_rarrucvp (CrankMatCplxFloatN* mat,
+void		crank_mat_cplx_float_n__gi_init_rarrucpv (CrankMatCplxFloatN* mat,
 														const guint		  rn,
-														CrankVecFloatN**	rarrucvp);
+														CrankVecFloatN**	rarrucpv);
 
 void		crank_mat_cplx_float_n__gi_init_carrucv (CrankMatCplxFloatN* mat,
 												  const guint		  cn,
 												  CrankVecFloatN*	  carrucv);
 
-void		crank_mat_cplx_float_n__gi_init_carrucvp (CrankMatCplxFloatN* mat,
+void		crank_mat_cplx_float_n__gi_init_carrucpv (CrankMatCplxFloatN* mat,
 												  const guint		  cn,
-												  CrankVecFloatN**	carrucvp);
+												  CrankVecFloatN**	carrucpv);
 
 void		crank_mat_cplx_float_n__gi_init_diagarruc (CrankMatCplxFloatN*	mat,
 											 		   const guint			n,
