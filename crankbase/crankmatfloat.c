@@ -40,10 +40,6 @@
 	((a) * (d) - (b) * (c))
 
 
-
-G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_free)
-
-
 /**
  * SECTION: crankmatfloat
  * @title: Float Matrices
@@ -56,29 +52,6 @@ G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_f
  * Currently following operations are supported.
  *
  * It is compared to mat in GLSL
- *
- * * Basic Operations
- *    * hashing
- *    * equality check
- *    * stringify
- * * Matrix properties
- *    * trace
- *    * determinent
- *    * cofactor and adjugate matrices
- * * Unary operations
- *    * negate
- *    * transpose
- *    * inverse
- * * Scalar operations
- *    * Scalar multiplication
- *    * Scalar division
- * * Vector operations
- *    * Vector multiplication (Matrix * Vector)
- * * Matrix operations
- *    * Matrix multiplication
- * * Ternary Operations
- *    * Mixing by scalar
- *    * Component mixing by matrix.
  *
  * # Notes about involuement of advanced operations.
  *
@@ -104,9 +77,111 @@ G_DEFINE_BOXED_TYPE (CrankMatFloat2, crank_mat_float2, crank_mat_float2_dup, g_f
  *   even projections.
  *   This means it can be combined with other transforms like translation and
  *   scales, and so on, in arbitarily order.
+ *
+ * # Type Conversion
+ *
+ * <table><title>Type Conversion of #CrankMatFloat2</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_mat_float2_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_mat_float2_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankMatFloatN.</entry>
+ *             <entry>crank_mat_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    Cast matrix into array,
+ *                    Defined at #CrankMatFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankMatFloat3</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_mat_float3_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_mat_float3_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankMatFloatN.</entry>
+ *             <entry>crank_mat_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    Cast matrix into array,
+ *                    Defined at #CrankMatFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankMatFloat4</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_mat_float4_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_mat_float4_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankMatFloatN.</entry>
+ *             <entry>crank_mat_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    Cast matrix into array,
+ *                    Defined at #CrankMatFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankMatFloatN</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankMatFloat2 </entry>
+ *             <entry>crank_mat_float_n_init_arr() </entry>
+ *             <entry>GValue Transform, Cast Matrix to array</entry> </row>
+ *
+ *       <row> <entry>From #CrankMatFloat3</entry>
+ *             <entry>crank_mat_float_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankMatFloat4</entry>
+ *             <entry>crank_mat_float_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_mat_float_n_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_mat_float_n_to_string_full()</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
+static void crank_mat_float2_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
 
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankMatFloat2,
+		crank_mat_float2,
+		crank_mat_float2_dup,
+		g_free,
+		{
+			g_value_register_transform_func (
+					g_define_type_id,
+					G_TYPE_STRING,
+					crank_mat_float2_transform_to_string	);
+		})
 
 /**
  * crank_mat_float2_init:
@@ -633,6 +708,21 @@ crank_mat_float2_neg (	CrankMatFloat2*	a,
 }
 
 /**
+ * crank_mat_float2_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float2_neg_self (	CrankMatFloat2*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+}
+
+/**
  * crank_mat_float2_transpose:
  * @a: A Matrix.
  * @r: (out): A Matrix to store result.
@@ -647,6 +737,22 @@ crank_mat_float2_transpose (	CrankMatFloat2*	a,
   	r->m01 = a->m10;
   	r->m10 = a->m01;
   	r->m11 = a->m11;
+}
+
+/**
+ * crank_mat_float2_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float2_transpose_self (	CrankMatFloat2*	a	)
+{
+  	gfloat temp;
+
+  	temp = a->m01;
+  	a->m01 = a->m10;
+  	a->m10 = temp;
 }
 
 /**
@@ -667,37 +773,6 @@ crank_mat_float2_inverse (	CrankMatFloat2*	a,
 	r->m11 = a->m00 * detinv;
 	r->m01 = - a->m01 * detinv;
 	r->m10 = - a->m10 * detinv;
-}
-
-/**
- * crank_mat_float2_neg_self:
- * @a: A Matrix.
- *
- * Negates a matrix.
- */
-void
-crank_mat_float2_neg_self (	CrankMatFloat2*	a	)
-{
-	a->m00 = - a->m00;
-  	a->m01 = - a->m01;
-  	a->m10 = - a->m10;
-  	a->m11 = - a->m11;
-}
-
-/**
- * crank_mat_float2_transpose_self:
- * @a: A Matrix.
- *
- * Gets a transpose of matrix.
- */
-void
-crank_mat_float2_transpose_self (	CrankMatFloat2*	a	)
-{
-  	gfloat temp;
-
-  	temp = a->m01;
-  	a->m01 = a->m10;
-  	a->m10 = temp;
 }
 
 /**
@@ -744,27 +819,6 @@ crank_mat_float2_muls (	CrankMatFloat2*	a,
 }
 
 /**
- * crank_mat_float2_divs:
- * @a: A Matrix.
- * @b: A Scalar.
- * @r: (out): A Matrix to store result.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float2_divs (	CrankMatFloat2*	a,
-					   	const gfloat	b,
-					   	CrankMatFloat2*	r	)
-{
-	g_return_if_fail (a != r);
-	
-	r->m00 = a->m00 / b;
-	r->m01 = a->m01 / b;
-	r->m10 = a->m10 / b;
-	r->m11 = a->m11 / b;
-}
-
-/**
  * crank_mat_float2_muls_self:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -780,25 +834,6 @@ crank_mat_float2_muls_self (	CrankMatFloat2*	a,
 	a->m10 *= b;
 	a->m11 *= b;
 }
-
-/**
- * crank_mat_float2_divs_self:
- * @a: A Matrix.
- * @b: A Scalar.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float2_divs_self (	CrankMatFloat2*	a,
-							   	const gfloat	b	)
-{
-	a->m00 /= b;
-	a->m01 /= b;
-	a->m10 /= b;
-	a->m11 /= b;
-}
-
-
 
 /**
  * crank_mat_float2_mulv:
@@ -823,50 +858,6 @@ crank_mat_float2_mulv (	CrankMatFloat2*	a,
 
   	r->x = nx;
   	r->y = ny;
-}
-
-/**
- * crank_mat_float2_add:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Adds a matrix.
- */
-void
-crank_mat_float2_add (	CrankMatFloat2*	a,
-					  	CrankMatFloat2*	b,
-					  	CrankMatFloat2*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->m00 = a->m00 + b->m00;
-  	r->m01 = a->m01 + b->m01;
-  	r->m10 = a->m10 + b->m10;
-  	r->m11 = a->m11 + b->m11;
-}
-
-/**
- * crank_mat_float2_sub:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float2_sub (	CrankMatFloat2*	a,
-					  	CrankMatFloat2*	b,
-					  	CrankMatFloat2*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->m00 = a->m00 - b->m00;
-  	r->m01 = a->m01 - b->m01;
-  	r->m10 = a->m10 - b->m10;
-  	r->m11 = a->m11 - b->m11;
 }
 
 /**
@@ -896,40 +887,6 @@ crank_mat_float2_mul (	CrankMatFloat2*	a,
 }
 
 /**
- * crank_mat_float2_add_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Adds a matrix.
- */
-void
-crank_mat_float2_add_self (	CrankMatFloat2*	a,
-						  	CrankMatFloat2*	b	)
-{
-	a->m00 += b->m00;
-  	a->m01 += b->m01;
-  	a->m10 += b->m10;
-  	a->m11 += b->m11;
-}
-
-/**
- * crank_mat_float2_sub_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float2_sub_self (	CrankMatFloat2*	a,
-					  		CrankMatFloat2*	b	)
-{
-	a->m00 -= b->m00;
-  	a->m01 -= b->m01;
-  	a->m10 -= b->m10;
-  	a->m11 -= b->m11;
-}
-
-/**
  * crank_mat_float2_mul_self:
  * @a: A Matrix.
  * @b: A Matrix.
@@ -948,6 +905,124 @@ crank_mat_float2_mul_self (	CrankMatFloat2*	a,
   	nr.m11 = (a->m10 * b->m01) + (a->m11 * b->m11);
 
   	crank_mat_float2_copy (&nr, a);
+}
+
+/**
+ * crank_mat_float2_divs:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ * @r: (out): A Matrix to store result.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float2_divs (	CrankMatFloat2*	a,
+					   	const gfloat	b,
+					   	CrankMatFloat2*	r	)
+{
+	g_return_if_fail (a != r);
+	
+	r->m00 = a->m00 / b;
+	r->m01 = a->m01 / b;
+	r->m10 = a->m10 / b;
+	r->m11 = a->m11 / b;
+}
+
+/**
+ * crank_mat_float2_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float2_divs_self (	CrankMatFloat2*	a,
+							   	const gfloat	b	)
+{
+	a->m00 /= b;
+	a->m01 /= b;
+	a->m10 /= b;
+	a->m11 /= b;
+}
+
+
+
+/**
+ * crank_mat_float2_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float2_add (	CrankMatFloat2*	a,
+					  	CrankMatFloat2*	b,
+					  	CrankMatFloat2*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+}
+
+/**
+ * crank_mat_float2_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float2_add_self (	CrankMatFloat2*	a,
+						  	CrankMatFloat2*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+}
+
+
+/**
+ * crank_mat_float2_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float2_sub (	CrankMatFloat2*	a,
+					  	CrankMatFloat2*	b,
+					  	CrankMatFloat2*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
+}
+/**
+ * crank_mat_float2_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float2_sub_self (	CrankMatFloat2*	a,
+					  		CrankMatFloat2*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
 }
 
 /**
@@ -1010,13 +1085,35 @@ crank_mat_float2_mix (	CrankMatFloat2*	a,
 	r->m11 = (a->m11 * (1 - c->m11)) + (b->m11 * c->m11);
 }
 
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_mat_float2_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+		crank_mat_float2_to_string (
+			(CrankMatFloat2*) g_value_get_boxed (src) ) );
+}
 
 
 
 
 
+static void crank_mat_float3_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
 
-G_DEFINE_BOXED_TYPE (CrankMatFloat3, crank_mat_float3, crank_mat_float3_dup, g_free)
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankMatFloat3,
+		crank_mat_float3,
+		crank_mat_float3_dup,
+		g_free,
+		{
+			g_value_register_transform_func (
+					g_define_type_id,
+					G_TYPE_STRING,
+					crank_mat_float3_transform_to_string	);
+		})
 
 /**
  * crank_mat_float3_init:
@@ -1616,6 +1713,26 @@ crank_mat_float3_neg (	CrankMatFloat3*	a,
 }
 
 /**
+ * crank_mat_float3_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float3_neg_self (	CrankMatFloat3*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m02 = - a->m02;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+  	a->m12 = - a->m12;
+	a->m20 = - a->m20;
+  	a->m21 = - a->m21;
+  	a->m22 = - a->m22;
+}
+
+/**
  * crank_mat_float3_transpose:
  * @a: A Matrix.
  * @r: (out): A Matrix to store result.
@@ -1635,45 +1752,6 @@ crank_mat_float3_transpose (	CrankMatFloat3*	a,
   	r->m20 = a->m02;
   	r->m21 = a->m12;
   	r->m22 = a->m22;
-}
-
-/**
- * crank_mat_float3_inverse:
- * @a: A Matrix.
- * @r: (out): A Matrix to store result.
- *
- * Gets an inverse of matrix.
- * If the matrix is singular, then NaN matrix may be returned.
- */
-void
-crank_mat_float3_inverse (	CrankMatFloat3*	a,
-						  	CrankMatFloat3*	r	)
-{
-  	CrankMatFloat3	adj;
-  	gfloat	det = crank_mat_float3_get_det (a);
-
-  	crank_mat_float3_get_adj (a, &adj);
-	crank_mat_float3_divs (&adj, det, r);
-}
-
-/**
- * crank_mat_float3_neg_self:
- * @a: A Matrix.
- *
- * Negates a matrix.
- */
-void
-crank_mat_float3_neg_self (	CrankMatFloat3*	a	)
-{
-	a->m00 = - a->m00;
-  	a->m01 = - a->m01;
-  	a->m02 = - a->m02;
-  	a->m10 = - a->m10;
-  	a->m11 = - a->m11;
-  	a->m12 = - a->m12;
-	a->m20 = - a->m20;
-  	a->m21 = - a->m21;
-  	a->m22 = - a->m22;
 }
 
 /**
@@ -1698,6 +1776,25 @@ crank_mat_float3_transpose_self (	CrankMatFloat3*	a	)
   	temp = a->m12;
   	a->m12 = a->m21;
   	a->m21 = temp;
+}
+
+/**
+ * crank_mat_float3_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float3_inverse (	CrankMatFloat3*	a,
+						  	CrankMatFloat3*	r	)
+{
+  	CrankMatFloat3	adj;
+  	gfloat	det = crank_mat_float3_get_det (a);
+
+  	crank_mat_float3_get_adj (a, &adj);
+	crank_mat_float3_divs (&adj, det, r);
 }
 
 /**
@@ -1746,32 +1843,6 @@ crank_mat_float3_muls (	CrankMatFloat3*	a,
 }
 
 /**
- * crank_mat_float3_divs:
- * @a: A Matrix.
- * @b: A Scalar.
- * @r: (out): A Matrix to store result.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float3_divs (	CrankMatFloat3*	a,
-					   	const gfloat	b,
-					   	CrankMatFloat3*	r	)
-{
-	g_return_if_fail (a != r);
-	
-	r->m00 = a->m00 / b;
-	r->m01 = a->m01 / b;
-  	r->m02 = a->m02 / b;
-	r->m10 = a->m10 / b;
-	r->m11 = a->m11 / b;
-  	r->m12 = a->m12 / b;
-	r->m20 = a->m20 / b;
-	r->m21 = a->m21 / b;
-  	r->m22 = a->m22 / b;
-}
-
-/**
  * crank_mat_float3_muls_self:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -1792,29 +1863,6 @@ crank_mat_float3_muls_self (	CrankMatFloat3*	a,
 	a->m21 *= b;
   	a->m22 *= b;
 }
-
-/**
- * crank_mat_float3_divs_self:
- * @a: A Matrix.
- * @b: A Scalar.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float3_divs_self (	CrankMatFloat3*	a,
-					   			const gfloat	b	)
-{
-	a->m00 /= b;
-	a->m01 /= b;
-  	a->m02 /= b;
-	a->m10 /= b;
-	a->m11 /= b;
-  	a->m12 /= b;
-	a->m20 /= b;
-	a->m21 /= b;
-  	a->m22 /= b;
-}
-
 
 /**
  * crank_mat_float3_mulv:
@@ -1842,60 +1890,6 @@ crank_mat_float3_mulv (	CrankMatFloat3*	a,
   	r->x = nx;
   	r->y = ny;
   	r->z = nz;
-}
-
-/**
- * crank_mat_float3_add:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Adds a matrix.
- */
-void
-crank_mat_float3_add (	CrankMatFloat3*	a,
-					  	CrankMatFloat3*	b,
-					  	CrankMatFloat3*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->m00 = a->m00 + b->m00;
-  	r->m01 = a->m01 + b->m01;
-  	r->m02 = a->m02 + b->m02;
-  	r->m10 = a->m10 + b->m10;
-  	r->m11 = a->m11 + b->m11;
-  	r->m12 = a->m12 + b->m12;
-  	r->m20 = a->m20 + b->m20;
-  	r->m21 = a->m21 + b->m21;
-  	r->m22 = a->m22 + b->m22;
-}
-
-/**
- * crank_mat_float3_sub:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float3_sub (	CrankMatFloat3*	a,
-					  	CrankMatFloat3*	b,
-					  	CrankMatFloat3*	r	)
-{
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->m00 = a->m00 - b->m00;
-  	r->m01 = a->m01 - b->m01;
-  	r->m02 = a->m02 - b->m02;
-  	r->m10 = a->m10 - b->m10;
-  	r->m11 = a->m11 - b->m11;
-  	r->m12 = a->m12 - b->m12;
-  	r->m20 = a->m20 - b->m20;
-  	r->m21 = a->m21 - b->m21;
-  	r->m22 = a->m22 - b->m22;
 }
 
 /**
@@ -1931,51 +1925,6 @@ crank_mat_float3_mul (	CrankMatFloat3*	a,
   	crank_mat_float3_copy (&nr, r);
 }
 
-
-/**
- * crank_mat_float3_add_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Adds a matrix.
- */
-void
-crank_mat_float3_add_self (	CrankMatFloat3*	a,
-					  		CrankMatFloat3*	b	)
-{
-	a->m00 += b->m00;
-  	a->m01 += b->m01;
-  	a->m02 += b->m02;
-  	a->m10 += b->m10;
-  	a->m11 += b->m11;
-  	a->m12 += b->m12;
-  	a->m20 += b->m20;
-  	a->m21 += b->m21;
-  	a->m22 += b->m22;
-}
-
-/**
- * crank_mat_float3_sub_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float3_sub_self (	CrankMatFloat3*	a,
-					  		CrankMatFloat3*	b	)
-{
-	a->m00 -= b->m00;
-  	a->m01 -= b->m01;
-  	a->m02 -= b->m02;
-  	a->m10 -= b->m10;
-  	a->m11 -= b->m11;
-  	a->m12 -= b->m12;
-  	a->m20 -= b->m20;
-  	a->m21 -= b->m21;
-  	a->m22 -= b->m22;
-}
-
 /**
  * crank_mat_float3_mul_self:
  * @a: A Matrix.
@@ -2002,6 +1951,153 @@ crank_mat_float3_mul_self (	CrankMatFloat3*	a,
   	nr.m22 = (a->m20 * b->m02) + (a->m21 * b->m12) + (a->m22 * b->m22);
 
   	crank_mat_float3_copy (&nr, a);
+}
+
+/**
+ * crank_mat_float3_divs:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ * @r: (out): A Matrix to store result.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float3_divs (	CrankMatFloat3*	a,
+					   	const gfloat	b,
+					   	CrankMatFloat3*	r	)
+{
+	g_return_if_fail (a != r);
+	
+	r->m00 = a->m00 / b;
+	r->m01 = a->m01 / b;
+  	r->m02 = a->m02 / b;
+	r->m10 = a->m10 / b;
+	r->m11 = a->m11 / b;
+  	r->m12 = a->m12 / b;
+	r->m20 = a->m20 / b;
+	r->m21 = a->m21 / b;
+  	r->m22 = a->m22 / b;
+}
+
+/**
+ * crank_mat_float3_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float3_divs_self (	CrankMatFloat3*	a,
+					   			const gfloat	b	)
+{
+	a->m00 /= b;
+	a->m01 /= b;
+  	a->m02 /= b;
+	a->m10 /= b;
+	a->m11 /= b;
+  	a->m12 /= b;
+	a->m20 /= b;
+	a->m21 /= b;
+  	a->m22 /= b;
+}
+
+
+/**
+ * crank_mat_float3_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float3_add (	CrankMatFloat3*	a,
+					  	CrankMatFloat3*	b,
+					  	CrankMatFloat3*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m02 = a->m02 + b->m02;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+  	r->m12 = a->m12 + b->m12;
+  	r->m20 = a->m20 + b->m20;
+  	r->m21 = a->m21 + b->m21;
+  	r->m22 = a->m22 + b->m22;
+}
+
+/**
+ * crank_mat_float3_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float3_add_self (	CrankMatFloat3*	a,
+					  		CrankMatFloat3*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m02 += b->m02;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+  	a->m12 += b->m12;
+  	a->m20 += b->m20;
+  	a->m21 += b->m21;
+  	a->m22 += b->m22;
+}
+
+/**
+ * crank_mat_float3_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float3_sub (	CrankMatFloat3*	a,
+					  	CrankMatFloat3*	b,
+					  	CrankMatFloat3*	r	)
+{
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m02 = a->m02 - b->m02;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
+  	r->m12 = a->m12 - b->m12;
+  	r->m20 = a->m20 - b->m20;
+  	r->m21 = a->m21 - b->m21;
+  	r->m22 = a->m22 - b->m22;
+}
+
+/**
+ * crank_mat_float3_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float3_sub_self (	CrankMatFloat3*	a,
+					  		CrankMatFloat3*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m02 -= b->m02;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
+  	a->m12 -= b->m12;
+  	a->m20 -= b->m20;
+  	a->m21 -= b->m21;
+  	a->m22 -= b->m22;
 }
 
 
@@ -2075,13 +2171,36 @@ crank_mat_float3_mix (	CrankMatFloat3*	a,
 	r->m22 = (a->m22 * (1 - c->m22)) + (b->m22 * c->m22);
 }
 
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_mat_float3_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+		crank_mat_float3_to_string (
+			(CrankMatFloat3*) g_value_get_boxed (src) ) );
+}
 
 
 
 
 
 
-G_DEFINE_BOXED_TYPE (CrankMatFloat4, crank_mat_float4, crank_mat_float4_dup, g_free)
+static void crank_mat_float4_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankMatFloat4,
+		crank_mat_float4,
+		crank_mat_float4_dup,
+		g_free,
+		{
+			g_value_register_transform_func (
+					g_define_type_id,
+					G_TYPE_STRING,
+					crank_mat_float4_transform_to_string	);
+		})
 
 /**
  * crank_mat_float4_init:
@@ -2800,6 +2919,33 @@ crank_mat_float4_neg (	CrankMatFloat4*	a,
 }
 
 /**
+ * crank_mat_float4_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float4_neg_self (	CrankMatFloat4*	a	)
+{
+	a->m00 = - a->m00;
+  	a->m01 = - a->m01;
+  	a->m02 = - a->m02;
+  	a->m03 = - a->m03;
+  	a->m10 = - a->m10;
+  	a->m11 = - a->m11;
+  	a->m12 = - a->m12;
+  	a->m13 = - a->m13;
+	a->m20 = - a->m20;
+  	a->m21 = - a->m21;
+  	a->m22 = - a->m22;
+  	a->m23 = - a->m23;
+	a->m30 = - a->m30;
+  	a->m31 = - a->m31;
+  	a->m32 = - a->m32;
+  	a->m33 = - a->m33;
+}
+
+/**
  * crank_mat_float4_transpose:
  * @a: A Matrix.
  * @r: (out): A Matrix to store result.
@@ -2858,52 +3004,6 @@ crank_mat_float4_transpose (	CrankMatFloat4*	a,
 }
 
 /**
- * crank_mat_float4_inverse:
- * @a: A Matrix.
- * @r: (out): A Matrix to store result.
- *
- * Gets an inverse of matrix.
- * If the matrix is singular, then NaN matrix may be returned.
- */
-void
-crank_mat_float4_inverse (	CrankMatFloat4*	a,
-						  	CrankMatFloat4*	r	)
-{
-  	CrankMatFloat4	adj;
-  	gfloat	det = crank_mat_float4_get_det (a);
-
-  	crank_mat_float4_get_adj (a, &adj);
-	crank_mat_float4_divs (&adj, det, r);
-}
-
-/**
- * crank_mat_float4_neg_self:
- * @a: A Matrix.
- *
- * Negates a matrix.
- */
-void
-crank_mat_float4_neg_self (	CrankMatFloat4*	a	)
-{
-	a->m00 = - a->m00;
-  	a->m01 = - a->m01;
-  	a->m02 = - a->m02;
-  	a->m03 = - a->m03;
-  	a->m10 = - a->m10;
-  	a->m11 = - a->m11;
-  	a->m12 = - a->m12;
-  	a->m13 = - a->m13;
-	a->m20 = - a->m20;
-  	a->m21 = - a->m21;
-  	a->m22 = - a->m22;
-  	a->m23 = - a->m23;
-	a->m30 = - a->m30;
-  	a->m31 = - a->m31;
-  	a->m32 = - a->m32;
-  	a->m33 = - a->m33;
-}
-
-/**
  * crank_mat_float4_transpose_self:
  * @a: A Matrix.
  *
@@ -2937,6 +3037,25 @@ crank_mat_float4_transpose_self (	CrankMatFloat4*	a	)
   	temp = a->m23;
   	a->m23 = a->m32;
   	a->m32 = temp;
+}
+
+/**
+ * crank_mat_float4_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+void
+crank_mat_float4_inverse (	CrankMatFloat4*	a,
+						  	CrankMatFloat4*	r	)
+{
+  	CrankMatFloat4	adj;
+  	gfloat	det = crank_mat_float4_get_det (a);
+
+  	crank_mat_float4_get_adj (a, &adj);
+	crank_mat_float4_divs (&adj, det, r);
 }
 
 /**
@@ -2988,22 +3107,6 @@ crank_mat_float4_muls (	CrankMatFloat4*	a,
 }
 
 /**
- * crank_mat_float4_divs:
- * @a: A Matrix.
- * @b: A Scalar.
- * @r: (out): A Matrix to store result.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float4_divs (	CrankMatFloat4*	a,
-					   	const gfloat	b,
-					   	CrankMatFloat4*	r	)
-{
-  	crank_mat_float4_muls (a, 1 / b, r);
-}
-
-/**
  * crank_mat_float4_muls_self:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -3033,21 +3136,6 @@ crank_mat_float4_muls_self (	CrankMatFloat4*	a,
 }
 
 /**
- * crank_mat_float4_divs_self:
- * @a: A Matrix.
- * @b: A Scalar.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float4_divs_self (	CrankMatFloat4*	a,
-					   			const gfloat	b	)
-{
-  	crank_mat_float4_muls_self (a, 1 / b);
-}
-
-
-/**
  * crank_mat_float4_mulv:
  * @a: A Matrix.
  * @b: A Vector.
@@ -3070,70 +3158,6 @@ crank_mat_float4_mulv (	CrankMatFloat4*	a,
   	r->z = nz;
   	r->w = nw;
 }
-
-
-/**
- * crank_mat_float4_add:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Adds a matrix.
- */
-void
-crank_mat_float4_add (	CrankMatFloat4*	a,
-					  	CrankMatFloat4*	b,
-					  	CrankMatFloat4*	r	)
-{
-	r->m00 = a->m00 + b->m00;
-  	r->m01 = a->m01 + b->m01;
-  	r->m02 = a->m02 + b->m02;
-  	r->m03 = a->m03 + b->m03;
-  	r->m10 = a->m10 + b->m10;
-  	r->m11 = a->m11 + b->m11;
-  	r->m12 = a->m12 + b->m12;
-  	r->m13 = a->m13 + b->m13;
-  	r->m20 = a->m20 + b->m20;
-  	r->m21 = a->m21 + b->m21;
-  	r->m22 = a->m22 + b->m22;
-  	r->m23 = a->m23 + b->m23;
-  	r->m30 = a->m30 + b->m30;
-  	r->m31 = a->m31 + b->m31;
-  	r->m32 = a->m32 + b->m32;
-  	r->m33 = a->m33 + b->m33;
-}
-
-/**
- * crank_mat_float4_sub:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float4_sub (	CrankMatFloat4*	a,
-					  	CrankMatFloat4*	b,
-					  	CrankMatFloat4*	r	)
-{
-	r->m00 = a->m00 - b->m00;
-  	r->m01 = a->m01 - b->m01;
-  	r->m02 = a->m02 - b->m02;
-  	r->m03 = a->m03 - b->m03;
-  	r->m10 = a->m10 - b->m10;
-  	r->m11 = a->m11 - b->m11;
-  	r->m12 = a->m12 - b->m12;
-  	r->m13 = a->m13 - b->m13;
-  	r->m20 = a->m20 - b->m20;
-  	r->m21 = a->m21 - b->m21;
-  	r->m22 = a->m22 - b->m22;
-  	r->m23 = a->m23 - b->m23;
-  	r->m30 = a->m30 - b->m30;
-  	r->m31 = a->m31 - b->m31;
-  	r->m32 = a->m32 - b->m32;
-  	r->m33 = a->m33 - b->m33;
-}
-
 
 /**
  * crank_mat_float4_mul:
@@ -3174,65 +3198,6 @@ crank_mat_float4_mul (	CrankMatFloat4*	a,
 }
 
 /**
- * crank_mat_float4_add_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Adds a matrix.
- */
-void
-crank_mat_float4_add_self (	CrankMatFloat4*	a,
-					  		CrankMatFloat4*	b	)
-{
-	a->m00 += b->m00;
-  	a->m01 += b->m01;
-  	a->m02 += b->m02;
-  	a->m03 += b->m03;
-  	a->m10 += b->m10;
-  	a->m11 += b->m11;
-  	a->m12 += b->m12;
-  	a->m13 += b->m13;
-  	a->m20 += b->m20;
-  	a->m21 += b->m21;
-  	a->m22 += b->m22;
-  	a->m23 += b->m23;
-  	a->m30 += b->m30;
-  	a->m31 += b->m31;
-  	a->m32 += b->m32;
-  	a->m33 += b->m33;
-}
-
-/**
- * crank_mat_float4_sub_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float4_sub_self (	CrankMatFloat4*	a,
-					  		CrankMatFloat4*	b	)
-{
-	a->m00 -= b->m00;
-  	a->m01 -= b->m01;
-  	a->m02 -= b->m02;
-  	a->m03 -= b->m03;
-  	a->m10 -= b->m10;
-  	a->m11 -= b->m11;
-  	a->m12 -= b->m12;
-  	a->m13 -= b->m13;
-  	a->m20 -= b->m20;
-  	a->m21 -= b->m21;
-  	a->m22 -= b->m22;
-  	a->m23 -= b->m23;
-  	a->m30 -= b->m30;
-  	a->m31 -= b->m31;
-  	a->m32 -= b->m32;
-  	a->m33 -= b->m33;
-}
-
-
-/**
  * crank_mat_float4_mul_self:
  * @a: A Matrix.
  * @b: A Matrix.
@@ -3267,6 +3232,157 @@ crank_mat_float4_mul_self (	CrankMatFloat4*	a,
 
   	crank_mat_float4_copy (&nr, a);
 }
+
+/**
+ * crank_mat_float4_divs:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ * @r: (out): A Matrix to store result.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float4_divs (	CrankMatFloat4*	a,
+					   	const gfloat	b,
+					   	CrankMatFloat4*	r	)
+{
+  	crank_mat_float4_muls (a, 1 / b, r);
+}
+
+/**
+ * crank_mat_float4_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float4_divs_self (	CrankMatFloat4*	a,
+					   			const gfloat	b	)
+{
+  	crank_mat_float4_muls_self (a, 1 / b);
+}
+
+/**
+ * crank_mat_float4_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float4_add (	CrankMatFloat4*	a,
+					  	CrankMatFloat4*	b,
+					  	CrankMatFloat4*	r	)
+{
+	r->m00 = a->m00 + b->m00;
+  	r->m01 = a->m01 + b->m01;
+  	r->m02 = a->m02 + b->m02;
+  	r->m03 = a->m03 + b->m03;
+  	r->m10 = a->m10 + b->m10;
+  	r->m11 = a->m11 + b->m11;
+  	r->m12 = a->m12 + b->m12;
+  	r->m13 = a->m13 + b->m13;
+  	r->m20 = a->m20 + b->m20;
+  	r->m21 = a->m21 + b->m21;
+  	r->m22 = a->m22 + b->m22;
+  	r->m23 = a->m23 + b->m23;
+  	r->m30 = a->m30 + b->m30;
+  	r->m31 = a->m31 + b->m31;
+  	r->m32 = a->m32 + b->m32;
+  	r->m33 = a->m33 + b->m33;
+}
+
+/**
+ * crank_mat_float4_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float4_add_self (	CrankMatFloat4*	a,
+					  		CrankMatFloat4*	b	)
+{
+	a->m00 += b->m00;
+  	a->m01 += b->m01;
+  	a->m02 += b->m02;
+  	a->m03 += b->m03;
+  	a->m10 += b->m10;
+  	a->m11 += b->m11;
+  	a->m12 += b->m12;
+  	a->m13 += b->m13;
+  	a->m20 += b->m20;
+  	a->m21 += b->m21;
+  	a->m22 += b->m22;
+  	a->m23 += b->m23;
+  	a->m30 += b->m30;
+  	a->m31 += b->m31;
+  	a->m32 += b->m32;
+  	a->m33 += b->m33;
+}
+
+/**
+ * crank_mat_float4_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float4_sub (	CrankMatFloat4*	a,
+					  	CrankMatFloat4*	b,
+					  	CrankMatFloat4*	r	)
+{
+	r->m00 = a->m00 - b->m00;
+  	r->m01 = a->m01 - b->m01;
+  	r->m02 = a->m02 - b->m02;
+  	r->m03 = a->m03 - b->m03;
+  	r->m10 = a->m10 - b->m10;
+  	r->m11 = a->m11 - b->m11;
+  	r->m12 = a->m12 - b->m12;
+  	r->m13 = a->m13 - b->m13;
+  	r->m20 = a->m20 - b->m20;
+  	r->m21 = a->m21 - b->m21;
+  	r->m22 = a->m22 - b->m22;
+  	r->m23 = a->m23 - b->m23;
+  	r->m30 = a->m30 - b->m30;
+  	r->m31 = a->m31 - b->m31;
+  	r->m32 = a->m32 - b->m32;
+  	r->m33 = a->m33 - b->m33;
+}
+
+/**
+ * crank_mat_float4_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float4_sub_self (	CrankMatFloat4*	a,
+					  		CrankMatFloat4*	b	)
+{
+	a->m00 -= b->m00;
+  	a->m01 -= b->m01;
+  	a->m02 -= b->m02;
+  	a->m03 -= b->m03;
+  	a->m10 -= b->m10;
+  	a->m11 -= b->m11;
+  	a->m12 -= b->m12;
+  	a->m13 -= b->m13;
+  	a->m20 -= b->m20;
+  	a->m21 -= b->m21;
+  	a->m22 -= b->m22;
+  	a->m23 -= b->m23;
+  	a->m30 -= b->m30;
+  	a->m31 -= b->m31;
+  	a->m32 -= b->m32;
+  	a->m33 -= b->m33;
+}
+
 
 
 /**
@@ -3343,14 +3459,33 @@ crank_mat_float4_mix (	CrankMatFloat4*	a,
 	r->m33 = (a->m33 * (1 - c->m33)) + (b->m33 * c->m33);
 }
 
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_mat_float4_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+		crank_mat_float4_to_string (
+			(CrankMatFloat4*) g_value_get_boxed (src) ) );
+}
 
 
 
 
 
 
+static void crank_mat_float_n_transform_from_m2 (	const GValue*	src,
+													GValue*			dest	);
 
+static void crank_mat_float_n_transform_from_m3 (	const GValue*	src,
+													GValue*			dest	);
 
+static void crank_mat_float_n_transform_from_m4 (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_mat_float_n_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
 
 G_DEFINE_BOXED_TYPE(CrankMatFloatN, crank_mat_float_n,
 					crank_mat_float_n_dup,\
@@ -4507,6 +4642,22 @@ crank_mat_float_n_neg (	CrankMatFloatN*	a,
 }
 
 /**
+ * crank_mat_float_n_neg_self:
+ * @a: A Matrix.
+ *
+ * Negates a matrix.
+ */
+void
+crank_mat_float_n_neg_self (	CrankMatFloatN*	a	)
+{
+  	guint	i;
+  	guint	j;
+  	guint	n = a->rn * a->cn;
+
+	for (i = 0; i < n; i ++) 	a->data[i] =  - a->data[i];
+}
+
+/**
  * crank_mat_float_n_transpose:
  * @a: A Matrix.
  * @r: (out): A Matrix to store result.
@@ -4527,6 +4678,28 @@ crank_mat_float_n_transpose (	CrankMatFloatN*	a,
 	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
 
   	crank_mat_float_n_init_arr_take (r, a->cn, a->rn, data);
+}
+
+/**
+ * crank_mat_float_n_transpose_self:
+ * @a: A Matrix.
+ *
+ * Gets a transpose of matrix.
+ */
+void
+crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
+{
+  	guint	i;
+  	guint	j;
+
+  	gfloat*	data = g_new (gfloat, a->rn * a->cn);
+
+  	for (i = 0; i < a->rn; i++)
+	  	for (j = 0; j < a->cn; j++)
+	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
+
+	g_free (a->data);
+  	crank_mat_float_n_init_arr_take (a, a->cn, a->rn, data);
 }
 
 /**
@@ -4563,44 +4736,6 @@ crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 	crank_mat_float_n_fini (&u);
 	crank_mat_float_n_fini (&linv);
 	crank_mat_float_n_fini (&uinv);
-}
-
-/**
- * crank_mat_float_n_neg_self:
- * @a: A Matrix.
- *
- * Negates a matrix.
- */
-void
-crank_mat_float_n_neg_self (	CrankMatFloatN*	a	)
-{
-  	guint	i;
-  	guint	j;
-  	guint	n = a->rn * a->cn;
-
-	for (i = 0; i < n; i ++) 	a->data[i] =  - a->data[i];
-}
-
-/**
- * crank_mat_float_n_transpose_self:
- * @a: A Matrix.
- *
- * Gets a transpose of matrix.
- */
-void
-crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
-{
-  	guint	i;
-  	guint	j;
-
-  	gfloat*	data = g_new (gfloat, a->rn * a->cn);
-
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
-
-	g_free (a->data);
-  	crank_mat_float_n_init_arr_take (a, a->cn, a->rn, data);
 }
 
 /**
@@ -4660,24 +4795,6 @@ crank_mat_float_n_muls (	CrankMatFloatN*	a,
 }
 
 /**
- * crank_mat_float_n_divs:
- * @a: A Matrix.
- * @b: A Scalar.
- * @r: (out): A Matrix to store result.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float_n_divs (	CrankMatFloatN*	a,
-						   	const gfloat	b,
-						   	CrankMatFloatN*	r	)
-{
-  	
-	g_return_if_fail (a != r);
-  	crank_mat_float_n_muls (a, 1 / b, r);
-}
-
-/**
  * crank_mat_float_n_muls_self:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -4697,21 +4814,6 @@ crank_mat_float_n_muls_self (	CrankMatFloatN*	a,
   	for (i = 0; i < n; i++)
   		a->data[i] *= b;
 }
-
-/**
- * crank_mat_float_n_divs_self:
- * @a: A Matrix.
- * @b: A Scalar.
- *
- * Divides a matrix by scalar.
- */
-void
-crank_mat_float_n_divs_self (	CrankMatFloatN*	a,
-							   	const gfloat	b	)
-{
-  	crank_mat_float_n_muls_self (a, 1 / b);
-}
-
 
 /**
  * crank_mat_float_n_mulv:
@@ -4744,67 +4846,6 @@ crank_mat_float_n_mulv (	CrankMatFloatN*	a,
 	}
 
   	crank_vec_float_n_init_arr_take (r, a->rn, data);
-}
-
-
-/**
- * crank_mat_float_n_add:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Adds a matrix.
- */
-void
-crank_mat_float_n_add (	CrankMatFloatN*	a,
-					  	CrankMatFloatN*	b,
-					  	CrankMatFloatN*	r	)
-{
-  	guint	i;
-  	guint	j;
-  	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
-  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
-
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-
-	  		r->data[ei] = a->data[ei] + b->data[ei];
-		}
-	}
-}
-
-/**
- * crank_mat_float_n_sub:
- * @a: A Matrix
- * @b: A Matrix
- * @r: (out): A Matrix to store result.
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float_n_sub (	CrankMatFloatN*	a,
-					  	CrankMatFloatN*	b,
-					  	CrankMatFloatN*	r	)
-{
-  	guint	i;
-  	guint	j;
-
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
-  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
-
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-
-	  		r->data[ei] = a->data[ei] - b->data[ei];
-		}
-	}
 }
 
 /**
@@ -4846,49 +4887,6 @@ crank_mat_float_n_mul (	CrankMatFloatN*	a,
   	crank_mat_float_n_init_arr_take (r, a->rn, b->cn, data);
 }
 
-
-/**
- * crank_mat_float_n_add_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Adds a matrix.
- */
-void
-crank_mat_float_n_add_self (	CrankMatFloatN*	a,
-					  			CrankMatFloatN*	b	)
-{
-  	guint	i;
-  	guint	n;
-
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "add-self", a, b);
-
-	n = a->rn * a->cn;
-
-  	for (i = 0; i < n; i++) 	a->data[i] += b->data[i];
-}
-
-/**
- * crank_mat_float_n_sub_self:
- * @a: A Matrix
- * @b: A Matrix
- *
- * Subtracts a matrix.
- */
-void
-crank_mat_float_n_sub_self (	CrankMatFloatN*	a,
-					  			CrankMatFloatN*	b	)
-{
-  	guint	i;
-  	guint	n;
-
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub-self", a, b);
-
-	n = a->rn * a->cn;
-
-  	for (i = 0; i < n; i++) 	a->data[i] -= b->data[i];
-}
-
 /**
  * crank_mat_float_n_mul_self:
  * @a: A Matrix.
@@ -4926,6 +4924,143 @@ crank_mat_float_n_mul_self (	CrankMatFloatN*	a,
 
 	g_free (a->data);
   	crank_mat_float_n_init_arr_take (a, a->rn, b->cn, data);
+}
+
+/**
+ * crank_mat_float_n_divs:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ * @r: (out): A Matrix to store result.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float_n_divs (	CrankMatFloatN*	a,
+						   	const gfloat	b,
+						   	CrankMatFloatN*	r	)
+{
+  	
+	g_return_if_fail (a != r);
+  	crank_mat_float_n_muls (a, 1 / b, r);
+}
+
+/**
+ * crank_mat_float_n_divs_self:
+ * @a: A Matrix.
+ * @b: A Scalar.
+ *
+ * Divides a matrix by scalar.
+ */
+void
+crank_mat_float_n_divs_self (	CrankMatFloatN*	a,
+							   	const gfloat	b	)
+{
+  	crank_mat_float_n_muls_self (a, 1 / b);
+}
+
+
+
+/**
+ * crank_mat_float_n_add:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float_n_add (	CrankMatFloatN*	a,
+					  	CrankMatFloatN*	b,
+					  	CrankMatFloatN*	r	)
+{
+  	guint	i;
+  	guint	j;
+  	
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
+
+  	for (i = 0; i < a->rn; i++) {
+	  	for (j = 0; j < a->cn; j++) {
+	  		guint	ei = (i * a->cn) + j;
+
+	  		r->data[ei] = a->data[ei] + b->data[ei];
+		}
+	}
+}
+
+/**
+ * crank_mat_float_n_add_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Adds a matrix.
+ */
+void
+crank_mat_float_n_add_self (	CrankMatFloatN*	a,
+					  			CrankMatFloatN*	b	)
+{
+  	guint	i;
+  	guint	n;
+
+	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "add-self", a, b);
+
+	n = a->rn * a->cn;
+
+  	for (i = 0; i < n; i++) 	a->data[i] += b->data[i];
+}
+
+/**
+ * crank_mat_float_n_sub:
+ * @a: A Matrix
+ * @b: A Matrix
+ * @r: (out): A Matrix to store result.
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float_n_sub (	CrankMatFloatN*	a,
+					  	CrankMatFloatN*	b,
+					  	CrankMatFloatN*	r	)
+{
+  	guint	i;
+  	guint	j;
+
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+  	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
+  	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
+
+  	for (i = 0; i < a->rn; i++) {
+	  	for (j = 0; j < a->cn; j++) {
+	  		guint	ei = (i * a->cn) + j;
+
+	  		r->data[ei] = a->data[ei] - b->data[ei];
+		}
+	}
+}
+
+
+/**
+ * crank_mat_float_n_sub_self:
+ * @a: A Matrix
+ * @b: A Matrix
+ *
+ * Subtracts a matrix.
+ */
+void
+crank_mat_float_n_sub_self (	CrankMatFloatN*	a,
+					  			CrankMatFloatN*	b	)
+{
+  	guint	i;
+  	guint	n;
+
+	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub-self", a, b);
+
+	n = a->rn * a->cn;
+
+  	for (i = 0; i < n; i++) 	a->data[i] -= b->data[i];
 }
 
 /**
@@ -5194,4 +5329,48 @@ crank_mat_float_n_diag_inverse (	CrankMatFloatN*	a,
 		crank_mat_float_n_set (r, i, i,
 				1 / crank_mat_float_n_get (a, i, i));
 	}
+}
+
+
+//////// GValue Transformation /////////////////////////////////////////////////
+
+static void
+crank_mat_float_n_transform_from_m2 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankMatFloatN*	mat = g_new (CrankMatFloatN, 1);
+	
+	crank_mat_float_n_init_arr (mat, 2, 2, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, mat);
+}
+
+static void
+crank_mat_float_n_transform_from_m3 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankMatFloatN*	mat = g_new (CrankMatFloatN, 1);
+	
+	crank_mat_float_n_init_arr (mat, 3, 3, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, mat);
+}
+
+static void
+crank_mat_float_n_transform_from_m4 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankMatFloatN*	mat = g_new (CrankMatFloatN, 1);
+	
+	crank_mat_float_n_init_arr (mat, 4, 4, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, mat);
+}
+static void
+crank_mat_float_n_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+		crank_mat_float_n_to_string (
+			(CrankMatFloatN*) g_value_get_boxed (src) ) );
 }

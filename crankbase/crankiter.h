@@ -286,21 +286,46 @@ gboolean	crank_iter_mem_struct_foreach (		CrankIterMemStruct*	iter,
 												gpointer			userdata	);
 												
 //////// Typed initialization //////////////////////////////////////////////////
-
-#define	crank_iter_mem_struct_init_typed(iter,G,from,to)	\
+/**
+ * crank_iter_mem_struct_init_typed:
+ * @iter: A #CrankIterMemStruct.
+ * @G: Type of structure/chunk. It should be known at time of use.
+ * @from: starting point.
+ * @to: ending point.
+ *
+ * Initialize a iterator with typename.
+ */
+#define	crank_iter_mem_struct_init_typed(iter, G, from, to)	\
 		G_STMT_START {			\
 			G*	nf = from;		\
 			G*	nt= to;			\
 			crank_iter_mem_struct_init(iter,nf,nt,sizeof(G)); \
 		} G_STMT_END
 
-#define	crank_iter_mem_struct_init_with_count_typed(iter,G,from,count)	\
+/**
+ * crank_iter_mem_struct_init_with_count_typed:
+ * @iter: A #CrankIterMemStruct.
+ * @G: Type of structure/chunk. It should be known at time of use.
+ * @from: starting point.
+ * @count: number of structure/chunks.
+ *
+ * Initialize a iterator with count and typename.
+ */
+#define	crank_iter_mem_struct_init_with_count_typed(iter, G, from, count)	\
 		G_STMT_START {			\
 			G*	nf = from;		\
 			crank_iter_mem_struct_init_with_count(iter,nf,count,sizeof(G)); \
 		} G_STMT_END
 
-#define crank_iter_mem_struct_init_with_range_typed(iter,G,range) \
+/**
+ * crank_iter_mem_struct_init_with_range_typed:
+ * @iter: A #CrankIterMemStruct.
+ * @G: Type of structure/chunk. It should be known at time of use.
+ * @range: A Memory range to iterate.
+ *
+ * Initialize a iterator with range and typename.
+ */
+#define crank_iter_mem_struct_init_with_range_typed(iter, G, range) \
 		crank_iter_mem_struct_init_with_range(iter,range,sizeof(G)
 
 #endif

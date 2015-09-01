@@ -70,6 +70,11 @@
  *       <row> <entry>To #CrankVecInt2</entry>
  *             <entry>crank_vec_int2_init_from_vb()</entry>
  *             <entry>GValue Transform, Defined in #CrankVecInt2</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat2.</entry>
+ *             <entry>crank_vec_float2_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat2</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -94,6 +99,11 @@
  *       <row> <entry>To #CrankVecInt3</entry>
  *             <entry>crank_vec_int3_init_from_vb()</entry>
  *             <entry>GValue Transform, Defined in #CrankVecInt3</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat3.</entry>
+ *             <entry>crank_vec_float3_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat3</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -118,6 +128,11 @@
  *       <row> <entry>To #CrankVecInt4</entry>
  *             <entry>crank_vec_int4_init_from_vb()</entry>
  *             <entry>GValue Transform, Defined in #CrankVecInt4</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat4.</entry>
+ *             <entry>crank_vec_float4_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat4</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -148,6 +163,21 @@
  *             <entry>crank_vec_bool_n_to_string()</entry>
  *             <entry>GValue Transform</entry> </row>
  *       <row> <entry>crank_vec_bool_n_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecIntN.</entry>
+ *             <entry>crank_vec_int_n_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecIntN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloatN.</entry>
+ *             <entry>crank_vec_float_n_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloatN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecCplxFloatN.</entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vb()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecCplxFloatN</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>

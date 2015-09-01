@@ -4,8 +4,8 @@ DISTCHECK_CONFIGURE_FLAGS= --enable-introspection --enable-gtk-doc
 
 SUBDIRS= \
 		crankbase \
-		tests \
 		docs \
+		tests \
 		po
 
 pkgconfigdir= $(libdir)/pkgconfig

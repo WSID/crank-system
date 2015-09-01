@@ -68,17 +68,47 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 	} G_STMT_END
 
 /**
+ * CRNAK_VEC_ALLOC0:
+ * @v: Variable sized vector item.
+ * @G: Type of vector type.
+ * @_n: Size of vector.
+ *
+ * Allocates variable size vector's storage, with 0-initialized.
+ */
+#define CRANK_VEC_ALLOC0(v,G,_n)												\
+	G_STMT_START {															\
+		(v)->data = g_new0 (G, _n);											\
+		(v)->n = _n;														\
+	} G_STMT_END
+
+/**
  * CRNAK_MAT_ALLOC:
  * @v: Variable sized vector item.
  * @G: Type of vector type.
  * @_rn: Size of vector.
  * @_cn: Size of vector.
  *
- * Allocates variable size vector's storage.
+ * Allocates variable size matrix's storage.
  */
 #define CRANK_MAT_ALLOC(m,G,_rn,_cn)										\
 	G_STMT_START {															\
 		(m)->data = g_new (G, _rn * _cn);									\
+		(m)->rn = _rn;														\
+		(m)->cn = _cn;														\
+	} G_STMT_END
+
+/**
+ * CRNAK_MAT_ALLOC0:
+ * @v: Variable sized vector item.
+ * @G: Type of vector type.
+ * @_rn: Size of vector.
+ * @_cn: Size of vector.
+ *
+ * Allocates variable size matrix's storage, with 0-initialized.
+ */
+#define CRANK_MAT_ALLOC0(m,G,_rn,_cn)										\
+	G_STMT_START {															\
+		(m)->data = g_new0 (G, _rn * _cn);									\
 		(m)->rn = _rn;														\
 		(m)->cn = _cn;														\
 	} G_STMT_END

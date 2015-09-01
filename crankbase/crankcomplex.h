@@ -76,6 +76,10 @@ void		crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
 void		crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
 											gfloat			fill	);
 
+void		crank_cplx_float_init_polar (	CrankCplxFloat*	cplx,
+											const gfloat	norm,
+											const gfloat	arg	);
+
 //////// Basic Operations //////////////////////////////////////////////////////
 
 void		crank_cplx_float_copy (			CrankCplxFloat*	cplx,

@@ -56,13 +56,13 @@ int main (string[] args) {
 
 
 private void test_n_equal () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f );
-	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f );
-	Crank.MatCplxFloatN c = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN c = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f );
 		 
@@ -71,7 +71,7 @@ private void test_n_equal () {
 }
 
 private void test_n_to_string () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f );
 
@@ -79,7 +79,7 @@ private void test_n_to_string () {
 }
 
 private void test_n_get () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f );
 
@@ -90,7 +90,7 @@ private void test_n_get () {
 }
 
 private void test_n_get_row () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f);
 
@@ -106,7 +106,7 @@ private void test_n_get_row () {
 }
 
 private void test_n_get_col () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f);
 
@@ -123,7 +123,7 @@ private void test_n_get_col () {
 
 
 private void test_n_slice () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -136,7 +136,7 @@ private void test_n_slice () {
 }
 
 private void test_n_tr () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -145,7 +145,7 @@ private void test_n_tr () {
 }
 
 private void test_n_det () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -154,7 +154,7 @@ private void test_n_det () {
 }
 
 private void test_n_diagv () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -168,7 +168,7 @@ private void test_n_diagv () {
 }
 
 private void test_n_cof ()  {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -187,7 +187,7 @@ private void test_n_cof ()  {
 }
 
 private void test_n_adj ()  {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -206,7 +206,7 @@ private void test_n_adj ()  {
 }
 
 private void test_n_neg () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f);
 		 
@@ -219,7 +219,7 @@ private void test_n_neg () {
 }
 
 private void test_n_transpose () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 3,
 		1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f,
 		7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f);
 
@@ -237,7 +237,7 @@ private void test_n_transpose () {
 }
 
 private void test_n_inverse () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (3, 3,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (3, 3,
 		1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 		4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 		7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -256,7 +256,7 @@ private void test_n_inverse () {
 }
 
 private void test_n_mulrs () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f);
 		 
@@ -269,7 +269,7 @@ private void test_n_mulrs () {
 }
 
 private void test_n_divrs () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		5.0f, 6.0f, 7.0f, 8.0f);
 		 
@@ -282,10 +282,10 @@ private void test_n_divrs () {
 }
 
 private void test_n_mulv () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
-	Crank.VecCplxFloatN b = Crank.VecCplxFloatN.imm (2,
+	Crank.VecCplxFloatN b = Crank.VecCplxFloatN.uc (2,
 		2.0f, 3.0f, 5.0f, 7.0f);
 		
 	b = a.mulv (b);
@@ -296,10 +296,10 @@ private void test_n_mulv () {
 }
 
 private void test_n_add () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
-	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.uc (2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f);
 
@@ -312,10 +312,10 @@ private void test_n_add () {
 }
 
 private void test_n_sub () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
-	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.uc (2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f);
 
@@ -329,10 +329,10 @@ private void test_n_sub () {
 
 
 private void test_n_mul () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
-	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.uc (2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f);
 
@@ -345,10 +345,10 @@ private void test_n_mul () {
 }
 
 private void test_n_mixs () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
-	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.cimm (2, 2,
+	Crank.MatCplxFloatN b = Crank.MatCplxFloatN.uc (2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f);
 		 
@@ -361,7 +361,7 @@ private void test_n_mixs () {
 }
 
 private void test_n_shuffle_row () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (4, 1,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (4, 1,
 		1.0f, 3.0f,
 		7.0f, 2.0f,
 		1.0f, 4.0f,
@@ -378,7 +378,7 @@ private void test_n_shuffle_row () {
 }
 
 private void test_n_shuffle_col () {
-	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.cimm (1, 4,
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.uc (1, 4,
 		1.0f, 3.0f,		7.0f, 2.0f,		1.0f, 4.0f,		3.0f, 1.0f );
 	
 	Crank.Permutation p = Crank.Permutation.arr ({1, 3, 0, 2});

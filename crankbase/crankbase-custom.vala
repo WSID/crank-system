@@ -523,9 +523,15 @@ namespace Crank {
 		public VecCplxFloatN.valist		(uint n, va_list	varargs);
 		public VecCplxFloatN.fill		(uint n, CplxFloat	fill);
 		
-		public VecCplxFloatN.imm		(uint n, ...);
-		public VecCplxFloatN.valist_imm	(uint n, ...);
-		public VecCplxFloatN.fill_imm	(uint n, float real=0.0f, float imag=0.0f);
+		public VecCplxFloatN.uc			(uint n, ...);
+		public VecCplxFloatN.valistuc	(uint n, ...);
+		public VecCplxFloatN.ucarr		([CCode (array_length_pos=0)]float[] real,
+										 [CCode (array_length_pos=0)]float[] imag);
+										 
+		[CCode (cname="crank_vec_cplx_float_n__gi_init_arruc")]
+		public VecCplxFloatN.arruc		([CCode (array_length_pos=0)]float[] arr);
+		public VecCplxFloatN.filluc		(uint n, float real=0.0f, float imag=0.0f);
+		public VecCplxFloatN.ucv		(VecFloatN	real, VecFloatN	imag);
 
 		public VecCplxFloatN.from_vb	(VecBoolN	vb);
 		public VecCplxFloatN.from_vi	(VecIntN	vi);
@@ -652,8 +658,24 @@ namespace Crank {
 		public MatCplxFloatN.diag (uint n, ...);
 		public MatCplxFloatN.diag_arr ([CCode (array_length_pos=0)]CplxFloat[] darr);
 		public MatCplxFloatN.fill (uint rn, uint cn, CplxFloat fill);
-		public MatCplxFloatN.cimm (uint rn, uint cn, ...);
-		public MatCplxFloatN.cuarr (uint rn, uint cn, [CCode (array_length=false)]float[] cuarr);
+		
+		public MatCplxFloatN.uc (uint rn, uint cn, ...);
+		public MatCplxFloatN.arruc ([CCode (array_length_pos=0)]float[] mucarr);
+		public MatCplxFloatN.ucarr ([CCode (array_length_pos=0)]float[] real, [CCode (array_length_pos=0)]float[] imag);
+		public MatCplxFloatN.ucm (MatFloatN real, MatFloatN imag);
+		public MatCplxFloatN.rucv (uint rn, ...);
+		public MatCplxFloatN.rarrucv (uint rn, [CCode (array_length_pos=0)]VecFloatN[] rarrucv);
+		public MatCplxFloatN.rarrucvp (uint rn, [CCode (array_length_pos=0)](unowned VecFloatN?)[] rarrucvp);
+		public MatCplxFloatN.cucv (uint cn, ...);
+		public MatCplxFloatN.carrucv (uint cn, [CCode (array_length_pos=0)]VecFloatN[] carrucv);
+		public MatCplxFloatN.carrucvp (uint cn, [CCode (array_length_pos=0)](unowned VecFloatN?)[] carrucvp);
+		public MatCplxFloatN.diaguc (uint n, ...);
+		public MatCplxFloatN.diagarruc (uint n, [CCode (array_length_pos=0)]float[] arruc);
+		public MatCplxFloatN.diagucarr ([CCode (array_length_pos=0)]float[] real, [CCode (array_length_pos=0)]float[] imag);
+		public MatCplxFloatN.diagucv (VecFloatN real, VecFloatN imag);
+		public MatCplxFloatN.filluc (uint rn, uint cn, float real, float imag);
+		
+		
 		
 		public CplxFloat		tr { owned get; }
 		public CplxFloat		det { owned get; }

@@ -70,6 +70,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eqarray_bool_imm: (skip)
  * @a: (element-type gboolean) (array length=an): A array
  * @an: (type guint): Length of elements.
+ * @...: Variadic list of boolean to compare with @a.
  *
  * Asserts a given boolean array has same element with given list
  */
@@ -91,6 +92,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eqarray_int_imm: (skip)
  * @a: (element-type gint) (array length=an): A array
  * @an: (type guint): Length of elements.
+ * @...: Variadic list of int to compare with @a.
  *
  * Asserts a given gint array has same element with given list
  */
@@ -112,6 +114,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eqarray_uint_imm: (skip)
  * @a: (element-type guint) (array length=an): A array
  * @an: (type guint): Length of elements.
+ * @...: Variadic list of uint to compare with @a.
  *
  * Asserts a given guint array has same element with given list
  */
@@ -133,7 +136,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eqarray_float_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
  * @an: (type guint): Length of elements.
- * @...: Variadic list to compare with @a.
+ * @...: Variadic list of float to compare with @a.
  *
  * Asserts a given boolean array has same element with given list
  */
@@ -159,6 +162,7 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eqarray_float_d_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
  * @an: (type guint): Length of elements.
+ * @d: (type gfloat): Delta value.
  * @...: Variadic list to compare with @a.
  *
  * Asserts a given boolean array has same element with given list
@@ -230,6 +234,8 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eq_permutation_imm: (skip)
  * @a: (type CrankPermutaion): A #CrankPermutaion
  * @...: Variadic list to compare with @a.
+ *
+ * Asserts a given permutation has same elements with given variadic list.
  */
 #define crank_assert_eq_permutation_imm(a,...) \
 	crank_assert_eqarray_uint_imm((a)->data, (a)->n, __VA_ARGS__)
@@ -238,21 +244,33 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
 /**
  * crank_assert_eq_vecbool2_imm: (skip)
  * @a: (type CrankVecBool2): A #CrankVecBool2
- * @...: Variadic list to compare with @a.
+ * @x: (type gboolean): First element to compare.
+ * @y: (type gboolean): Second element to compare.
+ *
+ * Asserts a given boolean vector has same elements with given elements.
  */
 #define crank_assert_eq_vecbool2_imm(a,x,y) \
 	crank_assert_eqarray_bool_imm((gboolean*)(a), 2, x,y)
 /**
  * crank_assert_eq_vecbool3_imm: (skip)
  * @a: (type CrankVecFloat3): A #CrankVecBool3
- * @...: Variadic list to compare with @a.
+ * @x: (type gboolean): First element to compare.
+ * @y: (type gboolean): Second element to compare.
+ * @z: (type gboolean): Third element to compare.
+ *
+ * Asserts a given boolean vector has same elements with given elements.
  */
 #define crank_assert_eq_vecbool3_imm(a,x,y,z) \
 	crank_assert_eqarray_bool_imm((gboolean*)(a), 3, x,y,z)
 /**
  * crank_assert_eq_vecbool4_imm: (skip)
  * @a: (type CrankVecBool4): A #CrankVecBool4
- * @...: Variadic list to compare with @a.
+ * @x: (type gboolean): First element to compare.
+ * @y: (type gboolean): Second element to compare.
+ * @z: (type gboolean): Third element to compare.
+ * @w: (type gboolean): Fourth elements to compare.
+ *
+ * Asserts a given boolean vector has same elements with given elements.
  */
 #define crank_assert_eq_vecbool4_imm(a,x,y,z,w) \
 	crank_assert_eqarray_bool_imm((gboolean*)(a), 4, x,y,z,w)
@@ -260,6 +278,10 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eq_vecbool_n_imm: (skip)
  * @a: (type CrankVecBoolN): A #CrankVecBoolN
  * @...: Variadic list to compare with @a.
+ *
+ * Asserts a given boolean vector has same elements with given variadic list.
+ *
+ * You don't have to pass length of list, as macro catches length of list.
  */
 #define crank_assert_eq_vecbool_n_imm(a,...) \
 	crank_assert_eqarray_bool_imm((a)->data, (a)->n, __VA_ARGS__)
@@ -268,21 +290,33 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
 /**
  * crank_assert_eq_vecint2_imm: (skip)
  * @a: (type CrankVecInt2): A #CrankVecInt2
- * @...: Variadic list to compare with @a.
+ * @x: (type gint): First element to compare.
+ * @y: (type gint): Second element to compare.
+ *
+ * Asserts a given int vector has same elements with given elements.
  */
 #define crank_assert_eq_vecint2_imm(a,x,y) \
 	crank_assert_eqarray_int_imm((gint*)(a), 2, x,y)
 /**
  * crank_assert_eq_vecint3_imm: (skip)
  * @a: (type CrankVecFloat3): A #CrankVecInt3
- * @...: Variadic list to compare with @a.
+ * @x: (type gint): First element to compare.
+ * @y: (type gint): Second element to compare.
+ * @z: (type gint): Third element to compare.
+ *
+ * Asserts a given int vector has same elements with given elements.
  */
 #define crank_assert_eq_vecint3_imm(a,x,y,z) \
 	crank_assert_eqarray_int_imm((gint*)(a), 3, x,y,z)
 /**
  * crank_assert_eq_vecint4_imm: (skip)
  * @a: (type CrankVecInt4): A #CrankVecInt4
- * @...: Variadic list to compare with @a.
+ * @x: (type gint): First element to compare.
+ * @y: (type gint): Second element to compare.
+ * @z: (type gint): Third element to compare.
+ * @w: (type gint): Fourth element to compare.
+ *
+ * Asserts a given int vector has same elements with given elements.
  */
 #define crank_assert_eq_vecint4_imm(a,x,y,z,w) \
 	crank_assert_eqarray_int_imm((gint*)(a), 4, x,y,z,w)
@@ -290,6 +324,10 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eq_vecint_n_imm: (skip)
  * @a: (type CrankVecIntN): A #CrankVecIntN
  * @...: Variadic list to compare with @a.
+ *
+ * Asserts a given int vector has same elements with given variadic list.
+ *
+ * You don't have to pass length of list, as macro catches length of list.
  */
 #define crank_assert_eq_vecint_n_imm(a,...) \
 	crank_assert_eqarray_int_imm((a)->data, (a)->n, __VA_ARGS__)
@@ -298,21 +336,33 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
 /**
  * crank_assert_eq_vecfloat2_imm: (skip)
  * @a: (type CrankVecFloat2): A #CrankVecFloat2
- * @...: Variadic list to compare with @a.
+ * @x: (type gfloat): First element to compare.
+ * @y: (type gfloat): Second element to compare.
+ *
+ * Asserts a given float vector has same elements with given elements.
  */
 #define crank_assert_eq_vecfloat2_imm(a,x,y) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 2, x,y)
 /**
  * crank_assert_eq_vecfloat3_imm: (skip)
  * @a: (type CrankVecFloat3): A #CrankVecFloat3
- * @...: Variadic list to compare with @a.
+ * @x: (type gfloat): First element to compare.
+ * @y: (type gfloat): Second element to compare.
+ * @z: (type gfloat): Third element to compare.
+ *
+ * Asserts a given float vector has same elements with given elements.
  */
 #define crank_assert_eq_vecfloat3_imm(a,x,y,z) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 3, x,y,z)
 /**
  * crank_assert_eq_vecfloat4_imm: (skip)
  * @a: (type CrankVecFloat4): A #CrankVecFloat4
- * @...: Variadic list to compare with @a.
+ * @x: (type gfloat): First element to compare.
+ * @y: (type gfloat): Second element to compare.
+ * @z: (type gfloat): Third element to compare.
+ * @w: (type gfloat): Fourth element to compare.
+ *
+ * Asserts a given float vector has same elements with given elements.
  */
 #define crank_assert_eq_vecfloat4_imm(a,x,y,z,w) \
 	crank_assert_eqarray_float_imm((gfloat*)(a), 4, x,y,z,w)
@@ -320,6 +370,10 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
  * crank_assert_eq_vecfloat_n_imm: (skip)
  * @a: (type CrankVecFloatN): A #CrankVecFloatN
  * @...: Variadic list to compare with @a.
+ *
+ * Asserts a given float vector has same elements with given variadic list.
+ *
+ * You don't have to pass length of list, as macro catches length of list.
  */
 #define crank_assert_eq_vecfloat_n_imm(a,...) \
 	crank_assert_eqarray_float_imm((a)->data, (a)->n, __VA_ARGS__)

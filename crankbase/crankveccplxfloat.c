@@ -45,8 +45,50 @@
  * @include: crankbase.h
  *
  * Crank System provides complex float vectors for convenience.
+ *
+ * # Type Conversion
+ *
+ * <table><title>Type Conversion of #CrankVecCplxFloatN</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBoolN </entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vb() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecIntN </entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vi() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecFloatN</entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vf()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_cplx_float_n_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_vec_cplx_float_n_to_string_full()</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
+
+
+static void crank_vec_cplx_float_n_transform_from_vbn (	const GValue*	src,
+														GValue*			dest );
+
+static void crank_vec_cplx_float_n_transform_from_vin (	const GValue*	src,
+														GValue*			dest );
+
+static void crank_vec_cplx_float_n_transform_from_vfn (	const GValue*	src,
+														GValue*			dest );
+
+
+static void crank_vec_cplx_float_n_transform_to_string (const GValue*	src,
+														GValue*			dest );
 /**
  * CrankVecCplxFloatN:
  * @data: (array length=n): Array to store elements.
@@ -54,11 +96,34 @@
  *
  * Struct to point variable size of float vector.
  */
-G_DEFINE_BOXED_TYPE (
+G_DEFINE_BOXED_TYPE_WITH_CODE (
 		CrankVecCplxFloatN,
 		crank_vec_cplx_float_n,
 		crank_vec_cplx_float_n_dup,
-		crank_vec_cplx_float_n_free	)
+		crank_vec_cplx_float_n_free,
+		{
+
+			g_value_register_transform_func (
+					CRANK_TYPE_VEC_BOOL_N,
+					g_define_type_id,
+					crank_vec_cplx_float_n_transform_from_vbn );
+
+			g_value_register_transform_func (
+					CRANK_TYPE_VEC_INT_N,
+					g_define_type_id,
+					crank_vec_cplx_float_n_transform_from_vin );
+
+			g_value_register_transform_func (
+					CRANK_TYPE_VEC_FLOAT_N,
+					g_define_type_id,
+					crank_vec_cplx_float_n_transform_from_vfn );
+
+
+			g_value_register_transform_func (
+					g_define_type_id,
+					G_TYPE_STRING,
+					crank_vec_cplx_float_n_transform_to_string );
+		}	)
 
 //////// Private functions ////////
 
@@ -165,7 +230,7 @@ crank_vec_cplx_float_n_init_fill	(	CrankVecCplxFloatN*	vec,
 
 
 /**
- * crank_vec_cplx_float_n_init_imm:
+ * crank_vec_cplx_float_n_init_uc:
  * @vec: (out): Vector to initialize.
  * @n: size of vector.
  * @...: element of vector.
@@ -176,7 +241,7 @@ crank_vec_cplx_float_n_init_fill	(	CrankVecCplxFloatN*	vec,
  * makes a element.
  */
 void
-crank_vec_cplx_float_n_init_imm	(	CrankVecCplxFloatN*	vec,
+crank_vec_cplx_float_n_init_uc	(	CrankVecCplxFloatN*	vec,
 									const guint		n,
 									...	)
 {
@@ -184,13 +249,13 @@ crank_vec_cplx_float_n_init_imm	(	CrankVecCplxFloatN*	vec,
 	
 	va_start (varargs, n);
 	
-	crank_vec_cplx_float_n_init_valist_imm (vec, n, varargs);
+	crank_vec_cplx_float_n_init_valistuc (vec, n, varargs);
 	
 	va_end (varargs);
 }
 
 /**
- * crank_vec_cplx_float_n_init_valist_imm:
+ * crank_vec_cplx_float_n_init_valistuc:
  * @vec: (out): Vector to initialize.
  * @n: Size of vector.
  * @varargs: va_list that contains elements.
@@ -198,7 +263,7 @@ crank_vec_cplx_float_n_init_imm	(	CrankVecCplxFloatN*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_cplx_float_n_init_valist_imm	(	CrankVecCplxFloatN*	vec,
+crank_vec_cplx_float_n_init_valistuc	(	CrankVecCplxFloatN*	vec,
 											const guint		n,
 											va_list			varargs	)
 {
@@ -211,7 +276,53 @@ crank_vec_cplx_float_n_init_valist_imm	(	CrankVecCplxFloatN*	vec,
 }
 
 /**
- * crank_vec_cplx_float_n_init_fill_imm:
+ * crank_vec_cplx_float_n_init_ucarr:
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @real: (array length=n): An array of real entities.
+ * @imag: (array length=n): An array of imaginary entities.
+ *
+ * Initialize vector with given two arrays, one for real, the other for
+ * imaginary.
+ */
+void
+crank_vec_cplx_float_n_init_ucarr (CrankVecCplxFloatN*	vec,
+								   const guint			n,
+								   const gfloat*		real,
+								   const gfloat*		imag )
+{
+  guint i;
+
+  CRANK_VEC_ALLOC (vec, CrankCplxFloat, n);
+
+  for (i = 0; i < n; i++)	crank_cplx_float_init (vec->data + i, real[i], imag[i]);
+}
+
+/**
+ * crank_vec_cplx_float_n_init_arruc:
+ * @vec: (out): Vector to initialize.
+ * @n: Size of vector.
+ * @arr: (array): An array of @n pairs of (real, imag) float values.
+ *
+ * Initialize vector with given an array of pairs.
+ *
+ * Difference to crank_vec_cplx_float_n_init_arr_uc() is, this function receives
+ * a single array, rather than 2 arrays.
+ */
+void
+crank_vec_cplx_float_n_init_arruc (CrankVecCplxFloatN* vec,
+								   const guint			n,
+								   const gfloat*		arr )
+{
+  guint i;
+
+  CRANK_VEC_ALLOC (vec, CrankCplxFloat, n);
+
+  for (i = 0; i < n; i++)	crank_cplx_float_init (vec->data + i, arr[2*n], arr[2*n + 1]);
+}
+
+/**
+ * crank_vec_cplx_float_n_init_filluc:
  * @vec: (out): Vector to initialize.
  * @n: Size of vector.
  * @real: real part of element to fill @vec
@@ -220,16 +331,43 @@ crank_vec_cplx_float_n_init_valist_imm	(	CrankVecCplxFloatN*	vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_cplx_float_n_init_fill_imm	(	CrankVecCplxFloatN*	vec,
-								const guint		n,
-								const gfloat	real,
-								const gfloat	imag	)
+crank_vec_cplx_float_n_init_filluc	(CrankVecCplxFloatN* vec,
+									 const guint		 n,
+									 const gfloat		 real,
+									 const gfloat		 imag	)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC(vec,CrankCplxFloat,n);
-	
-	for (i = 0; i < n; i++) crank_cplx_float_init (vec->data + i, real, imag);
+  guint	i;
+
+  CRANK_VEC_ALLOC(vec,CrankCplxFloat,n);
+
+  for (i = 0; i < n; i++) crank_cplx_float_init (vec->data + i, real, imag);
+}
+
+/**
+ * crank_vec_cplx_float_n_init_ucv:
+ * @vec: (out): Vector to initialize.
+ * @real: Real part of vector.
+ * @imag: Imaginary part of vector.
+ *
+ * Initialize vector from given two vectors, one for real, the other for imaginary.
+ * If one is smaller than other, the result vector will have same length as longer
+ * part and missing parts will be filled with 0.
+ */
+void
+crank_vec_cplx_float_n_init_ucv (CrankVecCplxFloatN*	vec,
+								 CrankVecFloatN*		real,
+								 CrankVecFloatN*		imag	)
+{
+  guint i;
+  guint n;
+
+  n = MAX (real != NULL ? real->n : 0,
+		   imag != NULL ? imag->n : 0);
+
+  CRANK_VEC_ALLOC(vec, CrankCplxFloat, n);
+
+  for (i = 0; i < real->n; i++)	vec->data[i].real = real->data[i];
+  for (i = 0; i < imag->n; i++)	vec->data[i].real = imag->data[i];
 }
 
 
@@ -272,6 +410,27 @@ crank_vec_cplx_float_n_init_from_vi	(	CrankVecCplxFloatN*	vec,
 	for (i = 0; i < vi->n; i++)
 		crank_cplx_float_init (vec->data + i,
 				vi->data[i],
+				0);
+}
+
+/**
+ * crank_vec_cplx_float_n_init_from_vf:
+ * @vec: (out): Vector to initialize.
+ * @vf: A Float vector.
+ *
+ * Initialize vector from integer vector.
+ */
+void
+crank_vec_cplx_float_n_init_from_vf	(	CrankVecCplxFloatN*	vec,
+										CrankVecFloatN*	vf		)
+{
+	guint	i;
+
+	CRANK_VEC_ALLOC(vec,CrankCplxFloat,vf->n);
+
+	for (i = 0; i < vf->n; i++)
+		crank_cplx_float_init (vec->data + i,
+				vf->data[i],
 				0);
 }
 
@@ -883,6 +1042,19 @@ crank_vec_cplx_float_n_neg (	CrankVecCplxFloatN*	a,
 	for (i = 0; i < a->n; i++) crank_cplx_float_neg (a->data + i, r->data + i);
 }
 
+/**
+ * crank_vec_cplx_float_n_neg_self:
+ * @a: A vector
+ *
+ * Applies negation.
+ */
+void
+crank_vec_cplx_float_n_neg_self (	CrankVecCplxFloatN*	a	)
+{
+	guint	i;
+
+	for (i = 0; i < a->n; i++) crank_cplx_float_neg_self (a->data + i);
+}
 
 /**
  * crank_vec_cplx_float_n_unit:
@@ -898,6 +1070,17 @@ crank_vec_cplx_float_n_unit (	CrankVecCplxFloatN*	a,
 	crank_vec_cplx_float_n_divrs (a, crank_vec_cplx_float_n_get_magn (a), r);
 }
 
+/**
+ * crank_vec_cplx_float_n_unit_self:
+ * @a: A vector
+ *
+ * Gets unit length of vector with same direction of @a
+ */
+void
+crank_vec_cplx_float_n_unit_self (	CrankVecCplxFloatN*	a	)
+{
+	crank_vec_cplx_float_n_divrs_self (a, crank_vec_cplx_float_n_get_magn (a));
+}
 
 /**
  * crank_vec_cplx_float_n_conjugate:
@@ -911,41 +1094,11 @@ crank_vec_cplx_float_n_conjugate (	CrankVecCplxFloatN*	a,
 								CrankVecCplxFloatN*	r	)
 {
 	guint	i;
-	
+
 	CRANK_VEC_ALLOC(r,CrankCplxFloat,a->n);
-	
+
 	for (i = 0; i < a->n; i++) crank_cplx_float_conjugate (a->data + i, r->data + i);
 }
-
-
-
-/**
- * crank_vec_cplx_float_n_neg_self:
- * @a: A vector
- *
- * Applies negation.
- */
-void
-crank_vec_cplx_float_n_neg_self (	CrankVecCplxFloatN*	a	)
-{
-	guint	i;
-	
-	for (i = 0; i < a->n; i++) crank_cplx_float_neg_self (a->data + i);
-}
-
-
-/**
- * crank_vec_cplx_float_n_unit_self:
- * @a: A vector
- *
- * Gets unit length of vector with same direction of @a
- */
-void
-crank_vec_cplx_float_n_unit_self (	CrankVecCplxFloatN*	a	)
-{
-	crank_vec_cplx_float_n_divrs_self (a, crank_vec_cplx_float_n_get_magn (a));
-}
-
 
 /**
  * crank_vec_cplx_float_n_conjugate_self:
@@ -985,24 +1138,18 @@ crank_vec_cplx_float_n_muls	(	CrankVecCplxFloatN*	a,
 }
 
 /**
- * crank_vec_cplx_float_n_divs:
+ * crank_vec_cplx_float_n_muls_self:
  * @a: A vector.
  * @b: A scalar.
- * @r: (out): A vector to store result.
  *
- * Applies scalar division.
+ * Applies scalar multiplication.
  */
 void
-crank_vec_cplx_float_n_divs	(	CrankVecCplxFloatN*	a,
-								CrankCplxFloat*		b,
-								CrankVecCplxFloatN*	r	)
+crank_vec_cplx_float_n_muls_self	(	CrankVecCplxFloatN*	a,
+										CrankCplxFloat*		b	)
 {
-	CrankCplxFloat	binv;
-	
-	g_return_if_fail (a != r);
-	crank_cplx_float_inverse (b, &binv);
-	
-	crank_vec_cplx_float_n_muls (a, &binv, r);
+	guint	i;
+	for (i = 0; i < a->n; i++) crank_cplx_float_mul_self (a->data + i, b);
 }
 
 /**
@@ -1027,36 +1174,40 @@ crank_vec_cplx_float_n_mulrs	(	CrankVecCplxFloatN*	a,
 }
 
 /**
- * crank_vec_cplx_float_n_divrs:
+ * crank_vec_cplx_float_n_mulrs_self:
  * @a: A vector.
  * @b: A real scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_cplx_float_n_mulrs_self	(	CrankVecCplxFloatN*	a,
+										const gfloat		b	)
+{
+	guint	i;
+
+	for (i = 0; i < a->n; i++) crank_cplx_float_mulr_self (a->data + i, b);
+}
+
+/**
+ * crank_vec_cplx_float_n_divs:
+ * @a: A vector.
+ * @b: A scalar.
  * @r: (out): A vector to store result.
  *
  * Applies scalar division.
  */
 void
-crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*	a,
-									const gfloat		b,
-									CrankVecCplxFloatN*	r	)
+crank_vec_cplx_float_n_divs	(	CrankVecCplxFloatN*	a,
+								CrankCplxFloat*		b,
+								CrankVecCplxFloatN*	r	)
 {
+	CrankCplxFloat	binv;
+
 	g_return_if_fail (a != r);
-	crank_vec_cplx_float_n_mulrs (a, 1.0f / b, r);
-}
+	crank_cplx_float_inverse (b, &binv);
 
-
-/**
- * crank_vec_cplx_float_n_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_cplx_float_n_muls_self	(	CrankVecCplxFloatN*	a,
-										CrankCplxFloat*		b	)
-{
-	guint	i;
-	for (i = 0; i < a->n; i++) crank_cplx_float_mul_self (a->data + i, b);
+	crank_vec_cplx_float_n_muls (a, &binv, r);
 }
 
 /**
@@ -1077,19 +1228,20 @@ crank_vec_cplx_float_n_divs_self	(	CrankVecCplxFloatN*	a,
 }
 
 /**
- * crank_vec_cplx_float_n_mulrs_self:
+ * crank_vec_cplx_float_n_divrs:
  * @a: A vector.
  * @b: A real scalar.
+ * @r: (out): A vector to store result.
  *
- * Applies scalar multiplication.
+ * Applies scalar division.
  */
 void
-crank_vec_cplx_float_n_mulrs_self	(	CrankVecCplxFloatN*	a,
-										const gfloat		b	)
+crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*	a,
+									const gfloat		b,
+									CrankVecCplxFloatN*	r	)
 {
-	guint	i;
-	
-	for (i = 0; i < a->n; i++) crank_cplx_float_mulr_self (a->data + i, b);
+	g_return_if_fail (a != r);
+	crank_vec_cplx_float_n_mulrs (a, 1.0f / b, r);
 }
 
 /**
@@ -1109,6 +1261,46 @@ crank_vec_cplx_float_n_divrs_self	(	CrankVecCplxFloatN*	a,
 
 
 //////// Standard vector operations ////////
+/**
+ * crank_vec_cplx_float_n_addr:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_cplx_float_n_addr		(	CrankVecCplxFloatN*	a,
+									CrankVecFloatN*		b,
+									CrankVecCplxFloatN*	r	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "addr", a, b);
+	CRANK_VEC_ALLOC(r, CrankCplxFloat, a->n);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_addr (a->data + i, b->data[i], r->data + i);
+}
+
+/**
+ * crank_vec_cplx_float_n_addr_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_cplx_float_n_addr_self	(	CrankVecCplxFloatN*	a,
+										CrankVecFloatN*		b	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "addr-self", a, b);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_addr_self (a->data + i, b->data[i]);
+}
 
 /**
  * crank_vec_cplx_float_n_add:
@@ -1123,7 +1315,7 @@ void			crank_vec_cplx_float_n_add			(	CrankVecCplxFloatN*	a,
 													CrankVecCplxFloatN*	r	)
 {
 	guint	i;
-	
+
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "add", a, b);
@@ -1131,6 +1323,67 @@ void			crank_vec_cplx_float_n_add			(	CrankVecCplxFloatN*	a,
 
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_add (a->data + i, b->data + i, r->data + i);
+}
+
+/**
+ * crank_vec_cplx_float_n_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_cplx_float_n_add_self	(	CrankVecCplxFloatN*	a,
+									CrankVecCplxFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "add-self", a, b);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_add_self (a->data + i, b->data + i);
+}
+
+
+/**
+ * crank_vec_cplx_float_n_subr:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_cplx_float_n_subr	(	CrankVecCplxFloatN*	a,
+								CrankVecFloatN*		b,
+								CrankVecCplxFloatN*	r	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "subr", a, b);
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_subr (a->data + i, b->data[i], r->data + i);
+}
+
+/**
+ * crank_vec_cplx_float_n_subr_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_cplx_float_n_subr_self	(	CrankVecCplxFloatN*	a,
+										CrankVecFloatN*		b	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "subr-self", a, b);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_subr_self (a->data + i, b->data[i]);
 }
 
 /**
@@ -1158,6 +1411,25 @@ crank_vec_cplx_float_n_sub	(	CrankVecCplxFloatN*	a,
 }
 
 /**
+ * crank_vec_cplx_float_n_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_cplx_float_n_sub_self	(	CrankVecCplxFloatN*	a,
+									CrankVecCplxFloatN*	b	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "sub-self", a, b);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_sub_self (a->data + i, b->data + i);
+}
+
+/**
  * crank_vec_cplx_float_n_dot:
  * @a: A vector
  * @b: A vector
@@ -1169,7 +1441,7 @@ void
 crank_vec_cplx_float_n_dot	(	CrankVecCplxFloatN*	a,
 								CrankVecCplxFloatN*	b,
 								CrankCplxFloat*		r	)
-{	
+{
 	guint	i;
 
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "dot", a, b);
@@ -1183,212 +1455,7 @@ crank_vec_cplx_float_n_dot	(	CrankVecCplxFloatN*	a,
 	}
 }
 
-/**
- * crank_vec_cplx_float_n_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_cplx_float_n_add_self	(	CrankVecCplxFloatN*	a,
-									CrankVecCplxFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "add-self", a, b);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_add_self (a->data + i, b->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_cplx_float_n_sub_self	(	CrankVecCplxFloatN*	a,
-									CrankVecCplxFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "sub-self", a, b);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_sub_self (a->data + i, b->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_addr:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- *
- * Adds two vectors.
- */
-void
-crank_vec_cplx_float_n_addr		(	CrankVecCplxFloatN*	a,
-									CrankVecFloatN*		b,
-									CrankVecCplxFloatN*	r	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "addr", a, b);
-	CRANK_VEC_ALLOC(r, CrankCplxFloat, a->n);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_addr (a->data + i, b->data[i], r->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_subr:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_cplx_float_n_subr	(	CrankVecCplxFloatN*	a,
-								CrankVecFloatN*		b,
-								CrankVecCplxFloatN*	r	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "subr", a, b);
-	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_subr (a->data + i, b->data[i], r->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_addr_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_cplx_float_n_addr_self	(	CrankVecCplxFloatN*	a,
-										CrankVecFloatN*		b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "addr-self", a, b);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_addr_self (a->data + i, b->data[i]);
-}
-
-/**
- * crank_vec_cplx_float_n_subr_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_cplx_float_n_subr_self	(	CrankVecCplxFloatN*	a,
-										CrankVecFloatN*		b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "subr-self", a, b);
-
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_subr_self (a->data + i, b->data[i]);
-}
-
 //////// Component vector operations ////////
-
-/**
- * crank_vec_cplx_float_n_cmpmul:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_cplx_float_n_cmpmul	(	CrankVecCplxFloatN*	a,
-									CrankVecCplxFloatN*	b,
-									CrankVecCplxFloatN*	r	)
-{
-	guint	i;
-		
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul", a, b);
-	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
-	
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_mul (a->data + i, b->data + i, r->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_cmpdiv:
- * @a: A vector.
- * @b: A vector.
- * @r: (out): A vector to store result.
- * 
- * Gets component-wise division.
- */
-void
-crank_vec_cplx_float_n_cmpdiv	(	CrankVecCplxFloatN*	a,
-									CrankVecCplxFloatN*	b,
-									CrankVecCplxFloatN*	r	)
-{
-	guint	i;
-
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv", a, b);
-	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
-	
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_div (a->data + i, b->data + i, r->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_cplx_float_n_cmpmul_self	(	CrankVecCplxFloatN*	a,
-										CrankVecCplxFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul-self", a, b);
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_mul_self (a->data + i, b->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_cmpdiv_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise division.
- */
-void
-crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
-										CrankVecCplxFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv-self", a, b);
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_div_self (a->data + i, b->data + i);
-}
-
 /**
  * crank_vec_cplx_float_n_cmpmulr:
  * @a: A vector.
@@ -1413,6 +1480,66 @@ crank_vec_cplx_float_n_cmpmulr	(	CrankVecCplxFloatN*	a,
 }
 
 /**
+ * crank_vec_cplx_float_n_cmpmulr_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
+										CrankVecFloatN*		b	)
+{
+	guint	i;
+
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmulr-self", a, b);
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_mulr_self (a->data + i, b->data[i]);
+}
+
+/**
+ * crank_vec_cplx_float_n_cmpmul:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_cplx_float_n_cmpmul	(	CrankVecCplxFloatN*	a,
+									CrankVecCplxFloatN*	b,
+									CrankVecCplxFloatN*	r	)
+{
+	guint	i;
+
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul", a, b);
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+	
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_mul (a->data + i, b->data + i, r->data + i);
+}
+
+/**
+ * crank_vec_cplx_float_n_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_cplx_float_n_cmpmul_self	(	CrankVecCplxFloatN*	a,
+										CrankVecCplxFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmul-self", a, b);
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_mul_self (a->data + i, b->data + i);
+}
+
+/**
  * crank_vec_cplx_float_n_cmpdivr:
  * @a: A vector.
  * @b: A vector.
@@ -1429,28 +1556,10 @@ crank_vec_cplx_float_n_cmpdivr	(	CrankVecCplxFloatN*	a,
 
 	g_return_if_fail (a != r);
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdivr", a, b);
-	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);		
-	
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_divr (a->data + i, b->data[i], r->data + i);
-}
-
-/**
- * crank_vec_cplx_float_n_cmpmulr_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
-										CrankVecFloatN*		b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpmulr-self", a, b);
-	for (i = 0; i < a->n; i++)
-		crank_cplx_float_mulr_self (a->data + i, b->data[i]);
 }
 
 /**
@@ -1465,16 +1574,56 @@ crank_vec_cplx_float_n_cmpdivr_self	(	CrankVecCplxFloatN*	a,
 										CrankVecFloatN*		b	)
 {
 	guint	i;
-	
+
 	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdivr-self", a, b);
 	for (i = 0; i < a->n; i++)
 		crank_cplx_float_divr_self (a->data + i, b->data[i]);
 }
 
+/**
+ * crank_vec_cplx_float_n_cmpdiv:
+ * @a: A vector.
+ * @b: A vector.
+ * @r: (out): A vector to store result.
+ * 
+ * Gets component-wise division.
+ */
+void
+crank_vec_cplx_float_n_cmpdiv	(	CrankVecCplxFloatN*	a,
+									CrankVecCplxFloatN*	b,
+									CrankVecCplxFloatN*	r	)
+{
+	guint	i;
+
+	g_return_if_fail (a != r);
+	g_return_if_fail (b != r);
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv", a, b);
+	CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
+
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_div (a->data + i, b->data + i, r->data + i);
+}
+
+/**
+ * crank_vec_cplx_float_n_cmpdiv_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise division.
+ */
+void
+crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
+										CrankVecCplxFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecCplxFloatN", "cmpdiv-self", a, b);
+	for (i = 0; i < a->n; i++)
+		crank_cplx_float_div_self (a->data + i, b->data + i);
+}
 
 
 
-												
 /**
  * crank_vec_cplx_float_n_cmpeq:
  * @a: A vector.
@@ -1497,76 +1646,6 @@ crank_vec_cplx_float_n_cmpeq	(	CrankVecCplxFloatN*	a,
 	for (i = 0; i < a->n; i++)
 		r->data[i] = crank_cplx_float_equal (a->data + i, b->data + i);
 }
-
-
-
-/**
- * crank_vec_cplx_float_n_mulm:
- * @a: A vector.
- * @b: A Matrox.
- * @r: (out): A vector to store result.
- *
- * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
- */
-void
-crank_vec_cplx_float_n_mulm (	CrankVecCplxFloatN*	a,
-								CrankMatCplxFloatN*	b,
-								CrankVecCplxFloatN*	r	)
-{
-	g_return_if_fail (a != r);
-	
-  	if (a->n == b->rn) {
-		guint	i;
-	  	guint	j;
-	  	CrankCplxFloat*	data;
-
-	  	data = g_new0 (CrankCplxFloat, b->cn);
-
-	  	for (i = 0; i < b->cn; i++) {
-	  		for (j = 0; j < a->n; j++) {
-	  			CrankCplxFloat	mul;
-	  			crank_cplx_float_mul (a->data + j, b->data + (b->cn * j) + i, &mul);
-	  			crank_cplx_float_add_self (data + i, &mul);
-	  		}
-	  	}
-
-	  	crank_vec_cplx_float_n_init_arr_take (r, b->cn, data);
-	}
-  	else g_warning ("VecCplxFloatN: mulm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
-}	
-
-
-/**
- * crank_vec_cplx_float_n_mulm_self:
- * @a: A vector.
- * @b: A Matrox.
- *
- * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
- */
-void
-crank_vec_cplx_float_n_mulm_self (	CrankVecCplxFloatN*	a,
-									CrankMatCplxFloatN*	b	)
-{
-  	if (a->n == b->rn) {
-		guint	i;
-	  	guint	j;
-	  	CrankCplxFloat*	data;
-
-	  	data = g_new0 (CrankCplxFloat, b->cn);
-
-	  	for (i = 0; i < b->cn; i++) {
-	  		for (j = 0; j < a->n; j++) {
-	  			CrankCplxFloat	mul;
-	  			crank_cplx_float_mul (a->data + j, b->data + (b->cn * j) + i, &mul);
-	  			crank_cplx_float_add_self (data + i, &mul);
-	  		}
-	  	}
-
-		g_free (a->data);
-	  	crank_vec_cplx_float_n_init_arr_take (a, b->cn, data);
-	}
-  	else g_warning ("VecCplxFloatN: mulm-self: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
-}	
 
 
 
@@ -1604,7 +1683,6 @@ crank_vec_cplx_float_n_mulrm (	CrankVecCplxFloatN*	a,
   	else g_warning ("VecCplxFloatN: mulrm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
 }	
 
-
 /**
  * crank_vec_cplx_float_n_mulrm_self:
  * @a: A vector.
@@ -1636,6 +1714,74 @@ crank_vec_cplx_float_n_mulrm_self (	CrankVecCplxFloatN*	a,
 	}
   	else g_warning ("VecCplxFloatN: mulrm-self: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
 }	
+
+/**
+ * crank_vec_cplx_float_n_mulm:
+ * @a: A vector.
+ * @b: A Matrox.
+ * @r: (out): A vector to store result.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_cplx_float_n_mulm (	CrankVecCplxFloatN*	a,
+								CrankMatCplxFloatN*	b,
+								CrankVecCplxFloatN*	r	)
+{
+	g_return_if_fail (a != r);
+
+  	if (a->n == b->rn) {
+		guint	i;
+	  	guint	j;
+	  	CrankCplxFloat*	data;
+
+	  	data = g_new0 (CrankCplxFloat, b->cn);
+
+	  	for (i = 0; i < b->cn; i++) {
+	  		for (j = 0; j < a->n; j++) {
+	  			CrankCplxFloat	mul;
+	  			crank_cplx_float_mul (a->data + j, b->data + (b->cn * j) + i, &mul);
+	  			crank_cplx_float_add_self (data + i, &mul);
+	  		}
+	  	}
+
+	  	crank_vec_cplx_float_n_init_arr_take (r, b->cn, data);
+	}
+  	else g_warning ("VecCplxFloatN: mulm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
+}	
+
+/**
+ * crank_vec_cplx_float_n_mulm_self:
+ * @a: A vector.
+ * @b: A Matrox.
+ *
+ * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
+ */
+void
+crank_vec_cplx_float_n_mulm_self (	CrankVecCplxFloatN*	a,
+									CrankMatCplxFloatN*	b	)
+{
+  	if (a->n == b->rn) {
+		guint	i;
+	  	guint	j;
+	  	CrankCplxFloat*	data;
+
+	  	data = g_new0 (CrankCplxFloat, b->cn);
+
+	  	for (i = 0; i < b->cn; i++) {
+	  		for (j = 0; j < a->n; j++) {
+	  			CrankCplxFloat	mul;
+	  			crank_cplx_float_mul (a->data + j, b->data + (b->cn * j) + i, &mul);
+	  			crank_cplx_float_add_self (data + i, &mul);
+	  		}
+	  	}
+
+		g_free (a->data);
+	  	crank_vec_cplx_float_n_init_arr_take (a, b->cn, data);
+	}
+  	else g_warning ("VecCplxFloatN: mulm-self: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
+}	
+
 
 
 
@@ -1701,4 +1847,96 @@ crank_vec_cplx_float_n_mix (	CrankVecCplxFloatN*	a,
 	for (i = 0; i < a->n; i++) {
 		crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);
 	}
+}
+
+
+//////// GValue Transform //////////////////////////////////////////////////////
+
+
+static void
+crank_vec_cplx_float_n_transform_from_vbn (	const GValue*	src,
+											GValue*			dest )
+{
+	CrankVecCplxFloatN*	res = g_new (CrankVecCplxFloatN, 1);
+
+	crank_vec_cplx_float_n_init_from_vb (
+			res,
+			(CrankVecBoolN*) g_value_get_boxed (src) );
+
+	g_value_take_boxed (dest, res);
+}
+
+static void
+crank_vec_cplx_float_n_transform_from_vin (	const GValue*	src,
+											GValue*			dest )
+
+{
+	CrankVecCplxFloatN*	res = g_new (CrankVecCplxFloatN, 1);
+
+	crank_vec_cplx_float_n_init_from_vi (
+			res,
+			(CrankVecIntN*) g_value_get_boxed (src) );
+
+	g_value_take_boxed (dest, res);
+}
+
+static void
+crank_vec_cplx_float_n_transform_from_vfn (	const GValue*	src,
+											GValue*			dest )
+{
+	CrankVecCplxFloatN*	res = g_new (CrankVecCplxFloatN, 1);
+
+	crank_vec_cplx_float_n_init_from_vf (
+			res,
+			(CrankVecFloatN*) g_value_get_boxed (src) );
+
+	g_value_take_boxed (dest, res);
+}
+
+
+static void
+crank_vec_cplx_float_n_transform_to_string (const GValue*	src,
+											GValue*			dest )
+{
+	g_value_take_string (dest,
+		crank_vec_cplx_float_n_to_string (
+			(CrankVecCplxFloatN*) g_value_get_boxed (dest) ) );
+}
+
+
+//////// GI Support ////////////////////////////////////////////////////////////
+
+/**
+ * crank_vec_cplx_float_n__gi_init_arruc:
+ * @vec: (out): A Vector to initialize.
+ * @n: Count of @arruc.
+ * @arruc: (array length=n): Array of unrolled complex pairs of elements.
+ * 
+ * Initialize a vector with array of unrolled complex pairs.
+ *
+ * This function is for vala, so this function receives number of elements, 
+ * instead of number of pairs.
+ */
+void
+crank_vec_cplx_float_n__gi_init_arruc (	CrankVecCplxFloatN*	vec,
+										const guint			n,
+										const gfloat*		arruc )
+{
+  if (n % 2 == 1)
+    {
+      gfloat* narruc;
+      
+      g_warning ("The array has odd number of elements.");
+      
+      narruc = g_new (gfloat, n + 1);
+      memcpy (narruc, arruc, n * sizeof (gfloat));
+      narruc[n] = 0;
+  
+      crank_vec_cplx_float_n_init_arr_take (vec, (n + 1) / 2, (CrankCplxFloat*)narruc);
+    }
+  
+  else
+    {
+      crank_vec_cplx_float_n_init_arruc (vec, n / 2, arruc);
+    }
 }

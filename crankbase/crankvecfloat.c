@@ -49,49 +49,131 @@
  *
  * It is compared to vec in GLSL
  *
- * <table frame="all"><title>Supported Operations</title>
- *   <tgroup cols="2" align="left" colsep="1" rowsep="1">
- *     <colspec colname="op" />
- *     <thead>
- *       <row>
- *         <entry>Operations</entry>
- *         <entry>Detailed</entry>
- *       </row>
- *     </thead>
+ * # Type Conversion.
+ * 
+ * Float vector types are frequently used and can be converted to other types.
+ *
+ * For fixed-sized types, it can be converted to variadic sized vector types.
+ *
+ * <table><title>Type Conversion of #CrankVecFloat2</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
- *       <row>
- *         <entry>Initialization</entry>
- *         <entry>arguments, array, va_list, fill</entry>
- *       </row>
- *       <row>
- *         <entry>Attributes</entry>
- *         <entry>magn square, magn</entry>
- *       </row>
- *       <row>
- *         <entry>Collection</entry>
- *         <entry>get, set, foreach, iterator</entry>
- *       </row>
- *       <row>
- *         <entry>Unary Operations</entry>
- *         <entry>neg, unit</entry>
- *       </row>
- *       <row>
- *         <entry>Vector - Scalar Operations</entry>
- *         <entry>mul, div</entry>
- *       </row>
- *       <row>
- *         <entry>Vector - Vector Operations</entry>
- *         <entry>add, sub, dot, crs</entry>
- *       </row>
- *       <row>
- *         <entry>Component Operations</entry>
- *         <entry>cmpmul, cmpdiv, cmpeq, cmpless, cmpgreater, cmpcmp,
- *                min, max</entry>
- *       </row>
- *       <row>
- *         <entry>Ternary Operations</entry>
- *         <entry>mix scalar, mix</entry>
- *       </row>
+ *       <row> <entry>From #CrankVecBool2 </entry>
+ *             <entry>crank_vec_float2_init_from_vb() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt2 </entry>
+ *             <entry>crank_vec_float2_init_from_vi() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_float2_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_float2_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloatN.</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecFloat3</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBool3 </entry>
+ *             <entry>crank_vec_float3_init_from_vb() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt3 </entry>
+ *             <entry>crank_vec_float3_init_from_vi() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_float3_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_float3_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloatN.</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecFloat4</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBool4 </entry>
+ *             <entry>crank_vec_float4_init_from_vb() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecInt4 </entry>
+ *             <entry>crank_vec_float4_init_from_vi() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_float4_to_string()</entry>
+ *             <entry>GValue Transform</entry></row>
+ *       <row> <entry>crank_vec_float4_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloatN.</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform,
+ *                    cast vector into array,
+ *                    Defined in #CrankVecFloatN</entry> </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
+ *
+ * <table><title>Type Conversion of #CrankVecFloatN</title>
+ *   <tgroup cols="3" align="left">
+ *     <thead> <row> <entry>Type</entry>
+ *                   <entry>Related Functions</entry>
+ *                   <entry>Remarks</entry> </row> </thead>
+ *     <tbody>
+ *       <row> <entry>From #CrankVecBoolN </entry>
+ *             <entry>crank_vec_float_n_init_from_vb() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecIntN </entry>
+ *             <entry>crank_vec_float_n_init_from_vi() </entry>
+ *             <entry>GValue Transform </entry> </row>
+ *
+ *       <row> <entry>From #CrankVecFloat2</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecFloat3</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry>From #CrankVecFloat4</entry>
+ *             <entry>crank_vec_float_n_init_arr()</entry>
+ *             <entry>GValue Transform, Cast vector into array</entry> </row>
+ *
+ *       <row> <entry morerows="1">To string.</entry>
+ *             <entry>crank_vec_float_n_to_string()</entry>
+ *             <entry>GValue Transform</entry> </row>
+ *       <row> <entry>crank_vec_float_n_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecCplxFloatN.</entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vf()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecCplxFloatN</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -100,7 +182,33 @@
 
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat2, crank_vec_float2, crank_vec_float2_dup, g_free)
+static void crank_vec_float2_transform_from_vb (	const GValue*	src,
+													GValue*			dest	);
+													
+static void crank_vec_float2_transform_from_vi (	const GValue*	src,
+													GValue*			dest	);
+
+static void	crank_vec_float2_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecFloat2,
+		crank_vec_float2,
+		crank_vec_float2_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL2,
+												g_define_type_id,
+												crank_vec_float2_transform_from_vb	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT2,
+												g_define_type_id,
+												crank_vec_float2_transform_from_vi	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_float2_transform_to_string	);
+		} )
 
 /**
  * crank_vec_float2_init:
@@ -447,6 +555,20 @@ crank_vec_float2_neg (	CrankVecFloat2*	a,
 
 
 /**
+ * crank_vec_float2_neg_self:
+ * @a: A vector
+ *
+ * Applies negation.
+ */
+void
+crank_vec_float2_neg_self (	CrankVecFloat2*	a	)
+{
+	a->x = - (a->x);
+	a->y = - (a->y);
+}
+
+
+/**
  * crank_vec_float2_unit:
  * @a: A vector
  * @r: (out): A vector to store result.
@@ -458,20 +580,6 @@ crank_vec_float2_unit (	CrankVecFloat2*	a,
 						CrankVecFloat2*	r	)
 {
 	crank_vec_float2_divs (a, crank_vec_float2_get_magn (a), r);
-}
-
-
-/**
- * crank_vec_float2_neg_self:
- * @a: A vector
- *
- * Applies negation.
- */
-void
-crank_vec_float2_neg_self (	CrankVecFloat2*	a	)
-{
-	a->x = - (a->x);
-	a->y = - (a->y);
 }
 
 
@@ -509,6 +617,21 @@ crank_vec_float2_muls	(	CrankVecFloat2*	a,
 }
 
 /**
+ * crank_vec_float2_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_float2_muls_self	(	CrankVecFloat2*	a,
+								const gfloat	b	)
+{
+	a->x *= b;
+	a->y *= b;
+}
+
+/**
  * crank_vec_float2_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -525,21 +648,6 @@ crank_vec_float2_divs	(	CrankVecFloat2*	a,
 
 	r->x = a->x / b;
 	r->y = a->y / b;
-}
-
-/**
- * crank_vec_float2_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_float2_muls_self	(	CrankVecFloat2*	a,
-								const gfloat	b	)
-{
-	a->x *= b;
-	a->y *= b;
 }
 
 /**
@@ -581,6 +689,21 @@ crank_vec_float2_add	(	CrankVecFloat2*	a,
 }
 
 /**
+ * crank_vec_float2_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_float2_add_self	(	CrankVecFloat2*	a,
+								CrankVecFloat2*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+}
+
+/**
  * crank_vec_float2_sub:
  * @a: A vector.
  * @b: A vector.
@@ -601,6 +724,21 @@ crank_vec_float2_sub	(	CrankVecFloat2*	a,
 }
 
 /**
+ * crank_vec_float2_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_float2_sub_self	(	CrankVecFloat2*	a,
+								CrankVecFloat2*	b	)
+{
+	a->x -= b->x;
+	a->y -= b->y;
+}
+
+/**
  * crank_vec_float2_dot:
  * @a: A vector
  * @b: A vector
@@ -614,37 +752,6 @@ crank_vec_float2_dot	(	CrankVecFloat2*	a,
 						CrankVecFloat2*	b	)
 {
 	return (a->x) * (b->x) + (a->y) * (b->y);
-}
-
-
-/**
- * crank_vec_float2_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_float2_add_self	(	CrankVecFloat2*	a,
-								CrankVecFloat2*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-}
-
-/**
- * crank_vec_float2_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_float2_sub_self	(	CrankVecFloat2*	a,
-								CrankVecFloat2*	b	)
-{
-	a->x -= b->x;
-	a->y -= b->y;
 }
 
 //////// Component vector operations ////////
@@ -670,6 +777,21 @@ crank_vec_float2_cmpmul	(	CrankVecFloat2*	a,
 }
 
 /**
+ * crank_vec_float2_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_float2_cmpmul_self	(	CrankVecFloat2*	a,
+									CrankVecFloat2*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+}
+
+/**
  * crank_vec_float2_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -687,22 +809,6 @@ crank_vec_float2_cmpdiv	(	CrankVecFloat2*	a,
 
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
-}
-
-
-/**
- * crank_vec_float2_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_float2_cmpmul_self	(	CrankVecFloat2*	a,
-									CrankVecFloat2*	b	)
-{
-	a->x *= b->x;
-	a->y *= b->y;
 }
 
 /**
@@ -933,6 +1039,38 @@ crank_vec_float2_mix (	CrankVecFloat2*	a,
 	r->y = a->y * d.y + b->y * c->y;
 }
 
+//////// GValue Transform //////////////////////////////////////////////////////
+
+static void
+crank_vec_float2_transform_from_vb (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat2*	vf = g_new (CrankVecFloat2, 1);
+	
+	crank_vec_float2_init_from_vb (vf, (CrankVecBool2*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float2_transform_from_vi (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat2*	vf = g_new (CrankVecFloat2, 1);
+	
+	crank_vec_float2_init_from_vi (vf, (CrankVecInt2*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float2_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+			crank_vec_float2_to_string (
+					(CrankVecFloat2*) g_value_get_boxed(src) ) );
+}
 
 
 
@@ -940,8 +1078,33 @@ crank_vec_float2_mix (	CrankVecFloat2*	a,
 
 
 
+static void crank_vec_float3_transform_from_vb (	const GValue*	src,
+													GValue*			dest	);
+													
+static void crank_vec_float3_transform_from_vi (	const GValue*	src,
+													GValue*			dest	);
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat3, crank_vec_float3, crank_vec_float3_dup, g_free)
+static void	crank_vec_float3_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecFloat3,
+		crank_vec_float3,
+		crank_vec_float3_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL3,
+												g_define_type_id,
+												crank_vec_float3_transform_from_vb	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT3,
+												g_define_type_id,
+												crank_vec_float3_transform_from_vi	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_float3_transform_to_string	);
+		} )
 
 /**
  * crank_vec_float3_init:
@@ -1305,21 +1468,6 @@ crank_vec_float3_neg (	CrankVecFloat3*	a,
 	r->z = - (a->z);
 }
 
-
-/**
- * crank_vec_float3_unit:
- * @a: A vector
- * @r: (out): A vector to store result.
- *
- * Gets unit length of vector with same direction of @a
- */
-void
-crank_vec_float3_unit (	CrankVecFloat3*	a,
-						CrankVecFloat3*	r	)
-{
-	crank_vec_float3_divs (a, crank_vec_float3_get_magn (a), r);
-}
-
 /**
  * crank_vec_float3_neg_self:
  * @a: A vector
@@ -1334,6 +1482,19 @@ crank_vec_float3_neg_self (	CrankVecFloat3*	a	)
 	a->z = - (a->z);
 }
 
+/**
+ * crank_vec_float3_unit:
+ * @a: A vector
+ * @r: (out): A vector to store result.
+ *
+ * Gets unit length of vector with same direction of @a
+ */
+void
+crank_vec_float3_unit (	CrankVecFloat3*	a,
+						CrankVecFloat3*	r	)
+{
+	crank_vec_float3_divs (a, crank_vec_float3_get_magn (a), r);
+}
 
 /**
  * crank_vec_float3_unit_self:
@@ -1371,6 +1532,22 @@ crank_vec_float3_muls	(	CrankVecFloat3*	a,
 }
 
 /**
+ * crank_vec_float3_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_float3_muls_self	(	CrankVecFloat3*	a,
+								const gfloat	b	)
+{
+	a->x *= b;
+	a->y *= b;
+	a->z *= b;
+}
+
+/**
  * crank_vec_float3_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -1388,22 +1565,6 @@ crank_vec_float3_divs	(	CrankVecFloat3*	a,
 	r->x = a->x / b;
 	r->y = a->y / b;
 	r->z = a->z / b;
-}
-
-/**
- * crank_vec_float3_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_float3_muls_self	(	CrankVecFloat3*	a,
-								const gfloat	b	)
-{
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
 }
 
 /**
@@ -1447,6 +1608,22 @@ crank_vec_float3_add	(	CrankVecFloat3*	a,
 }
 
 /**
+ * crank_vec_float3_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_float3_add_self	(	CrankVecFloat3*	a,
+								CrankVecFloat3*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+	a->z += b->z;
+}
+
+/**
  * crank_vec_float3_sub:
  * @a: A vector.
  * @b: A vector.
@@ -1465,6 +1642,22 @@ crank_vec_float3_sub	(	CrankVecFloat3*	a,
 	r->x = a->x - b->x;
 	r->y = a->y - b->y;
 	r->z = a->z - b->z;
+}
+
+/**
+ * crank_vec_float3_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_float3_sub_self	(	CrankVecFloat3*	a,
+								CrankVecFloat3*	b	)
+{
+	a->x -= b->x;
+	a->y -= b->y;
+	a->z -= b->z;
 }
 
 /**
@@ -1513,38 +1706,6 @@ crank_vec_float3_crs	(	CrankVecFloat3*	a,
 }
 
 /**
- * crank_vec_float3_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_float3_add_self	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
-}
-
-/**
- * crank_vec_float3_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_float3_sub_self	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b	)
-{
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
-}
-
-/**
  * crank_vec_float3_crs_self:
  * @a: A vector.
  * @b: A vector.
@@ -1588,6 +1749,22 @@ crank_vec_float3_cmpmul	(	CrankVecFloat3*	a,
 }
 
 /**
+ * crank_vec_float3_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_float3_cmpmul_self	(	CrankVecFloat3*	a,
+									CrankVecFloat3*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+	a->z *= b->z;
+}
+
+/**
  * crank_vec_float3_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -1606,22 +1783,6 @@ crank_vec_float3_cmpdiv	(	CrankVecFloat3*	a,
 	r->x = a->x / b->x;
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
-}
-
-/**
- * crank_vec_float3_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_float3_cmpmul_self	(	CrankVecFloat3*	a,
-									CrankVecFloat3*	b	)
-{
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
 }
 
 /**
@@ -1868,15 +2029,71 @@ crank_vec_float3_mix (	CrankVecFloat3*	a,
 	r->z = a->z * d.z + b->z * c->z;
 }
 
+//////// GValue Transform //////////////////////////////////////////////////////
+
+static void
+crank_vec_float3_transform_from_vb (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat3*	vf = g_new (CrankVecFloat3, 1);
+	
+	crank_vec_float3_init_from_vb (vf, (CrankVecBool3*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float3_transform_from_vi (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat3*	vf = g_new (CrankVecFloat3, 1);
+	
+	crank_vec_float3_init_from_vi (vf, (CrankVecInt3*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float3_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+			crank_vec_float3_to_string (
+					(CrankVecFloat3*) g_value_get_boxed(src) ) );
+}
 
 
 
 
 
 
+static void crank_vec_float4_transform_from_vb (	const GValue*	src,
+													GValue*			dest	);
+													
+static void crank_vec_float4_transform_from_vi (	const GValue*	src,
+													GValue*			dest	);
 
+static void	crank_vec_float4_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
 
-G_DEFINE_BOXED_TYPE (CrankVecFloat4, crank_vec_float4, crank_vec_float4_dup, g_free)
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecFloat4,
+		crank_vec_float4,
+		crank_vec_float4_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL4,
+												g_define_type_id,
+												crank_vec_float4_transform_from_vb	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT4,
+												g_define_type_id,
+												crank_vec_float4_transform_from_vi	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_float4_transform_to_string	);
+		} )
 
 /**
  * crank_vec_float4_init:
@@ -2259,21 +2476,6 @@ crank_vec_float4_neg (	CrankVecFloat4*	a,
 }
 
 /**
- * crank_vec_float4_unit:
- * @a: A vector
- * @r: (out): A vector to store result.
- *
- * Gets unit length of vector with same direction of @a
- */
-void
-crank_vec_float4_unit (	CrankVecFloat4*	a,
-						CrankVecFloat4*	r	)
-{
-	crank_vec_float4_divs (a, crank_vec_float4_get_magn (a), r);
-}
-
-
-/**
  * crank_vec_float4_neg_self:
  * @a: A vector
  *
@@ -2286,6 +2488,20 @@ crank_vec_float4_neg_self (	CrankVecFloat4*	a	)
 	a->y = - (a->y);
 	a->z = - (a->z);
 	a->w = - (a->w);
+}
+
+/**
+ * crank_vec_float4_unit:
+ * @a: A vector
+ * @r: (out): A vector to store result.
+ *
+ * Gets unit length of vector with same direction of @a
+ */
+void
+crank_vec_float4_unit (	CrankVecFloat4*	a,
+						CrankVecFloat4*	r	)
+{
+	crank_vec_float4_divs (a, crank_vec_float4_get_magn (a), r);
 }
 
 /**
@@ -2325,6 +2541,23 @@ crank_vec_float4_muls	(	CrankVecFloat4*	a,
 }
 
 /**
+ * crank_vec_float4_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_float4_muls_self	(	CrankVecFloat4*	a,
+								const gfloat	b	)
+{
+	a->x *= b;
+	a->y *= b;
+	a->z *= b;
+	a->w *= b;
+}
+
+/**
  * crank_vec_float4_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -2343,23 +2576,6 @@ crank_vec_float4_divs	(	CrankVecFloat4*	a,
 	r->y = a->y / b;
 	r->z = a->z / b;
 	r->w = a->w / b;
-}
-
-/**
- * crank_vec_float4_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_float4_muls_self	(	CrankVecFloat4*	a,
-								const gfloat	b	)
-{
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
-	a->w *= b;
 }
 
 /**
@@ -2405,6 +2621,23 @@ crank_vec_float4_add	(	CrankVecFloat4*	a,
 }
 
 /**
+ * crank_vec_float4_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_float4_add_self	(	CrankVecFloat4*	a,
+								CrankVecFloat4*	b	)
+{
+	a->x += b->x;
+	a->y += b->y;
+	a->z += b->z;
+	a->w += b->w;
+}
+
+/**
  * crank_vec_float4_sub:
  * @a: A vector.
  * @b: A vector.
@@ -2427,6 +2660,23 @@ crank_vec_float4_sub	(	CrankVecFloat4*	a,
 }
 
 /**
+ * crank_vec_float4_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_float4_sub_self	(	CrankVecFloat4*	a,
+								CrankVecFloat4*	b	)
+{
+	a->x -= b->x;
+	a->y -= b->y;
+	a->z -= b->z;
+	a->w -= b->w;
+}
+
+/**
  * crank_vec_float4_dot:
  * @a: A vector
  * @b: A vector
@@ -2443,40 +2693,6 @@ crank_vec_float4_dot	(	CrankVecFloat4*	a,
 			(a->y) * (b->y) +
 			(a->z) * (b->z) +
 			(a->w) * (b->w);
-}
-
-/**
- * crank_vec_float4_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_float4_add_self	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b	)
-{
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
-	a->w += b->w;
-}
-
-/**
- * crank_vec_float4_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_float4_sub_self	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b	)
-{
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
-	a->w -= b->w;
 }
 
 
@@ -2505,6 +2721,23 @@ crank_vec_float4_cmpmul	(	CrankVecFloat4*	a,
 }
 
 /**
+ * crank_vec_float4_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_float4_cmpmul_self	(	CrankVecFloat4*	a,
+									CrankVecFloat4*	b	)
+{
+	a->x *= b->x;
+	a->y *= b->y;
+	a->z *= b->z;
+	a->w *= b->w;
+}
+
+/**
  * crank_vec_float4_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -2524,23 +2757,6 @@ crank_vec_float4_cmpdiv	(	CrankVecFloat4*	a,
 	r->y = a->y / b->y;
 	r->z = a->z / b->z;
 	r->w = a->w / b->w;
-}
-
-/**
- * crank_vec_float4_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_float4_cmpmul_self	(	CrankVecFloat4*	a,
-									CrankVecFloat4*	b	)
-{
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
-	a->w *= b->w;
 }
 
 /**
@@ -2801,6 +3017,38 @@ crank_vec_float4_mix (	CrankVecFloat4*	a,
 	r->w = a->w * d.w + b->w * c->w;
 }
 
+//////// GValue Transform //////////////////////////////////////////////////////
+
+static void
+crank_vec_float4_transform_from_vb (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat4*	vf = g_new (CrankVecFloat4, 1);
+	
+	crank_vec_float4_init_from_vb (vf, (CrankVecBool4*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float4_transform_from_vi (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloat4*	vf = g_new (CrankVecFloat4, 1);
+	
+	crank_vec_float4_init_from_vi (vf, (CrankVecInt4*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float4_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+			crank_vec_float2_to_string (
+					(CrankVecFloat2*) g_value_get_boxed(src) ) );
+}
 
 
 
@@ -2809,9 +3057,54 @@ crank_vec_float4_mix (	CrankVecFloat4*	a,
 
 
 
-G_DEFINE_BOXED_TYPE (CrankVecFloatN, crank_vec_float_n, crank_vec_float_n_dup, g_free)
+static void crank_vec_float_n_transform_from_vb (	const GValue*	src,
+													GValue*			dest	);
+													
+static void crank_vec_float_n_transform_from_vi (	const GValue*	src,
+													GValue*			dest	);
 
+static void crank_vec_float_n_transform_from_v2 (	const GValue*	src,
+													GValue*			dest	);
 
+static void crank_vec_float_n_transform_from_v3 (	const GValue*	src,
+													GValue*			dest	);
+
+static void crank_vec_float_n_transform_from_v4 (	const GValue*	src,
+													GValue*			dest	);
+
+static void	crank_vec_float_n_transform_to_string (	const GValue*	src,
+													GValue*			dest	);
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (
+		CrankVecFloatN,
+		crank_vec_float_n,
+		crank_vec_float_n_dup,
+		g_free,
+		{
+			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL_N,
+												g_define_type_id,
+												crank_vec_float_n_transform_from_vb	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_INT_N,
+												g_define_type_id,
+												crank_vec_float_n_transform_from_vi	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT2,
+												g_define_type_id,
+												crank_vec_float_n_transform_from_v2	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT3,
+												g_define_type_id,
+												crank_vec_float_n_transform_from_v3	);
+												
+			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT4,
+												g_define_type_id,
+												crank_vec_float_n_transform_from_v4	);
+												
+			g_value_register_transform_func (	g_define_type_id,
+												G_TYPE_STRING,
+												crank_vec_float_n_transform_to_string	);
+		} )
 
 /**
  * crank_vec_float_n_init:
@@ -3105,7 +3398,7 @@ crank_vec_float_n_insert (	CrankVecFloatN*	vec,
 /**
  * crank_vec_float_n_remove:
  * @vec: Vector to remove element.
- * @index; Index to remove element.
+ * @index: Index to remove element.
  *
  * Removes an element from vector.
  */
@@ -3353,6 +3646,7 @@ crank_vec_float_n_is_empty ( CrankVecFloatN* vec	)
 
 /**
  * crank_vec_float_n_has_nan:
+ * @vec: A Vector
  *
  * Chechks whether the vector has NaN.
  *
@@ -3371,6 +3665,7 @@ crank_vec_float_n_has_nan ( CrankVecFloatN*	vec	)
 
 /**
  * crank_vec_float_n_has_inf:
+ * @vec: A Vector
  *
  * Chechks whether the vector has infinity.
  *
@@ -3448,21 +3743,6 @@ crank_vec_float_n_neg (	CrankVecFloatN*	a,
 
 
 /**
- * crank_vec_float_n_unit:
- * @a: A vector
- * @r: (out): A vector to store result.
- *
- * Gets unit length of vector with same direction of @a
- */
-void
-crank_vec_float_n_unit (	CrankVecFloatN*	a,
-						CrankVecFloatN*	r	)
-{
-	crank_vec_float_n_divs (a, crank_vec_float_n_get_magn (a), r);
-}
-
-
-/**
  * crank_vec_float_n_neg_self:
  * @a: A vector
  *
@@ -3474,6 +3754,21 @@ crank_vec_float_n_neg_self (	CrankVecFloatN*	a	)
 	guint	i;
 	
 	for (i = 0; i < a->n; i++) a->data[i] = - a->data[i];
+}
+
+
+/**
+ * crank_vec_float_n_unit:
+ * @a: A vector
+ * @r: (out): A vector to store result.
+ *
+ * Gets unit length of vector with same direction of @a
+ */
+void
+crank_vec_float_n_unit (	CrankVecFloatN*	a,
+						CrankVecFloatN*	r	)
+{
+	crank_vec_float_n_divs (a, crank_vec_float_n_get_magn (a), r);
 }
 
 
@@ -3514,6 +3809,22 @@ crank_vec_float_n_muls	(	CrankVecFloatN*	a,
 }
 
 /**
+ * crank_vec_float_n_muls_self:
+ * @a: A vector.
+ * @b: A scalar.
+ *
+ * Applies scalar multiplication.
+ */
+void
+crank_vec_float_n_muls_self	(	CrankVecFloatN*	a,
+								const gfloat	b	)
+{
+	guint	i;
+	
+	for (i = 0; i < a->n; i++)	a->data[i] *= b;
+}
+
+/**
  * crank_vec_float_n_divs:
  * @a: A vector.
  * @b: A scalar.
@@ -3532,22 +3843,6 @@ crank_vec_float_n_divs	(	CrankVecFloatN*	a,
 	
 	CRANK_VEC_ALLOC(r,gfloat,a->n);
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b;
-}
-
-/**
- * crank_vec_float_n_muls_self:
- * @a: A vector.
- * @b: A scalar.
- *
- * Applies scalar multiplication.
- */
-void
-crank_vec_float_n_muls_self	(	CrankVecFloatN*	a,
-								const gfloat	b	)
-{
-	guint	i;
-	
-	for (i = 0; i < a->n; i++)	a->data[i] *= b;
 }
 
 /**
@@ -3594,6 +3889,24 @@ crank_vec_float_n_add	(	CrankVecFloatN*	a,
 }
 
 /**
+ * crank_vec_float_n_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_float_n_add_self	(	CrankVecFloatN*	a,
+								CrankVecFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] += b->data[i];
+}
+
+/**
  * crank_vec_float_n_sub:
  * @a: A vector.
  * @b: A vector.
@@ -3618,6 +3931,24 @@ crank_vec_float_n_sub	(	CrankVecFloatN*	a,
 }
 
 /**
+ * crank_vec_float_n_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_float_n_sub_self	(	CrankVecFloatN*	a,
+								CrankVecFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub-self", a, b);
+	
+	for (i = 0; i < a->n; i++)	a->data[i] -= b->data[i];
+}
+
+/**
  * crank_vec_float_n_dot:
  * @a: A vector
  * @b: A vector
@@ -3637,42 +3968,6 @@ crank_vec_float_n_dot	(	CrankVecFloatN*	a,
 	
 	for (i = 0; i < a->n; i++) result += a->data[i] * b->data[i];
 	return result;
-}
-
-/**
- * crank_vec_float_n_add_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Adds two vectors.
- */
-void
-crank_vec_float_n_add_self	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] += b->data[i];
-}
-
-/**
- * crank_vec_float_n_sub_self:
- * @a: A vector.
- * @b: A vector.
- *
- * Subtracts @a by @b.
- */
-void
-crank_vec_float_n_sub_self	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] -= b->data[i];
 }
 
 //////// Component vector operations ////////
@@ -3702,6 +3997,23 @@ crank_vec_float_n_cmpmul	(	CrankVecFloatN*	a,
 }
 
 /**
+ * crank_vec_float_n_cmpmul_self:
+ * @a: A vector.
+ * @b: A vector.
+ * 
+ * Gets component-wise multiplication.
+ */
+void
+crank_vec_float_n_cmpmul_self	(	CrankVecFloatN*	a,
+									CrankVecFloatN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul-self", a, b);
+	for (i = 0; i < a->n; i++) a->data[i] *= b->data[i];
+}
+
+/**
  * crank_vec_float_n_cmpdiv:
  * @a: A vector.
  * @b: A vector.
@@ -3723,23 +4035,6 @@ crank_vec_float_n_cmpdiv	(	CrankVecFloatN*	a,
 	CRANK_VEC_ALLOC(r, gfloat, a->n);
 
 	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b->data[i];
-}
-
-/**
- * crank_vec_float_n_cmpmul_self:
- * @a: A vector.
- * @b: A vector.
- * 
- * Gets component-wise multiplication.
- */
-void
-crank_vec_float_n_cmpmul_self	(	CrankVecFloatN*	a,
-									CrankVecFloatN*	b	)
-{
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul-self", a, b);
-	for (i = 0; i < a->n; i++) a->data[i] *= b->data[i];
 }
 
 /**
@@ -4017,4 +4312,70 @@ crank_vec_float_n_mix (	CrankVecFloatN*	a,
 		d = 1.0f - c->data[i];
 		r->data[i] =	a->data[i] * d + b->data[i] * c->data[i];
 	}
+}
+
+//////// GValue Transform //////////////////////////////////////////////////////
+
+static void
+crank_vec_float_n_transform_from_vb (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
+	
+	crank_vec_float_n_init_from_vb (vf, (CrankVecBoolN*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float_n_transform_from_vi (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
+	
+	crank_vec_float_n_init_from_vi (vf, (CrankVecIntN*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float_n_transform_from_v2 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
+	
+	crank_vec_float_n_init_arr (vf, 2, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float_n_transform_from_v3 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
+	
+	crank_vec_float_n_init_arr (vf, 3, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+													
+static void
+crank_vec_float_n_transform_from_v4 (	const GValue*	src,
+										GValue*			dest	)
+{
+	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
+	
+	crank_vec_float_n_init_arr (vf, 4, (gfloat*) g_value_get_boxed (src));
+	
+	g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float_n_transform_to_string (	const GValue*	src,
+										GValue*			dest	)
+{
+	g_value_take_string (dest,
+			crank_vec_float_n_to_string (
+					(CrankVecFloatN*) g_value_get_boxed(src) ) );
 }

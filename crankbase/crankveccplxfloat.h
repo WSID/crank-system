@@ -41,13 +41,13 @@ struct _CrankVecCplxFloatN {
 #define CRANK_TYPE_VEC_CPLX_FLOAT_N	(crank_vec_cplx_float_n_get_type ())
 GType			crank_vec_cplx_float_n_get_type	(void);
 
-void			crank_vec_cplx_float_n_init		(	CrankVecCplxFloatN*	vec,
-													const guint		n,
-													...	);
+void			crank_vec_cplx_float_n_init		(		CrankVecCplxFloatN*	vec,
+														const guint		n,
+														...	);
 
-void			crank_vec_cplx_float_n_init_arr	(	CrankVecCplxFloatN*		vec,
-													const guint				n,
-													CrankCplxFloat*	arr	);
+void			crank_vec_cplx_float_n_init_arr	(		CrankVecCplxFloatN*		vec,
+														const guint				n,
+														CrankCplxFloat*	arr	);
 
 void			crank_vec_cplx_float_n_init_arr_take (	CrankVecCplxFloatN*	vec,
 														const guint			n,
@@ -61,24 +61,41 @@ void			crank_vec_cplx_float_n_init_fill	(	CrankVecCplxFloatN*	vec,
 														const guint			n,
 														CrankCplxFloat*		fill	);
 
-void			crank_vec_cplx_float_n_init_imm		(	CrankVecCplxFloatN*	vec,
+
+void			crank_vec_cplx_float_n_init_uc		(	CrankVecCplxFloatN*	vec,
 														const guint		n,
 														...	);
 
-void			crank_vec_cplx_float_n_init_valist_imm (	CrankVecCplxFloatN*	vec,
-															const guint		n,
-															va_list			varargs	);
+void			crank_vec_cplx_float_n_init_valistuc (	CrankVecCplxFloatN*	vec,
+														const guint			n,
+														va_list				varargs	);
 
-void			crank_vec_cplx_float_n_init_fill_imm	(	CrankVecCplxFloatN*	vec,
-															const guint			n,
-															const float			real,
-															const float			imag	);
+void			crank_vec_cplx_float_n_init_ucarr (		CrankVecCplxFloatN*	vec,
+														const guint			n,
+														const gfloat*		real,
+														const gfloat*		imag	);
+
+void			crank_vec_cplx_float_n_init_arruc (		CrankVecCplxFloatN*	vec,
+														const guint			n,
+														const gfloat*		arr	);
+
+void			crank_vec_cplx_float_n_init_filluc	(	CrankVecCplxFloatN*	vec,
+														const guint			n,
+														const gfloat		real,
+														const gfloat		imag	);
+
+void			crank_vec_cplx_float_n_init_ucv (		CrankVecCplxFloatN*	vec,
+														CrankVecFloatN*	real,
+														CrankVecFloatN*	imag	);
 
 void			crank_vec_cplx_float_n_init_from_vb (	CrankVecCplxFloatN*	vec,
 														CrankVecBoolN*	vb		);
 												
 void			crank_vec_cplx_float_n_init_from_vi (	CrankVecCplxFloatN*	vec,
 														CrankVecIntN*	vi		);
+
+void			crank_vec_cplx_float_n_init_from_vf (	CrankVecCplxFloatN*	vec,
+														CrankVecFloatN*	vf		);
 
 void			crank_vec_cplx_float_n_fini		(	CrankVecCplxFloatN*	vec	);
 
@@ -178,15 +195,15 @@ void			crank_vec_cplx_float_n_set_imag			(	CrankVecCplxFloatN*	vec,
 void			crank_vec_cplx_float_n_neg			(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	r	);
 
+void			crank_vec_cplx_float_n_neg_self		(	CrankVecCplxFloatN*	a	);
+
 void			crank_vec_cplx_float_n_unit			(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	r	);
 
+void			crank_vec_cplx_float_n_unit_self	(	CrankVecCplxFloatN*	a	);
+
 void			crank_vec_cplx_float_n_conjugate	(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	r	);
-
-void			crank_vec_cplx_float_n_neg_self		(	CrankVecCplxFloatN*	a	);
-
-void			crank_vec_cplx_float_n_unit_self	(	CrankVecCplxFloatN*	a	);
 
 void			crank_vec_cplx_float_n_conjugate_self(	CrankVecCplxFloatN*	a	);
 
@@ -197,26 +214,26 @@ void			crank_vec_cplx_float_n_muls		(	CrankVecCplxFloatN*		a,
 													CrankCplxFloat*			b,
 													CrankVecCplxFloatN*		r	);
 
-void			crank_vec_cplx_float_n_divs		(	CrankVecCplxFloatN*		a,
-													CrankCplxFloat*			b,
-													CrankVecCplxFloatN*		r	);
+void			crank_vec_cplx_float_n_muls_self(	CrankVecCplxFloatN*		a,
+													CrankCplxFloat*			b	);
 
 void			crank_vec_cplx_float_n_mulrs	(	CrankVecCplxFloatN*		a,
 													const gfloat			b,
 													CrankVecCplxFloatN*		r	);
 
-void			crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*		a,
-													const gfloat			b,
-													CrankVecCplxFloatN*		r	);
+void			crank_vec_cplx_float_n_mulrs_self(	CrankVecCplxFloatN*		a,
+													const gfloat			b	);
 
-void			crank_vec_cplx_float_n_muls_self(	CrankVecCplxFloatN*		a,
-													CrankCplxFloat*			b	);
+void			crank_vec_cplx_float_n_divs		(	CrankVecCplxFloatN*		a,
+													CrankCplxFloat*			b,
+													CrankVecCplxFloatN*		r	);
 
 void			crank_vec_cplx_float_n_divs_self(	CrankVecCplxFloatN*		a,
 													CrankCplxFloat*			b	);
 
-void			crank_vec_cplx_float_n_mulrs_self(	CrankVecCplxFloatN*		a,
-													const gfloat			b	);
+void			crank_vec_cplx_float_n_divrs	(	CrankVecCplxFloatN*		a,
+													const gfloat			b,
+													CrankVecCplxFloatN*		r	);
 
 void			crank_vec_cplx_float_n_divrs_self(	CrankVecCplxFloatN*		a,
 													const gfloat			b	);
@@ -227,62 +244,61 @@ void			crank_vec_cplx_float_n_add			(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b,
 														CrankVecCplxFloatN*	r	);
 
-void			crank_vec_cplx_float_n_sub			(	CrankVecCplxFloatN*	a,
-														CrankVecCplxFloatN*	b,
-														CrankVecCplxFloatN*	r	);
-
-void			crank_vec_cplx_float_n_dot			(	CrankVecCplxFloatN*	a,
-														CrankVecCplxFloatN*	b,
-														CrankCplxFloat*		r	);
-
 void			crank_vec_cplx_float_n_add_self		(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b	);
 
-void			crank_vec_cplx_float_n_sub_self		(	CrankVecCplxFloatN*	a,
-														CrankVecCplxFloatN*	b	);
-
-
 void			crank_vec_cplx_float_n_addr			(	CrankVecCplxFloatN*	a,
-														CrankVecFloatN*		b,
-														CrankVecCplxFloatN*	r	);
-
-void			crank_vec_cplx_float_n_subr			(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b,
 														CrankVecCplxFloatN*	r	);
 
 void			crank_vec_cplx_float_n_addr_self	(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b	);
 
+void			crank_vec_cplx_float_n_sub			(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_sub_self		(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
+
 void			crank_vec_cplx_float_n_subr_self	(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b	);
+
+void			crank_vec_cplx_float_n_subr			(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_dot			(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b,
+														CrankCplxFloat*		r	);
 
 //////// Component vector operations ////////
 
 void			crank_vec_cplx_float_n_cmpmul		(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b,
 														CrankVecCplxFloatN*	r	);
-												
-void			crank_vec_cplx_float_n_cmpdiv		(	CrankVecCplxFloatN*	a,
-														CrankVecCplxFloatN*	b,
-														CrankVecCplxFloatN*	r	);
 
 void			crank_vec_cplx_float_n_cmpmul_self	(	CrankVecCplxFloatN*	a,
-														CrankVecCplxFloatN*	b	);
-												
-void			crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
 														CrankVecCplxFloatN*	b	);
 
 void			crank_vec_cplx_float_n_cmpmulr		(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b,
 														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
+														CrankVecFloatN*		b	);
+
+void			crank_vec_cplx_float_n_cmpdiv		(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b,
+														CrankVecCplxFloatN*	r	);
+
+void			crank_vec_cplx_float_n_cmpdiv_self	(	CrankVecCplxFloatN*	a,
+														CrankVecCplxFloatN*	b	);
 												
 void			crank_vec_cplx_float_n_cmpdivr		(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b,
 														CrankVecCplxFloatN*	r	);
 
-void			crank_vec_cplx_float_n_cmpmulr_self	(	CrankVecCplxFloatN*	a,
-														CrankVecFloatN*		b	);
-												
 void			crank_vec_cplx_float_n_cmpdivr_self	(	CrankVecCplxFloatN*	a,
 														CrankVecFloatN*		b	);
 												
@@ -317,5 +333,11 @@ void			crank_vec_cplx_float_n_mix	(		CrankVecCplxFloatN*	a,
 													CrankVecCplxFloatN*	b,
 													CrankVecFloatN*	c,
 													CrankVecCplxFloatN*	r	);
+													
+//////// GI Support ////////////////////////////////////////////////////////////
+
+void			crank_vec_cplx_float_n__gi_init_arruc (	CrankVecCplxFloatN*	vec,
+														const guint			n,
+														const gfloat*		arruc );
 
 #endif

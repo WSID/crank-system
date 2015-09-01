@@ -61,10 +61,29 @@
       Sometimes, it is convenient to have functions to receive unrolled entities
       to reduce programmer's effort to initializing grouped entity in his code.
       For this, we add extra 'u' for suffixes.
-      <note>
-        If some operation requires vectors of unrolled complex, it means that
-        it requires two vector entity, one for real, other for imaginary parts.
-      </note>
+    </para>
+    <para>
+      For normal cases, suffixes comes in given order.
+      <itemizedlist>
+      	<listitem>Aggregation suffix (m, v, s, ...)</listitem>
+        <listitem>Complex compound suffix (r, c, q, ...)</listitem>
+        <listitem>Element type suffix (b, i, u, f)</listitem>
+      </itemizedlist>
+      but for unrolled suffixes, suffixes can come in different order to mean
+      different required entities.
+      <itemizedlist>
+        <listitem>arr_uc: Array of unrolled complex
+          <para>
+            Requires array of pair of eitities.
+          </para>
+        </listitem>
+
+        <listitem>uc_acc: Unrolled complex of array.
+          <para>
+            Requires pair of arrays, one for real, the other for imaginary.
+          </para>
+        </listitem>
+      </itemizedlist>
     </para>
   </refsect1>
   

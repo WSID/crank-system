@@ -512,7 +512,7 @@ crank_quat_float_is_pure_real (	CrankQuatFloat* quat	)
 }
 
 /**
- * crank_quat_float_is_pure_real:
+ * crank_quat_float_is_pure_imag:
  * @quat: A Quaternion.
  *
  * Checks the quaternion is pure imaginary value and has 0 real part.

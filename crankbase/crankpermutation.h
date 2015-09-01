@@ -297,20 +297,6 @@ guint*		crank_permutation__gi_slice (	CrankPermutation*	p,
 //////// Vala Support //////////////////////////////////////////////////////////
 
 
-void		crank_permutation__vala_init_compare_sarray (	const guint			n,
-													const gsize			gsz,
-													gpointer			garr,
-													GCompareFunc		gcmp,
-													CrankPermutation*	p	);
-
-void		crank_permutation__vala_init_compare_sarray_data (	const guint			n,
-															const gsize			gsz,
-															gpointer			garr,
-															GCompareDataFunc	gcmp,
-															gpointer			userdata,
-															CrankPermutation*	p	);
-
-
 void		crank_permutation__vala_init_compare_parray (	const guint			n,
 													gpointer*			garr,
 													GCompareFunc		gcmp,

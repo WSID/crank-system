@@ -2,7 +2,7 @@
 
 include ../glib-tap.mk
 
-SUBDIRS=. perf
+SUBDIRS= . bench
 
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \

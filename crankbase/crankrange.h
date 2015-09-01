@@ -363,8 +363,7 @@ void		crank_ran_ptr_init_diff (		CrankRanPtr*	ran,
  * crank_ran_ptr_init_typed_unit:
  * @ran: (out): A Range
  * @T: Type of chunk.
- * @start: Start of range,
- * @n: Count of chunk
+ * @start: Start of range
  *
  * Initialize a range for single sized chunk.
  */

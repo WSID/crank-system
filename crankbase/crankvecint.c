@@ -73,6 +73,11 @@
  *             <entry>GValue Transform,
  *                    cast vector into array,
  *                    Defined in #CrankVecIntN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat2.</entry>
+ *             <entry>crank_vec_float2_init_from_vi()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat2</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -97,6 +102,11 @@
  *             <entry>GValue Transform,
  *                    cast vector into array,
  *                    Defined in #CrankVecIntN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat3.</entry>
+ *             <entry>crank_vec_float3_init_from_vi()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat3</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -121,6 +131,11 @@
  *             <entry>GValue Transform,
  *                    cast vector into array,
  *                    Defined in #CrankVecIntN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloat4.</entry>
+ *             <entry>crank_vec_float4_init_from_vi()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloat4</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -151,6 +166,16 @@
  *             <entry>crank_vec_int_n_to_string()</entry>
  *             <entry>GValue Transform</entry> </row>
  *       <row> <entry>crank_vec_int_n_to_string_full()</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecFloatN.</entry>
+ *             <entry>crank_vec_float_n_init_from_vi()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecFloatN</entry> </row>
+ *
+ *       <row> <entry>To #CrankVecCplxFloatN.</entry>
+ *             <entry>crank_vec_cplx_float_n_init_from_vi()</entry>
+ *             <entry>GValue Transform,
+ *                    Defined in #CrankVecCplxFloatN</entry> </row>
  *     </tbody>
  *   </tgroup>
  * </table>
@@ -686,7 +711,7 @@ crank_vec_int2_sub	(	CrankVecInt2*	a,
  * crank_vec_int2_sub_self:
  * @a: A vector.
  * @b: A vector.
- * *
+ *
  * Applies subtraction to a vector.
  */
 void

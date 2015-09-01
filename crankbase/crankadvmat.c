@@ -665,7 +665,7 @@ crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
   	if (n == 1) {
 	  	if (! crank_cplx_float_is_zero (a->data)) {
 			crank_mat_cplx_float_n_init (l, 1, 1, a->data + 0);
-			crank_mat_cplx_float_n_init_cimm (u, 1, 1, 1.0f, 0.0f);
+			crank_mat_cplx_float_n_init_uc (u, 1, 1, 1.0f, 0.0f);
 		  	return TRUE;
 		}
 		// If a == [[0]] then a is singular and cannot be defactorized.

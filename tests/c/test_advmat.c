@@ -394,7 +394,7 @@ test_lu_cplx (void)
   	
   	CrankCplxFloat		v;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+  	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
 		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
 		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
@@ -433,7 +433,7 @@ test_gram_schmidt_cplx (void)
   	
   	CrankCplxFloat		v;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+  	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
 		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
 		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
@@ -471,7 +471,7 @@ test_qr_householder_cplx (void)
   	
   	CrankCplxFloat		v;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+  	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
 		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
 		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);
@@ -499,7 +499,7 @@ test_qr_givens_cplx (void)
   	
   	CrankCplxFloat		v;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+  	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 		3.0f, 1.0f,		10.0f, 20.0f,	9.0f, 3.0f,
 		6.0f, 2.0f,		22.0f, 45.0f,	-3.0f, 26.0f,
 		0.0f, 1.0f,		1.0f, 5.0f,		19.0f, 33.0f	);

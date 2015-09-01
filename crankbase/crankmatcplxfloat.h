@@ -110,15 +110,73 @@ void		crank_mat_cplx_float_n_init_fill (	CrankMatCplxFloatN* mat,
 									  			CrankCplxFloat*		fill	);
 
 
-void		crank_mat_cplx_float_n_init_cimm (	CrankMatCplxFloatN*	mat,
+
+void		crank_mat_cplx_float_n_init_uc (	CrankMatCplxFloatN*	mat,
 												const guint			rn,
 												const guint			cn,
 												...	);
+void		crank_mat_cplx_float_n_init_arruc (CrankMatCplxFloatN*	mat,
+											   const guint			rn,
+										 	   const guint			cn,
+										       const gfloat*		mucarr	);
 
 void		crank_mat_cplx_float_n_init_ucarr(	CrankMatCplxFloatN*	mat,
 												const guint			rn,
 												const guint			cn,
-												const gfloat*		mucarr	);
+												const gfloat*		real,
+												const gfloat*		imag	);
+
+void		crank_mat_cplx_float_n_init_ucm(CrankMatCplxFloatN* mat,
+									  		CrankMatFloatN*		real,
+									  		CrankMatFloatN*		imag);
+
+void		crank_mat_cplx_float_n_init_rucv (CrankMatCplxFloatN* mat,
+											  const guint		  rn,
+											  ...);
+
+void		crank_mat_cplx_float_n_init_rarrucv (CrankMatCplxFloatN* mat,
+												  const guint		  rn,
+												  CrankVecFloatN*	  rarrucv);
+
+void		crank_mat_cplx_float_n_init_rarrucvp (CrankMatCplxFloatN* mat,
+												  const guint		  rn,
+												  CrankVecFloatN**	  rarrucvp);
+
+void		crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
+											  const guint		  cn,
+											  ...);
+
+void		crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
+												  const guint		  cn,
+												  CrankVecFloatN*	  carrucv);
+
+void		crank_mat_cplx_float_n_init_carrucvp (CrankMatCplxFloatN* mat,
+												  const guint		  cn,
+												  CrankVecFloatN**	  carrucvp);
+
+void		crank_mat_cplx_float_n_init_diaguc (CrankMatCplxFloatN*	mat,
+										  		const guint			n,
+										  		... );
+
+void		crank_mat_cplx_float_n_init_diagarruc (CrankMatCplxFloatN*	mat,
+											 	   const guint			n,
+											 	   const gfloat*		arruc);
+
+void		crank_mat_cplx_float_n_init_diagucarr (CrankMatCplxFloatN*	mat,
+											 		const guint			n,
+											 		const gfloat*		real,
+											 		const gfloat*		imag);
+
+void		crank_mat_cplx_float_n_init_diagucv (CrankMatCplxFloatN*	mat,
+										   		 CrankVecFloatN*		real,
+										   	     CrankVecFloatN*		imag);
+
+void		crank_mat_cplx_float_n_init_filluc (CrankMatCplxFloatN* mat,
+										  		const guint			rn,
+										  		const guint			cn,
+										  		const gfloat		real,
+										  		const gfloat		imag);
+
 
 void		crank_mat_cplx_float_n_fini (	CrankMatCplxFloatN*	mat	);
 
@@ -175,6 +233,14 @@ void		crank_mat_cplx_float_n_set_row (	CrankMatCplxFloatN*	mat,
 												const guint			index,
 												CrankVecCplxFloatN*	row		);
 
+void		crank_mat_cplx_float_n_set_row_real(CrankMatCplxFloatN* mat,
+												const guint			index,
+												CrankVecFloatN* 	row_real);
+
+void		crank_mat_cplx_float_n_set_row_imag(CrankMatCplxFloatN* mat,
+												const guint			index,
+												CrankVecFloatN* 	row_imag);
+
 void		crank_mat_cplx_float_n_get_col (	CrankMatCplxFloatN*	mat,
 												const guint		index,
 												CrankVecCplxFloatN*	col		);
@@ -182,6 +248,14 @@ void		crank_mat_cplx_float_n_get_col (	CrankMatCplxFloatN*	mat,
 void		crank_mat_cplx_float_n_set_col (	CrankMatCplxFloatN*	mat,
 												const guint			index,
 												CrankVecCplxFloatN*	col		);
+
+void		crank_mat_cplx_float_n_set_col_real(CrankMatCplxFloatN* mat,
+												const guint			index,
+												CrankVecFloatN* 	col_real);
+
+void		crank_mat_cplx_float_n_set_col_imag(CrankMatCplxFloatN* mat,
+												const guint			index,
+												CrankVecFloatN* 	col_imag);
 
 void		crank_mat_cplx_float_n_slice_row (	CrankMatCplxFloatN*	mat,
 												const guint			start,
@@ -257,27 +331,26 @@ void		crank_mat_cplx_float_n_set_imag (	CrankMatCplxFloatN*	mat,
 void		crank_mat_cplx_float_n_neg (	CrankMatCplxFloatN*	a,
 											CrankMatCplxFloatN*	r	);
 
+void		crank_mat_cplx_float_n_neg_self (	CrankMatCplxFloatN*	a	);
+
 void		crank_mat_cplx_float_n_transpose (	CrankMatCplxFloatN*	a,
 												CrankMatCplxFloatN*	r	);
 
+void		crank_mat_cplx_float_n_transpose_self (	CrankMatCplxFloatN*	a	);
+
 void		crank_mat_cplx_float_n_inverse (	CrankMatCplxFloatN*	a,
 												CrankMatCplxFloatN*	r	);
-											
-												
-void		crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,
-												CrankMatCplxFloatN*	r	);
-
-void		crank_mat_cplx_float_n_star (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	r	);
-
-void		crank_mat_cplx_float_n_neg_self (	CrankMatCplxFloatN*	a	);
-
-void		crank_mat_cplx_float_n_transpose_self (	CrankMatCplxFloatN*	a	);
 
 void		crank_mat_cplx_float_n_inverse_self (	CrankMatCplxFloatN*	a	);
 											
-												
+
+void		crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,
+												CrankMatCplxFloatN*	r	);
+
 void		crank_mat_cplx_float_n_conjugate_self (	CrankMatCplxFloatN*	a	);
+
+void		crank_mat_cplx_float_n_star (	CrankMatCplxFloatN*	a,
+											CrankMatCplxFloatN*	r	);
 
 void		crank_mat_cplx_float_n_star_self (	CrankMatCplxFloatN*	a	);
 
@@ -287,34 +360,14 @@ void		crank_mat_cplx_float_n_mulrs (	CrankMatCplxFloatN*	a,
 											const gfloat	b,
 											CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_divrs (	CrankMatCplxFloatN*	a,
-											const gfloat	b,
-											CrankMatCplxFloatN*	r	);
-
+void		crank_mat_cplx_float_n_mulrs_self (	CrankMatCplxFloatN*	a,
+												const gfloat		b	);
 
 void		crank_mat_cplx_float_n_muls (	CrankMatCplxFloatN*	a,
 											CrankCplxFloat*		b,
 											CrankMatCplxFloatN*	r	);
-
-void		crank_mat_cplx_float_n_divs (	CrankMatCplxFloatN*	a,
-											CrankCplxFloat*		b,
-											CrankMatCplxFloatN*	r	);
-											
-
-void		crank_mat_cplx_float_n_mulrs_self (	CrankMatCplxFloatN*	a,
-												const gfloat		b	);
-
-void		crank_mat_cplx_float_n_divrs_self (	CrankMatCplxFloatN*	a,
-												const gfloat		b	);
-
-
 void		crank_mat_cplx_float_n_muls_self (	CrankMatCplxFloatN*	a,
 												CrankCplxFloat*		b	);
-
-void		crank_mat_cplx_float_n_divs_self (	CrankMatCplxFloatN*	a,
-												CrankCplxFloat*		b	);
-
-//////// Vector operations ////////
 
 void		crank_mat_cplx_float_n_mulrv (	CrankMatCplxFloatN*	a,
 											CrankVecFloatN*		b,
@@ -324,51 +377,61 @@ void		crank_mat_cplx_float_n_mulv (	CrankMatCplxFloatN*	a,
 											CrankVecCplxFloatN*	b,
 											CrankVecCplxFloatN*	r	);
 
-//////// Matrix operations ////////
+void		crank_mat_cplx_float_n_mulr (	CrankMatCplxFloatN*	a,
+											CrankMatFloatN*	b,
+											CrankMatCplxFloatN* r	);
+
+void		crank_mat_cplx_float_n_mulr_self (	CrankMatCplxFloatN*	a,
+												CrankMatFloatN*		b	);
+
+void		crank_mat_cplx_float_n_mul (	CrankMatCplxFloatN*	a,
+											CrankMatCplxFloatN*	b,
+											CrankMatCplxFloatN* r	);
+
+void		crank_mat_cplx_float_n_mul_self (	CrankMatCplxFloatN*	a,
+												CrankMatCplxFloatN*	b	);
+
+void		crank_mat_cplx_float_n_divrs (	CrankMatCplxFloatN*	a,
+											const gfloat	b,
+											CrankMatCplxFloatN*	r	);
+
+void		crank_mat_cplx_float_n_divrs_self (	CrankMatCplxFloatN*	a,
+												const gfloat		b	);
+
+void		crank_mat_cplx_float_n_divs (	CrankMatCplxFloatN*	a,
+											CrankCplxFloat*		b,
+											CrankMatCplxFloatN*	r	);
+
+void		crank_mat_cplx_float_n_divs_self (	CrankMatCplxFloatN*	a,
+												CrankCplxFloat*		b	);
+
 
 void		crank_mat_cplx_float_n_addr (	CrankMatCplxFloatN*	a,
 											CrankMatFloatN*	b,
 											CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_subr (	CrankMatCplxFloatN*	a,
-											CrankMatFloatN*	b,
-											CrankMatCplxFloatN*	r	);
-
-void		crank_mat_cplx_float_n_mulr (	CrankMatCplxFloatN*	a,
-											CrankMatFloatN*	b,
-											CrankMatCplxFloatN* r	);
-											
+void		crank_mat_cplx_float_n_addr_self (	CrankMatCplxFloatN*	a,
+												CrankMatFloatN*		b	);
 
 void		crank_mat_cplx_float_n_add (	CrankMatCplxFloatN*	a,
 											CrankMatCplxFloatN*	b,
 											CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_sub (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	b,
+void		crank_mat_cplx_float_n_add_self (	CrankMatCplxFloatN*	a,
+												CrankMatCplxFloatN*	b	);
+
+void		crank_mat_cplx_float_n_subr (	CrankMatCplxFloatN*	a,
+											CrankMatFloatN*	b,
 											CrankMatCplxFloatN*	r	);
-
-void		crank_mat_cplx_float_n_mul (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	b,
-											CrankMatCplxFloatN* r	);
-											
-
-void		crank_mat_cplx_float_n_addr_self (	CrankMatCplxFloatN*	a,
-												CrankMatFloatN*		b	);
 
 void		crank_mat_cplx_float_n_subr_self (	CrankMatCplxFloatN*	a,
 												CrankMatFloatN*		b	);
 
-void		crank_mat_cplx_float_n_mulr_self (	CrankMatCplxFloatN*	a,
-												CrankMatFloatN*		b	);
-											
-
-void		crank_mat_cplx_float_n_add_self (	CrankMatCplxFloatN*	a,
-												CrankMatCplxFloatN*	b	);
+void		crank_mat_cplx_float_n_sub (	CrankMatCplxFloatN*	a,
+											CrankMatCplxFloatN*	b,
+											CrankMatCplxFloatN*	r	);
 
 void		crank_mat_cplx_float_n_sub_self (	CrankMatCplxFloatN*	a,
-												CrankMatCplxFloatN*	b	);
-
-void		crank_mat_cplx_float_n_mul_self (	CrankMatCplxFloatN*	a,
 												CrankMatCplxFloatN*	b	);
 
 //////// Ternary operaions ////////
@@ -396,14 +459,41 @@ void		crank_mat_cplx_float_n_shuffle_col (	CrankMatCplxFloatN*		a,
 
 //////// Supplement Operations /////////////////////////////////////////////////
 
-void		crank_mat_cplx_float_n_upper_tri_invserse (	CrankMatCplxFloatN*	a,
+void		crank_mat_cplx_float_n_upper_tri_inverse (	CrankMatCplxFloatN*	a,
 														CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_lower_tri_invserse (	CrankMatCplxFloatN*	a,
+void		crank_mat_cplx_float_n_lower_tri_inverse (	CrankMatCplxFloatN*	a,
 														CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_diag_invserse (	CrankMatCplxFloatN*	a,
+void		crank_mat_cplx_float_n_diag_inverse (	CrankMatCplxFloatN*	a,
 													CrankMatCplxFloatN*	r	);
+													
+//////// Vala Support //////////////////////////////////////////////////////////
+
+void		crank_mat_cplx_float_n__vala_init_arruc (	CrankMatCplxFloatN* mat,
+														const guint rn,
+														const guint cn,
+														const gfloat* arruc );
+
+void		crank_mat_cplx_float_n__gi_init_rarrucv (CrankMatCplxFloatN* mat,
+													   const guint		  rn,
+													   CrankVecFloatN*	  rarrucv);
+
+void		crank_mat_cplx_float_n__gi_init_rarrucvp (CrankMatCplxFloatN* mat,
+														const guint		  rn,
+														CrankVecFloatN**	rarrucvp);
+
+void		crank_mat_cplx_float_n__gi_init_carrucv (CrankMatCplxFloatN* mat,
+												  const guint		  cn,
+												  CrankVecFloatN*	  carrucv);
+
+void		crank_mat_cplx_float_n__gi_init_carrucvp (CrankMatCplxFloatN* mat,
+												  const guint		  cn,
+												  CrankVecFloatN**	carrucvp);
+
+void		crank_mat_cplx_float_n__gi_init_diagarruc (CrankMatCplxFloatN*	mat,
+											 		   const guint			n,
+													   const gfloat*		arruc);
 											
 G_END_DECLS
 

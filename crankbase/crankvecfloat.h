@@ -50,26 +50,6 @@ struct _CrankVecFloat2 {
 #define CRANK_TYPE_VEC_FLOAT2	(crank_vec_float2_get_type ())
 GType			crank_vec_float2_get_type	(void);
 
-/**
- * CRANK_VEC_FLOAT2_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_FLOAT2_0	{0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT2_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT2_I	{1.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT2_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT2_J	{0.0f, 1.0f}
 
 void			crank_vec_float2_init		(	CrankVecFloat2*	vec,
 												gfloat			x,
@@ -137,10 +117,10 @@ gfloat			crank_vec_float2_get_magn			(	CrankVecFloat2*	vec	);
 void			crank_vec_float2_neg			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	r	);
 
+void			crank_vec_float2_neg_self		(	CrankVecFloat2*	a	);
+
 void			crank_vec_float2_unit			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	r	);
-
-void			crank_vec_float2_neg_self		(	CrankVecFloat2*	a	);
 
 void			crank_vec_float2_unit_self		(	CrankVecFloat2*	a	);
 
@@ -151,12 +131,12 @@ void			crank_vec_float2_muls			(	CrankVecFloat2*	a,
 													const gfloat	b,
 													CrankVecFloat2*	r	);
 
+void			crank_vec_float2_muls_self		(	CrankVecFloat2*	a,
+													const gfloat	b	);
+
 void			crank_vec_float2_divs			(	CrankVecFloat2*	a,
 													const gfloat	b,
 													CrankVecFloat2*	r	);
-
-void			crank_vec_float2_muls_self		(	CrankVecFloat2*	a,
-													const gfloat	b	);
 
 void			crank_vec_float2_divs_self		(	CrankVecFloat2*	a,
 													const gfloat	b	);
@@ -167,17 +147,17 @@ void			crank_vec_float2_add			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	b,
 													CrankVecFloat2*	r	);
 
+void			crank_vec_float2_add_self		(	CrankVecFloat2*	a,
+													CrankVecFloat2*	b	);
+
 void			crank_vec_float2_sub			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	b,
 													CrankVecFloat2*	r	);
 
-gfloat			crank_vec_float2_dot			(	CrankVecFloat2*	a,
-													CrankVecFloat2*	b	);
-
-void			crank_vec_float2_add_self		(	CrankVecFloat2*	a,
-													CrankVecFloat2*	b	);
-
 void			crank_vec_float2_sub_self		(	CrankVecFloat2*	a,
+													CrankVecFloat2*	b	);
+
+gfloat			crank_vec_float2_dot			(	CrankVecFloat2*	a,
 													CrankVecFloat2*	b	);
 
 //////// Component vector operations ////////
@@ -185,13 +165,13 @@ void			crank_vec_float2_sub_self		(	CrankVecFloat2*	a,
 void			crank_vec_float2_cmpmul		(	CrankVecFloat2*	a,
 												CrankVecFloat2*	b,
 												CrankVecFloat2*	r	);
+
+void			crank_vec_float2_cmpmul_self(	CrankVecFloat2*	a,
+												CrankVecFloat2*	b	);
 												
 void			crank_vec_float2_cmpdiv		(	CrankVecFloat2*	a,
 												CrankVecFloat2*	b,
 												CrankVecFloat2*	r	);
-
-void			crank_vec_float2_cmpmul_self(	CrankVecFloat2*	a,
-												CrankVecFloat2*	b	);
 												
 void			crank_vec_float2_cmpdiv_self(	CrankVecFloat2*	a,
 												CrankVecFloat2*	b	);
@@ -264,33 +244,6 @@ struct _CrankVecFloat3 {
 #define CRANK_TYPE_VEC_FLOAT3	(crank_vec_float3_get_type ())
 GType			crank_vec_float3_get_type	(void);
 
-/**
- * CRANK_VEC_FLOAT3_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_FLOAT3_0	{0.0f, 0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT3_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT3_I	{1.0f, 0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT3_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT3_J	{0.0f, 1.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT3_K:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT3_K	{0.0f, 0.0f, 1.0f}
 
 void			crank_vec_float3_init		(	CrankVecFloat3*	vec,
 												gfloat			x,
@@ -359,11 +312,10 @@ gfloat			crank_vec_float3_get_magn			(	CrankVecFloat3*	vec	);
 void			crank_vec_float3_neg			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	r	);
 
+void			crank_vec_float3_neg_self		(	CrankVecFloat3*	a	);
+
 void			crank_vec_float3_unit			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	r	);
-													
-
-void			crank_vec_float3_neg_self		(	CrankVecFloat3*	a	);
 
 void			crank_vec_float3_unit_self		(	CrankVecFloat3*	a	);
 
@@ -374,12 +326,12 @@ void			crank_vec_float3_muls			(	CrankVecFloat3*	a,
 													const gfloat	b,
 													CrankVecFloat3*	r	);
 
+void			crank_vec_float3_muls_self		(	CrankVecFloat3*	a,
+													const gfloat	b	);
+
 void			crank_vec_float3_divs			(	CrankVecFloat3*	a,
 													const gfloat	b,
 													CrankVecFloat3*	r	);
-
-void			crank_vec_float3_muls_self		(	CrankVecFloat3*	a,
-													const gfloat	b	);
 
 void			crank_vec_float3_divs_self		(	CrankVecFloat3*	a,
 													const gfloat	b	);
@@ -390,9 +342,15 @@ void			crank_vec_float3_add			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b,
 													CrankVecFloat3*	r	);
 
+void			crank_vec_float3_add_self		(	CrankVecFloat3*	a,
+													CrankVecFloat3*	b	);
+
 void			crank_vec_float3_sub			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b,
 													CrankVecFloat3*	r	);
+
+void			crank_vec_float3_sub_self		(	CrankVecFloat3*	a,
+													CrankVecFloat3*	b	);
 
 gfloat			crank_vec_float3_dot			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b	);
@@ -400,13 +358,6 @@ gfloat			crank_vec_float3_dot			(	CrankVecFloat3*	a,
 void			crank_vec_float3_crs			(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b,
 													CrankVecFloat3*	r	);
-
-
-void			crank_vec_float3_add_self		(	CrankVecFloat3*	a,
-													CrankVecFloat3*	b	);
-
-void			crank_vec_float3_sub_self		(	CrankVecFloat3*	a,
-													CrankVecFloat3*	b	);
 
 void			crank_vec_float3_crs_self		(	CrankVecFloat3*	a,
 													CrankVecFloat3*	b	);
@@ -417,13 +368,13 @@ void			crank_vec_float3_crs_self		(	CrankVecFloat3*	a,
 void			crank_vec_float3_cmpmul		(	CrankVecFloat3*	a,
 												CrankVecFloat3*	b,
 												CrankVecFloat3*	r	);
+
+void			crank_vec_float3_cmpmul_self(	CrankVecFloat3*	a,
+												CrankVecFloat3*	b	);
 												
 void			crank_vec_float3_cmpdiv		(	CrankVecFloat3*	a,
 												CrankVecFloat3*	b,
 												CrankVecFloat3*	r	);
-
-void			crank_vec_float3_cmpmul_self(	CrankVecFloat3*	a,
-												CrankVecFloat3*	b	);
 												
 void			crank_vec_float3_cmpdiv_self(	CrankVecFloat3*	a,
 												CrankVecFloat3*	b	);
@@ -499,40 +450,6 @@ struct _CrankVecFloat4 {
 #define CRANK_TYPE_VEC_FLOAT4	(crank_vec_float4_get_type ())
 GType			crank_vec_float4_get_type	(void);
 
-/**
- * CRANK_VEC_FLOAT4_0:
- * 
- * Zero vector initializing list.
- */
-#define CRANK_VEC_FLOAT4_0	{0.0f, 0.0f, 0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT4_I:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT4_I	{1.0f, 0.0f, 0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT4_J:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT4_J	{0.0f, 1.0f, 0.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT4_K:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT4_K	{0.0f, 0.0f, 1.0f, 0.0f}
-
-/**
- * CRANK_VEC_FLOAT4_L:
- * 
- * Standard basis.
- */
-#define CRANK_VEC_FLOAT4_L	{0.0f, 0.0f, 0.0f, 1.0f}
 
 void			crank_vec_float4_init		(	CrankVecFloat4*	vec,
 												gfloat			x,
@@ -602,10 +519,10 @@ gfloat			crank_vec_float4_get_magn			(	CrankVecFloat4*	vec	);
 void			crank_vec_float4_neg			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	r	);
 
+void			crank_vec_float4_neg_self		(	CrankVecFloat4*	a	);
+
 void			crank_vec_float4_unit			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	r	);
-
-void			crank_vec_float4_neg_self		(	CrankVecFloat4*	a	);
 
 void			crank_vec_float4_unit_self		(	CrankVecFloat4*	a	);
 
@@ -616,12 +533,12 @@ void			crank_vec_float4_muls			(	CrankVecFloat4*	a,
 													const gfloat	b,
 													CrankVecFloat4*	r	);
 
+void			crank_vec_float4_muls_self		(	CrankVecFloat4*	a,
+													const gfloat	b	);
+
 void			crank_vec_float4_divs			(	CrankVecFloat4*	a,
 													const gfloat	b,
 													CrankVecFloat4*	r	);
-
-void			crank_vec_float4_muls_self		(	CrankVecFloat4*	a,
-													const gfloat	b	);
 
 void			crank_vec_float4_divs_self		(	CrankVecFloat4*	a,
 													const gfloat	b	);
@@ -632,17 +549,17 @@ void			crank_vec_float4_add			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	b,
 													CrankVecFloat4*	r	);
 
+void			crank_vec_float4_add_self		(	CrankVecFloat4*	a,
+													CrankVecFloat4*	b	);
+
 void			crank_vec_float4_sub			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	b,
 													CrankVecFloat4*	r	);
 
-gfloat			crank_vec_float4_dot			(	CrankVecFloat4*	a,
-													CrankVecFloat4*	b	);
-
-void			crank_vec_float4_add_self		(	CrankVecFloat4*	a,
-													CrankVecFloat4*	b	);
-
 void			crank_vec_float4_sub_self		(	CrankVecFloat4*	a,
+													CrankVecFloat4*	b	);
+
+gfloat			crank_vec_float4_dot			(	CrankVecFloat4*	a,
 													CrankVecFloat4*	b	);
 
 //////// Component vector operations ////////
@@ -650,13 +567,13 @@ void			crank_vec_float4_sub_self		(	CrankVecFloat4*	a,
 void			crank_vec_float4_cmpmul		(	CrankVecFloat4*	a,
 												CrankVecFloat4*	b,
 												CrankVecFloat4*	r	);
+
+void			crank_vec_float4_cmpmul_self(	CrankVecFloat4*	a,
+												CrankVecFloat4*	b	);
 												
 void			crank_vec_float4_cmpdiv		(	CrankVecFloat4*	a,
 												CrankVecFloat4*	b,
 												CrankVecFloat4*	r	);
-
-void			crank_vec_float4_cmpmul_self(	CrankVecFloat4*	a,
-												CrankVecFloat4*	b	);
 												
 void			crank_vec_float4_cmpdiv_self(	CrankVecFloat4*	a,
 												CrankVecFloat4*	b	);
@@ -832,10 +749,10 @@ gfloat			crank_vec_float_n_get_magn			(	CrankVecFloatN*	vec	);
 void			crank_vec_float_n_neg			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	r	);
 
+void			crank_vec_float_n_neg_self		(	CrankVecFloatN*	a	);
+
 void			crank_vec_float_n_unit			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	r	);
-
-void			crank_vec_float_n_neg_self		(	CrankVecFloatN*	a	);
 
 void			crank_vec_float_n_unit_self		(	CrankVecFloatN*	a	);
 
@@ -846,12 +763,12 @@ void			crank_vec_float_n_muls			(	CrankVecFloatN*	a,
 													const gfloat	b,
 													CrankVecFloatN*	r	);
 
+void			crank_vec_float_n_muls_self		(	CrankVecFloatN*	a,
+													const gfloat	b	);
+
 void			crank_vec_float_n_divs			(	CrankVecFloatN*	a,
 													const gfloat	b,
 													CrankVecFloatN*	r	);
-
-void			crank_vec_float_n_muls_self		(	CrankVecFloatN*	a,
-													const gfloat	b	);
 
 void			crank_vec_float_n_divs_self		(	CrankVecFloatN*	a,
 													const gfloat	b	);
@@ -862,18 +779,17 @@ void			crank_vec_float_n_add			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	b,
 													CrankVecFloatN*	r	);
 
+void			crank_vec_float_n_add_self		(	CrankVecFloatN*	a,
+													CrankVecFloatN*	b	);
+
 void			crank_vec_float_n_sub			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	b,
 													CrankVecFloatN*	r	);
 
-gfloat			crank_vec_float_n_dot			(	CrankVecFloatN*	a,
-													CrankVecFloatN*	b	);
-
-
-void			crank_vec_float_n_add_self		(	CrankVecFloatN*	a,
-													CrankVecFloatN*	b	);
-
 void			crank_vec_float_n_sub_self		(	CrankVecFloatN*	a,
+													CrankVecFloatN*	b	);
+
+gfloat			crank_vec_float_n_dot			(	CrankVecFloatN*	a,
 													CrankVecFloatN*	b	);
 
 //////// Component vector operations ////////
@@ -881,13 +797,13 @@ void			crank_vec_float_n_sub_self		(	CrankVecFloatN*	a,
 void			crank_vec_float_n_cmpmul	(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
 												CrankVecFloatN*	r	);
+
+void			crank_vec_float_n_cmpmul_self(	CrankVecFloatN*	a,
+												CrankVecFloatN*	b	);
 												
 void			crank_vec_float_n_cmpdiv	(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b,
 												CrankVecFloatN*	r	);
-
-void			crank_vec_float_n_cmpmul_self(	CrankVecFloatN*	a,
-												CrankVecFloatN*	b	);
 												
 void			crank_vec_float_n_cmpdiv_self(	CrankVecFloatN*	a,
 												CrankVecFloatN*	b	);

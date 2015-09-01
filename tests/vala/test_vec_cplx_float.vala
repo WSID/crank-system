@@ -61,7 +61,7 @@ private bool float_eq (float a, float b, float delta = 0.0001f) {
 
 
 private void test_n_get () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	Crank.CplxFloat	v = a[0];
 	assert (float_eq (v.real, 3.0f));
@@ -74,7 +74,7 @@ private void test_n_get () {
 
 
 private void test_n_insert () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	a.insert (1, {5.0f, 10.0f});
 
 	
@@ -93,7 +93,7 @@ private void test_n_insert () {
 
 
 private void test_n_remove () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	a.remove (0);
 
 	Crank.CplxFloat	v = a[0];
@@ -105,7 +105,7 @@ private void test_n_remove () {
 
 
 private void test_n_foreach () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	Crank.CplxFloat		sum = {0.0f, 0.0f};
 
 	a.foreach ((v) => {
@@ -119,16 +119,16 @@ private void test_n_foreach () {
 
 
 private void test_n_equal () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
-	Crank.VecCplxFloatN	c = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	c = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	assert (! a.equal (b));
 	assert (  a.equal (c));
 }
 
 private void test_n_magn () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	assert (float_eq (a.magn_sq, 194.0f));
 	assert (float_eq (a.magn, 13.9284f));
@@ -136,7 +136,7 @@ private void test_n_magn () {
 
 
 private void test_n_unit () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 
 	a = a.unit ();
 	
@@ -150,7 +150,7 @@ private void test_n_unit () {
 }
 
 private void test_n_muls () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	a = a.muls ({2.0f, 3.0f});
 	
@@ -165,7 +165,7 @@ private void test_n_muls () {
 
 
 private void test_n_divs () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	a = a.divs ({2.0f, 3.0f});
 	
@@ -179,7 +179,7 @@ private void test_n_divs () {
 }
 
 private void test_n_mulrs () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	a = a.mulrs (2.0f);
 	
@@ -194,7 +194,7 @@ private void test_n_mulrs () {
 
 
 private void test_n_divrs () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
 	
 	a = a.divrs (2.0f);
 	
@@ -210,8 +210,8 @@ private void test_n_divrs () {
 
 
 private void test_n_add () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	a = a.add (b);
 	
@@ -226,8 +226,8 @@ private void test_n_add () {
 
 
 private void test_n_sub () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	a = a.sub (b);
 	
@@ -242,8 +242,8 @@ private void test_n_sub () {
 
 
 private void test_n_dot () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	Crank.CplxFloat v = a.dot (b);
 	assert (float_eq (v.real, 163.0f));
@@ -252,8 +252,8 @@ private void test_n_dot () {
 
 
 private void test_n_cmpmul () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	a = a.cmpmul (b);
 	
@@ -267,8 +267,8 @@ private void test_n_cmpmul () {
 }
 
 private void test_n_cmpdiv () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	a = a.cmpdiv (b);
 
@@ -282,8 +282,8 @@ private void test_n_cmpdiv () {
 }
 
 private void test_n_cmpeq () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(3, 2.0f, 3.0f, 4.0f, 6.0f, 17.0f, 20.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(3, 2.0f, 2.0f, 4.0f, 6.0f, 53.0f, 55.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(3, 2.0f, 3.0f, 4.0f, 6.0f, 17.0f, 20.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(3, 2.0f, 2.0f, 4.0f, 6.0f, 53.0f, 55.0f);
 	
 	Crank.VecBoolN	r = a.cmpeq (b);
 	
@@ -294,7 +294,7 @@ private void test_n_cmpeq () {
 
 
 private void test_n_mulrm () {
-	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.imm(3, 3.0f, 4.0f, 5.0f, 12.0f, 2.0f, 3.0f);
+	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.uc(3, 3.0f, 4.0f, 5.0f, 12.0f, 2.0f, 3.0f);
 	Crank.MatFloatN b = Crank.MatFloatN(3, 2,
 			1.0f, 2.0f,
 			3.0f, 4.0f,
@@ -313,8 +313,8 @@ private void test_n_mulrm () {
 
 
 private void test_n_mixs () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	
 	a = a.mixs (b, 0.2f);
 	
@@ -329,8 +329,8 @@ private void test_n_mixs () {
 
 
 private void test_n_mix () {
-	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.imm(2, 3.0f, 4.0f, 5.0f, 12.0f);
-	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.imm(2, 2.0f, 3.0f, 5.0f, 10.0f);
+	Crank.VecCplxFloatN	a = Crank.VecCplxFloatN.uc(2, 3.0f, 4.0f, 5.0f, 12.0f);
+	Crank.VecCplxFloatN	b = Crank.VecCplxFloatN.uc(2, 2.0f, 3.0f, 5.0f, 10.0f);
 	Crank.VecFloatN c = Crank.VecFloatN(2, 0.6f, 0.5f);
 	
 	a = a.mix (b, c);

@@ -105,15 +105,15 @@ test_n_equal (void)
   	CrankMatCplxFloatN	b;
   	CrankMatCplxFloatN	c;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 			1.0f, 2.0f, 3.0f, 4.0f,
 			5.0f, 6.0f, 7.0f, 8.0f	);
 
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 			1.0f, 2.0f, 3.0f, 4.0f,
 			5.0f, 6.0f, 7.0f, 8.0f	);
 
-  	crank_mat_cplx_float_n_init_cimm (&c, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&c, 2, 2,
 			1.0f, 2.0f, 3.0f, 4.0f,
 			4.0f, 5.0f, 6.0f, 7.0f	);
 
@@ -131,7 +131,7 @@ test_n_to_string (void)
 	CrankMatCplxFloatN	a;
   	gchar*			astr;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 			1.0f, 2.0f, 3.0f, 4.0f,
 			4.0f, 5.0f, 6.0f, 7.0f	);
 
@@ -148,7 +148,7 @@ test_n_get (void)
 	CrankMatCplxFloatN	a;
 	CrankCplxFloat		v;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 
@@ -174,7 +174,7 @@ test_n_get_row (void)
 	CrankMatCplxFloatN	a;
   	CrankVecCplxFloatN	r = {0};
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 
@@ -200,7 +200,7 @@ test_n_get_col (void)
 	CrankMatCplxFloatN	a;
   	CrankVecCplxFloatN	c = {0};
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 
@@ -226,7 +226,7 @@ test_n_slice (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	b;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -249,7 +249,7 @@ test_n_tr (void)
 	CrankMatCplxFloatN	a;
 	CrankCplxFloat		tr;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -266,7 +266,7 @@ test_n_det (void)
 	CrankMatCplxFloatN	a;
 	CrankCplxFloat		det;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -283,7 +283,7 @@ test_n_cof (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	cof;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -310,7 +310,7 @@ test_n_adj (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	adj;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -337,7 +337,7 @@ test_n_diag (void)
 	CrankMatCplxFloatN	a;
 	CrankVecCplxFloatN	b = {0};
 
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -358,7 +358,7 @@ test_n_neg (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	b;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
@@ -380,7 +380,7 @@ test_n_transpose (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	b;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 3,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 3,
 		1.0f, 2.0f, 	3.0f, 4.0f, 	5.0f, 6.0f,
 		7.0f, 8.0f, 	9.0f, 10.0f,	11.0f, 12.0f);
 		
@@ -406,7 +406,7 @@ test_n_inverse (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	ainv;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 3, 3,
+	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
 			1.0f, 1.5f,		2.0f, 2.5f,		3.0f, 4.5f,
 			4.0f, 4.5f,		5.0f, 5.5f,		6.0f, 6.5f,
 			7.0f, 3.5f,		8.0f, 4.0f,		9.0f, 4.5f	);
@@ -433,7 +433,7 @@ test_n_mulrs (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	b;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
@@ -454,7 +454,7 @@ test_n_divrs (void)
 	CrankMatCplxFloatN	a;
 	CrankMatCplxFloatN	b;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
@@ -476,11 +476,11 @@ test_n_mulv (void)
 	CrankVecCplxFloatN	b = {0};
 	CrankVecCplxFloatN	c = {0};
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-	crank_vec_cplx_float_n_init_imm (&b, 2,
+	crank_vec_cplx_float_n_init_uc (&b, 2,
 		2.0f, 3.0f, 5.0f, 7.0f);
 
 	crank_mat_cplx_float_n_mulv (&a, &b, &c);
@@ -500,11 +500,11 @@ test_n_add (void)
   	CrankMatCplxFloatN	b;
   	CrankMatCplxFloatN	c;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f	);
 
@@ -527,11 +527,11 @@ test_n_sub (void)
   	CrankMatCplxFloatN	b;
   	CrankMatCplxFloatN	c;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f	);
 
@@ -554,11 +554,11 @@ test_n_mul (void)
   	CrankMatCplxFloatN	b;
   	CrankMatCplxFloatN	c;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f	);
 
@@ -584,11 +584,11 @@ test_n_mixs (void)
   	CrankMatCplxFloatN	b;
   	CrankMatCplxFloatN	c;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f	);
 		
@@ -612,11 +612,11 @@ test_n_mix (void)
 	CrankMatFloatN		c = {0};
 	CrankMatCplxFloatN	d;
 
-  	crank_mat_cplx_float_n_init_cimm (&a, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&a, 2, 2,
 		1.0f, 2.0f, 3.0f, 4.0f,
 		4.0f, 5.0f, 6.0f, 7.0f);
 	
-  	crank_mat_cplx_float_n_init_cimm (&b, 2, 2,
+  	crank_mat_cplx_float_n_init_uc (&b, 2, 2,
 		2.0f, 3.0f, 5.0f, 7.0f,
 		4.0f, 2.0f, 1.0f, 3.0f	);
 	
@@ -644,7 +644,7 @@ test_n_shuffle_row (void)
 	CrankMatCplxFloatN		b;
 	CrankPermutation		p;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 4, 1,
+	crank_mat_cplx_float_n_init_uc (&a, 4, 1,
 		1.0f, 3.0f,
 		7.0f, 2.0f,
 		1.0f, 4.0f,
@@ -672,7 +672,7 @@ test_n_shuffle_col (void)
 	CrankMatCplxFloatN		b;
 	CrankPermutation		p;
 	
-	crank_mat_cplx_float_n_init_cimm (&a, 1, 4,
+	crank_mat_cplx_float_n_init_uc (&a, 1, 4,
 		1.0f, 7.0f, 	1.0f, 3.0f,		3.0f, 2.0f, 	4.0f, 1.0f	);
 
 	crank_permutation_init (&p, 4,
