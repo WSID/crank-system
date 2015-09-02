@@ -52,7 +52,7 @@ static void	test_n_mix (void);
 static void test_n_init_arruc (void);
 static void test_n_init_ucarr (void);
 static void test_n_init_ucv (void);
-static void test_n_init_filluc (void);
+static void test_n_init_fill_uc (void);
 
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ main (	gint argc, gchar** argv	)
 	g_test_add_func ("/crank/base/vec/cplx/float/n/init/arruc", test_n_init_arruc);
 	g_test_add_func ("/crank/base/vec/cplx/float/n/init/ucarr", test_n_init_ucarr);
 	g_test_add_func ("/crank/base/vec/cplx/float/n/init/ucv", test_n_init_ucv);
-	g_test_add_func ("/crank/base/vec/cplx/float/n/init/filluc", test_n_init_filluc);
+	g_test_add_func ("/crank/base/vec/cplx/float/n/init/fill_uc", test_n_init_fill_uc);
 	
 	g_test_run ();
 	return 0;
@@ -514,11 +514,11 @@ test_n_init_ucv (void)
 }
 
 static void
-test_n_init_filluc (void)
+test_n_init_fill_uc (void)
 {
   CrankVecCplxFloatN a;
   
-  crank_vec_cplx_float_n_init_filluc (&a, 3, 2.0f, 5.0f);
+  crank_vec_cplx_float_n_init_fill_uc (&a, 3, 2.0f, 5.0f);
 	
 	crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 5.0f);
 	crank_assert_eqcplxfloat_cimm (a.data + 1, 2.0f, 5.0f);

@@ -79,7 +79,7 @@ void			crank_vec_cplx_float_n_init_arruc (		CrankVecCplxFloatN*	vec,
 														const guint			n,
 														const gfloat*		arr	);
 
-void			crank_vec_cplx_float_n_init_filluc	(	CrankVecCplxFloatN*	vec,
+void			crank_vec_cplx_float_n_init_fill_uc	(	CrankVecCplxFloatN*	vec,
 														const guint			n,
 														const gfloat		real,
 														const gfloat		imag	);
@@ -333,11 +333,5 @@ void			crank_vec_cplx_float_n_mix	(		CrankVecCplxFloatN*	a,
 													CrankVecCplxFloatN*	b,
 													CrankVecFloatN*	c,
 													CrankVecCplxFloatN*	r	);
-													
-//////// GI Support ////////////////////////////////////////////////////////////
-
-void			crank_vec_cplx_float_n__gi_init_arruc (	CrankVecCplxFloatN*	vec,
-														const guint			n,
-														const gfloat*		arruc );
 
 #endif

@@ -629,6 +629,311 @@ class TestMatCplxFloatN(unittest.TestCase):
 		v = c.get (0, 3)
 		self.assertFloat (v.real, 3)
 		self.assertFloat (v.imag, 2)
+	
+	def test_init_ucarr (self):
+		a = CrankBase.MatCplxFloatN.init_ucarr (2, 3,
+			[2, 3, 5,
+			 1, 4, 7],
+			[8, 9, 2,
+			 0, 3, 0] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_arruc (self):
+		a = CrankBase.MatCplxFloatN.init_arruc (2, 3,
+			[2, 8,	3, 9,	5, 2,
+			 1, 0,	4, 3,	7, 0] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_ucm (self):
+		a = CrankBase.MatCplxFloatN.init_ucm (
+			CrankBase.MatFloatN.init_arr (2, 3,	[2, 3, 5,
+												 1, 4, 7] ),
+												 
+			CrankBase.MatFloatN.init_arr (2, 3, [8, 9, 2,
+												 0, 3, 0] ) )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_row_arruc (self):
+		a = CrankBase.MatCplxFloatN.init_row_arruc (2, 
+				[CrankBase.VecFloatN.init_arr ([2, 3, 5]),
+				 CrankBase.VecFloatN.init_arr ([8, 9, 2]),
+				 
+				 CrankBase.VecFloatN.init_arr ([1, 4, 7]),
+				 CrankBase.VecFloatN.init_arr ([0, 3, 0])] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_row_parruc (self):
+		a = CrankBase.MatCplxFloatN.init_row_parruc (2, 
+				[CrankBase.VecFloatN.init_arr ([2, 3, 5]),
+				 CrankBase.VecFloatN.init_arr ([8, 9, 2]),
+				 
+				 CrankBase.VecFloatN.init_arr ([1, 4, 7]),
+				 CrankBase.VecFloatN.init_arr ([0, 3, 0])] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+		
+	
+	def test_init_col_arruc (self):
+		a = CrankBase.MatCplxFloatN.init_col_arruc (3, 
+				[CrankBase.VecFloatN.init_arr ([2, 1]),
+				 CrankBase.VecFloatN.init_arr ([8, 0]),
+				 
+				 CrankBase.VecFloatN.init_arr ([3, 4]),
+				 CrankBase.VecFloatN.init_arr ([9, 3]),
+				 
+				 CrankBase.VecFloatN.init_arr ([5, 7]),
+				 CrankBase.VecFloatN.init_arr ([2, 0])] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_col_parruc (self):
+		a = CrankBase.MatCplxFloatN.init_col_parruc (3, 
+				[CrankBase.VecFloatN.init_arr ([2, 1]),
+				 CrankBase.VecFloatN.init_arr ([8, 0]),
+				 
+				 CrankBase.VecFloatN.init_arr ([3, 4]),
+				 CrankBase.VecFloatN.init_arr ([9, 3]),
+				 
+				 CrankBase.VecFloatN.init_arr ([5, 7]),
+				 CrankBase.VecFloatN.init_arr ([2, 0])] )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 8)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 3)
+		self.assertFloat (v.imag, 9)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 5)
+		self.assertFloat (v.imag, 2)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 4)
+		self.assertFloat (v.imag, 3)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 7)
+		self.assertFloat (v.imag, 0)
+	
+	def test_init_diag_arruc (self):
+		a = CrankBase.MatCplxFloatN.init_diag_arruc (3,
+				[1.0, 1.5,	 3.0, 2.0,	 4.5, 3.5])
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 1.0)
+		self.assertFloat (v.imag, 1.5)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 3.0)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 2)
+		self.assertFloat (v.real, 4.5)
+		self.assertFloat (v.imag, 3.5)
+	
+	def test_init_diag_ucarr (self):
+		a = CrankBase.MatCplxFloatN.init_diag_ucarr (
+				[1.0, 3.0, 4.5], [1.5, 2.0, 3.5])
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 1.0)
+		self.assertFloat (v.imag, 1.5)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 3.0)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 2)
+		self.assertFloat (v.real, 4.5)
+		self.assertFloat (v.imag, 3.5)
+	
+	def test_init_diag_ucv (self):
+		a = CrankBase.MatCplxFloatN.init_diag_ucv (
+				CrankBase.VecFloatN.init_arr ([1.0, 3.0, 4.5]),
+				CrankBase.VecFloatN.init_arr ([1.5, 2.0, 3.5]) )
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 1.0)
+		self.assertFloat (v.imag, 1.5)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (0, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 3.0)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (1, 2)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 0)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 1)
+		self.assertFloat (v.real, 0)
+		self.assertFloat (v.imag, 0)
+		v = a.get (2, 2)
+		self.assertFloat (v.real, 4.5)
+		self.assertFloat (v.imag, 3.5)
+	
+	def test_init_fill_uc (self):
+		a = CrankBase.MatCplxFloatN.init_fill_uc (2, 2, 1.5, 2.0)
+		
+		v = a.get (0, 0)
+		self.assertFloat (v.real, 1.5)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (0, 1)
+		self.assertFloat (v.real, 1.5)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (1, 0)
+		self.assertFloat (v.real, 1.5)
+		self.assertFloat (v.imag, 2.0)
+		v = a.get (1, 1)
+		self.assertFloat (v.real, 1.5)
+		self.assertFloat (v.imag, 2.0)
 		
 if __name__ == '__main__':
 	unittest.main ()

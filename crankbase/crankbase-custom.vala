@@ -528,9 +528,8 @@ namespace Crank {
 		public VecCplxFloatN.ucarr		([CCode (array_length_pos=0)]float[] real,
 										 [CCode (array_length_pos=0)]float[] imag);
 										 
-		[CCode (cname="crank_vec_cplx_float_n__gi_init_arruc")]
-		public VecCplxFloatN.arruc		([CCode (array_length_pos=0)]float[] arr);
-		public VecCplxFloatN.filluc		(uint n, float real=0.0f, float imag=0.0f);
+		public VecCplxFloatN.arruc		(uint n, [CCode (array_length=false)]float[] arr);
+		public VecCplxFloatN.fill_uc	(uint n, float real=0.0f, float imag=0.0f);
 		public VecCplxFloatN.ucv		(VecFloatN	real, VecFloatN	imag);
 
 		public VecCplxFloatN.from_vb	(VecBoolN	vb);
@@ -550,12 +549,12 @@ namespace Crank {
 	public struct MatFloat2 {
 		public MatFloat2 (float m00, float m01, float m10, float m11);
 		public MatFloat2.arr (float marr[4]);
-		public MatFloat2.rv (VecFloat2 rv0, VecFloat2 rv1);
-		public MatFloat2.rarrv (VecFloat2 rarrv[2]);
-		public MatFloat2.rarrpv (VecFloat2? rarrpv[]);
-		public MatFloat2.cv (VecFloat2 cv0, VecFloat2 cv1);
-		public MatFloat2.carrv (VecFloat2 carrv[2]);
-		public MatFloat2.carrpv (VecFloat2? carrpv[]);
+		public MatFloat2.row (VecFloat2 row0, VecFloat2 row1);
+		public MatFloat2.row_arr (VecFloat2 row_arr[2]);
+		public MatFloat2.row_parr (VecFloat2? row_parr[]);
+		public MatFloat2.col (VecFloat2 col0, VecFloat2 col1);
+		public MatFloat2.col_arr (VecFloat2 col_arr[2]);
+		public MatFloat2.col_parr (VecFloat2? col_parr[]);
 		public MatFloat2.diag (float m00, float m11);
 		public MatFloat2.diag_arr (float darr[2]);
 		public MatFloat2.fill (float fill);
@@ -572,12 +571,12 @@ namespace Crank {
 							float m10, float m11, float m12,
 							float m20, float m21, float m22);
 		public MatFloat3.arr (float marr[9]);
-		public MatFloat3.rv (VecFloat3 rv0, VecFloat3 rv1, VecFloat3 rv2);
-		public MatFloat3.rarrv (VecFloat3 rarrv[3]);
-		public MatFloat3.rarrpv (VecFloat3? rarrpv[]);
-		public MatFloat3.cv (VecFloat3 cv0, VecFloat3 cv1, VecFloat3 cv2);
-		public MatFloat3.carrv (VecFloat3 carrv[3]);
-		public MatFloat3.carrpv (VecFloat3? carrpv[]);
+		public MatFloat3.row (VecFloat3 row0, VecFloat3 row1, VecFloat3 row2);
+		public MatFloat3.row_arr (VecFloat3 row_arr[3]);
+		public MatFloat3.row_parr (VecFloat3? row_parr[]);
+		public MatFloat3.col (VecFloat3 col0, VecFloat3 col1, VecFloat3 col2);
+		public MatFloat3.col_arr (VecFloat3 col_arr[3]);
+		public MatFloat3.col_parr (VecFloat3? col_parr[]);
 		public MatFloat3.diag (float m00, float m11, float m22);
 		public MatFloat3.diag_arr (float darr[3]);
 		public MatFloat3.fill (float fill);
@@ -595,12 +594,12 @@ namespace Crank {
 							float m20, float m21, float m22, float m23,
 							float m30, float m31, float m32, float m33	);
 		public MatFloat4.arr (float marr[16]);
-		public MatFloat4.rv (VecFloat4 rv0, VecFloat4 rv1, VecFloat4 rv2, VecFloat4 rv3);
-		public MatFloat4.rarrv (VecFloat4 rarrv[4]);
-		public MatFloat4.rarrpv (VecFloat4? rarrpv[]);
-		public MatFloat4.cv (VecFloat4 cv0, VecFloat4 cv1, VecFloat4 cv2, VecFloat4 cv3);
-		public MatFloat4.carrv (VecFloat4 carrv[4]);
-		public MatFloat4.carrpv (VecFloat4? carrpv[]);
+		public MatFloat4.row (VecFloat4 row0, VecFloat4 row1, VecFloat4 row2, VecFloat4 row3);
+		public MatFloat4.row_arr (VecFloat4 row_arr[4]);
+		public MatFloat4.row_parr (VecFloat4? row_parr[]);
+		public MatFloat4.col (VecFloat4 col0, VecFloat4 col1, VecFloat4 col2, VecFloat4 col3);
+		public MatFloat4.col_arr (VecFloat4 col_arr[4]);
+		public MatFloat4.col_parr (VecFloat4? col_parr[]);
 		public MatFloat4.diag (float m00, float m11, float m22, float m33);
 		public MatFloat4.diag_arr (float darr[4]);
 		public MatFloat4.fill (float fill);
@@ -619,12 +618,12 @@ namespace Crank {
 		public MatFloatN (uint rn, uint cn, ...);
 		public MatFloatN.arr ([CCode (array_length_pos=0)]float[,] marr);
 		public MatFloatN.arr_take ([CCode (array_length_pos=0)]owned float[,] marr);
-		public MatFloatN.rv (uint rn, ...);
-		public MatFloatN.rarrv ([CCode (array_length_pos=0)]VecFloat4[] rarrv);
-		public MatFloatN.rarrpv ([CCode (array_length_pos=0)]VecFloat4?[] rarrpv);
-		public MatFloatN.cv (uint cn, ...);
-		public MatFloatN.carrv ([CCode (array_length_pos=0)]VecFloat4[] carrv);
-		public MatFloatN.carrpv ([CCode (array_length_pos=0)]VecFloat4?[] carrpv);
+		public MatFloatN.row (uint rn, ...);
+		public MatFloatN.row_arr ([CCode (array_length_pos=0)]VecFloat4[] row_arr);
+		public MatFloatN.row_parr ([CCode (array_length_pos=0)]VecFloat4?[] row_parr);
+		public MatFloatN.col (uint cn, ...);
+		public MatFloatN.col_arr ([CCode (array_length_pos=0)]VecFloat4[] col_arr);
+		public MatFloatN.col_parr ([CCode (array_length_pos=0)]VecFloat4?[] col_parr);
 		public MatFloatN.diag (uint n, ...);
 		public MatFloatN.diag_arr ([CCode (array_length_pos=0)]float[] darr);
 		public MatFloatN.fill (uint rn, uint cn, float fill);
@@ -641,41 +640,39 @@ namespace Crank {
 	}
 	
 
-	[CCode (	copy_function="crank_mat_float_n_copy",
-				destroy_function="crank_mat_float_n_fini",
-				free_function="crank_mat_float_n_free"	)]
+	[CCode (	copy_function="crank_mat_cplx_float_n_copy",
+				destroy_function="crank_mat_cplx_float_n_fini",
+				free_function="crank_mat_cplx_float_n_free"	)]
 	public struct MatCplxFloatN {
 
 		public MatCplxFloatN (uint rn, uint cn, ...);
 		public MatCplxFloatN.arr ([CCode (array_length_pos=0)]CplxFloat[,] marr);
 		public MatCplxFloatN.arr_take ([CCode (array_length_pos=0)]owned CplxFloat[,] marr);
-		public MatCplxFloatN.rv (uint rn, ...);
-		public MatCplxFloatN.rarrv ([CCode (array_length_pos=0)]VecCplxFloatN[] rarrv);
-		public MatCplxFloatN.rarrpv ([CCode (array_length_pos=0)]VecCplxFloatN?[] rarrpv);
-		public MatCplxFloatN.cv (uint cn, ...);
-		public MatCplxFloatN.carrv ([CCode (array_length_pos=0)]VecCplxFloatN[] carrv);
-		public MatCplxFloatN.carrpv ([CCode (array_length_pos=0)]VecCplxFloatN?[] carrpv);
+		public MatCplxFloatN.row (uint rn, ...);
+		public MatCplxFloatN.row_arr ([CCode (array_length_pos=0)]VecCplxFloatN[] row_arr);
+		public MatCplxFloatN.row_parr ([CCode (array_length_pos=0)]VecCplxFloatN?[] row_parr);
+		public MatCplxFloatN.col (uint cn, ...);
+		public MatCplxFloatN.col_arr ([CCode (array_length_pos=0)]VecCplxFloatN[] col_arr);
+		public MatCplxFloatN.col_parr ([CCode (array_length_pos=0)]VecCplxFloatN?[] col_parr);
 		public MatCplxFloatN.diag (uint n, ...);
 		public MatCplxFloatN.diag_arr ([CCode (array_length_pos=0)]CplxFloat[] darr);
 		public MatCplxFloatN.fill (uint rn, uint cn, CplxFloat fill);
 		
 		public MatCplxFloatN.uc (uint rn, uint cn, ...);
-		public MatCplxFloatN.arruc ([CCode (array_length_pos=0)]float[] mucarr);
-		public MatCplxFloatN.ucarr ([CCode (array_length_pos=0)]float[] real, [CCode (array_length_pos=0)]float[] imag);
+		public MatCplxFloatN.arruc (uint rn, uint cn, [CCode (array_length=false)]float[] mucarr);
+		public MatCplxFloatN.ucarr ([CCode (array_length_pos=0)]float[,] real, [CCode (array_length_pos=0)]float[,] imag);
 		public MatCplxFloatN.ucm (MatFloatN real, MatFloatN imag);
-		public MatCplxFloatN.rucv (uint rn, ...);
-		public MatCplxFloatN.rarrucv (uint rn, [CCode (array_length_pos=0)]VecFloatN[] rarrucv);
-		public MatCplxFloatN.rarrucpv (uint rn, [CCode (array_length_pos=0)](unowned VecFloatN?)[] rarrucpv);
-		public MatCplxFloatN.cucv (uint cn, ...);
-		public MatCplxFloatN.carrucv (uint cn, [CCode (array_length_pos=0)]VecFloatN[] carrucv);
-		public MatCplxFloatN.carrucpv (uint cn, [CCode (array_length_pos=0)](unowned VecFloatN?)[] carrucpv);
-		public MatCplxFloatN.diaguc (uint n, ...);
-		public MatCplxFloatN.diagarruc (uint n, [CCode (array_length_pos=0)]float[] arruc);
-		public MatCplxFloatN.diagucarr ([CCode (array_length_pos=0)]float[] real, [CCode (array_length_pos=0)]float[] imag);
-		public MatCplxFloatN.diagucv (VecFloatN real, VecFloatN imag);
-		public MatCplxFloatN.filluc (uint rn, uint cn, float real, float imag);
-		
-		
+		public MatCplxFloatN.row_uc (uint rn, ...);
+		public MatCplxFloatN.row_arruc (uint rn, [CCode (array_length=false)]VecFloatN[] row_arruc);
+		public MatCplxFloatN.row_parruc (uint rn, [CCode (array_length=false)]VecFloatN?[] row_parruc);
+		public MatCplxFloatN.col_uc (uint cn, ...);
+		public MatCplxFloatN.col_arruc (uint cn, [CCode (array_length=false)]VecFloatN[] col_arruc);
+		public MatCplxFloatN.col_parruc (uint cn, [CCode (array_length=false)]VecFloatN?[] col_parruc);
+		public MatCplxFloatN.diag_uc (uint n, ...);
+		public MatCplxFloatN.diag_arruc (uint n, [CCode (array_length=false)]float[] arruc);
+		public MatCplxFloatN.diag_ucarr ([CCode (array_length_pos=0)]float[] real, [CCode (array_length_pos=0)]float[] imag);
+		public MatCplxFloatN.diag_ucv (VecFloatN real, VecFloatN imag);
+		public MatCplxFloatN.fill_uc (uint rn, uint cn, float real, float imag);
 		
 		public CplxFloat		tr { owned get; }
 		public CplxFloat		det { owned get; }

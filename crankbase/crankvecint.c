@@ -3485,6 +3485,23 @@ crank_vec_int_n_add			(	CrankVecIntN*	a,
 
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] + b->data[i];
 }
+/**
+ * crank_vec_int_n_add_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Adds two vectors.
+ */
+void
+crank_vec_int_n_add_self	(	CrankVecIntN*	a,
+								CrankVecIntN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "add-self", a, b);
+
+	for (i = 0; i < a->n; i++)		a->data[i] += b->data[i];
+}
 
 /**
  * crank_vec_int_n_sub:
@@ -3507,6 +3524,24 @@ crank_vec_int_n_sub	(	CrankVecIntN*	a,
 	CRANK_VEC_ALLOC(r,gint,a->n);
 
 	for (i = 0; i < a->n; i++)		r->data[i] = a->data[i] - b->data[i];
+}
+
+/**
+ * crank_vec_int_n_sub_self:
+ * @a: A vector.
+ * @b: A vector.
+ *
+ * Subtracts @a by @b.
+ */
+void
+crank_vec_int_n_sub_self	(	CrankVecIntN*	a,
+								CrankVecIntN*	b	)
+{
+	guint	i;
+	
+	CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "sub-self", a, b);
+
+	for (i = 0; i < a->n; i++)		a->data[i] -= b->data[i];
 }
 
 /**

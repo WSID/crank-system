@@ -47,6 +47,21 @@ int main (string[] args) {
 	
 	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/shuffle/row", test_n_shuffle_row);
 	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/shuffle/col", test_n_shuffle_col);
+	
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/ucarr", test_n_init_ucarr);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/arruc", test_n_init_arruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/ucm", test_n_init_ucm);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/row/uc", test_n_init_row_uc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/row/arruc", test_n_init_row_arruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/row/parruc", test_n_init_row_parruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/col/uc", test_n_init_col_uc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/col/arruc", test_n_init_col_arruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/col/parruc", test_n_init_col_parruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/diag/uc", test_n_init_diag_uc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/diag/arruc", test_n_init_diag_arruc);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/diag/ucarr", test_n_init_diag_ucarr);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/diag/ucv", test_n_init_diag_ucv);
+	GLib.Test.add_func ("/crank/base/mat/cplx/float/n/init/fill/uc", test_n_init_fill_uc);
 
 	GLib.Test.run ();
 
@@ -390,3 +405,223 @@ private void test_n_shuffle_col () {
 	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 1.0f, 3.0f);
 	Crank.assert_eqcplxfloat_cimm  (a[0, 3], 1.0f, 4.0f);
 }
+
+private void test_n_init_ucarr () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.ucarr (
+		{{2.0f, 3.0f, 5.0f},
+		 {1.0f, 4.0f, 7.0f}},
+		{{8.0f, 9.0f, 2.0f},
+		 {0.0f, 3.0f, 0.0f}} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_arruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.arruc (2, 3,
+		{2.0f, 8.0f,    3.0f, 9.0f,    5.0f, 2.0f,
+		 1.0f, 0.0f,    4.0f, 3.0f,    7.0f, 0.0f} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_ucm () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.ucm (
+		Crank.MatFloatN.arr ({{2.0f, 3.0f, 5.0f},
+							  {1.0f, 4.0f, 7.0f}}),
+		Crank.MatFloatN.arr ({{8.0f, 9.0f, 2.0f},
+							  {0.0f, 3.0f, 0.0f}}) );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_row_uc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.row_uc (2,
+		Crank.VecFloatN (3, 2.0f, 3.0f, 5.0f),
+		Crank.VecFloatN (3, 8.0f, 9.0f, 2.0f),
+		 
+		Crank.VecFloatN (3, 1.0f, 4.0f, 7.0f),
+		Crank.VecFloatN (3, 0.0f, 3.0f, 0.0f) );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_row_arruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.row_arruc (2,
+		{Crank.VecFloatN (3, 2.0f, 3.0f, 5.0f),
+		 Crank.VecFloatN (3, 8.0f, 9.0f, 2.0f),
+		 
+		 Crank.VecFloatN (3, 1.0f, 4.0f, 7.0f),
+		 Crank.VecFloatN (3, 0.0f, 3.0f, 0.0f)} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_row_parruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.row_parruc (2,
+		{Crank.VecFloatN (3, 2.0f, 3.0f, 5.0f),
+		 Crank.VecFloatN (3, 8.0f, 9.0f, 2.0f),
+		 
+		 Crank.VecFloatN (3, 1.0f, 4.0f, 7.0f),
+		 Crank.VecFloatN (3, 0.0f, 3.0f, 0.0f)} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_col_uc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.col_uc (3,
+		Crank.VecFloatN (2, 2.0f, 1.0f),
+		Crank.VecFloatN (2, 8.0f, 0.0f),
+		
+		Crank.VecFloatN (2, 3.0f, 4.0f),
+		Crank.VecFloatN (2, 9.0f, 3.0f),
+		
+		Crank.VecFloatN (2, 5.0f, 7.0f),
+		Crank.VecFloatN (2, 2.0f, 0.0f) );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_col_arruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.col_arruc (3,
+		{Crank.VecFloatN (2, 2.0f, 1.0f),
+		 Crank.VecFloatN (2, 8.0f, 0.0f),
+		
+		 Crank.VecFloatN (2, 3.0f, 4.0f),
+		 Crank.VecFloatN (2, 9.0f, 3.0f),
+		
+		 Crank.VecFloatN (2, 5.0f, 7.0f),
+		 Crank.VecFloatN (2, 2.0f, 0.0f)} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_col_parruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.col_parruc (3,
+		{Crank.VecFloatN (2, 2.0f, 1.0f),
+		 Crank.VecFloatN (2, 8.0f, 0.0f),
+		
+		 Crank.VecFloatN (2, 3.0f, 4.0f),
+		 Crank.VecFloatN (2, 9.0f, 3.0f),
+		
+		 Crank.VecFloatN (2, 5.0f, 7.0f),
+		 Crank.VecFloatN (2, 2.0f, 0.0f)} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 2.0f, 8.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 3.0f, 9.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 5.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 4.0f, 3.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 7.0f, 0.0f);
+}
+
+private void test_n_init_diag_uc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.diag_uc (3,
+			1.0f, 1.5f, 	3.0f, 2.0f,		4.0f, 3.5f );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 1.0f, 1.5f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 3.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 2], 4.0f, 3.5f);
+}
+
+private void test_n_init_diag_arruc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.diag_arruc (3,
+			{1.0f, 1.5f, 	3.0f, 2.0f,		4.0f, 3.5f} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 1.0f, 1.5f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 3.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 2], 4.0f, 3.5f);
+}
+
+private void test_n_init_diag_ucarr () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.diag_ucarr (
+			{1.0f, 3.0f, 4.0f}, {1.5f, 2.0f, 3.5f} );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 1.0f, 1.5f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 3.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 2], 4.0f, 3.5f);
+}
+
+private void test_n_init_diag_ucv () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.diag_ucv (
+			Crank.VecFloatN.arr ({1.0f, 3.0f, 4.0f}),
+			Crank.VecFloatN.arr ({1.5f, 2.0f, 3.5f}) );
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 1.0f, 1.5f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 3.0f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 2], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 0], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 1], 0.0f, 0.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[2, 2], 4.0f, 3.5f);
+}
+
+private void test_n_init_fill_uc () {
+	Crank.MatCplxFloatN a = Crank.MatCplxFloatN.fill_uc (2, 2, 1.5f, 2.0f);
+		 
+	Crank.assert_eqcplxfloat_cimm  (a[0, 0], 1.5f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[0, 1], 1.5f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 0], 1.5f, 2.0f);
+	Crank.assert_eqcplxfloat_cimm  (a[1, 1], 1.5f, 2.0f);
+}
+
+

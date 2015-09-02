@@ -64,25 +64,25 @@ void		crank_mat_float2_init (	CrankMatFloat2*	mat,
 void		crank_mat_float2_init_arr (	CrankMatFloat2*	mat,
 										const gfloat*	marr	);
 
-void		crank_mat_float2_init_rv (	CrankMatFloat2*	mat,
-										CrankVecFloat2*	rv0,
-										CrankVecFloat2* rv1	);
+void		crank_mat_float2_init_row (	CrankMatFloat2*	mat,
+										CrankVecFloat2*	row0,
+										CrankVecFloat2* row1	);
 
-void		crank_mat_float2_init_rarrv (	CrankMatFloat2*	mat,
-											CrankVecFloat2*	rarrv	);
+void		crank_mat_float2_init_row_arr (	CrankMatFloat2*	mat,
+											CrankVecFloat2*	row_arr	);
 
-void		crank_mat_float2_init_rarrpv (	CrankMatFloat2*		mat,
-											CrankVecFloat2**	rarrpv	);
+void		crank_mat_float2_init_row_parr (	CrankMatFloat2*		mat,
+											CrankVecFloat2**	row_parr	);
 
-void		crank_mat_float2_init_cv (	CrankMatFloat2*			mat,
-										CrankVecFloat2*			cv0,
-										CrankVecFloat2*			cv1	);
+void		crank_mat_float2_init_col (	CrankMatFloat2*			mat,
+										CrankVecFloat2*			col0,
+										CrankVecFloat2*			col1	);
 
-void		crank_mat_float2_init_carrv (	CrankMatFloat2*			mat,
-											CrankVecFloat2*			carrv );
+void		crank_mat_float2_init_col_arr (	CrankMatFloat2*			mat,
+											CrankVecFloat2*			col_arr );
 
-void		crank_mat_float2_init_carrpv (	CrankMatFloat2*			mat,
-											CrankVecFloat2**		carrpv );
+void		crank_mat_float2_init_col_parr (	CrankMatFloat2*			mat,
+											CrankVecFloat2**		col_parr );
 
 void		crank_mat_float2_init_diag (	CrankMatFloat2*	mat,
 											const gfloat	m00,
@@ -280,27 +280,27 @@ void		crank_mat_float3_init (	CrankMatFloat3*	mat,
 void		crank_mat_float3_init_arr (	CrankMatFloat3*	mat,
 										const gfloat*	marr	);
 
-void		crank_mat_float3_init_rv (	CrankMatFloat3*	mat,
-										CrankVecFloat3*	rv0,
-										CrankVecFloat3* rv1,
-										CrankVecFloat3*	rv2	);
+void		crank_mat_float3_init_row (	CrankMatFloat3*	mat,
+										CrankVecFloat3*	row0,
+										CrankVecFloat3* row1,
+										CrankVecFloat3*	row2	);
 
-void		crank_mat_float3_init_rarrv (	CrankMatFloat3*	mat,
-											CrankVecFloat3*	rarrv	);
+void		crank_mat_float3_init_row_arr (	CrankMatFloat3*	mat,
+											CrankVecFloat3*	row_arr	);
 
-void		crank_mat_float3_init_rarrpv (	CrankMatFloat3*		mat,
-											CrankVecFloat3**	rarrpv	);
+void		crank_mat_float3_init_row_parr (	CrankMatFloat3*		mat,
+											CrankVecFloat3**	row_parr	);
 
-void		crank_mat_float3_init_cv (	CrankMatFloat3*			mat,
-										CrankVecFloat3*			cv0,
-										CrankVecFloat3*			cv1,
-										CrankVecFloat3*			cv2	);
+void		crank_mat_float3_init_col (	CrankMatFloat3*			mat,
+										CrankVecFloat3*			col0,
+										CrankVecFloat3*			col1,
+										CrankVecFloat3*			col2	);
 
-void		crank_mat_float3_init_carrv (	CrankMatFloat3*		mat,
-											CrankVecFloat3*		carrv );
+void		crank_mat_float3_init_col_arr (	CrankMatFloat3*		mat,
+											CrankVecFloat3*		col_arr );
 
-void		crank_mat_float3_init_carrpv (	CrankMatFloat3*			mat,
-											CrankVecFloat3**		carrpv );
+void		crank_mat_float3_init_col_parr (	CrankMatFloat3*			mat,
+											CrankVecFloat3**		col_parr );
 
 void		crank_mat_float3_init_diag (	CrankMatFloat3*	mat,
 											const gfloat	m00,
@@ -521,29 +521,29 @@ void		crank_mat_float4_init (	CrankMatFloat4*	mat,
 void		crank_mat_float4_init_arr (	CrankMatFloat4*	mat,
 										const gfloat*	marr	);
 
-void		crank_mat_float4_init_rv (	CrankMatFloat4*	mat,
-										CrankVecFloat4*	rv0,
-										CrankVecFloat4* rv1,
-										CrankVecFloat4*	rv2,
-										CrankVecFloat4*	rv3	);
+void		crank_mat_float4_init_row (	CrankMatFloat4*	mat,
+										CrankVecFloat4*	row0,
+										CrankVecFloat4* row1,
+										CrankVecFloat4*	row2,
+										CrankVecFloat4*	row3	);
 
-void		crank_mat_float4_init_rarrv (	CrankMatFloat4*		mat,
-											CrankVecFloat4*	rarrv	);
+void		crank_mat_float4_init_row_arr (	CrankMatFloat4*		mat,
+											CrankVecFloat4*	row_arr	);
 
-void		crank_mat_float4_init_rarrpv (	CrankMatFloat4*		mat,
-											CrankVecFloat4**	rarrpv	);
+void		crank_mat_float4_init_row_parr (	CrankMatFloat4*		mat,
+											CrankVecFloat4**	row_parr	);
 
-void		crank_mat_float4_init_cv (	CrankMatFloat4*			mat,
-										CrankVecFloat4*			cv0,
-										CrankVecFloat4*			cv1,
-										CrankVecFloat4*			cv2,
-										CrankVecFloat4*			cv3	);
+void		crank_mat_float4_init_col (	CrankMatFloat4*			mat,
+										CrankVecFloat4*			col0,
+										CrankVecFloat4*			col1,
+										CrankVecFloat4*			col2,
+										CrankVecFloat4*			col3	);
 
-void		crank_mat_float4_init_carrv (	CrankMatFloat4*		mat,
-											CrankVecFloat4*		carrv );
+void		crank_mat_float4_init_col_arr (	CrankMatFloat4*		mat,
+											CrankVecFloat4*		col_arr );
 
-void		crank_mat_float4_init_carrpv (	CrankMatFloat4*			mat,
-											CrankVecFloat4**		carrpv );
+void		crank_mat_float4_init_col_parr (	CrankMatFloat4*			mat,
+											CrankVecFloat4**		col_parr );
 
 void		crank_mat_float4_init_diag (	CrankMatFloat4*	mat,
 											const gfloat	m00,
@@ -731,29 +731,29 @@ void		crank_mat_float_n_init_arr_take (	CrankMatFloatN*	mat,
 									   			const guint		cn,
 									   			gfloat*	marr	);
 
-void		crank_mat_float_n_init_rv (	CrankMatFloatN*	mat,
+void		crank_mat_float_n_init_row (	CrankMatFloatN*	mat,
 										const guint		rn,
 										...	);
 
-void		crank_mat_float_n_init_rarrv (	CrankMatFloatN*		mat,
+void		crank_mat_float_n_init_row_arr (	CrankMatFloatN*		mat,
 											const guint 		rn,
-											CrankVecFloatN*		rarrv	);
+											CrankVecFloatN*		row_arr	);
 
-void		crank_mat_float_n_init_rarrpv (	CrankMatFloatN*		mat,
+void		crank_mat_float_n_init_row_parr (	CrankMatFloatN*		mat,
 											const guint 		rn,
-											CrankVecFloatN**	rarrpv	);
+											CrankVecFloatN**	row_parr	);
 
-void		crank_mat_float_n_init_cv (	CrankMatFloatN*			mat,
+void		crank_mat_float_n_init_col (	CrankMatFloatN*			mat,
 										const guint				cn,
 										...);
 
-void		crank_mat_float_n_init_carrv (	CrankMatFloatN*			mat,
+void		crank_mat_float_n_init_col_arr (	CrankMatFloatN*			mat,
 											const guint				cn,
-											CrankVecFloatN*		carrv );
+											CrankVecFloatN*		col_arr );
 
-void		crank_mat_float_n_init_carrpv (	CrankMatFloatN*			mat,
+void		crank_mat_float_n_init_col_parr (	CrankMatFloatN*			mat,
 											const guint				cn,
-											CrankVecFloatN**		carrpv );
+											CrankVecFloatN**		col_parr );
 
 void		crank_mat_float_n_init_diag (	CrankMatFloatN*	mat,
 											const guint		n,

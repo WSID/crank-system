@@ -323,7 +323,7 @@ crank_vec_cplx_float_n_init_arruc (CrankVecCplxFloatN* vec,
 }
 
 /**
- * crank_vec_cplx_float_n_init_filluc:
+ * crank_vec_cplx_float_n_init_fill_uc:
  * @vec: (out): Vector to initialize.
  * @n: Size of vector.
  * @real: real part of element to fill @vec
@@ -332,7 +332,7 @@ crank_vec_cplx_float_n_init_arruc (CrankVecCplxFloatN* vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_cplx_float_n_init_filluc	(CrankVecCplxFloatN* vec,
+crank_vec_cplx_float_n_init_fill_uc	(CrankVecCplxFloatN* vec,
 									 const guint		 n,
 									 const gfloat		 real,
 									 const gfloat		 imag	)
@@ -1902,42 +1902,4 @@ crank_vec_cplx_float_n_transform_to_string (const GValue*	src,
 	g_value_take_string (dest,
 		crank_vec_cplx_float_n_to_string (
 			(CrankVecCplxFloatN*) g_value_get_boxed (dest) ) );
-}
-
-
-//////// GI Support ////////////////////////////////////////////////////////////
-
-/**
- * crank_vec_cplx_float_n__gi_init_arruc:
- * @vec: (out): A Vector to initialize.
- * @n: Count of @arruc.
- * @arruc: (array length=n): Array of unrolled complex pairs of elements.
- * 
- * Initialize a vector with array of unrolled complex pairs.
- *
- * This function is for vala, so this function receives number of elements, 
- * instead of number of pairs.
- */
-void
-crank_vec_cplx_float_n__gi_init_arruc (	CrankVecCplxFloatN*	vec,
-										const guint			n,
-										const gfloat*		arruc )
-{
-  if (n % 2 == 1)
-    {
-      gfloat* narruc;
-      
-      g_warning ("The array has odd number of elements.");
-      
-      narruc = g_new (gfloat, n + 1);
-      memcpy (narruc, arruc, n * sizeof (gfloat));
-      narruc[n] = 0;
-  
-      crank_vec_cplx_float_n_init_arr_take (vec, (n + 1) / 2, (CrankCplxFloat*)narruc);
-    }
-  
-  else
-    {
-      crank_vec_cplx_float_n_init_arruc (vec, n / 2, arruc);
-    }
 }

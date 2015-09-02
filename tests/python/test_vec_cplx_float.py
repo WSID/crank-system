@@ -358,5 +358,68 @@ class TestVecCplxFloat(unittest.TestCase):
 		self.assertFloat (v.real, 5.0)
 		self.assertFloat (v.imag, 11.0)
 		
+	def test_n_init_arruc (self):
+		a = CrankBase.VecCplxFloatN.init_arruc (3, [2, 4,	 1, 3,	 6, 4])
+		
+		self.assertEqual (a.get_size (), 3)
+		
+		v = a.get (0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 4)
+		v = a.get (1)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 3)
+		v = a.get (2)
+		self.assertFloat (v.real, 6)
+		self.assertFloat (v.imag, 4)
+	
+	def test_n_init_ucarr (self):
+		a = CrankBase.VecCplxFloatN.init_ucarr ([2, 1, 6], [4, 3, 4])
+		
+		self.assertEqual (a.get_size (), 3)
+		
+		v = a.get (0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 4)
+		v = a.get (1)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 3)
+		v = a.get (2)
+		self.assertFloat (v.real, 6)
+		self.assertFloat (v.imag, 4)
+
+	def test_n_init_ucv (self):
+		r = CrankBase.VecFloatN.init_arr ([2, 1, 6])
+		i = CrankBase.VecFloatN.init_arr ([4, 3, 4])
+		
+		a = CrankBase.VecCplxFloatN.init_ucv (r, i)
+		
+		self.assertEqual (a.get_size (), 3)
+		
+		v = a.get (0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 4)
+		v = a.get (1)
+		self.assertFloat (v.real, 1)
+		self.assertFloat (v.imag, 3)
+		v = a.get (2)
+		self.assertFloat (v.real, 6)
+		self.assertFloat (v.imag, 4)
+		
+	def test_n_init_fill_uc (self):
+		a = CrankBase.VecCplxFloatN.init_fill_uc (3, 2, 5)
+		
+		self.assertEqual (a.get_size (), 3)
+		
+		v = a.get (0)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 5)
+		v = a.get (1)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 5)
+		v = a.get (2)
+		self.assertFloat (v.real, 2)
+		self.assertFloat (v.imag, 5)
+		
 if __name__ == '__main__':
 	unittest.main ()

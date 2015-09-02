@@ -42,6 +42,11 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/mulrm", test_n_mulrm);
 	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/mixs", test_n_mixs);
 	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/mix", test_n_mix);
+	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/init/arruc", test_n_init_arruc);
+	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/init/ucarr", test_n_init_ucarr);
+	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/init/ucv", test_n_init_ucv);
+	GLib.Test.add_func ("/crank/base/vec/cplx/float/n/init/fill_uc", test_n_init_fill_uc);
+	
 	
 	GLib.Test.run ();
 	
@@ -342,4 +347,49 @@ private void test_n_mix () {
 	v = a[1];
 	assert (float_eq (v.real, 5.0f));
 	assert (float_eq (v.imag, 11.0f));
+}
+
+
+private void test_n_init_arruc () {
+	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.arruc (3,
+			{2.0f, 4.0f,    1.0f, 3.0f,    6.0f, 4.0f});
+	
+	assert (a.size == 3);
+	
+	Crank.assert_eqcplxfloat (a[0], {2.0f, 4.0f});
+	Crank.assert_eqcplxfloat (a[1], {1.0f, 3.0f});
+	Crank.assert_eqcplxfloat (a[2], {6.0f, 4.0f});
+}
+
+private void test_n_init_ucarr () {
+	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.ucarr (
+			{2.0f, 1.0f, 6.0f}, {4.0f, 3.0f, 4.0f} );
+	
+	assert (a.size == 3);
+	
+	Crank.assert_eqcplxfloat (a[0], {2.0f, 4.0f});
+	Crank.assert_eqcplxfloat (a[1], {1.0f, 3.0f});
+	Crank.assert_eqcplxfloat (a[2], {6.0f, 4.0f});
+}
+
+private void test_n_init_ucv () {
+	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.ucv (
+			Crank.VecFloatN.arr({2.0f, 1.0f, 6.0f}),
+			Crank.VecFloatN.arr({4.0f, 3.0f, 4.0f}) );
+	
+	assert (a.size == 3);
+
+	Crank.assert_eqcplxfloat (a[0], {2.0f, 4.0f});
+	Crank.assert_eqcplxfloat (a[1], {1.0f, 3.0f});
+	Crank.assert_eqcplxfloat (a[2], {6.0f, 4.0f});
+}
+
+private void test_n_init_fill_uc () {
+	Crank.VecCplxFloatN a = Crank.VecCplxFloatN.fill_uc (3, 1.0f, 2.0f);
+	
+	assert (a.size == 3);
+
+	Crank.assert_eqcplxfloat (a[0], {1.0f, 2.0f});
+	Crank.assert_eqcplxfloat (a[1], {1.0f, 2.0f});
+	Crank.assert_eqcplxfloat (a[2], {1.0f, 2.0f});
 }

@@ -155,7 +155,7 @@ crank_mat_cplx_float_n_init_arr_take (	CrankMatCplxFloatN* mat,
 
 
 /**
- * crank_mat_cplx_float_n_init_rv:
+ * crank_mat_cplx_float_n_init_row:
  * @mat: (out): A Matrix.
  * @rn: Row count
  * @...: Row vectors.
@@ -163,7 +163,7 @@ crank_mat_cplx_float_n_init_arr_take (	CrankMatCplxFloatN* mat,
  * Initialize a matrix with given row vectors.
  */
 void
-crank_mat_cplx_float_n_init_rv (	CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_row (	CrankMatCplxFloatN*	mat,
 								  	const guint		rn,
 								   	...	)
 {
@@ -195,7 +195,7 @@ crank_mat_cplx_float_n_init_rv (	CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_rarrv:
+ * crank_mat_cplx_float_n_init_row_arr:
  * @mat: (out): A Matrix.
  * @rn: Row count.
  * @rarrv: (array length=rn): An array of row vectors.
@@ -203,7 +203,7 @@ crank_mat_cplx_float_n_init_rv (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_cplx_float_n_init_rarrv (	CrankMatCplxFloatN*		mat,
+crank_mat_cplx_float_n_init_row_arr (	CrankMatCplxFloatN*		mat,
 								  	const guint			rn,
 	 								CrankVecCplxFloatN*	rarrv	)
 {
@@ -219,31 +219,31 @@ crank_mat_cplx_float_n_init_rarrv (	CrankMatCplxFloatN*		mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_rarrpv:
+ * crank_mat_cplx_float_n_init_row_parr:
  * @mat: (out): A Matrix.
  * @rn: Row count.
- * @rarrpv: (array length=rn): An array of row vectors.
+ * @rparrv: (array length=rn): An array of row vectors.
  *
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_cplx_float_n_init_rarrpv (	CrankMatCplxFloatN*		mat,
+crank_mat_cplx_float_n_init_row_parr (	CrankMatCplxFloatN*		mat,
 									  	const guint				rn,
-	 									CrankVecCplxFloatN**	rarrpv	)
+	 									CrankVecCplxFloatN**	rparrv	)
 {
   	guint	i;
   	guint	cn = 0;
 
-  	for (i = 0; i < rn; i++) cn = MAX(cn, rarrpv[i]->n);
+  	for (i = 0; i < rn; i++) cn = MAX(cn, rparrv[i]->n);
 
 	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 	
   	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), rarrpv[i]->data, rarrpv[i]->n);
+	  	memcpy (mat->data + (i * cn), rparrv[i]->data, rparrv[i]->n);
 }
 
 /**
- * crank_mat_cplx_float_n_init_cv:
+ * crank_mat_cplx_float_n_init_col:
  * @mat: (out): A Matrix.
  * @cn: Column count.
  * @...: Column Vectors.
@@ -251,7 +251,7 @@ crank_mat_cplx_float_n_init_rarrpv (	CrankMatCplxFloatN*		mat,
  * Initialize a matrix with column vectors.
  */
 void
-crank_mat_cplx_float_n_init_cv (	CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_col (	CrankMatCplxFloatN*	mat,
 								   	const guint		cn,
 									...	)
 {
@@ -286,7 +286,7 @@ crank_mat_cplx_float_n_init_cv (	CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_carrv:
+ * crank_mat_cplx_float_n_init_col_arr:
  * @mat: (out): A Matrix.
  * @cn: Column count.
  * @carrv: (array length=cn): An array of column vectors.
@@ -294,7 +294,7 @@ crank_mat_cplx_float_n_init_cv (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_cplx_float_n_init_carrv (	CrankMatCplxFloatN* 	mat,
+crank_mat_cplx_float_n_init_col_arr (	CrankMatCplxFloatN* 	mat,
 								 	const guint				cn,
 								 	CrankVecCplxFloatN*		carrv	)
 {
@@ -314,29 +314,29 @@ crank_mat_cplx_float_n_init_carrv (	CrankMatCplxFloatN* 	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_carrpv:
+ * crank_mat_cplx_float_n_init_col_parr:
  * @mat: (out): A Matrix.
  * @cn: Column count.
- * @carrpv: (array length=cn): An array of column vectors.
+ * @cparrv: (array length=cn): An array of column vectors.
  *
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_cplx_float_n_init_carrpv (	CrankMatCplxFloatN* 	mat,
+crank_mat_cplx_float_n_init_col_parr (	CrankMatCplxFloatN* 	mat,
 									 	const guint				cn,
-									 	CrankVecCplxFloatN**	carrpv	)
+									 	CrankVecCplxFloatN**	cparrv	)
 {
   	guint	rn = 0;
   	guint	i;
   	guint	j;
 
-  	for (i = 0; i < cn; i++) rn = MAX (rn, carrpv[i]->n);
+  	for (i = 0; i < cn; i++) rn = MAX (rn, cparrv[i]->n);
 
 	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 	
   	for (i = 0; i < cn; i++) {
-	  	for (j = 0; j < carrpv[i]->n; j++) {
-	  		crank_cplx_float_copy(carrpv[i]->data + j, mat->data + (rn * j) + i);
+	  	for (j = 0; j < cparrv[i]->n; j++) {
+	  		crank_cplx_float_copy(cparrv[i]->data + j, mat->data + (rn * j) + i);
 		}
 	}
 }
@@ -539,7 +539,7 @@ crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_rucv:
+ * crank_mat_cplx_float_n_init_row_uc:
  * @mat: (out): A Matrix
  * @rn: Row count
  * @...: A Array of unrolled complex pairs of row vectors.
@@ -548,7 +548,7 @@ crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_rucv (CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_row_uc (CrankMatCplxFloatN*	mat,
 								  const guint			rn,
 								  ... )
 {
@@ -583,7 +583,7 @@ crank_mat_cplx_float_n_init_rucv (CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_rarrucv:
+ * crank_mat_cplx_float_n_init_row_arruc:
  * @mat: (out): A Matrix.
  * @rn: Row count.
  * @rarrucv: (array): Array of unrolled complex pairs of vectors, one for real,
@@ -592,7 +592,7 @@ crank_mat_cplx_float_n_init_rucv (CrankMatCplxFloatN*	mat,
  * Intialize a matrix with unrolled complex pairs of vectors.
  */
 void
-crank_mat_cplx_float_n_init_rarrucv (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_row_arruc (CrankMatCplxFloatN* mat,
 									 const guint		  rn,
 									 CrankVecFloatN*	  rarrucv)
 {
@@ -618,7 +618,7 @@ crank_mat_cplx_float_n_init_rarrucv (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_rarrucpv:
+ * crank_mat_cplx_float_n_init_row_parruc:
  * @mat: (out): A Matrix.
  * @rn: Row count.
  * @rarrucpv: (array): Array of unrolled complex pairs of pointers to vectors,
@@ -627,7 +627,7 @@ crank_mat_cplx_float_n_init_rarrucv (CrankMatCplxFloatN* mat,
  * Initialize a matrix with unrolled complex pairs of pointers to vectors.
  */
 void
-crank_mat_cplx_float_n_init_rarrucpv (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_row_parruc (CrankMatCplxFloatN* mat,
 									  const guint		  rn,
 									  CrankVecFloatN**	  rarrucpv)
 {
@@ -653,7 +653,7 @@ crank_mat_cplx_float_n_init_rarrucpv (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_cucv:
+ * crank_mat_cplx_float_n_init_col_uc:
  * @mat: (out): A Matrix
  * @cn: Column count
  * @...: A list of row vectors.
@@ -662,7 +662,7 @@ crank_mat_cplx_float_n_init_rarrucpv (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_col_uc (CrankMatCplxFloatN* mat,
 								  const guint		  cn,
 								  ...)
 {
@@ -697,7 +697,7 @@ crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_carrucv:
+ * crank_mat_cplx_float_n_init_col_arruc:
  * @mat: (out): A Matrix
  * @cn: Column count
  * @carrucv: (array): A Array of row vectors.
@@ -706,7 +706,7 @@ crank_mat_cplx_float_n_init_cucv (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_col_arruc (CrankMatCplxFloatN* mat,
 									 const guint		  cn,
 									 CrankVecFloatN*	  carrucv)
 {
@@ -732,7 +732,7 @@ crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_carrucpv:
+ * crank_mat_cplx_float_n_init_col_parruc:
  * @mat: (out): A Matrix
  * @cn: Column count
  * @carrucpv: (array): An array of row vectors.
@@ -741,7 +741,7 @@ crank_mat_cplx_float_n_init_carrucv (CrankMatCplxFloatN* mat,
  * represents a row, one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_carrucpv (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_col_parruc (CrankMatCplxFloatN* mat,
 									  const guint		  cn,
 									  CrankVecFloatN**	  carrucpv)
 {
@@ -767,7 +767,7 @@ crank_mat_cplx_float_n_init_carrucpv (CrankMatCplxFloatN* mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_diaguc:
+ * crank_mat_cplx_float_n_init_diag_uc:
  * @mat: (out): A Matrix.
  * @n: Diagonal component count.
  * @...: A list of unrolled complex pairs.
@@ -775,7 +775,7 @@ crank_mat_cplx_float_n_init_carrucpv (CrankMatCplxFloatN* mat,
  * Initialize a diagonal matrix with list of unrolled complex pairs.
  */
 void
-crank_mat_cplx_float_n_init_diaguc (CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_diag_uc (CrankMatCplxFloatN*	mat,
 							  		const guint			n,
 							  		... )
 {
@@ -793,7 +793,7 @@ crank_mat_cplx_float_n_init_diaguc (CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_diagarruc:
+ * crank_mat_cplx_float_n_init_diag_arruc:
  * @mat: (out): A Matrix.
  * @n: Diagonal component count.
  * @arruc: (array): An array of unrolled complex pairs.
@@ -801,7 +801,7 @@ crank_mat_cplx_float_n_init_diaguc (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with array of unrolled complex pairs.
  */
 void
-crank_mat_cplx_float_n_init_diagarruc (CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_diag_arruc (CrankMatCplxFloatN*	mat,
 								 	   const guint			n,
 								 	   const gfloat*		arruc)
 {
@@ -809,7 +809,7 @@ crank_mat_cplx_float_n_init_diagarruc (CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_diagucarr:
+ * crank_mat_cplx_float_n_init_diag_ucarr:
  * @mat: (out): A Matrix.
  * @n: Diagonal component count.
  * @real: (array length=n): An array of real entities.
@@ -818,7 +818,7 @@ crank_mat_cplx_float_n_init_diagarruc (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with unrolled complex pair of arrays.
  */
 void
-crank_mat_cplx_float_n_init_diagucarr (CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_diag_ucarr (CrankMatCplxFloatN*	mat,
 								 		const guint			n,
 								 		const gfloat*		real,
 								 		const gfloat*		imag)
@@ -832,7 +832,7 @@ crank_mat_cplx_float_n_init_diagucarr (CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_diagucv:
+ * crank_mat_cplx_float_n_init_diag_ucv:
  * @mat: (out): A Matrix.
  * @real: A vector of real entities.
  * @imag: A vector of imaginary entities.
@@ -840,7 +840,7 @@ crank_mat_cplx_float_n_init_diagucarr (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with unrolled complex pair of vectors.
  */
 void
-crank_mat_cplx_float_n_init_diagucv (CrankMatCplxFloatN*	mat,
+crank_mat_cplx_float_n_init_diag_ucv (CrankMatCplxFloatN*	mat,
 							   		 CrankVecFloatN*		real,
 							   	     CrankVecFloatN*		imag)
 {
@@ -856,7 +856,7 @@ crank_mat_cplx_float_n_init_diagucv (CrankMatCplxFloatN*	mat,
 }
 
 /**
- * crank_mat_cplx_float_n_init_filluc:
+ * crank_mat_cplx_float_n_init_fill_uc:
  * @mat: (out): A Matrix.
  * @rn: Row count
  * @cn: Column count 
@@ -866,7 +866,7 @@ crank_mat_cplx_float_n_init_diagucv (CrankMatCplxFloatN*	mat,
  * Initialize a matrix by filling specific value.
  */
 void
-crank_mat_cplx_float_n_init_filluc (CrankMatCplxFloatN* mat,
+crank_mat_cplx_float_n_init_fill_uc (CrankMatCplxFloatN* mat,
 							  		const guint			rn,
 							  		const guint			cn,
 							  		const gfloat		real,
@@ -3120,145 +3120,6 @@ crank_mat_cplx_float_n_diag_inverse (	CrankMatCplxFloatN*	a,
 		
 		crank_mat_cplx_float_n_set (r, i, i, &dcomp);
 	}
-}
-
-
-//////// Vala Support ////////////////////////////////////////////////////////////
-
-/**
- * crank_mat_cplx_float_n__vala_init_arruc:
- * @mat: (out): A Matrix to initialize.
- * @rn: Row count.
- * @cn: Column count.
- * @arruc: Array of unrolled complex pairs of elements.
- * 
- * Initialize a matrix with given array of unrolled complex pairs of elements.
- *
- * This function is for vala, so this function receives number of elements, 
- * instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__vala_init_arruc (	CrankMatCplxFloatN*	mat,
-											const guint			rn,
-											const guint			cn,
-											const gfloat*		arruc )
-{
-  if (cn % 2 == 1)
-    g_warning ("The column has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_arruc (mat, rn, cn / 2, arruc);
-}
-
-
-/**
- * crank_mat_cplx_float_n__gi_init_rarrucv:
- * @mat: (out): A Matrix to initialize.
- * @rn: Double of row count.
- * @rarrucv: (array length=rn): Array of unrolled complex pairs of vectors.
- *
- * Initialize a matrix with given array of unrolled complex pairs of vectors.
- *
- * This function is for GIR consumers, so this function receives number of
- * vectors instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__gi_init_rarrucv (CrankMatCplxFloatN* mat,
-									   const guint		  rn,
-									   CrankVecFloatN*	  rarrucv)
-{
-  if (rn % 2 == 1)
-    g_warning ("The array has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_rarrucv (mat, rn / 2, rarrucv);
-}
-
-/**
- * crank_mat_cplx_float_n__gi_init_rarrucpv:
- * @mat: (out): A Matrix to initialize.
- * @rn: Double of row count.
- * @rarrucpv: (array length=rn): Array of unrolled complex pairs of pointers of vectors.
- *
- * Initialize a matrix with given array of unrolled complex pairs of pointers of
- * vectors.
- *
- * This function is for GIR consumers, so this function receives number of
- * vectors instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__gi_init_rarrucpv (CrankMatCplxFloatN* mat,
-										  const guint		  rn,
-										  CrankVecFloatN**	rarrucpv)
-{
-  if (rn % 2 == 1)
-    g_warning ("The array has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_rarrucpv (mat, rn / 2, rarrucpv);
-}
-
-/**
- * crank_mat_cplx_float_n__gi_init_carrucv:
- * @mat: (out): A Matrix to initialize.
- * @cn: Double of column count.
- * @carrucv: (array length=cn): Array of unrolled complex pairs of vectors.
- *
- * Initialize a matrix with given array of unrolled complex pairs of vectors.
- *
- * This function is for GIR consumers, so this function receives number of
- * vectors instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__gi_init_carrucv (CrankMatCplxFloatN* mat,
-										  const guint		  cn,
-										  CrankVecFloatN*	  carrucv)
-{
-  if (cn % 2 == 1)
-    g_warning ("The array has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_carrucv (mat, cn / 2, carrucv);
-}
-
-/**
- * crank_mat_cplx_float_n__gi_init_carrucpv:
- * @mat: (out): A Matrix to initialize.
- * @cn: Double of column count.
- * @carrucpv: (array length=cn): Array of unrolled complex pairs of vectors.
- *
- * Initialize a matrix with given array of unrolled complex pairs of vectors.
- *
- * This function is for GIR consumers, so this function receives number of
- * vectors instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__gi_init_carrucpv (CrankMatCplxFloatN* mat,
-										  const guint		  cn,
-										  CrankVecFloatN**	carrucpv)
-{
-  if (cn % 2 == 1)
-    g_warning ("The array has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_carrucpv (mat, cn / 2, carrucpv);
-}
-
-/**
- * crank_mat_cplx_float_n__gi_init_diagarruc:
- * @mat: (out): A Matrix to initialize.
- * @n: Double of number of diagonal elements.
- * @arruc: (array length=n): Array of unrolled complex pairs of values.
- *
- * Initialize a matrix with given array of unrolled complex pairs of vectors.
- *
- * This function is for GIR consumers, so this function receives number of
- * vectors instead of number of pairs.
- */
-void
-crank_mat_cplx_float_n__gi_init_diagarruc (CrankMatCplxFloatN*	mat,
-								 		   const guint			n,
-										   const gfloat*		arruc)
-{
-  if (n % 2 == 1)
-    g_warning ("The array has odd number of elements.");
-  else
-    crank_mat_cplx_float_n_init_diagarruc (mat, n / 2, arruc);
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
