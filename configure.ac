@@ -86,10 +86,11 @@ AC_OUTPUT([
 		crankbase/Makefile
 		tests/Makefile
 		tests/c/Makefile
-		tests/c/bench/Makefile
 		tests/python/Makefile
 		tests/vala/Makefile
 		docs/Makefile
+		bench/Makefile
+		bench/c/Makefile
 		po/Makefile.in
 		
 		crank-base-0.0.pc

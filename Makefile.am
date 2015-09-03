@@ -6,6 +6,7 @@ SUBDIRS= \
 		crankbase \
 		docs \
 		tests \
+		bench \
 		po
 
 pkgconfigdir= $(libdir)/pkgconfig
