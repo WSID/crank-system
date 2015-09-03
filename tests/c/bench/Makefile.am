@@ -12,6 +12,8 @@ TEST_BASE_LDADD= \
 
 # 대상 목록
 test_programs= \
-		test_perf_digraph
+		test_perf_digraph \
+		test_perf_matfloat
 
 test_perf_digraph_LDADD=  $(TEST_BASE_LDADD)
+test_perf_matfloat_LDADD=  $(TEST_BASE_LDADD)
