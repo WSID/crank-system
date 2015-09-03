@@ -30,6 +30,10 @@ static void	test_lu (void);
 
 static void	test_lu_p (void);
 
+static void test_ch (void);
+
+static void test_ldl (void);
+
 static void test_gram_schmidt (void);
 
 static void test_qr_householder (void);
