@@ -113,6 +113,95 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 		(m)->cn = _cn;														\
 	} G_STMT_END
 
+//////// Getter and setter /////////////////////////////////////////////////////
+
+/**
+ * CRANK_VEC_GET:
+ * @v: Variable sized vector item.
+ * @_i: Index to get.
+ *
+ * Gets a item at @_i.
+ *
+ * Returns: an item at @_i
+ */
+#define CRANK_VEC_GET(v,_i)	((v)->data[(_i)])
+
+/**
+ * CRANK_VEC_SET:
+ * @v: Variable sized vector item.
+ * @_i: Index to get.
+ * @_value: A Value to set.
+ *
+ * Sets an item at @_i as @_value.
+ */
+#define CRANK_VEC_SET(v,_i,_value)	((v)->data[(_i)] = (_value))
+
+/**
+ * CRANK_VEC_GETP:
+ * @v: Variable sized vector item.
+ * @_i: Index to get.
+ *
+ * Gets a pointer to item at @_i.
+ *
+ * Returns: a pointer to an item at @_i
+ */
+#define CRANK_VEC_GETP(v,_i)	((v)->data + (_i))
+
+
+/**
+ * CRANK_MAT_GET:
+ * @v: Variable sized vector item.
+ * @_ri: Row index to get.
+ * @_ci: Col index to get.
+ *
+ * Gets a item at (@_ri, @_ci).
+ *
+ * Returns: an item at (@_ri, @_ci).
+ */
+#define CRANK_MAT_GET(m,_ri,_ci)	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)])
+
+/**
+ * CRANK_MAT_SET:
+ * @v: Variable sized vector item.
+ * @_ri: Row index to get.
+ * @_ci: Col index to get.
+ * @_value: A Value to set.
+ *
+ * Sets an item at (@_ri, @_ci) as @_value.
+ */
+#define CRANK_MAT_SET(m,_ri,_ci,_value)	\
+	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)] = (_value))
+
+/**
+ * CRANK_MAT_GETP:
+ * @v: Variable sized vector item.
+ * @_ri: Row index to get.
+ * @_ci: Col index to get.
+ *
+ * Gets a pointer to item at (@_ri, @_ci).
+ *
+ * Returns: a pointer to an item at (@_ri, @_ci).
+ */
+#define CRANK_MAT_GETP(m,_ri,_ci)	\
+	((m)->data + CRANK_MAT_FLAT_INDEX (m, _ri, _ci))
+
+
+
+//////// Miscellnous Macros ////////////////////////////////////////////////////
+
+/**
+ * CRANK_MAT_FLAT_INDEX:
+ * @m: Variable sized matrix item.
+ * @_ri: Row index.
+ * @_ci: Column index.
+ * 
+ * Gets flatten element index from 2-dimensional indices.
+ *
+ * Returns: Flatten index.
+ */
+#define CRANK_MAT_FLAT_INDEX(m,_ri,_ci)	((m)->cn * (_ri) + (_ci))
+
+
 //////// Warning macro /////////////////////////////////////////////////////////
 /**
  * CRANK_VEC_WARN_IF_SIZE_MISMATCH2:

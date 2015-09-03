@@ -28,6 +28,12 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/advmat/lu_p/mat/float/n",
 		test_lu_p );
 	
+	GLib.Test.add_func ("/crank/base/advmat/ch/mat/float/n",
+		test_ch );
+	
+	GLib.Test.add_func ("/crank/base/advmat/ldl/mat/float/n",
+		test_ldl );
+	
 	GLib.Test.add_func ("/crank/base/advmat/qr/gram_schmidt/mat/float/n",
 		test_gram_schmidt );
 	
@@ -46,16 +52,6 @@ int main (string[] args) {
 }
 
 
-private bool float_eq (float a, float b, float delta = 0.0001f) {
-	bool result = ((b-delta < a) && (a < b+delta));
-
-	if (! result) warning ("%g != %g (diff=%g)", a, b, delta);
-
-	return result;
-}
-
-
-
 private void test_lu () {
 	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
 		{3.0f,	12.0f,	21.0f},
@@ -67,30 +63,30 @@ private void test_lu () {
 	
 	assert (Crank.lu_mat_float_n (a, out l, out u));
 	
-	assert (float_eq (l[0, 0], 3));
-	assert (float_eq (l[0, 1], 0));
-	assert (float_eq (l[0, 2], 0));
+	Crank.assert_eqfloat (l[0, 0], 3);
+	Crank.assert_eqfloat (l[0, 1], 0);
+	Crank.assert_eqfloat (l[0, 2], 0);
 	
-	assert (float_eq (l[1, 0], 8));
-	assert (float_eq (l[1, 1], 7));
-	assert (float_eq (l[1, 2], 0));
+	Crank.assert_eqfloat (l[1, 0], 8);
+	Crank.assert_eqfloat (l[1, 1], 7);
+	Crank.assert_eqfloat (l[1, 2], 0);
 	
-	assert (float_eq (l[2, 0], 2));
-	assert (float_eq (l[2, 1], 8));
-	assert (float_eq (l[2, 2], 3));
+	Crank.assert_eqfloat (l[2, 0], 2);
+	Crank.assert_eqfloat (l[2, 1], 8);
+	Crank.assert_eqfloat (l[2, 2], 3);
 	
 	
-	assert (float_eq (u[0, 0], 1));
-	assert (float_eq (u[0, 1], 4));
-	assert (float_eq (u[0, 2], 7));
+	Crank.assert_eqfloat (u[0, 0], 1);
+	Crank.assert_eqfloat (u[0, 1], 4);
+	Crank.assert_eqfloat (u[0, 2], 7);
 	
-	assert (float_eq (u[1, 0], 0));
-	assert (float_eq (u[1, 1], 1));
-	assert (float_eq (u[1, 2], 4));
+	Crank.assert_eqfloat (u[1, 0], 0);
+	Crank.assert_eqfloat (u[1, 1], 1);
+	Crank.assert_eqfloat (u[1, 2], 4);
 	
-	assert (float_eq (u[2, 0], 0));
-	assert (float_eq (u[2, 1], 0));
-	assert (float_eq (u[2, 2], 1));
+	Crank.assert_eqfloat (u[2, 0], 0);
+	Crank.assert_eqfloat (u[2, 1], 0);
+	Crank.assert_eqfloat (u[2, 2], 1);
 }
 
 private void test_lu_p () {
@@ -109,30 +105,81 @@ private void test_lu_p () {
 	assert (p[1] == 2);
 	assert (p[2] == 0);
 	
-	assert (float_eq (l[0, 0], 3.0f));
-	assert (float_eq (l[0, 1], 0.0f));
-	assert (float_eq (l[0, 2], 0.0f));
+	Crank.assert_eqfloat (l[0, 0], 3.0f);
+	Crank.assert_eqfloat (l[0, 1], 0.0f);
+	Crank.assert_eqfloat (l[0, 2], 0.0f);
 	
-	assert (float_eq (l[1, 0], 2.0f));
-	assert (float_eq (l[1, 1], 16.0f));
-	assert (float_eq (l[1, 2], 0.0f));
+	Crank.assert_eqfloat (l[1, 0], 2.0f);
+	Crank.assert_eqfloat (l[1, 1], 16.0f);
+	Crank.assert_eqfloat (l[1, 2], 0.0f);
 	
-	assert (float_eq (l[2, 0], 0.0f));
-	assert (float_eq (l[2, 1], 4.0f));
-	assert (float_eq (l[2, 2], 2.0f));
+	Crank.assert_eqfloat (l[2, 0], 0.0f);
+	Crank.assert_eqfloat (l[2, 1], 4.0f);
+	Crank.assert_eqfloat (l[2, 2], 2.0f);
 	
 	
-	assert (float_eq (u[0, 0], 1.0f));
-	assert (float_eq (u[0, 1], 2.0f));
-	assert (float_eq (u[0, 2], 2.0f));
+	Crank.assert_eqfloat (u[0, 0], 1.0f);
+	Crank.assert_eqfloat (u[0, 1], 2.0f);
+	Crank.assert_eqfloat (u[0, 2], 2.0f);
 	
-	assert (float_eq (u[1, 0], 0.0f));
-	assert (float_eq (u[1, 1], 1.0f));
-	assert (float_eq (u[1, 2], 0.25f));
+	Crank.assert_eqfloat (u[1, 0], 0.0f);
+	Crank.assert_eqfloat (u[1, 1], 1.0f);
+	Crank.assert_eqfloat (u[1, 2], 0.25f);
 	
-	assert (float_eq (u[2, 0], 0.0f));
-	assert (float_eq (u[2, 1], 0.0f));
-	assert (float_eq (u[2, 2], 1.0f));
+	Crank.assert_eqfloat (u[2, 0], 0.0f);
+	Crank.assert_eqfloat (u[2, 1], 0.0f);
+	Crank.assert_eqfloat (u[2, 2], 1.0f);
+}
+
+private void test_ch () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{  4.0f,  12.0f, -16.0f},
+		{ 12.0f,  37.0f, -43.0f},
+		{-16.0f, -43.0f,  98.0f}}	);
+	
+	Crank.MatFloatN	l;
+		
+	assert(Crank.ch_mat_float_n (a, out l));
+	
+	Crank.assert_eqfloat (l[0, 0], 2);
+	Crank.assert_eqfloat (l[0, 1], 0);
+	Crank.assert_eqfloat (l[0, 2], 0);
+	
+	Crank.assert_eqfloat (l[1, 0], 6);
+	Crank.assert_eqfloat (l[1, 1], 1);
+	Crank.assert_eqfloat (l[1, 2], 0);
+	
+	Crank.assert_eqfloat (l[2, 0], -8);
+	Crank.assert_eqfloat (l[2, 1],  5);
+	Crank.assert_eqfloat (l[2, 2],  3);
+}
+
+private void test_ldl () {
+	Crank.MatFloatN	a = Crank.MatFloatN.arr ( {
+		{  4.0f,  12.0f, -16.0f},
+		{ 12.0f,  37.0f, -43.0f},
+		{-16.0f, -43.0f,  98.0f}}	);
+	
+	Crank.MatFloatN	l;
+	Crank.VecFloatN d;
+		
+	assert(Crank.ldl_mat_float_n (a, out l, out d));
+	
+	Crank.assert_eqfloat (l[0, 0], 1);
+	Crank.assert_eqfloat (l[0, 1], 0);
+	Crank.assert_eqfloat (l[0, 2], 0);
+	
+	Crank.assert_eqfloat (l[1, 0], 3);
+	Crank.assert_eqfloat (l[1, 1], 1);
+	Crank.assert_eqfloat (l[1, 2], 0);
+	
+	Crank.assert_eqfloat (l[2, 0], -4);
+	Crank.assert_eqfloat (l[2, 1],  5);
+	Crank.assert_eqfloat (l[2, 2],  1);
+	
+	Crank.assert_eqfloat (d[0], 4);
+	Crank.assert_eqfloat (d[1], 1);
+	Crank.assert_eqfloat (d[2], 9);
 }
 
 
@@ -147,30 +194,30 @@ private void test_gram_schmidt () {
 	
 	assert (Crank.gram_schmidt_mat_float_n (a, out q, out r));
 	
-	assert (float_eq (q[0, 0], 0.5571f));
-	assert (float_eq (q[0, 1], 0.7459f));
-	assert (float_eq (q[0, 2], -0.3651f));
+	Crank.assert_eqfloat (q[0, 0], 0.5571f);
+	Crank.assert_eqfloat (q[0, 1], 0.7459f);
+	Crank.assert_eqfloat (q[0, 2], -0.3651f);
 	
-	assert (float_eq (q[1, 0], 0.3714f));
-	assert (float_eq (q[1, 1], 0.1695f));
-	assert (float_eq (q[1, 2], 0.9129f));
+	Crank.assert_eqfloat (q[1, 0], 0.3714f);
+	Crank.assert_eqfloat (q[1, 1], 0.1695f);
+	Crank.assert_eqfloat (q[1, 2], 0.9129f);
 	
-	assert (float_eq (q[2, 0], 0.7428f));
-	assert (float_eq (q[2, 1], -0.6442f));
-	assert (float_eq (q[2, 2], -0.1826f));
+	Crank.assert_eqfloat (q[2, 0], 0.7428f);
+	Crank.assert_eqfloat (q[2, 1], -0.6442f);
+	Crank.assert_eqfloat (q[2, 2], -0.1826f);
 	
 	
-	assert (float_eq (r[0, 0], 5.3852f));
-	assert (float_eq (r[0, 1], 4.4567f));
-	assert (float_eq (r[0, 2], 1.6713f));
+	Crank.assert_eqfloat (r[0, 0], 5.3852f);
+	Crank.assert_eqfloat (r[0, 1], 4.4567f);
+	Crank.assert_eqfloat (r[0, 2], 1.6713f);
 	
-	assert (float_eq (r[1, 0], 0.0f));
-	assert (float_eq (r[1, 1], 2.0342f));
-	assert (float_eq (r[1, 2], 0.2712f));
+	Crank.assert_eqfloat (r[1, 0], 0.0f);
+	Crank.assert_eqfloat (r[1, 1], 2.0342f);
+	Crank.assert_eqfloat (r[1, 2], 0.2712f);
 	
-	assert (float_eq (r[2, 0], 0.0f));
-	assert (float_eq (r[2, 1], 0.0f));
-	assert (float_eq (r[2, 2], 0.3651f));
+	Crank.assert_eqfloat (r[2, 0], 0.0f);
+	Crank.assert_eqfloat (r[2, 1], 0.0f);
+	Crank.assert_eqfloat (r[2, 2], 0.3651f);
 }
 
 
@@ -184,17 +231,17 @@ private void test_qr_householder () {
 	
 	assert (Crank.qr_householder_mat_float_n (a, out r));
 	
-	assert (float_eq (r[0, 0], 5.3852f));
-	assert (float_eq (r[0, 1], 4.4567f));
-	assert (float_eq (r[0, 2], 1.6713f));
+	Crank.assert_eqfloat (r[0, 0], 5.3852f);
+	Crank.assert_eqfloat (r[0, 1], 4.4567f);
+	Crank.assert_eqfloat (r[0, 2], 1.6713f);
 	
-	assert (float_eq (r[1, 0], 0.0f));
-	assert (float_eq (r[1, 1], 2.0342f));
-	assert (float_eq (r[1, 2], 0.2712f));
+	Crank.assert_eqfloat (r[1, 0], 0.0f);
+	Crank.assert_eqfloat (r[1, 1], 2.0342f);
+	Crank.assert_eqfloat (r[1, 2], 0.2712f);
 	
-	assert (float_eq (r[2, 0], 0.0f));
-	assert (float_eq (r[2, 1], 0.0f));
-	assert (float_eq (r[2, 2], 0.3651f));
+	Crank.assert_eqfloat (r[2, 0], 0.0f);
+	Crank.assert_eqfloat (r[2, 1], 0.0f);
+	Crank.assert_eqfloat (r[2, 2], 0.3651f);
 }
 
 
@@ -208,17 +255,17 @@ private void test_qr_givens () {
 	
 	assert (Crank.qr_givens_mat_float_n (a, out r));
 	
-	assert (float_eq (r[0, 0], 5.3852f));
-	assert (float_eq (r[0, 1], 4.4567f));
-	assert (float_eq (r[0, 2], 1.6713f));
+	Crank.assert_eqfloat (r[0, 0], 5.3852f);
+	Crank.assert_eqfloat (r[0, 1], 4.4567f);
+	Crank.assert_eqfloat (r[0, 2], 1.6713f);
 	
-	assert (float_eq (r[1, 0], 0.0f));
-	assert (float_eq (r[1, 1], 2.0342f));
-	assert (float_eq (r[1, 2], 0.2712f));
+	Crank.assert_eqfloat (r[1, 0], 0.0f);
+	Crank.assert_eqfloat (r[1, 1], 2.0342f);
+	Crank.assert_eqfloat (r[1, 2], 0.2712f);
 	
-	assert (float_eq (r[2, 0], 0.0f));
-	assert (float_eq (r[2, 1], 0.0f));
-	assert (float_eq (r[2, 2], 0.3651f));
+	Crank.assert_eqfloat (r[2, 0], 0.0f);
+	Crank.assert_eqfloat (r[2, 1], 0.0f);
+	Crank.assert_eqfloat (r[2, 2], 0.3651f);
 }
 
 
@@ -230,10 +277,10 @@ private void test_eval_power () {
 
 	Crank.VecFloatN	evec;
 	
-	assert (float_eq (Crank.eval_power_mat_float_n (a, null, out evec), 21.4467f));
-	assert (float_eq (evec[0], 0.1729f));
-	assert (float_eq (evec[1], 0.4671f));
-	assert (float_eq (evec[2], 0.8671f));
+	Crank.assert_eqfloat (Crank.eval_power_mat_float_n (a, null, out evec), 21.4467f);
+	Crank.assert_eqfloat (evec[0], 0.1729f);
+	Crank.assert_eqfloat (evec[1], 0.4671f);
+	Crank.assert_eqfloat (evec[2], 0.8671f);
 }
 
 

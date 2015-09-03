@@ -63,6 +63,10 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/advmat/lu/mat/float/n", test_lu);
 
 	g_test_add_func ("/crank/base/advmat/lup/mat/float/n", test_lu_p);
+	
+	g_test_add_func ("/crank/base/advmat/ch/mat/float/n", test_ch);
+	
+	g_test_add_func ("/crank/base/advmat/ldl/mat/float/n", test_ldl);
 
 	g_test_add_func ("/crank/base/advmat/qr/gram_schmidt/mat/float/n", test_gram_schmidt);
 	
@@ -109,12 +113,10 @@ test_lu (void)
   	CrankMatFloatN	l = {0};
   	CrankMatFloatN	u = {0};
 
-  	g_message ("initializing A");
   	crank_mat_float_n_init (&a, 3, 3,
 		3.0f,	12.0f,	21.0f,
 		8.0f,	39.0f,	84.0f,
 		2.0f,	16.0f,	49.0f	);
-  	g_message ("initialized A");
 
 	g_assert (crank_lu_mat_float_n (&a, &l, &u));
 
@@ -197,6 +199,66 @@ test_lu_p (void)
 	crank_permutation_fini (&p);
 	crank_mat_float_n_fini (&l);
 	crank_mat_float_n_fini (&u);
+}
+
+static void
+test_ch (void)
+{
+	CrankMatFloatN	a;
+	CrankMatFloatN	l;
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		 4.0f,  12.0f, -16.0f,
+		12.0f,  37.0f, -43.0f,
+	   -16.0f, -43.0f,  98.0f );
+	   
+	g_assert (crank_ch_mat_float_n (&a, &l));
+	
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 0), ==,  2.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 1), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 2), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 0), ==,  6.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 1), ==,  1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 2), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 0), ==, -8.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 1), ==,  5.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 2), ==,  3.0f);
+	
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&l);
+}
+
+static void
+test_ldl (void)
+{
+	CrankMatFloatN	a;
+	CrankMatFloatN	l;
+	CrankVecFloatN	d;
+	
+	crank_mat_float_n_init (&a, 3, 3,
+		 4.0f,  12.0f, -16.0f,
+		12.0f,  37.0f, -43.0f,
+	   -16.0f, -43.0f,  98.0f );
+	   
+	g_assert (crank_ldl_mat_float_n (&a, &l, &d));
+	
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 0), ==,  1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 1), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 0, 2), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 0), ==,  3.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 1), ==,  1.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 1, 2), ==,  0.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 0), ==, -4.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 1), ==,  5.0f);
+	crank_assert_cmpfloat (crank_mat_float_n_get (&l, 2, 2), ==,  1.0f);
+	
+	crank_assert_cmpfloat (crank_vec_float_n_get (&d, 0), ==, 4.0f);
+	crank_assert_cmpfloat (crank_vec_float_n_get (&d, 1), ==, 1.0f);
+	crank_assert_cmpfloat (crank_vec_float_n_get (&d, 2), ==, 9.0f);
+	
+	crank_vec_float_n_fini (&d);
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&l);
 }
 
 static void

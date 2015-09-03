@@ -47,6 +47,10 @@ gboolean	crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 gboolean	crank_ch_mat_float_n (	CrankMatFloatN*	a,
 									CrankMatFloatN*	l	);
 
+gboolean	crank_ldl_mat_float_n (	CrankMatFloatN*	a,
+									CrankMatFloatN*	l,
+									CrankVecFloatN* d	);
+
 
 gboolean	crank_gram_schmidt_mat_float_n (	CrankMatFloatN*	a,
 												CrankMatFloatN*	q,

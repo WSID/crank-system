@@ -204,11 +204,11 @@ crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 	for (i = 0; i < a->rn; i++) {
 		guint	max_index = i;
 		gfloat	max =
-				crank_mat_float_n_get (a,	crank_permutation_get (p, i), i);
+				ABS (crank_mat_float_n_get (a,	crank_permutation_get (p, i), i));
 				
 		for (j = i + 1; j < a->rn; j++) {
 			gfloat	cur =
-				crank_mat_float_n_get (a, 	crank_permutation_get (p, j), i);
+				ABS (crank_mat_float_n_get (a, 	crank_permutation_get (p, j), i));
 			
 			if (max < cur) {
 				max_index = j;
@@ -222,6 +222,141 @@ crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 	// Do LU Decomposition.
 	crank_mat_float_n_shuffle_row (a, p, &na);
 	return crank_lu_mat_float_n (&na, l, u);
+}
+
+/**
+ * crank_ch_mat_float_n:
+ * @a: A Matrix.
+ * @l: (out): A Lower triangular matrix.
+ *
+ * Performs cholesky decomposition on @a, which results in @l, which
+ *
+ * * @l.mul (@l.star()) == @a.
+ *
+ * Returns: Whether cholesky decomposition performed on @a.
+ */
+gboolean
+crank_ch_mat_float_n (CrankMatFloatN*	a,
+					  CrankMatFloatN*	l	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("advmat", "ch-MatFloatN", a, FALSE);
+	
+	crank_mat_float_n_init_fill (l, a->rn, a->rn, 0.0f);
+	
+	// Proceed row by row.
+	for (i = 0; i < a->rn; i++) {
+		gfloat l_ij;
+		
+		// Gets l[i, j] = (a[i, j] - l[i,0]*l[j,0] - l[i,1]*l[j,1] ...) / l[j,j]
+		
+		for (j = 0; j < i; j++) {
+			gfloat d;
+		
+			l_ij = crank_mat_float_n_get (a, i, j);
+			for (k = 0; k < j; k++) {
+				l_ij -=	crank_mat_float_n_get (l, i, k) *
+						crank_mat_float_n_get (l, j, k);
+			}
+			l_ij /= crank_mat_float_n_get (l, j, j);
+			crank_mat_float_n_set (l, i, j, l_ij);
+		}
+		
+		
+		// Gets l[i, i] == a[i, i] - l[i, 0]**2 - ....
+		
+		l_ij = crank_mat_float_n_get (a, i, i);
+		for (k = 0; k < i; k++) {
+			gfloat	e = crank_mat_float_n_get (l, i, k);
+			l_ij -= e*e;
+		}
+		
+		if (l_ij < 0.0f) {
+			crank_mat_float_n_fini (l);
+			return FALSE;
+		}
+		crank_mat_float_n_set (l, i, i, sqrtf (l_ij));
+	}
+	
+	return TRUE;
+}
+
+/**
+ * crank_ldl_mat_float_n:
+ * @a: A Matrix.
+ * @l: (out): A Lower triangular matrix.
+ * @d: (out): A Diagonal components.
+ *
+ * Performs LDLT decomposition on @a, which results in @l, @d, which is
+ *
+ * * @l.mul (D.mul (@l.star())) == @a.
+ *
+ * where D is diagonal matrix whose diagonal is @d.
+ *
+ * This implementation is differ classical LDLT, by returning diagonal
+ * vector rather than diagonal matrix.
+ *
+ * LDLT avoids performing sqrt on diagonal elements, while multiplication happens
+ * more than Cholskey Decomposition.
+ *
+ * Returns: Whether cholesky decomposition performed on @a.
+ */
+gboolean
+crank_ldl_mat_float_n (CrankMatFloatN*	a,
+					   CrankMatFloatN*	l,
+					   CrankVecFloatN*	d	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("advmat", "ch-MatFloatN", a, FALSE);
+	
+	crank_mat_float_n_init_fill (l, a->rn, a->rn, 0.0f);
+	crank_vec_float_n_init_fill (d, a->rn, 0.0f);
+	
+	// Proceed row by row.
+	for (i = 0; i < a->rn; i++) {
+		gfloat l_ij;
+		
+		// Gets l[i, j] = ( a[i, j]
+		//                  - l[i,0] * l[j,0] * d[0]
+		//                  - l[i,1] * l[j,1] * d[1] ...) / d[j]
+		
+		for (j = 0; j < i; j++) {
+		
+			l_ij = crank_mat_float_n_get (a, i, j);
+			for (k = 0; k < j; k++) {
+				l_ij -=	crank_mat_float_n_get (l, i, k) *
+						crank_mat_float_n_get (l, j, k) *
+						crank_vec_float_n_get (d, k);
+			}
+			l_ij /= crank_vec_float_n_get (d, j);
+			crank_mat_float_n_set (l, i, j, l_ij);
+		}
+		
+		
+		// Gets d[i] == a[i, i] - l[i, 0]**2 * d[0] - ....
+		
+		l_ij = crank_mat_float_n_get (a, i, i);
+		for (k = 0; k < i; k++) {
+			gfloat	e = crank_mat_float_n_get (l, i, k);
+			l_ij -= e*e * crank_vec_float_n_get (d, k);
+		}
+		
+		if (l_ij < 0.0f) {
+			crank_mat_float_n_fini (l);
+			crank_vec_float_n_fini (d);
+			return FALSE;
+		}
+		crank_vec_float_n_set (d, i, l_ij);
+		crank_mat_float_n_set (l, i, i, 1.0f);
+	}
+	
+	return TRUE;
 }
 
 /**

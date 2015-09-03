@@ -111,6 +111,46 @@ class TestAdvMat(unittest.TestCase):
 		self.assertFloat (u.get (2, 0), 0)
 		self.assertFloat (u.get (2, 1), 0)
 		self.assertFloat (u.get (2, 2), 1)
+	
+	def test_ch (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				4,  12, -16,
+			   12,  37, -43,
+			  -16, -43,  98] )
+		
+		(r, l) = CrankBase.ch_mat_float_n (a)
+		
+		self.assertFloat (l.get (0, 0), 2)
+		self.assertFloat (l.get (0, 1), 0)
+		self.assertFloat (l.get (0, 2), 0)
+		self.assertFloat (l.get (1, 0), 6)
+		self.assertFloat (l.get (1, 1), 1)
+		self.assertFloat (l.get (1, 2), 0)
+		self.assertFloat (l.get (2, 0),-8)
+		self.assertFloat (l.get (2, 1), 5)
+		self.assertFloat (l.get (2, 2), 3)
+	
+	def test_ldl (self):
+		a = CrankBase.MatFloatN.init_arr (3, 3, [
+				4,  12, -16,
+			   12,  37, -43,
+			  -16, -43,  98] )
+		
+		(r, l, d) = CrankBase.ldl_mat_float_n (a)
+		
+		self.assertFloat (l.get (0, 0), 1)
+		self.assertFloat (l.get (0, 1), 0)
+		self.assertFloat (l.get (0, 2), 0)
+		self.assertFloat (l.get (1, 0), 3)
+		self.assertFloat (l.get (1, 1), 1)
+		self.assertFloat (l.get (1, 2), 0)
+		self.assertFloat (l.get (2, 0),-4)
+		self.assertFloat (l.get (2, 1), 5)
+		self.assertFloat (l.get (2, 2), 1)
+		
+		self.assertFloat (d.get (0), 4)
+		self.assertFloat (d.get (1), 1)
+		self.assertFloat (d.get (2), 9)
 
 	def test_gram_schmidt (self):
 		a = CrankBase.MatFloatN.init_arr (3, 3, [
