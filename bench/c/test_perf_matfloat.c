@@ -32,9 +32,11 @@ static guint		R	= 8;
 //////// Declaration ///////////////////////////////////////////////////////////
 
 static void test_gen_mat_float_n (CrankMatFloatN* mat);
+static void	test_gen_mat_float_4 (CrankMatFloat4* mat);
 
 static void test_mat_mul (void);
 static void test_mat_mul_self (void);
+static void test_mat4_mul (void);
 
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -52,6 +54,8 @@ main (gint   argc,
 			test_mat_mul);
 	g_test_add_func ("/crank/base/mat/float/n/perf/mul_self",
 			test_mat_mul_self);
+	g_test_add_func ("/crank/base/mat/float/4/perf/mul",
+			test_mat4_mul);
 	
 	g_test_run ();
 
@@ -71,6 +75,15 @@ test_gen_mat_float_n (CrankMatFloatN* mat)
 	for (i = 0; i < N*N; i++) {
 		mat->data[i] = g_test_rand_double ();
 	}
+}
+
+static void
+test_gen_mat_float_4 (CrankMatFloat4* mat)
+{
+	guint i;
+	gfloat*	matp = (gfloat*) mat;
+	
+	for (i = 0; i < 16; i++) matp[i] = g_test_rand_double ();
 }
 
 
@@ -120,5 +133,33 @@ test_mat_mul_self (void)
 		
 		crank_mat_float_n_fini (&a);
 		crank_mat_float_n_fini (&b);
+	}
+}
+
+static void
+test_mat4_mul (void)
+{
+	guint i;
+	guint j;
+	
+	for (i = 0; i < R; i++) {
+		CrankMatFloat4*	mats = g_new (CrankMatFloat4, N);
+		CrankMatFloat4 res = {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1 };
+		
+		for (j = 0; j < N; j++) {
+			test_gen_mat_float_4 (mats + j);
+		}
+		
+		g_test_timer_start ();
+		
+		for (j = 0; j < N; j++) crank_mat_float4_mul_self (&res, mats + j);
+		
+		g_test_minimized_result ( g_test_timer_elapsed (), "mul4");
+		
+		g_free (mats);
 	}
 }
