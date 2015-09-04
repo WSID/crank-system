@@ -1,8 +1,5 @@
 ## tests: 라이브러리 테스트
 
-.PHONY: bench cpylog
-
-
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
 		-I $(top_srcdir)/crankbase
@@ -26,7 +23,7 @@ noinst_PROGRAMS= $(bench_programs)
 
 # We are use gtester, a kind of deprecated tool
 # As this is not a Pass-Fail Tests. It is a measurements, and benches.
-bench: $(bench_programs)
+bench-local: $(bench_programs)
 	sh ../bench_helper.sh gen $(bench_programs)
 
 cpylog: $(bench_programs)
