@@ -47,7 +47,7 @@
  * @stability: unstable
  * @include: crankbase.h
  *
- * Crank System provides 2x2 sized float vectors for convenience.
+ * Crank System provides float matrices for convenience.
  *
  * Currently following operations are supported.
  *
