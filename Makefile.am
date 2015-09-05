@@ -7,7 +7,8 @@ SUBDIRS= \
 		docs \
 		tests \
 		bench \
-		po
+		po \
+		demo
 
 pkgconfigdir= $(libdir)/pkgconfig
 pkgconfig_DATA= \

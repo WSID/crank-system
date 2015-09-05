@@ -24,7 +24,7 @@ AC_PROG_CC
 
 
 ######## Module configure ######################################################
-PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
+PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0 gtk+-3.0])
 
 
 
@@ -95,6 +95,9 @@ AC_OUTPUT([
 		bench/Makefile
 		bench/c/Makefile
 		po/Makefile.in
+		
+		demo/Makefile
+		demo/matrix/Makefile
 		
 		crank-base-0.0.pc
 ])

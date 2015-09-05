@@ -615,26 +615,42 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 	gfloat			dsp = INFINITY;
 	gfloat			ds = INFINITY;
 	
+	gfloat			eval = 0.0f;
+	
 	CrankVecFloatN	diff;
 	
 	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatFloatN", "power-method", a, 0.0f);
 	
-	if (b != NULL) {
+	if (b != NULL)
 		crank_vec_float_n_copy (b, &bs);
-	}
-	else {
+	else
 		crank_mat_float_n_get_col (a, 0, &bs);
-	}
 	
-	crank_vec_float_n_init_fill (&diff, a->rn, INFINITY);
+	
 	
 	do {
 		dsp = ds;
 		crank_vec_float_n_copy (&bs, &diff);
 		
+		// Iterate: b = (a * b) / (a * b).magn
+		// bsmv = a * bs
+		// bs = bsmv unit.
+		
 		crank_mat_float_n_mulv (a, &bs, &bsmv);
-		magn = crank_vec_float_n_get_magn (&bsmv);
-		crank_vec_float_n_divs (&bsmv, magn, &bs);
+		crank_vec_float_n_unit (&bsmv, &bs);
+		crank_vec_float_n_fini (&bsmv);
+		
+		//Gets a eigen value.
+		// lambda = b * a * b / (b.magn)
+		//
+		// As b is normalized, b.magn == 1
+		//
+		// bsmv = a * bs
+		// eval = bs dot bsmv
+		
+		crank_mat_float_n_mulv (a, &bs, &bsmv);
+		eval = crank_vec_float_n_dot (&bs, &bsmv);
+		
 		crank_vec_float_n_fini (&bsmv);
 		
 		crank_vec_float_n_sub_self (&diff, &bs);
@@ -654,9 +670,14 @@ crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 		return NAN;
 	}
 	else {
+		guint i;
+	
 		if (evec != NULL) crank_vec_float_n_copy (&bs, evec);
+
 		crank_vec_float_n_fini (&bs);
-		return magn;
+		crank_vec_float_n_fini (&bsmv);
+		
+		return eval;
 	}
 }
 
@@ -1228,4 +1249,3 @@ crank_qr_givens_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 	
 	return TRUE;
 }
-

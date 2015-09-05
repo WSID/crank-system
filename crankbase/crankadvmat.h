@@ -32,6 +32,7 @@
 #include "crankpermutation.h"
 #include "crankveccommon.h"
 #include "crankmatfloat.h"
+#include "crankmatcplxfloat.h"
 
 G_BEGIN_DECLS
 
@@ -62,12 +63,16 @@ gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 gboolean	crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 											CrankMatFloatN*	r	);
 
+
+
 gfloat		crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
 											CrankVecFloatN*	b,
 											CrankVecFloatN*	evec	);
 
 void		crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
 										CrankVecFloatN*	evals	);
+
+
 
 
 gboolean	crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
