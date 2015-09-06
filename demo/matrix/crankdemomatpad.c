@@ -38,17 +38,14 @@ typedef struct _CrankDemoMatPadPrivate {
 	GSimpleActionGroup*	agroup;
 	GMenu*				menuset;
 
-	GtkAdjustment*	rowadj;
-	GtkAdjustment*	coladj;
+	GtkAdjustment*	resize_adjrow;
+	GtkAdjustment*	resize_adjcol;
 
-	GtkMenuButton*	set;		// Menu Button to set matrix
+	GtkMenuButton*	setter;		// Menu Button to set matrix
 	GtkButton*		addrow;		// Add row.
 	GtkButton*		addcol;		// Add col
 	GtkMenuButton*	resize;		// Popover Button to set size
-	GtkPopover*		resizepo;	// A Popover to set size.
-	GtkSpinButton*	resizerow;
-	GtkSpinButton*	resizecol;
-	GtkButton*		resizeaccept;
+	GtkPopover*		resize_popover;
 } CrankDemoMatPadPrivate;
 
 
@@ -321,12 +318,15 @@ crank_demo_mat_pad_init (CrankDemoMatPad*	self)
 	
 	priv->nrow = 1;
 	priv->ncol = 1;
+	
+	gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
 crank_demo_mat_pad_class_init (CrankDemoMatPadClass*	c)
 {
 	GObjectClass*	c_g_object;
+	GtkWidgetClass*	c_gtk_widget;
 	
 	c_g_object = G_OBJECT_CLASS (c);
 	c_g_object->get_property = _g_object_get_property;
@@ -342,6 +342,24 @@ crank_demo_mat_pad_class_init (CrankDemoMatPadClass*	c)
 			G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 	
 	g_object_class_install_properties (c_g_object, PROP_COUNT, pspecs);
+	
+	
+	c_gtk_widget = GTK_WIDGET_CLASS (c);
+	gtk_widget_class_set_template_from_resource (c_gtk_widget, "/crank/demo/matrix/crankdemomatpad.ui");
+	
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, resize_adjrow);
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, resize_adjcol);
+	
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, setter);
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, addrow);
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, addcol);
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, resize);
+	gtk_widget_class_bind_template_child_private (c_gtk_widget, CrankDemoMatPad, resize_popover);
+	
+	gtk_widget_class_bind_template_callback (c_gtk_widget, cb_show_resize);
+	gtk_widget_class_bind_template_callback (c_gtk_widget, cb_resize_accept);
+	gtk_widget_class_bind_template_callback (c_gtk_widget, crank_demo_mat_pad_append_row);
+	gtk_widget_class_bind_template_callback (c_gtk_widget, crank_demo_mat_pad_append_col);
 }
 
 
@@ -403,88 +421,15 @@ _g_object_constructed (GObject*	self_g_object)
 	guint	i;
 	guint	j;
 	
-	GtkImage*	image_addrow;
-	GtkImage*	image_addcol;
-	
-	
-	GtkLabel*	resizerowl;
-	GtkLabel*	resizecoll;
-	
-	GtkPopover*	resizepop;
-	GtkGrid*	resizegrid;
-	
 	G_OBJECT_CLASS (crank_demo_mat_pad_parent_class)->constructed (self_g_object);
 	
 	GtkGrid*	self_gtk_grid = GTK_GRID (self_g_object);
 	
-	// Constructs a simple UI
-	
-	image_addrow = GTK_IMAGE (gtk_image_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_BUTTON));
-	image_addcol = GTK_IMAGE (gtk_image_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_BUTTON));
-	
-	//resizepop = GTK_POPOVER (gtk_popover_new (GTK_WIDGET (priv->resize)));
-	resizegrid = GTK_GRID (gtk_grid_new ());
-	
-	resizerowl = GTK_LABEL (gtk_label_new ("Row"));
-	resizecoll = GTK_LABEL (gtk_label_new ("Col"));
-	
+	// Build a action group for menu.
 	priv->agroup = g_simple_action_group_new ();
-	priv->menuset = g_menu_new ();
-	
-	g_menu_insert (priv->menuset, 0, "Zero", "pad.zero");
-	g_menu_insert (priv->menuset, 1, "Identity", "pad.identity");
-	
-	priv->rowadj = gtk_adjustment_new (1, 1, 128, 1, 3, 3);
-	priv->coladj = gtk_adjustment_new (1, 1, 128, 1, 3, 3);
-	
-	priv->set = GTK_MENU_BUTTON (gtk_menu_button_new ());
-	priv->addrow = GTK_BUTTON (gtk_button_new ());
-	priv->addcol = GTK_BUTTON (gtk_button_new ());
-	priv->resize = GTK_MENU_BUTTON (gtk_menu_button_new ());
-	
-	priv->resizepo = GTK_POPOVER (gtk_popover_new (GTK_WIDGET (priv->resize)));
-	priv->resizerow = GTK_SPIN_BUTTON (gtk_spin_button_new (priv->rowadj, 1, 0));
-	priv->resizecol = GTK_SPIN_BUTTON (gtk_spin_button_new (priv->coladj, 1, 0));
-	priv->resizeaccept = GTK_BUTTON (gtk_button_new_with_label ("Accept"));
-	
-	
-	// Setup UI
 	g_action_map_add_action_entries (G_ACTION_MAP (priv->agroup), actions, G_N_ELEMENTS (actions), self);
-	
 	gtk_widget_insert_action_group (GTK_WIDGET (self), "pad", G_ACTION_GROUP (priv->agroup));
 	
-	gtk_menu_button_set_use_popover (priv->set, TRUE);
-	gtk_menu_button_set_menu_model (priv->set, G_MENU_MODEL(priv->menuset));
-	
-	gtk_button_set_image (GTK_BUTTON(priv->addrow), GTK_WIDGET (image_addrow));
-	gtk_button_set_image (GTK_BUTTON(priv->addcol), GTK_WIDGET (image_addcol));
-	
-	gtk_menu_button_set_direction (priv->set, GTK_ARROW_NONE);
-	gtk_menu_button_set_direction (priv->resize, GTK_ARROW_NONE);
-	
-	// Builds a simple UI
-	
-	gtk_container_add (GTK_CONTAINER (priv->resizepo), GTK_WIDGET (resizegrid));
-	gtk_menu_button_set_popover (priv->resize, GTK_WIDGET (priv->resizepo));
-	
-	gtk_grid_attach (self_gtk_grid,	GTK_WIDGET (priv->set),0, 0, 1, 1);
-	gtk_grid_attach (self_gtk_grid,	GTK_WIDGET (priv->addrow),0, 1 + priv->nrow, 1 + priv->ncol, 1);
-	gtk_grid_attach (self_gtk_grid,	GTK_WIDGET (priv->addcol),1 + priv->ncol, 0, 1, 1 + priv->nrow);
-	gtk_grid_attach (self_gtk_grid,	GTK_WIDGET (priv->resize),1 + priv->ncol, 1 + priv->nrow, 1, 1);
-	
-	gtk_grid_attach (resizegrid, GTK_WIDGET (resizerowl), 0, 0, 1, 1);
-	gtk_grid_attach (resizegrid, GTK_WIDGET (resizecoll), 0, 1, 1, 1);
-	gtk_grid_attach (resizegrid, GTK_WIDGET (priv->resizerow), 1, 0, 1, 1);
-	gtk_grid_attach (resizegrid, GTK_WIDGET (priv->resizecol), 1, 1, 1, 1);
-	gtk_grid_attach (resizegrid, GTK_WIDGET (priv->resizeaccept), 0, 2, 2, 1);
-	
-	gtk_widget_show_all (GTK_WIDGET (resizegrid));
-	
-	// Hook up signals
-	g_signal_connect_swapped (priv->addrow, "clicked", G_CALLBACK (crank_demo_mat_pad_append_row), self);
-	g_signal_connect_swapped (priv->addcol, "clicked", G_CALLBACK (crank_demo_mat_pad_append_col), self);
-	g_signal_connect (priv->resizepo, "show", G_CALLBACK (cb_show_resize), self);
-	g_signal_connect (priv->resizeaccept, "clicked", G_CALLBACK (cb_resize_accept), self);
 	
 	
 	// Adds entry for elements.
@@ -567,7 +512,8 @@ create_entry (CrankDemoMatPad* self)
 	
 	gtk_entry_set_has_frame (entry, FALSE);
 	gtk_entry_set_placeholder_text (entry, "0");
-	
+	gtk_entry_set_width_chars (entry, 10);
+
 	gtk_widget_show (GTK_WIDGET (entry));
 	
 	return entry;
@@ -682,8 +628,10 @@ cb_show_resize (GtkWidget*	widget,
 	CrankDemoMatPad*		self = CRANK_DEMO_MAT_PAD (user_data);
 	CrankDemoMatPadPrivate*	priv = crank_demo_mat_pad_get_instance_private (self);
 	
-	gtk_spin_button_set_value (priv->resizerow, priv->nrow);
-	gtk_spin_button_set_value (priv->resizecol, priv->ncol);
+	gtk_adjustment_set_value (priv->resize_adjrow, priv->nrow);
+	gtk_adjustment_set_value (priv->resize_adjcol, priv->ncol);
+	gtk_adjustment_value_changed (priv->resize_adjrow);
+	gtk_adjustment_value_changed (priv->resize_adjcol);
 }
 
 static void
@@ -694,8 +642,8 @@ cb_resize_accept (GtkButton*	button,
 	CrankDemoMatPadPrivate*	priv = crank_demo_mat_pad_get_instance_private (self);
 	
 	crank_demo_mat_pad_resize (self,
-			(guint) gtk_spin_button_get_value (priv->resizerow),
-			(guint) gtk_spin_button_get_value (priv->resizecol) );
+			(guint) gtk_adjustment_get_value (priv->resize_adjrow),
+			(guint) gtk_adjustment_get_value (priv->resize_adjcol) );
 	
-	gtk_widget_hide ( GTK_WIDGET (priv->resizepo) );
+	gtk_widget_hide ( GTK_WIDGET (priv->resize_popover) );
 }
