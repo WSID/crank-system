@@ -6,8 +6,12 @@ AM_CFLAGS= \
 
 bin_PROGRAMS=crank-demo-matrix
 
+noinst_HEADERS= \
+		crankdemomatpad.h
+
 crank_demo_matrix_SOURCES= \
-		crankdemomatrix.c
+		crankdemomatrix.c \
+		crankdemomatpad.c
 
 crank_demo_matrix_LDADD= \
 		$(CRANK_BASE_LIBS) \

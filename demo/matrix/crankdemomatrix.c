@@ -32,6 +32,8 @@
 #include <gtk/gtk.h>
 #include <crankbase.h>
 
+#include "crankdemomatpad.h"
+
 //////// Declaration ///////////////////////////////////////////////////////////
 
 typedef struct _CrankDemoMatrixApp {
@@ -40,6 +42,7 @@ typedef struct _CrankDemoMatrixApp {
 
 typedef struct _CrankDemoMatrixAppPrivate {
 	GtkApplicationWindow*	main_window;
+	CrankDemoMatPad*		matpad;
 } CrankDemoMatrixAppPrivate;
 
 
@@ -106,8 +109,15 @@ _g_application_startup (GApplication*	application)
 	priv->main_window = 
 			GTK_APPLICATION_WINDOW( gtk_application_window_new (
 					GTK_APPLICATION (application) ) );
+	
+	priv->matpad =
+			crank_demo_mat_pad_new_with_size (4, 2);
+			
+	gtk_container_add ( GTK_CONTAINER (priv->main_window), GTK_WIDGET (priv->matpad) );
+
 					
-	gtk_widget_show ( GTK_WIDGET (priv->main_window) );
+	gtk_widget_show_all ( GTK_WIDGET (priv->main_window) );
+	
 }
 
 static void
@@ -116,10 +126,20 @@ _g_application_activate (GApplication*	application)
 	CrankDemoMatrixApp*	self = CRANK_DEMO_MATRIX_APP (application);
 	CrankDemoMatrixAppPrivate*	priv = crank_demo_matrix_app_get_instance_private (self);
 	
+	CrankMatCplxFloatN	mat;
+	gchar*				matstr;
+	
 	GApplicationClass*	pc_g_application =
 		G_APPLICATION_CLASS (crank_demo_matrix_app_parent_class);
 	
 	pc_g_application->activate (application);
+	
+	crank_demo_mat_pad_create_value (priv->matpad, &mat);
+	matstr = crank_mat_cplx_float_n_to_string (&mat);
+	
+	g_message ("Matrix:\n  %s", matstr);
+	g_free (matstr);
+	crank_mat_cplx_float_n_fini (&mat);
 	
 	gtk_window_present (GTK_WINDOW (priv->main_window));
 }
