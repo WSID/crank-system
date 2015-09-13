@@ -4,7 +4,7 @@ AM_CFLAGS= \
 		-I $(top_srcdir)/crankbase \
 		-lm
 
-EXTRA_DIST= crankdemomatrix.gresources.xml crankdemomatpad.ui
+EXTRA_DIST= crankdemomatrix.gresources.xml crankdemomatpad.ui crankdemomatrix.ui
 
 bin_PROGRAMS=crank-demo-matrix
 
@@ -20,5 +20,5 @@ crank_demo_matrix_LDADD= \
 		$(CRANK_BASE_LIBS) \
 		$(top_builddir)/crankbase/libcrankbase.la
 
-crankdemomatrix_res.c: crankdemomatrix.gresources.xml crankdemomatpad.ui
+crankdemomatrix_res.c: crankdemomatrix.gresources.xml crankdemomatpad.ui crankdemomatrix.ui
 	glib-compile-resources --generate-source --target=crankdemomatrix_res.c crankdemomatrix.gresources.xml

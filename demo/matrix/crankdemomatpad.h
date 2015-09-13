@@ -62,6 +62,12 @@ guint				crank_demo_mat_pad_get_ncol (	CrankDemoMatPad*	self);
 
 void				crank_demo_mat_pad_set_ncol (	CrankDemoMatPad*	self,
 													guint				ncol);
+													
+void				crank_demo_mat_pad_get_mcf (	CrankDemoMatPad*	self,
+													CrankMatCplxFloatN*	value	);
+													
+void				crank_demo_mat_pad_set_mcf (	CrankDemoMatPad*	self,
+													CrankMatCplxFloatN*	value	);
 
 
 //////// Methods ///////////////////////////////////////////////////////////////
@@ -80,14 +86,17 @@ void				crank_demo_mat_pad_resize (	CrankDemoMatPad*	self,
 												guint				nrow,
 												guint				ncol	);
 
+void				crank_demo_mat_pad_negate 	(	CrankDemoMatPad*	self );
+
+void				crank_demo_mat_pad_inverse	(	CrankDemoMatPad*	self );
+
+void				crank_demo_mat_pad_transpose (	CrankDemoMatPad*	self );
 
 
 GtkEntry*			crank_demo_mat_pad_get_entry (	CrankDemoMatPad*	self,
 													guint				row,
 													guint				col );
 
-void				crank_demo_mat_pad_create_value (CrankDemoMatPad*	self,
-													CrankMatCplxFloatN*	value	);
 
 
 #endif

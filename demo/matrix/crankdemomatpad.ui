@@ -53,12 +53,25 @@
   
   <!-- Setter Menu -->
   <menu id="setter_menu">
-    <item> <attribute name="label">Zero</attribute>
-           <attribute name="action">pad.zero</attribute>
-    </item>
-    <item> <attribute name="label">Identity</attribute>
-           <attribute name="action">pad.identity</attribute>
-    </item>
+    <section>
+      <item> <attribute name="label">Zero</attribute>
+             <attribute name="action">pad.zero</attribute>
+      </item>
+      <item> <attribute name="label">Identity</attribute>
+             <attribute name="action">pad.identity</attribute>
+      </item>
+    </section>
+    <section>
+      <item> <attribute name="label">Negate</attribute>
+             <attribute name="action">pad.negate</attribute>
+      </item>
+      <item> <attribute name="label">Inverse</attribute>
+             <attribute name="action">pad.inverse</attribute>
+      </item>
+      <item> <attribute name="label">Transpose</attribute>
+             <attribute name="action">pad.transpose</attribute>
+      </item>
+    </section>
   </menu>
   
   <!-- Resizer Popover -->

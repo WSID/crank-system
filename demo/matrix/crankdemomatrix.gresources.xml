@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/crank/demo/matrix">
     <file>crankdemomatpad.ui</file>
+    <file>crankdemomatrix.ui</file>
   </gresource>
 </gresources>
