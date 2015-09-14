@@ -63,7 +63,13 @@ enum {
 	PROP_COUNT
 };
 
-static GParamSpec* pspecs [PROP_COUNT] = {NULL};
+enum {
+	SIG_ACTION_FAILED,
+	SIG_COUNT
+};
+
+static GParamSpec*	pspecs [PROP_COUNT] = {NULL};
+static guint		sigs [SIG_COUNT] = {0};
 
 
 
@@ -355,6 +361,16 @@ crank_demo_mat_pad_set_mcf (	CrankDemoMatPad*	self,
 	}
 }
 
+//////// Signals ///////////////////////////////////////////////////////////////
+
+void
+crank_demo_mat_pad_action_failed (	CrankDemoMatPad*	self,
+									GQuark				detail,
+									const gchar*		message	)
+{
+	g_signal_emit (self, sigs[SIG_ACTION_FAILED], detail, message);
+}
+
 //////// Methods ///////////////////////////////////////////////////////////////
 
 /*  crank_demo_mat_pad_append_row:
@@ -512,9 +528,15 @@ crank_demo_mat_pad_inverse (	CrankDemoMatPad*	self )
 	crank_demo_mat_pad_get_mcf (self, &mcf);
 	
 	// A Matrix can be inversed by ..._inverse[_self] () functions.
-	crank_mat_cplx_float_n_inverse_self (&mcf);
+	// If the matrix is singular, then NaN may be returned.
+	//
+	// If check needs to be done, use ..._try_inverse[_self] () functions, like here.
 	
-	crank_demo_mat_pad_set_mcf (self, &mcf);
+	if (crank_mat_cplx_float_n_try_inverse_self (&mcf))
+		crank_demo_mat_pad_set_mcf (self, &mcf);
+	else
+		crank_demo_mat_pad_action_failed (self,	g_quark_from_string ("inverse"),
+				"Inverse failed: the matrix is singular." );
 	
 	crank_mat_cplx_float_n_fini (&mcf);
 }
@@ -595,6 +617,16 @@ crank_demo_mat_pad_class_init (CrankDemoMatPadClass*	c)
 			G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 	
 	g_object_class_install_properties (c_g_object, PROP_COUNT, pspecs);
+	
+	sigs[SIG_ACTION_FAILED] = g_signal_new (
+			"action-failed",
+			CRANK_DEMO_TYPE_MAT_PAD,
+			G_SIGNAL_DETAILED,
+			0,
+			NULL, NULL,
+			NULL,
+			G_TYPE_NONE,
+			1, G_TYPE_STRING	);
 	
 	
 	c_gtk_widget = GTK_WIDGET_CLASS (c);

@@ -68,7 +68,12 @@ void				crank_demo_mat_pad_get_mcf (	CrankDemoMatPad*	self,
 													
 void				crank_demo_mat_pad_set_mcf (	CrankDemoMatPad*	self,
 													CrankMatCplxFloatN*	value	);
+													
+//////// Signals ///////////////////////////////////////////////////////////////
 
+void				crank_demo_mat_pad_action_failed (	CrankDemoMatPad*	self,
+														GQuark				detail,
+														const gchar*		message	);
 
 //////// Methods ///////////////////////////////////////////////////////////////
 

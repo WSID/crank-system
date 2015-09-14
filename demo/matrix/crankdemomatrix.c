@@ -60,6 +60,10 @@ typedef struct _CrankDemoMatrixApp {
 
 typedef struct _CrankDemoMatrixAppPrivate {
 	GtkApplicationWindow*	main_window;
+	
+	GtkInfoBar*				msgbar;
+	GtkLabel*				msgbar_label;
+	
 	CrankDemoMatPad*		matpad_a;
 	CrankDemoMatPad*		matpad_b;
 	GtkButton*				eval;
@@ -88,11 +92,17 @@ static void	crank_demo_matrix_app_set_optype (	CrankDemoMatrixApp*	self,
 static gboolean	crank_demo_matrix_app_op_is_possible (	CrankDemoMatrixApp*	self	);
 
 
+static void	crank_demo_matrix_app_show_message (	CrankDemoMatrixApp*	self,
+													GtkMessageType		mtype,
+													const gchar*		msg	);
 
 //////// Callbacks /////////////////////////////////////////////////////////////
 
 static void cb_sz_notify (	GObject*		object,
 							GParamSpec*		pspec,	gpointer	user_data );
+
+static void cb_action_failed(	CrankDemoMatPad*	pad,
+								const gchar*		message,	gpointer	user_data );
 
 static void	cb_op_add (	GtkToggleButton*	button,	gpointer	user_data );
 
@@ -172,6 +182,7 @@ _g_application_startup (GApplication*	application)
 	
 	gtk_builder_expose_object (builder, "App", G_OBJECT (self) );
 	gtk_builder_add_callback_symbol (builder, "cb_sz_notify", G_CALLBACK (cb_sz_notify));
+	gtk_builder_add_callback_symbol (builder, "cb_action_failed", G_CALLBACK (cb_action_failed));
 	gtk_builder_add_callback_symbol (builder, "cb_op_add", G_CALLBACK (cb_op_add));
 	gtk_builder_add_callback_symbol (builder, "cb_op_sub", G_CALLBACK (cb_op_sub));
 	gtk_builder_add_callback_symbol (builder, "cb_op_mul", G_CALLBACK (cb_op_mul));
@@ -184,6 +195,12 @@ _g_application_startup (GApplication*	application)
 	
 	priv->main_window = 
 			GTK_APPLICATION_WINDOW( gtk_builder_get_object (builder, "main_window") );
+			
+	priv->msgbar = 
+			GTK_INFO_BAR( gtk_builder_get_object (builder, "msgbar") );
+			
+	priv->msgbar_label = 
+			GTK_LABEL( gtk_builder_get_object (builder, "msgbar_label") );
 	
 	priv->matpad_a =
 			CRANK_DEMO_MAT_PAD ( gtk_builder_get_object (builder, "matpad_a") );
@@ -275,9 +292,34 @@ crank_demo_matrix_app_op_is_possible (	CrankDemoMatrixApp*	self	)
 }
 
 
+static void
+crank_demo_matrix_app_show_message (	CrankDemoMatrixApp*	self,
+										GtkMessageType		mtype,
+										const gchar*		msg	)
+{
+	CrankDemoMatrixAppPrivate*	priv = crank_demo_matrix_app_get_instance_private (self);
+	
+	gtk_info_bar_set_message_type (priv->msgbar, mtype);
+	gtk_label_set_label (priv->msgbar_label, msg);
+	gtk_widget_show (GTK_WIDGET (priv->msgbar));
+	gtk_widget_show (GTK_WIDGET (priv->msgbar_label));
+}
 
 
 //////// Callback //////////////////////////////////////////////////////////////
+
+static void
+cb_action_failed (	CrankDemoMatPad*	pad,
+					const gchar*		message,
+					gpointer			user_data )
+{
+	CrankDemoMatrixApp*	self = CRANK_DEMO_MATRIX_APP (user_data);
+	CrankDemoMatrixAppPrivate*	priv = crank_demo_matrix_app_get_instance_private (self);
+	
+	crank_demo_matrix_app_show_message (self,
+			GTK_MESSAGE_ERROR,
+			message	);
+}
 
 
 static void
@@ -321,7 +363,6 @@ cb_op_mul (	GtkToggleButton*	button,
 		crank_demo_matrix_app_set_optype (self, CRANK_DEMO_OP_TYPE_MUL);
 	}
 }
-
 
 static void
 cb_eval (	GtkButton*	button,
@@ -388,6 +429,11 @@ cb_lu (	GtkButton*	button,
 		crank_demo_mat_pad_set_mcf (priv->matpad_b, &mat_b);
 		crank_mat_cplx_float_n_fini (&mat_a);
 		crank_mat_cplx_float_n_fini (&mat_b);
+	}
+	else {
+		crank_demo_matrix_app_show_message (self,
+				GTK_MESSAGE_INFO,
+				"LU Decomposition failed."	);
 	}
 	
 	gtk_widget_set_sensitive (	GTK_WIDGET (priv->eval),
@@ -457,6 +503,11 @@ cb_qr (	GtkButton*	button,
 		crank_demo_mat_pad_set_mcf (priv->matpad_b, &mat_b);
 		crank_mat_cplx_float_n_fini (&mat_a);
 		crank_mat_cplx_float_n_fini (&mat_b);
+	}
+	else {
+		crank_demo_matrix_app_show_message (self,
+				GTK_MESSAGE_INFO,
+				"QR Decomposition failed."	);
 	}
 	
 	gtk_widget_set_sensitive (	GTK_WIDGET (priv->eval),

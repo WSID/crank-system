@@ -11,11 +11,26 @@
       <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
       <property name="spacing">7</property>
       
+      <child> <object class="GtkInfoBar" id="msgbar">
+        <property name="no-show-all">TRUE</property>
+        <property name="show-close-button">TRUE</property>
+        
+        <signal name="response" handler="gtk_widget_hide" />
+        
+        <child internal-child="content_area"> <object class="GtkContainer" id="msgbar_content">
+          <child> <object class="GtkLabel" id="msgbar_label">
+          </object> </child>
+        </object> </child>
+      </object> </child>
+      
       <child> <object class="CrankDemoMatPad" id="matpad_a">
         <property name="margin">7</property>
         <signal name="notify::nrow" handler="cb_sz_notify"/>
         <signal name="notify::ncol" handler="cb_sz_notify"/>
+        <signal name="action-failed" handler="cb_action_failed"/>
       </object> </child>
+      
+      
 
       <child> <object class="GtkBox" id="ctrlbox">
       
@@ -70,10 +85,13 @@
       
       </object> </child>
       
+      
+      
       <child> <object class="CrankDemoMatPad" id="matpad_b">
         <property name="margin">7</property>
         <signal name="notify::nrow" handler="cb_sz_notify"/>
         <signal name="notify::ncol" handler="cb_sz_notify"/>
+        <signal name="action-failed" handler="cb_action_failed"/>
       </object> </child>
       
       <child> <object class="GtkButton" id="eval">
