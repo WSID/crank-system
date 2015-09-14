@@ -279,8 +279,8 @@ crank_vec_cplx_float_n_init_valistuc	(	CrankVecCplxFloatN*	vec,
  * crank_vec_cplx_float_n_init_ucarr:
  * @vec: (out): Vector to initialize.
  * @n: Size of vector.
- * @real: (array length=n): An array of real entities.
- * @imag: (array length=n): An array of imaginary entities.
+ * @real: (array length=n) (nullable): An array of real entities.
+ * @imag: (array length=n) (nullable): An array of imaginary entities.
  *
  * Initialize vector with given two arrays, one for real, the other for
  * imaginary.
@@ -293,9 +293,16 @@ crank_vec_cplx_float_n_init_ucarr (CrankVecCplxFloatN*	vec,
 {
   guint i;
 
-  CRANK_VEC_ALLOC (vec, CrankCplxFloat, n);
+  CRANK_VEC_ALLOC0 (vec, CrankCplxFloat, n);
 
-  for (i = 0; i < n; i++)	crank_cplx_float_init (vec->data + i, real[i], imag[i]);
+
+  if (real != NULL) {
+    for (i = 0; i < n; i++)	vec->data[i].real = real[i];
+  }
+  
+  if (imag != NULL) {
+    for (i = 0; i < n; i++)	vec->data[i].imag = imag[i];
+  }
 }
 
 /**
@@ -367,8 +374,8 @@ crank_vec_cplx_float_n_init_ucv (CrankVecCplxFloatN*	vec,
 
   CRANK_VEC_ALLOC0(vec, CrankCplxFloat, n);
 
-  for (i = 0; i < real->n; i++)	vec->data[i].real = real->data[i];
-  for (i = 0; i < imag->n; i++)	vec->data[i].imag = imag->data[i];
+  if (real != NULL) for (i = 0; i < real->n; i++)	vec->data[i].real = real->data[i];
+  if (imag != NULL) for (i = 0; i < imag->n; i++)	vec->data[i].imag = imag->data[i];
 }
 
 

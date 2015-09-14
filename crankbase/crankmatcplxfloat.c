@@ -486,8 +486,8 @@ crank_mat_cplx_float_n_init_arruc (	CrankMatCplxFloatN*	mat,
  * @mat: (out): A Matrix.
  * @rn: Row count.
  * @cn: Column count.
- * @real: (array): Array of real entities.
- * @imag: (array): Array of imaginary entities.
+ * @real: (array) (nullable): Array of real entities.
+ * @imag: (array) (nullable): Array of imaginary entities.
  *
  * Initialize a matrix with given two arrays.
  */
@@ -500,17 +500,19 @@ crank_mat_cplx_float_n_init_ucarr (CrankMatCplxFloatN* mat,
 {
   guint	i, n;
 
-  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, rn, cn);
 
-  for (i = 0, n = rn * cn; i < n; i++)
-	crank_cplx_float_init (mat->data + i, real[i], imag[i]);
+  n = rn * cn;
+  
+  if (real != NULL) for (i = 0; i < n; i++) mat->data[i].real = real[i];
+  if (imag != NULL) for (i = 0; i < n; i++) mat->data[i].imag = imag[i];
 }
 
 /**
  * crank_mat_cplx_float_n_init_ucm:
  * @mat: (out): A Matrix.
- * @real: A Matrix for real.
- * @imag: A Matrix for Imaginary.
+ * @real: (nullable): A Matrix for real.
+ * @imag: (nullable): A Matrix for Imaginary.
  *
  * Initialize a matrix with given two matrices, one for real, one for imaginary.
  *
@@ -527,15 +529,17 @@ crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN* mat,
   guint rn;
   guint cn;
 
-  rn = MAX (real->rn, imag->rn);
-  cn = MAX (real->cn, imag->cn);
+  rn = MAX (real != NULL ? real->rn: 0,
+  			imag != NULL ? imag->rn: 0);
+  cn = MAX (real != NULL ? real->cn: 0,
+  			imag != NULL ? imag->cn: 0);
 
-  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, rn, cn);
 
-  for (i = 0; i < real->rn; i++) for (j = 0; j < real->cn; j++)
+  if (real != NULL) for (i = 0; i < real->rn; i++) for (j = 0; j < real->cn; j++)
 	mat->data[(i * cn) + j].real = crank_mat_float_n_get (real, i, j);
 
-  for (i = 0; i < imag->rn; i++) for (j = 0; j < imag->cn; j++)
+  if (imag != NULL) for (i = 0; i < imag->rn; i++) for (j = 0; j < imag->cn; j++)
 	mat->data[(i * cn) + j].imag = crank_mat_float_n_get (imag, i, j);
 }
 
@@ -835,8 +839,8 @@ crank_mat_cplx_float_n_init_diag_ucarr (CrankMatCplxFloatN*	mat,
 /**
  * crank_mat_cplx_float_n_init_diag_ucv:
  * @mat: (out): A Matrix.
- * @real: A vector of real entities.
- * @imag: A vector of imaginary entities.
+ * @real: (nullable): A vector of real entities.
+ * @imag: (nullable):  A vector of imaginary entities.
  *
  * Initialize a diagonal matrix with unrolled complex pair of vectors.
  */
@@ -848,12 +852,13 @@ crank_mat_cplx_float_n_init_diag_ucv (CrankMatCplxFloatN*	mat,
   guint i;
   guint n;
   
-  n = MAX (real->n, imag->n);
+  n = MAX (	real != NULL ? real->n : 0,
+  			imag != NULL ? imag->n : 0);
   
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
   
-  for (i = 0; i < real->n; i++) mat->data[i * (n + 1)].real = real->data[i];
-  for (i = 0; i < imag->n; i++) mat->data[i * (n + 1)].imag = imag->data[i];
+  if (real != NULL) for (i = 0; i < real->n; i++) mat->data[i * (n + 1)].real = real->data[i];
+  if (imag != NULL) for (i = 0; i < imag->n; i++) mat->data[i * (n + 1)].imag = imag->data[i];
 }
 
 /**
