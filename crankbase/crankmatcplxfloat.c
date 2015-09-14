@@ -1620,8 +1620,47 @@ crank_mat_cplx_float_n_is_symmetric (	CrankMatCplxFloatN*	mat	)
 		
 		for (i = 1; i < mat->rn; i++) {
 			for (j = 0; j < i; j++) {
-				if (! crank_cplx_float_equal (	mat->data + (i + mat->cn) + j,
-												mat->data + (j + mat->cn) + i ))
+				if (! crank_cplx_float_equal (	mat->data + (i * mat->cn) + j,
+												mat->data + (j * mat->cn) + i ))
+					return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * crank_mat_cplx_float_n_is_hermitian:
+ * @mat: A Matrix to check.
+ *
+ * Checks a matrix is hermitian matrix. A hermitian matrix is same as its
+ * conjugate transpose.
+ *
+ * Returns: Whether matrix is symmetric matrix.
+ */
+gboolean
+crank_mat_cplx_float_n_is_hermitian (	CrankMatCplxFloatN*	mat	)
+{
+	if (crank_mat_cplx_float_n_is_square (mat)) {
+		guint	i;
+		guint	j;
+		
+		// Check diagonal parts are real, as they should be same as their conjugate.
+		for (i = 0; i < mat->rn; i++) {
+			if (! crank_cplx_float_is_pure_real (mat->data + (j * mat->cn) + i))
+				return FALSE;
+		}
+		
+		for (i = 1; i < mat->rn; i++) {
+			for (j = 0; j < i; j++) {
+				CrankCplxFloat	conj_ij;
+				
+				crank_cplx_float_conjugate (	mat->data + (i * mat->cn) + j,
+												&conj_ij						);
+				
+				if (! crank_cplx_float_equal (	&conj_ij,
+												mat->data + (j * mat->cn) + i ))
 					return FALSE;
 			}
 		}
@@ -1681,6 +1720,49 @@ crank_mat_cplx_float_n_has_inf (	CrankMatCplxFloatN* mat )
 	return FALSE;
 }
 
+/**
+ * crank_mat_cplx_float_n_is_pure_real:
+ * @mat: A Matrix to check.
+ *
+ * Checks a matrix is pure real.
+ *
+ * Returns: Whether matrix is real matrix.
+ */
+gboolean
+crank_mat_cplx_float_n_is_pure_real (	CrankMatCplxFloatN*	mat	)
+{
+	guint i;
+	guint n;
+	
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (! crank_cplx_float_is_pure_real(mat->data + i)) return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * crank_mat_cplx_float_n_is_pure_imag:
+ * @mat: A Matrix to check.
+ *
+ * Checks a matrix is pure imaginary.
+ *
+ * Returns: Whether matrix is pure imaginary matrix.
+ */
+gboolean
+crank_mat_cplx_float_n_is_pure_imag (	CrankMatCplxFloatN*	mat	)
+{
+	guint i;
+	guint n;
+	
+	n = mat->rn * mat->cn;
+	
+	for (i = 0; i < n; i++) {
+		if (! crank_cplx_float_is_pure_imag(mat->data + i)) return FALSE;
+	}
+	return TRUE;
+}
 
 
 /**

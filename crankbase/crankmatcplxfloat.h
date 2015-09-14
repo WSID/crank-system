@@ -291,9 +291,15 @@ gboolean	crank_mat_cplx_float_n_is_diag (	CrankMatCplxFloatN*	mat	);
 
 gboolean	crank_mat_cplx_float_n_is_symmetric(CrankMatCplxFloatN*	mat	);
 
+gboolean	crank_mat_cplx_float_n_is_hermitian(CrankMatCplxFloatN*	mat	);
+
 gboolean	crank_mat_cplx_float_n_has_nan (	CrankMatCplxFloatN* mat	);
 
 gboolean	crank_mat_cplx_float_n_has_inf (	CrankMatCplxFloatN* mat	);
+
+gboolean	crank_mat_cplx_float_n_is_pure_real(CrankMatCplxFloatN*	mat	);
+
+gboolean	crank_mat_cplx_float_n_is_pure_imag(CrankMatCplxFloatN*	mat	);
 
 //////// Attributes ////////////////////////////////////////////////////////////
 
