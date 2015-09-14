@@ -20,6 +20,7 @@
  */
 #define _CRANKBASE_INSIDE
 
+#include <math.h>
 #include <string.h>
 
 #include <glib.h>
@@ -2052,7 +2053,7 @@ crank_mat_cplx_float_n_inverse (	CrankMatCplxFloatN*	a,
 		crank_mat_cplx_float_n_fini (&uinv);
 	}
 	else {
-		// TODO: Warn a things.
+		crank_mat_cplx_float_n_init_fill_uc (r, a->rn, a->rn, NAN, NAN);
 	}
 }
 
@@ -2090,7 +2091,100 @@ crank_mat_cplx_float_n_inverse_self (	CrankMatCplxFloatN*	a	)
 		crank_mat_cplx_float_n_fini (&uinv);
 	}
 	else {
-		// TODO: Warn a things.
+		guint	n = a->rn * a->rn;
+		
+		for (i = 0; i < n; i++) {
+			crank_cplx_float_init (a->data + i, NAN, NAN);
+		}
+	}
+}
+
+/**
+ * crank_mat_cplx_float_n_try_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Current implementation make uses LU Decomposition.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_cplx_float_n_try_inverse (	CrankMatCplxFloatN*	a,
+						  				CrankMatCplxFloatN*	r	)
+{
+	CrankMatCplxFloatN	l;
+	CrankMatCplxFloatN	u;
+	
+	guint i;
+	
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse", a, FALSE);
+	
+	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
+	
+		CrankMatCplxFloatN	linv;
+		CrankMatCplxFloatN	uinv;
+		
+		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+		
+		crank_mat_cplx_float_n_mul (&uinv, &linv, r);
+			
+		crank_mat_cplx_float_n_fini (&l);
+		crank_mat_cplx_float_n_fini (&u);
+		crank_mat_cplx_float_n_fini (&linv);
+		crank_mat_cplx_float_n_fini (&uinv);
+		
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
+}
+
+/**
+ * crank_mat_cplx_float_n_try_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Current implementation make uses LU Decomposition.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_cplx_float_n_try_inverse_self (	CrankMatCplxFloatN*	a	)
+{
+	CrankMatCplxFloatN	l;
+	CrankMatCplxFloatN	u;
+
+	guint i;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse-self", a, FALSE);
+
+	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
+
+		CrankMatCplxFloatN	linv;
+		CrankMatCplxFloatN	uinv;
+
+		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+
+		crank_mat_cplx_float_n_fini (a);
+		crank_mat_cplx_float_n_mul (&uinv, &linv, a);
+
+		crank_mat_cplx_float_n_fini (&l);
+		crank_mat_cplx_float_n_fini (&u);
+		crank_mat_cplx_float_n_fini (&linv);
+		crank_mat_cplx_float_n_fini (&uinv);
+		
+		return TRUE;
+	}
+	else {
+		return FALSE;
 	}
 }
 

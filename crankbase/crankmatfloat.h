@@ -177,6 +177,11 @@ void		crank_mat_float2_inverse (	CrankMatFloat2*	a,
 
 void		crank_mat_float2_inverse_self (	CrankMatFloat2*	a	);
 
+gboolean	crank_mat_float2_try_inverse (	CrankMatFloat2*	a,
+											CrankMatFloat2*	r	);
+
+gboolean	crank_mat_float2_try_inverse_self (	CrankMatFloat2*	a	);
+
 //////// Airthmetics ////////
 
 void		crank_mat_float2_muls (	CrankMatFloat2*	a,
@@ -395,6 +400,11 @@ void		crank_mat_float3_inverse (	CrankMatFloat3*	a,
 										CrankMatFloat3*	r	);
 
 void		crank_mat_float3_inverse_self (	CrankMatFloat3*	a	);
+
+gboolean	crank_mat_float3_try_inverse (	CrankMatFloat3*	a,
+											CrankMatFloat3*	r	);
+
+gboolean	crank_mat_float3_try_inverse_self (	CrankMatFloat3*	a	);
 
 //////// Airthmetics ////////
 
@@ -639,6 +649,11 @@ void		crank_mat_float4_inverse (	CrankMatFloat4*	a,
 										CrankMatFloat4*	r	);
 
 void		crank_mat_float4_inverse_self (	CrankMatFloat4*	a	);
+
+gboolean	crank_mat_float4_try_inverse (	CrankMatFloat4*	a,
+											CrankMatFloat4*	r	);
+
+gboolean	crank_mat_float4_try_inverse_self (	CrankMatFloat4*	a	);
 
 //////// Airthmetics ////////
 
@@ -897,6 +912,11 @@ void		crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 										CrankMatFloatN*	r	);
 
 void		crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	);
+
+gboolean	crank_mat_float_n_try_inverse (	CrankMatFloatN*	a,
+											CrankMatFloatN*	r	);
+
+gboolean	crank_mat_float_n_try_inverse_self (	CrankMatFloatN*	a	);
 
 //////// Scalar operations ////////
 

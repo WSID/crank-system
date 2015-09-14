@@ -342,6 +342,11 @@ void		crank_mat_cplx_float_n_inverse (	CrankMatCplxFloatN*	a,
 												CrankMatCplxFloatN*	r	);
 
 void		crank_mat_cplx_float_n_inverse_self (	CrankMatCplxFloatN*	a	);
+
+gboolean	crank_mat_cplx_float_n_try_inverse (	CrankMatCplxFloatN*	a,
+													CrankMatCplxFloatN*	r	);
+	
+gboolean	crank_mat_cplx_float_n_try_inverse_self (	CrankMatCplxFloatN*	a	);
 											
 
 void		crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,

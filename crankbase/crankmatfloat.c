@@ -798,6 +798,66 @@ crank_mat_float2_inverse_self (	CrankMatFloat2*	a	)
 }
 
 /**
+ * crank_mat_float2_try_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float2_try_inverse (	CrankMatFloat2*	a,
+							  	CrankMatFloat2*	r	)
+{
+	gfloat	det = crank_mat_float2_get_det (a);
+	
+	if (det != 0) {
+	  	gfloat	detinv = 1 / det;
+
+		r->m00 = a->m11 * detinv;
+		r->m11 = a->m00 * detinv;
+		r->m01 = - a->m01 * detinv;
+		r->m10 = - a->m10 * detinv;
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
+ * crank_mat_float2_try_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float2_try_inverse_self (	CrankMatFloat2*	a	)
+{
+	gfloat	det = crank_mat_float2_get_det (a);
+
+	if (det != 0) {
+	  	gfloat	detinv = 1 / det;
+
+		gfloat temp;
+
+		temp = a->m00 * detinv;
+	  	a->m00 = a->m11 * detinv;
+	  	a->m11 = temp;
+
+	  	a->m01 *= -detinv;
+	  	a->m10 *= -detinv;
+	  	
+	  	return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
  * crank_mat_float2_muls:
  * @a: A Matrix.
  * @b: A Scalar.
@@ -1814,6 +1874,53 @@ crank_mat_float3_inverse_self (	CrankMatFloat3*	a	)
 	crank_mat_float3_divs (&adj, det, a);
 }
 
+/**
+ * crank_mat_float3_try_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float3_try_inverse (	CrankMatFloat3*	a,
+							  	CrankMatFloat3*	r	)
+{
+  	CrankMatFloat3	adj;
+  	gfloat	det = crank_mat_float3_get_det (a);
+
+	if (det != 0) {
+	  	crank_mat_float3_get_adj (a, &adj);
+		crank_mat_float3_divs (&adj, det, r);
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
+ * crank_mat_float3_try_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then NaN matrix may be returned.
+ */
+gboolean
+crank_mat_float3_try_inverse_self (	CrankMatFloat3*	a	)
+{
+  	CrankMatFloat3	adj;
+  	gfloat	det = crank_mat_float3_get_det (a);
+
+	if (det != 0) {
+	  	crank_mat_float3_get_adj (a, &adj);
+		crank_mat_float3_divs (&adj, det, a);
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
 
 
 /**
@@ -3074,6 +3181,57 @@ crank_mat_float4_inverse_self (	CrankMatFloat4*	a	)
   	crank_mat_float4_get_adj (a, &adj);
 	crank_mat_float4_divs (&adj, det, a);
 }
+
+/**
+ * crank_mat_float4_try_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float4_try_inverse (	CrankMatFloat4*	a,
+							  	CrankMatFloat4*	r	)
+{
+  	CrankMatFloat4	adj;
+  	gfloat	det = crank_mat_float4_get_det (a);
+
+	if (det != 0) {
+	  	crank_mat_float4_get_adj (a, &adj);
+		crank_mat_float4_divs (&adj, det, r);
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
+ * crank_mat_float4_try_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float4_try_inverse_self (	CrankMatFloat4*	a	)
+{
+  	CrankMatFloat4	adj;
+  	gfloat	det = crank_mat_float4_get_det (a);
+
+	if (det != 0) {
+	  	crank_mat_float4_get_adj (a, &adj);
+		crank_mat_float4_divs (&adj, det, a);
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
+
 
 /**
  * crank_mat_float4_muls:
@@ -4725,17 +4883,18 @@ crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 	g_return_if_fail (a != r);
 	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "inverse", a);
 	
-	crank_lu_mat_float_n (a, &l, &u);
+	if (crank_lu_mat_float_n (a, &l, &u)) {
 	
-	crank_mat_float_n_lower_tri_inverse (&l, &linv);
-	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
+		crank_mat_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-	crank_mat_float_n_mul (&uinv, &linv, r);
+		crank_mat_float_n_mul (&uinv, &linv, r);
 	
-	crank_mat_float_n_fini (&l);
-	crank_mat_float_n_fini (&u);
-	crank_mat_float_n_fini (&linv);
-	crank_mat_float_n_fini (&uinv);
+		crank_mat_float_n_fini (&l);
+		crank_mat_float_n_fini (&u);
+		crank_mat_float_n_fini (&linv);
+		crank_mat_float_n_fini (&uinv);
+	}
 }
 
 /**
@@ -4756,17 +4915,94 @@ crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	)
 
 	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "inverse", a);
 	
-	crank_lu_mat_float_n (a, &l, &u);
+	if (crank_lu_mat_float_n (a, &l, &u)) {
 	
-	crank_mat_float_n_lower_tri_inverse (&l, &linv);
-	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
+		crank_mat_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-	crank_mat_float_n_mul (&uinv, &linv, a);
+		crank_mat_float_n_mul (&uinv, &linv, a);
 	
-	crank_mat_float_n_fini (&l);
-	crank_mat_float_n_fini (&u);
-	crank_mat_float_n_fini (&linv);
-	crank_mat_float_n_fini (&uinv);
+		crank_mat_float_n_fini (&l);
+		crank_mat_float_n_fini (&u);
+		crank_mat_float_n_fini (&linv);
+		crank_mat_float_n_fini (&uinv);
+	}
+}
+
+/**
+ * crank_mat_float_n_try_inverse:
+ * @a: A Matrix.
+ * @r: (out): A Matrix to store result.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Current implementation make uses LU Decomposition.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float_n_try_inverse (	CrankMatFloatN*	a,
+						 	 	CrankMatFloatN*	r	)
+{
+	CrankMatFloatN	l;
+	CrankMatFloatN	u;
+	
+	CrankMatFloatN	linv;
+	CrankMatFloatN	uinv;
+
+	g_return_val_if_fail (a != r, FALSE);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("MatFloatN", "try-inverse", a, FALSE);
+	
+	if (crank_lu_mat_float_n (a, &l, &u)) {
+		crank_mat_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
+	
+		crank_mat_float_n_mul (&uinv, &linv, r);
+	
+		crank_mat_float_n_fini (&l);
+		crank_mat_float_n_fini (&u);
+		crank_mat_float_n_fini (&linv);
+		crank_mat_float_n_fini (&uinv);
+		
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+/**
+ * crank_mat_float_n_try_inverse_self:
+ * @a: A Matrix.
+ *
+ * Gets an inverse of matrix.
+ * If the matrix is singular, then this operation is nop and returns %FALSE.
+ *
+ * Returns: Whether the matrix is non-singular and inverse is done.
+ */
+gboolean
+crank_mat_float_n_try_inverse_self (	CrankMatFloatN*	a	)
+{
+	CrankMatFloatN	l;
+	CrankMatFloatN	u;
+	
+	CrankMatFloatN	linv;
+	CrankMatFloatN	uinv;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("MatFloatN", "try-inverse-self", a, FALSE);
+	
+	if (crank_lu_mat_float_n (a, &l, &u)) {
+		crank_mat_float_n_lower_tri_inverse (&l, &linv);
+		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
+	
+		crank_mat_float_n_mul (&uinv, &linv, a);
+	
+		crank_mat_float_n_fini (&l);
+		crank_mat_float_n_fini (&u);
+		crank_mat_float_n_fini (&linv);
+		crank_mat_float_n_fini (&uinv);
+		return TRUE;
+	}
+	else return FALSE;
 }
 
 /**
