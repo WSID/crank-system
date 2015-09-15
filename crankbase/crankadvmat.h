@@ -84,6 +84,9 @@ gboolean	crank_lu_p_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 											CrankMatCplxFloatN*	l,
 											CrankMatCplxFloatN*	u	);
 
+gboolean	crank_ch_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+										CrankMatCplxFloatN*	l	);
+
 gboolean	crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
 													CrankMatCplxFloatN*	q,
 													CrankMatCplxFloatN*	r	);

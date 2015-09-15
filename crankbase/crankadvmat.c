@@ -959,6 +959,82 @@ crank_lu_p_mat_cplx_float_n (	CrankMatCplxFloatN*		a,
 }
 
 /**
+ * crank_ch_mat_cplx_float_n:
+ * @a: A Matrix.
+ * @l: (out): A Lower triangular matrix.
+ *
+ * Performs cholesky decomposition on @a, which results in @l, which
+ *
+ * * @l.mul (@l.star()) == @a.
+ *
+ * Returns: Whether cholesky decomposition performed on @a.
+ */
+gboolean
+crank_ch_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
+					  		CrankMatCplxFloatN*	l	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("advmat", "ch-MatCplxFloatN", a, FALSE);
+	
+	crank_mat_cplx_float_n_init_fill_uc (l, a->rn, a->rn, 0.0f, 0.0f);
+	
+	// Proceed row by row.
+	for (i = 0; i < a->rn; i++) {
+		CrankCplxFloat l_ij;
+		
+		// Gets l[i, j] = (a[i, j] - l[i,0]*l[j,0] - l[i,1]*l[j,1] ...) / l[j,j]
+		
+		for (j = 0; j < i; j++) {
+			gfloat d;
+		
+			crank_mat_cplx_float_n_get (a, i, j, &l_ij);
+			for (k = 0; k < j; k++) {
+				CrankCplxFloat	ik_jk;
+				
+				crank_cplx_float_mul_conj (
+						crank_mat_cplx_float_n_peek (l, i, k),
+						crank_mat_cplx_float_n_peek (l, j, k),
+						&ik_jk									);
+				
+				crank_cplx_float_sub_self (&l_ij, &ik_jk);
+			}
+			crank_cplx_float_div_self (&l_ij, crank_mat_cplx_float_n_peek (l, j, j));
+			crank_mat_cplx_float_n_set (l, i, j, &l_ij);
+		}
+		
+		
+		// Gets l[i, i] == a[i, i] - l[i, 0]**2 - ....
+		
+		crank_mat_cplx_float_n_get (a, i, i, &l_ij);
+		for (k = 0; k < i; k++) {
+			CrankCplxFloat*	ep = crank_mat_cplx_float_n_peek (l, i, k);
+			gfloat	esq = crank_cplx_float_get_norm_sq (ep);
+			
+			crank_cplx_float_subr_self (&l_ij, esq);
+		}
+		
+		// Diagonal component should be real positive.
+		// as complex multiplication of its conjugate is always positive real.
+		//
+		// In other word, @l_ij is negative or imaginary, there is no cholesky
+		// decomposition.
+		if (l_ij.real < 0) {
+			crank_mat_cplx_float_n_fini (l);
+			return FALSE;
+		}
+		
+		crank_cplx_float_sqrt_self (&l_ij);
+		crank_mat_cplx_float_n_set (l, i, i, &l_ij);
+	}
+	
+	return TRUE;
+}
+
+
+/**
  * crank_gram_schmidt_mat_cplx_float_n:
  * @a: A Matrix.
  * @q: (out): A Resulting Orthogonal Matrix.
