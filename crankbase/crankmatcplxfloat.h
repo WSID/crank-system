@@ -360,10 +360,10 @@ void		crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,
 
 void		crank_mat_cplx_float_n_conjugate_self (	CrankMatCplxFloatN*	a	);
 
-void		crank_mat_cplx_float_n_star (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	r	);
+void		crank_mat_cplx_float_n_conj_tpose (	CrankMatCplxFloatN*	a,
+												CrankMatCplxFloatN*	r	);
 
-void		crank_mat_cplx_float_n_star_self (	CrankMatCplxFloatN*	a	);
+void		crank_mat_cplx_float_n_conj_tpose_self (	CrankMatCplxFloatN*	a	);
 
 //////// Scalar operations ////////
 

@@ -2318,15 +2318,15 @@ crank_mat_cplx_float_n_conjugate_self (	CrankMatCplxFloatN*	a	)
 }
 
 /**
- * crank_mat_cplx_float_n_star:
+ * crank_mat_cplx_float_n_conj_tpose:
  * @a: A Matrix.
  * @r: (out): A Matrix to store result.
  *
- * Gets a star of matrix, a.k.a, conjugate transpose.
+ * Gets a conjugate transpose of a matrix.
  */
 void
-crank_mat_cplx_float_n_star (	CrankMatCplxFloatN*	a,
-								CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_conj_tpose (	CrankMatCplxFloatN*	a,
+									CrankMatCplxFloatN*	r	)
 {
   	guint	i;
   	guint	j;
@@ -2343,13 +2343,13 @@ crank_mat_cplx_float_n_star (	CrankMatCplxFloatN*	a,
 }
 
 /**
- * crank_mat_cplx_float_n_star_self:
+ * crank_mat_cplx_float_n_conj_tpose_self:
  * @a: A Matrix.
  *
- * Gets a star of matrix, a.k.a, conjugate transpose.
+ * Gets a conjugate transpose of a matrix.
  */
 void
-crank_mat_cplx_float_n_star_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_conj_tpose_self (	CrankMatCplxFloatN*	a	)
 {
   	guint	i;
   	guint	j;
