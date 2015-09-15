@@ -138,6 +138,9 @@ void		crank_cplx_float_conjugate (	CrankCplxFloat*	a,
 											
 void		crank_cplx_float_unit (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
+
+void		crank_cplx_float_sqrt (			CrankCplxFloat*	a,
+											CrankCplxFloat*	r	);
 											
 										
 void		crank_cplx_float_neg_self (		CrankCplxFloat*	a	);
@@ -147,6 +150,8 @@ void		crank_cplx_float_inverse_self (	CrankCplxFloat*	a	);
 void		crank_cplx_float_conjugate_self (	CrankCplxFloat*	a	);
 											
 void		crank_cplx_float_unit_self (	CrankCplxFloat*	a	);
+											
+void		crank_cplx_float_sqrt_self (	CrankCplxFloat*	a	);
 
 //////// Airthmetics  //////////////////////////////////////////////////////////
 

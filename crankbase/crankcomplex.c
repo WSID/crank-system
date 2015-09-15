@@ -623,6 +623,44 @@ crank_cplx_float_unit_self (	CrankCplxFloat*	a	)
 	crank_cplx_float_divr_self (a, norm);
 }
 
+/**
+ * crank_cplx_float_sqrt:
+ * @a: A Complex
+ * @r: (out): A Complex to store result.
+ *
+ * Gets square root of complex.
+ * If square roots have real part, returned value always have positive real part.
+ * If square roots are pure imaginary, returned value will have positive imaginary part.
+ */
+void
+crank_cplx_float_sqrt (	CrankCplxFloat*	a,
+						CrankCplxFloat*	r	)
+{
+	gfloat	anorm = crank_cplx_float_get_norm (a);
+	
+	r->real = sqrtf ((a->real + anorm) * 0.5f);
+	r->imag = sqrtf ((-(a->real) + anorm) * 0.5f);
+	
+	r->imag = (a->imag >= 0) ? r->imag : - (r->imag);
+}
+
+/**
+ * crank_cplx_float_sqrt_self:
+ * @a: A Complex
+ *
+ * Apply square root on complex.
+ * If square roots have real part, returned value always have positive real part.
+ * If square roots are pure imaginary, returned value will have positive imaginary part.
+ */
+void
+crank_cplx_float_sqrt_self (	CrankCplxFloat*	a	)
+{
+	CrankCplxFloat	temp;
+	
+	crank_cplx_float_copy (a, &temp);
+	crank_cplx_float_sqrt (&temp, a);
+}
+
 //////// Cplx - Real Operations ////////////////////////////////////////////////
 
 /**

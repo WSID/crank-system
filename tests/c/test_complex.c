@@ -39,6 +39,8 @@ static void		test_conjugate ( void );
 
 static void		test_unit ( void );
 
+static void		test_sqrt ( void );
+
 static void		test_addr ( void );
 
 static void		test_subr ( void );
@@ -96,6 +98,7 @@ main (	gint   argc,
 	g_test_add_func ("/crank/base/cplx/float/inverse",		test_inverse	);
 	g_test_add_func ("/crank/base/cplx/float/conjugate",	test_conjugate	);
 	g_test_add_func ("/crank/base/cplx/float/unit",			test_unit		);
+	g_test_add_func ("/crank/base/cplx/float/sqrt",			test_sqrt		);
 	g_test_add_func ("/crank/base/cplx/float/addr",			test_addr		);
 	g_test_add_func ("/crank/base/cplx/float/subr",			test_subr		);
 	g_test_add_func ("/crank/base/cplx/float/mulr",			test_mulr		);
@@ -202,6 +205,16 @@ test_unit ( void )
 	crank_cplx_float_unit (&cplx, &r);
 	
 	crank_assert_eqcplxfloat_cimm(&r, 0.6f, 0.8f);
+}
+
+static void
+test_sqrt ( void )
+{
+	CrankCplxFloat	cplx = {7.0f, 8.0f};
+	CrankCplxFloat	r;
+	
+	crank_cplx_float_sqrt (&cplx, &r);
+	crank_assert_eqcplxfloat_cimm (&r, 2.9690f, 1.3472f);
 }
 
 static void

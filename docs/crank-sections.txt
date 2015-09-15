@@ -372,6 +372,8 @@ crank_cplx_float_conjugate
 crank_cplx_float_conjugate_self
 crank_cplx_float_unit
 crank_cplx_float_unit_self
+crank_cplx_float_sqrt
+crank_cplx_float_sqrt_self
 <SUBSECTION Airthmetic>
 crank_cplx_float_addr
 crank_cplx_float_add

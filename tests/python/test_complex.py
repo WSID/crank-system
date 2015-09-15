@@ -100,6 +100,14 @@ class TestVecInt(unittest.TestCase):
 		self.assertFloat (a.real, 0.6)
 		self.assertFloat (a.imag, 0.8)
 	
+	def test_sqrt (self):
+		a = CrankBase.CplxFloat.init (7, 8)
+		
+		a = a.sqrt ()
+		
+		self.assertFloat (a.real, 2.9690)
+		self.assertFloat (a.imag, 1.3472)
+	
 	def test_addr (self):
 		a = CrankBase.CplxFloat.init (3, 4)
 		
