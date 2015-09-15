@@ -451,9 +451,6 @@ cb_ch (	GtkButton*	button,
 	CrankDemoMatrixAppPrivate*	priv = crank_demo_matrix_app_get_instance_private (self);
 	
 	CrankMatCplxFloatN	mat;
-	CrankMatFloatN		rmat;
-	
-	CrankMatFloatN		rmat_l;
 	CrankMatCplxFloatN	mat_l;
 	
 	crank_demo_mat_pad_get_mcf (priv->matpad_a, &mat);
@@ -462,15 +459,6 @@ cb_ch (	GtkButton*	button,
 	//
 	// This will be only valid if the matrix is symmetric and real.
 	
-	
-	if (! crank_mat_cplx_float_n_is_pure_real (&mat)) {
-		crank_demo_matrix_app_show_message (self,
-				GTK_MESSAGE_INFO,
-				"Cholesky Decomposition: supported for complex matrices." );
-	
-		goto END_CB_CH;
-	}
-	
 	if (! crank_mat_cplx_float_n_is_hermitian (&mat)) {
 		crank_demo_matrix_app_show_message (self,
 				GTK_MESSAGE_INFO,
@@ -478,17 +466,13 @@ cb_ch (	GtkButton*	button,
 	
 		goto END_CB_CH;
 	}
-	
-	crank_mat_cplx_float_n_get_real (&mat, &rmat);
 
-	if (crank_ch_mat_float_n (&rmat, &rmat_l)) {
-		crank_mat_cplx_float_n_init_ucm (&mat_l, &rmat_l, NULL);
+	if (crank_ch_mat_cplx_float_n (&mat, &mat_l)) {
 		crank_demo_mat_pad_set_mcf (priv->matpad_a, &mat_l);
 
 		gtk_widget_set_sensitive (	GTK_WIDGET (priv->eval),
 									crank_demo_matrix_app_op_is_possible (self)	);
 								
-		crank_mat_float_n_fini (&rmat_l);
 		crank_mat_cplx_float_n_fini (&mat_l);
 	}
 	
@@ -497,8 +481,6 @@ cb_ch (	GtkButton*	button,
 				GTK_MESSAGE_INFO,
 				"Cholesky Decomposition: failed."	);
 	}
-	
-	crank_mat_float_n_fini (&rmat);	
 	
 	END_CB_CH:			
 	crank_mat_cplx_float_n_fini (&mat);	
