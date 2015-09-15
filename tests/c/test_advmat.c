@@ -56,8 +56,6 @@ static void test_qr_householder_cplx (void);
 
 static void test_qr_givens_cplx (void);
 
-static void test_eval_power_cplx (void);
-
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
@@ -104,9 +102,6 @@ main (	gint   argc,
 
 	g_test_add_func ("/crank/base/advmat/qr/givens/mat/cplx/float/n", test_qr_givens_cplx);
 	
-	crank_test_add_func_timeout (
-			"/crank/base/advmat/eval/power/mat/cplx/float/n",
-			test_eval_power_cplx, G_USEC_PER_SEC);
 	g_test_run ();
 
 	return 0;
@@ -587,35 +582,4 @@ test_qr_givens_cplx (void)
 
 	crank_mat_cplx_float_n_fini (&a);
 	crank_mat_cplx_float_n_fini (&r);
-}
-
-static void
-test_eval_power_cplx (void)
-{
-	CrankMatCplxFloatN	a;
-	CrankVecCplxFloatN	evec;
-	CrankCplxFloat		eval;
-	
-	CrankCplxFloat		v;
-	
-	crank_mat_cplx_float_n_init_uc (&a, 3, 3,
-		2.0f, 0.0f,		-3.0f, 1.0f,		5.0f, 0.0f,
-		7.0f, 0.0f, 	-2.0f, 0.0f,		0.0f, 4.0f,
-		0.0f, -3.0f,	2.0f, -5.0f,		5.0f, 0.0f	);
-
-	g_assert (crank_eval_power_mat_cplx_float_n (&a, NULL, &evec, &eval));
-	
-	crank_assert_eqcplxfloat_cimm (&eval, 8.0942f, -2.2709f);
-	
-	crank_vec_cplx_float_n_get (&evec, 0, &v);
-	crank_assert_eqcplxfloat_cimm (&v, 0.4531f, 0.0228f);
-	
-	crank_vec_cplx_float_n_get (&evec, 1, &v);
-	crank_assert_eqcplxfloat_cimm (&v, 0.2300f, 0.3744f);
-	
-	crank_vec_cplx_float_n_get (&evec, 2, &v);
-	crank_assert_eqcplxfloat_cimm (&v, 0.7753f, 0.0000f);
-	
-	crank_mat_cplx_float_n_fini (&a);
-	crank_vec_cplx_float_n_fini (&evec);
 }
