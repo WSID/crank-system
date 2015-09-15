@@ -1648,7 +1648,7 @@ crank_mat_cplx_float_n_is_hermitian (	CrankMatCplxFloatN*	mat	)
 		
 		// Check diagonal parts are real, as they should be same as their conjugate.
 		for (i = 0; i < mat->rn; i++) {
-			if (! crank_cplx_float_is_pure_real (mat->data + (j * mat->cn) + i))
+			if (! crank_cplx_float_is_pure_real (mat->data + (i * mat->cn) + i))
 				return FALSE;
 		}
 		
@@ -1658,7 +1658,7 @@ crank_mat_cplx_float_n_is_hermitian (	CrankMatCplxFloatN*	mat	)
 				
 				crank_cplx_float_conjugate (	mat->data + (i * mat->cn) + j,
 												&conj_ij						);
-				
+
 				if (! crank_cplx_float_equal (	&conj_ij,
 												mat->data + (j * mat->cn) + i ))
 					return FALSE;
