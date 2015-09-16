@@ -80,6 +80,10 @@
             <property name="label">QR</property>
             <signal name="clicked" handler="cb_qr"/>
           </object> </child>
+          <child> <object class="GtkButton" id="advev">
+            <property name="label">EVAL</property>
+            <signal name="clicked" handler="cb_eigen"/>
+          </object> </child>
         
         </object> </child>
       

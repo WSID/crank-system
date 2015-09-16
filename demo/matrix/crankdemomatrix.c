@@ -119,7 +119,7 @@ static void cb_ch (	GtkButton*	button,	gpointer	user_data	);
 
 static void cb_qr (	GtkButton*	button,	gpointer	user_data	);
 
-
+static void cb_eigen (GtkButton*	button,	gpointer	user_data	);
 
 
 
@@ -190,6 +190,7 @@ _g_application_startup (GApplication*	application)
 	gtk_builder_add_callback_symbol (builder, "cb_lu", G_CALLBACK (cb_lu));
 	gtk_builder_add_callback_symbol (builder, "cb_ch", G_CALLBACK (cb_ch));
 	gtk_builder_add_callback_symbol (builder, "cb_qr", G_CALLBACK (cb_qr));
+	gtk_builder_add_callback_symbol (builder, "cb_eigen", G_CALLBACK (cb_eigen));
 	gtk_builder_add_from_resource (builder, "/crank/demo/matrix/crankdemomatrix.ui", NULL);
 	gtk_builder_connect_signals (builder, self);
 	
@@ -457,7 +458,8 @@ cb_ch (	GtkButton*	button,
 
 	// Crank system provides cholesky decomposition.
 	//
-	// This will be only valid if the matrix is symmetric and real.
+	// This will be only valid if the matrix is hermitian and [semi-]positive
+	// definite.
 	
 	if (! crank_mat_cplx_float_n_is_hermitian (&mat)) {
 		crank_demo_matrix_app_show_message (self,
@@ -521,4 +523,49 @@ cb_qr (	GtkButton*	button,
 								crank_demo_matrix_app_op_is_possible (self)	);
 								
 	crank_mat_cplx_float_n_fini (&mat);	
+}
+
+
+static void
+cb_eigen (	GtkButton*	button,
+			gpointer	user_data	)
+{
+	CrankDemoMatrixApp*	self = CRANK_DEMO_MATRIX_APP (user_data);
+	CrankDemoMatrixAppPrivate*	priv = crank_demo_matrix_app_get_instance_private (self);
+	
+	CrankMatCplxFloatN	mat;
+	
+	crank_demo_mat_pad_get_mcf (priv->matpad_a, &mat);
+	
+	// Crank System provides eigenvalue algorithms for real matrices.
+	//
+	// Power method returns both eigenvalue and eigenvector, but returns only
+	// dominant pair. (with most significant eigenvalue)
+	//
+	// QR method returns eigenvalues only. NaN is used in place of complex
+	// eigenvalues.
+	//
+	// Crank System does not provide eigenvalue algorithms for complex matrices.
+	
+	if (crank_mat_cplx_float_n_is_pure_real (&mat)) {
+		CrankMatFloatN	rmat;
+		CrankVecFloatN	evals;
+		
+		crank_mat_cplx_float_n_get_real (&mat, &rmat);
+		
+		crank_eval_qr_mat_float_n (&rmat, &evals);
+		crank_mat_cplx_float_n_fini (&mat);
+		crank_mat_cplx_float_n_init_diag_ucv (&mat, &evals, NULL);
+		
+		crank_demo_mat_pad_set_mcf (priv->matpad_a, &mat);
+		crank_mat_float_n_fini (&rmat);
+		crank_vec_float_n_fini (&evals);
+	}
+	else {
+		crank_demo_matrix_app_show_message (self,
+				GTK_MESSAGE_INFO,
+				"EVAL: Not supported for complex matrices"	);
+	}
+	
+	crank_mat_cplx_float_n_fini (&mat);
 }
