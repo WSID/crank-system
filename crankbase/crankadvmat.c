@@ -374,7 +374,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 									CrankMatFloatN*		q,
 									CrankMatFloatN*		r	)
 {
-	CrankVecFloatN*		e;
+	CrankVecFloatN*	e;
 	
 	guint	i;
 	guint	j;
@@ -390,6 +390,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 	for (i = 0; i < a->rn; i++) {
 		CrankVecFloatN	ac;
 		CrankVecFloatN	u;
+		gfloat			umagn;
 		
 		// u = a.col[i]
 		crank_mat_float_n_get_col (a, i, &ac);
@@ -409,16 +410,15 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 		}
 	
 		// e[i] = u.unit
-		crank_mat_float_n_set (r, i, i, crank_vec_float_n_get_magn (&u));
-		crank_vec_float_n_unit (&u, e + i);
+		umagn = crank_vec_float_n_get_magn (&u);
+		crank_mat_float_n_set (r, i, i, umagn);
+		crank_vec_float_n_divs (&u, umagn, e + i);
 		crank_vec_float_n_fini (&u);
 	}
 
 	crank_mat_float_n_init_col_arr (q, a->rn, e);
-
-	for (i = 0; i < a->rn; i++) {
-		crank_vec_float_n_fini (e + i);
-	}
+	
+	for (k = 0; k < a->rn; k++) crank_vec_float_n_fini (e + k);
 	g_free (e);
 	
 	return TRUE;
@@ -527,7 +527,7 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 	
 	
 	g_return_val_if_fail (a != r, FALSE);
-	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatFloatN", "gram-schmidt", a, FALSE);
+	CRANK_MAT_WARN_IF_NON_SQUARE_RET ("Advmat-MatFloatN", "qr-givens", a, FALSE);
 	
 	if (a->rn == 1) {
 		crank_mat_float_n_init (r, 1, 1,
@@ -539,12 +539,10 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 	crank_mat_float_n_copy (a, &pa);
 	
 	for (i = 0; i < a->rn - 1; i++) {
-		guint	n = a->rn - i;
-		
-		for (j = n - 1; 0 < j; j--) {
+		for (j = a->rn - 1; i < j; j--) {
 			CrankVecFloat2 x = {
-					crank_mat_float_n_get (&pa, j - 1, 0),
-					crank_mat_float_n_get (&pa, j, 0)};
+					crank_mat_float_n_get (&pa, j - 1, i),
+					crank_mat_float_n_get (&pa, j, i)};
 			
 			if ((x.x == 0) && (x.y == 0)) {
 				crank_mat_float_n_fini (&pa);
@@ -559,27 +557,31 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 			//
 			// We don't build up Full givens rotation matrix,
 			// instead we apply this with sin, cos value.
-			for (k = 0; k < n; k++) {
-				gfloat	e = crank_mat_float_n_get (&pa, j - 1, k);
-				gfloat	f = crank_mat_float_n_get (&pa, j, k);
+			for (k = i; k < a->rn; k++) {
+				gfloat*	paa = pa.data + (a->cn * (j - 1)) + k;
+				gfloat*	pab = paa + (a->cn);
+							
+				gfloat	e = *paa;
+				gfloat	f = *pab;
 				
-				crank_mat_float_n_set (&pa, j-1, k,
-						e * x.x + f * x.y);
+				*paa = 	e * x.x + f * x.y;
+				*pab = - e * x.y + f * x.x;
+				
+				//crank_mat_float_n_set (&pa, j-1, k,
+				//		e * x.x + f * x.y);
 						
-				crank_mat_float_n_set (&pa, j, k,
-						- e * x.y + f * x.x);
+				//crank_mat_float_n_set (&pa, j, k,
+				//		- e * x.y + f * x.x);
 			}
 		}
 		
-		for (j = 0; j < n; j++) {
-			crank_mat_float_n_set (r, i, i + j,
-				crank_mat_float_n_get (&pa, 0, j));
+		for (j = i; j < a->rn; j++) {
+			crank_mat_float_n_set (r, i, j,
+				crank_mat_float_n_get (&pa, i, j));
 		}
-		
-		crank_mat_float_n_slice (&pa, 1, 1, pa.rn, pa.cn, &pa);
 	}
 	
-	crank_mat_float_n_set (r, a->rn - 1, a->rn - 1, pa.data[0]);
+	crank_mat_float_n_set (r, a->rn - 1, a->rn - 1, pa.data[(a->rn * a->rn) - 1]);
 	
 	crank_mat_float_n_fini (&pa);
 	
