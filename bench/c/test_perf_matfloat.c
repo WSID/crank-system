@@ -25,19 +25,24 @@
 
 //////// Testing Variables /////////////////////////////////////////////////////
 
-static guint		N	= 1024;
+static guint		N	= 512;
 static guint		R	= 8;
 
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static void test_gen_mat_float_n (CrankMatFloatN* mat);
-static void	test_gen_mat_float_4 (CrankMatFloat4* mat);
+static void test_gen_mat_float_n (		CrankMatFloatN* mat);
+static void test_gen_mat_float_n_sym (	CrankMatFloatN* mat);
+static void	test_gen_mat_float_4 (		CrankMatFloat4* mat);
 
 static void test_mat_mul (void);
 static void test_mat_mul_self (void);
 static void test_mat4_mul (void);
 
+static void test_mat_lu (void);
+static void test_mat_gram_schmidt (void);
+static void test_mat_householder (void);
+static void test_mat_givens (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -56,6 +61,17 @@ main (gint   argc,
 			test_mat_mul_self);
 	g_test_add_func ("/crank/base/mat/float/4/perf/mul",
 			test_mat4_mul);
+			
+	g_test_add_func ("/crank/base/mat/float/n/perf/lu",
+			test_mat_lu	);
+	g_test_add_func ("/crank/base/mat/float/n/perf/qr/gram-schmidt",
+			test_mat_gram_schmidt	);
+	//g_test_add_func ("/crank/base/mat/float/n/perf/qr/householder",
+	//		test_mat_householder	);
+	// We don't use it for now.
+	// This will take so long, as slicing out a matrix.
+	g_test_add_func ("/crank/base/mat/float/n/perf/qr/givens",
+			test_mat_givens	);
 	
 	g_test_run ();
 
@@ -75,6 +91,53 @@ test_gen_mat_float_n (CrankMatFloatN* mat)
 	for (i = 0; i < N*N; i++) {
 		mat->data[i] = g_test_rand_double ();
 	}
+}
+
+static void
+test_gen_mat_float_n_sym (CrankMatFloatN* mat)
+{
+	guint i;
+	guint j;
+	
+	crank_mat_float_n_init_fill (mat, N, N, 0.0f);
+	
+	for (i = 0; i < N; i++) {
+		crank_mat_float_n_set (mat, i, i, (gfloat) g_test_rand_double ());
+		
+		for (j = i + 1; j < N; j++) {
+			crank_mat_float_n_set (mat, i, j, (gfloat) g_test_rand_double ());
+			crank_mat_float_n_set (mat, j, i, (gfloat) g_test_rand_double ());
+		}
+	}
+}
+
+static void
+test_gen_mat_float_n_pd (CrankMatFloatN* mat)
+{
+	guint i;
+	guint j;
+	
+	CrankMatFloatN	a;
+	CrankMatFloatN	b;
+	
+	crank_mat_float_n_init_fill (&a, N, N, 0.0f);
+	crank_mat_float_n_init_fill (&b, N, N, 0.0f);
+	
+	for (i = 0; i < N; i++) {
+		gfloat	e = (gfloat) g_test_rand_double ();
+		gfloat	ep = ABS (e) + 1;
+		crank_mat_float_n_set (&a, i, i, ep);
+		crank_mat_float_n_set (&b, i, i, ep);
+		
+		for (j = i + 1; j < N; j++) {
+			e = (gfloat) g_test_rand_double ();
+			ep = ABS (e) + 1;
+			crank_mat_float_n_set (&a, i, j, ep);
+			crank_mat_float_n_set (&b, j, i, ep);
+		}
+	}
+	
+	crank_mat_float_n_mul (&a, &b, mat);
 }
 
 static void
@@ -161,5 +224,103 @@ test_mat4_mul (void)
 		g_test_minimized_result ( g_test_timer_elapsed (), "mul4");
 		
 		g_free (mats);
+	}
+}
+
+static void
+test_mat_lu (void)
+{
+	guint i;
+	
+	for (i = 0; i < R; i++) {
+		CrankMatFloatN	a;
+		CrankMatFloatN	b;
+		CrankMatFloatN	c;
+			
+		test_gen_mat_float_n (&a);
+		
+		g_test_timer_start ();
+		
+		crank_lu_mat_float_n (&a, &b, &c);
+		
+		g_test_minimized_result ( g_test_timer_elapsed (), "lu");
+		
+		crank_mat_float_n_fini (&a);
+		crank_mat_float_n_fini (&b);
+		crank_mat_float_n_fini (&c);
+	}
+}
+
+static void
+test_mat_gram_schmidt (void)
+{
+	guint i;
+	
+	for (i = 0; i < R; i++) {
+		CrankMatFloatN	a = {0};
+		CrankMatFloatN	b = {0};
+		CrankMatFloatN	c = {0};
+			
+		test_gen_mat_float_n (&a);
+		
+		g_test_timer_start ();
+		
+		if (! crank_gram_schmidt_mat_float_n (&a, &b, &c)) {
+			g_test_message ("QR decomp failed! This means that generation may have isssues.");
+		}
+		
+		g_test_minimized_result ( g_test_timer_elapsed (), "qr-gram-schmidt");
+		
+		crank_mat_float_n_fini (&a);
+		crank_mat_float_n_fini (&b);
+		crank_mat_float_n_fini (&c);
+	}
+}
+
+static void
+test_mat_householder (void)
+{
+	guint i;
+	
+	for (i = 0; i < R; i++) {
+		CrankMatFloatN	a = {0};
+		CrankMatFloatN	b = {0};
+			
+		test_gen_mat_float_n (&a);
+		
+		g_test_timer_start ();
+		
+		if (! crank_qr_householder_mat_float_n (&a, &b)) {
+			g_test_message ("QR decomp failed! This means that generation may have isssues.");
+		}
+		
+		g_test_minimized_result ( g_test_timer_elapsed (), "qr-householder");
+		
+		crank_mat_float_n_fini (&a);
+		crank_mat_float_n_fini (&b);
+	}
+}
+
+static void
+test_mat_givens (void)
+{
+	guint i;
+	
+	for (i = 0; i < R; i++) {
+		CrankMatFloatN	a = {0};
+		CrankMatFloatN	b = {0};
+			
+		test_gen_mat_float_n (&a);
+		
+		g_test_timer_start ();
+		
+		if (! crank_qr_givens_mat_float_n (&a, &b)) {
+			g_test_message ("QR decomp failed! This means that generation may have isssues.");
+		}
+		
+		g_test_minimized_result ( g_test_timer_elapsed (), "qr-givens");
+		
+		crank_mat_float_n_fini (&a);
+		//crank_mat_float_n_fini (&b);
 	}
 }
