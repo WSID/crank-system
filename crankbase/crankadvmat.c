@@ -316,23 +316,25 @@ crank_ch_mat_float_n (CrankMatFloatN*	a,
 	
 	// Proceed row by row.
 	for (i = 0; i < a->rn; i++) {
-		gfloat l_ij;
+		gfloat*	l_rowi;
+		gfloat	l_ij;
+		
+		l_rowi = l->data + (i * l->cn);
+	
 		
 		// Gets l[i, j] = (a[i, j] - l[i,0]*l[j,0] - l[i,1]*l[j,1] ...) / l[j,j]
 		
 		for (j = 0; j < i; j++) {
-			gfloat d;
-		
-			gfloat*	l_rowi = l->data + (i * l->cn);
-			gfloat*	l_rowj = l->data + (j * l->cn);
+			gfloat*	l_rowj;
+			gfloat	d;
+			
+			l_rowj = l->data + (j * l->cn);
 			
 			l_ij = crank_mat_float_n_get (a, i, j);
 			
-			for (k = 0; k < j; k++) {
-				l_ij -=	l_rowi[k] * 
-						l_rowj[k];
-			}
-			l_ij /= l_rowj[j]; //crank_mat_float_n_get (l, j, j);
+			for (k = 0; k < j; k++)	l_ij -=	l_rowi[k] * l_rowj[k];
+			
+			l_ij /= l_rowj[j];
 			l_rowi[j] = l_ij;
 			
 		}
@@ -341,16 +343,14 @@ crank_ch_mat_float_n (CrankMatFloatN*	a,
 		// Gets l[i, i] == a[i, i] - l[i, 0]**2 - ....
 		
 		l_ij = crank_mat_float_n_get (a, i, i);
-		for (k = 0; k < i; k++) {
-			gfloat	e = crank_mat_float_n_get (l, i, k);
-			l_ij -= e*e;
-		}
+		
+		for (k = 0; k < i; k++) l_ij -= l_rowi[k] * l_rowi[k];
 		
 		if (l_ij < 0.0f) {
 			crank_mat_float_n_fini (l);
 			return FALSE;
 		}
-		crank_mat_float_n_set (l, i, i, sqrtf (l_ij));
+		l_rowi[i] = sqrtf (l_ij);
 	}
 	
 	return TRUE;
@@ -394,39 +394,42 @@ crank_ldl_mat_float_n (CrankMatFloatN*	a,
 	
 	// Proceed row by row.
 	for (i = 0; i < a->rn; i++) {
-		gfloat l_ij;
+		gfloat*	l_rowi;
+		gfloat 	l_ij;
+		
+		l_rowi = l->data + (i * l->cn);
 		
 		// Gets l[i, j] = ( a[i, j]
 		//                  - l[i,0] * l[j,0] * d[0]
 		//                  - l[i,1] * l[j,1] * d[1] ...) / d[j]
 		
 		for (j = 0; j < i; j++) {
+			gfloat*	l_rowj;
+			
 			l_ij = crank_mat_float_n_get (a, i, j);
-			for (k = 0; k < j; k++) {
-				l_ij -=	crank_mat_float_n_get (l, i, k) *
-						crank_mat_float_n_get (l, j, k) *
-						crank_vec_float_n_get (d, k);
-			}
-			l_ij /= crank_vec_float_n_get (d, j);
-			crank_mat_float_n_set (l, i, j, l_ij);
+			l_rowj = l->data + (j * l->cn);
+			
+			for (k = 0; k < j; k++)
+				l_ij -=	l_rowi[k] * l_rowj[k] *	d->data[k];
+			
+			l_ij /= d->data[j];
+			l_rowi[j] = l_ij;
 		}
 		
 		
 		// Gets d[i] == a[i, i] - l[i, 0]**2 * d[0] - ....
 		
 		l_ij = crank_mat_float_n_get (a, i, i);
-		for (k = 0; k < i; k++) {
-			gfloat	e = crank_mat_float_n_get (l, i, k);
-			l_ij -= e*e * crank_vec_float_n_get (d, k);
-		}
+		for (k = 0; k < i; k++)
+			l_ij -= l_rowi[k] * l_rowi[k] * d->data[k];
 		
 		if (l_ij < 0.0f) {
 			crank_mat_float_n_fini (l);
 			crank_vec_float_n_fini (d);
 			return FALSE;
 		}
-		crank_vec_float_n_set (d, i, l_ij);
-		crank_mat_float_n_set (l, i, i, 1.0f);
+		d->data[i] = l_ij;
+		l_rowi[i] = 1.0f;
 	}
 	
 	return TRUE;
