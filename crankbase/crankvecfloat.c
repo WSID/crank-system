@@ -3478,8 +3478,8 @@ crank_vec_float_n_hash (	gconstpointer	a	)
 	guint	hash = 0;
 	
 	for (i = 0; i < vec->n; i++) {
-		gdouble de = vec->data[i];
-		hash += 37 + g_double_hash (&de);
+		hash *= 33;
+		hash += crank_float_hash (vec->data + i);
 	}
 	
 	return hash;
