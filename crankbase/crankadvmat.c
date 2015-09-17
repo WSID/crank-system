@@ -485,6 +485,8 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 			
 			crank_vec_float_n_sub_self (&u, &proj);
 			crank_mat_float_n_set (r, j, i, dot);
+			
+			crank_vec_float_n_fini (&proj);
 		}
 	
 		// e[i] = u.unit
@@ -492,6 +494,7 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
 		crank_mat_float_n_set (r, i, i, umagn);
 		crank_vec_float_n_divs (&u, umagn, e + i);
 		crank_vec_float_n_fini (&u);
+		crank_vec_float_n_fini (&ac);
 	}
 
 	crank_mat_float_n_init_col_arr (q, a->rn, e);
