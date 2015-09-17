@@ -53,33 +53,93 @@
  * But when decomposition come into play, some operation can be done quickly.
  *
  * For example, when LU decomposition is found, determinent can be obtained by
- * multipling diagonal components of each factors, and it tooks O(n cube).
- * * Getting LU decomposition takes O(n cube) times.
+ * multipling diagonal components of each factors, and it tooks
+ * O(n<superscript>3</superscript>).
+ * * Getting LU decomposition takes O(n<superscript>3</superscript>) times.
  * * And getting product of diagonal components takes O(n) times.
  * This is much faster than O(n!) times.
  * 
- * Currently Crank System provides,
- * * LU Decomposition
- *   * A = L U
- *     * L is lower triangular matrix.
- *     * U is upper triangular matrix.
- *   * Crout's Method.
+ * <table><title>Decompositions</title>
+ *   <tgroup cols="2" align="left" colsep="1" rowsep="0">
+ *     <thead>
+ *       <row>
+ *         <entry>Name and description</entry>
+ *         <entry>Factors</entry>
+ *       </row>
+ *     </thead>
+ *     <tbody>
+ *       <row>
+ *         <entry morerows="1">
+ *           LU Decomposition
+ *           <para>A = L U </para>
+ *           <para>A is non-singular</para>
+ *           <para>Crank System uses Crout's Method</para></entry>
+ *         <entry>L
+ *           <para>Lower triangular</para></entry>
+ *       </row>
  *
- * * QR Decomposition
- *   * A = Q R
- *     * Q is Orthogonal Matrix.
- *     * R is upper triangular matrix.
- *   * Gram Schmidt Process
- *   * Householder Method (Does not return Q)
+ *       <row>
+ *         <entry>U
+ *           <para>Upper triangular</para>
+ *           <para>All diagonal components are 1</para></entry>
+ *       </row>
+ 
+ *       <row>
+ *         <entry>
+ *           Cholesky Decomposition
+ *           <para>A = L L<superscript>*</superscript> </para>
+ *           <para>A is hermitian</para>
+ *           <para>A is positive/semi-positive definite</para> </entry>
+ *         <entry>L
+ *           <para>Lower triangular</para></entry>
+ *       </row>
+ 
+ *       <row>
+ *         <entry morerows="1">
+ *           LDLT Decomposition
+ *           <para>A = L D L<superscript>*</superscript> </para>
+ *           <para>A is hermitian</para>
+ *           <para>A is positive/semi-positive definite</para>
+ *           <para>Avoids <function>sqrt</function>()</para></entry>
+ *         <entry>L
+ *           <para>Lower triangular</para></entry>
+ *       </row>
+ *       <row>
+ *         <entry>D
+ *           <para>Diagonal Matrix</para>
+ *           <para>Crank System returns diagonal vector instad of matrix.</para></entry>
+ *       </row>
+ *
+ *       <row>
+ *         <entry morerows="1">
+ *           QR Decomposition
+ *           <para>A = Q R </para>
+ *           <para>Crank Ststem provides 3 method to perform.
+ *             <itemizedlist>
+ *               <listitem>Gram Schmidt</listitem>
+ *               <listitem>Householder</listitem>
+ *               <listitem>Givens</listitem>
+ *             </itemizedlist></para>
+ *           <para>Crank System does not support rectangular matrices</para></entry>
+ *         <entry>Q
+ *           <para>Orthogonal/Unitary matrix</para></entry>
+ *       </row>
+ *       <row>
+ *         <entry>R
+ *           <para>Upper triangular matrix</para></entry>
+ *       </row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
 
 
 /**
  * crank_lu_mat_float_n:
- * @a: A Matrix.
+ * @a: A Square matrix.
  * @l: (out): Lower triangular factor.
- * @u: (out): Upper triangular factor.
+ * @u: (out): Upper triangular factor, whose all diagonal components are 1.
  *
  * Try to get LU decomposition of @a.
  *
@@ -88,6 +148,8 @@
  *
  * Note that this does not perform pivoting. If pivoting is required, then use
  * crank_lu_p_mat_float_n().
+ *
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: Whether @a has LU Decomposition.
  */
@@ -164,10 +226,10 @@ crank_lu_mat_float_n (	CrankMatFloatN*	a,
 
 /**
  * crank_lu_p_mat_float_n:
- * @a: A Matrix.
+ * @a: A Square matrix.
  * @p: (out): Pivoting result.
  * @l: (out): Lower triangular factor.
- * @u: (out): Upper triangular factor.
+ * @u: (out): Upper triangular factor, whose all diagonal components are 1.
  *
  * Try to get LU decomposition of @a, with pivoting.
  *
@@ -179,6 +241,8 @@ crank_lu_mat_float_n (	CrankMatFloatN*	a,
  * in this function, the pivot result is returned as #CrankPermutation.
  *
  * For implementation detail, please see crank_lu_mat_float_n().
+ *
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: Whether @a has LU Decomposition.
  */
@@ -226,12 +290,15 @@ crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
 
 /**
  * crank_ch_mat_float_n:
- * @a: A Matrix.
+ * @a: A Symmetric matrix.
  * @l: (out): A Lower triangular matrix.
  *
- * Performs cholesky decomposition on @a, which results in @l, which
+ * Performs cholesky decomposition on @a, which results in @l, which meets a
+ * statement below.
  *
- * * @l.mul (@l.star()) == @a.
+ * * @l.mul (@l.transpose()) == @a.
+ *
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: Whether cholesky decomposition performed on @a.
  */
@@ -286,13 +353,13 @@ crank_ch_mat_float_n (CrankMatFloatN*	a,
 
 /**
  * crank_ldl_mat_float_n:
- * @a: A Matrix.
+ * @a: A Symmetric atrix.
  * @l: (out): A Lower triangular matrix.
  * @d: (out): A Diagonal components.
  *
  * Performs LDLT decomposition on @a, which results in @l, @d, which is
  *
- * * @l.mul (D.mul (@l.star())) == @a.
+ * * @l.mul (D.mul (@l.transpose())) == @a.
  *
  * where D is diagonal matrix whose diagonal is @d.
  *
@@ -301,6 +368,8 @@ crank_ch_mat_float_n (CrankMatFloatN*	a,
  *
  * LDLT avoids performing sqrt on diagonal elements, while multiplication happens
  * more than Cholskey Decomposition.
+ *
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: Whether cholesky decomposition performed on @a.
  */
@@ -367,6 +436,8 @@ crank_ldl_mat_float_n (CrankMatFloatN*	a,
  *
  * Gets QR Decomposition by Gram Schmidt process.
  *
+ * Time: O((@a->rn)<superscript>3</superscript>)
+ *
  * Returns: %TRUE if @a has QR Decomposition.
  */
 gboolean
@@ -430,6 +501,8 @@ crank_gram_schmidt_mat_float_n (	CrankMatFloatN*		a,
  * @r: (out): A Lower triangular matrix.
  *
  * Performs QR Decomposition by householder method.
+ 
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: %TRUE if @a has QR Decomposition.
  */
@@ -493,6 +566,8 @@ crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
 			crank_mat_float_n_set (r, i, i + j,
 					crank_mat_float_n_get (&qpai, 0, j));
 		}
+		// FIXME: Replace slicing by other actions.
+		// Slicing requires allocation and copying.
 		crank_mat_float_n_slice (&qpai, 1, 1, qpai.rn, qpai.cn, &pa);
 	}
 	// Fill last part of r
@@ -512,6 +587,8 @@ crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
  * @r: (out): A Lower triangular matrix.
  *
  * Performs QR Decomposition by Givens rotation.
+ 
+ * Time: O((@a->rn)<superscript>3</superscript>)
  *
  * Returns: %TRUE if @a has QR Decomposition.
  */
@@ -566,12 +643,6 @@ crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
 				
 				*paa = 	e * x.x + f * x.y;
 				*pab = - e * x.y + f * x.x;
-				
-				//crank_mat_float_n_set (&pa, j-1, k,
-				//		e * x.x + f * x.y);
-						
-				//crank_mat_float_n_set (&pa, j, k,
-				//		- e * x.y + f * x.x);
 			}
 		}
 		
