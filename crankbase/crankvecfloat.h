@@ -854,6 +854,11 @@ void			crank_vec_float_n_mix	(		CrankVecFloatN*	a,
 												CrankVecFloatN*	c,
 												CrankVecFloatN*	r	);
 
+//////// Macro variant of operations ///////////////////////////////////////////
+
+#define crank_vec_float_n_get(vec,index)		CRANK_VEC_GET(vec,index)
+#define crank_vec_float_n_set(vec,index,value)	CRANK_VEC_SET(vec,index,value)
+
 G_END_DECLS
 
 #endif //CRANKBOOLVEC_H

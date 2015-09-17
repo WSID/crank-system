@@ -3319,10 +3319,10 @@ crank_vec_float_n_get_size (	CrankVecFloatN*	vec	)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float_n_get	(	CrankVecFloatN*	vec,
+(crank_vec_float_n_get)	(	CrankVecFloatN*	vec,
 							const guint		index	)
 {
-	return vec->data[index];
+	return CRANK_VEC_GET (vec, index);
 }
 
 /**
@@ -3334,11 +3334,11 @@ crank_vec_float_n_get	(	CrankVecFloatN*	vec,
  * Sets element of vector at @index, by @value.
  */
 void
-crank_vec_float_n_set			(	CrankVecFloatN*	vec,
-									const guint		index,
-									const gfloat		value	)
+(crank_vec_float_n_set)	(	CrankVecFloatN*	vec,
+							const guint		index,
+							const gfloat	value	)
 {
-	vec->data[index] = value;
+	CRANK_VEC_SET (vec, index, value);
 }
 
 /**

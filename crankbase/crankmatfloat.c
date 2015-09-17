@@ -4228,11 +4228,11 @@ crank_mat_float_n_get_col_size (	CrankMatFloatN*	mat	)
  * Returns: Element at given indices.
  */
 gfloat
-crank_mat_float_n_get (	CrankMatFloatN*	mat,
-					  	const guint		i,
-					  	const guint		j	)
+(crank_mat_float_n_get) (	CrankMatFloatN*	mat,
+					  		const guint		i,
+					  		const guint		j	)
 {
-	return mat->data [(mat->cn * i)  +  j];
+	return CRANK_MAT_GET(mat, i, j);
 }
 
 /**
@@ -4245,12 +4245,12 @@ crank_mat_float_n_get (	CrankMatFloatN*	mat,
  * Sets element at given indices.
  */
 void
-crank_mat_float_n_set (	CrankMatFloatN*	mat,
-					  	const guint		i,
-					  	const guint		j,
-					  	const gfloat	value	)
+(crank_mat_float_n_set) (	CrankMatFloatN*	mat,
+						  	const guint		i,
+						  	const guint		j,
+						  	const gfloat	value	)
 {
-	mat->data [(mat->cn * i)  +  j] = value;
+	CRANK_MAT_SET(mat, i, j, value);
 }
 
 /**
