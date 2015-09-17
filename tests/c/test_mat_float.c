@@ -604,22 +604,24 @@ test_n_get_col (void)
 static void
 test_n_slice (void)
 {
-	CrankMatFloatN	a = {0};
+	CrankMatFloatN	a;
+	CrankMatFloatN	b;
 	
 	crank_mat_float_n_init (&a, 3, 3,
 			1.0f,	2.0f,	3.0f,
 			4.0f,	5.0f,	6.0f,
 			7.0f,	8.0f,	9.0f	);
 
-	crank_mat_float_n_slice (&a, 1, 1, 3, 2, &a);
+	crank_mat_float_n_slice (&a, 1, 1, 3, 2, &b);
 	
-	g_assert_cmpuint (a.rn, ==, 2);
-	g_assert_cmpuint (a.cn, ==, 1);
+	g_assert_cmpuint (b.rn, ==, 2);
+	g_assert_cmpuint (b.cn, ==, 1);
 	
-	test_assert_float (a.data[0], 5.0f);
-	test_assert_float (a.data[1], 8.0f);
+	test_assert_float (b.data[0], 5.0f);
+	test_assert_float (b.data[1], 8.0f);
 	
 	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&b);
 }
 
 static void
