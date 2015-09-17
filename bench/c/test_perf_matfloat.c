@@ -47,6 +47,7 @@ static void test_gen_mat_float_n (		CrankMatFloatN* mat);
 static void test_gen_mat_float_n_sym (	CrankMatFloatN* mat);
 static void	test_gen_mat_float_4 (		CrankMatFloat4* mat);
 
+static void bench_mat_transpose (void);
 static void bench_mat_mul (void);
 static void bench_mat_inv (void);
 static void bench_mat4_mul (void);
@@ -68,6 +69,8 @@ main (gint   argc,
 	g_test_message ("N: %u", N);
 	g_test_message ("R: %u", R);
 	
+	test_add_bench ("/crank/base/mat/float/n/bench/transpose",
+			(BenchFunc)bench_mat_transpose, NULL);
 	test_add_bench ("/crank/base/mat/float/n/bench/mul",
 			(BenchFunc)bench_mat_mul, NULL);
 	test_add_bench ("/crank/base/mat/float/n/bench/inv",
@@ -187,6 +190,24 @@ test_gen_mat_float_4 (CrankMatFloat4* mat)
 	gfloat*	matp = (gfloat*) mat;
 	
 	for (i = 0; i < 16; i++) matp[i] = g_test_rand_double ();
+}
+
+static void
+bench_mat_transpose (void)
+{
+	CrankMatFloatN	a;
+	CrankMatFloatN	b;
+	
+	test_gen_mat_float_n (&a);
+	
+	g_test_timer_start ();
+	
+	crank_mat_float_n_transpose (&a, &b);
+	
+	g_test_minimized_result ( g_test_timer_elapsed (), "transpose");
+	
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (&b);
 }
 
 
