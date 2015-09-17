@@ -54,6 +54,7 @@ static void bench_mat4_mul (void);
 
 static void bench_mat_lu (void);
 static void bench_mat_ch (void);
+static void bench_mat_ldl (void);
 static void bench_mat_gram_schmidt (void);
 static void bench_mat_householder (void);
 static void bench_mat_givens (void);
@@ -82,6 +83,8 @@ main (gint   argc,
 			(BenchFunc)bench_mat_lu, NULL	);
 	test_add_bench ("/crank/base/mat/float/n/bench/ch",
 			(BenchFunc)bench_mat_ch, NULL	);
+	test_add_bench ("/crank/base/mat/float/n/bench/ldl",
+			(BenchFunc)bench_mat_ldl, NULL	);
 	test_add_bench ("/crank/base/mat/float/n/bench/qr/gram-schmidt",
 			(BenchFunc)bench_mat_gram_schmidt, NULL	);
 	//test_add_bench ("/crank/base/mat/float/n/perf/qr/householder",
@@ -314,6 +317,32 @@ bench_mat_ch (void)
 	if (!res)
 		g_test_message ("Cholesky decomp failed! This means that generation may have isssues.");
 	else crank_mat_float_n_fini (&b);
+
+	crank_mat_float_n_fini (&a);
+}
+
+static void
+bench_mat_ldl (void)
+{
+	gboolean		res;
+	CrankMatFloatN	a;
+	CrankMatFloatN	b;
+	CrankVecFloatN	c;
+	
+	test_gen_mat_float_n_pd (&a);
+
+	g_test_timer_start ();
+
+	res = crank_ldl_mat_float_n (&a, &b, &c);
+
+	g_test_minimized_result ( g_test_timer_elapsed (), "ldl");
+
+	if (!res)
+		g_test_message ("LDLT decomp failed! This means that generation may have isssues.");
+	else {
+		crank_mat_float_n_fini (&b);
+		crank_vec_float_n_fini (&c);
+	}
 
 	crank_mat_float_n_fini (&a);
 }
