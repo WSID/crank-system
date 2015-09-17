@@ -143,6 +143,18 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 #define CRANK_MAT_GETP(m,_ri,_ci)	\
 	((m)->data + CRANK_MAT_FLAT_INDEX (m, _ri, _ci))
 
+/**
+ * CRANK_MAT_GET_ROWP:
+ * @m: Variable sized matrix item.
+ * @_ri: Row index to get.
+ *
+ * Gets a pointer to row at @_ri.
+ *
+ * Returns: a pointer to a row at @_ri.
+ */
+#define CRANK_MAT_GET_ROWP(m,_ri)	\
+	((m)->data + CRANK_MAT_FLAT_ROW_INDEX (m, _ri))
+
 
 
 //////// Miscellnous Macros ////////////////////////////////////////////////////
@@ -157,7 +169,18 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Returns: Flatten index.
  */
-#define CRANK_MAT_FLAT_INDEX(m,_ri,_ci)	((m)->cn * (_ri) + (_ci))
+#define CRANK_MAT_FLAT_INDEX(m,_ri,_ci)	(CRANK_MAT_FLAT_ROW_INDEX(m,_ri) + (_ci))
+
+/**
+ * CRANK_MAT_FLAT_ROW_INDEX:
+ * @m: Variable sized matrix item.
+ * @_ri: Row index.
+ * 
+ * Gets flatten element index of first item in given row.
+ *
+ * Returns: Flatten index of first element in the row.
+ */
+#define CRANK_MAT_FLAT_ROW_INDEX(m,_ri)	((m)->cn * (_ri))
 
 
 //////// Warning macro /////////////////////////////////////////////////////////
