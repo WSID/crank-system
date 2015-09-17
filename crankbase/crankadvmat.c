@@ -323,13 +323,18 @@ crank_ch_mat_float_n (CrankMatFloatN*	a,
 		for (j = 0; j < i; j++) {
 			gfloat d;
 		
+			gfloat*	l_rowi = l->data + (i * l->cn);
+			gfloat*	l_rowj = l->data + (j * l->cn);
+			
 			l_ij = crank_mat_float_n_get (a, i, j);
+			
 			for (k = 0; k < j; k++) {
-				l_ij -=	crank_mat_float_n_get (l, i, k) *
-						crank_mat_float_n_get (l, j, k);
+				l_ij -=	l_rowi[k] * 
+						l_rowj[k];
 			}
-			l_ij /= crank_mat_float_n_get (l, j, j);
-			crank_mat_float_n_set (l, i, j, l_ij);
+			l_ij /= l_rowj[j]; //crank_mat_float_n_get (l, j, j);
+			l_rowi[j] = l_ij;
+			
 		}
 		
 		
@@ -396,7 +401,6 @@ crank_ldl_mat_float_n (CrankMatFloatN*	a,
 		//                  - l[i,1] * l[j,1] * d[1] ...) / d[j]
 		
 		for (j = 0; j < i; j++) {
-		
 			l_ij = crank_mat_float_n_get (a, i, j);
 			for (k = 0; k < j; k++) {
 				l_ij -=	crank_mat_float_n_get (l, i, k) *
