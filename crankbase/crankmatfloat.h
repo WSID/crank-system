@@ -845,6 +845,15 @@ void		crank_mat_float_n_set_col (	CrankMatFloatN*	mat,
 										guint			index,
 										CrankVecFloatN*	col		);
 
+
+gfloat*		crank_mat_float_n_getp (	CrankMatFloatN*	mat,
+										const guint		i,
+										const guint		j	);
+										
+gfloat*		crank_mat_float_n_get_rowp(	CrankMatFloatN*	mat,
+										const guint		index	);
+										
+
 void		crank_mat_float_n_slice_row (	CrankMatFloatN*	mat,
 										const guint			start,
 										const guint			end,
@@ -1001,6 +1010,12 @@ void		crank_mat_float_n_diag_inverse (	CrankMatFloatN*	a,
 
 #define crank_mat_float_n_set(mat,ri,ci,value)	\
 		CRANK_MAT_SET(mat,ri,ci,value)
+
+#define crank_mat_flpat_n_getp(mat,ri,ci)	\
+		CRANK_MAT_GETP(mat,ri,ci)
+
+#define crank_mat_float_n_get_rowp(mat,ri)	\
+		CRANK_MAT_GET_ROWP(mat,ri)
 
 G_END_DECLS
 

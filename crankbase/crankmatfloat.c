@@ -3731,8 +3731,8 @@ crank_mat_float_n_init_arr_take (	CrankMatFloatN* mat,
  */
 void
 crank_mat_float_n_init_row (	CrankMatFloatN*	mat,
-						  	const guint		rn,
-						   	...	)
+							  	const guint		rn,
+							   	...	)
 {
   	va_list	varargs_cn;
   	va_list	varargs_data;
@@ -3755,8 +3755,10 @@ crank_mat_float_n_init_row (	CrankMatFloatN*	mat,
 
   	for (i = 0; i < rn; i++) {
 	 	CrankVecFloatN*	row = va_arg (varargs_data, CrankVecFloatN*);
-
-	  	memcpy (mat->data + (i * cn), row->data, row->n);
+	 	
+	  	memcpy (crank_mat_float_n_get_rowp (mat,i),
+	  			row->data,
+	  			row->n * sizeof (gfloat));
 	}
   	va_end (varargs_data);
 }
@@ -3781,7 +3783,9 @@ crank_mat_float_n_init_row_arr (	CrankMatFloatN*	mat,
 
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), row_arr[i].data, row_arr[i].n);
+	  	memcpy (crank_mat_float_n_get_rowp (mat,i),
+	  			row_arr[i].data,
+	  			row_arr[i].n * sizeof (gfloat));
 }
 
 /**
@@ -3804,7 +3808,9 @@ crank_mat_float_n_init_row_parr (	CrankMatFloatN*		mat,
 
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), row_parr[i]->data, row_parr[i]->n);
+	  	memcpy (crank_mat_float_n_get_rowp (mat,i),
+	  			row_parr[i]->data,
+	  			row_parr[i]->n * sizeof (gfloat));
 }
 
 /**
@@ -3842,7 +3848,7 @@ crank_mat_float_n_init_col (	CrankMatFloatN*	mat,
 		CrankVecFloatN*	col = va_arg (varargs_data, CrankVecFloatN*);
 
 	  	for (j = 0; j < col->n; j++) {
-	  		mat->data[(rn * j) + i] = col->data[j];
+	  		crank_mat_float_n_set (mat, j, i, col->data[j]);
 		}
 	}
   	va_end (varargs_data);
@@ -3872,7 +3878,7 @@ crank_mat_float_n_init_col_arr (	CrankMatFloatN* mat,
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < cn; i++) {
 	  	for (j = 0; j < col_arr[i].n; j++) {
-	  		mat->data[(rn * j) + i] = col_arr[i].data[j];
+	  		crank_mat_float_n_set (mat, j, i, col_arr[i].data[j]);
 		}
 	}
 }
@@ -3899,7 +3905,7 @@ crank_mat_float_n_init_col_parr (	CrankMatFloatN* 	mat,
 	CRANK_MAT_ALLOC(mat, gfloat, rn, cn);
   	for (i = 0; i < cn; i++) {
 	  	for (j = 0; j < col_parr[i]->n; j++) {
-	  		mat->data[(rn * j) + i] = col_parr[i]->data[j];
+	  		crank_mat_float_n_set (mat, j, i, col_parr[i]->data[j]);
 		}
 	}
 }
@@ -3920,12 +3926,13 @@ crank_mat_float_n_init_diag (	CrankMatFloatN*	mat,
 {
   	va_list	varargs;
   	guint	i;
+  	guint	n1 = n + 1;
 
   	va_start (varargs, n);
 
 	CRANK_MAT_ALLOC(mat, gfloat, n, n);
  	for (i = 0; i < n; i++)
-	 	mat->data[(n * i) + i] = va_arg (varargs, gdouble);
+	 	mat->data[i * n1] = va_arg (varargs, gdouble);
 
   	va_end (varargs);
 }
@@ -3945,10 +3952,11 @@ crank_mat_float_n_init_diag_arr (	CrankMatFloatN*	mat,
 									const gfloat*	darr	)
 {
   	guint	i;
+  	guint	n1 = n + 1;
 
 	CRANK_MAT_ALLOC(mat, gfloat, n, n);
  	for (i = 0; i < n; i++)
-	 	mat->data[(n * i) + i] = darr[i];
+	 	mat->data[i * n1] = darr[i];
 }
 
 /**
@@ -4064,18 +4072,18 @@ crank_mat_float_n_hash (	gconstpointer	a	)
 {
 	const CrankMatFloatN*	mat = (const CrankMatFloatN*)a;
   	guint	i;
-  	guint	j;
+  	guint	n;
 
   	guint	hash;
 
-  	hash =  g_direct_hash (GINT_TO_POINTER (mat->rn)) +
+	n = mat->rn * mat->cn;
+
+  	hash =  37 * g_direct_hash (GINT_TO_POINTER (mat->rn)) +
   			g_direct_hash (GINT_TO_POINTER (mat->cn));
 
-  	for (i = 0; i < mat->rn; i++) {
-	  	for (j = 0; j < mat->cn; j++) {
-	  		gdouble dm = mat->data[(mat->cn * i) + j];
-			hash += g_double_hash (&dm);
-		}
+  	for (i = 0; i < n; i++) {
+  		hash *= 33;
+		hash += crank_float_hash (mat->data + i);
 	}
 
   	return hash;
@@ -4099,18 +4107,14 @@ crank_mat_float_n_equal (	gconstpointer	a,
 	const CrankMatFloatN*	mat_b = (const CrankMatFloatN*)b;
 
   	guint	i;
-  	guint	j;
+  	guint	n;
 
   	if (	(mat_a->rn != mat_b->rn) ||
 	   		(mat_a->cn != mat_b->cn))	return FALSE;
 
-	for (i = 0; i < mat_a->rn; i++) {
-		for (j = 0; j < mat_a->cn; j++) {
-
-			guint	ei = i * mat_a->cn + j;
-
-			if (mat_a->data[ei] != mat_b->data[ei]) return FALSE;
-		}
+	n = mat_a->rn * mat_a->cn;
+	for (i = 0; i < n; i++) {
+		if (mat_a->data[i] != mat_b->data[i]) return FALSE;
 	}
 
   	return TRUE;
@@ -4169,12 +4173,14 @@ crank_mat_float_n_to_string_full (	CrankMatFloatN*	mat,
   	builder = g_string_new (mat_left);
 
   	for (i = 0; i < mat->rn; i++) {
+  		gfloat*	mrowi = crank_mat_float_n_get_rowp (mat, i);
+  	
 	  	if (0 < i) g_string_append (builder, mat_in);
 
 	  	g_string_append (builder, row_left);
 	  	for (j = 0; j < mat->cn; j++) {
 	  		if (0 < j) g_string_append (builder, row_in);
-	  		g_string_append_printf (builder, format, mat->data[(i * mat->cn) + j]);
+	  		g_string_append_printf (builder, format, mrowi[j]);
 
 		}
 		g_string_append (builder, row_right);
@@ -4266,7 +4272,9 @@ crank_mat_float_n_get_row (	CrankMatFloatN*	mat,
 						  	const guint		index,
 						  	CrankVecFloatN*	row	)
 {
-  	crank_vec_float_n_init_arr (row, mat->cn, mat->data + mat->cn * index);
+  	crank_vec_float_n_init_arr (row,
+  			mat->cn,
+  			crank_mat_float_n_get_rowp(mat,index)	);
 }
 
 /**
@@ -4283,7 +4291,7 @@ crank_mat_float_n_set_row (	CrankMatFloatN*	mat,
 						  	CrankVecFloatN*	row	)
 {
   	g_return_if_fail (row->n <= mat->cn);
-  	memcpy (mat->data + mat->cn * index, row->data, row->n);
+  	memcpy (crank_mat_float_n_get_rowp (mat, index), row->data, row->n);
 }
 
 
@@ -4305,7 +4313,7 @@ crank_mat_float_n_get_col (	CrankMatFloatN*	mat,
 
   	data = g_new (gfloat, mat->rn);
   	for (i = 0; i < mat->rn; i++)
-		data[i] = mat->data[(mat->cn * i) + index];
+		data[i] = crank_mat_float_n_get (mat, i, index);
 
   	crank_vec_float_n_init_arr_take (col, mat->rn, data);
 }
@@ -4327,8 +4335,43 @@ crank_mat_float_n_set_col (	CrankMatFloatN*	mat,
 
   	g_return_if_fail (col->n <= mat->rn);
   	for (i = 0; i < mat->rn; i++)
-		mat->data[(mat->cn * i) + index] = col->data[i];
+		crank_mat_float_n_set (mat, i, index, col->data[i]);
 }
+
+/**
+ * crank_mat_float_n_getp:
+ * @mat: A Matrix.
+ * @i: Row index.
+ * @j: Column index.
+ *
+ * Gets a pointer to item at given indices.
+ *
+ * Returns: A Pointer to item at given indices.
+ */
+gfloat*
+(crank_mat_float_n_getp) (	CrankMatFloatN*	mat,
+							const guint		i,
+							const guint		j	)
+{
+	return CRANK_MAT_GETP (mat, i, j);
+}
+
+/**
+ * crank_mat_float_n_get_rowp:
+ * @mat: A Matrix.
+ * @index: Row index.
+ *
+ * Gets a pointer to row at given index.
+ *
+ * Returns: A Pointer to row at given index.
+ */
+gfloat*
+(crank_mat_float_n_get_rowp) (	CrankMatFloatN*	mat,
+								const guint		index	)
+{
+	return CRANK_MAT_GET_ROWP (mat, index);
+}
+
 
 /**
  * crank_mat_float_n_slice_row:
@@ -4392,23 +4435,22 @@ crank_mat_float_n_slice (	CrankMatFloatN*	mat,
 	
 	guint	rn;
 	guint	cn;
-	gfloat*	data;
 	
+	g_return_if_fail (mat != r);
 	g_return_if_fail (row_start <= row_end);
 	g_return_if_fail (col_start <= col_end);
 	
 	rn = row_end - row_start;
 	cn = col_end - col_start;
-	data = g_new (gfloat, rn * cn);
+	
+	CRANK_MAT_ALLOC(r, gfloat, rn, cn);
 	
 	for (i = 0; i < rn; i++) {
-		for (j = 0; j < cn; j++) {
-			data[ (i * cn) + j] =
-					crank_mat_float_n_get (mat,	i + row_start, j + col_start );
-		}
+		gfloat*	rrowi = crank_mat_float_n_get_rowp (r, i);
+		gfloat*	mrowi = crank_mat_float_n_get_rowp (mat, i + row_start) + col_start;
+		
+		memcpy (rrowi, mrowi, cn * sizeof (gfloat));
 	}
-	
-	crank_mat_float_n_init_arr_take (r, rn, cn, data);
 }
 
 
@@ -4752,6 +4794,7 @@ crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 	CrankMatFloatN	uinv;
 	
 	guint			i;
+	guint			n1;
 	gfloat			det = 1.0f;
 	
 	g_return_if_fail (mat != r);
@@ -4764,9 +4807,11 @@ crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 	
 	crank_mat_float_n_mul (&uinv, &linv, r);
 	
+	n1 = mat->cn + 1;
 	for (i = 0; i < mat->rn; i++) {
-		det *=	crank_mat_float_n_get (&l, i, i)
-			*	crank_mat_float_n_get (&u, i, i);
+		guint	ei = i * n1;
+	
+		det *=	l.data[ei] * u.data[ei];
 	}
 	
 	crank_mat_float_n_muls_self (r, det);
@@ -4789,15 +4834,13 @@ crank_mat_float_n_neg (	CrankMatFloatN*	a,
 					  	CrankMatFloatN* r	)
 {
   	guint	i;
-  	guint	j;
+  	guint	n = a->rn * a->cn;
 
+	g_return_if_fail (a != r);
+	
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
-	for (i = 0; i < a->rn; i ++) {
-		for (j = 0; j < a->cn; j ++) {
-			r->data[(i * a->cn) + j] =  - a->data[(i * a->cn) + j];
-		}
-	}
+	for (i = 0; i < n; i ++) 	r->data[i] = - a->data[i];
 }
 
 /**
@@ -4829,14 +4872,14 @@ crank_mat_float_n_transpose (	CrankMatFloatN*	a,
 {
   	guint	i;
   	guint	j;
-
-  	gfloat*	data = g_new (gfloat, a->rn * a->cn);
+  	
+  	g_return_if_fail (a != r);
+	CRANK_MAT_ALLOC (r, gfloat, a->cn, a->rn);
 
   	for (i = 0; i < a->rn; i++)
 	  	for (j = 0; j < a->cn; j++)
-	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
-
-  	crank_mat_float_n_init_arr_take (r, a->cn, a->rn, data);
+	  		crank_mat_float_n_set (r, j, i,
+	  				crank_mat_float_n_get (a, i, j));
 }
 
 /**
@@ -4855,7 +4898,7 @@ crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
 
   	for (i = 0; i < a->rn; i++)
 	  	for (j = 0; j < a->cn; j++)
-	  		data[(j * a->rn) + i] = a->data[(i * a->cn) + j];
+	  		data[(j * a->rn) + i] = crank_mat_float_n_get (a, i, j);
 
 	g_free (a->data);
   	crank_mat_float_n_init_arr_take (a, a->cn, a->rn, data);
@@ -5020,15 +5063,13 @@ crank_mat_float_n_muls (	CrankMatFloatN*	a,
 					 	  	CrankMatFloatN*	r	)
 {
 	guint	i;
-  	guint	j;
+  	guint	n = a->rn * a->cn;
   	
 	g_return_if_fail (a != r);
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		r->data[(i * a->cn) + j] = a->data[(i * a->cn) + j] * b;
+  	for (i = 0; i < n; i++)		r->data[i] = a->data[i] * b;
 }
 
 /**
@@ -5048,8 +5089,7 @@ crank_mat_float_n_muls_self (	CrankMatFloatN*	a,
   	
   	n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-  		a->data[i] *= b;
+  	for (i = 0; i < n; i++)		a->data[i] *= b;
 }
 
 /**
@@ -5073,16 +5113,13 @@ crank_mat_float_n_mulv (	CrankMatFloatN*	a,
 	g_return_if_fail (b != r);
   	g_return_if_fail (a->cn == b->n);
 
-  	data = g_new0 (gfloat, a->rn);
+	CRANK_VEC_ALLOC0 (r, gfloat, a->rn);
 
   	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < a->cn; j++) {
-			data[i] +=
-				a->data[(a->cn * i) + j] * b->data[j];
-		}
+  		gfloat*	arowi = crank_mat_float_n_get_rowp (a, i);
+  	
+		for (j = 0; j < a->cn; j++)		r->data[i] += arowi[j] * b->data[j];
 	}
-
-  	crank_vec_float_n_init_arr_take (r, a->rn, data);
 }
 
 /**
@@ -5102,26 +5139,33 @@ crank_mat_float_n_mul (	CrankMatFloatN*	a,
   	guint	j;
   	guint	k;
 
-  	gfloat*	data;
+	CrankMatFloatN	bt;
   	
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
 
-  	g_return_if_fail (a->cn == b->rn);
-
-  	data = g_new0 (gfloat, a->rn * b->cn);
-
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				data[(b->cn * i) + j] +=
-					a->data[(a->cn * i) + k] *
-					b->data[(b->cn * k) + j];
-			}
-		}
+	if (G_UNLIKELY(a->cn != b->rn)) {
+		g_warning ("MatFloatN: mul-self: Size Mismatch: %ux%u, %ux%u",
+					a->rn, a->cn,	b->rn, b->cn	);
+		return;
 	}
 
-  	crank_mat_float_n_init_arr_take (r, a->rn, b->cn, data);
+	CRANK_MAT_ALLOC0 (r, gfloat, a->rn, b->cn);
+
+	crank_mat_float_n_transpose (b, &bt);
+  	for (i = 0; i < a->rn; i++) {
+  		gfloat*	arowi = crank_mat_float_n_get_rowp (a, i);
+		gfloat*	rrowi = crank_mat_float_n_get_rowp (r, i);
+  	
+		for (j = 0; j < b->cn; j++) {
+  			gfloat*	bcolj = crank_mat_float_n_get_rowp (&bt, j);
+			
+			for (k = 0; k < a->cn; k++)
+				rrowi[j] += arowi[k] * bcolj[k];
+		}
+	}
+	
+	crank_mat_float_n_fini (&bt);
 }
 
 /**
@@ -5138,29 +5182,35 @@ crank_mat_float_n_mul_self (	CrankMatFloatN*	a,
   	guint	i;
   	guint	j;
   	guint	k;
-
+  	
+  	CrankMatFloatN	bt;
   	gfloat*	data;
 
 	if (G_UNLIKELY(a->cn != b->rn)) {
-		g_warning ("MatFloatN: mul: Size Mismatch: %ux%u, %ux%u",
+		g_warning ("MatFloatN: mul-self: Size Mismatch: %ux%u, %ux%u",
 					a->rn, a->cn,	b->rn, b->cn	);
 		return;
 	}
 
   	data = g_new0 (gfloat, a->rn * b->cn);
+	crank_mat_float_n_transpose (b, &bt);
 
   	for (i = 0; i < a->rn; i++) {
+  		gfloat*	arowi = crank_mat_float_n_get_rowp (a, i);
+  		gfloat*	drowi = data + (b->cn * i);
+  	
 		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				data[(b->cn * i) + j] +=
-					a->data[(a->cn * i) + k] *
-					b->data[(b->cn * k) + j];
-			}
+			gfloat*	bcolj = crank_mat_float_n_get_rowp (&bt, j);
+		
+			for (k = 0; k < a->cn; k++)
+				drowi[j] += arowi[k] * bcolj[k];
 		}
 	}
 
 	g_free (a->data);
   	crank_mat_float_n_init_arr_take (a, a->rn, b->cn, data);
+  	
+  	crank_mat_float_n_fini (&bt);
 }
 
 /**
@@ -5211,20 +5261,15 @@ crank_mat_float_n_add (	CrankMatFloatN*	a,
 					  	CrankMatFloatN*	r	)
 {
   	guint	i;
-  	guint	j;
+  	guint	n;
   	
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
   	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
-
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-
-	  		r->data[ei] = a->data[ei] + b->data[ei];
-		}
-	}
+  	
+  	n = a->rn * a->cn;
+  	for (i = 0; i < n; i++) r->data[i] = a->data[i] + b->data[i];
 }
 
 /**
@@ -5244,7 +5289,6 @@ crank_mat_float_n_add_self (	CrankMatFloatN*	a,
 	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "add-self", a, b);
 
 	n = a->rn * a->cn;
-
   	for (i = 0; i < n; i++) 	a->data[i] += b->data[i];
 }
 
@@ -5262,20 +5306,15 @@ crank_mat_float_n_sub (	CrankMatFloatN*	a,
 					  	CrankMatFloatN*	r	)
 {
   	guint	i;
-  	guint	j;
+  	guint	n;
 
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
   	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub", a, b);
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-
-	  		r->data[ei] = a->data[ei] - b->data[ei];
-		}
-	}
+	n = a->rn * a->cn;
+  	for (i = 0; i < n; i++)		r->data[i] = a->data[i] - b->data[i];
 }
 
 
@@ -5296,7 +5335,6 @@ crank_mat_float_n_sub_self (	CrankMatFloatN*	a,
 	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatFloatN", "sub-self", a, b);
 
 	n = a->rn * a->cn;
-
   	for (i = 0; i < n; i++) 	a->data[i] -= b->data[i];
 }
 
@@ -5319,7 +5357,7 @@ crank_mat_float_n_mixs (	CrankMatFloatN* a,
 						  	CrankMatFloatN*	r	)
 {
 	guint	i;
-  	guint	j;
+  	guint	n;
   	
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
@@ -5330,13 +5368,9 @@ crank_mat_float_n_mixs (	CrankMatFloatN* a,
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-
-			r->data[ei] = a->data[ei] * d + b->data[ei] * c;
-		}
-	}
+	n = a->rn * a->cn;
+	
+  	for (i = 0; i < n; i++) 	r->data[i] = a->data[i] * d + b->data[i] * c;
 }
 
 /**
@@ -5358,7 +5392,7 @@ crank_mat_float_n_mix (	CrankMatFloatN*	a,
 					  	CrankMatFloatN*	r	)
 {
 	guint	i;
-  	guint	j;
+  	guint	n;
 
 	g_return_if_fail (a != r);
 	g_return_if_fail (b != r);
@@ -5368,15 +5402,12 @@ crank_mat_float_n_mix (	CrankMatFloatN*	a,
 
   	CRANK_MAT_ALLOC(r, gfloat, a->rn, a->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
+	n = a->rn * a->cn;
+  	for (i = 0; i < n; i++) {
+  		gfloat	ce = c->data[i];
+  		gfloat	de = 1 - ce;
 
-	  		gfloat	ce = c->data[ei];
-	  		gfloat	de = 1 - ce;
-
-			r->data[ei] = a->data[ei] * de + b->data[ei] * ce;
-		}
+		r->data[i] = a->data[i] * de + b->data[i] * ce;
 	}
 }
 
@@ -5396,21 +5427,20 @@ crank_mat_float_n_shuffle_row (	CrankMatFloatN*		a,
 								CrankPermutation*	p,
 								CrankMatFloatN*		r	)
 {
-	gfloat*	data;
 	guint	i;
-	guint	j;
+	
+	g_return_if_fail (a != r);
 	
 	if (a->rn == p->n) {
-		data = g_new (gfloat, a->rn * a->cn);
+		CRANK_MAT_ALLOC (r, gfloat, a->rn, a->cn);
 	
 		for (i = 0; i < a->rn; i++) {
-			guint ni = crank_permutation_get (p, i);
+			guint 	ni = crank_permutation_get (p, i);
+			gfloat*	rrowi	= crank_mat_float_n_get_rowp (r, i);
+			gfloat* arowni	= crank_mat_float_n_get_rowp (a, ni);
 			
-			for (j = 0; j < a->cn; j++)
-				data[(i * a->cn) + j] = crank_mat_float_n_get (a, ni, j);
+			memcpy (rrowi, arowni, sizeof (gfloat) * a->cn);
 		}
-		
-		crank_mat_float_n_init_arr_take (r, a->rn, a->cn, data);
 	}
 	
 	else {
@@ -5437,17 +5467,18 @@ crank_mat_float_n_shuffle_col (	CrankMatFloatN*		a,
 	guint	i;
 	guint	j;
 	
+	g_return_if_fail (a != r);
+	
 	if (a->cn == p->n) {
-		data = g_new (gfloat, a->rn * a->cn);
+		CRANK_MAT_ALLOC (r, gfloat, a->rn, a->cn);
 	
 		for (i = 0; i < a->rn; i++) {
+			gfloat*	rrowi = crank_mat_float_n_get_rowp (r, i);
+			gfloat*	arowi = crank_mat_float_n_get_rowp (a, i);
 			for (j = 0; j < a->cn; j++) {
-				data[(i * a->cn) + j] =
-						crank_mat_float_n_get (a, i, crank_permutation_get (p, j));
+				rrowi[j] = arowi[crank_permutation_get (p, j)];
 			}
 		}
-		
-		crank_mat_float_n_init_arr_take (r, a->rn, a->cn, data);
 	}
 	
 	else {
@@ -5478,8 +5509,10 @@ crank_mat_float_n_upper_tri_inverse (	CrankMatFloatN*	a,
 
 	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "upper-triangular-inverse", a);
 	
-	crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
+	CRANK_MAT_ALLOC0 (r, gfloat, a->rn, a->rn);
 	
+	// Fisrt calculate transpose of inverse (to get advantage of cache)
+	// And transpose.
 	
 	// Initialize diagonal components.
 	for (i = 0; i < a->rn; i++) {
@@ -5487,17 +5520,22 @@ crank_mat_float_n_upper_tri_inverse (	CrankMatFloatN*	a,
 				1 / crank_mat_float_n_get (a, i, i));
 	}
 	
-	for (i = 1; i < a->rn; i++) {
-		for (j = 0; j < a->rn - i; j++) {
+	for (i = 0; i < a->rn; i++) {
+		gfloat*	rtrowi = crank_mat_float_n_get_rowp (r, i);
+	
+		j = i;
+		while (0 < j) {
+			j --;
+			gfloat* arowj = crank_mat_float_n_get_rowp (a, j);
+			
 			gfloat	sum = 0;
-			for (k = 1; k <= i; k++) {
-				sum +=	crank_mat_float_n_get (a, j, j + k) *
-						crank_mat_float_n_get (r, j + k, j + i);
-			}
-			crank_mat_float_n_set (r, j, j + i,
-					-sum / crank_mat_float_n_get (a, j, j));
+			for (k = j + 1; k <= i; k++) sum += arowj[k] * rtrowi[k];
+			
+			rtrowi[j] = -sum / arowj[j];
 		}
 	}
+	
+	crank_mat_float_n_transpose_self (r);
 }
 
 
@@ -5521,6 +5559,8 @@ void		crank_mat_float_n_lower_tri_inverse (	CrankMatFloatN*	a,
 	
 	crank_mat_float_n_init_fill (r, a->rn, a->rn, 0);
 	
+	// Fisrt calculate transpose of inverse (to get advantage of cache)
+	// And transpose.
 	
 	// Initialize diagonal components.
 	for (i = 0; i < a->rn; i++) {
@@ -5528,17 +5568,23 @@ void		crank_mat_float_n_lower_tri_inverse (	CrankMatFloatN*	a,
 				1 / crank_mat_float_n_get (a, i, i));
 	}
 	
-	for (i = 1; i < a->rn; i++) {
-		for (j = 0; j < a->rn - i; j++) {
+	i = a->rn - 1;
+	while (0 < i) {
+		gfloat*	rtrowi;
+
+		i--;
+		rtrowi = crank_mat_float_n_get_rowp (r, i);
+		
+		for (j = i + 1; j < a->rn; j++) {
 			gfloat	sum = 0;
-			for (k = 1; k <= i; k++) {
-				sum +=	crank_mat_float_n_get (a, j + k, j) *
-						crank_mat_float_n_get (r, j + i, j + k);
-			}
-			crank_mat_float_n_set (r, j + i, j,
-					-sum / crank_mat_float_n_get (a, j, j));
+			gfloat*	arowj = crank_mat_float_n_get_rowp (a, j);
+			
+			for (k = i; k < j; k++) sum += rtrowi[k] * arowj[k];
+			rtrowi[j] = -sum / arowj[j];
 		}
 	}
+	
+	crank_mat_float_n_transpose_self (r);
 }
 
 
