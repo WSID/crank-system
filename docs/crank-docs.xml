@@ -49,10 +49,12 @@
   
   <chapter>
     <title>Vectorized types and matrix types</title>
+    <xi:include href="xml/crankveccommon.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>
 	<xi:include href="xml/crankveccplxfloat.xml"/>
+    <xi:include href="xml/crankmatcommon.xml"/>
 	<xi:include href="xml/crankmatfloat.xml"/>
 	<xi:include href="xml/crankmatcplxfloat.xml"/>
 	<xi:include href="xml/crankadvmat.xml"/>

@@ -33,6 +33,7 @@
 #include "crankvecfloat.h"
 #include "crankadvmat.h"
 
+#include "crankmatcommon.h"
 #include "crankmatfloat.h"
 
 //////// Private Macros ////////////////////////////////////////////////////////

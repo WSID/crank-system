@@ -32,6 +32,7 @@
 #include "crankfunction.h"
 #include "crankpermutation.h"
 #include "crankveccommon.h"
+#include "crankmatcommon.h"
 
 G_BEGIN_DECLS
 

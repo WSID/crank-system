@@ -33,6 +33,7 @@
 #include "crankpermutation.h"
 #include "crankcomplex.h"
 #include "crankveccommon.h"
+#include "crankmatcommon.h"
 
 G_BEGIN_DECLS
 

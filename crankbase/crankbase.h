@@ -42,6 +42,7 @@
 #include "crankvecfloat.h"
 #include "crankveccplxfloat.h"
 
+#include "crankmatcommon.h"
 #include "crankmatfloat.h"
 #include "crankmatcplxfloat.h"
 #include "crankadvmat.h"

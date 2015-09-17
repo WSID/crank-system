@@ -50,11 +50,29 @@ typedef struct _CrankMatFloatN CrankMatFloatN;
 
 typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 
+/**
+ * SECTION: crankveccommon
+ * @title: Common Macros for Vector Type
+ * @short_description: Common Macros for vector types.
+ * @stability: Unstable
+ * @include: crankbase.h
+ *
+ * In crank system, vectorized types are defined in similar style for consistence.
+ *
+ * |[ <!- language="C" -->
+ * typedef struct _SomeVecTypeN {
+ *     Type*   data;
+ *     guint   n;
+ * } SomeVecTypeN;
+ * ]|
+ *
+ * This enables Crank System to factoring out specific operations as macros.
+ */
 
 //////// Allocator /////////////////////////////////////////////////////////////
 
 /**
- * CRNAK_VEC_ALLOC:
+ * CRANK_VEC_ALLOC:
  * @v: Variable sized vector item.
  * @G: Type of vector type.
  * @_n: Size of vector.
@@ -68,7 +86,7 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 	} G_STMT_END
 
 /**
- * CRNAK_VEC_ALLOC0:
+ * CRANK_VEC_ALLOC0:
  * @v: Variable sized vector item.
  * @G: Type of vector type.
  * @_n: Size of vector.
@@ -79,38 +97,6 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 	G_STMT_START {															\
 		(v)->data = g_new0 (G, _n);											\
 		(v)->n = _n;														\
-	} G_STMT_END
-
-/**
- * CRNAK_MAT_ALLOC:
- * @v: Variable sized vector item.
- * @G: Type of vector type.
- * @_rn: Size of vector.
- * @_cn: Size of vector.
- *
- * Allocates variable size matrix's storage.
- */
-#define CRANK_MAT_ALLOC(m,G,_rn,_cn)										\
-	G_STMT_START {															\
-		(m)->data = g_new (G, _rn * _cn);									\
-		(m)->rn = _rn;														\
-		(m)->cn = _cn;														\
-	} G_STMT_END
-
-/**
- * CRNAK_MAT_ALLOC0:
- * @v: Variable sized vector item.
- * @G: Type of vector type.
- * @_rn: Size of vector.
- * @_cn: Size of vector.
- *
- * Allocates variable size matrix's storage, with 0-initialized.
- */
-#define CRANK_MAT_ALLOC0(m,G,_rn,_cn)										\
-	G_STMT_START {															\
-		(m)->data = g_new0 (G, _rn * _cn);									\
-		(m)->rn = _rn;														\
-		(m)->cn = _cn;														\
 	} G_STMT_END
 
 //////// Getter and setter /////////////////////////////////////////////////////
@@ -147,59 +133,6 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  */
 #define CRANK_VEC_GETP(v,_i)	((v)->data + (_i))
 
-
-/**
- * CRANK_MAT_GET:
- * @v: Variable sized vector item.
- * @_ri: Row index to get.
- * @_ci: Col index to get.
- *
- * Gets a item at (@_ri, @_ci).
- *
- * Returns: an item at (@_ri, @_ci).
- */
-#define CRANK_MAT_GET(m,_ri,_ci)	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)])
-
-/**
- * CRANK_MAT_SET:
- * @v: Variable sized vector item.
- * @_ri: Row index to get.
- * @_ci: Col index to get.
- * @_value: A Value to set.
- *
- * Sets an item at (@_ri, @_ci) as @_value.
- */
-#define CRANK_MAT_SET(m,_ri,_ci,_value)	\
-	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)] = (_value))
-
-/**
- * CRANK_MAT_GETP:
- * @v: Variable sized vector item.
- * @_ri: Row index to get.
- * @_ci: Col index to get.
- *
- * Gets a pointer to item at (@_ri, @_ci).
- *
- * Returns: a pointer to an item at (@_ri, @_ci).
- */
-#define CRANK_MAT_GETP(m,_ri,_ci)	\
-	((m)->data + CRANK_MAT_FLAT_INDEX (m, _ri, _ci))
-
-
-
-//////// Miscellnous Macros ////////////////////////////////////////////////////
-
-/**
- * CRANK_MAT_FLAT_INDEX:
- * @m: Variable sized matrix item.
- * @_ri: Row index.
- * @_ci: Column index.
- * 
- * Gets flatten element index from 2-dimensional indices.
- *
- * Returns: Flatten index.
- */
-#define CRANK_MAT_FLAT_INDEX(m,_ri,_ci)	((m)->cn * (_ri) + (_ci))
 
 
 //////// Warning macro /////////////////////////////////////////////////////////
@@ -274,86 +207,6 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
 			g_warning ("%s: %s: size mismatch: %u, %u, %u",					\
 						t, op, (a)->n, (b)->n, (c)->n	);					\
 			return (r);														\
-		}																	\
-	} G_STMT_END
-
-
-
-/**
- * CRANK_MAT_WARN_IF_SIZE_MISMATCH2:
- * @t: (type gchar*): Type name that operation takes places of.
- * @op: (type gchar*): Operation name that checks size.
- * @a: Variable sized matrix item.
- * @b: Variable sized matrix item.
- *
- * Warns and return if two matrices has different size.
- */
-#define CRANK_MAT_WARN_IF_SIZE_MISMATCH2(t,op,a,b)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn))) {		\
-			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u",				\
-						t, op, (a)->rn, (a)->cn, (b)->rn, (b)->cn	);		\
-			return; 														\
-		}																	\
-	} G_STMT_END
-
-
-/**
- * CRANK_MAT_WARN_IF_SIZE_MISMATCH3:
- * @t: (type gchar*): Type name that operation takes places of.
- * @op: (type gchar*): Operation name that checks size.
- * @a: Variable sized matrix item.
- * @b: Variable sized matrix item.
- * @c: Variable sized matrix item.
- *
- * Warns and return if three matrices has different size.
- */
-#define CRANK_MAT_WARN_IF_SIZE_MISMATCH3(t,op,a,b,c)						\
-	G_STMT_START { 															\
-		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn) &&		\
-						((a)->rn != (c)->rn) && ((a)->cn != (c)->cn) )) {	\
-			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u, %ux%u",		\
-						t, op,												\
-						(a)->rn, (a)->cn,									\
-						(b)->rn, (b)->cn,									\
-						(c)->rn, (c)->cn	);								\
-			return; 														\
-		}																	\
-	} G_STMT_END
-
-
-/**
- * CRANK_MAT_WARN_IF_NON_SQUARE:
- * @t: (type gchar*): Type name that operation takes places of.
- * @op: (type gchar*): Operation name that checks size.
- * @a: Variable sized matrix item.
- *
- * Warns and return if the matrix is not square.
- */
-#define CRANK_MAT_WARN_IF_NON_SQUARE(t,op,a)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
-			g_warning ("%s: %s: non square: %ux%u",				\
-						t, op, (a)->rn, (a)->cn);		\
-			return; 														\
-		}																	\
-	} G_STMT_END
-
-/**
- * CRANK_MAT_WARN_IF_NON_SQUARE_RET:
- * @t: (type gchar*): Type name that operation takes places of.
- * @op: (type gchar*): Operation name that checks size.
- * @a: Variable sized matrix item.
- * @r: Return value
- *
- * Warns and return if the matrix is not square.
- */
-#define CRANK_MAT_WARN_IF_NON_SQUARE_RET(t,op,a,r)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
-			g_warning ("%s: %s: non square: %ux%u",				\
-						t, op, (a)->rn, (a)->cn);		\
-			return (r); 														\
 		}																	\
 	} G_STMT_END
 
