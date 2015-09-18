@@ -158,11 +158,12 @@ crank_lu_mat_float_n (	CrankMatFloatN*	a,
 					  	CrankMatFloatN*	l,
 					  	CrankMatFloatN*	u	)
 {
-	guint	i;
-  	guint	j;
-  	guint	k;
+	guint			i;
+  	guint			j;
+  	guint			k;
 
-  	guint	n;
+  	guint			n;
+  	CrankMatFloatN	ut;
   	
   	g_return_val_if_fail (a != l, FALSE);
   	g_return_val_if_fail (a != u, FALSE);
@@ -182,45 +183,48 @@ crank_lu_mat_float_n (	CrankMatFloatN*	a,
 		// If a == [[0]] then a is singular and cannot be defactorized.
 		else return FALSE;
 	}
+	
 
 	crank_mat_float_n_init_fill (l, n, n, 0);
-	crank_mat_float_n_init_fill (u, n, n, 0);
+	crank_mat_float_n_init_fill (&ut, n, n, 0);
+
 
   	for (i = 0; i < n; i++) {
+  		gfloat*	ucoli = crank_mat_float_n_get_rowp (&ut, i);
+  	
 	  	// l: column i
 		for (j = i; j < n; j++) {
+			gfloat*	lrowj = crank_mat_float_n_get_rowp (l, j);
 			gfloat	sum = 0;
 
-			for (k = 0; k < i; k++) {
-				sum +=	crank_mat_float_n_get (l, j, k) *
-						crank_mat_float_n_get (u, k, i);
-			}
-			crank_mat_float_n_set (l, j, i,
-					crank_mat_float_n_get (a, j, i) - sum);
+			for (k = 0; k < i; k++)		sum +=	lrowj[k] * ucoli[k];
+			
+			lrowj[i] = crank_mat_float_n_get (a, j, i) - sum;
 		}
 
 
 		// u: row i
-		crank_mat_float_n_set (u, i, i, 1);
+		ucoli[i] = 1.0f;
+		//crank_mat_float_n_set (u, i, i, 1);
 	  	for (j = i + 1; j < n; j++) {
+	  		gfloat*	lrowi = crank_mat_float_n_get_rowp(l, i);
+	  		gfloat*	ucolj = crank_mat_float_n_get_rowp(&ut, j);
 	  		gfloat	sum = 0;
-	  		gfloat	ln = crank_mat_float_n_get (l, i, i);
+	  		gfloat	ln = lrowi[i];
 
 			if (ln == 0) {
 			  	crank_mat_float_n_fini (l);
-			  	crank_mat_float_n_fini (u);
+			  	crank_mat_float_n_fini (&ut);
 			  	return FALSE;
 			}
 
-	  		for (k = 0; k < i; k++) {
-				sum +=	crank_mat_float_n_get (l, i, k) *
-		  				crank_mat_float_n_get (u, k, j);
-			}
-			crank_mat_float_n_set (u, i, j,
-					(crank_mat_float_n_get (a, i, j) - sum)/ln);
+	  		for (k = 0; k < i; k++)	sum += lrowi[k] * ucolj[k];
+			
+			ucolj[i] = (crank_mat_float_n_get (a, i, j) - sum)/ln;
 		}
 	}
-
+	crank_mat_float_n_transpose (&ut, u);
+	crank_mat_float_n_fini (&ut);
   	return TRUE;
 }
 
