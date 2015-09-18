@@ -22,7 +22,7 @@ test_perf_matfloat_LDADD=  $(TEST_BASE_LDADD)
 noinst_PROGRAMS= $(bench_programs)
 
 # We are use gtester, a kind of deprecated tool
-# As this is not a Pass-Fail Tests. It is a measurements, and benches.
+# This is not a Pass-Fail Tests. TAP protocol would not be appropriate for it.
 bench-local: $(bench_programs)
 	sh ../bench_helper.sh gen $(bench_programs)
 
