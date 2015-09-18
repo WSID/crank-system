@@ -26,7 +26,7 @@
 //////// Testing Variables /////////////////////////////////////////////////////
 
 static guint		N	= 512;
-static guint		R	= 4;
+static guint		R	= 8;
 
 
 //////// Declaration ///////////////////////////////////////////////////////////
@@ -47,6 +47,7 @@ static void test_gen_mat_float_n (		CrankMatFloatN* mat);
 static void test_gen_mat_float_n_sym (	CrankMatFloatN* mat);
 static void	test_gen_mat_float_4 (		CrankMatFloat4* mat);
 
+static void	bench_mat_slice4 (void);
 static void bench_mat_transpose (void);
 static void bench_mat_mul (void);
 static void bench_mat_inv (void);
@@ -70,6 +71,8 @@ main (gint   argc,
 	g_test_message ("N: %u", N);
 	g_test_message ("R: %u", R);
 	
+	test_add_bench ("/crank/base/mat/float/n/bench/slice4",
+			(BenchFunc)bench_mat_slice4, NULL);
 	test_add_bench ("/crank/base/mat/float/n/bench/transpose",
 			(BenchFunc)bench_mat_transpose, NULL);
 	test_add_bench ("/crank/base/mat/float/n/bench/mul",
@@ -88,7 +91,7 @@ main (gint   argc,
 	test_add_bench ("/crank/base/mat/float/n/bench/qr/gram-schmidt",
 			(BenchFunc)bench_mat_gram_schmidt, NULL	);
 	//test_add_bench ("/crank/base/mat/float/n/perf/qr/householder",
-	//		(BenchFunc)bench_mat_householder	);
+	//		(BenchFunc)bench_mat_householder, NULL	);
 	// We don't use it for now.
 	// This will take so long, as slicing out a matrix.
 	test_add_bench ("/crank/base/mat/float/n/bench/qr/givens",
@@ -193,6 +196,34 @@ test_gen_mat_float_4 (CrankMatFloat4* mat)
 	gfloat*	matp = (gfloat*) mat;
 	
 	for (i = 0; i < 16; i++) matp[i] = g_test_rand_double ();
+}
+
+
+
+
+static void
+bench_mat_slice4 (void)
+{
+	CrankMatFloatN	a;
+	CrankMatFloatN	s[4];
+	guint			hn = N / 2;
+	
+	test_gen_mat_float_n (&a);
+	
+	g_test_timer_start ();
+	
+	crank_mat_float_n_slice (&a, 0, 0, hn, hn, s + 0);
+	crank_mat_float_n_slice (&a, hn, 0, N, hn, s + 1);
+	crank_mat_float_n_slice (&a, 0, hn, hn, N, s + 2);
+	crank_mat_float_n_slice (&a, hn, hn, N, N, s + 3);
+	
+	g_test_minimized_result ( g_test_timer_elapsed (), "mul");
+	
+	crank_mat_float_n_fini (&a);
+	crank_mat_float_n_fini (s + 0);
+	crank_mat_float_n_fini (s + 1);
+	crank_mat_float_n_fini (s + 2);
+	crank_mat_float_n_fini (s + 3);
 }
 
 static void
