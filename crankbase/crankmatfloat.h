@@ -1003,6 +1003,10 @@ void		crank_mat_float_n_lower_tri_inverse (	CrankMatFloatN*	a,
 void		crank_mat_float_n_diag_inverse (	CrankMatFloatN*	a,
 												CrankMatFloatN*	r	);
 
+void		crank_mat_float_n_mul_ul (	CrankMatFloatN*	u,
+										CrankMatFloatN*	l,
+										CrankMatFloatN*	r	);
+
 //////// Macro variants ////////////////////////////////////////////////////////
 
 #define crank_mat_float_n_get(mat,ri,ci)	\

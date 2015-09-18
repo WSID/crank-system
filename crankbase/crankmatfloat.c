@@ -4805,7 +4805,7 @@ crank_mat_float_n_get_adj (	CrankMatFloatN*	mat,
 	crank_mat_float_n_lower_tri_inverse (&l, &linv);
 	crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-	crank_mat_float_n_mul (&uinv, &linv, r);
+	crank_mat_float_n_mul_ul (&uinv, &linv, r);
 	
 	n1 = mat->cn + 1;
 	for (i = 0; i < mat->rn; i++) {
@@ -4876,10 +4876,12 @@ crank_mat_float_n_transpose (	CrankMatFloatN*	a,
   	g_return_if_fail (a != r);
 	CRANK_MAT_ALLOC (r, gfloat, a->cn, a->rn);
 
-  	for (i = 0; i < a->rn; i++)
+  	for (i = 0; i < a->rn; i++){
+  		gfloat* arowi =	crank_mat_float_n_get_rowp (a, i);
+  		
 	  	for (j = 0; j < a->cn; j++)
-	  		crank_mat_float_n_set (r, j, i,
-	  				crank_mat_float_n_get (a, i, j));
+	  		crank_mat_float_n_set (r, j, i, arowi[j]);
+	}
 }
 
 /**
@@ -4896,9 +4898,12 @@ crank_mat_float_n_transpose_self (	CrankMatFloatN*	a	)
 
   	gfloat*	data = g_new (gfloat, a->rn * a->cn);
 
-  	for (i = 0; i < a->rn; i++)
+  	for (i = 0; i < a->rn; i++) {
+  		gfloat* arowi =	crank_mat_float_n_get_rowp (a, i);
+  	
 	  	for (j = 0; j < a->cn; j++)
-	  		data[(j * a->rn) + i] = crank_mat_float_n_get (a, i, j);
+	  		data[(j * a->rn) + i] = arowi[j];
+	}
 
 	g_free (a->data);
   	crank_mat_float_n_init_arr_take (a, a->cn, a->rn, data);
@@ -4932,7 +4937,7 @@ crank_mat_float_n_inverse (	CrankMatFloatN*	a,
 		crank_mat_float_n_lower_tri_inverse (&l, &linv);
 		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-		crank_mat_float_n_mul (&uinv, &linv, r);
+		crank_mat_float_n_mul_ul (&uinv, &linv, r);
 	
 		crank_mat_float_n_fini (&l);
 		crank_mat_float_n_fini (&u);
@@ -4964,7 +4969,7 @@ crank_mat_float_n_inverse_self (	CrankMatFloatN*	a	)
 		crank_mat_float_n_lower_tri_inverse (&l, &linv);
 		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-		crank_mat_float_n_mul (&uinv, &linv, a);
+		crank_mat_float_n_mul_ul (&uinv, &linv, a);
 	
 		crank_mat_float_n_fini (&l);
 		crank_mat_float_n_fini (&u);
@@ -5002,7 +5007,7 @@ crank_mat_float_n_try_inverse (	CrankMatFloatN*	a,
 		crank_mat_float_n_lower_tri_inverse (&l, &linv);
 		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-		crank_mat_float_n_mul (&uinv, &linv, r);
+		crank_mat_float_n_mul_ul (&uinv, &linv, r);
 	
 		crank_mat_float_n_fini (&l);
 		crank_mat_float_n_fini (&u);
@@ -5038,7 +5043,7 @@ crank_mat_float_n_try_inverse_self (	CrankMatFloatN*	a	)
 		crank_mat_float_n_lower_tri_inverse (&l, &linv);
 		crank_mat_float_n_upper_tri_inverse (&u, &uinv);
 	
-		crank_mat_float_n_mul (&uinv, &linv, a);
+		crank_mat_float_n_mul_ul (&uinv, &linv, a);
 	
 		crank_mat_float_n_fini (&l);
 		crank_mat_float_n_fini (&u);
@@ -5612,6 +5617,55 @@ crank_mat_float_n_diag_inverse (	CrankMatFloatN*	a,
 		crank_mat_float_n_set (r, i, i,
 				1 / crank_mat_float_n_get (a, i, i));
 	}
+}
+
+/**
+ * crank_mat_float_n_mul_ul:
+ * @u: A Upper triangular matrix.
+ * @l: A Lower triangular matrix.
+ * @r: (out): A Matrix.
+ * 
+ * Calculates multiplication of upper triangular matrix and lower triangular matrix.
+ *
+ * This function is more like internal function, used for calculating inverse.
+ */
+void
+crank_mat_float_n_mul_ul (	CrankMatFloatN*	u,
+							CrankMatFloatN* l,
+							CrankMatFloatN*	r	)
+{
+	guint	i;
+	guint	j;
+	guint	k;
+	
+	CrankMatFloatN	lt;
+	
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "mul-ul", u);
+	CRANK_MAT_WARN_IF_NON_SQUARE ("MatFloatN", "mul-ul", l);
+	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatFloatN", "mul-ul", u, l);
+		
+	CRANK_MAT_ALLOC0 (r, gfloat, u->rn, l->cn);
+	
+	crank_mat_float_n_transpose (l, &lt);
+	
+	for (i = 0; i < u->rn; i++) {
+		gfloat*	urowi = crank_mat_float_n_get_rowp (u, i);
+		gfloat*	rrowi = crank_mat_float_n_get_rowp (r, i);
+		
+		for (j = 0; j < i; j++) {
+			gfloat*	lcolj = crank_mat_float_n_get_rowp (&lt, j);
+			
+			for (k = i; k < u->cn; k++)	rrowi[j] += urowi[k] * lcolj[k];
+		}
+		
+		for (; j < u->cn; j++) {
+			gfloat*	lcolj = crank_mat_float_n_get_rowp (&lt, j);
+			
+			for (k = j; k < u->cn; k++)	rrowi[j] += urowi[k] * lcolj[k];
+		}
+	}
+	
+	crank_mat_float_n_fini (&lt);
 }
 
 
