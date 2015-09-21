@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<refentry id="crank-overview-base">
+  <refmeta>
+    <refentrytitle>Crank Base</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>Crank System</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Crank Base</refname>
+    <refpurpose>Crank Base Overview</refpurpose>
+  </refnamediv>
+
+  <refsect1 id="fundamentals">
+    <title>Fundamental Support</title>
+    <para>
+      Crank System is fairly a large library which provides complex features,
+      from basic vector computations, to scene rendering, and other tasks.
+      
+      Fundamental part of Crank System provides versioning and general purpose
+      macros, typedefs.
+    </para>
+  </refsect1>
+
+  <refsect1 id="basic-data">
+    <title>Basic Data Structures</title>
+    <para>
+      Although Crank System is a game support library, it contains some
+      mathematical structures like Permutation, complex types. This would be 
+      useful modeling or simulating parts of world.
+    </para>
+  </refsect1>
+
+  <refsect1 id="vector-matrix">
+    <title>Vectors and Matrices</title>
+    <para>
+      Vectors and Matrix types are frequently used in 3D applications, and also
+      in games, as they can represent arbitarly position in 2D/3D space.
+      
+      Might not useful in most of games, but Crank System also provides complex
+      vector and matrix for modeling, and simulating.
+    </para>
+  </refsect1>
+
+  <refsect1 id="graph">
+    <title>Graphs</title>
+    <para>
+      Crank System also provides graphs which are used through out games.
+      Currently, Crank System only provides digraph implementation.
+    </para>
+  </refsect1>
+
+</refentry>

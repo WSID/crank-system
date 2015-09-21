@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<refentry id="crank-overview-general">
+  <refmeta>
+    <refentrytitle>General Notes about Crank System</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>General Notes about Crank System</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>General Notes about Crank System</refname>
+  </refnamediv>
+
+  <refsect1 id="documentation-annotation">
+    <title>Documentations by Annotations</title>
+    <para>
+      For avoiding redundancy and mismatch of documentation, some informations
+      will be documented by annotations, and not in text form. (like “Free this
+      after use.”) If there is no annotation appropriate for some information,
+      text form would be used. (Example: Time: O(n))
+    </para>
+  </refsect1>
+  
+  <refsect1 id="macro-simple-function">
+    <title>Simple Functions with macro.</title>
+    <para>
+      Crank System defines macro versions of simple functions, so that overhead
+      can be avoided and even has chance to being optimized. If a function is
+      such kind of function, it will be documented that "This function is
+      simple function."
+    </para>
+  </refsect1>
+  
+  <refsect1 id="macro-c11-generic-selector">
+    <title>C11 Generic Selector</title>
+    <para>
+        Crank System also defines macros with generic selectors. They are
+        defined for some operations that works for various types, and they
+        enables programmers to do same operations with different types by
+        same representative name of functions.
+    </para>
+    <para>
+      If a operation is such kind of operation, its representative function will
+      be documented that "This function is representative function of operation
+      ...". They will be defined only when C11 is available.
+    </para>
+  </refsect1>
+
+  <refsect1 id="function-fini">
+    <title>Fini functions</title>
+    <para>
+      Some structure might allocate some memory or resources, so that, they need
+      to clear their all allocated resources after use.
+    </para>
+    <para>
+      If some structure has fini () funciton, it need such kind of clean up. For
+      others, they are just need to be deallocated.
+    </para>
+  </refsect1>
+
+  <refsect1 id="function-free">
+    <title>Free functions</title>
+    <para>
+      Some structure might allocate some memory or resources, so that, they need
+      to clear their all allocated resources after use.
+    </para>
+    <para>
+      If some structure has fini () funciton, it need such kind of clean up. For
+      others, they are just need to be deallocated.
+    </para>
+  </refsect1>
+
+  <refsect1 id="conversion-to-other-types">
+    <title>Conversion to other types.</title>
+    <para>
+      Crank System provides 2 ways to converting a structure to the structure
+      with other types, which preserving meaning of datas.
+    </para>
+    <para>
+      First way is using appropriate functions. Generally the functions are
+      one of init functions for "from conversion", and to_.... functions for "to
+      conversion".
+    </para>
+    <para>
+      Second way is using Gvalue Transformation. Crank System also registers
+      transformation functions for each appropriate conversion.
+    </para>
+    <para>
+      Detailed are documented in each section, under subsection "Conversion to
+      other types."
+    </para>
+  </refsect1>
+  
+  <refsect1 id="type-as-collection">
+    <title>A Type as collection</title>
+    <para>
+      Some types are associated or aggregation of other datas. 
+    </para>
+  </refsect1>
+
+</refentry>

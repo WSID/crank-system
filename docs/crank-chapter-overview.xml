@@ -5,4 +5,5 @@
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
 <para>
+  Crank System is fairly large library, and its documentation is also large.
 </para>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<para>
+	<para>
+	  Crank System provides basic data structures. Some of them would not
+	  relevant to games, but they can be used for modeling and/or simulating
+	  specific types of game worlds.
+	</para>
+	<simplesect>
+	  <title>Compound numeric types with imaginary parts.</title>
+	  <para>
+	    Crank System comes up with two compound types with imaginary parts. One
+	    is a complex type, the other is a quaternion type.
+	  </para>
+	  <para>
+	    While complex type is not useful itself, quaternion type is frequently
+	    used, especially for rotations.
+	  </para>
+	</simplesect>
+</para>

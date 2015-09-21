@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<para>
+	<simplesect> <title>Vectorized Types</title>
+	Crank System provides vectorized types. Each vector types are matched into
+	following types.
+	
+	<itemizedlist>
+		<listitem>
+			<link linkend="crank-Boolean-Vectors">CrankVecBool</link>:
+			<link linkend="gboolean">gboolean</link></listitem>
+		<listitem>
+			<link linkend="crank-Integer-Vectors">CrankVecInt</link>:
+			<link linkend="gint">gint</link></listitem>
+		<listitem>
+			<link linkend="crank-Float-Vectors">CrankVecFloat</link>:
+			<link linkend="gfloat">gfloat</link></listitem>
+		<listitem>
+			<link linkend="crank-Complex-Float-Vectors">CrankVecCplxFloat</link>:
+			<link linkend="crank-Complex-value">CrankCplxFloat</link></listitem>
+	</itemizedlist>
+	
+	Vectorized types defined here can be categorized by 4 groups.
+	
+	Please note that fixed sized vectors are provided only for bool, integer,
+	float type.
+	
+	<itemizedlist>
+	<listitem>Fixed 2 sized vector</listitem>
+	<listitem>Fixed 3 sized vector</listitem>
+	<listitem>Fixed 4 sized vector</listitem>
+	<listitem>Variable sized vector</listitem>
+	</itemizedlist>
+	
+	<para>
+	Fixed sized vector types have fixed size of structure. They are declared
+	with members named x, y, z, w, just like
+	<programlisting>typedef struct _CrankVecInt3 {
+    gint  x;
+    gint  y;
+    gint  z;
+} CrankVecInt3;</programlisting>
+	Because of this, we can cast them into arrays or vice versa.
+	</para>
+	
+	<para>
+	Variable sized vector types are structure type with pointer and length.
+	<programlisting>typedef struc _CrankVecFloatN {
+    gfloat*  data;
+    guint    n;
+} CrankVecFloatN;</programlisting>
+	</para>
+	</simplesect>
+	
+	
+	
+	<simplesect> <title> Vectorized types as collection </title>
+	<para>
+	Vectorized types are aggregated data structure, and thus, they has some
+	colleciton function to act as an list. In General, they are used for
+	compound numeric types But sometimes, in advanced operations, it is used as
+	a collection, as desired values can be obtained by operations.
+	</para>
+	<para>
+	For fixed sized vector types, they only has getter, setter, foreach, iterator
+	functions - their size cannot be changed.
+	</para>
+	<para>
+	For variable sized vector types, they has inserting, removing functions
+	as their size are variable. But they are not built for collections in mind,
+	and resizing is done by g_realloc, it may take more longer than you think.
+	</para>
+	</simplesect>
+	
+	
+	
+	<simplesect> <title>Matrix types</title>
+	Crank System also provides matrix types. The matrix types are matched to
+	following types.
+	
+	<itemizedlist>
+		<listitem>
+			<link linkend="crank-Float-Matrices">CrankMatFloat</link>:
+			<link linkend="gfloat">gfloat</link></listitem>
+		<listitem>
+			<link linkend="crank-Complex-Float-Matrices">CrankMatCplxFloat</link>:
+			<link linkend="crank-Complex-value">CrankCplxFloat</link></listitem>
+	</itemizedlist>
+	
+	Just like vectorized type, Crank System provides 4 size. Please note that
+	fixed size matrix is provided for only float type.
+	
+	<itemizedlist>
+	<listitem>Fixed 2x2 sized matrix</listitem>
+	<listitem>Fixed 3x3 sized matrix</listitem>
+	<listitem>Fixed 4x4 sized matrix</listitem>
+	<listitem>Variable sized matrix</listitem>
+	</itemizedlist>
+	
+	<para>
+	In matrix types in Crank System, elements are placed with row-major order.
+	This means elements with same row placed continuously, and these rows are
+	aggregated to form matrix.
+	</para>
+	
+	<para>
+	Fixed sized vector types have fixed size of structure, like vectorized types.
+	They are declared with members named m00, m01, m02, ... just like
+	<programlisting>typedef struct _CrankMatFloat2 {
+    gfloat   m00;
+    gfloat   m01;
+    gfloat   m10;
+    gfloat   m11;
+} CrankMatFloat2;</programlisting>
+	We still can cast them as array of elements, though it is not very useful.
+	</para>
+	
+	<para>
+	Variable sized matrix types are structure type with pointer and number of
+	rows and columns.
+	<programlisting>typedef struc _CrankMatFloatN {
+    gfloat*  data;
+    guint    rn;
+    guint    cn;
+} CrankMatFloatN;</programlisting>
+	</para>
+	
+	Crank System also provides advanced operations on matrix.
+	<itemizedlist>
+	<listitem>LU Decompositions</listitem>
+	<listitem>QR Decompositions</listitem>
+	<listitem>Eigenvalue/vector calculation</listitem>
+	</itemizedlist>
+	
+	</simplesect>
+
+
+
+	<simplesect> <title> Matrix types as collection </title>
+	<para>
+	Just like vector, matrix types also can be used as collection of elements.
+	Sometimes, matrix type is used as an list of vectors, as some operation
+	might results in matrix with desired vectors.
+	</para>
+	
+	<para>
+	A matrix can be used as
+	<itemizedlist>
+	  <listitem>2-dimensional list of elements</listitem>
+	  <listitem>list of row vectors</listitem>
+	  <listitem>list of column vectors</listitem>
+	</itemizedlist>
+	
+	Therefore, every matrix types has getter, setter, row/col getter, setters.
+	Currently, insertion and removal of element, row, or column is not supported.
+	</para>
+	
+	</simplesect>
+</para>

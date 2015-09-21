@@ -19,54 +19,58 @@
   </bookinfo>
   
   <chapter>
-    <title>Overview of Crank System</title>
+    <title>Oerview</title>
+	<xi:include href="crank-chapter-overview.xml"/>
+	
+	<xi:include href="crank-overview-general.xml"/>
     <xi:include href="crank-overview-base.xml"/>
-    
-    FIXME: This chapter should describe overall structure of crank system, and
-    relations of each modules.
   </chapter>
   
   <chapter>
   	<title>Fundamentals</title>
+	<xi:include href="crank-chapter-base-fundamental.xml"/>
+	
     <xi:include href="xml/crankbasemacro.xml"/>
-    	<xi:include href="xml/crankfunction.xml"/>
+    <xi:include href="xml/crankfunction.xml"/>
 	<xi:include href="xml/crankvala.xml"/>
 	<xi:include href="xml/crankstring.xml"/>
 	<xi:include href="xml/crankvalue.xml"/>
-	<xi:include href="crank-chapter-base-fundamental.xml"/>
   </chapter>
   
   <chapter>
     <title>Basic Data Structures</title>
+	<xi:include href="crank-chapter-base-basic-data.xml"/>
+	
     <xi:include href="crank-basic-data-abbreviation.xml"/>
     <xi:include href="xml/crankrange.xml"/>
 	<xi:include href="xml/crankiter.xml"/>
     <xi:include href="xml/crankpermutation.xml"/>
     <xi:include href="xml/crankcomplex.xml"/>
     <xi:include href="xml/crankquaternion.xml"/>
-	<xi:include href="crank-chapter-base-basic-data.xml"/>
   </chapter>
   
   <chapter>
     <title>Vectorized types and matrix types</title>
+	<xi:include href="crank-chapter-base-vec-data.xml"/>
+	
     <xi:include href="xml/crankveccommon.xml"/>
+    <xi:include href="xml/crankmatcommon.xml"/>
 	<xi:include href="xml/crankvecbool.xml"/>
 	<xi:include href="xml/crankvecint.xml"/>
 	<xi:include href="xml/crankvecfloat.xml"/>
 	<xi:include href="xml/crankveccplxfloat.xml"/>
-    <xi:include href="xml/crankmatcommon.xml"/>
 	<xi:include href="xml/crankmatfloat.xml"/>
 	<xi:include href="xml/crankmatcplxfloat.xml"/>
 	<xi:include href="xml/crankadvmat.xml"/>
-	<xi:include href="crank-chapter-base-vec-data.xml"/>
   </chapter>
   
   <chapter>
     <title>Data structures</title>
+	<xi:include href="crank-chapter-base-data.xml"/>
+	
    	<xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
 	<xi:include href="xml/crankbasetest.xml"/>
-	<xi:include href="crank-chapter-base-data.xml"/>
   </chapter>
   
   <chapter id="object-tree">

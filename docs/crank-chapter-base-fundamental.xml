@@ -4,7 +4,7 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<section>
+<para>
 	<para>
 	Crank System defines several macros and functions to ease basic and frequent
 	tasks. Crank System primarily uses these utilities for itself, but they may
@@ -13,4 +13,4 @@
 	<para>
 	For details, please refer to each sections.
 	</para>
-</section>
+</para>
