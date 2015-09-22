@@ -5,5 +5,17 @@
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
 <para>
-  Crank System is fairly large library, and its documentation is also large.
+  <para>
+    Crank System is fairly large library, which consist of several modules. And
+    further more, a game probably would not require all modules.
+  
+    <note>
+      Crank System is under heavy development, and is not capable to provide all
+      function that it supposed to do.
+    </note>
+  </para>
+  
+  <section> <title> The Crank System at a glance. </title>
+    <inlinegraphic fileref="overview-overview.png" format="PNG"/>
+  </section>
 </para>
