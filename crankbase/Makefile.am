@@ -25,6 +25,7 @@ include_HEADERS = \
 		crankvecfloat.h \
 		crankveccplxfloat.h \
 		\
+		crankmatcommon.h \
 		crankmatfloat.h \
 		crankmatcplxfloat.h \
 		\
