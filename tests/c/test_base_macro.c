@@ -113,7 +113,7 @@ main (gint   argc, gchar **argv)
 	g_test_add_func ("/crank/base/macro/foreach/vararg_do",
 		test_macro_FOREACH_VARARG_DO);
 		
-	g_test_add_func ("/crank/base/macro/foreach/glist",
+	g_test_add_func ("/crank/base/macro/foreach/glist_do",
 		test_macro_FOREACH_GLIST_DO);
 
 	g_test_add_func ("/crank/base/macro/foreach/g_ptr_array_do",

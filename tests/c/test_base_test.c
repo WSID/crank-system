@@ -128,16 +128,7 @@ main	(gint argc, gchar** argv)
 	crank_test_add_func_timeout (
 			"/crank/base/test/timeout",
 			test_test_timeout_1000,
-			10000	);
-			
-	g_test_add_func (
-			"/crank/base/test/eq/vecfloat/n/imm",
-			test_assert_eq_vecfloat_n_imm);
-			
-	crank_test_add_func_expected_fail (
-			"/crank/base/test/eq/vecfloat/n/imm/fail",
-			test_assert_eq_vecfloat_n_imm_fail	);
-	
+			10000000	);
 	
 	g_test_add_func (
 			"/crank/base/test/eq/array/bool",
