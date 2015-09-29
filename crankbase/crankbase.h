@@ -28,6 +28,7 @@
 #include "crankstring.h"
 #include "crankvala.h"
 #include "crankvalue.h"
+#include "crank128.h"
 
 #include "crankrange.h"
 #include "crankiter.h"

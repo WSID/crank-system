@@ -18,6 +18,7 @@ test_programs= \
 		test_base_test \
 		test_string \
 		test_base_macro \
+		test_128 \
 		test_value \
 		test_range \
 		test_iter \
@@ -40,6 +41,8 @@ test_base_test_LDADD= $(TEST_BASE_LDADD)
 test_string_LDADD= $(TEST_BASE_LDADD)
 
 test_base_macro_LDADD= $(TEST_BASE_LDADD)
+
+test_128_LDADD= $(TEST_BASE_LDADD)
 
 test_value_LDADD= $(TEST_BASE_LDADD)
 
