@@ -57,6 +57,9 @@ void	crank_uint128_init_mul			(CrankUint128*	i,
 void	crank_uint128_copy				(CrankUint128*	i,
 										 CrankUint128*	r	);
 
+void	crank_uint128_inc				(CrankUint128*	i	);
+
+void	crank_uint128_dec				(CrankUint128*	i	);
 
 
 void	crank_uint128_add64				(CrankUint128*	a,
@@ -111,6 +114,15 @@ void	crank_uint128_div32				(CrankUint128*	a,
 void	crank_uint128_div32_self		(CrankUint128*	a,
 							   			 guint32		b	);
 
+void	crank_uint128_remquo32			(CrankUint128*	a,
+							   			 guint32		b,
+							   			 CrankUint128*	q,
+							   			 guint32*		r	);
+
+void	crank_uint128_remquo32_self		(CrankUint128*	a,
+							   			 guint32		b,
+							   			 guint32*		r	);
+
 
 void	crank_uint128_lsh				(CrankUint128*	a,
 							 			 const guint	b,
@@ -134,6 +146,19 @@ void	crank_uint128_rsh_self			(CrankUint128*	a,
 			(r)->h = (i)->h;	\
 			(r)->l = (i)->l;	\
 		} G_STMT_END
+
+#define crank_uint128_inc(i)		\
+		G_STMT_START {				\
+			(i)->l++;				\
+			(i)->h += (! (i)->l);	\
+		} G_STMT_END
+
+#define crank_uint128_dec(i)		\
+		G_STMT_START {				\
+			(i)->h -= (! (i)->l);	\
+			(i)->l--;				\
+		} G_STMT_END
+
 
 #define crank_uint128_add64(a,b,r) 										\
 		G_STMT_START {													\

@@ -87,6 +87,8 @@ CrankUint128
 crank_uint128_init_add
 crank_uint128_init_mul
 crank_uint128_copy
+crank_uint128_inc
+crank_uint128_dec
 crank_uint128_add64
 crank_uint128_add64_self
 crank_uint128_add
@@ -101,6 +103,8 @@ crank_uint128_div32
 crank_uint128_div32_self
 crank_uint128_div64
 crank_uint128_div64_self
+crank_uint128_remquo32
+crank_uint128_remquo32_self
 crank_uint128_lsh
 crank_uint128_lsh_self
 crank_uint128_rsh

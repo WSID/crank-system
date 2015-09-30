@@ -111,6 +111,32 @@ void
 	r->h = i->h;	r->l = i->l;
 }
 
+/**
+ * crank_uint128_inc:
+ * @i: A instance.
+ *
+ * Increase 128-bit integer by one.
+ */
+void
+(crank_uint128_inc)	(CrankUint128*	i)
+{
+	i++;
+	i->h += !(i->l);
+}
+
+/**
+ * crank_uint128_dec:
+ * @i: A instance.
+ *
+ * Decrease 128-bit integer by one.
+ */
+void
+(crank_uint128_dec)	(CrankUint128*	i)
+{
+	i->h -= !(i->l);
+	i--;
+}
+
 
 /**
  * crank_uint128_add64:
@@ -504,6 +530,109 @@ crank_uint128_div32_self (CrankUint128*	a,
 
   	crank_uint128_add64_self (a, q64 * hr);
   	crank_uint128_add64_self (a, hrr / b);
+}
+
+/**
+ * crank_uint128_remquo32:
+ * @a: A 128-bit integer.
+ * @b: A 32-bit integer.
+ * @q: (out): A Quotient.
+ * @r: (out): A Reminder.
+ *
+ * Divides 128-bit integer by 32-bit integer.
+ *
+ * As it does not worry about overflowing remainer, it is much faster than
+ * 64-bit version.
+ */
+void
+crank_uint128_remquo32 (CrankUint128*	a,
+						guint32			b,
+						CrankUint128*	q,
+						guint32*		r)
+{
+	// this is about modular.
+	guint64 		mod64;
+	guint64			q64;
+
+	guint64			hr;
+  	guint64			lr;
+
+  	guint64			hrr;
+
+	// Performs division on (2^64 - 1)
+	mod64 = 0xFFFFFFFFFFFFFFFF % b;
+	q64 = 0xFFFFFFFFFFFFFFFF / b;
+
+	// Make results of (2^64 /% b) from ((2^64 - 1) /% b).
+	mod64++;
+	if (mod64 == b) {
+		mod64 = 0;
+		q64++;
+	}
+
+  	q->h = a->h / b;
+  	q->l = a->l / b;
+
+  	hr = a->h % b;
+  	lr = a->l % b;
+
+	hrr = mod64 * hr + lr;
+
+  	crank_uint128_add64_self (q, q64 * hr);
+  	crank_uint128_add64_self (q, hrr / b);
+  	*r = hrr % b;
+}
+
+/**
+ * crank_uint128_remquo32_self:
+ * @a: A 128-bit integer.
+ * @b: A 32-bit integer.
+ * @r: (out): A Reminder.
+ *
+ * Divides 128-bit integer by 32-bit integer.
+ *
+ * As it does not worry about overflowing remainer, it is much faster than
+ * 64-bit version.
+ */
+void
+crank_uint128_remquo32_self (CrankUint128*	a,
+						 	 guint32		b,
+						 	 guint32*		r)
+{
+	// this is about modular.
+	guint64 		mod64;
+	guint64			q64;
+
+  	CrankUint128	ap = {0, 0};
+  	CrankUint128	ac = {0, 0};
+
+	guint64			hr;
+  	guint64			lr;
+
+  	guint64			hrr;
+
+	// Performs division on (2^64 - 1)
+	mod64 = 0xFFFFFFFFFFFFFFFF % b;
+	q64 = 0xFFFFFFFFFFFFFFFF / b;
+
+	// Make results of (2^64 /% b) from ((2^64 - 1) /% b).
+	mod64++;
+	if (mod64 == b) {
+		mod64 = 0;
+		q64++;
+	}
+
+  	hr = a->h % b;
+  	lr = a->l % b;
+
+  	a->h = a->h / b;
+  	a->l = a->l / b;
+
+	hrr = mod64 * hr + lr;
+
+  	crank_uint128_add64_self (a, q64 * hr);
+  	crank_uint128_add64_self (a, hrr / b);
+  	*r = hrr % b;
 }
 
 /**
