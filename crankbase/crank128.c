@@ -452,6 +452,7 @@ crank_uint128_div32 (CrankUint128*	a,
 
 	hrr = mod64 * hr + lr;
 
+  	crank_uint128_add64_self (r, q64 * hr);
   	crank_uint128_add64_self (r, hrr / b);
 }
 
@@ -500,6 +501,7 @@ crank_uint128_div32_self (CrankUint128*	a,
 
 	hrr = mod64 * hr + lr;
 
+  	crank_uint128_add64_self (a, q64 * hr);
   	crank_uint128_add64_self (a, hrr / b);
 }
 

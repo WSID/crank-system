@@ -36,6 +36,8 @@ static void test_sub64 (void);
 static void test_sub (void);
 static void test_mul64 (void);
 static void test_div64 (void);
+static void test_div32 (void);
+static void test_div32_self (void);
 static void test_shift (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -68,6 +70,11 @@ main	(gint argc, gchar** argv)
 
 	g_test_add_func ("/crank/base/128/div/64",
 					test_div64					);
+					
+	g_test_add_func ("/crank/base/128/div/32",
+					test_div32					);
+	g_test_add_func ("/crank/base/128/div/32/self",
+					test_div32_self				);
 
 	g_test_add_func ("/crank/base/128/shift",
 				  	test_shift 					);
@@ -238,6 +245,14 @@ test_div64 (void)
   	g_assert_cmpuint (b.h, ==, 0);
   	g_assert_cmpuint (b.l, ==, 0xB8BD5521EDDEF);
 
+	a.h = 0x8C213d9dLU;
+	a.l = 0xa242dd2467d0b232LU;
+	
+	crank_uint128_div64 (&a, 5, &b);
+
+  	g_assert_cmpuint (b.h, ==, 0x1C06A5ECLU);
+  	g_assert_cmpuint (b.l, ==, 0x53A6F90747F68A0ALU);
+
 }
 
 static void
@@ -262,6 +277,45 @@ test_div32 (void)
   	g_assert_cmpuint (b.h, ==, 0);
   	g_assert_cmpuint (b.l, ==, 0xB8BD5521EDDEF);
 
+	a.h = 0x8C213d9dLU;
+	a.l = 0xa242dd2467d0b232LU;
+	
+	crank_uint128_div32 (&a, 5, &b);
+
+  	g_assert_cmpuint (b.h, ==, 0x1C06A5ECLU);
+  	g_assert_cmpuint (b.l, ==, 0x53A6F90747F68A0ALU);
+
+}
+
+static void
+test_div32_self (void)
+{
+	CrankUint128	a;
+
+  	a.h = 0;
+  	a.l = 97;
+
+  	crank_uint128_div32_self (&a, 13);
+
+  	g_assert_cmpuint (a.h, ==, 0);
+  	g_assert_cmpuint (a.l, ==, 7);
+
+  	a.h = 0x32DE9;
+ 	a.l = 0x9CAAC323DEFFFE3E;
+
+	crank_uint128_div32_self (&a, 0x467DDDCF);
+
+  	g_assert_cmpuint (a.h, ==, 0);
+  	g_assert_cmpuint (a.l, ==, 0xB8BD5521EDDEF);
+
+	a.h = 0x8C213d9dLU;
+	a.l = 0xa242dd2467d0b232LU;
+	
+	crank_uint128_div32_self (&a, 5);
+
+  	g_assert_cmpuint (a.h, ==, 0x1C06A5ECLU);
+  	g_assert_cmpuint (a.l, ==, 0x53A6F90747F68A0ALU);
+
 }
 
 static void
@@ -279,4 +333,12 @@ test_shift (void)
 
 	g_assert_cmpuint (a.h, ==, 0x0);
 	g_assert_cmpuint (a.l, ==, 0x123456789ABCDEF0);
+	
+	a.h = 0x1C06A5ECLU;
+	a.l = 0x53A6F90747F68A0ALU;
+	
+	crank_uint128_lsh (&a, 3, &b);
+	
+  	g_assert_cmpuint (b.h, ==, 0xE0352F62LU);
+  	g_assert_cmpuint (b.l, ==, 0x9D37C83A3FB45050LU);
 }
