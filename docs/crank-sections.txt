@@ -113,10 +113,18 @@ crank_uint128_rsh_self
 
 <SECTION>
 <FILE>crankstring</FILE>
+CrankReadDecResult
+
 crank_str_read_space
 crank_str_read_word
+crank_str_read_uint64
+crank_str_read_int64
+crank_str_read_double
 crank_str_scan_char
 crank_str_scan_word
+crank_str_scan_uint64
+crank_str_scan_int64
+crank_str_scan_double
 crank_str_check_char
 crank_str_check_chars
 crank_str_check_chars_str

@@ -27,6 +27,18 @@ int main (string[] args) {
 	
 	GLib.Test.add_func (	"/crank/base/string/read/word",
 							test_read_word	);
+							
+	GLib.Test.add_func (	"/crank/base/string/read/uint64",
+							test_read_uint64	);
+							
+	GLib.Test.add_func (	"/crank/base/string/read/int64",
+							test_read_int64	);
+	
+	GLib.Test.add_func (	"/crank/base/string/read/double",
+							test_read_double	);
+	
+	GLib.Test.add_func (	"/crank/base/string/scan/char",
+							test_scan_char	);
 	
 	GLib.Test.add_func (	"/crank/base/string/scan/word",
 							test_scan_word	);
@@ -90,6 +102,123 @@ private void test_read_word () {
 	assert (pos == 23);
 	assert (word == "mps");
 }
+
+private void test_read_uint64 () {
+	string	subject = "12 seven 1948889382 18446744073709551615 19073283471829393945";
+	uint	pos = 0;
+	uint64	value;
+	bool	overflow;
+	
+	assert (Crank.Str.read_uint64 (subject, ref pos, out value, out overflow));
+	assert (pos == 2);
+	assert (value == 12);
+	assert (overflow == false);
+	
+	pos = 3;
+	assert (! Crank.Str.read_uint64 (subject, ref pos, out value, out overflow));
+	
+	pos = 9;
+	assert (Crank.Str.read_uint64 (subject, ref pos, out value, out overflow));
+	assert (pos == 19);
+	assert (value == 1948889382L);
+	assert (overflow == false);
+	
+	pos = 20;
+	assert (Crank.Str.read_uint64 (subject, ref pos, out value, out overflow));
+	assert (pos == 40);
+	assert (value == 18446744073709551615L);
+	assert (overflow == false);
+	
+	pos = 41;
+	assert (Crank.Str.read_uint64 (subject, ref pos, out value, out overflow));
+	assert (pos == 61);
+	assert (value == uint64.MAX);
+	assert (overflow == true);
+}
+
+private void test_read_int64 () {
+	string	subject = "EE -492 +32948398 555518394892988392 -38293887837878789218884";
+	uint	pos = 0;
+	int64	value;
+	int		overflow;
+	
+	assert (! Crank.Str.read_int64 (subject, ref pos, out value, out overflow));
+	
+	pos = 3;
+	assert (Crank.Str.read_int64 (subject, ref pos, out value, out overflow));
+	assert (pos == 7);
+	assert (value == -492);
+	assert (overflow == 0);
+	
+	pos = 8;
+	assert (Crank.Str.read_int64 (subject, ref pos, out value, out overflow));
+	assert (pos == 17);
+	assert (value == 32948398L);
+	assert (overflow == 0);
+	
+	pos = 18;
+	assert (Crank.Str.read_int64 (subject, ref pos, out value, out overflow));
+	assert (pos == 36);
+	assert (value == 555518394892988392L);
+	assert (overflow == 0);
+	
+	pos = 37;
+	assert (Crank.Str.read_int64 (subject, ref pos, out value, out overflow));
+	assert (pos == 61);
+	assert (value == int64.MIN);
+	assert (overflow < 0);
+}
+
+private void test_read_double () {
+	string subject =
+		"INF nemo 15 +3.141259 88e52 -1.433e-670 7.49292e-310 1.999e275";
+	
+	uint				pos;
+	double				value;
+	Crank.ReadDecResult	result;
+
+	pos = 0;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 3);
+	assert (value.is_infinity () == 1);
+	assert ((result & Crank.ReadDecResult.SYMBOL) != 0);
+	
+	pos = 4;
+	assert (!Crank.Str.read_double (subject, ref pos, out value, out result));
+	
+	pos = 9;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 11);
+	assert (value == 15);
+	
+	pos = 12;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 21);
+	assert (value == 3.141259);
+	
+	pos = 22;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 27);
+	assert (value == 8.8e53);
+	
+	pos = 28;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 39);
+	assert (value == 0);
+	assert ((result & Crank.ReadDecResult.UNDERFLOW) != 0);
+	
+	pos = 40;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 52);
+	message (value.to_string ());
+	assert (7.4929199e-310 <= value <= 7.4929201e-310);
+	
+	pos = 53;
+	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
+	assert (pos == 62);
+	assert (value == 1.999e275);
+}
+	
 
 private void test_scan_char () {
 	string subject = "( : )";
