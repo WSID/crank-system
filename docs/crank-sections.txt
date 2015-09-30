@@ -72,10 +72,17 @@ crank_vala_create_closure
 </SECTION>
 
 <SECTION>
-<FILE>crank128</FILE>
+<FILE>crankbits</FILE>
 CRANK_ADD_CARRY64
 CRANK_IADD_CARRY64
 CRANK_SUB_CARRY64
+
+crank_bits_shift_to_left32
+crank_bits_shift_to_left64
+</SECTION>
+
+<SECTION>
+<FILE>crank128</FILE>
 CrankUint128
 crank_uint128_init_add
 crank_uint128_init_mul

@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbits.h"
 #include "crank128.h"
 /**
  * SECTION: crank128

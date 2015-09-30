@@ -28,6 +28,8 @@
 
 #include <glib.h>
 
+#include "crankbits.h"
+
 /**
  * CrankUint128:
  * @h: 64 bits at high position.
@@ -123,38 +125,6 @@ void	crank_uint128_rsh				(CrankUint128*	a,
 
 void	crank_uint128_rsh_self			(CrankUint128*	a,
 							 			 const guint	b	);
-
-
-/**
- * CRANK_ADD_CARRY64:
- * @a: A 64-bit integer.
- * @b: A 64-bit integer.
- * @r: (out): A 64-bit result.
- *
- * Adds two 64-bit integer and returns its carry.
- * It is used to perform additions in various operations.
- */
-#define CRANK_ADD_CARRY64(a,b,r)	((*(r) = (a) + (b)), (b) > *(r))
-/**
- * CRANK_IADD_CARRY64:
- * @a: A 64-bit integer.
- * @b: A 64-bit integer.
- *
- * Adds two 64-bit integer and returns its carry.
- * It is used to perform additions in various operations.
- */
-#define CRANK_IADD_CARRY64(a,b)		((*(a) += (b)), (b) > *(a))
-
-/**
- * CRANK_SUB_CARRY64:
- * @a: A 64-bit integer.
- * @b: A 64-bit integer.
- * @r: (out): A 64-bit result.
- *
- * Subtracts two 64-bit integer and returns its takeover.
- * It is used to perform additions in various operations.
- */
-#define CRANK_SUB_CARRY64(a,b,r)	((*(r) = (a) - (b)), (a) < (b))
 
 #define crank_uint128_init_add(i,a,b)	\
 	(i)->h = CRANK_ADD_CARRY64(a,b,&((i)->l))

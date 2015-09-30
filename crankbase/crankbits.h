@@ -1,5 +1,5 @@
-#ifndef CRANKBASE_H
-#define CRANKBASE_H
+#ifndef CRANKBITS_H
+#define CRANKBITS_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,39 +22,47 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKBASE_INSIDE
+#ifndef _CRANKBASE_INSIDE
+#error crankbits.h cannot be included directly.
+#endif
 
-#include "crankbasemacro.h"
-#include "crankstring.h"
-#include "crankvala.h"
-#include "crankvalue.h"
-#include "crankbits.h"
-#include "crank128.h"
+#include <glib.h>
 
-#include "crankrange.h"
-#include "crankiter.h"
+guint	crank_bits_shift_to_left32 (	guint32*	subject);
 
-#include "crankpermutation.h"
-#include "crankcomplex.h"
-#include "crankquaternion.h"
-
-#include "crankveccommon.h"
-#include "crankvecbool.h"
-#include "crankvecint.h"
-#include "crankvecfloat.h"
-#include "crankveccplxfloat.h"
-
-#include "crankmatcommon.h"
-#include "crankmatfloat.h"
-#include "crankmatcplxfloat.h"
-#include "crankadvmat.h"
-
-#include "crankdigraph.h"
-#include "crankadvgraph.h"
-
-#include "crankbasetest.h"
+guint	crank_bits_shift_to_left64 (	guint64*	subject);
 
 
-#undef _CRANKBASE_INSIDE
+/**
+ * CRANK_ADD_CARRY64:
+ * @a: A 64-bit integer.
+ * @b: A 64-bit integer.
+ * @r: (out): A 64-bit result.
+ *
+ * Adds two 64-bit integer and returns its carry.
+ * It is used to perform additions in various operations.
+ */
+#define CRANK_ADD_CARRY64(a,b,r)	((*(r) = (a) + (b)), (b) > *(r))
+/**
+ * CRANK_IADD_CARRY64:
+ * @a: A 64-bit integer.
+ * @b: A 64-bit integer.
+ *
+ * Adds two 64-bit integer and returns its carry.
+ * It is used to perform additions in various operations.
+ */
+#define CRANK_IADD_CARRY64(a,b)		((*(a) += (b)), (b) > *(a))
 
-#endif /* CRANKBASE_H */
+/**
+ * CRANK_SUB_CARRY64:
+ * @a: A 64-bit integer.
+ * @b: A 64-bit integer.
+ * @r: (out): A 64-bit result.
+ *
+ * Subtracts two 64-bit integer and returns its takeover.
+ * It is used to perform additions in various operations.
+ */
+#define CRANK_SUB_CARRY64(a,b,r)	((*(r) = (a) - (b)), (a) < (b))
+
+
+#endif //CRANKBITS_H
