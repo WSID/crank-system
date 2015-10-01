@@ -324,52 +324,30 @@ crank_uint128_div64	(CrankUint128*	a,
 					 guint64		b,
 					 CrankUint128*	r)
 {
-	// this is about modular.
-	guint64 		mod64;
-	guint64			q64;
-
-  	CrankUint128	ap = {0, 0};
-  	CrankUint128	ac = {0, 0};
-
-	// Performs division on (2^64 - 1)
-	mod64 = 0xFFFFFFFFFFFFFFFF % b;
-	q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-	// Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-	mod64++;
-	if (mod64 == b) {
-		mod64 = 0;
-		q64++;
-	}
-
-	// Initial calculation.
-	r->h = a->h / b;
+  	
+  	CrankUint128	ac;
+  	guint64			add;
+  	
+  	// Initial calculation.
+  	
+  	r->h = a->h / b;
   	ac.h = a->h % b;
-
+  	
   	r->l = 0;
   	ac.l = a->l;
-
-  	// Iterative calculation.
-	// continuously retrieve reminder by, until a_next come in 64-bit range.
-	//
-	//   a_next = a_h * 64_reminder + a_l_reminder.
-	//   q += a_h * 64_quotient + a_l_quotient.
-	//
-
-  	while (ac.h != 0) {
-		guint64	lr = ac.l % b;
-	  	guint64	lq = ac.l / b;
-
-	  	crank_uint128_copy (&ac, &ap);
-
-		crank_uint128_init_mul (&ac, ap.h, mod64);
-	  	crank_uint128_add64_self (&ac, lr);
-
-	  	crank_uint128_add64_self (r, ap.h * q64);
-	  	crank_uint128_add64_self (r, lq);
-	}
-
-  	crank_uint128_add64_self (r, ac.l / b);
+  	
+  	// Shift right and subtract.
+  	add = 0x8000000000000000LU;
+  	crank_uint128_lsh_self (&ac, 1);
+  	while (add) {
+  		if (b <= ac.h) {
+  			ac.h -= b;
+  			r->l |= add;
+  		}
+  	
+  		crank_uint128_lsh_self (&ac, 1);
+  		add >>= 1;
+  	}
 }
 
 
@@ -384,52 +362,30 @@ void
 crank_uint128_div64_self	(CrankUint128*	a,
 							 guint64		b)
 {
-	// this is about modular.
-	guint64 		mod64;
-	guint64			q64;
-
-  	CrankUint128	ap = {0, 0};
-  	CrankUint128	ac = {0, 0};
-
-	// Performs division on (2^64 - 1)
-	mod64 = 0xFFFFFFFFFFFFFFFF % b;
-	q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-	// Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-	mod64++;
-	if (mod64 == b) {
-		mod64 = 0;
-		q64++;
-	}
-
-	// Initial calculation.
+  	
+  	CrankUint128	ac;
+  	guint64			add;
+  	
+  	// Initial calculation.
+  	
   	ac.h = a->h % b;
-	a->h /= a->h / b;
-
+  	a->h = a->h / b;
+  	
   	ac.l = a->l;
   	a->l = 0;
-
-  	// Iterative calculation.
-	// continuously retrieve reminder by, until a_next come in 64-bit range.
-	//
-	//   a_next = a_h * 64_reminder + a_l_reminder.
-	//   q += a_h * 64_quotient + a_l_quotient.
-	//
-
-  	while (ac.h != 0) {
-		guint64	lr = ac.l % b;
-	  	guint64	lq = ac.l / b;
-
-	  	crank_uint128_copy (&ac, &ap);
-
-		crank_uint128_init_mul (&ac, ap.h, mod64);
-	  	crank_uint128_add64_self (&ac, lr);
-
-	  	crank_uint128_add64_self (a, ap.h * q64);
-	  	crank_uint128_add64_self (a, lq);
-	}
-
-  	crank_uint128_add64_self (a, ac.l / b);
+  	
+  	// Shift right and subtract.
+  	add = 0x8000000000000000LU;
+  	crank_uint128_lsh_self (&ac, 1);
+  	while (add) {
+  		if (b <= ac.h) {
+  			ac.h -= b;
+  			a->l |= add;
+  		}
+  	
+  		crank_uint128_lsh_self (&ac, 1);
+  		add >>= 1;
+  	}
 }
 
 /**
