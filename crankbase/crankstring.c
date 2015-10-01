@@ -172,7 +172,7 @@
 #define	DBL_DEMAX	(308)
 #define DBL_DEDNORM	(-323)
 
-static gchar*	float_symwords [] =
+static const gchar*	float_symwords [] =
 {
 	"inf",
 	"infinity",
