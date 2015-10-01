@@ -132,7 +132,7 @@
 
 #define DEC18 G_GUINT64_CONSTANT(1000000000000000000)
 
-#define PEN16 G_GUINT64_CONSTANT(0x2386F26FC1)
+#define PEN16 0x2386F26FC1UL
 #define PEN8  0x5F5E1
 #define PEN4  0x271
 #define PEN2  0x19
@@ -214,54 +214,81 @@ crank_str_read_decstring (	const gchar*	str,
 						  	gint*			dp,
 						  	gint64*			expon	)
 {
-	guint si;	//string iteration
 	gint bi;	//number box iteration
-	
 	bi = 0;
-
-  	// Read preceeding zeros.
-  	for (si = *position; str[si] == '0'; si++) {}
-
 	
-  	// Read integer part.
-  	for (; isdigit (str[si]); si++) {
-		if (str[si] != '0')	*eend = bi + 1;
-  		if (bi < n_numbox)	numbox[bi] = str[si];
-		bi++;
-  	}
-  	
-
-  	// Read decimal point.
-	*dp = bi;
-  	if (str[si] == '.') {
-  		si++;
-  		
-  		// If it is still reading preceeding zeroes,
-  		if (bi == 0) {
-  			for (; str[si] == '0'; si++) { bi --; }
-  			*dp = bi;
-  			bi = 0;
-  		}
-  	}
-
-  	// Read numbers.
-  	for (; isdigit (str[si]); si++) {
-  		if (str[si] != '0') *eend = bi + 1;
-  		if (bi < n_numbox) numbox[bi] = str[si];
-		bi++;
+	guint 		i;
+	gint		dp_pp = 0;
+	
+	guint		ss;
+	guint		se;
+	guint		sd;
+	guint		ee;
+	//// Phase 1: Check effective range.
+	// Read leading zeros.
+	for (i = *position; str[i] == '0'; i++) {}
+	if (str[i] == '.') {
+		dp_pp = 1;
+		sd = i;
+		for (i++; str[i] == '0'; i++) {}
 	}
 
-	// Read exponential.
-	if(str[si] == 'e' || str[si] == 'E') {
-		si++;
-		if (! crank_str_read_int64 (str, &si, expon, NULL)) si--;
+	// Read numbers.
+	ss = i;
+	for (; isdigit (str[i]); i++) {}
+	if ((str[i] == '.') && (dp_pp == 0)) { 
+		dp_pp = 2;
+		sd = i;
+		for (i++ ;isdigit (str[i]); i++) {}
 	}
-
-	if (*position != si) {
-		*position = si;
+	
+	// If decimal point is not found, think decimal point is at end of numbers.
+	if (dp_pp == 0) sd = i;
+	
+	// Trace back numbers.
+	if (ss < i) {
+		for (se = i - 1;str[se] == '0'; se--) {}
+		if (str[se] == '.') {
+			for (se-- ;str[se] == '0'; se--) {}
+			dp_pp = 3;
+		}
+		se++;
+	}
+	else se = ss;
+	
+	// Read exponential
+	if (str[i] == 'e' || str[i] == 'E') {
+		ee = i + 1;
+		if (! crank_str_read_int64 (str, &ee, expon, NULL)) ee--;
+	}
+	else ee = i;
+	
+	
+	//// Phase 2: Fill numbox.
+	if (dp_pp == 2) {
+		guint nd = (sd <= ss + n_numbox) ? sd : ss + n_numbox;
+		guint ne = (se <= ss + n_numbox + 1) ? se : ss + n_numbox + 1;
+		
+		for (i = ss; i < nd; i++) numbox[bi++] = str[i];
+		for (i = sd + 1; i < ne; i++) numbox[bi++] = str[i];
+	}
+	else {
+		guint 	ne = (se < ss + n_numbox) ? se : ss + n_numbox;
+		for (i = ss; i < ne; i++) numbox[bi++] = str[i];
+	}
+	
+	
+	//// Phase 3: Fill out information.
+	*eend = se - ss - (guint)(dp_pp == 2);
+	*dp = (gint)(sd) - (gint)(ss) + (gint)(sd < ss);
+	
+	if (*position != ee) {
+		*position = ee;
 		return TRUE;
 	}
-  	else return FALSE;
+  	
+	return FALSE;
+  	
 }
 
 
@@ -442,10 +469,10 @@ crank_str_read_uint64 (	const gchar*		str,
   }
   else if (0 < n) {
     for (i = 0; i < n1; i++)
-	  m_value = m_value * 10 + (guint64)(str[rstart + i] - '0');
+	  m_value = m_value * 10 + (guint64)(str[nzstart + i] - '0');
 
 	if (I64_N10 == n) {
-	  guint	vi = (guint)(str[rstart + n1] - '0');
+	  guint	vi = (guint)(str[nzstart + n1] - '0');
 
 	  if ((m_value < I64_D10) ||  ((m_value == I64_D10) && (vi < I64_R10)))
 	 	m_value = m_value * 10 + vi;
@@ -545,7 +572,7 @@ crank_str_read_double (	const gchar*		str,
 						gdouble*			value_ptr,
 						CrankReadDecResult*	read_flags	)
 {
-	gchar		numbox[36] = {0};
+	gchar		numbox[18];
 
 	gboolean	success = TRUE;
 	guint		mpos;
@@ -557,8 +584,7 @@ crank_str_read_double (	const gchar*		str,
 
 	gboolean	negate = FALSE;
 
-	guint64			mantisa10_temp = 0;
-	CrankUint128	mantisa10 = {0, 0};
+	guint64			mantisa10 = 0;
 	gint64			exp10 = 0;
   	gint			exp10_p = 0;
 
@@ -567,8 +593,6 @@ crank_str_read_double (	const gchar*		str,
 	gint			exp2;
 
 	guint		i;
-	guint		n;
-  	guint		nb;
 
 	gdouble				mvalue = 0;
 	CrankReadDecResult	mres = 0;
@@ -604,9 +628,9 @@ crank_str_read_double (	const gchar*		str,
 	}
 
 	//// Read mantissa
-	else if (crank_str_read_decstring (str, &mpos, 36, numbox, &mend, &mdp, &exp10)) {
+	else if (crank_str_read_decstring (str, &mpos, 18, numbox, &mend, &mdp, &exp10)) {
 		exp10 += mdp;
-		exp10 -= MIN(mend, 36);
+		exp10 -= MIN(mend, 18);
 		
 		exp10_p = exp10 + mend - 1;
 
@@ -624,78 +648,63 @@ crank_str_read_double (	const gchar*		str,
 		}
 
 		// truncation
-		else if (36 < mend) {
+		else if (18 < mend) {
 			mres = CRANK_READ_DEC_TRUNC_PRECISE;
-			mend = 36;
+			mend = 18;
 		}
 
 
 		//// Constructs numeric structure.
 		// Construct N for N x 10 exp.
-		nb = mend - 18;
-		
-		i = 0;
-		if (18 < mend) {
-			for (; i < nb; i++) {
-				mantisa10_temp = mantisa10_temp * 10 + (guint64)(numbox[i] - '0');
-			}
-			crank_uint128_init_mul(&mantisa10, mantisa10_temp, DEC18);
-			mantisa10_temp = 0;
-		}
-		
-		for (; i < mend; i++) {
-			mantisa10_temp = mantisa10_temp * 10 + (guint64)(numbox[i] - '0');
-			n++;
-		}
-	  	crank_uint128_add64_self (&mantisa10, mantisa10_temp);
-	
+		for (i = 0; i < mend; i++)
+			mantisa10 = mantisa10 * 10 + (guint64)(numbox[i] - '0');
 
 		// Constructs float base 2.
 		exp2 = exp10;
 
-	  	if (mantisa10.h == 0) {
-		  	mantisa10_temp = mantisa10.l;
-			exp2 += 63;
-		  	exp2 -= crank_bits_shift_to_left64 (&mantisa10_temp);
-			mantisa2.h = mantisa10_temp;
-		  	mantisa2.l = 0;
-
-		}
-	  	else {
-		  	mantisa10_temp = mantisa10.h;
-		  	exp2 += 127;
-			i = crank_bits_shift_to_left64 (&mantisa10_temp);
-
-			exp2 -= i;
-			crank_uint128_lsh(&mantisa10, i, &mantisa2);
-		}
+		exp2 += 63;
+	  	exp2 -= crank_bits_shift_to_left64 (&mantisa10);
+		mantisa2.h = mantisa10;
+	  	mantisa2.l = 0;
 	  	
 
 	  	if (exp10 < 0) {
-			while (exp10 <= -8) {
+			while (exp10 <= -16) {
+				crank_uint128_div64_self (&mantisa2, PEN16);
+				exp10 += 16;
+				exp2 -= crank_str_shift128_to_left (&mantisa2);
+			}
+			
+			if (exp10 <= -8) {
 				crank_uint128_div32_self (&mantisa2, PEN8);
 				exp10 += 8;
-				exp2 -= crank_str_shift128_to_left (&mantisa2);
 			}
 			
 			if (exp10 <= -4) {
 				crank_uint128_div32_self (&mantisa2, PEN4);
 				exp10 += 4;
-				exp2 -= crank_str_shift128_to_left (&mantisa2);
 			}
 			if (exp10 <= -2) {
 				crank_uint128_div32_self (&mantisa2, PEN2);
 				exp10 += 2;
-				exp2 -= crank_str_shift128_to_left (&mantisa2);
 			}
 			if (exp10 <= -1) {
 				crank_uint128_div32_self (&mantisa2, 5);
 				exp10 += 1;
-				exp2 -= crank_str_shift128_to_left (&mantisa2);
 			}
+			exp2 -= crank_str_shift128_to_left (&mantisa2);
 		  }
 	  	else if (0 < exp10) {
-	  		while (8 <= exp10) {
+	  		while (16 <= exp10) {
+	  			if (mantisa2.h > I64_D5_16) {
+	  				crank_uint128_rsh_self (&mantisa2, PEN16_BIT);
+	  				exp2 += PEN16_BIT;
+	  			}
+	  			crank_uint128_mul64_self (&mantisa2, PEN16);
+	  			exp10 -= 16;
+	  		}
+	  		
+	  		if (8 <= exp10) {
 	  			if (mantisa2.h > I64_D5_8) {
 	  				crank_uint128_rsh_self (&mantisa2, PEN8_BIT);
 	  				exp2 += PEN8_BIT;

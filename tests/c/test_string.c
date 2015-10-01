@@ -152,7 +152,7 @@ test_read_word (void) {
 
 static void
 test_read_uint64 (void) {
-	const gchar*	subject = 	"12 seven 1948889382 18446744073709551615 19073283471829393945";
+	const gchar*	subject = 	"12 seven 1948889382 18446744073709551615 19073283471829393945 007";
 	guint			pos = 		0;
 	guint64			value;
   	gboolean		overflow;
@@ -182,11 +182,17 @@ test_read_uint64 (void) {
 	g_assert_cmpuint (pos, ==, 61);
 	g_assert_cmpuint (value, ==, G_MAXUINT64);
 	g_assert_true (overflow);
+	
+	pos = 62;
+	g_assert (crank_str_read_uint64 (subject, &pos, &value, &overflow));
+	g_assert_cmpuint (pos, ==, 65);
+	g_assert_cmpuint (value, ==, 7);
+	g_assert_false (overflow);
 }
 
 static void
 test_read_int64 (void) {
-	const gchar*	subject = 	"EE -492 +32948398 555518394892988392 -38293887837878789218884";
+	const gchar*	subject = 	"EE -492 +32948398 555518394892988392 -38293887837878789218884 007";
 	guint			pos = 		0;
 	gint64			value;
   	gint			overflow;
@@ -216,12 +222,18 @@ test_read_int64 (void) {
 	g_assert_cmpuint (pos, ==, 61);
 	g_assert_cmpuint (value, ==, G_MININT64);
 	g_assert_cmpint (overflow, <, 0);
+	
+	pos = 62;
+	g_assert (crank_str_read_int64 (subject, &pos, &value, &overflow));
+	g_assert_cmpuint (pos, ==, 65);
+	g_assert_cmpuint (value, ==, 7);
+	g_assert_cmpint (overflow, ==, 0);
 }
 
 static void
 test_read_double (void) {
 	const gchar*	subject =
-		"INF nemo 15 +3.141259 88e52 -1.433e-670 7.49292e-310 1.999e275";
+		"INF nemo 15 +3.141259 88e52 -1.433e-670 7.49292e-310 1.999e275 1.0e02";
 	
 	guint				pos;
 	gdouble				value;
@@ -266,6 +278,11 @@ test_read_double (void) {
 	g_assert ( crank_str_read_double (subject, &pos, &value, &result));
 	g_assert_cmpuint (pos, ==, 62);
 	crank_assert_cmpfloat (value, ==, 1.999e275);
+	
+	pos = 63;
+	g_assert ( crank_str_read_double (subject, &pos, &value, &result));
+	g_assert_cmpuint (pos, ==, 69);
+	crank_assert_cmpfloat (value, ==, 1.0e2);
 }
 
 static void
