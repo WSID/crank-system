@@ -81,6 +81,10 @@ gboolean			crank_str_read_space				(	const gchar*		str,
 															guint*				position,
 															guint*				space	);
 
+gboolean			crank_str_read_plusminus			(	const gchar*		str,
+															guint*				position,
+															gboolean*			negate	);
+
 gboolean			crank_str_read_word					(	const gchar*		str,
 															guint*				position,
 															gchar**				word_ptr	);

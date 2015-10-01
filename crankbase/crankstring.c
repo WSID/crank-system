@@ -391,6 +391,45 @@ crank_str_read_space (	const gchar*		str,
 }
 
 /**
+ * crank_str_read_plusminus:
+ * @str: string to read.
+ * @position: (inout): position.
+ * @negate: (out): Whether it read minus. If it cannot read, %FALSE is returned.
+ *
+ * Reads +- within @str and move @position if is.
+ *
+ * This is used to implement numeric reading function.
+ *
+ * Returns: %TRUE if it read a sign.
+ */
+gboolean
+crank_str_read_plusminus (	const gchar*	str,
+							guint*			position,
+							gboolean*		negate	)
+{
+	gchar		c = str[*position];
+	gboolean	mnegate;
+	
+	switch (c) {
+	case '+':
+		mnegate = FALSE;
+		break;
+	case '-':
+		mnegate = TRUE;
+		break;
+	default:
+		if (negate != NULL) *negate = FALSE;
+		return FALSE;
+	}
+	
+	(*position) ++;
+	crank_str_read_space (str, position, NULL);
+	
+	if (negate != NULL) *negate = mnegate;
+	return TRUE;
+}
+
+/**
  * crank_str_read_word:
  * @str: string to read.
  * @position: (inout): position.
@@ -516,19 +555,10 @@ crank_str_read_int64 (	const gchar*		str,
 	guint64		m_uvalue;
 	gint64		m_value = 0;
 	gint		m_overflowed = 0;
-	gboolean	negate = FALSE;
-
+	gboolean	negate;
+	
 	m_pos = *position;
-	if (str[m_pos] == '+') {
-		m_pos ++;
-		negate = FALSE;
-		crank_str_read_space (str, &m_pos, NULL);
-	}
-	else if (str[m_pos] == '-') {
-		m_pos ++;
-		negate = TRUE;
-		crank_str_read_space (str, &m_pos, NULL);
-	}
+	crank_str_read_plusminus (str, &m_pos, &negate);
 
 	success = crank_str_read_uint64 (str, &m_pos, &m_uvalue, NULL);
 	if (success) {
@@ -579,10 +609,7 @@ crank_str_read_double (	const gchar*		str,
 	guint		mend;
 	gint		mdp;
 
-	gchar*		lsymbol;
-	gchar*		symbol;
-
-	gboolean	negate = FALSE;
+	gboolean	negate;
 
 	guint64			mantisa10 = 0;
 	gint64			exp10 = 0;
@@ -601,15 +628,7 @@ crank_str_read_double (	const gchar*		str,
 
 	//// Read string.
 	// Read sign.
-	if (str[mpos] == '-') {
-		mpos ++;
-		crank_str_read_space (str, &mpos, NULL);
-		negate = TRUE;
-	}
-	else if (str[mpos] == '+') {
-		mpos ++;
-		crank_str_read_space (str, &mpos, NULL);
-	}
+	crank_str_read_plusminus (str, &mpos, &negate);
 
 	//// Read words
 	if (isalpha (str[mpos])) {
@@ -667,7 +686,6 @@ crank_str_read_double (	const gchar*		str,
 		mantisa2.h = mantisa10;
 	  	mantisa2.l = 0;
 	  	
-
 	  	if (exp10 < 0) {
 			while (exp10 <= -16) {
 				crank_uint128_div64_self (&mantisa2, PEN16);

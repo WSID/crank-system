@@ -118,6 +118,7 @@ crank_uint128_rsh_self
 CrankReadDecResult
 
 crank_str_read_space
+crank_str_read_plusminus
 crank_str_read_word
 crank_str_read_uint64
 crank_str_read_int64
