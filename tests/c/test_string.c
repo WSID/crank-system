@@ -347,7 +347,7 @@ test_check_chars_str (void) {
 
 static void
 test_check_words (void) {
-	const gchar*	subject = "apple pie and strawberry shortcake or graph juice";
+	const gchar*	subject = "Apple pie and strawberry shortcake or graph juice";
 	guint			pos = 0;
 	
 	static gchar*	fruits[] = {
@@ -355,25 +355,28 @@ test_check_words (void) {
 		"graph",
 		"orange",
 		"pear",
-		"strawberry"
+		"strawberry",
+		NULL
 	};
 	
-	g_assert_cmpint (0, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
+	g_assert_cmpint (0, ==, crank_str_check_words (subject, &pos, fruits,
+													CRANK_STR_CHECK_CI_IN_LOWERCASE));
 	
-	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
 	
 	pos = 9;
-	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
 	
 	pos = 13;
-	g_assert_cmpint (4, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (4, ==, crank_str_check_words (subject, &pos, fruits, 0));
 	
-	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
 	
 	pos = 34;
-	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
 	
 	pos = 37;
-	g_assert_cmpint (1, ==, crank_str_check_words (subject, &pos, fruits));
-	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits));
+	g_assert_cmpint (1, ==, crank_str_check_words (subject, &pos, fruits, 0));
+	g_assert_cmpint (-1, ==, crank_str_check_words (subject, &pos, fruits, 0));
 }

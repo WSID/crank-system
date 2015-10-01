@@ -1048,6 +1048,7 @@ crank_str_check_chars_str (	const gchar*		str,
  * @str: String to check.
  * @position: (inout): position.
  * @check_words: (array zero-terminated=1): Items to check.
+ * @flags: A flags to adjust function behavior.
  *
  * Checks next words is one of @check_words, and move @position to next if it is.
  * Skip spaces before it reads.
@@ -1055,13 +1056,21 @@ crank_str_check_chars_str (	const gchar*		str,
  * Returns: The index of read word at @check_words, or -1 for absences.
  */
 gint
-crank_str_check_words (	const gchar*	str,
-						guint*			position,
-						const gchar**	check_words	)
+crank_str_check_words (	const gchar*		str,
+						guint*				position,
+						const gchar**		check_words,
+						CrankStrCheckFlags	flags		)
 {
 	guint	i;
 	guint	j;
 	gchar*	word;
+	gchar*	cword;
+	
+	gchar* (*convfunc) (const gchar*, gssize) = NULL;
+	gchar*	ccword = NULL;
+	
+	guint	case_insensitive;
+	
 	
 	i = *position;
 	
@@ -1069,12 +1078,41 @@ crank_str_check_words (	const gchar*	str,
 	
 	if (! crank_str_scan_word (str, &i, &word)) return -1;
 	
-	for (j = 0; check_words[j] != NULL; j++) {
-		if (g_strcmp0 (word, check_words[j]) == 0) break;
+	// Prepare case insensitive comparsion
+	case_insensitive = flags & CRANK_STR_CHECK_MASK_CASE_INSENSITIVE;
+	
+	if (case_insensitive != 0) {
+		convfunc = (case_insensitive == CRANK_STR_CHECK_CI_IN_UPPERCASE) ?
+					g_ascii_strup : g_ascii_strdown ;
+		
+		cword = convfunc (word, -1);
+	}
+	else {
+		cword = word;
 	}
 	
+	
+	// Check by comparsion.
+	if (case_insensitive == CRANK_STR_CHECK_CI_NORMAL) {
+		for (j = 0; check_words[j] != NULL; j++) {
+			gchar*		ccword = convfunc (check_words[j], -1);
+			gboolean	cmpresult = (strcmp (cword, ccword) == 0);
+			
+			g_free (ccword);
+			if (cmpresult) break;
+		}
+	}
+	else {
+		for (j = 0; check_words[j] != NULL; j++) {
+			if (strcmp (cword, check_words[j]) == 0) break;
+		}
+	}
+	
+	// wrap up!
+	if (case_insensitive != 0) g_free (cword);
 	g_free (word);
 	
+	// Return result
 	if (check_words[j] == NULL) {
 		return -1;
 	}

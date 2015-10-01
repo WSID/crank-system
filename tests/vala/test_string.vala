@@ -51,6 +51,9 @@ int main (string[] args) {
 							
 	GLib.Test.add_func (	"/crank/base/string/check/chars_str",
 							test_check_chars_str	);
+							
+	GLib.Test.add_func (	"/crank/base/string/check/words",
+							test_check_words	);
 	
 	GLib.Test.run ();
 	
@@ -285,4 +288,38 @@ private void test_check_chars_str () {
 	assert (1 == Crank.Str.check_chars_str (subject, ref pos, chars));
 	assert (2 == Crank.Str.check_chars_str (subject, ref pos, chars));
 	assert (-1 == Crank.Str.check_chars_str (subject, ref pos, chars));
+}
+
+private void test_check_words () {
+	string subject = "Apple pie and strawberry shortcake or graph juice";
+	uint	pos = 0;
+	
+	string[]	fruits = {
+		"apple",
+		"graph",
+		"orange",
+		"pear",
+		"strawberry"
+	};
+	
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	assert (0 == Crank.Str.check_words (subject, ref pos, fruits,
+										Crank.StrCheckFlags.CI_IN_LOWERCASE));
+	
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	
+	pos = 9;
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	
+	pos = 13;
+	assert (4 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	
+	pos = 34;
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	
+	pos = 37;
+	assert (1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
+	assert (-1 == Crank.Str.check_words (subject, ref pos, fruits, 0));
 }

@@ -55,6 +55,26 @@ typedef enum _CrankReadDecResult {
 	CRANK_READ_DEC_SYMBOL = 1 << 3
 } CrankReadDecResult;
 
+/**
+ * CrankStrCheckFlags:
+ * @CRANK_STR_CHECK_MASK_CASE_INSENSITIVE:
+ *     Mask value for case insensitive comparsion.
+ * @CRANK_STR_CHECK_CI_NORMAL:
+ *     Performs normal case insensitive comparsion.
+ * @CRANK_STR_CHECK_CI_IN_LOWERCASE:
+ *     Input items are lowercase.
+ * @CRANK_STR_CHECK_CI_IN_UPPERCASE:
+ *     Input items are uppercase.
+ *
+ * This flag is used to adjust check operations.
+ */
+typedef enum _CrankStrCheckFlags {
+	CRANK_STR_CHECK_MASK_CASE_INSENSITIVE = 3 << 0,
+	CRANK_STR_CHECK_CI_NORMAL =	   1 << 0,
+	CRANK_STR_CHECK_CI_IN_LOWERCASE = 2 << 0,
+	CRANK_STR_CHECK_CI_IN_UPPERCASE = 3 << 2
+} CrankStrCheckFlags;
+
 //////// Reading functions
 
 gboolean			crank_str_read_space				(	const gchar*		str,
@@ -123,7 +143,8 @@ gint				crank_str_check_chars_str			(	const gchar*		str,
 
 gint				crank_str_check_words				(	const gchar*		str,
 															guint*				position,
-															const gchar**		check_words	);
+															const gchar**		check_words,
+															CrankStrCheckFlags	flags	);
 
 
 G_END_DECLS
