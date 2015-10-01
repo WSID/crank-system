@@ -1043,3 +1043,43 @@ crank_str_check_chars_str (	const gchar*		str,
 	return -1;
 }
 
+/**
+ * crank_str_check_words:
+ * @str: String to check.
+ * @position: (inout): position.
+ * @check_words: (array zero-terminated=1): Items to check.
+ *
+ * Checks next words is one of @check_words, and move @position to next if it is.
+ * Skip spaces before it reads.
+ *
+ * Returns: The index of read word at @check_words, or -1 for absences.
+ */
+gint
+crank_str_check_words (	const gchar*	str,
+						guint*			position,
+						const gchar**	check_words	)
+{
+	guint	i;
+	guint	j;
+	gchar*	word;
+	
+	i = *position;
+	
+	crank_str_read_space (str, &i, NULL);
+	
+	if (! crank_str_scan_word (str, &i, &word)) return -1;
+	
+	for (j = 0; check_words[j] != NULL; j++) {
+		if (g_strcmp0 (word, check_words[j]) == 0) break;
+	}
+	
+	g_free (word);
+	
+	if (check_words[j] == NULL) {
+		return -1;
+	}
+	else {
+		*position = i;
+		return j;
+	}
+}

@@ -104,7 +104,7 @@ gboolean			crank_str_scan_int64				(	const gchar*		str,
 gboolean			crank_str_scan_double				(	const gchar*		str,
 															guint*				position,
 															gdouble*			value_ptr,
-															CrankReadDecResult*	result	);
+															CrankReadDecResult*	result		);
 
 //////// Checking Function
 
@@ -120,6 +120,11 @@ gint				crank_str_check_chars				(	const gchar*		str,
 gint				crank_str_check_chars_str			(	const gchar*		str,
 															guint*				position,
 															const gchar*		check_items	);
+
+gint				crank_str_check_words				(	const gchar*		str,
+															guint*				position,
+															const gchar**		check_words	);
+
 
 G_END_DECLS
 
