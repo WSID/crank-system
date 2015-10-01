@@ -10,10 +10,12 @@ TEST_BASE_LDADD= \
 
 bench_programs = \
 		test_perf_digraph \
-		test_perf_matfloat
+		test_perf_matfloat \
+		test_perf_str
 
 test_perf_digraph_LDADD=  $(TEST_BASE_LDADD)
 test_perf_matfloat_LDADD=  $(TEST_BASE_LDADD)
+test_perf_str_LDADD=  $(TEST_BASE_LDADD)
 
 
 
