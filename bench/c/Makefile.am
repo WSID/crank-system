@@ -1,4 +1,4 @@
-## tests: 라이브러리 테스트
+## bench: Benchmark functions.
 
 AM_CFLAGS= \
 		$(CRANK_BASE_CFLAGS) \
@@ -23,11 +23,25 @@ test_perf_str_LDADD=  $(TEST_BASE_LDADD)
 
 noinst_PROGRAMS= $(bench_programs)
 
-# We are use gtester, a kind of deprecated tool
+clean-local:
+	for bench in $(bench_programs); \
+	do rm $$bench.log ; \
+	done
+
+mostlyclean-local:
+	rm *.log
+
+# We are using gtester, a kind of deprecated tool
 # This is not a Pass-Fail Tests. TAP protocol would not be appropriate for it.
-bench-local: $(bench_programs)
-	sh ../bench_helper.sh gen $(bench_programs)
+.PHONY: bench cpylog
+
+bench: $(bench_programs)
+	for bench in $(bench_programs); \
+	do gtester $$bench -o $$bench.log ; \
+	done
 
 cpylog: $(bench_programs)
-	sh ../bench_helper.sh cpy . `date +%Y-%m-%d` $(bench_programs)
+	for bench in $(bench_programs); \
+	do cp $$bench.log $$bench-`date +%Y-%m-%d`.log ; \
+	done
 

@@ -79,9 +79,6 @@ VAPIGEN_CHECK()
 AS_IF([test S"$enable_vala" = S"yes"],
 		[AM_PROG_VALAC])
 
-######## Benchmark recursive targets. ##########################################
-AM_EXTRA_RECURSIVE_TARGETS([bench])
-
 
 ######## Prints configuration results ##########################################
 AC_CONFIG_FILES([

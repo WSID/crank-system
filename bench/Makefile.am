@@ -9,3 +9,10 @@ SUBDIRS=c
 # endif
 
 EXTRA_DIST=	bench_helper.sh
+
+.PHONY: bench
+
+bench:
+	for DIR in $(SUBDIRS); do \
+	    $(MAKE) -C $$DIR bench ; \
+	done

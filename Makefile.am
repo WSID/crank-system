@@ -17,3 +17,10 @@ pkgconfig_DATA= \
 
 EXTRA_DIST= \
 		po
+
+
+# Benchmark
+.PHONY: bench
+
+bench: all
+	$(MAKE) -C bench/ bench
