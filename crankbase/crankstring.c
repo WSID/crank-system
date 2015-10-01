@@ -172,6 +172,17 @@
 #define	DBL_DEMAX	(308)
 #define DBL_DEDNORM	(-323)
 
+static gchar*	float_symwords [] =
+{
+	"inf",
+	"infinity",
+	"nan",
+	NULL
+};
+
+
+
+
 static guint
 crank_str_shift128_to_left (	CrankUint128*	subject	)
 {
@@ -536,12 +547,10 @@ crank_str_read_double (	const gchar*		str,
 {
 	gchar		numbox[36] = {0};
 
+	gboolean	success = TRUE;
 	guint		mpos;
-
 	guint		mend;
 	gint		mdp;
-	
-	guint		wpos;
 
 	gchar*		lsymbol;
 	gchar*		symbol;
@@ -561,8 +570,8 @@ crank_str_read_double (	const gchar*		str,
 	guint		n;
   	guint		nb;
 
-	GDoubleIEEE754 		mvalue;
-	CrankReadDecResult	mres;
+	gdouble				mvalue = 0;
+	CrankReadDecResult	mres = 0;
 
 	mpos = *position;
 
@@ -579,29 +588,19 @@ crank_str_read_double (	const gchar*		str,
 	}
 
 	//// Read words
-	wpos = mpos;
-	if (isalpha (str[wpos]) && (crank_str_read_word (str, &wpos, &symbol))) {
-		lsymbol = g_ascii_strdown (symbol, -1);
-
-		if ((strcmp (lsymbol, "inf") == 0) || (strcmp (lsymbol, "infinity") == 0)) {
-			mvalue.v_double = INFINITY;
-			mres = CRANK_READ_DEC_SYMBOL;
-			mpos = wpos;
-		}
-		else if (strcmp (lsymbol, "nan") == 0) {
-			mvalue.v_double = NAN;
-			mres = CRANK_READ_DEC_SYMBOL;
-			mpos = wpos;
+	if (isalpha (str[mpos])) {
+		gint symno = crank_str_check_words (str, &mpos, float_symwords,
+											CRANK_STR_CHECK_CI_IN_LOWERCASE	);
+		
+		if (symno == -1) {
+			success = FALSE;
 		}
 		else {
-			g_free (symbol);
-			g_free (lsymbol);
-			return FALSE;
-		}
+			mres = CRANK_READ_DEC_SYMBOL;
 			
-		
-		g_free (symbol);
-		g_free (lsymbol);
+			mvalue = (symno == 2) ? NAN : INFINITY;
+			mvalue = (negate) ? -mvalue : mvalue;
+		}
 	}
 
 	//// Read mantissa
@@ -614,13 +613,13 @@ crank_str_read_double (	const gchar*		str,
 		// Some noticable things can be detected.
 		// overflow
 		if (DBL_DEMAX < exp10_p) {
-			mvalue.v_double = INFINITY;
+			mvalue = INFINITY;
 			mres = CRANK_READ_DEC_OVERFLOW;
 		}
 
 		// underflow
 		else if (exp10_p < DBL_DEDNORM) {
-			mvalue.v_double = 0.0;
+			mvalue = 0.0;
 			mres = CRANK_READ_DEC_UNDERFLOW;
 		}
 
@@ -736,33 +735,33 @@ crank_str_read_double (	const gchar*		str,
 		//// Check sepcialities
 		// Underflow cases
 		if (exp2 < DBL_EDNORM) {
-			mvalue.v_double = 0;
+			mvalue = 0;
 			mres |= CRANK_READ_DEC_UNDERFLOW;
 		}
 	
 		// Denormalized cases.
 		else if (exp2 < DBL_EMIN) {
-			mvalue.v_double = crank_str_build_double_denorm (negate, exp2, mantisa2.h);
+			mvalue = crank_str_build_double_denorm (negate, exp2, mantisa2.h);
 		}
 	
 		// Overflow cases
 		else if (exp2 > DBL_EMAX) {
-			mvalue.v_double = INFINITY;
+			mvalue = INFINITY;
 			mres |= CRANK_READ_DEC_OVERFLOW;
 		}
 		
 		else {
-			mvalue.v_double = crank_str_build_double_norm (negate, exp2, mantisa2.h);
+			mvalue = crank_str_build_double_norm (negate, exp2, mantisa2.h);
 		}
 	}
-	else return FALSE;
-	mvalue.mpn.sign = negate;
-
-	*position = mpos;
-	if (value_ptr != NULL) *value_ptr = mvalue.v_double;
+	else success = FALSE;
+	
+	if (success)	*position = mpos;
+	
+	if (value_ptr != NULL) *value_ptr = mvalue;
 	if (read_flags != NULL) *read_flags = mres;	
 	
-	return TRUE;
+	return success;
 }
 
 //////// Scanning Function
