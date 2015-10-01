@@ -105,10 +105,10 @@ test_gen_double_string (gdouble** array)
 	
 	for (i = 0; i < N; i++) {
 		gint	value_int = g_test_rand_int_range (-1000000000, 1000000000);
-		gdouble value_double = ((gdouble)value_int) / 10000000;
+		gdouble value_double = ((gdouble)value_int) / 10000000000;
 		marray[i] = value_double;
 	
-		g_string_append_printf (str, "%0.4g   ", value_double);
+		g_string_append_printf (str, "%0.8g   ", value_double);
 	}
 	
 	
@@ -162,6 +162,7 @@ bench_read_double (void)
 				return;
 			}
 		}
+		
 	}
 	
 	g_test_minimized_result (g_test_timer_elapsed (), "crank_read_double");
