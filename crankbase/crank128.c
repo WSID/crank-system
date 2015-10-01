@@ -312,6 +312,92 @@ crank_uint128_mul64_self	(CrankUint128*	a,
 }
 
 /**
+ * crank_uint128_div:
+ * @a: A 128-bit integer.
+ * @b: A 128-bit integer.
+ * @r: (out): A Result.
+ *
+ * Divides 128-bit integer with 128-bit integer.
+ */
+void
+crank_uint128_div (	CrankUint128*	a,
+					CrankUint128*	b,
+					CrankUint128*	r	)
+{
+  	
+  	CrankUint128	ac;
+  	CrankUint128	bc;
+  	guint64			add = 1;
+  	
+  	if (b->h == 0) crank_uint128_div64 (a, b->l, r);
+  	else {
+  		r->h = 0;
+  		r->l = 0;
+  		
+  		crank_uint128_copy (a, &ac);
+  		crank_uint128_copy (b, &bc);
+  		
+  		// Shifts to left!
+  		guint sha = crank_bits_shift_to_left64 (&(bc.h));
+  		bc.h |= (bc.l >> (64 - sha));
+  		bc.l <<= sha;
+  		add <<= sha;
+  		
+  		
+  		while (add) {
+  			if ((bc.h < ac.h) || ((bc.h == ac.h) && (bc.l <= ac.l))) {
+  				crank_uint128_sub_self (&ac, &bc);
+  				r->l |= add;
+  			}
+  			crank_uint128_rsh_self (&bc, 1);
+  			add >>= 1;
+  		}
+  	}
+}
+
+/**
+ * crank_uint128_div_self:
+ * @a: A 128-bit integer.
+ * @b: A 128-bit integer.
+ *
+ * Divides 128-bit integer with 128-bit integer.
+ */
+void
+crank_uint128_div_self (	CrankUint128*	a,
+							CrankUint128*	b	)
+{
+  	
+  	CrankUint128	ac;
+  	CrankUint128	bc;
+  	guint64			add = 1;
+  	
+  	if (b->h == 0) crank_uint128_div64_self (a, b->l);
+  	else {
+  		crank_uint128_copy (a, &ac);
+  		crank_uint128_copy (b, &bc);
+
+  		a->h = 0;
+  		a->l = 0;
+  		
+  		// Shifts to left!
+  		guint sha = crank_bits_shift_to_left64 (&(bc.h));
+  		bc.h |= (bc.l >> (64 - sha));
+  		bc.l <<= sha;
+  		add <<= sha;
+  		
+  		
+  		while (add) {
+  			if ((bc.h < ac.h) || ((bc.h == ac.h) && (bc.l <= ac.l))) {
+  				crank_uint128_sub_self (&ac, &bc);
+  				a->l |= add;
+  			}
+  			crank_uint128_rsh_self (&bc, 1);
+  			add >>= 1;
+  		}
+  	}
+}
+
+/**
  * crank_uint128_div64:
  * @a: A 128-bit integer.
  * @b: A 64-bit integer.

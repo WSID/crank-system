@@ -99,6 +99,13 @@ void	crank_uint128_mul64				(CrankUint128*	a,
 
 void	crank_uint128_mul64_self		(CrankUint128*	a,
 										 guint64		b	);
+										 
+void	crank_uint128_div				(CrankUint128*	a,
+										 CrankUint128*	b,
+										 CrankUint128*	r	);
+										 
+void	crank_uint128_div_self			(CrankUint128*	a,
+										 CrankUint128*	b	);
 
 void	crank_uint128_div64				(CrankUint128*	a,
 										 guint64		b,

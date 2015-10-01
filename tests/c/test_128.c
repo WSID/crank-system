@@ -35,6 +35,7 @@ static void test_add (void);
 static void test_sub64 (void);
 static void test_sub (void);
 static void test_mul64 (void);
+static void test_div (void);
 static void test_div64 (void);
 static void test_div32 (void);
 static void test_div32_self (void);
@@ -67,6 +68,9 @@ main	(gint argc, gchar** argv)
 
 	g_test_add_func ("/crank/base/128/mul/64",
 					test_mul64					);
+
+	g_test_add_func ("/crank/base/128/div/128",
+					test_div					);
 
 	g_test_add_func ("/crank/base/128/div/64",
 					test_div64					);
@@ -221,6 +225,25 @@ test_mul64 (void)
 
 	g_assert_cmpuint (b.h, ==, 0x8CCC6C5181050A);
 	g_assert_cmpuint (b.l, ==, 0x060E9FB4BF25D774);
+}
+
+static void
+test_div (void)
+{
+	CrankUint128	a;
+	CrankUint128	b;
+	CrankUint128	r;
+
+	a.h =     0x7855DEEDCAC4;
+	a.l = 0x999205EEDE323355;
+	
+	b.h =           0x492EA4;
+	b.l = 0x2DB593A439DE6393;
+
+  	crank_uint128_div (&a, &b, &r);
+  	
+  	g_assert_cmpuint (r.h, ==, 0);
+  	g_assert_cmpuint (r.l, ==, 0x1A4F298);
 }
 
 static void

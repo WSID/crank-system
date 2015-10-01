@@ -103,6 +103,8 @@ crank_uint128_div32
 crank_uint128_div32_self
 crank_uint128_div64
 crank_uint128_div64_self
+crank_uint128_div
+crank_uint128_div_self
 crank_uint128_remquo32
 crank_uint128_remquo32_self
 crank_uint128_lsh
