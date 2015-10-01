@@ -34,6 +34,7 @@
       <xi:include href="xml/crankbasemacro.xml"/>
       <xi:include href="xml/crankfunction.xml"/>
       <xi:include href="xml/crankvala.xml"/>
+      <xi:include href="xml/crankbits.xml"/>
       <xi:include href="xml/crank128.xml"/>
 	  <xi:include href="xml/crankstring.xml"/>
 	  <xi:include href="xml/crankvalue.xml"/>
