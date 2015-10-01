@@ -942,21 +942,16 @@ parse_complex (	const gchar*	str,
 	guint		pos = 0;
 	
 	gboolean	positive;
-	gfloat		strtof_value;
-	gchar*		strtof_endptr;
+	gdouble		value;
 	
 	crank_cplx_float_init (cplx, 0.0f, 0.0f);
 	
 	{
-		strtof_value = strtof (str, &strtof_endptr);
-		
-		if (strtof_endptr != str) {
-			pos = CRANK_PTR_DIFF (strtof_endptr, str);
-			
+		if (crank_str_scan_double (str, &pos, &value, NULL)) {
 			if (crank_str_check_char (str, &pos, 'i'))
-				cplx->imag = strtof_value;
+				cplx->imag = value;
 			else
-				cplx->real = strtof_value;
+				cplx->real = value;
 		}
 	}
 	
@@ -969,15 +964,11 @@ parse_complex (	const gchar*	str,
 			return;
 		}
 		
-		strtof_value = strtof (str + pos, &strtof_endptr);
-		
-		if (strtof_endptr != str) {
-			pos = CRANK_PTR_DIFF (strtof_endptr, str);
-			
+		if (crank_str_scan_double (str, &pos, &value, NULL)) {
 			if (crank_str_check_char (str, &pos, 'i'))
-				cplx->imag += (positive) ? strtof_value : -strtof_value;
+				cplx->imag += (positive) ? value : -value;
 			else
-				cplx->real += (positive) ? strtof_value : -strtof_value;
+				cplx->real += (positive) ? value : -value;
 		}
 	}
 }
