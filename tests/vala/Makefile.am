@@ -14,7 +14,6 @@ AM_CFLAGS= \
 # 대상 목록
 test_programs= \
 		test_base_test \
-		test_vala \
 		test_string \
 		test_range \
 		test_iter \
@@ -41,14 +40,6 @@ test_base_test_LDADD= \
 test_base_test_SOURCES= \
 		test_base_test.vala
 		
-
-test_vala_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la
-
-test_vala_SOURCES= \
-		test_vala.vala
-
 
 
 test_string_LDADD= \

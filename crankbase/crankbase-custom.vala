@@ -64,53 +64,6 @@ namespace Crank {
 	
 	
 	
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_GET_POINTER")]
-	public GLib.Callback	func_get_pointer (Crank.Callback pointer);
-	
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_GET_USERDATA")]
-	public void*	func_get_userdata (Crank.Callback pointer);
-	
-	
-	
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_JOIN_SPLIT")]
-	public unowned Crank.Callback func_join	(
-			GLib.Callback	fp,
-			void*			userdata);
-	
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_JOIN_SPLIT")]
-	public GLib.Callback func_split (
-			Crank.Callback	cb,
-			out void*		userdata);
-
-	
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_JOIN_SPLIT_OWNED")]
-	public Crank.Callback func_join_owned (
-			GLib.Callback		fp,
-			void*				userdata,
-			GLib.DestroyNotify	destroy);
-				
-				
-	[CCode (simple_generics=true, cname="CRANK_VALA_FUNC_JOIN_SPLIT_OWNED")]
-	public GLib.Callback func_split_owned (
-				Crank.Callback				fp,
-				out void*					userdata,
-				out GLib.DestroyNotify		destroy	);
-
-	[CCode (cname="CRANK_VALA_GENERIC_UNOWNED")]
-	public bool	generic_unowned <G> ();
-	
-	[CCode (cname="crank_vala_create_closure")]
-	public GLib.Closure	create_closure (	owned Crank.Callback callback,
-											GLib.ClosureMarshal? marshal = null	);
-	
-	[CCode (cname="g_closure_invoke")]
-	public void closure_invoke (	GLib.Closure	closure,
-									ref GLib.Value	return_value,
-										[CCode (array_length_pos=2.5)]
-									GLib.Value[]	param_types,
-									void*			invocation_hint = null);
-	
-	
 	
 	public struct RanUint {
 		public RanUint		(uint	start, uint		end);

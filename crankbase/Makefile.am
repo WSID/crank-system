@@ -8,7 +8,6 @@ include_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
 		crankfunction.h \
-		crankvala.h \
 		crankvalue.h \
 		crankbits.h \
 		crank128.h \
@@ -52,7 +51,6 @@ libcrankbase_la_LIBADD = \
 
 libcrankbase_la_SOURCES= \
 		crankfunction.c \
-		crankvala.c \
 		crankvalue.c \
 		crankstring.c \
 		crankbits.c \

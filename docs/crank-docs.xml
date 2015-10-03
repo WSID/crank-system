@@ -28,12 +28,11 @@
   
   <part> <title>Crank Base</title>
     <chapter>
-	  <title>Fundamentals</title>
+	  <title>Basic Utility</title>
 	  <xi:include href="crank-chapter-base-fundamental.xml"/>
 	
       <xi:include href="xml/crankbasemacro.xml"/>
       <xi:include href="xml/crankfunction.xml"/>
-      <xi:include href="xml/crankvala.xml"/>
       <xi:include href="xml/crankbits.xml"/>
       <xi:include href="xml/crank128.xml"/>
 	  <xi:include href="xml/crankstring.xml"/>

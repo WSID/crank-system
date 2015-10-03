@@ -26,7 +26,6 @@
 
 #include "crankbasemacro.h"
 #include "crankstring.h"
-#include "crankvala.h"
 #include "crankvalue.h"
 #include "crankbits.h"
 #include "crank128.h"
