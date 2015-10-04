@@ -26,6 +26,7 @@
 #error crankbasetest.h cannot be included directly.
 #endif
 
+#include <math.h>
 #include <glib.h>
 #include <glib-object.h>
 
@@ -645,6 +646,8 @@ void	crank_test_add_func_timeout		(	const gchar* 	path,
 					eqf, strf, strfu ); \
 			\
 		} G_STMT_END
+
+
 
 
 

@@ -147,7 +147,7 @@ gint				crank_str_check_chars_str			(	const gchar*		str,
 
 gint				crank_str_check_words				(	const gchar*		str,
 															guint*				position,
-															const gchar**		check_words,
+															gchar**				check_words,
 															CrankStrCheckFlags	flags	);
 
 

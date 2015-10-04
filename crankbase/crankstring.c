@@ -172,7 +172,7 @@
 #define	DBL_DEMAX	(308)
 #define DBL_DEDNORM	(-323)
 
-static const gchar*	float_symwords [] =
+static gchar*	float_symwords [] =
 {
 	"inf",
 	"infinity",
@@ -1084,7 +1084,7 @@ crank_str_check_chars_str (	const gchar*		str,
 gint
 crank_str_check_words (	const gchar*		str,
 						guint*				position,
-						const gchar**		check_words,
+						gchar**				check_words,
 						CrankStrCheckFlags	flags		)
 {
 	guint	i;

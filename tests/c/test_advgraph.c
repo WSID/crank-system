@@ -28,14 +28,14 @@
 typedef struct {
 	CrankDigraph*		graph;
 	CrankDigraphNode*	nodes[16];
-	CrankDigraphNode*	edges[32];
+	CrankDigraphEdge*	edges[32];
 } TestFixtureDigraph;
 
 void	test_fixture_init (			TestFixtureDigraph*	ft,
-									gpointer			userdata	);
+									gconstpointer		userdata	);
 
 void	test_fixture_fini (			TestFixtureDigraph*	ft,
-									gpointer			userdata	);
+									gconstpointer		userdata	);
 
 gfloat	testutil_edge_distance (	CrankDigraphEdge*	edge,
 									gpointer			userdata	);
@@ -45,10 +45,10 @@ gfloat	testutil_heuristic (		CrankDigraphNode*	from,
 									gpointer			userdata	);
 									
 void	test_dijkstra (				TestFixtureDigraph*	ft,
-									gpointer			userdata	);
+									gconstpointer		userdata	);
 									
 void	test_astar (				TestFixtureDigraph*	ft,
-									gpointer			userdata	);
+									gconstpointer		userdata	);
 	
 
 //////// Main //////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ main (	gint   argc,
 
 void
 test_fixture_init (	TestFixtureDigraph*	ft,
-					gpointer			userdata	)
+					gconstpointer		userdata	)
 {
 	CrankVecInt2	pos;
 	
@@ -185,7 +185,7 @@ test_fixture_init (	TestFixtureDigraph*	ft,
 
 void
 test_fixture_fini (	TestFixtureDigraph*	ft,
-					gpointer			userdata	)
+					gconstpointer		userdata	)
 {
 	crank_digraph_unref (ft->graph);
 }
@@ -230,7 +230,7 @@ testutil_heuristic (CrankDigraphNode*	from,
 
 void
 test_dijkstra (	TestFixtureDigraph*	ft,
-				gpointer			userdata	)
+				gconstpointer		userdata	)
 {
 	GList*	path;
 	
@@ -244,7 +244,7 @@ test_dijkstra (	TestFixtureDigraph*	ft,
 
 void
 test_astar (	TestFixtureDigraph*	ft,
-				gpointer			userdata	)
+				gconstpointer		userdata	)
 {
 	GList*	path;
 	
