@@ -278,9 +278,11 @@ void		crank_cplx_float_cos (			CrankCplxFloat*	a,
 void		crank_cplx_float_tan (			CrankCplxFloat*	a,
 											CrankCplxFloat*	r	);
 
+
+
 //////// Generic Selectors /////////////////////////////////////////////////////
 
-#if ! defined (_CRANK_INTERNAL) && (__STDC_VERSION__ >= 201112L) // On C11, we will have Generic selectors.
+#if ! defined (CRANK_NO_C11_GENERIC_SELECTOR) && (__STDC_VERSION__ >= 201112L)
 #define crank_cplx_float_add(a, b, r) \
 		_Generic((b),	gfloat:				crank_cplx_float_addr,	\
 						CrankCplxFloat*:	crank_cplx_float_add)	\
@@ -325,6 +327,70 @@ void		crank_cplx_float_tan (			CrankCplxFloat*	a,
 						CrankCplxFloat*:	crank_cplx_float_div_self)	\
 				(a, b)
 				
+#endif
+
+#ifndef CRANK_NO_SIMPLE_FUNCTION_MACRO
+#define crank_cplx_float_init(c,r,i)	\
+	G_STMT_START {						\
+		(c)->real = (r);				\
+		(c)->imag = (i);				\
+	} G_STMT_END
+
+#define crank_cplx_float_init_arr(c,p)	\
+	G_STMT_START {						\
+		(c)->real = (p)[0];				\
+		(c)->imag = (p)[1];				\
+	} G_STMT_END
+
+#define crank_cplx_float_init_valist(c,v)				\
+	G_STMT_START {										\
+		(c)->real = (gfloat) (va_arg((v), gdouble));	\
+		(c)->imag = (gfloat) (va_arg((v), gdouble));	\
+	} G_STMT_END
+
+#define crank_cplx_float_init_fill(c,f)	\
+	G_STMT_START {						\
+		(c)->real = (f);				\
+		(c)->imag = (f);				\
+	} G_STMT_END
+
+
+#define crank_cplx_float_copy(c,o)	\
+	G_STMT_START {					\
+		(o)->real = (c)->real;		\
+		(o)->imag = (c)->imag;		\
+	} G_STMT_END
+
+
+
+#define crank_cplx_float_to_string(c)	\
+	(crank_cplx_float_to_string_full(c, CRANK_CPLX_FLOAT_DEFFORMAT))
+
+#define crank_cplx_float_to_string_full(c,f)	\
+	(g_strdup_printf((f), (c)->real, (c)->imag))
+
+
+
+#define crank_cplx_float_is_zero(c)	\
+	(((c)->real == 0) && ((c)->imag == 0))
+
+#define crank_cplx_float_is_one(c)	\
+	(((c)->real == 1) && ((c)->imag == 1))
+
+#define crank_cplx_float_is_pure_real(c)	\
+	((c)->imag == 0)
+
+#define crank_cplx_float_is_pure_imag(c)	\
+	((c)->real == 0)
+
+#define crank_cplx_float_has_nan(c)	\
+	(isnanf((c)->real) || isnanf((c)->imag))
+
+#define crank_cplx_float_has_inf(c)	\
+	(isinff((c)->real) || isinff((c)->imag))
+
+
+
 #endif
 
 #endif

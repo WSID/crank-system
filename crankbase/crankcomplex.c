@@ -20,7 +20,7 @@
  */
 
 #define _CRANKBASE_INSIDE
-#define _CRANK_INTERNAL
+#define CRANK_NO_C11_GENERIC_SELECTOR
 
 #include <stdarg.h>
 #include <math.h>
@@ -106,11 +106,13 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankCplxFloat,
  * @imag: Imaginary part.
  *
  * Initialize a complex with given parts.
+ *
+ * This function is [simple function][simple-function].
  */
 void
-crank_cplx_float_init (	CrankCplxFloat*	cplx,
-						gfloat			real,
-						gfloat			imag	)
+(crank_cplx_float_init) (	CrankCplxFloat*	cplx,
+							gfloat			real,
+							gfloat			imag	)
 {
 	cplx->real = real;
 	cplx->imag = imag;
@@ -122,10 +124,12 @@ crank_cplx_float_init (	CrankCplxFloat*	cplx,
  * @parts: (array fixed-size=2): Parts.
  *
  * Initialize a complex with given parts.
+ *
+ * This function is [simple function][simple-function].
  */
 void
-crank_cplx_float_init_arr (	CrankCplxFloat*	cplx,
-							gfloat*			parts	)
+(crank_cplx_float_init_arr) (	CrankCplxFloat*	cplx,
+								gfloat*			parts	)
 {
 	cplx->real = parts[0];
 	cplx->imag = parts[1];
@@ -137,10 +141,12 @@ crank_cplx_float_init_arr (	CrankCplxFloat*	cplx,
  * @varargs: Variadic arguments. should contains 2 double values.
  *
  * Initialize a complex with given parts from variadic arguments.
+ *
+ * This function is [simple function][simple-function].
  */
 void
-crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
-								va_list			varargs	)
+(crank_cplx_float_init_valist) (	CrankCplxFloat*	cplx,
+									va_list			varargs	)
 {
 	cplx->real = (gfloat) (va_arg(varargs, gdouble));
 	cplx->imag = (gfloat) (va_arg(varargs, gdouble));
@@ -153,9 +159,11 @@ crank_cplx_float_init_valist (	CrankCplxFloat*	cplx,
  *
  * Initialize a complex by filling given value, so that the complex will be
  * @fill * (1 + i).
+ *
+ * This function is [simple function][simple-function].
  */
 void
-crank_cplx_float_init_fill (	CrankCplxFloat*	cplx,
+(crank_cplx_float_init_fill) (	CrankCplxFloat*	cplx,
 								gfloat			fill	)
 {
 	cplx->real = fill;
@@ -196,10 +204,12 @@ crank_cplx_float_init_polar (	CrankCplxFloat* cplx,
  * @other: (out): A Complex to store copy.
  *
  * Copies a complex.
+ *
+ * This function is [simple function][simple-function].
  */
 void
-crank_cplx_float_copy (	CrankCplxFloat*	cplx,
-						CrankCplxFloat*	other	)
+(crank_cplx_float_copy) (	CrankCplxFloat*	cplx,
+							CrankCplxFloat*	other	)
 {
 	other->real = cplx->real;
 	other->imag = cplx->imag;
@@ -311,11 +321,13 @@ crank_cplx_float_hash1 (		gconstpointer	a	)
  * |[ 
  *    3.2 + (-1.34i)
  * ]|
+ *
+ * This function is [simple function][simple-function].
  * 
  * Returns: String representation of complex. Free with g_free()
  */
 gchar*
-crank_cplx_float_to_string (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_to_string) (	CrankCplxFloat*	cplx	)
 {
 	return crank_cplx_float_to_string_full (	cplx, CRANK_CPLX_FLOAT_DEFFORMAT);
 }
@@ -330,10 +342,13 @@ crank_cplx_float_to_string (	CrankCplxFloat*	cplx	)
  * It internally uses g_strdup_printf(), so @format consumes 2 float parameters.
  * First one is real value, and second one is imaginary value.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: String representation of complex. Free with g_free()
  */
-gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
-												const gchar*	format	)
+gchar*
+(crank_cplx_float_to_string_full) (	CrankCplxFloat*	cplx,
+									const gchar*	format	)
 {
 	return g_strdup_printf (format, cplx->real, cplx->imag);
 }
@@ -346,10 +361,12 @@ gchar*		crank_cplx_float_to_string_full (	CrankCplxFloat*	cplx,
  *
  * Checks the complex is zero.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether "@cplx == 0".
  */
 gboolean
-crank_cplx_float_is_zero (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_is_zero) (	CrankCplxFloat*	cplx	)
 {
 	return (cplx->real == 0) && (cplx->imag == 0);
 }
@@ -360,10 +377,12 @@ crank_cplx_float_is_zero (	CrankCplxFloat*	cplx	)
  *
  * Checks the complex is one, which is "1 + 0i".
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether "@cplx == 1".
  */
 gboolean
-crank_cplx_float_is_one (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_is_one) (	CrankCplxFloat*	cplx	)
 {
 	return (cplx->real == 1) && (cplx->imag == 0);
 }
@@ -390,10 +409,12 @@ crank_cplx_float_is_unit (	CrankCplxFloat*	cplx	)
  *
  * Checks the complex is real value, and has 0 of imaginary part.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether @cplx is real.
  */
 gboolean
-crank_cplx_float_is_pure_real (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_is_pure_real) (	CrankCplxFloat*	cplx	)
 {
 	return (cplx->imag == 0);
 }
@@ -404,10 +425,12 @@ crank_cplx_float_is_pure_real (	CrankCplxFloat*	cplx	)
  *
  * Checks the complex is pure imaginary value, and has 0 of real part.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether @cplx is pure imaginary.
  */
 gboolean
-crank_cplx_float_is_pure_imag (	CrankCplxFloat* cplx	)
+(crank_cplx_float_is_pure_imag) (	CrankCplxFloat* cplx	)
 {
 	return (cplx->real == 0);
 }
@@ -422,10 +445,12 @@ crank_cplx_float_is_pure_imag (	CrankCplxFloat* cplx	)
  *
  * Individual part can be checked by <function>isnanf</function>.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether @cplx has (NaN) in any part of it.
  */
 gboolean
-crank_cplx_float_has_nan (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_has_nan) (	CrankCplxFloat*	cplx	)
 {
 	return isnanf (cplx->real) || isnanf (cplx->imag);
 }
@@ -439,10 +464,12 @@ crank_cplx_float_has_nan (	CrankCplxFloat*	cplx	)
  *
  * Individual part can be checked by <function>isinff</function>.
  *
+ * This function is [simple function][simple-function].
+ *
  * Returns: Whether @cplx has infinite in any part of it.
  */
 gboolean
-crank_cplx_float_has_inf (	CrankCplxFloat*	cplx	)
+(crank_cplx_float_has_inf) (	CrankCplxFloat*	cplx	)
 {
 	return isinff (cplx->real) || isinff (cplx->imag);
 }
