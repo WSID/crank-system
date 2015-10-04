@@ -20,6 +20,7 @@
  */
 
 #define _CRANKBASE_INSIDE
+#define CRANK_NO_C11_GENERIC_SELECTOR
 
 #include <ctype.h>
 #include <string.h>
@@ -185,7 +186,8 @@ void
  *
  * Adds 128-bit integer to 128-bit integer.
  *
- * This is [simple function][simple-function].
+ * This is [simple function][simple-function] and
+ * [representative function][representative-function].
  */
 void
 (crank_uint128_add)	(CrankUint128*	a,
@@ -202,7 +204,8 @@ void
  *
  * Adds 128-bit integer to 128-bit integer.
  *
- * This is [simple function][simple-function].
+ * This is [simple function][simple-function] and
+ * [representative function][representative-function].
  */
 void
 (crank_uint128_add_self)	(CrankUint128*	a,
@@ -255,7 +258,8 @@ void
  *
  * Subtracts 128-bit integer from 128-bit integer.
  *
- * This is [simple function][simple-function].
+ * This is [simple function][simple-function] and
+ * [representative function][representative-function].
  */
 void
 (crank_uint128_sub)	(CrankUint128*	a,
@@ -272,7 +276,8 @@ void
  *
  * Subtracts 128-bit integer from 128-bit integer.
  *
- * This is [simple function][simple-function].
+ * This is [simple function][simple-function] and
+ * [representative function][representative-function].
  */
 void
 (crank_uint128_sub_self)	(CrankUint128*	a,
@@ -322,7 +327,9 @@ crank_uint128_mul64_self	(CrankUint128*	a,
  * @b: A 128-bit integer.
  * @r: (out): A Result.
  *
- * Divides 128-bit integer with 128-bit integer.
+ * Divides 128-bit integer with 128-bit integer. 
+ *
+ * This function is [representative function][representative-function].
  */
 void
 crank_uint128_div (	CrankUint128*	a,
@@ -366,6 +373,8 @@ crank_uint128_div (	CrankUint128*	a,
  * @b: A 128-bit integer.
  *
  * Divides 128-bit integer with 128-bit integer.
+ *
+ * This function is [representative function][representative-function].
  */
 void
 crank_uint128_div_self (	CrankUint128*	a,
