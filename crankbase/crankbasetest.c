@@ -28,15 +28,15 @@
 
 //////// Private structures ////////////////////////////////////////////////////
 typedef struct _CrankTestMetaTimeout {
-	GTestFunc	func;
-	guint64		time;
+  GTestFunc func;
+  guint64 time;
 } CrankTestMetaTimeout;
 
 
 //////// Private functions /////////////////////////////////////////////////////
-static void		crank_test_meta_expected_fail (	gconstpointer	userdata	);
+static void crank_test_meta_expected_fail (gconstpointer userdata);
 
-static void		crank_test_meta_timeout (		gconstpointer	userdata	);
+static void crank_test_meta_timeout (gconstpointer userdata);
 
 
 //////// Adding meta test-case /////////////////////////////////////////////////
@@ -44,19 +44,22 @@ static void		crank_test_meta_timeout (		gconstpointer	userdata	);
  * crank_test_add_func_expected_fail: (skip)
  * @path: A Test path.
  * @func: A testing function, supposed to fail.
- * 
+ *
  * Adds a test case that checks given test fails.
- * 
+ *
  * If given function does not fail, then the test is considered to be failed.
  */
 void
-crank_test_add_func_expected_fail (	const gchar*	path,
-									GTestFunc		func	)
+crank_test_add_func_expected_fail (const gchar *path,
+                                   GTestFunc    func)
 {
-	gchar*	func_path = g_strdup_printf ("/_crank/subprocess/efail%s", path);
-	
-	g_test_add_func (func_path, func);
-	g_test_add_data_func_full (path, func_path, crank_test_meta_expected_fail, g_free);
+  gchar *func_path = g_strdup_printf ("/_crank/subprocess/efail%s", path);
+
+  g_test_add_func (func_path, func);
+  g_test_add_data_func_full (path,
+                             func_path,
+                             crank_test_meta_expected_fail,
+                             g_free);
 }
 
 /**
@@ -64,47 +67,49 @@ crank_test_add_func_expected_fail (	const gchar*	path,
  * @path: A Test path.
  * @func: A testing function, supposed to be done in time.
  * @time: Time in microseconds.
- * 
+ *
  * Adds a test case that checks given test done in time.
- * 
+ *
  * If given function does not end in time, then the test is considered to be failed.
  */
 void
-crank_test_add_func_timeout (	const gchar*	path,
-								GTestFunc		func,
-								const guint64	time	)
+crank_test_add_func_timeout (const gchar  *path,
+                             GTestFunc     func,
+                             const guint64 time)
 {
-	CrankTestMetaTimeout* meta = g_new (CrankTestMetaTimeout, 1);
-	
-	meta->func = func;
-	meta->time = time;
-	
-	g_test_add_data_func_full (path, meta, crank_test_meta_timeout, g_free);
+  CrankTestMetaTimeout *meta = g_new (CrankTestMetaTimeout, 1);
+
+  meta->func = func;
+  meta->time = time;
+
+  g_test_add_data_func_full (path, meta, crank_test_meta_timeout, g_free);
 }
 
 //////// Meta testcases ////////////////////////////////////////////////////////
 static void
-crank_test_meta_expected_fail (	gconstpointer	userdata	)
+crank_test_meta_expected_fail (gconstpointer userdata)
 {
-	gchar*	efail_path = (gchar*) userdata;
-	
-	g_test_trap_subprocess (efail_path, 0, G_TEST_SUBPROCESS_INHERIT_STDERR);
-	g_test_trap_assert_failed ();
+  gchar *efail_path = (gchar*) userdata;
+
+  g_test_trap_subprocess (efail_path, 0, G_TEST_SUBPROCESS_INHERIT_STDERR);
+  g_test_trap_assert_failed ();
 }
 
 static void
-crank_test_meta_timeout (	gconstpointer	userdata	)
+crank_test_meta_timeout (gconstpointer userdata)
 {
-	CrankTestMetaTimeout*	meta = (CrankTestMetaTimeout*) userdata;
-	
-	if (g_test_subprocess ()) {
-		meta->func ();
-	}
-	else {
-		g_test_trap_subprocess (NULL, meta->time,
-				G_TEST_SUBPROCESS_INHERIT_STDOUT |
-				G_TEST_SUBPROCESS_INHERIT_STDERR );
-				
-		g_test_trap_assert_passed ();
-	}
+  CrankTestMetaTimeout *meta = (CrankTestMetaTimeout*) userdata;
+
+  if (g_test_subprocess ())
+    {
+      meta->func ();
+    }
+  else
+    {
+      g_test_trap_subprocess (NULL, meta->time,
+                              G_TEST_SUBPROCESS_INHERIT_STDOUT |
+                              G_TEST_SUBPROCESS_INHERIT_STDERR);
+
+      g_test_trap_assert_passed ();
+    }
 }

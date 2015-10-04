@@ -49,40 +49,46 @@
  * If @subject is 0, it returns 32.
  */
 guint
-crank_bits_shift_to_left32 (	guint32*	subject	)
+crank_bits_shift_to_left32 (guint32 *subject)
 {
-  	guint	result = 0;
-  	guint32	nsubject = *subject;
-  	
-  	if (nsubject == 0) return 32;
+  guint result = 0;
+  guint32 nsubject = *subject;
 
-	if ((nsubject & 0xFFFF0000) == 0) {
-		result += 16;
-		nsubject <<= 16;
-	}
+  if (nsubject == 0)
+    return 32;
 
-  	if ((nsubject & 0xFF000000) == 0) {
-	  	result += 8;
-	  	nsubject <<= 8;
-  	}
+  if ((nsubject & 0xFFFF0000) == 0)
+    {
+      result += 16;
+      nsubject <<= 16;
+    }
 
-	if ((nsubject & 0xF0000000) == 0) {
-		result += 4;
-		nsubject <<= 4;
-	}
+  if ((nsubject & 0xFF000000) == 0)
+    {
+      result += 8;
+      nsubject <<= 8;
+    }
 
-	if ((nsubject & 0xC0000000) == 0) {
-		result += 2;
-		nsubject <<= 2;
-	}
+  if ((nsubject & 0xF0000000) == 0)
+    {
+      result += 4;
+      nsubject <<= 4;
+    }
 
-  	if ((nsubject & 0x80000000) == 0) {
-		result += 1;
-	  	nsubject <<= 1;
-	}
+  if ((nsubject & 0xC0000000) == 0)
+    {
+      result += 2;
+      nsubject <<= 2;
+    }
 
-  	*subject = nsubject;
-  	return result;	
+  if ((nsubject & 0x80000000) == 0)
+    {
+      result += 1;
+      nsubject <<= 1;
+    }
+
+  *subject = nsubject;
+  return result;
 }
 
 /**
@@ -94,45 +100,50 @@ crank_bits_shift_to_left32 (	guint32*	subject	)
  * If @subject is 0, it returns 64.
  */
 guint
-crank_bits_shift_to_left64 (	guint64*	subject	)
+crank_bits_shift_to_left64 (guint64 *subject)
 {
-  	guint	result = 0;
-  	guint64	nsubject = *subject;
-  	
-  	if (nsubject == 0) return 64;
+  guint result = 0;
+  guint64 nsubject = *subject;
 
-	if ((nsubject & 0xFFFFFFFF00000000) == 0) {
-		result += 32;
-		nsubject <<= 32;
-	}
+  if (nsubject == 0)
+    return 64;
 
-	if ((nsubject & 0xFFFF000000000000) == 0) {
-		result += 16;
-		nsubject <<= 16;
-	}
+  if ((nsubject & 0xFFFFFFFF00000000) == 0)
+    {
+      result += 32;
+      nsubject <<= 32;
+    }
 
-  	if ((nsubject & 0xFF00000000000000) == 0) {
-	  	result += 8;
-	  	nsubject <<= 8;
-  	}
+  if ((nsubject & 0xFFFF000000000000) == 0)
+    {
+      result += 16;
+      nsubject <<= 16;
+    }
 
-	if ((nsubject & 0xF000000000000000) == 0) {
-		result += 4;
-		nsubject <<= 4;
-	}
+  if ((nsubject & 0xFF00000000000000) == 0)
+    {
+      result += 8;
+      nsubject <<= 8;
+    }
 
-	if ((nsubject & 0xC000000000000000) == 0) {
-		result += 2;
-		nsubject <<= 2;
-	}
+  if ((nsubject & 0xF000000000000000) == 0)
+    {
+      result += 4;
+      nsubject <<= 4;
+    }
 
-  	if ((nsubject & 0x8000000000000000) == 0) {
-		result += 1;
-	  	nsubject <<= 1;
-	}
+  if ((nsubject & 0xC000000000000000) == 0)
+    {
+      result += 2;
+      nsubject <<= 2;
+    }
 
-  	*subject = nsubject;
-  	return result;	
+  if ((nsubject & 0x8000000000000000) == 0)
+    {
+      result += 1;
+      nsubject <<= 1;
+    }
+
+  *subject = nsubject;
+  return result;
 }
-
-

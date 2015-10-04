@@ -36,66 +36,66 @@
 
 G_BEGIN_DECLS
 
-gboolean	crank_lu_mat_float_n (	CrankMatFloatN*	a,
-									CrankMatFloatN*	l,
-									CrankMatFloatN*	u	);
-									
-gboolean	crank_lu_p_mat_float_n (	CrankMatFloatN*		a,
-										CrankPermutation*	p,
-										CrankMatFloatN*		l,
-										CrankMatFloatN*		u	);
+gboolean crank_lu_mat_float_n (CrankMatFloatN *a,
+                               CrankMatFloatN *l,
+                               CrankMatFloatN *u);
 
-gboolean	crank_ch_mat_float_n (	CrankMatFloatN*	a,
-									CrankMatFloatN*	l	);
+gboolean crank_lu_p_mat_float_n (CrankMatFloatN   *a,
+                                 CrankPermutation *p,
+                                 CrankMatFloatN   *l,
+                                 CrankMatFloatN   *u);
 
-gboolean	crank_ldl_mat_float_n (	CrankMatFloatN*	a,
-									CrankMatFloatN*	l,
-									CrankVecFloatN* d	);
+gboolean crank_ch_mat_float_n (CrankMatFloatN *a,
+                               CrankMatFloatN *l);
 
-
-gboolean	crank_gram_schmidt_mat_float_n (	CrankMatFloatN*	a,
-												CrankMatFloatN*	q,
-												CrankMatFloatN*	r	);
-
-gboolean	crank_qr_householder_mat_float_n (	CrankMatFloatN*	a,
-												CrankMatFloatN*	r	);
-
-gboolean	crank_qr_givens_mat_float_n (	CrankMatFloatN*	a,
-											CrankMatFloatN*	r	);
+gboolean crank_ldl_mat_float_n (CrankMatFloatN *a,
+                                CrankMatFloatN *l,
+                                CrankVecFloatN *d);
 
 
+gboolean crank_gram_schmidt_mat_float_n (CrankMatFloatN *a,
+                                         CrankMatFloatN *q,
+                                         CrankMatFloatN *r);
 
-gfloat		crank_eval_power_mat_float_n (	CrankMatFloatN*	a,
-											CrankVecFloatN*	b,
-											CrankVecFloatN*	evec	);
+gboolean crank_qr_householder_mat_float_n (CrankMatFloatN *a,
+                                           CrankMatFloatN *r);
 
-void		crank_eval_qr_mat_float_n (	CrankMatFloatN*	a,
-										CrankVecFloatN*	evals	);
+gboolean crank_qr_givens_mat_float_n (CrankMatFloatN *a,
+                                      CrankMatFloatN *r);
 
 
 
+gfloat   crank_eval_power_mat_float_n (CrankMatFloatN *a,
+                                       CrankVecFloatN *b,
+                                       CrankVecFloatN *evec);
 
-gboolean	crank_lu_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-										CrankMatCplxFloatN*	l,
-										CrankMatCplxFloatN*	u	);
+void     crank_eval_qr_mat_float_n (CrankMatFloatN *a,
+                                    CrankVecFloatN *evals);
 
-gboolean	crank_lu_p_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-											CrankPermutation*	p,
-											CrankMatCplxFloatN*	l,
-											CrankMatCplxFloatN*	u	);
 
-gboolean	crank_ch_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-										CrankMatCplxFloatN*	l	);
 
-gboolean	crank_gram_schmidt_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-													CrankMatCplxFloatN*	q,
-													CrankMatCplxFloatN*	r	);
 
-gboolean	crank_qr_householder_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-													CrankMatCplxFloatN*	r	);
+gboolean crank_lu_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                    CrankMatCplxFloatN *l,
+                                    CrankMatCplxFloatN *u);
 
-gboolean	crank_qr_givens_mat_cplx_float_n (	CrankMatCplxFloatN*	a,
-												CrankMatCplxFloatN*	r	);
+gboolean crank_lu_p_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                      CrankPermutation   *p,
+                                      CrankMatCplxFloatN *l,
+                                      CrankMatCplxFloatN *u);
+
+gboolean crank_ch_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                    CrankMatCplxFloatN *l);
+
+gboolean crank_gram_schmidt_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                              CrankMatCplxFloatN *q,
+                                              CrankMatCplxFloatN *r);
+
+gboolean crank_qr_householder_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                                CrankMatCplxFloatN *r);
+
+gboolean crank_qr_givens_mat_cplx_float_n (CrankMatCplxFloatN *a,
+                                           CrankMatCplxFloatN *r);
 
 G_END_DECLS
 

@@ -103,7 +103,7 @@
  *
  * <programlisting>
  *    p.w = 0, p.xyz = (position)
- *    
+ *
  *    pr = (p rotated by q)
  *       = q * p * q.conjugate()
  * </programlisting>
@@ -151,32 +151,37 @@
 
 //////// GValue Converters /////////////////////////////////////////////////////
 
-static void	crank_quat_float_transform_from_gfloat (const GValue*	src,
-													GValue*			dest	);
+static void crank_quat_float_transform_from_gfloat (const GValue *src,
+                                                    GValue       *dest);
 
-static void	crank_quat_float_transform_from_cplx_float (const GValue*	src,
-														GValue*			dest	);
+static void crank_quat_float_transform_from_cplx_float (const GValue *src,
+                                                        GValue       *dest);
 
-static void crank_quat_float_transform_to_string (	const GValue*	src,
-													GValue*			dest	);
+static void crank_quat_float_transform_to_string (const GValue *src,
+                                                  GValue       *dest);
 
 
 //////// Type function declaration /////////////////////////////////////////////
 
-G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankQuatFloat,
-								crank_quat_float,
-								crank_quat_float_dup,
-								g_free,
-	{
-		g_value_register_transform_func (G_TYPE_FLOAT, g_define_type_id,
-				crank_quat_float_transform_from_gfloat);
-		
-		g_value_register_transform_func (CRANK_TYPE_CPLX_FLOAT, g_define_type_id,
-				crank_quat_float_transform_from_cplx_float);
+G_DEFINE_BOXED_TYPE_WITH_CODE (CrankQuatFloat,
+                               crank_quat_float,
+                               crank_quat_float_dup,
+                               g_free,
+                               {
+                                 g_value_register_transform_func (G_TYPE_FLOAT,
+                                                                  g_define_type_id,
+                                                                  crank_quat_float_transform_from_gfloat);
 
-		g_value_register_transform_func	(g_define_type_id, G_TYPE_STRING,
-				crank_quat_float_transform_to_string);
-	}	);
+                                 g_value_register_transform_func (
+                                   CRANK_TYPE_CPLX_FLOAT,
+                                   g_define_type_id,
+                                   crank_quat_float_transform_from_cplx_float);
+
+                                 g_value_register_transform_func (
+                                   g_define_type_id,
+                                   G_TYPE_STRING,
+                                   crank_quat_float_transform_to_string);
+                               });
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -191,16 +196,16 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (	CrankQuatFloat,
  * Initialize a quaternion with given parts.
  */
 void
-crank_quat_float_init (	CrankQuatFloat*	quat,
-						gfloat			w,
-						gfloat			x,
-						gfloat			y,
-						gfloat			z	)
+crank_quat_float_init (CrankQuatFloat *quat,
+                       gfloat          w,
+                       gfloat          x,
+                       gfloat          y,
+                       gfloat          z)
 {
-	quat->w = w;
-	quat->x = x;
-	quat->y = y;
-	quat->z = z;
+  quat->w = w;
+  quat->x = x;
+  quat->y = y;
+  quat->z = z;
 }
 
 /**
@@ -209,17 +214,17 @@ crank_quat_float_init (	CrankQuatFloat*	quat,
  * @wx: First half part of quaternion.
  * @yz: Last half part of quaternion.
  *
- * Initialize a quaternion with given parts. 
+ * Initialize a quaternion with given parts.
  */
 void
-crank_quat_float_init_cplx (	CrankQuatFloat*	quat,
-								CrankCplxFloat* wx,
-								CrankCplxFloat* yz	)
+crank_quat_float_init_cplx (CrankQuatFloat *quat,
+                            CrankCplxFloat *wx,
+                            CrankCplxFloat *yz)
 {
-	quat->w = wx->real;
-	quat->x = wx->imag;
-	quat->y = yz->real;
-	quat->z = yz->imag;
+  quat->w = wx->real;
+  quat->x = wx->imag;
+  quat->y = yz->real;
+  quat->z = yz->imag;
 }
 
 /**
@@ -230,13 +235,13 @@ crank_quat_float_init_cplx (	CrankQuatFloat*	quat,
  * Initialize a quaternion with given parts.
  */
 void
-crank_quat_float_init_arr (	CrankQuatFloat*	quat,
-							gfloat*			parts	)
+crank_quat_float_init_arr (CrankQuatFloat *quat,
+                           gfloat         *parts)
 {
-	quat->w = parts[0];
-	quat->x = parts[1];
-	quat->y = parts[2];
-	quat->z = parts[3];
+  quat->w = parts[0];
+  quat->x = parts[1];
+  quat->y = parts[2];
+  quat->z = parts[3];
 }
 
 /**
@@ -247,13 +252,13 @@ crank_quat_float_init_arr (	CrankQuatFloat*	quat,
  * Initialize a quaternion with given parts from variadic arguments.
  */
 void
-crank_quat_float_init_valist (	CrankQuatFloat*	quat,
-								va_list			varargs	)
+crank_quat_float_init_valist (CrankQuatFloat *quat,
+                              va_list         varargs)
 {
-	quat->w = (gfloat) (va_arg(varargs, gdouble));
-	quat->x = (gfloat) (va_arg(varargs, gdouble));
-	quat->y = (gfloat) (va_arg(varargs, gdouble));
-	quat->z = (gfloat) (va_arg(varargs, gdouble));
+  quat->w = (gfloat) (va_arg(varargs, gdouble));
+  quat->x = (gfloat) (va_arg(varargs, gdouble));
+  quat->y = (gfloat) (va_arg(varargs, gdouble));
+  quat->z = (gfloat) (va_arg(varargs, gdouble));
 }
 
 /**
@@ -264,17 +269,17 @@ crank_quat_float_init_valist (	CrankQuatFloat*	quat,
  * Initialize a quaternion with given complexes from variadic arguments.
  */
 void
-crank_quat_float_init_valist_cplx (	CrankQuatFloat*	quat,
-									va_list			varargs	)
+crank_quat_float_init_valist_cplx (CrankQuatFloat *quat,
+                                   va_list         varargs)
 {
-	CrankCplxFloat*	cplx;
-	cplx = va_arg(varargs, CrankCplxFloat*);
-	quat->w = cplx->real;
-	quat->x = cplx->imag;
-	
-	cplx = va_arg(varargs, CrankCplxFloat*);
-	quat->y = cplx->real;
-	quat->z = cplx->imag;
+  CrankCplxFloat *cplx;
+  cplx = va_arg(varargs, CrankCplxFloat*);
+  quat->w = cplx->real;
+  quat->x = cplx->imag;
+
+  cplx = va_arg(varargs, CrankCplxFloat*);
+  quat->y = cplx->real;
+  quat->z = cplx->imag;
 }
 
 /**
@@ -285,13 +290,13 @@ crank_quat_float_init_valist_cplx (	CrankQuatFloat*	quat,
  * Initialize a quaternion by filling given value.
  */
 void
-crank_quat_float_init_fill (	CrankQuatFloat*	quat,
-								gfloat			fill	)
+crank_quat_float_init_fill (CrankQuatFloat *quat,
+                            gfloat          fill)
 {
-	quat->w = fill;
-	quat->x = fill;
-	quat->y = fill;
-	quat->z = fill;
+  quat->w = fill;
+  quat->x = fill;
+  quat->y = fill;
+  quat->z = fill;
 }
 
 //////// Basic Operations //////////////////////////////////////////////////////
@@ -304,15 +309,15 @@ crank_quat_float_init_fill (	CrankQuatFloat*	quat,
  * Copies a quaternion.
  */
 void
-crank_quat_float_copy (	CrankQuatFloat*	quat,
-						CrankQuatFloat*	other	)
+crank_quat_float_copy (CrankQuatFloat *quat,
+                       CrankQuatFloat *other)
 {
-	other->w = quat->w;
-	other->x = quat->x;
-	other->y = quat->y;
-	other->z = quat->z;
+  other->w = quat->w;
+  other->x = quat->x;
+  other->y = quat->y;
+  other->z = quat->z;
 }
-					
+
 /**
  * crank_quat_float_dup:
  * @quat: A Quaternion.
@@ -322,13 +327,13 @@ crank_quat_float_copy (	CrankQuatFloat*	quat,
  * Allocated memory should be freed by g_free().
  *
  * Returns: Allocated quaternion.
- */				
+ */
 CrankQuatFloat*
-crank_quat_float_dup (	CrankQuatFloat*	quat	)
+crank_quat_float_dup (CrankQuatFloat *quat)
 {
-	CrankQuatFloat* result = g_new (CrankQuatFloat, 1);
-	crank_quat_float_copy (quat, result);
-	return result;
+  CrankQuatFloat *result = g_new (CrankQuatFloat, 1);
+  crank_quat_float_copy (quat, result);
+  return result;
 }
 
 /**
@@ -341,13 +346,14 @@ crank_quat_float_dup (	CrankQuatFloat*	quat	)
  * Returns: whether they are equal.
  */
 gboolean
-crank_quat_float_equal (	gconstpointer	a,
-							gconstpointer	b	)
+crank_quat_float_equal (gconstpointer a,
+                        gconstpointer b)
 {
-	CrankQuatFloat*	ac = (CrankQuatFloat*)a;
-	CrankQuatFloat*	bc = (CrankQuatFloat*)b;
-	
-	return ((ac->w == bc->w) && (ac->x == bc->x) && (ac->y == bc->y) && (ac->z == bc->z));
+  CrankQuatFloat *ac = (CrankQuatFloat*)a;
+  CrankQuatFloat *bc = (CrankQuatFloat*)b;
+
+  return ((ac->w == bc->w) && (ac->x == bc->x) && (ac->y == bc->y) &&
+          (ac->z == bc->z));
 }
 
 /**
@@ -364,14 +370,14 @@ crank_quat_float_equal (	gconstpointer	a,
  * Returns: whether they are equal.
  */
 gboolean
-crank_quat_float_equal_delta (	CrankQuatFloat*	a,
-								CrankQuatFloat*	b,
-								const gfloat	d	)
+crank_quat_float_equal_delta (CrankQuatFloat *a,
+                              CrankQuatFloat *b,
+                              const gfloat    d)
 {
-	CrankQuatFloat	diff;
-	crank_quat_float_sub (b, a, &diff);
-	
-	return (crank_quat_float_get_norm (&diff) <= d);
+  CrankQuatFloat diff;
+  crank_quat_float_sub (b, a, &diff);
+
+  return (crank_quat_float_get_norm (&diff) <= d);
 }
 
 /**
@@ -384,14 +390,14 @@ crank_quat_float_equal_delta (	CrankQuatFloat*	a,
  * Returns: A hash value.
  */
 guint
-crank_quat_float_hash (		gconstpointer	a	)
+crank_quat_float_hash (gconstpointer a)
 {
-	CrankQuatFloat*	ac = (CrankQuatFloat*)a;
-	
-	return ( ( (crank_float_hash (& ac->w) * 33 +
-			     crank_float_hash (& ac->x)) * 33 +
-			      crank_float_hash (& ac->y)) * 33 +
-			       crank_float_hash (& ac->z));
+  CrankQuatFloat *ac = (CrankQuatFloat*)a;
+
+  return ( ( (crank_float_hash (&ac->w) * 33 +
+              crank_float_hash (&ac->x)) * 33 +
+             crank_float_hash (&ac->y)) * 33 +
+           crank_float_hash (&ac->z));
 }
 
 /**
@@ -404,14 +410,14 @@ crank_quat_float_hash (		gconstpointer	a	)
  * Returns: A hash value.
  */
 guint
-crank_quat_float_hash1 (		gconstpointer	a	)
+crank_quat_float_hash1 (gconstpointer a)
 {
-	CrankQuatFloat*	ac = (CrankQuatFloat*)a;
-	
-	return ( ( (crank_float_hash1 (& ac->w) * 33 +
-			     crank_float_hash1 (& ac->x)) * 33 +
-			      crank_float_hash1 (& ac->y)) * 33 +
-			       crank_float_hash1 (& ac->z));
+  CrankQuatFloat *ac = (CrankQuatFloat*)a;
+
+  return ( ( (crank_float_hash1 (&ac->w) * 33 +
+              crank_float_hash1 (&ac->x)) * 33 +
+             crank_float_hash1 (&ac->y)) * 33 +
+           crank_float_hash1 (&ac->z));
 }
 
 
@@ -421,16 +427,16 @@ crank_quat_float_hash1 (		gconstpointer	a	)
  *
  * Stringify a quaternion value as,
  *
- * |[ 
+ * |[
  *    3.2 + (-1.34i) + (2.23j) + (3.13k)
  * ]|
- * 
+ *
  * Returns: String representation of quaternion. Free with g_free()
  */
 gchar*
-crank_quat_float_to_string (	CrankQuatFloat*	quat	)
+crank_quat_float_to_string (CrankQuatFloat *quat)
 {
-	return crank_quat_float_to_string_full (	quat, CRANK_QUAT_FLOAT_DEFFORMAT);
+  return crank_quat_float_to_string_full (quat, CRANK_QUAT_FLOAT_DEFFORMAT);
 }
 
 /**
@@ -445,13 +451,14 @@ crank_quat_float_to_string (	CrankQuatFloat*	quat	)
  *
  * Returns: String representation of quaternion. Free with g_free()
  */
-gchar*		crank_quat_float_to_string_full (	CrankQuatFloat*	quat,
-												const gchar*	format	)
+gchar*
+crank_quat_float_to_string_full (CrankQuatFloat *quat,
+                                 const gchar    *format)
 {
-	return g_strdup_printf (format, quat->w, quat->x, quat->y, quat->z);
+  return g_strdup_printf (format, quat->w, quat->x, quat->y, quat->z);
 }
 
-												
+
 //////// Classification ////////////////////////////////////////////////////////
 
 /**
@@ -463,9 +470,9 @@ gchar*		crank_quat_float_to_string_full (	CrankQuatFloat*	quat,
  * Returns: Whether "@quat == 0".
  */
 gboolean
-crank_quat_float_is_zero (	CrankQuatFloat* quat	)
+crank_quat_float_is_zero (CrankQuatFloat *quat)
 {
-	return (quat->w == 0) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+  return (quat->w == 0) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
 }
 
 /**
@@ -477,9 +484,9 @@ crank_quat_float_is_zero (	CrankQuatFloat* quat	)
  * Returns: Whether "@quat == 1".
  */
 gboolean
-crank_quat_float_is_one (	CrankQuatFloat* quat	)
+crank_quat_float_is_one (CrankQuatFloat *quat)
 {
-	return (quat->w == 1) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+  return (quat->w == 1) && (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
 }
 
 /**
@@ -491,10 +498,10 @@ crank_quat_float_is_one (	CrankQuatFloat* quat	)
  * Returns: Whether "|@quat| == 1".
  */
 gboolean
-crank_quat_float_is_unit (	CrankQuatFloat* quat	)
+crank_quat_float_is_unit (CrankQuatFloat *quat)
 {
-	gfloat	norm_sq = crank_quat_float_get_norm_sq (quat);
-	return (0.9999f < norm_sq) && (norm_sq < 1.0001f);
+  gfloat norm_sq = crank_quat_float_get_norm_sq (quat);
+  return (0.9999f < norm_sq) && (norm_sq < 1.0001f);
 }
 
 /**
@@ -506,9 +513,9 @@ crank_quat_float_is_unit (	CrankQuatFloat* quat	)
  * Returns: Whether @quat represents real value.
  */
 gboolean
-crank_quat_float_is_pure_real (	CrankQuatFloat* quat	)
+crank_quat_float_is_pure_real (CrankQuatFloat *quat)
 {
-	return (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
+  return (quat->x == 0) && (quat->y == 0) && (quat->z == 0);
 }
 
 /**
@@ -520,9 +527,9 @@ crank_quat_float_is_pure_real (	CrankQuatFloat* quat	)
  * Returns: Whether @quat is pure imaginary value.
  */
 gboolean
-crank_quat_float_is_pure_imag (	CrankQuatFloat* quat	)
+crank_quat_float_is_pure_imag (CrankQuatFloat *quat)
 {
-	return (quat->w == 0);
+  return (quat->w == 0);
 }
 
 /**
@@ -537,12 +544,12 @@ crank_quat_float_is_pure_imag (	CrankQuatFloat* quat	)
  * Returns: Whether @quat has (NaN) in any part of it.
  */
 gboolean
-crank_quat_float_has_nan (	CrankQuatFloat*	quat	)
+crank_quat_float_has_nan (CrankQuatFloat *quat)
 {
-	return	isnanf(quat->w) &&
-			isnanf(quat->x) &&
-			isnanf(quat->y) &&
-			isnanf(quat->z);
+  return isnanf(quat->w) &&
+         isnanf(quat->x) &&
+         isnanf(quat->y) &&
+         isnanf(quat->z);
 }
 
 /**
@@ -557,12 +564,12 @@ crank_quat_float_has_nan (	CrankQuatFloat*	quat	)
  * Returns: Whether @quat has (inf) in any part of it.
  */
 gboolean
-crank_quat_float_has_inf (	CrankQuatFloat*	quat	)
+crank_quat_float_has_inf (CrankQuatFloat *quat)
 {
-	return	isinff(quat->w) &&
-			isinff(quat->x) &&
-			isinff(quat->y) &&
-			isinff(quat->z);
+  return isinff(quat->w) &&
+         isinff(quat->x) &&
+         isinff(quat->y) &&
+         isinff(quat->z);
 }
 
 //////// Unary Operations //////////////////////////////////////////////////////
@@ -575,11 +582,11 @@ crank_quat_float_has_inf (	CrankQuatFloat*	quat	)
  * Gets values of first 2 parts as #CrankCplxFloat.
  */
 void
-crank_quat_float_get_wx (	CrankQuatFloat*	quat,
-							CrankCplxFloat*	wx		)
+crank_quat_float_get_wx (CrankQuatFloat *quat,
+                         CrankCplxFloat *wx)
 {
-	wx->real = quat->w;
-	wx->imag = quat->x;
+  wx->real = quat->w;
+  wx->imag = quat->x;
 }
 
 /**
@@ -590,11 +597,11 @@ crank_quat_float_get_wx (	CrankQuatFloat*	quat,
  * Gets values of last 2 parts as #CrankCplxFloat.
  */
 void
-crank_quat_float_get_yz (	CrankQuatFloat*	quat,
-							CrankCplxFloat*	yz		)
+crank_quat_float_get_yz (CrankQuatFloat *quat,
+                         CrankCplxFloat *yz)
 {
-	yz->real = quat->y;
-	yz->imag = quat->z;
+  yz->real = quat->y;
+  yz->imag = quat->z;
 }
 
 /**
@@ -605,12 +612,12 @@ crank_quat_float_get_yz (	CrankQuatFloat*	quat,
  * Gets values of 3 imaginary parts as #CrankVecFloat3.
  */
 void
-crank_quat_float_get_imag (	CrankQuatFloat*	quat,
-							CrankVecFloat3*	imag		)
+crank_quat_float_get_imag (CrankQuatFloat *quat,
+                           CrankVecFloat3 *imag)
 {
-	imag->x = quat->x;
-	imag->y = quat->y;
-	imag->z = quat->z;
+  imag->x = quat->x;
+  imag->y = quat->y;
+  imag->z = quat->z;
 }
 
 /**
@@ -621,11 +628,11 @@ crank_quat_float_get_imag (	CrankQuatFloat*	quat,
  * Sets values of first 2 parts by #CrankCplxFloat.
  */
 void
-crank_quat_float_set_wx (	CrankQuatFloat*	quat,
-							CrankCplxFloat*	wx		)
+crank_quat_float_set_wx (CrankQuatFloat *quat,
+                         CrankCplxFloat *wx)
 {
-	quat->w = wx->real;
-	quat->x = wx->imag;
+  quat->w = wx->real;
+  quat->x = wx->imag;
 }
 
 /**
@@ -636,11 +643,11 @@ crank_quat_float_set_wx (	CrankQuatFloat*	quat,
  * Sets values of last 2 parts by #CrankCplxFloat.
  */
 void
-crank_quat_float_set_yz (	CrankQuatFloat*	quat,
-							CrankCplxFloat*	yz		)
+crank_quat_float_set_yz (CrankQuatFloat *quat,
+                         CrankCplxFloat *yz)
 {
-	quat->y = yz->real;
-	quat->z = yz->imag;
+  quat->y = yz->real;
+  quat->z = yz->imag;
 }
 
 /**
@@ -651,12 +658,12 @@ crank_quat_float_set_yz (	CrankQuatFloat*	quat,
  * Sets values of 3 imaginary parts by #CrankVecFloat3.
  */
 void
-crank_quat_float_set_imag (	CrankQuatFloat*	quat,
-							CrankVecFloat3*	imag		)
+crank_quat_float_set_imag (CrankQuatFloat *quat,
+                           CrankVecFloat3 *imag)
 {
-	quat->x = imag->x;
-	quat->y = imag->y;
-	quat->z = imag->z;
+  quat->x = imag->x;
+  quat->y = imag->y;
+  quat->z = imag->z;
 }
 
 /**
@@ -664,27 +671,29 @@ crank_quat_float_set_imag (	CrankQuatFloat*	quat,
  * @quat: A Quaternion.
  *
  * Gets square of norm.
- * 
+ *
  * Returns: Square of norm of quaternion.
  */
 gfloat
-crank_quat_float_get_norm_sq (	CrankQuatFloat*	quat	)
+crank_quat_float_get_norm_sq (CrankQuatFloat *quat)
 {
-	return (quat->w * quat->w) + (quat->x * quat->x) + (quat->y * quat->y) + (quat->z * quat->z);
+  return (quat->w *
+          quat->w) +
+         (quat->x * quat->x) + (quat->y * quat->y) + (quat->z * quat->z);
 }
 
 /**
  * crank_quat_float_get_norm:
  * @quat: A Quaternion.
- * 
+ *
  * Gets norm of quaternion.
  *
  * Returns: Norm.
  */
 gfloat
-crank_quat_float_get_norm (		CrankQuatFloat*	quat	)
+crank_quat_float_get_norm (CrankQuatFloat *quat)
 {
-	return sqrtf(crank_quat_float_get_norm_sq(quat));
+  return sqrtf(crank_quat_float_get_norm_sq(quat));
 }
 
 /**
@@ -695,13 +704,13 @@ crank_quat_float_get_norm (		CrankQuatFloat*	quat	)
  * Gets a conjugate.
  */
 void
-crank_quat_float_conjugate (	CrankQuatFloat*	a,
-								CrankQuatFloat*	r	)
+crank_quat_float_conjugate (CrankQuatFloat *a,
+                            CrankQuatFloat *r)
 {
-	r->w = a->w;
-	r->x = - a->x;
-	r->y = - a->y;
-	r->z = - a->z;
+  r->w = a->w;
+  r->x = -a->x;
+  r->y = -a->y;
+  r->z = -a->z;
 }
 
 /**
@@ -712,13 +721,13 @@ crank_quat_float_conjugate (	CrankQuatFloat*	a,
  * Gets a negation. (- @a)
  */
 void
-crank_quat_float_neg (	CrankQuatFloat*	a,
-						CrankQuatFloat*	r	)
+crank_quat_float_neg (CrankQuatFloat *a,
+                      CrankQuatFloat *r)
 {
-	r->w = - a->w;
-	r->x = - a->x;
-	r->y = - a->y;
-	r->z = - a->z;
+  r->w = -a->w;
+  r->x = -a->x;
+  r->y = -a->y;
+  r->z = -a->z;
 }
 
 /**
@@ -729,31 +738,31 @@ crank_quat_float_neg (	CrankQuatFloat*	a,
  * Gets a invert. (1 / @a)
  */
 void
-crank_quat_float_inverse (	CrankQuatFloat*	a,
-							CrankQuatFloat*	r	)
+crank_quat_float_inverse (CrankQuatFloat *a,
+                          CrankQuatFloat *r)
 {
-	gfloat norm_sq_inv = 1 / crank_quat_float_get_norm_sq (a);
-	
-	r->w = a->w * norm_sq_inv;
-	r->x = -a->x * norm_sq_inv;
-	r->y = -a->y * norm_sq_inv;
-	r->z = -a->z * norm_sq_inv;
+  gfloat norm_sq_inv = 1 / crank_quat_float_get_norm_sq (a);
+
+  r->w = a->w * norm_sq_inv;
+  r->x = -a->x * norm_sq_inv;
+  r->y = -a->y * norm_sq_inv;
+  r->z = -a->z * norm_sq_inv;
 }
 
 /**
  * crank_quat_float_unit:
  * @a: A Quaternion
  * @r: (out): A Quaternion to store result.
- * 
+ *
  * Gets unit quaternion. (@a / |@a|)
  */
 void
-crank_quat_float_unit (	CrankQuatFloat*	a,
-						CrankQuatFloat*	r	)
+crank_quat_float_unit (CrankQuatFloat *a,
+                       CrankQuatFloat *r)
 {
-	gfloat	norm = crank_quat_float_get_norm (a);
-	
-	crank_quat_float_divr (a, norm, r);
+  gfloat norm = crank_quat_float_get_norm (a);
+
+  crank_quat_float_divr (a, norm, r);
 }
 
 
@@ -765,11 +774,11 @@ crank_quat_float_unit (	CrankQuatFloat*	a,
  * Sets @a as conjugate of itself.
  */
 void
-crank_quat_float_conjugate_self (	CrankQuatFloat*	a	)
+crank_quat_float_conjugate_self (CrankQuatFloat *a)
 {
-	a->x = - a->x;
-	a->y = - a->y;
-	a->z = - a->z;
+  a->x = -a->x;
+  a->y = -a->y;
+  a->z = -a->z;
 }
 
 /**
@@ -779,12 +788,12 @@ crank_quat_float_conjugate_self (	CrankQuatFloat*	a	)
  * Sets @a as negation of itself. (- @a)
  */
 void
-crank_quat_float_neg_self (	CrankQuatFloat*	a	)
+crank_quat_float_neg_self (CrankQuatFloat *a)
 {
-	a->w = - a->w;
-	a->x = - a->x;
-	a->y = - a->y;
-	a->z = - a->z;
+  a->w = -a->w;
+  a->x = -a->x;
+  a->y = -a->y;
+  a->z = -a->z;
 }
 
 /**
@@ -794,28 +803,28 @@ crank_quat_float_neg_self (	CrankQuatFloat*	a	)
  * Sets @a as invert of self. (1 / @a)
  */
 void
-crank_quat_float_inverse_self (	CrankQuatFloat*	a	)
+crank_quat_float_inverse_self (CrankQuatFloat *a)
 {
-	gfloat norm_sq_inv = 1 / crank_quat_float_get_norm_sq (a);
-	
-	a->w *= norm_sq_inv;
-	a->x *= -norm_sq_inv;
-	a->y *= -norm_sq_inv;
-	a->z *= -norm_sq_inv;
+  gfloat norm_sq_inv = 1 / crank_quat_float_get_norm_sq (a);
+
+  a->w *= norm_sq_inv;
+  a->x *= -norm_sq_inv;
+  a->y *= -norm_sq_inv;
+  a->z *= -norm_sq_inv;
 }
 
 /**
  * crank_quat_float_unit_self:
  * @a: A Quaternion
- * 
+ *
  * Sets @a as its unit quaternion. (@a / |@a|)
  */
 void
-crank_quat_float_unit_self (	CrankQuatFloat*	a	)
+crank_quat_float_unit_self (CrankQuatFloat *a)
 {
-	gfloat	norm = crank_quat_float_get_norm (a);
-	
-	crank_quat_float_divr_self (a, norm);
+  gfloat norm = crank_quat_float_get_norm (a);
+
+  crank_quat_float_divr_self (a, norm);
 }
 
 //////// Quat - Real Operations ////////////////////////////////////////////////
@@ -829,14 +838,14 @@ crank_quat_float_unit_self (	CrankQuatFloat*	a	)
  * Gets a addition of quaternion and scalar.
  */
 void
-crank_quat_float_addr (	CrankQuatFloat*	a,
-						gfloat			b,
-						CrankQuatFloat*	r		)
+crank_quat_float_addr (CrankQuatFloat *a,
+                       gfloat          b,
+                       CrankQuatFloat *r)
 {
-	r->w = a->w + b;
-	r->x = a->x;
-	r->y = a->y;
-	r->z = a->z;
+  r->w = a->w + b;
+  r->x = a->x;
+  r->y = a->y;
+  r->z = a->z;
 }
 
 /**
@@ -848,14 +857,14 @@ crank_quat_float_addr (	CrankQuatFloat*	a,
  * Gets a subtration of quaternion by scalar.
  */
 void
-crank_quat_float_subr (	CrankQuatFloat*	a,
-						gfloat			b,
-						CrankQuatFloat*	r		)
+crank_quat_float_subr (CrankQuatFloat *a,
+                       gfloat          b,
+                       CrankQuatFloat *r)
 {
-	r->w = a->w - b;
-	r->x = a->x;
-	r->y = a->y;
-	r->z = a->z;
+  r->w = a->w - b;
+  r->x = a->x;
+  r->y = a->y;
+  r->z = a->z;
 }
 
 /**
@@ -867,14 +876,14 @@ crank_quat_float_subr (	CrankQuatFloat*	a,
  * Gets a multiplication of quaternion by scalar.
  */
 void
-crank_quat_float_mulr (	CrankQuatFloat*	a,
-						gfloat			b,
-						CrankQuatFloat*	r		)
+crank_quat_float_mulr (CrankQuatFloat *a,
+                       gfloat          b,
+                       CrankQuatFloat *r)
 {
-	r->w = a->w * b;
-	r->x = a->x * b;
-	r->y = a->y * b;
-	r->z = a->z * b;
+  r->w = a->w * b;
+  r->x = a->x * b;
+  r->y = a->y * b;
+  r->z = a->z * b;
 }
 
 /**
@@ -886,15 +895,15 @@ crank_quat_float_mulr (	CrankQuatFloat*	a,
  * Gets a division of quaternion by scalar.
  */
 void
-crank_quat_float_divr (	CrankQuatFloat*	a,
-						gfloat			b,
-						CrankQuatFloat*	r		)
+crank_quat_float_divr (CrankQuatFloat *a,
+                       gfloat          b,
+                       CrankQuatFloat *r)
 {
-	gfloat	b_inv = 1 / b;
-	r->w = a->w * b_inv;
-	r->x = a->x * b_inv;
-	r->y = a->y * b_inv;
-	r->z = a->z * b_inv;
+  gfloat b_inv = 1 / b;
+  r->w = a->w * b_inv;
+  r->x = a->x * b_inv;
+  r->y = a->y * b_inv;
+  r->z = a->z * b_inv;
 }
 
 
@@ -908,10 +917,10 @@ crank_quat_float_divr (	CrankQuatFloat*	a,
  * Applies a addition by scalar to a quaternion.
  */
 void
-crank_quat_float_addr_self (	CrankQuatFloat*	a,
-								gfloat			b		)
+crank_quat_float_addr_self (CrankQuatFloat *a,
+                            gfloat          b)
 {
-	a->w += b;
+  a->w += b;
 }
 
 /**
@@ -922,10 +931,10 @@ crank_quat_float_addr_self (	CrankQuatFloat*	a,
  * Applies a subtration by scalar to a quaternion.
  */
 void
-crank_quat_float_subr_self (	CrankQuatFloat*	a,
-								gfloat			b		)
+crank_quat_float_subr_self (CrankQuatFloat *a,
+                            gfloat          b)
 {
-	a->w -= b;
+  a->w -= b;
 }
 
 /**
@@ -936,13 +945,13 @@ crank_quat_float_subr_self (	CrankQuatFloat*	a,
  * Applies a multiplication by scalar to a quaternion.
  */
 void
-crank_quat_float_mulr_self (	CrankQuatFloat*	a,
-								gfloat			b		)
+crank_quat_float_mulr_self (CrankQuatFloat *a,
+                            gfloat          b)
 {
-	a->w *= b;
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
+  a->w *= b;
+  a->x *= b;
+  a->y *= b;
+  a->z *= b;
 }
 
 /**
@@ -953,14 +962,14 @@ crank_quat_float_mulr_self (	CrankQuatFloat*	a,
  * Applies a division by scalar to a quaternion.
  */
 void
-crank_quat_float_divr_self (	CrankQuatFloat*	a,
-								gfloat			b		)
+crank_quat_float_divr_self (CrankQuatFloat *a,
+                            gfloat          b)
 {
-	gfloat	b_inv = 1 / b;
-	a->w *= b_inv;
-	a->x *= b_inv;
-	a->y *= b_inv;
-	a->z *= b_inv;
+  gfloat b_inv = 1 / b;
+  a->w *= b_inv;
+  a->x *= b_inv;
+  a->y *= b_inv;
+  a->z *= b_inv;
 }
 
 //////// Real - Quat Operations ////////////////////////////////////////////////
@@ -974,14 +983,14 @@ crank_quat_float_divr_self (	CrankQuatFloat*	a,
  * Gets subtraction of scalar by quaternion.
  */
 void
-crank_quat_float_rsubr (	CrankQuatFloat*	a,
-							gfloat			b,
-							CrankQuatFloat*	r		)
+crank_quat_float_rsubr (CrankQuatFloat *a,
+                        gfloat          b,
+                        CrankQuatFloat *r)
 {
-	r->w = b - a->w;
-	r->x = - a->x;
-	r->y = - a->y;
-	r->z = - a->z;
+  r->w = b - a->w;
+  r->x = -a->x;
+  r->y = -a->y;
+  r->z = -a->z;
 }
 
 /**
@@ -993,16 +1002,16 @@ crank_quat_float_rsubr (	CrankQuatFloat*	a,
  * Gets division of scalar by quaternion.
  */
 void
-crank_quat_float_rdivr (	CrankQuatFloat*	a,
-							gfloat			b,
-							CrankQuatFloat*	r		)
+crank_quat_float_rdivr (CrankQuatFloat *a,
+                        gfloat          b,
+                        CrankQuatFloat *r)
 {
-	gfloat b_over_norm_sq = b / crank_quat_float_get_norm_sq (a);
-	
-	r->w = a->w * b_over_norm_sq;
-	r->x = -a->x * b_over_norm_sq;
-	r->y = -a->y * b_over_norm_sq;
-	r->z = -a->z * b_over_norm_sq;
+  gfloat b_over_norm_sq = b / crank_quat_float_get_norm_sq (a);
+
+  r->w = a->w * b_over_norm_sq;
+  r->x = -a->x * b_over_norm_sq;
+  r->y = -a->y * b_over_norm_sq;
+  r->z = -a->z * b_over_norm_sq;
 }
 
 
@@ -1017,16 +1026,16 @@ crank_quat_float_rdivr (	CrankQuatFloat*	a,
  * Gets a addition of quaternion and complex.
  */
 void
-crank_quat_float_addc (	CrankQuatFloat*	a,
-						CrankCplxFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_addc (CrankQuatFloat *a,
+                       CrankCplxFloat *b,
+                       CrankQuatFloat *r)
 {
-	r->w = a->w + b->real;
-	r->x = a->x + b->imag;
-	r->y = a->y;
-	r->z = a->z;
+  r->w = a->w + b->real;
+  r->x = a->x + b->imag;
+  r->y = a->y;
+  r->z = a->z;
 }
-										
+
 /**
  * crank_quat_float_subc:
  * @a: A Quaternion.
@@ -1036,14 +1045,14 @@ crank_quat_float_addc (	CrankQuatFloat*	a,
  * Gets a subtration of quaternion by complex.
  */
 void
-crank_quat_float_subc (	CrankQuatFloat*	a,
-						CrankCplxFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_subc (CrankQuatFloat *a,
+                       CrankCplxFloat *b,
+                       CrankQuatFloat *r)
 {
-	r->w = a->w - b->real;
-	r->x = a->x - b->imag;
-	r->y = a->y;
-	r->z = a->z;
+  r->w = a->w - b->real;
+  r->x = a->x - b->imag;
+  r->y = a->y;
+  r->z = a->z;
 }
 
 /**
@@ -1055,14 +1064,14 @@ crank_quat_float_subc (	CrankQuatFloat*	a,
  * Gets a multiplication of quaternion by complex.
  */
 void
-crank_quat_float_mulc (	CrankQuatFloat*	a,
-						CrankCplxFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_mulc (CrankQuatFloat *a,
+                       CrankCplxFloat *b,
+                       CrankQuatFloat *r)
 {
-	r->w = (a->w * b->real) - (a->x * b->imag);
-	r->x = (a->x * b->real) + (a->w * b->imag);
-	r->y = (a->y * b->real) + (a->z * b->imag);
-	r->z = (a->z * b->real) - (a->y * b->imag);
+  r->w = (a->w * b->real) - (a->x * b->imag);
+  r->x = (a->x * b->real) + (a->w * b->imag);
+  r->y = (a->y * b->real) + (a->z * b->imag);
+  r->z = (a->z * b->real) - (a->y * b->imag);
 }
 
 /**
@@ -1073,13 +1082,13 @@ crank_quat_float_mulc (	CrankQuatFloat*	a,
  * Applies a addition by a complex.
  */
 void
-crank_quat_float_addc_self (	CrankQuatFloat*	a,
-								CrankCplxFloat*	b	)
+crank_quat_float_addc_self (CrankQuatFloat *a,
+                            CrankCplxFloat *b)
 {
-	a->w += b->real;
-	a->x += b->imag;
+  a->w += b->real;
+  a->x += b->imag;
 }
-										
+
 /**
  * crank_quat_float_subc_self:
  * @a: A Quaternion.
@@ -1088,11 +1097,11 @@ crank_quat_float_addc_self (	CrankQuatFloat*	a,
  * Applies a subtration by a complex.
  */
 void
-crank_quat_float_subc_self (	CrankQuatFloat*	a,
-								CrankCplxFloat*	b	)
+crank_quat_float_subc_self (CrankQuatFloat *a,
+                            CrankCplxFloat *b)
 {
-	a->w -= b->real;
-	a->x -= b->imag;
+  a->w -= b->real;
+  a->x -= b->imag;
 }
 
 /**
@@ -1103,12 +1112,12 @@ crank_quat_float_subc_self (	CrankQuatFloat*	a,
  * Applies a multiplication by a complex.
  */
 void
-crank_quat_float_mulc_self (	CrankQuatFloat*	a,
-								CrankCplxFloat*	b	)
+crank_quat_float_mulc_self (CrankQuatFloat *a,
+                            CrankCplxFloat *b)
 {
-	CrankQuatFloat	result;
-	crank_quat_float_mulc (a, b, &result);
-	crank_quat_float_copy (&result, a);
+  CrankQuatFloat result;
+  crank_quat_float_mulc (a, b, &result);
+  crank_quat_float_copy (&result, a);
 }
 
 
@@ -1123,16 +1132,16 @@ crank_quat_float_mulc_self (	CrankQuatFloat*	a,
  * Gets a addition of two quaternion.
  */
 void
-crank_quat_float_add (	CrankQuatFloat*	a,
-						CrankQuatFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_add (CrankQuatFloat *a,
+                      CrankQuatFloat *b,
+                      CrankQuatFloat *r)
 {
-	r->w = a->w + b->w;
-	r->x = a->x + b->x;
-	r->y = a->y + b->y;
-	r->z = a->z + b->z;
+  r->w = a->w + b->w;
+  r->x = a->x + b->x;
+  r->y = a->y + b->y;
+  r->z = a->z + b->z;
 }
-										
+
 /**
  * crank_quat_float_sub:
  * @a: A Quaternion.
@@ -1142,14 +1151,14 @@ crank_quat_float_add (	CrankQuatFloat*	a,
  * Gets a subtration of two quaternion.
  */
 void
-crank_quat_float_sub (	CrankQuatFloat*	a,
-						CrankQuatFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_sub (CrankQuatFloat *a,
+                      CrankQuatFloat *b,
+                      CrankQuatFloat *r)
 {
-	r->w = a->w - b->w;
-	r->x = a->x - b->x;
-	r->y = a->y - b->y;
-	r->z = a->z - b->z;
+  r->w = a->w - b->w;
+  r->x = a->x - b->x;
+  r->y = a->y - b->y;
+  r->z = a->z - b->z;
 }
 
 /**
@@ -1161,14 +1170,14 @@ crank_quat_float_sub (	CrankQuatFloat*	a,
  * Gets a multiplication of two quaternion.
  */
 void
-crank_quat_float_mul (	CrankQuatFloat*	a,
-						CrankQuatFloat*	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_mul (CrankQuatFloat *a,
+                      CrankQuatFloat *b,
+                      CrankQuatFloat *r)
 {
-	r->w = (a->w * b->w) - (a->x * b->x) - (a->y * b->y) - (a->z * b->z);
-	r->x = (a->x * b->w) + (a->w * b->x) - (a->z * b->y) + (a->y * b->z);
-	r->y = (a->y * b->w) + (a->z * b->x) + (a->w * b->y) - (a->x * b->z);
-	r->z = (a->z * b->w) - (a->y * b->x) + (a->x * b->y) + (a->w * b->z);
+  r->w = (a->w * b->w) - (a->x * b->x) - (a->y * b->y) - (a->z * b->z);
+  r->x = (a->x * b->w) + (a->w * b->x) - (a->z * b->y) + (a->y * b->z);
+  r->y = (a->y * b->w) + (a->z * b->x) + (a->w * b->y) - (a->x * b->z);
+  r->z = (a->z * b->w) - (a->y * b->x) + (a->x * b->y) + (a->w * b->z);
 }
 
 /**
@@ -1179,15 +1188,15 @@ crank_quat_float_mul (	CrankQuatFloat*	a,
  * Applies a addition by a quaternion.
  */
 void
-crank_quat_float_add_self (	CrankQuatFloat*	a,
-							CrankQuatFloat*	b	)
+crank_quat_float_add_self (CrankQuatFloat *a,
+                           CrankQuatFloat *b)
 {
-	a->w += b->w;
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
+  a->w += b->w;
+  a->x += b->x;
+  a->y += b->y;
+  a->z += b->z;
 }
-										
+
 /**
  * crank_quat_float_sub_self:
  * @a: A Quaternion.
@@ -1196,13 +1205,13 @@ crank_quat_float_add_self (	CrankQuatFloat*	a,
  * Applies a subtration by a quaternion.
  */
 void
-crank_quat_float_sub_self (	CrankQuatFloat*	a,
-							CrankQuatFloat*	b	)
+crank_quat_float_sub_self (CrankQuatFloat *a,
+                           CrankQuatFloat *b)
 {
-	a->w -= b->w;
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
+  a->w -= b->w;
+  a->x -= b->x;
+  a->y -= b->y;
+  a->z -= b->z;
 }
 
 /**
@@ -1213,12 +1222,12 @@ crank_quat_float_sub_self (	CrankQuatFloat*	a,
  * Applies a multiplication by a quaternion.
  */
 void
-crank_quat_float_mul_self (	CrankQuatFloat*	a,
-							CrankQuatFloat*	b	)
+crank_quat_float_mul_self (CrankQuatFloat *a,
+                           CrankQuatFloat *b)
 {
-	CrankQuatFloat	result;
-	crank_quat_float_mul (a, b, &result);
-	crank_quat_float_copy (&result, a);
+  CrankQuatFloat result;
+  crank_quat_float_mul (a, b, &result);
+  crank_quat_float_copy (&result, a);
 }
 
 /**
@@ -1229,14 +1238,15 @@ crank_quat_float_mul_self (	CrankQuatFloat*	a,
  *
  * Multiplies @a with conjugate of @b.
  */
-void		crank_quat_float_mul_conj (	CrankQuatFloat*	a,
-										CrankQuatFloat*	b,
-										CrankQuatFloat*	r	)
+void
+crank_quat_float_mul_conj (CrankQuatFloat *a,
+                           CrankQuatFloat *b,
+                           CrankQuatFloat *r)
 {
-	r->w = (a->w * b->w) + (a->x * b->x) + (a->y * b->y) + (a->z * b->z);
-	r->x = (a->x * b->w) - (a->w * b->x) + (a->z * b->y) - (a->y * b->z);
-	r->y = (a->y * b->w) - (a->z * b->x) - (a->w * b->y) + (a->x * b->z);
-	r->z = (a->z * b->w) + (a->y * b->x) - (a->x * b->y) - (a->w * b->z);
+  r->w = (a->w * b->w) + (a->x * b->x) + (a->y * b->y) + (a->z * b->z);
+  r->x = (a->x * b->w) - (a->w * b->x) + (a->z * b->y) - (a->y * b->z);
+  r->y = (a->y * b->w) - (a->z * b->x) - (a->w * b->y) + (a->x * b->z);
+  r->z = (a->z * b->w) + (a->y * b->x) - (a->x * b->y) - (a->w * b->z);
 }
 
 //////// Ternary Operations ////////////////////////////////////////////////////
@@ -1251,17 +1261,17 @@ void		crank_quat_float_mul_conj (	CrankQuatFloat*	a,
  * Gets a mixture of two quaternion.
  */
 void
-crank_quat_float_mix (	CrankQuatFloat*	a,
-						CrankQuatFloat*	b,
-						gfloat			c,
-						CrankQuatFloat*	r	)
+crank_quat_float_mix (CrankQuatFloat *a,
+                      CrankQuatFloat *b,
+                      gfloat          c,
+                      CrankQuatFloat *r)
 {
-	gfloat	d = 1 - c;
-	
-	r->w = (a->w * d) + (b->w * c);
-	r->x = (a->x * d) + (b->x * c);
-	r->y = (a->y * d) + (b->y * c);
-	r->z = (a->z * d) + (b->z * c);
+  gfloat d = 1 - c;
+
+  r->w = (a->w * d) + (b->w * c);
+  r->x = (a->x * d) + (b->x * c);
+  r->y = (a->y * d) + (b->y * c);
+  r->z = (a->z * d) + (b->z * c);
 }
 
 
@@ -1278,23 +1288,23 @@ crank_quat_float_mix (	CrankQuatFloat*	a,
  * imaginary part in [0, 2 * PI} or being NAN (if @a is 0)
  */
 void
-crank_quat_float_ln (	CrankQuatFloat*	a,
-						CrankQuatFloat*	r	)
+crank_quat_float_ln (CrankQuatFloat *a,
+                     CrankQuatFloat *r)
 {
-	CrankVecFloat3*	imag = (CrankVecFloat3*) (& a->x);
+  CrankVecFloat3 *imag = (CrankVecFloat3*) (&a->x);
 
-	gfloat		norm;
-	gfloat		norm_imag;
-	gfloat		ac;
-	
-	norm = crank_quat_float_get_norm (a);
-	norm_imag = crank_vec_float3_get_magn (imag);
-	ac = acosf (a->w / norm);
-	
-	r->w = logf (norm);
-	r->x = a->x * ac / norm_imag;
-	r->y = a->y * ac / norm_imag;
-	r->z = a->z * ac / norm_imag;
+  gfloat norm;
+  gfloat norm_imag;
+  gfloat ac;
+
+  norm = crank_quat_float_get_norm (a);
+  norm_imag = crank_vec_float3_get_magn (imag);
+  ac = acosf (a->w / norm);
+
+  r->w = logf (norm);
+  r->x = a->x * ac / norm_imag;
+  r->y = a->y * ac / norm_imag;
+  r->z = a->z * ac / norm_imag;
 }
 
 /**
@@ -1305,26 +1315,26 @@ crank_quat_float_ln (	CrankQuatFloat*	a,
  * Gets e-based exponential of quaternion.
  */
 void
-crank_quat_float_exp (	CrankQuatFloat*	a,
-						CrankQuatFloat*	r	)
+crank_quat_float_exp (CrankQuatFloat *a,
+                      CrankQuatFloat *r)
 {
-	CrankVecFloat3*	imag = (CrankVecFloat3*) (& a->x);
-	
-	gfloat			exp_w;
-	gfloat			norm_imag;
-	gfloat			c;
-	gfloat			s;
-	
-	exp_w = expf (a->w);
-	norm_imag = crank_vec_float3_get_magn (imag);
-	
-	c = cosf (norm_imag);
-	s = sinf (norm_imag);
+  CrankVecFloat3 *imag = (CrankVecFloat3*) (&a->x);
 
-	r->w = exp_w * c;
-	r->x = exp_w * s * a->x / norm_imag;
-	r->y = exp_w * s * a->y / norm_imag;
-	r->z = exp_w * s * a->z / norm_imag;
+  gfloat exp_w;
+  gfloat norm_imag;
+  gfloat c;
+  gfloat s;
+
+  exp_w = expf (a->w);
+  norm_imag = crank_vec_float3_get_magn (imag);
+
+  c = cosf (norm_imag);
+  s = sinf (norm_imag);
+
+  r->w = exp_w * c;
+  r->x = exp_w * s * a->x / norm_imag;
+  r->y = exp_w * s * a->y / norm_imag;
+  r->z = exp_w * s * a->z / norm_imag;
 }
 
 /**
@@ -1336,37 +1346,37 @@ crank_quat_float_exp (	CrankQuatFloat*	a,
  * Gets power of quaternion over real exponents.
  */
 void
-crank_quat_float_powr (	CrankQuatFloat*	a,
-						const gfloat 	b,
-						CrankQuatFloat*	r	)
+crank_quat_float_powr (CrankQuatFloat *a,
+                       const gfloat    b,
+                       CrankQuatFloat *r)
 {
-	CrankVecFloat3*	imag = (CrankVecFloat3*) (& a->x);
-	
-	gfloat	norm;
-	gfloat	norm_imag;
-	
-	gfloat	norm_b;
-	gfloat	angle;
-	
-	gfloat	c;
-	gfloat	s;
-	
-	norm = crank_quat_float_get_norm (a);
-	norm_imag = crank_vec_float3_get_magn (imag);
-	
-	norm_b = powf (norm, b);
-	angle = b * acos (a->w / norm);
-	
-	c = cosf (angle);
-	s = sinf (angle);
-	
-	r->w = norm_b * c;
-	r->x = norm_b * s * a->x / norm_imag;
-	r->y = norm_b * s * a->y / norm_imag;
-	r->z = norm_b * s * a->z / norm_imag;
+  CrankVecFloat3 *imag = (CrankVecFloat3*) (&a->x);
+
+  gfloat norm;
+  gfloat norm_imag;
+
+  gfloat norm_b;
+  gfloat angle;
+
+  gfloat c;
+  gfloat s;
+
+  norm = crank_quat_float_get_norm (a);
+  norm_imag = crank_vec_float3_get_magn (imag);
+
+  norm_b = powf (norm, b);
+  angle = b * acos (a->w / norm);
+
+  c = cosf (angle);
+  s = sinf (angle);
+
+  r->w = norm_b * c;
+  r->x = norm_b * s * a->x / norm_imag;
+  r->y = norm_b * s * a->y / norm_imag;
+  r->z = norm_b * s * a->z / norm_imag;
 }
-											
-											
+
+
 //////// Rotation Operations ///////////////////////////////////////////////////
 
 /**
@@ -1378,15 +1388,15 @@ crank_quat_float_powr (	CrankQuatFloat*	a,
  * Initialize a quaternion by given rotation.
  */
 void
-crank_quat_float_init_rot (	CrankQuatFloat*	quat,
-							const gfloat	angle,
-							CrankVecFloat3*	axis	)
+crank_quat_float_init_rot (CrankQuatFloat *quat,
+                           const gfloat    angle,
+                           CrankVecFloat3 *axis)
 {
-	gfloat hangle = angle * 0.5f;
-	gfloat factor = cosf (hangle) / crank_vec_float3_get_magn (axis);
-	
-	quat->w = sinf (hangle);
-	crank_vec_float3_muls (axis, factor, (CrankVecFloat3*) &(quat->x));
+  gfloat hangle = angle * 0.5f;
+  gfloat factor = cosf (hangle) / crank_vec_float3_get_magn (axis);
+
+  quat->w = sinf (hangle);
+  crank_vec_float3_muls (axis, factor, (CrankVecFloat3*) &(quat->x));
 }
 
 /**
@@ -1400,15 +1410,15 @@ crank_quat_float_init_rot (	CrankQuatFloat*	quat,
  * Initialize a quaternion by given rotation.
  */
 void
-crank_quat_float_init_urot (	CrankQuatFloat*	quat,
-								const gfloat	angle,
-								const gfloat	x,
-								const gfloat	y,
-								const gfloat	z	)
+crank_quat_float_init_urot (CrankQuatFloat *quat,
+                            const gfloat    angle,
+                            const gfloat    x,
+                            const gfloat    y,
+                            const gfloat    z)
 {
-	CrankVecFloat3	axis = {x, y, z};
-	
-	crank_quat_float_init_rot (quat, angle, &axis);
+  CrankVecFloat3 axis = {x, y, z};
+
+  crank_quat_float_init_rot (quat, angle, &axis);
 }
 
 
@@ -1421,9 +1431,9 @@ crank_quat_float_init_urot (	CrankQuatFloat*	quat,
  * Returns: Rotation angle of quaternion.
  */
 gfloat
-crank_quat_float_get_rangle (	CrankQuatFloat*	quat	)
+crank_quat_float_get_rangle (CrankQuatFloat *quat)
 {
-	return acos (quat->w) * 2;
+  return acos (quat->w) * 2;
 }
 
 /**
@@ -1436,10 +1446,10 @@ crank_quat_float_get_rangle (	CrankQuatFloat*	quat	)
  * Returns: Rotation axis of quaternion.
  */
 void
-crank_quat_float_get_raxis (	CrankQuatFloat*	quat,
-								CrankVecFloat3*	axis	)
+crank_quat_float_get_raxis (CrankQuatFloat *quat,
+                            CrankVecFloat3 *axis)
 {
-	crank_vec_float3_unit ((CrankVecFloat3*) &(quat->x), axis);
+  crank_vec_float3_unit ((CrankVecFloat3*) &(quat->x), axis);
 }
 
 /**
@@ -1451,70 +1461,70 @@ crank_quat_float_get_raxis (	CrankQuatFloat*	quat,
  * Apply a rotation represented by a quaternion, to a vector.
  */
 void
-crank_quat_float_rotatev (	CrankQuatFloat*	quat,
-							CrankVecFloat3*	vec,
-							CrankVecFloat3*	r		)
+crank_quat_float_rotatev (CrankQuatFloat *quat,
+                          CrankVecFloat3 *vec,
+                          CrankVecFloat3 *r)
 {
-	gfloat	ww	= quat->w * quat->w;
-	gfloat	xx	= quat->x * quat->x;
-	gfloat	yy	= quat->y * quat->y;
-	gfloat	zz	= quat->z * quat->z;
-	
-	gfloat	wz	= quat->w * quat->z;
-	gfloat	xy	= quat->x * quat->y;
-	
-	gfloat	wy	= quat->w * quat->y;
-	gfloat	xz	= quat->x * quat->z;
-	
-	gfloat	wx	= quat->w * quat->x;
-	gfloat	yz	= quat->y * quat->z;
-	
-	r->x =
-			(ww + xx - yy - zz) *	vec->x +
-			2 * (xy - wz) *			vec->y +
-			2 * (wy + xz) *			vec->z;
+  gfloat ww  = quat->w * quat->w;
+  gfloat xx  = quat->x * quat->x;
+  gfloat yy  = quat->y * quat->y;
+  gfloat zz  = quat->z * quat->z;
 
-	r->y =
-			2 * (wz + xy) *			vec->x +
-			(ww - xx + yy - zz) *	vec->y +
-			2 * (yz - wx) *		vec->z;
+  gfloat wz  = quat->w * quat->z;
+  gfloat xy  = quat->x * quat->y;
 
-	r->z =
-			2 * (xz - wy) *		vec->x +
-			2 * (wx + yz) *			vec->y +
-			(ww - xx - yy + zz) *	vec->z;
+  gfloat wy  = quat->w * quat->y;
+  gfloat xz  = quat->x * quat->z;
+
+  gfloat wx  = quat->w * quat->x;
+  gfloat yz  = quat->y * quat->z;
+
+  r->x =
+    (ww + xx - yy - zz) *   vec->x +
+    2 * (xy - wz) *         vec->y +
+    2 * (wy + xz) *         vec->z;
+
+  r->y =
+    2 * (wz + xy) *         vec->x +
+    (ww - xx + yy - zz) *   vec->y +
+    2 * (yz - wx) *     vec->z;
+
+  r->z =
+    2 * (xz - wy) *     vec->x +
+    2 * (wx + yz) *         vec->y +
+    (ww - xx - yy + zz) *   vec->z;
 }
 
 //////// GValue Conversion /////////////////////////////////////////////////////
 
 static void
-crank_quat_float_transform_from_gfloat (	const GValue*	src,
-											GValue*			dest	)
+crank_quat_float_transform_from_gfloat (const GValue *src,
+                                        GValue       *dest)
 {
-	CrankQuatFloat quat = {g_value_get_float (src), 0, 0, 0};
-	g_value_set_boxed (dest, &quat);
+  CrankQuatFloat quat = {g_value_get_float (src), 0, 0, 0};
+  g_value_set_boxed (dest, &quat);
 }
 
 static void
-crank_quat_float_transform_from_cplx_float (	const GValue*	src,
-												GValue*			dest)
+crank_quat_float_transform_from_cplx_float (const GValue *src,
+                                            GValue       *dest)
 {
-	CrankCplxFloat*	cplx;
-	CrankQuatFloat	quat;
+  CrankCplxFloat *cplx;
+  CrankQuatFloat quat;
 
-	cplx = (CrankCplxFloat*) g_value_get_boxed (src);
-	
-	crank_quat_float_init_cplx (&quat, cplx, NULL);
-	g_value_set_boxed (dest, &quat);
+  cplx = (CrankCplxFloat*) g_value_get_boxed (src);
+
+  crank_quat_float_init_cplx (&quat, cplx, NULL);
+  g_value_set_boxed (dest, &quat);
 }
 
 static void
-crank_quat_float_transform_to_string (	const GValue*	src,
-										GValue*			dest	)
+crank_quat_float_transform_to_string (const GValue *src,
+                                      GValue       *dest)
 {
-	CrankQuatFloat* quat;
-	
-	quat = (CrankQuatFloat*) g_value_get_boxed (src);
-	
-	g_value_take_string (dest, crank_quat_float_to_string (quat));
+  CrankQuatFloat *quat;
+
+  quat = (CrankQuatFloat*) g_value_get_boxed (src);
+
+  g_value_take_string (dest, crank_quat_float_to_string (quat));
 }

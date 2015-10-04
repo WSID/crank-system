@@ -67,12 +67,12 @@
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_bool_init (	CrankIterMemBool*	iter,
-							gboolean*			from,
-							gboolean*			to		)
+crank_iter_mem_bool_init (CrankIterMemBool *iter,
+                          gboolean         *from,
+                          gboolean         *to)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = from - 1;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = from - 1;
 }
 
 /**
@@ -86,11 +86,11 @@ crank_iter_mem_bool_init (	CrankIterMemBool*	iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_bool_init_with_count (	CrankIterMemBool*	iter,
-										gboolean*			from,
-										guint				count	)
+crank_iter_mem_bool_init_with_count (CrankIterMemBool *iter,
+                                     gboolean         *from,
+                                     guint             count)
 {
-	crank_iter_mem_bool_init (iter, from, from + count);
+  crank_iter_mem_bool_init (iter, from, from + count);
 }
 
 /**
@@ -101,11 +101,11 @@ crank_iter_mem_bool_init_with_count (	CrankIterMemBool*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_bool_init_with_range (	CrankIterMemBool*	iter,
-										CrankRanPtr*		range	)
+crank_iter_mem_bool_init_with_range (CrankIterMemBool *iter,
+                                     CrankRanPtr      *range)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (guint*)(range->start) - 1;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (guint*)(range->start) - 1;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -119,9 +119,9 @@ crank_iter_mem_bool_init_with_range (	CrankIterMemBool*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_bool_is_valid (	CrankIterMemBool*	iter	)
+crank_iter_mem_bool_is_valid (CrankIterMemBool *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -133,13 +133,15 @@ crank_iter_mem_bool_is_valid (	CrankIterMemBool*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_bool_next (	CrankIterMemBool*	iter	)
+crank_iter_mem_bool_next (CrankIterMemBool *iter)
 {
-	if (iter->ptr + 1 < (gboolean*)((iter->range).end)) {
-		iter->ptr++;
-		return TRUE;
-	}
-	else return FALSE;
+  if (iter->ptr + 1 < (gboolean*)((iter->range).end))
+    {
+      iter->ptr++;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -151,12 +153,14 @@ crank_iter_mem_bool_next (	CrankIterMemBool*	iter	)
  * Returns: A Value.
  */
 gboolean
-crank_iter_mem_bool_get (	CrankIterMemBool*	iter	)
+crank_iter_mem_bool_get (CrankIterMemBool *iter)
 {
-	if (crank_iter_mem_bool_is_valid (iter)) {
-		return (*iter->ptr);
-	}
-	else return 0;
+  if (crank_iter_mem_bool_is_valid (iter))
+    {
+      return (*iter->ptr);
+    }
+  else
+    return 0;
 }
 
 /**
@@ -175,20 +179,22 @@ crank_iter_mem_bool_get (	CrankIterMemBool*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_bool_foreach (	CrankIterMemBool*	iter,
-								CrankBoolBoolFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_bool_foreach (CrankIterMemBool *iter,
+                             CrankBoolBoolFunc func,
+                             gpointer          userdata)
 {
-	if (	! crank_iter_mem_bool_is_valid(iter) &&
-			! crank_iter_mem_bool_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_bool_is_valid(iter) &&
+      !crank_iter_mem_bool_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_bool_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_bool_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_bool_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_bool_next (iter));
+
+  return TRUE;
 }
 
 
@@ -206,12 +212,12 @@ crank_iter_mem_bool_foreach (	CrankIterMemBool*	iter,
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_uint_init (	CrankIterMemUint*	iter,
-							guint*				from,
-							guint*				to		)
+crank_iter_mem_uint_init (CrankIterMemUint *iter,
+                          guint            *from,
+                          guint            *to)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = from - 1;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = from - 1;
 }
 
 /**
@@ -225,11 +231,11 @@ crank_iter_mem_uint_init (	CrankIterMemUint*	iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_uint_init_with_count (	CrankIterMemUint*	iter,
-										guint*				from,
-										guint				count	)
+crank_iter_mem_uint_init_with_count (CrankIterMemUint *iter,
+                                     guint            *from,
+                                     guint             count)
 {
-	crank_iter_mem_uint_init (iter, from, from + count);
+  crank_iter_mem_uint_init (iter, from, from + count);
 }
 
 /**
@@ -240,11 +246,11 @@ crank_iter_mem_uint_init_with_count (	CrankIterMemUint*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_uint_init_with_range (	CrankIterMemUint*	iter,
-										CrankRanPtr*		range	)
+crank_iter_mem_uint_init_with_range (CrankIterMemUint *iter,
+                                     CrankRanPtr      *range)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (guint*)(range->start) - 1;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (guint*)(range->start) - 1;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -258,9 +264,9 @@ crank_iter_mem_uint_init_with_range (	CrankIterMemUint*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_uint_is_valid (	CrankIterMemUint*	iter	)
+crank_iter_mem_uint_is_valid (CrankIterMemUint *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -272,13 +278,15 @@ crank_iter_mem_uint_is_valid (	CrankIterMemUint*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_uint_next (	CrankIterMemUint*	iter	)
+crank_iter_mem_uint_next (CrankIterMemUint *iter)
 {
-	if (iter->ptr + 1 < (guint*)((iter->range).end)) {
-		iter->ptr++;
-		return TRUE;
-	}
-	else return FALSE;
+  if (iter->ptr + 1 < (guint*)((iter->range).end))
+    {
+      iter->ptr++;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -290,12 +298,14 @@ crank_iter_mem_uint_next (	CrankIterMemUint*	iter	)
  * Returns: A Value.
  */
 guint
-crank_iter_mem_uint_get (	CrankIterMemUint*	iter	)
+crank_iter_mem_uint_get (CrankIterMemUint *iter)
 {
-	if (crank_iter_mem_uint_is_valid (iter)) {
-		return (*iter->ptr);
-	}
-	else return 0;
+  if (crank_iter_mem_uint_is_valid (iter))
+    {
+      return (*iter->ptr);
+    }
+  else
+    return 0;
 }
 
 /**
@@ -314,20 +324,22 @@ crank_iter_mem_uint_get (	CrankIterMemUint*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_uint_foreach (	CrankIterMemUint*	iter,
-								CrankBoolUintFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_uint_foreach (CrankIterMemUint *iter,
+                             CrankBoolUintFunc func,
+                             gpointer          userdata)
 {
-	if (	! crank_iter_mem_uint_is_valid(iter) &&
-			! crank_iter_mem_uint_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_uint_is_valid(iter) &&
+      !crank_iter_mem_uint_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_uint_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_uint_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_uint_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_uint_next (iter));
+
+  return TRUE;
 }
 
 
@@ -345,12 +357,12 @@ crank_iter_mem_uint_foreach (	CrankIterMemUint*	iter,
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_int_init (	CrankIterMemInt*	iter,
-							gint*				from,
-							gint*				to		)
+crank_iter_mem_int_init (CrankIterMemInt *iter,
+                         gint            *from,
+                         gint            *to)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = from - 1;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = from - 1;
 }
 
 /**
@@ -364,11 +376,11 @@ crank_iter_mem_int_init (	CrankIterMemInt*	iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_int_init_with_count (	CrankIterMemInt*	iter,
-										gint*				from,
-										guint				count	)
+crank_iter_mem_int_init_with_count (CrankIterMemInt *iter,
+                                    gint            *from,
+                                    guint            count)
 {
-	crank_iter_mem_int_init (iter, from, from + count);
+  crank_iter_mem_int_init (iter, from, from + count);
 }
 
 /**
@@ -379,11 +391,11 @@ crank_iter_mem_int_init_with_count (	CrankIterMemInt*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_int_init_with_range (	CrankIterMemInt*	iter,
-										CrankRanPtr*		range	)
+crank_iter_mem_int_init_with_range (CrankIterMemInt *iter,
+                                    CrankRanPtr     *range)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (gint*)(range->start) - 1;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (gint*)(range->start) - 1;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -397,9 +409,9 @@ crank_iter_mem_int_init_with_range (	CrankIterMemInt*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_int_is_valid (	CrankIterMemInt*	iter	)
+crank_iter_mem_int_is_valid (CrankIterMemInt *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -411,13 +423,15 @@ crank_iter_mem_int_is_valid (	CrankIterMemInt*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_int_next (	CrankIterMemInt*	iter	)
+crank_iter_mem_int_next (CrankIterMemInt *iter)
 {
-	if (iter->ptr + 1 < (gint*)((iter->range).end)) {
-		iter->ptr++;
-		return TRUE;
-	}
-	else return FALSE;
+  if (iter->ptr + 1 < (gint*)((iter->range).end))
+    {
+      iter->ptr++;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -429,12 +443,14 @@ crank_iter_mem_int_next (	CrankIterMemInt*	iter	)
  * Returns: A Value.
  */
 gint
-crank_iter_mem_int_get (	CrankIterMemInt*	iter	)
+crank_iter_mem_int_get (CrankIterMemInt *iter)
 {
-	if (crank_iter_mem_int_is_valid (iter)) {
-		return (*iter->ptr);
-	}
-	else return 0;
+  if (crank_iter_mem_int_is_valid (iter))
+    {
+      return (*iter->ptr);
+    }
+  else
+    return 0;
 }
 
 /**
@@ -453,20 +469,22 @@ crank_iter_mem_int_get (	CrankIterMemInt*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_int_foreach (	CrankIterMemInt*	iter,
-								CrankBoolIntFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_int_foreach (CrankIterMemInt *iter,
+                            CrankBoolIntFunc func,
+                            gpointer         userdata)
 {
-	if (	! crank_iter_mem_int_is_valid(iter) &&
-			! crank_iter_mem_int_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_int_is_valid(iter) &&
+      !crank_iter_mem_int_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_int_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_int_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_int_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_int_next (iter));
+
+  return TRUE;
 }
 
 
@@ -484,12 +502,12 @@ crank_iter_mem_int_foreach (	CrankIterMemInt*	iter,
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_float_init (	CrankIterMemFloat*	iter,
-							gfloat*				from,
-							gfloat*				to		)
+crank_iter_mem_float_init (CrankIterMemFloat *iter,
+                           gfloat            *from,
+                           gfloat            *to)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = from - 1;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = from - 1;
 }
 
 /**
@@ -503,11 +521,11 @@ crank_iter_mem_float_init (	CrankIterMemFloat*	iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_float_init_with_count (	CrankIterMemFloat*	iter,
-										gfloat*				from,
-										guint				count	)
+crank_iter_mem_float_init_with_count (CrankIterMemFloat *iter,
+                                      gfloat            *from,
+                                      guint              count)
 {
-	crank_iter_mem_float_init (iter, from, from + count);
+  crank_iter_mem_float_init (iter, from, from + count);
 }
 
 /**
@@ -518,11 +536,11 @@ crank_iter_mem_float_init_with_count (	CrankIterMemFloat*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_float_init_with_range (	CrankIterMemFloat*	iter,
-										CrankRanPtr*		range	)
+crank_iter_mem_float_init_with_range (CrankIterMemFloat *iter,
+                                      CrankRanPtr       *range)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (gfloat*)(range->start) - 1;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (gfloat*)(range->start) - 1;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -536,9 +554,9 @@ crank_iter_mem_float_init_with_range (	CrankIterMemFloat*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_float_is_valid (	CrankIterMemFloat*	iter	)
+crank_iter_mem_float_is_valid (CrankIterMemFloat *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -550,13 +568,15 @@ crank_iter_mem_float_is_valid (	CrankIterMemFloat*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_float_next (	CrankIterMemFloat*	iter	)
+crank_iter_mem_float_next (CrankIterMemFloat *iter)
 {
-	if (iter->ptr + 1 < (gfloat*)((iter->range).end)) {
-		iter->ptr++;
-		return TRUE;
-	}
-	else return FALSE;
+  if (iter->ptr + 1 < (gfloat*)((iter->range).end))
+    {
+      iter->ptr++;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -568,12 +588,14 @@ crank_iter_mem_float_next (	CrankIterMemFloat*	iter	)
  * Returns: A Value.
  */
 gfloat
-crank_iter_mem_float_get (	CrankIterMemFloat*	iter	)
+crank_iter_mem_float_get (CrankIterMemFloat *iter)
 {
-	if (crank_iter_mem_float_is_valid (iter)) {
-		return (*iter->ptr);
-	}
-	else return 0;
+  if (crank_iter_mem_float_is_valid (iter))
+    {
+      return (*iter->ptr);
+    }
+  else
+    return 0;
 }
 
 /**
@@ -592,20 +614,22 @@ crank_iter_mem_float_get (	CrankIterMemFloat*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_float_foreach (	CrankIterMemFloat*	iter,
-								CrankBoolFloatFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_float_foreach (CrankIterMemFloat *iter,
+                              CrankBoolFloatFunc func,
+                              gpointer           userdata)
 {
-	if (	! crank_iter_mem_float_is_valid(iter) &&
-			! crank_iter_mem_float_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_float_is_valid(iter) &&
+      !crank_iter_mem_float_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_float_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_float_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_float_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_float_next (iter));
+
+  return TRUE;
 }
 
 
@@ -623,12 +647,12 @@ crank_iter_mem_float_foreach (	CrankIterMemFloat*	iter,
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_ptr_init (	CrankIterMemPtr*	iter,
-							gpointer*				from,
-							gpointer*				to		)
+crank_iter_mem_ptr_init (CrankIterMemPtr *iter,
+                         gpointer        *from,
+                         gpointer        *to)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = from - 1;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = from - 1;
 }
 
 /**
@@ -642,11 +666,11 @@ crank_iter_mem_ptr_init (	CrankIterMemPtr*	iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_ptr_init_with_count (	CrankIterMemPtr*	iter,
-										gpointer*			from,
-										guint				count	)
+crank_iter_mem_ptr_init_with_count (CrankIterMemPtr *iter,
+                                    gpointer        *from,
+                                    guint            count)
 {
-	crank_iter_mem_ptr_init (iter, from, from + count);
+  crank_iter_mem_ptr_init (iter, from, from + count);
 }
 
 /**
@@ -657,11 +681,11 @@ crank_iter_mem_ptr_init_with_count (	CrankIterMemPtr*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_ptr_init_with_range (	CrankIterMemPtr*	iter,
-										CrankRanPtr*		range	)
+crank_iter_mem_ptr_init_with_range (CrankIterMemPtr *iter,
+                                    CrankRanPtr     *range)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (gpointer)(range->start) - 1;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (gpointer)(range->start) - 1;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -675,9 +699,9 @@ crank_iter_mem_ptr_init_with_range (	CrankIterMemPtr*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_ptr_is_valid (	CrankIterMemPtr*	iter	)
+crank_iter_mem_ptr_is_valid (CrankIterMemPtr *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -689,13 +713,15 @@ crank_iter_mem_ptr_is_valid (	CrankIterMemPtr*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_ptr_next (	CrankIterMemPtr*	iter	)
+crank_iter_mem_ptr_next (CrankIterMemPtr *iter)
 {
-	if (iter->ptr + 1 < (gpointer*)((iter->range).end)) {
-		iter->ptr++;
-		return TRUE;
-	}
-	else return FALSE;
+  if (iter->ptr + 1 < (gpointer*)((iter->range).end))
+    {
+      iter->ptr++;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -707,12 +733,14 @@ crank_iter_mem_ptr_next (	CrankIterMemPtr*	iter	)
  * Returns: (transfer none) (nullable): A Value or %NULL if invalid.
  */
 gpointer
-crank_iter_mem_ptr_get (	CrankIterMemPtr*	iter	)
+crank_iter_mem_ptr_get (CrankIterMemPtr *iter)
 {
-	if (crank_iter_mem_ptr_is_valid (iter)) {
-		return (*iter->ptr);
-	}
-	else return NULL;
+  if (crank_iter_mem_ptr_is_valid (iter))
+    {
+      return (*iter->ptr);
+    }
+  else
+    return NULL;
 }
 
 /**
@@ -731,20 +759,22 @@ crank_iter_mem_ptr_get (	CrankIterMemPtr*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_ptr_foreach (	CrankIterMemPtr*	iter,
-								CrankBoolPtrFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_ptr_foreach (CrankIterMemPtr *iter,
+                            CrankBoolPtrFunc func,
+                            gpointer         userdata)
 {
-	if (	! crank_iter_mem_ptr_is_valid(iter) &&
-			! crank_iter_mem_ptr_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_ptr_is_valid(iter) &&
+      !crank_iter_mem_ptr_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_ptr_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_ptr_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_ptr_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_ptr_next (iter));
+
+  return TRUE;
 }
 
 
@@ -763,14 +793,14 @@ crank_iter_mem_ptr_foreach (	CrankIterMemPtr*	iter,
  * Initialize memory iterator by start and end points.
  */
 void
-crank_iter_mem_struct_init (	CrankIterMemStruct*		iter,
-								gpointer				from,
-								gpointer				to,
-								gsize					size		)
+crank_iter_mem_struct_init (CrankIterMemStruct *iter,
+                            gpointer            from,
+                            gpointer            to,
+                            gsize               size)
 {
-	crank_ran_ptr_init (&(iter->range), from, to);
-	iter->ptr = (gpointer)((gsize)from - size);
-	iter->size = size;
+  crank_ran_ptr_init (&(iter->range), from, to);
+  iter->ptr = (gpointer)((gsize)from - size);
+  iter->size = size;
 }
 
 /**
@@ -785,12 +815,12 @@ crank_iter_mem_struct_init (	CrankIterMemStruct*		iter,
  * Useful especially for array of #guint.
  */
 void
-crank_iter_mem_struct_init_with_count (	CrankIterMemStruct*	iter,
-										gpointer			from,
-										guint				count,
-										gsize				size	)
+crank_iter_mem_struct_init_with_count (CrankIterMemStruct *iter,
+                                       gpointer            from,
+                                       guint               count,
+                                       gsize               size)
 {
-	crank_iter_mem_struct_init (iter, from, from + count, size);
+  crank_iter_mem_struct_init (iter, from, from + count, size);
 }
 
 /**
@@ -802,13 +832,13 @@ crank_iter_mem_struct_init_with_count (	CrankIterMemStruct*	iter,
  * Initialize memory iterator by memory range.
  */
 void
-crank_iter_mem_struct_init_with_range (	CrankIterMemStruct*	iter,
-										CrankRanPtr*		range,
-										gsize				size	)
+crank_iter_mem_struct_init_with_range (CrankIterMemStruct *iter,
+                                       CrankRanPtr        *range,
+                                       gsize               size)
 {
-	crank_ran_ptr_copy (range, &(iter->range));
-	iter->ptr = (gpointer)((gsize)(range->start) - size);
-	iter->size = size;
+  crank_ran_ptr_copy (range, &(iter->range));
+  iter->ptr = (gpointer)((gsize)(range->start) - size);
+  iter->size = size;
 }
 
 //////// Iteration /////////////////////////////////////////////////////////////
@@ -822,9 +852,9 @@ crank_iter_mem_struct_init_with_range (	CrankIterMemStruct*	iter,
  * Returns: Whether iterator is valid
  */
 gboolean
-crank_iter_mem_struct_is_valid (	CrankIterMemStruct*	iter	)
+crank_iter_mem_struct_is_valid (CrankIterMemStruct *iter)
 {
-	return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
+  return (crank_ran_ptr_contains (&(iter->range), iter->ptr));
 }
 
 /**
@@ -836,13 +866,15 @@ crank_iter_mem_struct_is_valid (	CrankIterMemStruct*	iter	)
  * Returns: Whether iterator proceed to next position.
  */
 gboolean
-crank_iter_mem_struct_next (	CrankIterMemStruct*	iter	)
+crank_iter_mem_struct_next (CrankIterMemStruct *iter)
 {
-	if ((gpointer)((gsize)iter->ptr + iter->size) < iter->range.end) {
-		iter->ptr = (gpointer)((gsize)iter->ptr + iter->size);
-		return TRUE;
-	}
-	else return FALSE;
+  if ((gpointer)((gsize)iter->ptr + iter->size) < iter->range.end)
+    {
+      iter->ptr = (gpointer)((gsize)iter->ptr + iter->size);
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -854,12 +886,14 @@ crank_iter_mem_struct_next (	CrankIterMemStruct*	iter	)
  * Returns: (transfer none) (nullable): A Value, or %NULL if it is invalid.
  */
 gpointer
-crank_iter_mem_struct_get (	CrankIterMemStruct*	iter	)
+crank_iter_mem_struct_get (CrankIterMemStruct *iter)
 {
-	if (crank_iter_mem_struct_is_valid (iter)) {
-		return iter->ptr;
-	}
-	else return NULL;
+  if (crank_iter_mem_struct_is_valid (iter))
+    {
+      return iter->ptr;
+    }
+  else
+    return NULL;
 }
 
 /**
@@ -878,18 +912,20 @@ crank_iter_mem_struct_get (	CrankIterMemStruct*	iter	)
  * Returns: Whether the function doesn't return %FALSE.
  */
 gboolean
-crank_iter_mem_struct_foreach (	CrankIterMemStruct*	iter,
-								CrankBoolPtrFunc	func,
-								gpointer			userdata	)
+crank_iter_mem_struct_foreach (CrankIterMemStruct *iter,
+                               CrankBoolPtrFunc    func,
+                               gpointer            userdata)
 {
-	if (	! crank_iter_mem_struct_is_valid(iter) &&
-			! crank_iter_mem_struct_next (iter))
-		return TRUE;
+  if (!crank_iter_mem_struct_is_valid(iter) &&
+      !crank_iter_mem_struct_next (iter))
+    return TRUE;
 
-	do {
-		if (! func (crank_iter_mem_struct_get(iter), userdata)) return FALSE;
-	}
-	while (crank_iter_mem_struct_next (iter));
-	
-	return TRUE;
+  do
+    {
+      if (!func (crank_iter_mem_struct_get(iter), userdata))
+        return FALSE;
+    }
+  while (crank_iter_mem_struct_next (iter));
+
+  return TRUE;
 }

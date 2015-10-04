@@ -62,28 +62,28 @@
  */
 
 
-static void crank_mat_cplx_float_n_transform_from_mf (	const GValue*	src,
-														GValue*			dest );
+static void crank_mat_cplx_float_n_transform_from_mf (const GValue *src,
+                                                      GValue       *dest);
 
-static void crank_mat_cplx_float_n_transform_to_string (	const GValue*	src,
-															GValue*			dest );
+static void crank_mat_cplx_float_n_transform_to_string (const GValue *src,
+                                                        GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE(
-		CrankMatCplxFloatN,
-		crank_mat_cplx_float_n,
-		crank_mat_cplx_float_n_dup,
-		crank_mat_cplx_float_n_free,
-		{
-			g_value_register_transform_func (
-					CRANK_TYPE_MAT_FLOAT_N,
-					g_define_type_id,
-					crank_mat_cplx_float_n_transform_from_mf	);
+  CrankMatCplxFloatN,
+  crank_mat_cplx_float_n,
+  crank_mat_cplx_float_n_dup,
+  crank_mat_cplx_float_n_free,
+  {
+    g_value_register_transform_func (
+      CRANK_TYPE_MAT_FLOAT_N,
+      g_define_type_id,
+      crank_mat_cplx_float_n_transform_from_mf);
 
-			g_value_register_transform_func (
-					g_define_type_id,
-					G_TYPE_STRING,
-					crank_mat_cplx_float_n_transform_to_string	);
-		})
+    g_value_register_transform_func (
+      g_define_type_id,
+      G_TYPE_STRING,
+      crank_mat_cplx_float_n_transform_to_string);
+  })
 
 /**
  * crank_mat_cplx_float_n_init:
@@ -95,22 +95,22 @@ G_DEFINE_BOXED_TYPE_WITH_CODE(
  * Initialize a matrix with given elements.
  */
 void
-crank_mat_cplx_float_n_init (	CrankMatCplxFloatN*	mat,
-								const guint		rn,
-								const guint		cn,
-								...	)
+crank_mat_cplx_float_n_init (CrankMatCplxFloatN *mat,
+                             const guint         rn,
+                             const guint         cn,
+                             ...)
 {
-  	va_list	varargs;
-  	guint	i;
+  va_list varargs;
+  guint i;
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-  	va_start (varargs, cn);
+  va_start (varargs, cn);
 
-  	for (i = 0; i < rn*cn; i++)
-		crank_cplx_float_copy (va_arg (varargs, CrankCplxFloat*), mat->data + i);
+  for (i = 0; i < rn * cn; i++)
+    crank_cplx_float_copy (va_arg (varargs, CrankCplxFloat*), mat->data + i);
 
-  	va_end (varargs);
+  va_end (varargs);
 }
 
 /**
@@ -123,16 +123,16 @@ crank_mat_cplx_float_n_init (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with given array.
  */
 void
-crank_mat_cplx_float_n_init_arr (	CrankMatCplxFloatN* mat,
-									const guint			rn,
-									const guint			cn,
-								   	CrankCplxFloat*		marr	)
+crank_mat_cplx_float_n_init_arr (CrankMatCplxFloatN *mat,
+                                 const guint         rn,
+                                 const guint         cn,
+                                 CrankCplxFloat     *marr)
 {
-  	guint	count = rn*cn;
+  guint count = rn * cn;
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-	memcpy (mat->data, marr, sizeof(CrankCplxFloat) * count);
+  memcpy (mat->data, marr, sizeof(CrankCplxFloat) * count);
 }
 
 /**
@@ -145,14 +145,14 @@ crank_mat_cplx_float_n_init_arr (	CrankMatCplxFloatN* mat,
  * Initialize a matrix by taking given array
  */
 void
-crank_mat_cplx_float_n_init_arr_take (	CrankMatCplxFloatN* mat,
-										const guint			rn,
-										const guint			cn,
-									   	CrankCplxFloat*		marr	)
+crank_mat_cplx_float_n_init_arr_take (CrankMatCplxFloatN *mat,
+                                      const guint         rn,
+                                      const guint         cn,
+                                      CrankCplxFloat     *marr)
 {
-  	mat->data = marr;
-  	mat->rn = rn;
- 	mat->cn = cn;
+  mat->data = marr;
+  mat->rn = rn;
+  mat->cn = cn;
 }
 
 
@@ -165,35 +165,37 @@ crank_mat_cplx_float_n_init_arr_take (	CrankMatCplxFloatN* mat,
  * Initialize a matrix with given row vectors.
  */
 void
-crank_mat_cplx_float_n_init_row (	CrankMatCplxFloatN*	mat,
-								  	const guint		rn,
-								   	...	)
+crank_mat_cplx_float_n_init_row (CrankMatCplxFloatN *mat,
+                                 const guint         rn,
+                                 ...)
 {
-  	va_list	varargs_cn;
-  	va_list	varargs_data;
-  	guint	i;
-  	guint	cn = 0;
+  va_list varargs_cn;
+  va_list varargs_data;
+  guint i;
+  guint cn = 0;
 
-  	va_start (varargs_cn, rn);
-  	va_copy (varargs_data, varargs_cn);
+  va_start (varargs_cn, rn);
+  va_copy (varargs_data, varargs_cn);
 
-  	// Phase 1: get max length of row vectors.
-	for (i = 0; i < rn; i++) {
-		CrankVecCplxFloatN*	rv = va_arg (varargs_cn, CrankVecCplxFloatN*);
+  // Phase 1: get max length of row vectors.
+  for (i = 0; i < rn; i++)
+    {
+      CrankVecCplxFloatN *rv = va_arg (varargs_cn, CrankVecCplxFloatN*);
 
-		cn = MAX(cn, rv->n);
-	}
-  	va_end (varargs_cn);
+      cn = MAX(cn, rv->n);
+    }
+  va_end (varargs_cn);
 
-  	// Phase 2: Copy actual data to matrix data.
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  // Phase 2: Copy actual data to matrix data.
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-  	for (i = 0; i < rn; i++) {
-	 	CrankVecCplxFloatN*	rv = va_arg (varargs_data, CrankVecCplxFloatN*);
+  for (i = 0; i < rn; i++)
+    {
+      CrankVecCplxFloatN *rv = va_arg (varargs_data, CrankVecCplxFloatN*);
 
-	  	memcpy (mat->data + (i * cn), rv->data, rv->n);
-	}
-  	va_end (varargs_data);
+      memcpy (mat->data + (i * cn), rv->data, rv->n);
+    }
+  va_end (varargs_data);
 }
 
 /**
@@ -205,19 +207,20 @@ crank_mat_cplx_float_n_init_row (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_cplx_float_n_init_row_arr (	CrankMatCplxFloatN*		mat,
-								  	const guint			rn,
-	 								CrankVecCplxFloatN*	rarrv	)
+crank_mat_cplx_float_n_init_row_arr (CrankMatCplxFloatN *mat,
+                                     const guint         rn,
+                                     CrankVecCplxFloatN *rarrv)
 {
-  	guint	i;
-  	guint	cn = 0;
+  guint i;
+  guint cn = 0;
 
-  	for (i = 0; i < rn; i++) cn = MAX(cn, (rarrv + i)->n);
+  for (i = 0; i < rn; i++)
+    cn = MAX(cn, (rarrv + i)->n);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), (rarrv + i)->data, (rarrv + i)->n);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+
+  for (i = 0; i < rn; i++)
+    memcpy (mat->data + (i * cn), (rarrv + i)->data, (rarrv + i)->n);
 }
 
 /**
@@ -229,19 +232,20 @@ crank_mat_cplx_float_n_init_row_arr (	CrankMatCplxFloatN*		mat,
  * Initialize a matrix with array of row vectors.
  */
 void
-crank_mat_cplx_float_n_init_row_parr (	CrankMatCplxFloatN*		mat,
-									  	const guint				rn,
-	 									CrankVecCplxFloatN**	rparrv	)
+crank_mat_cplx_float_n_init_row_parr (CrankMatCplxFloatN  *mat,
+                                      const guint          rn,
+                                      CrankVecCplxFloatN **rparrv)
 {
-  	guint	i;
-  	guint	cn = 0;
+  guint i;
+  guint cn = 0;
 
-  	for (i = 0; i < rn; i++) cn = MAX(cn, rparrv[i]->n);
+  for (i = 0; i < rn; i++)
+    cn = MAX(cn, rparrv[i]->n);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < rn; i++)
-	  	memcpy (mat->data + (i * cn), rparrv[i]->data, rparrv[i]->n);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+
+  for (i = 0; i < rn; i++)
+    memcpy (mat->data + (i * cn), rparrv[i]->data, rparrv[i]->n);
 }
 
 /**
@@ -253,37 +257,40 @@ crank_mat_cplx_float_n_init_row_parr (	CrankMatCplxFloatN*		mat,
  * Initialize a matrix with column vectors.
  */
 void
-crank_mat_cplx_float_n_init_col (	CrankMatCplxFloatN*	mat,
-								   	const guint		cn,
-									...	)
+crank_mat_cplx_float_n_init_col (CrankMatCplxFloatN *mat,
+                                 const guint         cn,
+                                 ...)
 {
-  	va_list	varargs_rn;
-  	va_list varargs_data;
+  va_list varargs_rn;
+  va_list varargs_data;
 
-  	guint	rn = 0;
-  	guint	i;
-  	guint	j;
+  guint rn = 0;
+  guint i;
+  guint j;
 
-  	va_start (varargs_rn, cn);
-  	va_copy (varargs_data, varargs_rn);
+  va_start (varargs_rn, cn);
+  va_copy (varargs_data, varargs_rn);
 
-  	for (i = 0; i < cn; i++) {
-		CrankVecCplxFloatN*	cv = va_arg (varargs_rn, CrankVecCplxFloatN*);
+  for (i = 0; i < cn; i++)
+    {
+      CrankVecCplxFloatN *cv = va_arg (varargs_rn, CrankVecCplxFloatN*);
 
-	  	rn = MAX (rn, cv->n);
-	}
-  	va_end (varargs_rn);
+      rn = MAX (rn, cv->n);
+    }
+  va_end (varargs_rn);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < cn; i++) {
-		CrankVecCplxFloatN*	cv = va_arg (varargs_data, CrankVecCplxFloatN*);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-	  	for (j = 0; j < cv->n; j++) {
-	  		crank_cplx_float_copy ((cv->data + j), mat->data + (rn * j) + i);
-		}
-	}
-  	va_end (varargs_data);
+  for (i = 0; i < cn; i++)
+    {
+      CrankVecCplxFloatN *cv = va_arg (varargs_data, CrankVecCplxFloatN*);
+
+      for (j = 0; j < cv->n; j++)
+        {
+          crank_cplx_float_copy ((cv->data + j), mat->data + (rn * j) + i);
+        }
+    }
+  va_end (varargs_data);
 
 }
 
@@ -296,23 +303,27 @@ crank_mat_cplx_float_n_init_col (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_cplx_float_n_init_col_arr (	CrankMatCplxFloatN* 	mat,
-								 	const guint				cn,
-								 	CrankVecCplxFloatN*		carrv	)
+crank_mat_cplx_float_n_init_col_arr (CrankMatCplxFloatN *mat,
+                                     const guint         cn,
+                                     CrankVecCplxFloatN *carrv)
 {
-  	guint	rn = 0;
-  	guint	i;
-  	guint	j;
+  guint rn = 0;
+  guint i;
+  guint j;
 
-  	for (i = 0; i < cn; i++) rn = MAX (rn, (carrv + i)->n);
+  for (i = 0; i < cn; i++)
+    rn = MAX (rn, (carrv + i)->n);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < cn; i++) {
-	  	for (j = 0; j < (carrv + i)->n; j++) {
-	  		crank_cplx_float_copy((carrv + i)->data + j, mat->data + (rn * j) + i);
-		}
-	}
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+
+  for (i = 0; i < cn; i++)
+    {
+      for (j = 0; j < (carrv + i)->n; j++)
+        {
+          crank_cplx_float_copy((carrv +
+                                 i)->data + j, mat->data + (rn * j) + i);
+        }
+    }
 }
 
 /**
@@ -324,23 +335,26 @@ crank_mat_cplx_float_n_init_col_arr (	CrankMatCplxFloatN* 	mat,
  * Initialize a matrix with an array of column vectors.
  */
 void
-crank_mat_cplx_float_n_init_col_parr (	CrankMatCplxFloatN* 	mat,
-									 	const guint				cn,
-									 	CrankVecCplxFloatN**	cparrv	)
+crank_mat_cplx_float_n_init_col_parr (CrankMatCplxFloatN  *mat,
+                                      const guint          cn,
+                                      CrankVecCplxFloatN **cparrv)
 {
-  	guint	rn = 0;
-  	guint	i;
-  	guint	j;
+  guint rn = 0;
+  guint i;
+  guint j;
 
-  	for (i = 0; i < cn; i++) rn = MAX (rn, cparrv[i]->n);
+  for (i = 0; i < cn; i++)
+    rn = MAX (rn, cparrv[i]->n);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < cn; i++) {
-	  	for (j = 0; j < cparrv[i]->n; j++) {
-	  		crank_cplx_float_copy(cparrv[i]->data + j, mat->data + (rn * j) + i);
-		}
-	}
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+
+  for (i = 0; i < cn; i++)
+    {
+      for (j = 0; j < cparrv[i]->n; j++)
+        {
+          crank_cplx_float_copy(cparrv[i]->data + j, mat->data + (rn * j) + i);
+        }
+    }
 }
 
 /**
@@ -353,21 +367,22 @@ crank_mat_cplx_float_n_init_col_parr (	CrankMatCplxFloatN* 	mat,
  * Other elements are initialized with 0.
  */
 void
-crank_mat_cplx_float_n_init_diag (	CrankMatCplxFloatN*	mat,
-									const guint		n,
-								 	...	)
+crank_mat_cplx_float_n_init_diag (CrankMatCplxFloatN *mat,
+                                  const guint         n,
+                                  ...)
 {
-  	va_list	varargs;
-  	guint	i;
+  va_list varargs;
+  guint i;
 
-  	va_start (varargs, n);
+  va_start (varargs, n);
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, n, n);
-	
- 	for (i = 0; i < n; i++)
- 		crank_cplx_float_copy (va_arg (varargs, CrankCplxFloat*), mat->data + (n*i) + i);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, n, n);
 
-  	va_end (varargs);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_copy (va_arg (varargs,
+                                   CrankCplxFloat*), mat->data + (n * i) + i);
+
+  va_end (varargs);
 }
 
 /**
@@ -380,16 +395,16 @@ crank_mat_cplx_float_n_init_diag (	CrankMatCplxFloatN*	mat,
  * Other elements are initialized with 0.
  */
 void
-crank_mat_cplx_float_n_init_diag_arr (	CrankMatCplxFloatN*	mat,
-									 	const guint			n,
-										CrankCplxFloat*		darr	)
+crank_mat_cplx_float_n_init_diag_arr (CrankMatCplxFloatN *mat,
+                                      const guint         n,
+                                      CrankCplxFloat     *darr)
 {
-  	guint	i;
+  guint i;
 
-	CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
-	
- 	for (i = 0; i < n; i++)
- 		crank_cplx_float_copy (darr + i, mat->data + (n*i) + i);
+  CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
+
+  for (i = 0; i < n; i++)
+    crank_cplx_float_copy (darr + i, mat->data + (n * i) + i);
 }
 
 /**
@@ -401,10 +416,10 @@ crank_mat_cplx_float_n_init_diag_arr (	CrankMatCplxFloatN*	mat,
  * Other elements are initialized with 0.
  */
 void
-crank_mat_cplx_float_n_init_diag_vec (	CrankMatCplxFloatN*	mat,
-										CrankVecCplxFloatN*	dvec	)
+crank_mat_cplx_float_n_init_diag_vec (CrankMatCplxFloatN *mat,
+                                      CrankVecCplxFloatN *dvec)
 {
-	crank_mat_cplx_float_n_init_diag_arr (mat, dvec->n, dvec->data);
+  crank_mat_cplx_float_n_init_diag_arr (mat, dvec->n, dvec->data);
 }
 
 /**
@@ -417,19 +432,19 @@ crank_mat_cplx_float_n_init_diag_vec (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix by filling with a value.
  */
 void
-crank_mat_cplx_float_n_init_fill (	CrankMatCplxFloatN*	mat,
-								 	const guint			rn,
-								 	const guint			cn,
-									CrankCplxFloat*		fill	)
+crank_mat_cplx_float_n_init_fill (CrankMatCplxFloatN *mat,
+                                  const guint         rn,
+                                  const guint         cn,
+                                  CrankCplxFloat     *fill)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-	
-  	for (i = 0; i < rn; i++)
-		for (j = 0; j < cn; j++)
-			crank_cplx_float_copy (fill, mat->data + (cn * i) + j);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+
+  for (i = 0; i < rn; i++)
+    for (j = 0; j < cn; j++)
+      crank_cplx_float_copy (fill, mat->data + (cn * i) + j);
 }
 
 /**
@@ -444,22 +459,22 @@ crank_mat_cplx_float_n_init_fill (	CrankMatCplxFloatN*	mat,
  * rather than #CrankCplxFloat.
  */
 void
-crank_mat_cplx_float_n_init_uc (	CrankMatCplxFloatN*	mat,
-									const guint		rn,
-									const guint		cn,
-									...	)
+crank_mat_cplx_float_n_init_uc (CrankMatCplxFloatN *mat,
+                                const guint         rn,
+                                const guint         cn,
+                                ...)
 {
-  	va_list	varargs;
-  	guint	i;
+  va_list varargs;
+  guint i;
 
-	CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
+  CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
-  	va_start (varargs, cn);
+  va_start (varargs, cn);
 
-  	for (i = 0; i < rn*cn; i++)
-		crank_cplx_float_init_valist (mat->data + i, varargs);
+  for (i = 0; i < rn * cn; i++)
+    crank_cplx_float_init_valist (mat->data + i, varargs);
 
-  	va_end (varargs);
+  va_end (varargs);
 }
 
 /**
@@ -474,12 +489,12 @@ crank_mat_cplx_float_n_init_uc (	CrankMatCplxFloatN*	mat,
  * rather than #CrankCplxFloat.
  */
 void
-crank_mat_cplx_float_n_init_arruc (	CrankMatCplxFloatN*	mat,
-									const guint			rn,
-									const guint			cn,
-									const gfloat*		mucarr	)
+crank_mat_cplx_float_n_init_arruc (CrankMatCplxFloatN *mat,
+                                   const guint         rn,
+                                   const guint         cn,
+                                   const gfloat       *mucarr)
 {
-	crank_mat_cplx_float_n_init_arr (mat, rn, cn, (CrankCplxFloat*)mucarr);
+  crank_mat_cplx_float_n_init_arr (mat, rn, cn, (CrankCplxFloat*)mucarr);
 }
 
 /**
@@ -493,20 +508,24 @@ crank_mat_cplx_float_n_init_arruc (	CrankMatCplxFloatN*	mat,
  * Initialize a matrix with given two arrays.
  */
 void
-crank_mat_cplx_float_n_init_ucarr (CrankMatCplxFloatN* mat,
-								   const guint			rn,
-								   const guint			cn,
-								   const gfloat*		real,
-								   const gfloat*		imag)
+crank_mat_cplx_float_n_init_ucarr (CrankMatCplxFloatN *mat,
+                                   const guint         rn,
+                                   const guint         cn,
+                                   const gfloat       *real,
+                                   const gfloat       *imag)
 {
-  guint	i, n;
+  guint i, n;
 
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, rn, cn);
 
   n = rn * cn;
-  
-  if (real != NULL) for (i = 0; i < n; i++) mat->data[i].real = real[i];
-  if (imag != NULL) for (i = 0; i < n; i++) mat->data[i].imag = imag[i];
+
+  if (real != NULL)
+    for (i = 0; i < n; i++)
+      mat->data[i].real = real[i];
+  if (imag != NULL)
+    for (i = 0; i < n; i++)
+      mat->data[i].imag = imag[i];
 }
 
 /**
@@ -521,27 +540,31 @@ crank_mat_cplx_float_n_init_ucarr (CrankMatCplxFloatN* mat,
  * filled for where elements are missing.
  */
 void
-crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN* mat,
-								 CrankMatFloatN*	real,
-								 CrankMatFloatN*	imag)
+crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN *mat,
+                                 CrankMatFloatN     *real,
+                                 CrankMatFloatN     *imag)
 {
   guint i;
   guint j;
   guint rn;
   guint cn;
 
-  rn = MAX (real != NULL ? real->rn: 0,
-  			imag != NULL ? imag->rn: 0);
-  cn = MAX (real != NULL ? real->cn: 0,
-  			imag != NULL ? imag->cn: 0);
+  rn = MAX (real != NULL ? real->rn : 0,
+            imag != NULL ? imag->rn : 0);
+  cn = MAX (real != NULL ? real->cn : 0,
+            imag != NULL ? imag->cn : 0);
 
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, rn, cn);
 
-  if (real != NULL) for (i = 0; i < real->rn; i++) for (j = 0; j < real->cn; j++)
-	mat->data[(i * cn) + j].real = crank_mat_float_n_get (real, i, j);
+  if (real != NULL)
+    for (i = 0; i < real->rn; i++)
+      for (j = 0; j < real->cn; j++)
+        mat->data[(i * cn) + j].real = crank_mat_float_n_get (real, i, j);
 
-  if (imag != NULL) for (i = 0; i < imag->rn; i++) for (j = 0; j < imag->cn; j++)
-	mat->data[(i * cn) + j].imag = crank_mat_float_n_get (imag, i, j);
+  if (imag != NULL)
+    for (i = 0; i < imag->rn; i++)
+      for (j = 0; j < imag->cn; j++)
+        mat->data[(i * cn) + j].imag = crank_mat_float_n_get (imag, i, j);
 }
 
 /**
@@ -554,9 +577,9 @@ crank_mat_cplx_float_n_init_ucm (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_row_uc (CrankMatCplxFloatN*	mat,
-								  const guint			rn,
-								  ... )
+crank_mat_cplx_float_n_init_row_uc (CrankMatCplxFloatN *mat,
+                                    const guint         rn,
+                                    ...)
 {
   va_list varargs_cn;
   va_list varargs;
@@ -569,22 +592,22 @@ crank_mat_cplx_float_n_init_row_uc (CrankMatCplxFloatN*	mat,
   va_copy (varargs, varargs_cn);
 
   for (i = 0; i < rn * 2; i++)
-	{
-	  CrankVecFloatN* v = va_arg (varargs_cn, CrankVecFloatN*);
-	  cn = MAX (cn, v->n);
-	}
+    {
+      CrankVecFloatN *v = va_arg (varargs_cn, CrankVecFloatN*);
+      cn = MAX (cn, v->n);
+    }
   va_end (varargs_cn);
 
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
   for (i = 0; i < rn; i++)
-	{
-	  CrankVecFloatN* rv = va_arg (varargs, CrankVecFloatN*);
-	  CrankVecFloatN* iv = va_arg (varargs, CrankVecFloatN*);
-	  
-	  crank_mat_cplx_float_n_set_row_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
-	}
+    {
+      CrankVecFloatN *rv = va_arg (varargs, CrankVecFloatN*);
+      CrankVecFloatN *iv = va_arg (varargs, CrankVecFloatN*);
+
+      crank_mat_cplx_float_n_set_row_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
+    }
   va_end (varargs);
 }
 
@@ -598,28 +621,28 @@ crank_mat_cplx_float_n_init_row_uc (CrankMatCplxFloatN*	mat,
  * Intialize a matrix with unrolled complex pairs of vectors.
  */
 void
-crank_mat_cplx_float_n_init_row_arruc (CrankMatCplxFloatN* mat,
-									 const guint		  rn,
-									 CrankVecFloatN*	  rarrucv)
+crank_mat_cplx_float_n_init_row_arruc (CrankMatCplxFloatN *mat,
+                                       const guint         rn,
+                                       CrankVecFloatN     *rarrucv)
 {
   guint cn = 0;
   guint i;
   guint j;
-  
+
   for (i = 0; i < rn * 2; i++)
     {
       cn = MAX (cn, rarrucv[i].n);
     }
-  
+
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-  
+
   for (i = 0; i < rn; i++)
     {
-      CrankVecFloatN* rv = rarrucv + (2 * i);
-      CrankVecFloatN* iv = rv + 1;
-	  
-	  crank_mat_cplx_float_n_set_row_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
+      CrankVecFloatN *rv = rarrucv + (2 * i);
+      CrankVecFloatN *iv = rv + 1;
+
+      crank_mat_cplx_float_n_set_row_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
     }
 }
 
@@ -633,28 +656,28 @@ crank_mat_cplx_float_n_init_row_arruc (CrankMatCplxFloatN* mat,
  * Initialize a matrix with unrolled complex pairs of pointers to vectors.
  */
 void
-crank_mat_cplx_float_n_init_row_parruc (CrankMatCplxFloatN* mat,
-									  const guint		  rn,
-									  CrankVecFloatN**	  rarrucpv)
+crank_mat_cplx_float_n_init_row_parruc (CrankMatCplxFloatN *mat,
+                                        const guint         rn,
+                                        CrankVecFloatN    **rarrucpv)
 {
   guint cn = 0;
   guint i;
   guint j;
-  
+
   for (i = 0; i < rn * 2; i++)
     {
       cn = MAX (cn, rarrucpv[i]->n);
     }
-  
+
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-  
+
   for (i = 0; i < rn; i++)
     {
-      CrankVecFloatN* rv = rarrucpv [2 * i];
-      CrankVecFloatN* iv = rarrucpv [2 * i + 1];
-	  
-	  crank_mat_cplx_float_n_set_row_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
+      CrankVecFloatN *rv = rarrucpv [2 * i];
+      CrankVecFloatN *iv = rarrucpv [2 * i + 1];
+
+      crank_mat_cplx_float_n_set_row_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_row_imag (mat, i, iv);
     }
 }
 
@@ -668,9 +691,9 @@ crank_mat_cplx_float_n_init_row_parruc (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_col_uc (CrankMatCplxFloatN* mat,
-								  const guint		  cn,
-								  ...)
+crank_mat_cplx_float_n_init_col_uc (CrankMatCplxFloatN *mat,
+                                    const guint         cn,
+                                    ...)
 {
   va_list varargs_rn;
   va_list varargs;
@@ -683,22 +706,22 @@ crank_mat_cplx_float_n_init_col_uc (CrankMatCplxFloatN* mat,
   va_copy (varargs, varargs_rn);
 
   for (i = 0; i < cn * 2; i++)
-	{
-	  CrankVecFloatN* v = va_arg (varargs_rn, CrankVecFloatN*);
-	  rn = MAX (rn, v->n);
-	}
+    {
+      CrankVecFloatN *v = va_arg (varargs_rn, CrankVecFloatN*);
+      rn = MAX (rn, v->n);
+    }
   va_end (varargs_rn);
 
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
   for (i = 0; i < cn; i++)
-	{
-	  CrankVecFloatN* rv = va_arg (varargs, CrankVecFloatN*);
-	  CrankVecFloatN* iv = va_arg (varargs, CrankVecFloatN*);
-	  
-	  crank_mat_cplx_float_n_set_col_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
-	}
+    {
+      CrankVecFloatN *rv = va_arg (varargs, CrankVecFloatN*);
+      CrankVecFloatN *iv = va_arg (varargs, CrankVecFloatN*);
+
+      crank_mat_cplx_float_n_set_col_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
+    }
   va_end (varargs);
 }
 
@@ -712,28 +735,28 @@ crank_mat_cplx_float_n_init_col_uc (CrankMatCplxFloatN* mat,
  * one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_col_arruc (CrankMatCplxFloatN* mat,
-									 const guint		  cn,
-									 CrankVecFloatN*	  carrucv)
+crank_mat_cplx_float_n_init_col_arruc (CrankMatCplxFloatN *mat,
+                                       const guint         cn,
+                                       CrankVecFloatN     *carrucv)
 {
   guint rn = 0;
   guint i;
   guint j;
-  
+
   for (i = 0; i < cn * 2; i++)
     {
       rn = MAX (rn, carrucv[i].n);
     }
-  
+
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-  
+
   for (i = 0; i < cn; i++)
     {
-      CrankVecFloatN* rv = carrucv + (2 * i);
-      CrankVecFloatN* iv = rv + 1;
-	  
-	  crank_mat_cplx_float_n_set_col_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
+      CrankVecFloatN *rv = carrucv + (2 * i);
+      CrankVecFloatN *iv = rv + 1;
+
+      crank_mat_cplx_float_n_set_col_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
     }
 }
 
@@ -747,28 +770,28 @@ crank_mat_cplx_float_n_init_col_arruc (CrankMatCplxFloatN* mat,
  * represents a row, one vector for real, the other vector for imaginary.
  */
 void
-crank_mat_cplx_float_n_init_col_parruc (CrankMatCplxFloatN* mat,
-									  const guint		  cn,
-									  CrankVecFloatN**	  carrucpv)
+crank_mat_cplx_float_n_init_col_parruc (CrankMatCplxFloatN *mat,
+                                        const guint         cn,
+                                        CrankVecFloatN    **carrucpv)
 {
   guint rn = 0;
   guint i;
   guint j;
-  
+
   for (i = 0; i < cn * 2; i++)
     {
       rn = MAX (rn, carrucpv[i]->n);
     }
-  
+
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-  
+
   for (i = 0; i < cn; i++)
     {
-      CrankVecFloatN* rv = carrucpv [2 * i];
-      CrankVecFloatN* iv = carrucpv [2 * i + 1];
-	  
-	  crank_mat_cplx_float_n_set_col_real (mat, i, rv);
-	  crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
+      CrankVecFloatN *rv = carrucpv [2 * i];
+      CrankVecFloatN *iv = carrucpv [2 * i + 1];
+
+      crank_mat_cplx_float_n_set_col_real (mat, i, rv);
+      crank_mat_cplx_float_n_set_col_imag (mat, i, iv);
     }
 }
 
@@ -781,20 +804,20 @@ crank_mat_cplx_float_n_init_col_parruc (CrankMatCplxFloatN* mat,
  * Initialize a diagonal matrix with list of unrolled complex pairs.
  */
 void
-crank_mat_cplx_float_n_init_diag_uc (CrankMatCplxFloatN*	mat,
-							  		const guint			n,
-							  		... )
+crank_mat_cplx_float_n_init_diag_uc (CrankMatCplxFloatN *mat,
+                                     const guint         n,
+                                     ...)
 {
   va_list varargs;
-  guint	i;
-  
+  guint i;
+
   va_start (varargs, n);
-  
+
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
-  
+
   for (i = 0; i < n; i++)
     crank_cplx_float_init_valist (mat->data + i * (n + 1), varargs);
-    
+
   va_end (varargs);
 }
 
@@ -807,9 +830,9 @@ crank_mat_cplx_float_n_init_diag_uc (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with array of unrolled complex pairs.
  */
 void
-crank_mat_cplx_float_n_init_diag_arruc (CrankMatCplxFloatN*	mat,
-								 	   const guint			n,
-								 	   const gfloat*		arruc)
+crank_mat_cplx_float_n_init_diag_arruc (CrankMatCplxFloatN *mat,
+                                        const guint         n,
+                                        const gfloat       *arruc)
 {
   crank_mat_cplx_float_n_init_diag_arr (mat, n, (CrankCplxFloat*)arruc);
 }
@@ -824,15 +847,15 @@ crank_mat_cplx_float_n_init_diag_arruc (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with unrolled complex pair of arrays.
  */
 void
-crank_mat_cplx_float_n_init_diag_ucarr (CrankMatCplxFloatN*	mat,
-								 		const guint			n,
-								 		const gfloat*		real,
-								 		const gfloat*		imag)
+crank_mat_cplx_float_n_init_diag_ucarr (CrankMatCplxFloatN *mat,
+                                        const guint         n,
+                                        const gfloat       *real,
+                                        const gfloat       *imag)
 {
   guint i;
-  
+
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
-  
+
   for (i = 0; i < n; i++)
     crank_cplx_float_init (mat->data + i * (n + 1), real[i], imag[i]);
 }
@@ -846,47 +869,52 @@ crank_mat_cplx_float_n_init_diag_ucarr (CrankMatCplxFloatN*	mat,
  * Initialize a diagonal matrix with unrolled complex pair of vectors.
  */
 void
-crank_mat_cplx_float_n_init_diag_ucv (CrankMatCplxFloatN*	mat,
-							   		 CrankVecFloatN*		real,
-							   	     CrankVecFloatN*		imag)
+crank_mat_cplx_float_n_init_diag_ucv (CrankMatCplxFloatN *mat,
+                                      CrankVecFloatN     *real,
+                                      CrankVecFloatN     *imag)
 {
   guint i;
   guint n;
-  
-  n = MAX (	real != NULL ? real->n : 0,
-  			imag != NULL ? imag->n : 0);
-  
+
+  n = MAX (real != NULL ? real->n : 0,
+           imag != NULL ? imag->n : 0);
+
   CRANK_MAT_ALLOC0 (mat, CrankCplxFloat, n, n);
-  
-  if (real != NULL) for (i = 0; i < real->n; i++) mat->data[i * (n + 1)].real = real->data[i];
-  if (imag != NULL) for (i = 0; i < imag->n; i++) mat->data[i * (n + 1)].imag = imag->data[i];
+
+  if (real != NULL)
+    for (i = 0; i < real->n; i++)
+      mat->data[i * (n + 1)].real = real->data[i];
+  if (imag != NULL)
+    for (i = 0; i < imag->n; i++)
+      mat->data[i * (n + 1)].imag = imag->data[i];
 }
 
 /**
  * crank_mat_cplx_float_n_init_fill_uc:
  * @mat: (out): A Matrix.
  * @rn: Row count
- * @cn: Column count 
+ * @cn: Column count
  * @real: Real value to fill.
  * @imag: Imaginary value to fill.
  *
  * Initialize a matrix by filling specific value.
  */
 void
-crank_mat_cplx_float_n_init_fill_uc (CrankMatCplxFloatN* mat,
-							  		const guint			rn,
-							  		const guint			cn,
-							  		const gfloat		real,
-							  		const gfloat		imag)
+crank_mat_cplx_float_n_init_fill_uc (CrankMatCplxFloatN *mat,
+                                     const guint         rn,
+                                     const guint         cn,
+                                     const gfloat        real,
+                                     const gfloat        imag)
 {
   guint i;
   guint n;
-  
+
   n = rn * cn;
-  
+
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
-  
-  for (i = 0; i < n; i++) crank_cplx_float_init (mat->data + i, real, imag);
+
+  for (i = 0; i < n; i++)
+    crank_cplx_float_init (mat->data + i, real, imag);
 }
 
 /**
@@ -897,10 +925,10 @@ crank_mat_cplx_float_n_init_fill_uc (CrankMatCplxFloatN* mat,
  * Copies a matrix to other matrix.
  */
 void
-crank_mat_cplx_float_n_copy (	CrankMatCplxFloatN*	mat,
-					   			CrankMatCplxFloatN*	other	)
+crank_mat_cplx_float_n_copy (CrankMatCplxFloatN *mat,
+                             CrankMatCplxFloatN *other)
 {
-	crank_mat_cplx_float_n_init_arr (other, mat->rn, mat->cn, mat->data);
+  crank_mat_cplx_float_n_init_arr (other, mat->rn, mat->cn, mat->data);
 }
 
 /**
@@ -912,11 +940,11 @@ crank_mat_cplx_float_n_copy (	CrankMatCplxFloatN*	mat,
  * Returns: an allocated copy. Free it with g_free()
  */
 CrankMatCplxFloatN*
-crank_mat_cplx_float_n_dup (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_dup (CrankMatCplxFloatN *mat)
 {
-  	CrankMatCplxFloatN*	result = g_new (CrankMatCplxFloatN, 1);
-	crank_mat_cplx_float_n_copy (mat, result);
-  	return result;
+  CrankMatCplxFloatN *result = g_new (CrankMatCplxFloatN, 1);
+  crank_mat_cplx_float_n_copy (mat, result);
+  return result;
 }
 
 /**
@@ -926,11 +954,11 @@ crank_mat_cplx_float_n_dup (	CrankMatCplxFloatN*	mat	)
  * Resets a matrix and frees its associated memory block.
  */
 void
-crank_mat_cplx_float_n_fini (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_fini (CrankMatCplxFloatN *mat)
 {
-  	g_free (mat->data);
-  	mat->rn = 0;
-  	mat->cn = 0;
+  g_free (mat->data);
+  mat->rn = 0;
+  mat->cn = 0;
 }
 
 /**
@@ -940,10 +968,10 @@ crank_mat_cplx_float_n_fini (	CrankMatCplxFloatN*	mat	)
  * Frees allocated matrix.
  */
 void
-crank_mat_cplx_float_n_free (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_free (CrankMatCplxFloatN *mat)
 {
-	crank_mat_cplx_float_n_fini (mat);
-  	g_free (mat);
+  crank_mat_cplx_float_n_fini (mat);
+  g_free (mat);
 }
 
 
@@ -959,26 +987,27 @@ crank_mat_cplx_float_n_free (	CrankMatCplxFloatN*	mat	)
  * Returns: hash value of a matrix.
  */
 guint
-crank_mat_cplx_float_n_hash (	gconstpointer	a	)
+crank_mat_cplx_float_n_hash (gconstpointer a)
 {
-	const CrankMatCplxFloatN*	mat = (const CrankMatCplxFloatN*)a;
-  	guint	i;
-  	guint	j;
-  	guint	count;
+  const CrankMatCplxFloatN *mat = (const CrankMatCplxFloatN*)a;
+  guint i;
+  guint j;
+  guint count;
 
-  	guint	hash;
+  guint hash;
 
-  	hash =  g_direct_hash (GINT_TO_POINTER (mat->rn)) +
-  			g_direct_hash (GINT_TO_POINTER (mat->cn));
+  hash =  g_direct_hash (GINT_TO_POINTER (mat->rn)) +
+         g_direct_hash (GINT_TO_POINTER (mat->cn));
 
-	count = mat->rn * mat->cn;
+  count = mat->rn * mat->cn;
 
-  	for (i = 0; i < count; i++) {
-		hash += crank_cplx_float_hash (mat->data + i);
-		hash *= 33;
-	}
+  for (i = 0; i < count; i++)
+    {
+      hash += crank_cplx_float_hash (mat->data + i);
+      hash *= 33;
+    }
 
-  	return hash;
+  return hash;
 }
 
 /**
@@ -992,26 +1021,29 @@ crank_mat_cplx_float_n_hash (	gconstpointer	a	)
  * Returns: %TRUE if the two are same.
  */
 gboolean
-crank_mat_cplx_float_n_equal (	gconstpointer	a,
-								gconstpointer	b	)
+crank_mat_cplx_float_n_equal (gconstpointer a,
+                              gconstpointer b)
 {
-	const CrankMatCplxFloatN*	mat_a = (const CrankMatCplxFloatN*)a;
-	const CrankMatCplxFloatN*	mat_b = (const CrankMatCplxFloatN*)b;
+  const CrankMatCplxFloatN *mat_a = (const CrankMatCplxFloatN*)a;
+  const CrankMatCplxFloatN *mat_b = (const CrankMatCplxFloatN*)b;
 
-  	guint	i;
-  	guint	j;
-  	guint	count;
+  guint i;
+  guint j;
+  guint count;
 
-  	if (	(mat_a->rn != mat_b->rn) ||
-	   		(mat_a->cn != mat_b->cn))	return FALSE;
+  if (    (mat_a->rn != mat_b->rn) ||
+          (mat_a->cn != mat_b->cn))
+    return FALSE;
 
-	count = mat_a->rn * mat_a->cn;
-	
-	for (i = 0; i < count; i++) {
-		if (! crank_cplx_float_equal (mat_a->data + i, mat_b->data + i)) return FALSE;
-	}
+  count = mat_a->rn * mat_a->cn;
 
-  	return TRUE;
+  for (i = 0; i < count; i++)
+    {
+      if (!crank_cplx_float_equal (mat_a->data + i, mat_b->data + i))
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 /**
@@ -1028,9 +1060,16 @@ crank_mat_cplx_float_n_equal (	gconstpointer	a,
  * Returns: string representation of matrix.
  */
 gchar*
-crank_mat_cplx_float_n_to_string (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_to_string (CrankMatCplxFloatN *mat)
 {
-  	return crank_mat_cplx_float_n_to_string_full (mat, "[", ", ", "]", "[", ", ", "]", CRANK_CPLX_FLOAT_DEFFORMAT);
+  return crank_mat_cplx_float_n_to_string_full (mat,
+                                                "[",
+                                                ", ",
+                                                "]",
+                                                "[",
+                                                ", ",
+                                                "]",
+                                                CRANK_CPLX_FLOAT_DEFFORMAT);
 }
 
 /**
@@ -1049,43 +1088,49 @@ crank_mat_cplx_float_n_to_string (	CrankMatCplxFloatN*	mat	)
  * Returns: string representation of matrix.
  */
 gchar*
-crank_mat_cplx_float_n_to_string_full (	CrankMatCplxFloatN*	mat,
-								 	const gchar*	mat_left,
-								 	const gchar*	mat_in,
-								 	const gchar*	mat_right,
-								 	const gchar*	row_left,
-								 	const gchar*	row_in,
-								 	const gchar*	row_right,
-								 	const gchar*	format	)
+crank_mat_cplx_float_n_to_string_full (CrankMatCplxFloatN *mat,
+                                       const gchar        *mat_left,
+                                       const gchar        *mat_in,
+                                       const gchar        *mat_right,
+                                       const gchar        *row_left,
+                                       const gchar        *row_in,
+                                       const gchar        *row_right,
+                                       const gchar        *format)
 {
-  	GString*	builder;
-	gchar*		str;
+  GString *builder;
+  gchar *str;
 
-  	guint		i;
-  	guint		j;
+  guint i;
+  guint j;
 
-  	builder = g_string_new (mat_left);
+  builder = g_string_new (mat_left);
 
-  	for (i = 0; i < mat->rn; i++) {
-	  	if (0 < i) g_string_append (builder, mat_in);
+  for (i = 0; i < mat->rn; i++)
+    {
+      if (0 < i)
+        g_string_append (builder, mat_in);
 
-	  	g_string_append (builder, row_left);
-	  	for (j = 0; j < mat->cn; j++) {
-	  		if (0 < j) g_string_append (builder, row_in);
-	  		g_string_append (builder,
-	  				crank_cplx_float_to_string_full (mat->data + (i * mat->cn) + j, format)	);
+      g_string_append (builder, row_left);
+      for (j = 0; j < mat->cn; j++)
+        {
+          if (0 < j)
+            g_string_append (builder, row_in);
+          g_string_append (builder,
+                           crank_cplx_float_to_string_full (mat->data +
+                                                            (i * mat->cn) + j,
+                                                            format) );
 
-		}
-		g_string_append (builder, row_right);
+        }
+      g_string_append (builder, row_right);
 
-	  }
+    }
 
-  	g_string_append (builder, mat_right);
+  g_string_append (builder, mat_right);
 
-	str = builder->str;
+  str = builder->str;
 
-	g_string_free (builder, FALSE);
-	return str;
+  g_string_free (builder, FALSE);
+  return str;
 }
 
 /**
@@ -1097,9 +1142,9 @@ crank_mat_cplx_float_n_to_string_full (	CrankMatCplxFloatN*	mat,
  * Returns: Row count of matrix.
  */
 guint
-crank_mat_cplx_float_n_get_row_size (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_get_row_size (CrankMatCplxFloatN *mat)
 {
-	return mat->rn;
+  return mat->rn;
 }
 
 /**
@@ -1111,9 +1156,9 @@ crank_mat_cplx_float_n_get_row_size (	CrankMatCplxFloatN*	mat	)
  * Returns: Column count of matrix.
  */
 guint
-crank_mat_cplx_float_n_get_col_size (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_get_col_size (CrankMatCplxFloatN *mat)
 {
-	return mat->cn;
+  return mat->cn;
 }
 
 /**
@@ -1126,12 +1171,12 @@ crank_mat_cplx_float_n_get_col_size (	CrankMatCplxFloatN*	mat	)
  * Gets element at given indices.
  */
 void
-crank_mat_cplx_float_n_get (	CrankMatCplxFloatN*	mat,
-							  	const guint			i,
-							  	const guint			j,
-							  	CrankCplxFloat*		value	)
+crank_mat_cplx_float_n_get (CrankMatCplxFloatN *mat,
+                            const guint         i,
+                            const guint         j,
+                            CrankCplxFloat     *value)
 {
-	crank_cplx_float_copy (mat->data + (i*mat->cn) + j, value);
+  crank_cplx_float_copy (mat->data + (i * mat->cn) + j, value);
 }
 
 /**
@@ -1144,12 +1189,12 @@ crank_mat_cplx_float_n_get (	CrankMatCplxFloatN*	mat,
  * Sets element at given indices.
  */
 void
-crank_mat_cplx_float_n_set (	CrankMatCplxFloatN*	mat,
-							  	const guint			i,
-							  	const guint			j,
-							  	CrankCplxFloat*		value	)
+crank_mat_cplx_float_n_set (CrankMatCplxFloatN *mat,
+                            const guint         i,
+                            const guint         j,
+                            CrankCplxFloat     *value)
 {
-	crank_cplx_float_copy (value, mat->data + (mat->cn * i) + j);
+  crank_cplx_float_copy (value, mat->data + (mat->cn * i) + j);
 }
 
 /**
@@ -1163,11 +1208,11 @@ crank_mat_cplx_float_n_set (	CrankMatCplxFloatN*	mat,
  * Returns: (transfer none): A element at position.
  */
 CrankCplxFloat*
-crank_mat_cplx_float_n_peek (	CrankMatCplxFloatN*	mat,
-							  	const guint			i,
-							  	const guint			j	)
+crank_mat_cplx_float_n_peek (CrankMatCplxFloatN *mat,
+                             const guint         i,
+                             const guint         j)
 {
-	return (mat->data + (i*mat->cn) + j);
+  return (mat->data + (i * mat->cn) + j);
 }
 
 /**
@@ -1179,11 +1224,11 @@ crank_mat_cplx_float_n_peek (	CrankMatCplxFloatN*	mat,
  * Gets a row vector at given index.
  */
 void
-crank_mat_cplx_float_n_get_row (	CrankMatCplxFloatN*	mat,
-							  		const guint			index,
-							  		CrankVecCplxFloatN*	row	)
+crank_mat_cplx_float_n_get_row (CrankMatCplxFloatN *mat,
+                                const guint         index,
+                                CrankVecCplxFloatN *row)
 {
-  	crank_vec_cplx_float_n_init_arr (row, mat->cn, mat->data + mat->cn * index);
+  crank_vec_cplx_float_n_init_arr (row, mat->cn, mat->data + mat->cn * index);
 }
 
 /**
@@ -1195,20 +1240,20 @@ crank_mat_cplx_float_n_get_row (	CrankMatCplxFloatN*	mat,
  * Sets a row vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_row (	CrankMatCplxFloatN*	mat,
-								  	const guint			index,
-								  	CrankVecCplxFloatN*	row	)
+crank_mat_cplx_float_n_set_row (CrankMatCplxFloatN *mat,
+                                const guint         index,
+                                CrankVecCplxFloatN *row)
 {
-	guint i;
-	
-  	g_return_if_fail (row->n <= mat->cn);
-  	
-  	memcpy (mat->data + mat->cn * index,
-  			row->data,
-  			row->n * sizeof (CrankCplxFloat));
-  			
-  	for (i = row->n; i < mat->cn; i++)
-  	  crank_cplx_float_init (mat->data + mat->cn * index + i, 0.0f, 0.0f);
+  guint i;
+
+  g_return_if_fail (row->n <= mat->cn);
+
+  memcpy (mat->data + mat->cn * index,
+          row->data,
+          row->n * sizeof (CrankCplxFloat));
+
+  for (i = row->n; i < mat->cn; i++)
+    crank_cplx_float_init (mat->data + mat->cn * index + i, 0.0f, 0.0f);
 }
 
 /**
@@ -1220,19 +1265,19 @@ crank_mat_cplx_float_n_set_row (	CrankMatCplxFloatN*	mat,
  * Sets real part of a vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_row_real(CrankMatCplxFloatN* mat,
-									const guint			index,
-									CrankVecFloatN* 	row_real)
+crank_mat_cplx_float_n_set_row_real (CrankMatCplxFloatN *mat,
+                                     const guint         index,
+                                     CrankVecFloatN     *row_real)
 {
-	guint i;
-	
-	g_return_if_fail (row_real->n <= mat->cn);
-	
-	for (i = 0; i < row_real->n; i++)
-	  mat->data[mat->cn * index + i].real = row_real->data[i];
-	for (     ; i < mat->cn; i++)
-	  mat->data[mat->cn * index + i].real = 0.0f;
-	
+  guint i;
+
+  g_return_if_fail (row_real->n <= mat->cn);
+
+  for (i = 0; i < row_real->n; i++)
+    mat->data[mat->cn * index + i].real = row_real->data[i];
+  for (; i < mat->cn; i++)
+    mat->data[mat->cn * index + i].real = 0.0f;
+
 }
 
 /**
@@ -1244,18 +1289,18 @@ crank_mat_cplx_float_n_set_row_real(CrankMatCplxFloatN* mat,
  * Sets imaginary part of a vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_row_imag(CrankMatCplxFloatN* mat,
-									const guint			index,
-									CrankVecFloatN* 	row_imag)
+crank_mat_cplx_float_n_set_row_imag (CrankMatCplxFloatN *mat,
+                                     const guint         index,
+                                     CrankVecFloatN     *row_imag)
 {
   guint i;
-  
-	g_return_if_fail (row_imag->n <= mat->cn);
-	
-	for (i = 0; i < row_imag->n; i++)
-	  mat->data[mat->cn * index + i].imag = row_imag->data[i];
-	for (     ; i < mat->cn; i++)
-	  mat->data[mat->cn * index + i].imag = 0.0f;
+
+  g_return_if_fail (row_imag->n <= mat->cn);
+
+  for (i = 0; i < row_imag->n; i++)
+    mat->data[mat->cn * index + i].imag = row_imag->data[i];
+  for (; i < mat->cn; i++)
+    mat->data[mat->cn * index + i].imag = 0.0f;
 }
 
 
@@ -1268,19 +1313,19 @@ crank_mat_cplx_float_n_set_row_imag(CrankMatCplxFloatN* mat,
  * Gets a column vector at given index.
  */
 void
-crank_mat_cplx_float_n_get_col (	CrankMatCplxFloatN*	mat,
-						  			const guint			index,
-						  			CrankVecCplxFloatN*	col	)
+crank_mat_cplx_float_n_get_col (CrankMatCplxFloatN *mat,
+                                const guint         index,
+                                CrankVecCplxFloatN *col)
 {
-  	guint	i;
-  	CrankCplxFloat*	data;
+  guint i;
+  CrankCplxFloat *data;
 
-  	data = g_new (CrankCplxFloat, mat->rn);
-  	for (i = 0; i < mat->rn; i++)
-  		crank_cplx_float_copy (	mat->data + (mat->cn * i) + index,
-  								data + i);
+  data = g_new (CrankCplxFloat, mat->rn);
+  for (i = 0; i < mat->rn; i++)
+    crank_cplx_float_copy (mat->data + (mat->cn * i) + index,
+                           data + i);
 
-  	crank_vec_cplx_float_n_init_arr_take (col, mat->rn, data);
+  crank_vec_cplx_float_n_init_arr_take (col, mat->rn, data);
 }
 
 /**
@@ -1292,19 +1337,19 @@ crank_mat_cplx_float_n_get_col (	CrankMatCplxFloatN*	mat,
  * Sets a column vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_col (	CrankMatCplxFloatN*	mat,
-								  	const guint			index,
-								  	CrankVecCplxFloatN*	col	)
+crank_mat_cplx_float_n_set_col (CrankMatCplxFloatN *mat,
+                                const guint         index,
+                                CrankVecCplxFloatN *col)
 {
-  	guint i;
+  guint i;
 
-  	g_return_if_fail (col->n <= mat->rn);
-  	for (i = 0; i < col->n; i++)
-  		crank_cplx_float_copy (	col->data + i,
-  								mat->data + (mat->cn * i) + index);
-    for (     ; i < mat->rn; i++)
-        crank_cplx_float_init ( mat->data + (mat->cn * i) + index,
-                                0.0f, 0.0f );
+  g_return_if_fail (col->n <= mat->rn);
+  for (i = 0; i < col->n; i++)
+    crank_cplx_float_copy (col->data + i,
+                           mat->data + (mat->cn * i) + index);
+  for (; i < mat->rn; i++)
+    crank_cplx_float_init (mat->data + (mat->cn * i) + index,
+                           0.0f, 0.0f);
 }
 
 /**
@@ -1316,19 +1361,19 @@ crank_mat_cplx_float_n_set_col (	CrankMatCplxFloatN*	mat,
  * Sets real part of a vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_col_real(CrankMatCplxFloatN* mat,
-									const guint			index,
-									CrankVecFloatN* 	col_real)
+crank_mat_cplx_float_n_set_col_real (CrankMatCplxFloatN *mat,
+                                     const guint         index,
+                                     CrankVecFloatN     *col_real)
 {
-	guint i;
-	
-	g_return_if_fail (col_real->n <= mat->rn);
-	
-	for (i = 0; i < col_real->n; i++)
-	  mat->data[mat->cn * i + index].real = col_real->data[i];
-	for (     ; i < mat->rn; i++)
-	  mat->data[mat->cn * i + index].real = 0.0f;
-	
+  guint i;
+
+  g_return_if_fail (col_real->n <= mat->rn);
+
+  for (i = 0; i < col_real->n; i++)
+    mat->data[mat->cn * i + index].real = col_real->data[i];
+  for (; i < mat->rn; i++)
+    mat->data[mat->cn * i + index].real = 0.0f;
+
 }
 
 /**
@@ -1340,18 +1385,18 @@ crank_mat_cplx_float_n_set_col_real(CrankMatCplxFloatN* mat,
  * Sets imaginary part of a vector at given index.
  */
 void
-crank_mat_cplx_float_n_set_col_imag(CrankMatCplxFloatN* mat,
-									const guint			index,
-									CrankVecFloatN* 	col_imag)
+crank_mat_cplx_float_n_set_col_imag (CrankMatCplxFloatN *mat,
+                                     const guint         index,
+                                     CrankVecFloatN     *col_imag)
 {
   guint i;
-  
-	g_return_if_fail (col_imag->n <= mat->rn);
-	
-	for (i = 0; i < col_imag->n; i++)
-	  mat->data[mat->cn * i + index].imag = col_imag->data[i];
-	for (     ; i < mat->rn; i++)
-	  mat->data[mat->cn * i + index].imag = 0.0f;
+
+  g_return_if_fail (col_imag->n <= mat->rn);
+
+  for (i = 0; i < col_imag->n; i++)
+    mat->data[mat->cn * i + index].imag = col_imag->data[i];
+  for (; i < mat->rn; i++)
+    mat->data[mat->cn * i + index].imag = 0.0f;
 }
 
 /**
@@ -1364,12 +1409,12 @@ crank_mat_cplx_float_n_set_col_imag(CrankMatCplxFloatN* mat,
  * Slices rows of a matrix.
  */
 void
-crank_mat_cplx_float_n_slice_row (	CrankMatCplxFloatN*	mat,
-									const guint		start,
-									const guint		end,
-									CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_slice_row (CrankMatCplxFloatN *mat,
+                                  const guint         start,
+                                  const guint         end,
+                                  CrankMatCplxFloatN *r)
 {
-	crank_mat_cplx_float_n_slice (mat, start, 0, end, mat->cn, r);
+  crank_mat_cplx_float_n_slice (mat, start, 0, end, mat->cn, r);
 }
 
 
@@ -1383,12 +1428,12 @@ crank_mat_cplx_float_n_slice_row (	CrankMatCplxFloatN*	mat,
  * Slices columns of a matrix.
  */
 void
-crank_mat_cplx_float_n_slice_col (	CrankMatCplxFloatN*	mat,
-									const guint		start,
-									const guint		end,
-									CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_slice_col (CrankMatCplxFloatN *mat,
+                                  const guint         start,
+                                  const guint         end,
+                                  CrankMatCplxFloatN *r)
 {
-	crank_mat_cplx_float_n_slice (mat, 0, start, mat->rn, end, r);
+  crank_mat_cplx_float_n_slice (mat, 0, start, mat->rn, end, r);
 }
 
 
@@ -1404,38 +1449,40 @@ crank_mat_cplx_float_n_slice_col (	CrankMatCplxFloatN*	mat,
  * Slices a matrix.
  */
 void
-crank_mat_cplx_float_n_slice (	CrankMatCplxFloatN*	mat,
-								const guint		row_start,
-								const guint		col_start,
-								const guint		row_end,
-								const guint		col_end,
-								CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_slice (CrankMatCplxFloatN *mat,
+                              const guint         row_start,
+                              const guint         col_start,
+                              const guint         row_end,
+                              const guint         col_end,
+                              CrankMatCplxFloatN *r)
 {
-	guint	i;
-	guint	j;
-	
-	guint			rn;
-	guint			cn;
-	CrankCplxFloat*	data;
-	
-	g_return_if_fail (row_start <= row_end);
-	g_return_if_fail (col_start <= col_end);
-	
-	rn = row_end - row_start;
-	cn = col_end - col_start;
-	data = g_new (CrankCplxFloat, rn * cn);
-	
-	for (i = 0; i < rn; i++) {
-		for (j = 0; j < cn; j++) {
-			crank_mat_cplx_float_n_get (
-					mat,
-					i + row_start,
-					j + col_start,
-					data + (i * cn) + j );
-		}
-	}
-	
-	crank_mat_cplx_float_n_init_arr_take (r, rn, cn, data);
+  guint i;
+  guint j;
+
+  guint rn;
+  guint cn;
+  CrankCplxFloat *data;
+
+  g_return_if_fail (row_start <= row_end);
+  g_return_if_fail (col_start <= col_end);
+
+  rn = row_end - row_start;
+  cn = col_end - col_start;
+  data = g_new (CrankCplxFloat, rn * cn);
+
+  for (i = 0; i < rn; i++)
+    {
+      for (j = 0; j < cn; j++)
+        {
+          crank_mat_cplx_float_n_get (
+            mat,
+            i + row_start,
+            j + col_start,
+            data + (i * cn) + j);
+        }
+    }
+
+  crank_mat_cplx_float_n_init_arr_take (r, rn, cn, data);
 }
 
 /**
@@ -1447,9 +1494,9 @@ crank_mat_cplx_float_n_slice (	CrankMatCplxFloatN*	mat,
  * Returns: Whether matrix is empty.
  */
 gboolean
-crank_mat_cplx_float_n_is_empty (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_empty (CrankMatCplxFloatN *mat)
 {
-	return (mat->rn == 0) || (mat->cn == 0);
+  return (mat->rn == 0) || (mat->cn == 0);
 }
 
 /**
@@ -1461,9 +1508,9 @@ crank_mat_cplx_float_n_is_empty (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is square matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_square (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_square (CrankMatCplxFloatN *mat)
 {
-	return (mat->rn == mat->cn);
+  return (mat->rn == mat->cn);
 }
 
 /**
@@ -1475,28 +1522,34 @@ crank_mat_cplx_float_n_is_square (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is identity matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_identity (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_identity (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		for (i = 0; i < mat->rn; i++) {
-			for (j = 0; j < mat->rn; j++) {
-				CrankCplxFloat*	element = mat->data + (i + mat->cn) + j;
-				if (i == j) {
-					if (! ((element->real == 1) && (element->imag == 0)))
-						return FALSE;
-				}
-				else {
-					if (! ((element->real == 0) && (element->imag == 0)))
-						return FALSE;
-				}
-			}
-		}
-		return TRUE;
-	}
-	else return FALSE;
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
+
+      for (i = 0; i < mat->rn; i++)
+        {
+          for (j = 0; j < mat->rn; j++)
+            {
+              CrankCplxFloat *element = mat->data + (i + mat->cn) + j;
+              if (i == j)
+                {
+                  if (!((element->real == 1) && (element->imag == 0)))
+                    return FALSE;
+                }
+              else
+                {
+                  if (!((element->real == 0) && (element->imag == 0)))
+                    return FALSE;
+                }
+            }
+        }
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /**
@@ -1508,17 +1561,18 @@ crank_mat_cplx_float_n_is_identity (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is zero matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_zero (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_zero (CrankMatCplxFloatN *mat)
 {
-	guint	i;
-	guint	count = mat->rn * mat->cn;
-	
-	for (i = 0; i < count; i++) {
-		CrankCplxFloat*	element = mat->data + i;
-		if (! ((element->real == 0) && (element->imag == 0)))
-			return FALSE;
-	}
-	return TRUE;
+  guint i;
+  guint count = mat->rn * mat->cn;
+
+  for (i = 0; i < count; i++)
+    {
+      CrankCplxFloat *element = mat->data + i;
+      if (!((element->real == 0) && (element->imag == 0)))
+        return FALSE;
+    }
+  return TRUE;
 }
 
 
@@ -1531,21 +1585,25 @@ crank_mat_cplx_float_n_is_zero (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is upper triangular matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_upper_tri(CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_upper_tri (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		for (i = 0; i < mat->rn; i++ ) {
-			for (j = 0; j < i; j++) {
-				CrankCplxFloat*	e = mat->data + (i + mat->cn) + j;
-				if (! ((e->real == 0) && (e->imag == 0))) return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
+
+      for (i = 0; i < mat->rn; i++)
+        {
+          for (j = 0; j < i; j++)
+            {
+              CrankCplxFloat *e = mat->data + (i + mat->cn) + j;
+              if (!((e->real == 0) && (e->imag == 0)))
+                return FALSE;
+            }
+        }
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1557,21 +1615,25 @@ crank_mat_cplx_float_n_is_upper_tri(CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is lower triangular matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_lower_tri(CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_lower_tri (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		for (i = 0; i < mat->rn; i++ ) {
-			for (j = i+1; j < mat->cn; j++) {
-				CrankCplxFloat*	e = mat->data + (i + mat->cn) + j;
-				if (! ((e->real == 0) && (e->imag == 0))) return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
+
+      for (i = 0; i < mat->rn; i++)
+        {
+          for (j = i + 1; j < mat->cn; j++)
+            {
+              CrankCplxFloat *e = mat->data + (i + mat->cn) + j;
+              if (!((e->real == 0) && (e->imag == 0)))
+                return FALSE;
+            }
+        }
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1583,25 +1645,30 @@ crank_mat_cplx_float_n_is_lower_tri(CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is diagonal matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_diag (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_diag (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		for (i = 0; i < mat->rn; i++ ) {
-			for (j = 0; j < mat->cn; j++) {
-				CrankCplxFloat*	e;
-				
-				if (i != j) {
-					e = mat->data + (i + mat->cn) + j;
-					if (! ((e->real == 0) && (e->imag == 0))) return FALSE;
-				}
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
+
+      for (i = 0; i < mat->rn; i++)
+        {
+          for (j = 0; j < mat->cn; j++)
+            {
+              CrankCplxFloat *e;
+
+              if (i != j)
+                {
+                  e = mat->data + (i + mat->cn) + j;
+                  if (!((e->real == 0) && (e->imag == 0)))
+                    return FALSE;
+                }
+            }
+        }
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1613,22 +1680,25 @@ crank_mat_cplx_float_n_is_diag (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is symmetric matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_symmetric (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_symmetric (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		for (i = 1; i < mat->rn; i++) {
-			for (j = 0; j < i; j++) {
-				if (! crank_cplx_float_equal (	mat->data + (i * mat->cn) + j,
-												mat->data + (j * mat->cn) + i ))
-					return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
+
+      for (i = 1; i < mat->rn; i++)
+        {
+          for (j = 0; j < i; j++)
+            {
+              if (!crank_cplx_float_equal (mat->data + (i * mat->cn) + j,
+                                           mat->data + (j * mat->cn) + i))
+                return FALSE;
+            }
+        }
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1641,33 +1711,37 @@ crank_mat_cplx_float_n_is_symmetric (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is symmetric matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_hermitian (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_hermitian (CrankMatCplxFloatN *mat)
 {
-	if (crank_mat_cplx_float_n_is_square (mat)) {
-		guint	i;
-		guint	j;
-		
-		// Check diagonal parts are real, as they should be same as their conjugate.
-		for (i = 0; i < mat->rn; i++) {
-			if (! crank_cplx_float_is_pure_real (mat->data + (i * mat->cn) + i))
-				return FALSE;
-		}
-		
-		for (i = 1; i < mat->rn; i++) {
-			for (j = 0; j < i; j++) {
-				CrankCplxFloat	conj_ij;
-				
-				crank_cplx_float_conjugate (	mat->data + (i * mat->cn) + j,
-												&conj_ij						);
+  if (crank_mat_cplx_float_n_is_square (mat))
+    {
+      guint i;
+      guint j;
 
-				if (! crank_cplx_float_equal (	&conj_ij,
-												mat->data + (j * mat->cn) + i ))
-					return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	return FALSE;
+      // Check diagonal parts are real, as they should be same as their conjugate.
+      for (i = 0; i < mat->rn; i++)
+        {
+          if (!crank_cplx_float_is_pure_real (mat->data + (i * mat->cn) + i))
+            return FALSE;
+        }
+
+      for (i = 1; i < mat->rn; i++)
+        {
+          for (j = 0; j < i; j++)
+            {
+              CrankCplxFloat conj_ij;
+
+              crank_cplx_float_conjugate (mat->data + (i * mat->cn) + j,
+                                          &conj_ij);
+
+              if (!crank_cplx_float_equal (&conj_ij,
+                                           mat->data + (j * mat->cn) + i))
+                return FALSE;
+            }
+        }
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1682,17 +1756,19 @@ crank_mat_cplx_float_n_is_hermitian (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix has NaN.
  */
 gboolean
-crank_mat_cplx_float_n_has_nan (	CrankMatCplxFloatN* mat )
+crank_mat_cplx_float_n_has_nan (CrankMatCplxFloatN *mat)
 {
-	guint i;
-	guint n;
-	
-	n = mat->rn * mat->cn;
-	
-	for (i = 0; i < n; i++) {
-		if (crank_cplx_float_has_nan(mat->data + i)) return TRUE;
-	}
-	return FALSE;
+  guint i;
+  guint n;
+
+  n = mat->rn * mat->cn;
+
+  for (i = 0; i < n; i++)
+    {
+      if (crank_cplx_float_has_nan(mat->data + i))
+        return TRUE;
+    }
+  return FALSE;
 }
 
 
@@ -1708,17 +1784,19 @@ crank_mat_cplx_float_n_has_nan (	CrankMatCplxFloatN* mat )
  * Returns: Whether matrix has infinity.
  */
 gboolean
-crank_mat_cplx_float_n_has_inf (	CrankMatCplxFloatN* mat )
+crank_mat_cplx_float_n_has_inf (CrankMatCplxFloatN *mat)
 {
-	guint i;
-	guint n;
-	
-	n = mat->rn * mat->cn;
-	
-	for (i = 0; i < n; i++) {
-		if (crank_cplx_float_has_inf(mat->data + i)) return TRUE;
-	}
-	return FALSE;
+  guint i;
+  guint n;
+
+  n = mat->rn * mat->cn;
+
+  for (i = 0; i < n; i++)
+    {
+      if (crank_cplx_float_has_inf(mat->data + i))
+        return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -1730,17 +1808,19 @@ crank_mat_cplx_float_n_has_inf (	CrankMatCplxFloatN* mat )
  * Returns: Whether matrix is real matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_pure_real (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_pure_real (CrankMatCplxFloatN *mat)
 {
-	guint i;
-	guint n;
-	
-	n = mat->rn * mat->cn;
-	
-	for (i = 0; i < n; i++) {
-		if (! crank_cplx_float_is_pure_real(mat->data + i)) return FALSE;
-	}
-	return TRUE;
+  guint i;
+  guint n;
+
+  n = mat->rn * mat->cn;
+
+  for (i = 0; i < n; i++)
+    {
+      if (!crank_cplx_float_is_pure_real(mat->data + i))
+        return FALSE;
+    }
+  return TRUE;
 }
 
 /**
@@ -1752,17 +1832,19 @@ crank_mat_cplx_float_n_is_pure_real (	CrankMatCplxFloatN*	mat	)
  * Returns: Whether matrix is pure imaginary matrix.
  */
 gboolean
-crank_mat_cplx_float_n_is_pure_imag (	CrankMatCplxFloatN*	mat	)
+crank_mat_cplx_float_n_is_pure_imag (CrankMatCplxFloatN *mat)
 {
-	guint i;
-	guint n;
-	
-	n = mat->rn * mat->cn;
-	
-	for (i = 0; i < n; i++) {
-		if (! crank_cplx_float_is_pure_imag(mat->data + i)) return FALSE;
-	}
-	return TRUE;
+  guint i;
+  guint n;
+
+  n = mat->rn * mat->cn;
+
+  for (i = 0; i < n; i++)
+    {
+      if (!crank_cplx_float_is_pure_imag(mat->data + i))
+        return FALSE;
+    }
+  return TRUE;
 }
 
 
@@ -1778,23 +1860,23 @@ crank_mat_cplx_float_n_is_pure_imag (	CrankMatCplxFloatN*	mat	)
  * Returns: A trace of matrix.
  */
 void
-crank_mat_cplx_float_n_get_tr (	CrankMatCplxFloatN*	mat,
-								CrankCplxFloat*		tr	)
+crank_mat_cplx_float_n_get_tr (CrankMatCplxFloatN *mat,
+                               CrankCplxFloat     *tr)
 {
-	guint	i;
+  guint i;
 
-	crank_cplx_float_init (tr, 0, 0);
+  crank_cplx_float_init (tr, 0, 0);
 
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "tr", mat);	
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "tr", mat);
 
-	for (i = 0; i < mat->rn; i++)
-		crank_cplx_float_add_self (tr, mat->data + (mat->cn * i) + i);
+  for (i = 0; i < mat->rn; i++)
+    crank_cplx_float_add_self (tr, mat->data + (mat->cn * i) + i);
 }
 
 /**
  * crank_mat_cplx_float_n_get_det:
  * @mat: A Matrix
- * @det: (out): Determinant of 
+ * @det: (out): Determinant of
  *
  * Gets a determinent of matrix.
  *
@@ -1803,34 +1885,37 @@ crank_mat_cplx_float_n_get_tr (	CrankMatCplxFloatN*	mat,
  * Returns: A determinent of matrix.
  */
 void
-crank_mat_cplx_float_n_get_det (	CrankMatCplxFloatN* mat,
-									CrankCplxFloat*		det	)
+crank_mat_cplx_float_n_get_det (CrankMatCplxFloatN *mat,
+                                CrankCplxFloat     *det)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
-	
-	guint i;
-	
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "det", mat);
-	
-	
-	if (crank_lu_mat_cplx_float_n (mat, &l, &u)) {
-	
-		crank_cplx_float_init (det, 1.0f, 0.0f);
-		
-		for (i = 0; i < mat->rn; i++) {
-		
-			CrankCplxFloat	lcomp;
-			crank_mat_cplx_float_n_get (&l, i, i, &lcomp);
-			crank_cplx_float_mul_self (det, &lcomp);
-		}
-			
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-	}
-	else {
-		crank_cplx_float_init (det, 0.0f, 0.0f);
-	}
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
+
+  guint i;
+
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "det", mat);
+
+
+  if (crank_lu_mat_cplx_float_n (mat, &l, &u))
+    {
+
+      crank_cplx_float_init (det, 1.0f, 0.0f);
+
+      for (i = 0; i < mat->rn; i++)
+        {
+
+          CrankCplxFloat lcomp;
+          crank_mat_cplx_float_n_get (&l, i, i, &lcomp);
+          crank_cplx_float_mul_self (det, &lcomp);
+        }
+
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+    }
+  else
+    {
+      crank_cplx_float_init (det, 0.0f, 0.0f);
+    }
 }
 
 /**
@@ -1841,19 +1926,19 @@ crank_mat_cplx_float_n_get_det (	CrankMatCplxFloatN* mat,
  * Gets diagonal components as vector.
  */
 void
-crank_mat_cplx_float_n_get_diag (CrankMatCplxFloatN*	mat,
-								CrankVecCplxFloatN*		r	)
+crank_mat_cplx_float_n_get_diag (CrankMatCplxFloatN *mat,
+                                 CrankVecCplxFloatN *r)
 {
-	guint	i;
+  guint i;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "diag", mat);
-	
-	CrankCplxFloat*	data = g_new (CrankCplxFloat, mat->rn);
-	
-	for (i = 0; i < mat->rn; i++)
-		crank_mat_cplx_float_n_get (mat, i, i, data + i);
-	
-	crank_vec_cplx_float_n_init_arr_take (r, mat->rn, data);
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "diag", mat);
+
+  CrankCplxFloat *data = g_new (CrankCplxFloat, mat->rn);
+
+  for (i = 0; i < mat->rn; i++)
+    crank_mat_cplx_float_n_get (mat, i, i, data + i);
+
+  crank_vec_cplx_float_n_init_arr_take (r, mat->rn, data);
 }
 
 /**
@@ -1864,12 +1949,12 @@ crank_mat_cplx_float_n_get_diag (CrankMatCplxFloatN*	mat,
  * Gets a cofactor matrix.
  */
 void
-crank_mat_cplx_float_n_get_cof (	CrankMatCplxFloatN*	mat,
-								  	CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_get_cof (CrankMatCplxFloatN *mat,
+                                CrankMatCplxFloatN *r)
 {
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "cof", mat);	
-	crank_mat_cplx_float_n_get_adj (mat, r);
-  	crank_mat_cplx_float_n_transpose_self (r);
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "cof", mat);
+  crank_mat_cplx_float_n_get_adj (mat, r);
+  crank_mat_cplx_float_n_transpose_self (r);
 }
 
 /**
@@ -1880,40 +1965,42 @@ crank_mat_cplx_float_n_get_cof (	CrankMatCplxFloatN*	mat,
  * Gets a adjugate matrix.
  */
 void
-crank_mat_cplx_float_n_get_adj (	CrankMatCplxFloatN*	mat,
-								  	CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_get_adj (CrankMatCplxFloatN *mat,
+                                CrankMatCplxFloatN *r)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
-	CrankMatCplxFloatN	linv;
-	CrankMatCplxFloatN	uinv;
-	CrankCplxFloat		det;
-	
-	guint i;
-	
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "adj", mat);
-	
-	if (crank_lu_mat_cplx_float_n (mat, &l, &u)) {
-	
-		crank_cplx_float_init (&det, 1.0f, 0.0f);
-		
-		for (i = 0; i < mat->rn; i++) {
-			CrankCplxFloat	lcomp;
-			crank_mat_cplx_float_n_get (&l, i, i, &lcomp);
-			crank_cplx_float_mul_self (&det, &lcomp);
-		}
-		
-		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
-		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
-		
-		crank_mat_cplx_float_n_mul (&uinv, &linv, r);
-		crank_mat_cplx_float_n_muls_self (r, &det);
-		
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-		crank_mat_cplx_float_n_fini (&linv);
-		crank_mat_cplx_float_n_fini (&uinv);
-	}
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
+  CrankMatCplxFloatN linv;
+  CrankMatCplxFloatN uinv;
+  CrankCplxFloat det;
+
+  guint i;
+
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "adj", mat);
+
+  if (crank_lu_mat_cplx_float_n (mat, &l, &u))
+    {
+
+      crank_cplx_float_init (&det, 1.0f, 0.0f);
+
+      for (i = 0; i < mat->rn; i++)
+        {
+          CrankCplxFloat lcomp;
+          crank_mat_cplx_float_n_get (&l, i, i, &lcomp);
+          crank_cplx_float_mul_self (&det, &lcomp);
+        }
+
+      crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+      crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+
+      crank_mat_cplx_float_n_mul (&uinv, &linv, r);
+      crank_mat_cplx_float_n_muls_self (r, &det);
+
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+      crank_mat_cplx_float_n_fini (&linv);
+      crank_mat_cplx_float_n_fini (&uinv);
+    }
 }
 
 /**
@@ -1924,23 +2011,24 @@ crank_mat_cplx_float_n_get_adj (	CrankMatCplxFloatN*	mat,
  * Gets real part of elements as matrix.
  */
 void
-crank_mat_cplx_float_n_get_real (	CrankMatCplxFloatN*	mat,
-									CrankMatFloatN*		r	)
+crank_mat_cplx_float_n_get_real (CrankMatCplxFloatN *mat,
+                                 CrankMatFloatN     *r)
 {
-	guint	i;
-	guint	count;
-	
-	gfloat*	data =	g_new (gfloat, mat->rn * mat->cn);
-	
-	count = mat->rn * mat->cn;
-	
-	for (i = 0; i < count; i++) {
-		data[i] = mat->data[i].real;
-	}
-	
-	r->data = data;
-	r->rn = mat->rn;
-	r->cn = mat->cn;
+  guint i;
+  guint count;
+
+  gfloat *data =  g_new (gfloat, mat->rn * mat->cn);
+
+  count = mat->rn * mat->cn;
+
+  for (i = 0; i < count; i++)
+    {
+      data[i] = mat->data[i].real;
+    }
+
+  r->data = data;
+  r->rn = mat->rn;
+  r->cn = mat->cn;
 }
 
 
@@ -1952,23 +2040,24 @@ crank_mat_cplx_float_n_get_real (	CrankMatCplxFloatN*	mat,
  * Gets imaginary part of elements as matrix.
  */
 void
-crank_mat_cplx_float_n_get_imag (	CrankMatCplxFloatN*	mat,
-									CrankMatFloatN*		r	)
+crank_mat_cplx_float_n_get_imag (CrankMatCplxFloatN *mat,
+                                 CrankMatFloatN     *r)
 {
-	guint	i;
-	guint	count;
-	
-	gfloat*	data =	g_new (gfloat, mat->rn * mat->cn);
-	
-	count = mat->rn * mat->cn;
-	
-	for (i = 0; i < count; i++) {
-		data[i] = mat->data[i].imag;
-	}
-	
-	r->data = data;
-	r->rn = mat->rn;
-	r->cn = mat->cn;
+  guint i;
+  guint count;
+
+  gfloat *data =  g_new (gfloat, mat->rn * mat->cn);
+
+  count = mat->rn * mat->cn;
+
+  for (i = 0; i < count; i++)
+    {
+      data[i] = mat->data[i].imag;
+    }
+
+  r->data = data;
+  r->rn = mat->rn;
+  r->cn = mat->cn;
 }
 
 /**
@@ -1979,17 +2068,18 @@ crank_mat_cplx_float_n_get_imag (	CrankMatCplxFloatN*	mat,
  * Gets real part of elements as matrix.
  */
 void
-crank_mat_cplx_float_n_set_real (	CrankMatCplxFloatN*	mat,
-									CrankMatFloatN*		r	)
+crank_mat_cplx_float_n_set_real (CrankMatCplxFloatN *mat,
+                                 CrankMatFloatN     *r)
 {
-	guint	i;
-	guint	count;
-	
-	count = mat->rn * mat->cn;
-	
-	for (i = 0; i < count; i++) {
-		mat->data[i].real = r->data[i];
-	}
+  guint i;
+  guint count;
+
+  count = mat->rn * mat->cn;
+
+  for (i = 0; i < count; i++)
+    {
+      mat->data[i].real = r->data[i];
+    }
 }
 
 
@@ -2001,17 +2091,18 @@ crank_mat_cplx_float_n_set_real (	CrankMatCplxFloatN*	mat,
  * Gets imaginary part of elements as matrix.
  */
 void
-crank_mat_cplx_float_n_set_imag (	CrankMatCplxFloatN*	mat,
-									CrankMatFloatN*		r	)
+crank_mat_cplx_float_n_set_imag (CrankMatCplxFloatN *mat,
+                                 CrankMatFloatN     *r)
 {
-	guint	i;
-	guint	count;
-	
-	count = mat->rn * mat->cn;
-	
-	for (i = 0; i < count; i++) {
-		mat->data[i].imag = r->data[i];
-	}
+  guint i;
+  guint count;
+
+  count = mat->rn * mat->cn;
+
+  for (i = 0; i < count; i++)
+    {
+      mat->data[i].imag = r->data[i];
+    }
 }
 
 /**
@@ -2022,22 +2113,24 @@ crank_mat_cplx_float_n_set_imag (	CrankMatCplxFloatN*	mat,
  * Negates a matrix.
  */
 void
-crank_mat_cplx_float_n_neg (	CrankMatCplxFloatN*	a,
-					  			CrankMatCplxFloatN* r	)
+crank_mat_cplx_float_n_neg (CrankMatCplxFloatN *a,
+                            CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-	for (i = 0; i < a->rn; i ++) {
-		for (j = 0; j < a->cn; j ++) {
-			guint	ei = (a->cn * i) + j;
-			crank_cplx_float_neg (a->data + ei, r->data + ei);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (a->cn * i) + j;
+          crank_cplx_float_neg (a->data + ei, r->data + ei);
+        }
+    }
 }
 
 /**
@@ -2047,14 +2140,15 @@ crank_mat_cplx_float_n_neg (	CrankMatCplxFloatN*	a,
  * Negates a matrix.
  */
 void
-crank_mat_cplx_float_n_neg_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_neg_self (CrankMatCplxFloatN *a)
 {
-  	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-	for (i = 0; i < n; i ++)	crank_cplx_float_neg_self (a->data + i);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_neg_self (a->data + i);
 }
 
 /**
@@ -2065,21 +2159,21 @@ crank_mat_cplx_float_n_neg_self (	CrankMatCplxFloatN*	a	)
  * Gets a transpose of matrix.
  */
 void
-crank_mat_cplx_float_n_transpose (	CrankMatCplxFloatN*	a,
-									CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_transpose (CrankMatCplxFloatN *a,
+                                  CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data = g_new (CrankCplxFloat, a->rn * a->cn);
+  CrankCplxFloat *data = g_new (CrankCplxFloat, a->rn * a->cn);
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_copy (
-	  				a->data + (i * a->cn) + j,
-	  				data + (j * a->rn) + i		);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_copy (
+        a->data + (i * a->cn) + j,
+        data + (j * a->rn) + i);
 
-  	crank_mat_cplx_float_n_init_arr_take (r, a->cn, a->rn, data);
+  crank_mat_cplx_float_n_init_arr_take (r, a->cn, a->rn, data);
 }
 
 /**
@@ -2089,21 +2183,21 @@ crank_mat_cplx_float_n_transpose (	CrankMatCplxFloatN*	a,
  * Gets a transpose of matrix.
  */
 void
-crank_mat_cplx_float_n_transpose_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_transpose_self (CrankMatCplxFloatN *a)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data = g_new (CrankCplxFloat, a->rn * a->cn);
+  CrankCplxFloat *data = g_new (CrankCplxFloat, a->rn * a->cn);
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_copy (
-	  				a->data + (i * a->cn) + j,
-	  				data + (j * a->rn) + i		);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_copy (
+        a->data + (i * a->cn) + j,
+        data + (j * a->rn) + i);
 
-	g_free (a->data);
-  	crank_mat_cplx_float_n_init_arr_take (a, a->cn, a->rn, data);
+  g_free (a->data);
+  crank_mat_cplx_float_n_init_arr_take (a, a->cn, a->rn, data);
 }
 
 /**
@@ -2115,34 +2209,36 @@ crank_mat_cplx_float_n_transpose_self (	CrankMatCplxFloatN*	a	)
  * If the matrix is singular, then NaN matrix may be returned.
  */
 void
-crank_mat_cplx_float_n_inverse (	CrankMatCplxFloatN*	a,
-						  			CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_inverse (CrankMatCplxFloatN *a,
+                                CrankMatCplxFloatN *r)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
-	
-	guint i;
-	
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "inverse", a);
-	
-	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
-	
-		CrankMatCplxFloatN	linv;
-		CrankMatCplxFloatN	uinv;
-		
-		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
-		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
-		
-		crank_mat_cplx_float_n_mul (&uinv, &linv, r);
-			
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-		crank_mat_cplx_float_n_fini (&linv);
-		crank_mat_cplx_float_n_fini (&uinv);
-	}
-	else {
-		crank_mat_cplx_float_n_init_fill_uc (r, a->rn, a->rn, NAN, NAN);
-	}
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
+
+  guint i;
+
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "inverse", a);
+
+  if (crank_lu_mat_cplx_float_n (a, &l, &u))
+    {
+
+      CrankMatCplxFloatN linv;
+      CrankMatCplxFloatN uinv;
+
+      crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+      crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+
+      crank_mat_cplx_float_n_mul (&uinv, &linv, r);
+
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+      crank_mat_cplx_float_n_fini (&linv);
+      crank_mat_cplx_float_n_fini (&uinv);
+    }
+  else
+    {
+      crank_mat_cplx_float_n_init_fill_uc (r, a->rn, a->rn, NAN, NAN);
+    }
 }
 
 /**
@@ -2153,38 +2249,41 @@ crank_mat_cplx_float_n_inverse (	CrankMatCplxFloatN*	a,
  * If the matrix is singular, then NaN matrix may be returned.
  */
 void
-crank_mat_cplx_float_n_inverse_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_inverse_self (CrankMatCplxFloatN *a)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
 
-	guint i;
+  guint i;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "inverse", a);
+  CRANK_MAT_WARN_IF_NON_SQUARE("MatCplxFloatN", "inverse", a);
 
-	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
+  if (crank_lu_mat_cplx_float_n (a, &l, &u))
+    {
 
-		CrankMatCplxFloatN	linv;
-		CrankMatCplxFloatN	uinv;
+      CrankMatCplxFloatN linv;
+      CrankMatCplxFloatN uinv;
 
-		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
-		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+      crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+      crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
 
-		crank_mat_cplx_float_n_fini (a);
-		crank_mat_cplx_float_n_mul (&uinv, &linv, a);
+      crank_mat_cplx_float_n_fini (a);
+      crank_mat_cplx_float_n_mul (&uinv, &linv, a);
 
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-		crank_mat_cplx_float_n_fini (&linv);
-		crank_mat_cplx_float_n_fini (&uinv);
-	}
-	else {
-		guint	n = a->rn * a->rn;
-		
-		for (i = 0; i < n; i++) {
-			crank_cplx_float_init (a->data + i, NAN, NAN);
-		}
-	}
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+      crank_mat_cplx_float_n_fini (&linv);
+      crank_mat_cplx_float_n_fini (&uinv);
+    }
+  else
+    {
+      guint n = a->rn * a->rn;
+
+      for (i = 0; i < n; i++)
+        {
+          crank_cplx_float_init (a->data + i, NAN, NAN);
+        }
+    }
 }
 
 /**
@@ -2200,36 +2299,38 @@ crank_mat_cplx_float_n_inverse_self (	CrankMatCplxFloatN*	a	)
  * Returns: Whether the matrix is non-singular and inverse is done.
  */
 gboolean
-crank_mat_cplx_float_n_try_inverse (	CrankMatCplxFloatN*	a,
-						  				CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_try_inverse (CrankMatCplxFloatN *a,
+                                    CrankMatCplxFloatN *r)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
-	
-	guint i;
-	
-	CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse", a, FALSE);
-	
-	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
-	
-		CrankMatCplxFloatN	linv;
-		CrankMatCplxFloatN	uinv;
-		
-		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
-		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
-		
-		crank_mat_cplx_float_n_mul (&uinv, &linv, r);
-			
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-		crank_mat_cplx_float_n_fini (&linv);
-		crank_mat_cplx_float_n_fini (&uinv);
-		
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
+
+  guint i;
+
+  CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse", a, FALSE);
+
+  if (crank_lu_mat_cplx_float_n (a, &l, &u))
+    {
+
+      CrankMatCplxFloatN linv;
+      CrankMatCplxFloatN uinv;
+
+      crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+      crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+
+      crank_mat_cplx_float_n_mul (&uinv, &linv, r);
+
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+      crank_mat_cplx_float_n_fini (&linv);
+      crank_mat_cplx_float_n_fini (&uinv);
+
+      return TRUE;
+    }
+  else
+    {
+      return FALSE;
+    }
 }
 
 /**
@@ -2244,36 +2345,39 @@ crank_mat_cplx_float_n_try_inverse (	CrankMatCplxFloatN*	a,
  * Returns: Whether the matrix is non-singular and inverse is done.
  */
 gboolean
-crank_mat_cplx_float_n_try_inverse_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_try_inverse_self (CrankMatCplxFloatN *a)
 {
-	CrankMatCplxFloatN	l;
-	CrankMatCplxFloatN	u;
+  CrankMatCplxFloatN l;
+  CrankMatCplxFloatN u;
 
-	guint i;
+  guint i;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse-self", a, FALSE);
+  CRANK_MAT_WARN_IF_NON_SQUARE_RET("MatCplxFloatN", "try-inverse-self", a,
+                                   FALSE);
 
-	if (crank_lu_mat_cplx_float_n (a, &l, &u)) {
+  if (crank_lu_mat_cplx_float_n (a, &l, &u))
+    {
 
-		CrankMatCplxFloatN	linv;
-		CrankMatCplxFloatN	uinv;
+      CrankMatCplxFloatN linv;
+      CrankMatCplxFloatN uinv;
 
-		crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
-		crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
+      crank_mat_cplx_float_n_lower_tri_inverse (&l, &linv);
+      crank_mat_cplx_float_n_upper_tri_inverse (&u, &uinv);
 
-		crank_mat_cplx_float_n_fini (a);
-		crank_mat_cplx_float_n_mul (&uinv, &linv, a);
+      crank_mat_cplx_float_n_fini (a);
+      crank_mat_cplx_float_n_mul (&uinv, &linv, a);
 
-		crank_mat_cplx_float_n_fini (&l);
-		crank_mat_cplx_float_n_fini (&u);
-		crank_mat_cplx_float_n_fini (&linv);
-		crank_mat_cplx_float_n_fini (&uinv);
-		
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+      crank_mat_cplx_float_n_fini (&l);
+      crank_mat_cplx_float_n_fini (&u);
+      crank_mat_cplx_float_n_fini (&linv);
+      crank_mat_cplx_float_n_fini (&uinv);
+
+      return TRUE;
+    }
+  else
+    {
+      return FALSE;
+    }
 }
 
 /**
@@ -2284,21 +2388,22 @@ crank_mat_cplx_float_n_try_inverse_self (	CrankMatCplxFloatN*	a	)
  * Gets an conjugation of matrix.
  */
 void
-crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,
-									CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_conjugate (CrankMatCplxFloatN *a,
+                                  CrankMatCplxFloatN *r)
 {
-	guint	i;
-	guint	count;
+  guint i;
+  guint count;
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-	count = a->rn * a->cn;
+  count = a->rn * a->cn;
 
-	for (i = 0; i < count; i++) {
-		crank_cplx_float_conjugate (a->data + i, r->data + i);
-	}
+  for (i = 0; i < count; i++)
+    {
+      crank_cplx_float_conjugate (a->data + i, r->data + i);
+    }
 }
 
 /**
@@ -2308,14 +2413,15 @@ crank_mat_cplx_float_n_conjugate (	CrankMatCplxFloatN*	a,
  * Gets an conjugation of matrix.
  */
 void
-crank_mat_cplx_float_n_conjugate_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_conjugate_self (CrankMatCplxFloatN *a)
 {
-	guint	i;
-	guint	n;
+  guint i;
+  guint n;
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-	for (i = 0; i < n; i++)		crank_cplx_float_conjugate_self (a->data + i);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_conjugate_self (a->data + i);
 }
 
 /**
@@ -2326,21 +2432,21 @@ crank_mat_cplx_float_n_conjugate_self (	CrankMatCplxFloatN*	a	)
  * Gets a conjugate transpose of a matrix.
  */
 void
-crank_mat_cplx_float_n_conj_tpose (	CrankMatCplxFloatN*	a,
-									CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_conj_tpose (CrankMatCplxFloatN *a,
+                                   CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data = g_new (CrankCplxFloat, a->rn * a->cn);
+  CrankCplxFloat *data = g_new (CrankCplxFloat, a->rn * a->cn);
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_conjugate (
-	  				a->data + (i * a->cn) + j,
-	  				data + (j * a->rn) + i		);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_conjugate (
+        a->data + (i * a->cn) + j,
+        data + (j * a->rn) + i);
 
-  	crank_mat_cplx_float_n_init_arr_take (r, a->cn, a->rn, data);
+  crank_mat_cplx_float_n_init_arr_take (r, a->cn, a->rn, data);
 }
 
 /**
@@ -2350,21 +2456,21 @@ crank_mat_cplx_float_n_conj_tpose (	CrankMatCplxFloatN*	a,
  * Gets a conjugate transpose of a matrix.
  */
 void
-crank_mat_cplx_float_n_conj_tpose_self (	CrankMatCplxFloatN*	a	)
+crank_mat_cplx_float_n_conj_tpose_self (CrankMatCplxFloatN *a)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data = g_new (CrankCplxFloat, a->rn * a->cn);
+  CrankCplxFloat *data = g_new (CrankCplxFloat, a->rn * a->cn);
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_conjugate (
-	  				a->data + (i * a->cn) + j,
-	  				data + (j * a->rn) + i		);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_conjugate (
+        a->data + (i * a->cn) + j,
+        data + (j * a->rn) + i);
 
-	g_free (a->data);
-  	crank_mat_cplx_float_n_init_arr_take (a, a->cn, a->rn, data);
+  g_free (a->data);
+  crank_mat_cplx_float_n_init_arr_take (a, a->cn, a->rn, data);
 }
 
 /**
@@ -2376,24 +2482,24 @@ crank_mat_cplx_float_n_conj_tpose_self (	CrankMatCplxFloatN*	a	)
  * Multiplies a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_mulrs (	CrankMatCplxFloatN*	a,
-					 	  		const gfloat		b,
-					 	  		CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_mulrs (CrankMatCplxFloatN *a,
+                              const gfloat        b,
+                              CrankMatCplxFloatN *r)
 {
-	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	g_return_if_fail (a != r);
+  g_return_if_fail (a != r);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_mulr (	a->data + (i * a->cn) + j,
-	  								b,
-	  								r->data + (i * a->cn) + j	);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_mulr (a->data + (i * a->cn) + j,
+                             b,
+                             r->data + (i * a->cn) + j);
 }
 
 /**
@@ -2404,16 +2510,16 @@ crank_mat_cplx_float_n_mulrs (	CrankMatCplxFloatN*	a,
  * Multiplies a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_mulrs_self (	CrankMatCplxFloatN*	a,
-					 	  			const gfloat		b	)
+crank_mat_cplx_float_n_mulrs_self (CrankMatCplxFloatN *a,
+                                   const gfloat        b)
 {
-	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-  	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-  		crank_cplx_float_mulr_self (	a->data + i,	b	);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_mulr_self (a->data + i,    b);
 }
 
 /**
@@ -2425,24 +2531,24 @@ crank_mat_cplx_float_n_mulrs_self (	CrankMatCplxFloatN*	a,
  * Multiplies a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_muls (	CrankMatCplxFloatN*	a,
-					 	  		CrankCplxFloat*		b,
-					 	  		CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_muls (CrankMatCplxFloatN *a,
+                             CrankCplxFloat     *b,
+                             CrankMatCplxFloatN *r)
 {
-	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	g_return_if_fail (a != r);
+  g_return_if_fail (a != r);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++)
-	  	for (j = 0; j < a->cn; j++)
-	  		crank_cplx_float_mul (	a->data + (i * a->cn) + j,
-	  								b,
-	  								r->data + (i * a->cn) + j	);
+  for (i = 0; i < a->rn; i++)
+    for (j = 0; j < a->cn; j++)
+      crank_cplx_float_mul (a->data + (i * a->cn) + j,
+                            b,
+                            r->data + (i * a->cn) + j);
 }
 
 /**
@@ -2453,16 +2559,16 @@ crank_mat_cplx_float_n_muls (	CrankMatCplxFloatN*	a,
  * Multiplies a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_muls_self (	CrankMatCplxFloatN*	a,
-					 	  			CrankCplxFloat*		b	)
+crank_mat_cplx_float_n_muls_self (CrankMatCplxFloatN *a,
+                                  CrankCplxFloat     *b)
 {
-	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-  		crank_cplx_float_mul_self (	a->data + i,	b	);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_mul_self (a->data + i,    b);
 }
 
 /**
@@ -2474,30 +2580,32 @@ crank_mat_cplx_float_n_muls_self (	CrankMatCplxFloatN*	a,
  * Multiplies a matrix by vector.
  */
 void
-crank_mat_cplx_float_n_mulrv (	CrankMatCplxFloatN*	a,
-						   		CrankVecFloatN*		b,
-						   		CrankVecCplxFloatN*	r	)
+crank_mat_cplx_float_n_mulrv (CrankMatCplxFloatN *a,
+                              CrankVecFloatN     *b,
+                              CrankVecCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
-  	g_return_if_fail (a->cn == b->n);
+  g_return_if_fail (a->cn == b->n);
 
-  	data = g_new0 (CrankCplxFloat, a->rn);
+  data = g_new0 (CrankCplxFloat, a->rn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < a->cn; j++) {
-			CrankCplxFloat	mul;
-			crank_cplx_float_mulr (	a->data + (a->cn * i) + j,
-									b->data [j],
-									&mul	);
-			crank_cplx_float_add_self (	data + i,	&mul	);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          CrankCplxFloat mul;
+          crank_cplx_float_mulr (a->data + (a->cn * i) + j,
+                                 b->data [j],
+                                 &mul);
+          crank_cplx_float_add_self (data + i,   &mul);
+        }
+    }
 
-  	crank_vec_cplx_float_n_init_arr_take (r, a->rn, data);
+  crank_vec_cplx_float_n_init_arr_take (r, a->rn, data);
 }
 
 /**
@@ -2509,32 +2617,34 @@ crank_mat_cplx_float_n_mulrv (	CrankMatCplxFloatN*	a,
  * Multiplies a matrix by vector.
  */
 void
-crank_mat_cplx_float_n_mulv (	CrankMatCplxFloatN*	a,
-						   		CrankVecCplxFloatN*	b,
-						   		CrankVecCplxFloatN*	r	)
+crank_mat_cplx_float_n_mulv (CrankMatCplxFloatN *a,
+                             CrankVecCplxFloatN *b,
+                             CrankVecCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
-  	g_return_if_fail (b != r);
+  g_return_if_fail (b != r);
 
-  	g_return_if_fail (a->cn == b->n);
+  g_return_if_fail (a->cn == b->n);
 
-  	data = g_new0 (CrankCplxFloat, a->rn);
+  data = g_new0 (CrankCplxFloat, a->rn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < a->cn; j++) {
-			CrankCplxFloat	mul;
-			crank_cplx_float_mul (	a->data + (a->cn * i) + j,
-									b->data + j,
-									&mul	);
-			crank_cplx_float_add_self (	data + i,	&mul	);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          CrankCplxFloat mul;
+          crank_cplx_float_mul (a->data + (a->cn * i) + j,
+                                b->data + j,
+                                &mul);
+          crank_cplx_float_add_self (data + i,   &mul);
+        }
+    }
 
-  	crank_vec_cplx_float_n_init_arr_take (r, a->rn, data);
+  crank_vec_cplx_float_n_init_arr_take (r, a->rn, data);
 }
 
 /**
@@ -2546,36 +2656,39 @@ crank_mat_cplx_float_n_mulv (	CrankMatCplxFloatN*	a,
  * Multiplies two matrices.
  */
 void
-crank_mat_cplx_float_n_mulr (	CrankMatCplxFloatN*	a,
-					  			CrankMatFloatN* b,
-					  			CrankMatCplxFloatN* r	)
+crank_mat_cplx_float_n_mulr (CrankMatCplxFloatN *a,
+                             CrankMatFloatN     *b,
+                             CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
-  	guint	k;
+  guint i;
+  guint j;
+  guint k;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
-	g_return_if_fail (a != r);
-  	g_return_if_fail (a->cn == b->rn);
+  g_return_if_fail (a != r);
+  g_return_if_fail (a->cn == b->rn);
 
-  	data = g_new0 (CrankCplxFloat, a->rn * b->cn);
+  data = g_new0 (CrankCplxFloat, a->rn * b->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				CrankCplxFloat	mul;
-				crank_cplx_float_mulr (	a->data + (a->cn * i) + k,
-										b->data [(b->cn * k) + j],
-										&mul	);
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < b->cn; j++)
+        {
+          for (k = 0; k < a->cn; k++)
+            {
+              CrankCplxFloat mul;
+              crank_cplx_float_mulr (a->data + (a->cn * i) + k,
+                                     b->data [(b->cn * k) + j],
+                                     &mul);
 
-				crank_cplx_float_add_self (	data + (b->cn * i) + j,
-											&mul	);
-			}
-		}
-	}
+              crank_cplx_float_add_self (data + (b->cn * i) + j,
+                                         &mul);
+            }
+        }
+    }
 
-  	crank_mat_cplx_float_n_init_arr_take (r, a->rn, b->cn, data);
+  crank_mat_cplx_float_n_init_arr_take (r, a->rn, b->cn, data);
 }
 
 /**
@@ -2586,36 +2699,39 @@ crank_mat_cplx_float_n_mulr (	CrankMatCplxFloatN*	a,
  * Multiplies two matrices.
  */
 void
-crank_mat_cplx_float_n_mulr_self (	CrankMatCplxFloatN*	a,
-						  			CrankMatFloatN* 	b	)
+crank_mat_cplx_float_n_mulr_self (CrankMatCplxFloatN *a,
+                                  CrankMatFloatN     *b)
 {
-  	guint	i;
-  	guint	j;
-  	guint	k;
+  guint i;
+  guint j;
+  guint k;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
 
-  	g_return_if_fail (a->cn == b->rn);
+  g_return_if_fail (a->cn == b->rn);
 
-  	data = g_new0 (CrankCplxFloat, a->rn * b->cn);
+  data = g_new0 (CrankCplxFloat, a->rn * b->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				CrankCplxFloat	mul;
-				crank_cplx_float_mulr (	a->data + (a->cn * i) + k,
-										b->data [(b->cn * k) + j],
-										&mul	);
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < b->cn; j++)
+        {
+          for (k = 0; k < a->cn; k++)
+            {
+              CrankCplxFloat mul;
+              crank_cplx_float_mulr (a->data + (a->cn * i) + k,
+                                     b->data [(b->cn * k) + j],
+                                     &mul);
 
-				crank_cplx_float_add_self (	data + (b->cn * i) + j,
-											&mul	);
-			}
-		}
-	}
+              crank_cplx_float_add_self (data + (b->cn * i) + j,
+                                         &mul);
+            }
+        }
+    }
 
-	g_free (a->data);
-  	crank_mat_cplx_float_n_init_arr_take (a, a->rn, b->cn, data);
+  g_free (a->data);
+  crank_mat_cplx_float_n_init_arr_take (a, a->rn, b->cn, data);
 }
 
 /**
@@ -2627,37 +2743,40 @@ crank_mat_cplx_float_n_mulr_self (	CrankMatCplxFloatN*	a,
  * Multiplies two matrices.
  */
 void
-crank_mat_cplx_float_n_mul (	CrankMatCplxFloatN*	a,
-					  			CrankMatCplxFloatN* b,
-					  			CrankMatCplxFloatN* r	)
+crank_mat_cplx_float_n_mul (CrankMatCplxFloatN *a,
+                            CrankMatCplxFloatN *b,
+                            CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
-  	guint	k;
+  guint i;
+  guint j;
+  guint k;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-  	g_return_if_fail (a->cn == b->rn);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  g_return_if_fail (a->cn == b->rn);
 
-  	data = g_new0 (CrankCplxFloat, a->rn * b->cn);
+  data = g_new0 (CrankCplxFloat, a->rn * b->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				CrankCplxFloat	mul;
-				crank_cplx_float_mul (	a->data + (a->cn * i) + k,
-										b->data + (b->cn * k) + j,
-										&mul	);
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < b->cn; j++)
+        {
+          for (k = 0; k < a->cn; k++)
+            {
+              CrankCplxFloat mul;
+              crank_cplx_float_mul (a->data + (a->cn * i) + k,
+                                    b->data + (b->cn * k) + j,
+                                    &mul);
 
-				crank_cplx_float_add_self (	data + (b->cn * i) + j,
-											&mul	);
-			}
-		}
-	}
+              crank_cplx_float_add_self (data + (b->cn * i) + j,
+                                         &mul);
+            }
+        }
+    }
 
-  	crank_mat_cplx_float_n_init_arr_take (r, a->rn, b->cn, data);
+  crank_mat_cplx_float_n_init_arr_take (r, a->rn, b->cn, data);
 }
 
 /**
@@ -2668,35 +2787,38 @@ crank_mat_cplx_float_n_mul (	CrankMatCplxFloatN*	a,
  * Multiplies two matrices.
  */
 void
-crank_mat_cplx_float_n_mul_self (	CrankMatCplxFloatN*	a,
-					  				CrankMatCplxFloatN* b	)
+crank_mat_cplx_float_n_mul_self (CrankMatCplxFloatN *a,
+                                 CrankMatCplxFloatN *b)
 {
-  	guint	i;
-  	guint	j;
-  	guint	k;
+  guint i;
+  guint j;
+  guint k;
 
-  	CrankCplxFloat*	data;
+  CrankCplxFloat *data;
 
-  	g_return_if_fail (a->cn == b->rn);
+  g_return_if_fail (a->cn == b->rn);
 
-  	data = g_new0 (CrankCplxFloat, a->rn * b->cn);
+  data = g_new0 (CrankCplxFloat, a->rn * b->cn);
 
-  	for (i = 0; i < a->rn; i++) {
-		for (j = 0; j < b->cn; j++) {
-			for (k = 0; k < a->cn; k++) {
-				CrankCplxFloat	mul;
-				crank_cplx_float_mul (	a->data + (a->cn * i) + k,
-										b->data + (b->cn * k) + j,
-										&mul	);
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < b->cn; j++)
+        {
+          for (k = 0; k < a->cn; k++)
+            {
+              CrankCplxFloat mul;
+              crank_cplx_float_mul (a->data + (a->cn * i) + k,
+                                    b->data + (b->cn * k) + j,
+                                    &mul);
 
-				crank_cplx_float_add_self (	data + (b->cn * i) + j,
-											&mul	);
-			}
-		}
-	}
+              crank_cplx_float_add_self (data + (b->cn * i) + j,
+                                         &mul);
+            }
+        }
+    }
 
-	g_free (a->data);
-  	crank_mat_cplx_float_n_init_arr_take (a, a->rn, b->cn, data);
+  g_free (a->data);
+  crank_mat_cplx_float_n_init_arr_take (a, a->rn, b->cn, data);
 }
 
 /**
@@ -2708,12 +2830,12 @@ crank_mat_cplx_float_n_mul_self (	CrankMatCplxFloatN*	a,
  * Divides a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_divrs (	CrankMatCplxFloatN*	a,
-						   		const gfloat		b,
-						   		CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_divrs (CrankMatCplxFloatN *a,
+                              const gfloat        b,
+                              CrankMatCplxFloatN *r)
 {
-  	g_return_if_fail (a != r);
-  	crank_mat_cplx_float_n_mulrs (a, 1 / b, r);
+  g_return_if_fail (a != r);
+  crank_mat_cplx_float_n_mulrs (a, 1 / b, r);
 }
 
 /**
@@ -2724,10 +2846,10 @@ crank_mat_cplx_float_n_divrs (	CrankMatCplxFloatN*	a,
  * Divides a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_divrs_self (	CrankMatCplxFloatN*	a,
-						   			const gfloat		b	)
+crank_mat_cplx_float_n_divrs_self (CrankMatCplxFloatN *a,
+                                   const gfloat        b)
 {
-  	crank_mat_cplx_float_n_mulrs_self (a, 1 / b);
+  crank_mat_cplx_float_n_mulrs_self (a, 1 / b);
 }
 
 /**
@@ -2739,16 +2861,16 @@ crank_mat_cplx_float_n_divrs_self (	CrankMatCplxFloatN*	a,
  * Divides a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_divs (	CrankMatCplxFloatN*	a,
-						   		CrankCplxFloat*		b,
-						   		CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_divs (CrankMatCplxFloatN *a,
+                             CrankCplxFloat     *b,
+                             CrankMatCplxFloatN *r)
 {
-	CrankCplxFloat	binv;
+  CrankCplxFloat binv;
 
-  	g_return_if_fail (a != r);
+  g_return_if_fail (a != r);
 
-	crank_cplx_float_inverse (b, &binv);
-  	crank_mat_cplx_float_n_muls (a, &binv, r);
+  crank_cplx_float_inverse (b, &binv);
+  crank_mat_cplx_float_n_muls (a, &binv, r);
 }
 
 /**
@@ -2759,12 +2881,12 @@ crank_mat_cplx_float_n_divs (	CrankMatCplxFloatN*	a,
  * Divides a matrix by scalar.
  */
 void
-crank_mat_cplx_float_n_divs_self (	CrankMatCplxFloatN*	a,
-						   			CrankCplxFloat*		b	)
+crank_mat_cplx_float_n_divs_self (CrankMatCplxFloatN *a,
+                                  CrankCplxFloat     *b)
 {
-	CrankCplxFloat	binv;
-	crank_cplx_float_inverse (b, &binv);
-  	crank_mat_cplx_float_n_muls_self (a, &binv);
+  CrankCplxFloat binv;
+  crank_cplx_float_inverse (b, &binv);
+  crank_mat_cplx_float_n_muls_self (a, &binv);
 }
 
 
@@ -2780,26 +2902,28 @@ crank_mat_cplx_float_n_divs_self (	CrankMatCplxFloatN*	a,
  * Adds a matrix.
  */
 void
-crank_mat_cplx_float_n_addr (	CrankMatCplxFloatN*	a,
-					  			CrankMatFloatN*	b,
-					  			CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_addr (CrankMatCplxFloatN *a,
+                             CrankMatFloatN     *b,
+                             CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "add-real", a, b);
+  g_return_if_fail (a != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "add-real", a, b);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-			crank_cplx_float_addr (a->data + ei,	b->data[ei],	r->data + ei);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
+          crank_cplx_float_addr (a->data + ei,    b->data[ei],    r->data + ei);
+        }
+    }
 }
 
 /**
@@ -2810,18 +2934,18 @@ crank_mat_cplx_float_n_addr (	CrankMatCplxFloatN*	a,
  * Adds a matrix.
  */
 void
-crank_mat_cplx_float_n_addr_self (	CrankMatCplxFloatN*	a,
-					  				CrankMatFloatN*		b	)
+crank_mat_cplx_float_n_addr_self (CrankMatCplxFloatN *a,
+                                  CrankMatFloatN     *b)
 {
-  	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "addr-self", a, b);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "addr-self", a, b);
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-	for (i = 0; i < n; i++)
-		crank_cplx_float_addr_self (a->data + i, b->data[i]);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_addr_self (a->data + i, b->data[i]);
 }
 
 /**
@@ -2833,27 +2957,29 @@ crank_mat_cplx_float_n_addr_self (	CrankMatCplxFloatN*	a,
  * Adds a matrix.
  */
 void
-crank_mat_cplx_float_n_add (	CrankMatCplxFloatN*	a,
-					  			CrankMatCplxFloatN*	b,
-					  			CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_add (CrankMatCplxFloatN *a,
+                            CrankMatCplxFloatN *b,
+                            CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "add", a, b);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "add", a, b);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-			crank_cplx_float_add (a->data + ei,	b->data + ei,	r->data + ei);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
+          crank_cplx_float_add (a->data + ei, b->data + ei,   r->data + ei);
+        }
+    }
 }
 
 /**
@@ -2864,18 +2990,18 @@ crank_mat_cplx_float_n_add (	CrankMatCplxFloatN*	a,
  * Adds a matrix.
  */
 void
-crank_mat_cplx_float_n_add_self (	CrankMatCplxFloatN*	a,
-					  				CrankMatCplxFloatN*	b	)
+crank_mat_cplx_float_n_add_self (CrankMatCplxFloatN *a,
+                                 CrankMatCplxFloatN *b)
 {
-  	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "add-self", a, b);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "add-self", a, b);
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-		crank_cplx_float_add_self (a->data + i, b->data + i);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_add_self (a->data + i, b->data + i);
 }
 
 /**
@@ -2887,26 +3013,28 @@ crank_mat_cplx_float_n_add_self (	CrankMatCplxFloatN*	a,
  * Subtracts a matrix.
  */
 void
-crank_mat_cplx_float_n_subr (	CrankMatCplxFloatN*	a,
-							  	CrankMatFloatN*	b,
-							  	CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_subr (CrankMatCplxFloatN *a,
+                             CrankMatFloatN     *b,
+                             CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "sub-real", a, b);
+  g_return_if_fail (a != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "sub-real", a, b);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
-			crank_cplx_float_subr (a->data + ei,	b->data [ei],	r->data + ei);
-		}
-	}
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
+          crank_cplx_float_subr (a->data + ei,    b->data [ei],   r->data + ei);
+        }
+    }
 }
 
 /**
@@ -2917,18 +3045,18 @@ crank_mat_cplx_float_n_subr (	CrankMatCplxFloatN*	a,
  * Subtracts a matrix.
  */
 void
-crank_mat_cplx_float_n_subr_self (	CrankMatCplxFloatN*	a,
-							  		CrankMatFloatN*		b	)
+crank_mat_cplx_float_n_subr_self (CrankMatCplxFloatN *a,
+                                  CrankMatFloatN     *b)
 {
-  	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "subr-self", a, b);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "subr-self", a, b);
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-		crank_cplx_float_subr_self (a->data + i, b->data [i]);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_subr_self (a->data + i, b->data [i]);
 }
 
 /**
@@ -2940,28 +3068,30 @@ crank_mat_cplx_float_n_subr_self (	CrankMatCplxFloatN*	a,
  * Subtracts a matrix.
  */
 void
-crank_mat_cplx_float_n_sub (	CrankMatCplxFloatN*	a,
-							  	CrankMatCplxFloatN*	b,
-							  	CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_sub (CrankMatCplxFloatN *a,
+                            CrankMatCplxFloatN *b,
+                            CrankMatCplxFloatN *r)
 {
-  	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "sub", a, b);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2("MatCplxFloatN", "sub", a, b);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
 
-			crank_cplx_float_sub (a->data + ei,	b->data + ei,	r->data + ei);
-		}
-	}
+          crank_cplx_float_sub (a->data + ei, b->data + ei,   r->data + ei);
+        }
+    }
 }
 
 /**
@@ -2972,18 +3102,18 @@ crank_mat_cplx_float_n_sub (	CrankMatCplxFloatN*	a,
  * Subtracts a matrix.
  */
 void
-crank_mat_cplx_float_n_sub_self (	CrankMatCplxFloatN*	a,
-							  		CrankMatCplxFloatN*	b	)
+crank_mat_cplx_float_n_sub_self (CrankMatCplxFloatN *a,
+                                 CrankMatCplxFloatN *b)
 {
-  	guint	i;
-  	guint	n;
+  guint i;
+  guint n;
 
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "sub-self", a, b);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "sub-self", a, b);
 
-	n = a->rn * a->cn;
+  n = a->rn * a->cn;
 
-  	for (i = 0; i < n; i++)
-		crank_cplx_float_sub_self (a->data + i,	b->data + i);
+  for (i = 0; i < n; i++)
+    crank_cplx_float_sub_self (a->data + i, b->data + i);
 }
 
 
@@ -3002,33 +3132,35 @@ crank_mat_cplx_float_n_sub_self (	CrankMatCplxFloatN*	a,
  * * (a * (1 - c)) + (b * c)
  */
 void
-crank_mat_cplx_float_n_mixs (	CrankMatCplxFloatN* a,
-						  	CrankMatCplxFloatN* b,
-						  	const gfloat	c,
-						  	CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_mixs (CrankMatCplxFloatN *a,
+                             CrankMatCplxFloatN *b,
+                             const gfloat        c,
+                             CrankMatCplxFloatN *r)
 {
-	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "mix-scalar", a, b);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH2 ("MatCplxFloatN", "mix-scalar", a, b);
 
-  	gfloat d = 1 - c;
+  gfloat d = 1 - c;
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
 
-			crank_cplx_float_mix (	a->data + ei,
-									b->data + ei,	c,
-									r->data + ei);
-		}
-	}
+          crank_cplx_float_mix (a->data + ei,
+                                b->data + ei,   c,
+                                r->data + ei);
+        }
+    }
 }
 
 /**
@@ -3044,31 +3176,33 @@ crank_mat_cplx_float_n_mixs (	CrankMatCplxFloatN* a,
  * * r[i, j] = (a[i, j] * (1 - c[i, j]) + (b[i, j] * c[i, j])
  */
 void
-crank_mat_cplx_float_n_mix (	CrankMatCplxFloatN*	a,
-					  			CrankMatCplxFloatN* b,
-					  			CrankMatFloatN*		c,
-					  			CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_mix (CrankMatCplxFloatN *a,
+                            CrankMatCplxFloatN *b,
+                            CrankMatFloatN     *c,
+                            CrankMatCplxFloatN *r)
 {
-	guint	i;
-  	guint	j;
+  guint i;
+  guint j;
 
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	CRANK_MAT_WARN_IF_SIZE_MISMATCH3 ("MatCplxFloatN", "mix-scalar", a, b, c);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  CRANK_MAT_WARN_IF_SIZE_MISMATCH3 ("MatCplxFloatN", "mix-scalar", a, b, c);
 
-	r->data = g_new (CrankCplxFloat, a->rn * a->cn);
-	r->rn = a->rn;
-	r->cn = a->cn;
+  r->data = g_new (CrankCplxFloat, a->rn * a->cn);
+  r->rn = a->rn;
+  r->cn = a->cn;
 
-  	for (i = 0; i < a->rn; i++) {
-	  	for (j = 0; j < a->cn; j++) {
-	  		guint	ei = (i * a->cn) + j;
+  for (i = 0; i < a->rn; i++)
+    {
+      for (j = 0; j < a->cn; j++)
+        {
+          guint ei = (i * a->cn) + j;
 
-			crank_cplx_float_mix (	a->data + ei,
-									b->data + ei, c->data[ei],
-									r->data + ei	);
-		}
-	}
+          crank_cplx_float_mix (a->data + ei,
+                                b->data + ei, c->data[ei],
+                                r->data + ei);
+        }
+    }
 }
 
 
@@ -3083,31 +3217,34 @@ crank_mat_cplx_float_n_mix (	CrankMatCplxFloatN*	a,
  * Shuffles row vectors by given permutation.
  */
 void
-crank_mat_cplx_float_n_shuffle_row (	CrankMatCplxFloatN*		a,
-								CrankPermutation*	p,
-								CrankMatCplxFloatN*		r	)
+crank_mat_cplx_float_n_shuffle_row (CrankMatCplxFloatN *a,
+                                    CrankPermutation   *p,
+                                    CrankMatCplxFloatN *r)
 {
-	CrankCplxFloat*	data;
-	guint	i;
-	guint	j;
-	
-	if (a->rn == p->n) {
-		data = g_new (CrankCplxFloat, a->rn * a->cn);
-	
-		for (i = 0; i < a->rn; i++) {
-			guint ni = crank_permutation_get (p, i);
-			
-			for (j = 0; j < a->cn; j++)
-				crank_mat_cplx_float_n_get (a, ni, j, data + (i * a->cn) + j);
-		}
-		
-		crank_mat_cplx_float_n_init_arr_take (r, a->rn, a->cn, data);
-	}
-	
-	else {
-		g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
-				a->rn, a->cn, p->n);
-	}
+  CrankCplxFloat *data;
+  guint i;
+  guint j;
+
+  if (a->rn == p->n)
+    {
+      data = g_new (CrankCplxFloat, a->rn * a->cn);
+
+      for (i = 0; i < a->rn; i++)
+        {
+          guint ni = crank_permutation_get (p, i);
+
+          for (j = 0; j < a->cn; j++)
+            crank_mat_cplx_float_n_get (a, ni, j, data + (i * a->cn) + j);
+        }
+
+      crank_mat_cplx_float_n_init_arr_take (r, a->rn, a->cn, data);
+    }
+
+  else
+    {
+      g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
+                 a->rn, a->cn, p->n);
+    }
 }
 
 
@@ -3120,30 +3257,36 @@ crank_mat_cplx_float_n_shuffle_row (	CrankMatCplxFloatN*		a,
  * Shuffles row vectors by given permutation.
  */
 void
-crank_mat_cplx_float_n_shuffle_col (	CrankMatCplxFloatN*		a,
-								CrankPermutation*	p,
-								CrankMatCplxFloatN*		r	)
+crank_mat_cplx_float_n_shuffle_col (CrankMatCplxFloatN *a,
+                                    CrankPermutation   *p,
+                                    CrankMatCplxFloatN *r)
 {
-	CrankCplxFloat*	data;
-	guint	i;
-	guint	j;
-	
-	if (a->cn == p->n) {
-		data = g_new (CrankCplxFloat, a->rn * a->cn);
-	
-		for (i = 0; i < a->rn; i++) {
-			for (j = 0; j < a->cn; j++) {
-				crank_mat_cplx_float_n_get (a, i, crank_permutation_get (p, j), data + (i * a->cn) + j);
-			}
-		}
-		
-		crank_mat_cplx_float_n_init_arr_take (r, a->rn, a->cn, data);
-	}
-	
-	else {
-		g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
-				a->rn, a->cn, p->n);
-	}
+  CrankCplxFloat *data;
+  guint i;
+  guint j;
+
+  if (a->cn == p->n)
+    {
+      data = g_new (CrankCplxFloat, a->rn * a->cn);
+
+      for (i = 0; i < a->rn; i++)
+        {
+          for (j = 0; j < a->cn; j++)
+            {
+              crank_mat_cplx_float_n_get (a, i, crank_permutation_get (p,
+                                                                       j), data +
+                                          (i * a->cn) + j);
+            }
+        }
+
+      crank_mat_cplx_float_n_init_arr_take (r, a->rn, a->cn, data);
+    }
+
+  else
+    {
+      g_warning ("MatFloatN: shuffle row: size mismatch: %ux%u, %u",
+                 a->rn, a->cn, p->n);
+    }
 }
 
 
@@ -3159,56 +3302,60 @@ crank_mat_cplx_float_n_shuffle_col (	CrankMatCplxFloatN*		a,
  * This is used to calculating inverse with decompositions.
  */
 void
-crank_mat_cplx_float_n_upper_tri_inverse (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_upper_tri_inverse (CrankMatCplxFloatN *a,
+                                          CrankMatCplxFloatN *r)
 {
-	guint	i;
-	guint	j;
-	guint	k;
-	
-	static CrankCplxFloat	ZERO = {0.0f, 0.0f};
+  guint i;
+  guint j;
+  guint k;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "upper-triangular-inverse", a);
-	
-	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
-	
-	
-	// Initialize diagonal components.
-	for (i = 0; i < a->rn; i++) {
-		CrankCplxFloat	dcomp;
-		crank_mat_cplx_float_n_get (a, i, i, &dcomp);
-		
-		crank_cplx_float_inverse_self (&dcomp);
-		
-		crank_mat_cplx_float_n_set (r, i, i, &dcomp);
-	}
-	
-	for (i = 1; i < a->rn; i++) {
-		for (j = 0; j < a->rn - i; j++) {
-		
-			CrankCplxFloat	sum = {0.0f, 0.0f};
-			CrankCplxFloat	div;
-			
-			for (k = 1; k <= i; k++) {
-				CrankCplxFloat	acomp;
-				CrankCplxFloat	rcomp;
-				CrankCplxFloat	addment;
-				
-				crank_mat_cplx_float_n_get (a, j, j + k, &acomp);
-				crank_mat_cplx_float_n_get (r, j + k, j + i, &rcomp);
-				
-				crank_cplx_float_mul (&acomp, &rcomp, &addment);
-				crank_cplx_float_add_self (&sum, &addment);
-			}
-			
-			crank_mat_cplx_float_n_get (a, j, j, &div);
-			
-			crank_cplx_float_div_self (&sum, &div);
-			crank_cplx_float_neg_self (&sum);
-			
-			crank_mat_cplx_float_n_set (r, j, j + i, &sum);
-		}
-	}
+  static CrankCplxFloat ZERO = {0.0f, 0.0f};
+
+  CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "upper-triangular-inverse", a);
+
+  crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+
+
+  // Initialize diagonal components.
+  for (i = 0; i < a->rn; i++)
+    {
+      CrankCplxFloat dcomp;
+      crank_mat_cplx_float_n_get (a, i, i, &dcomp);
+
+      crank_cplx_float_inverse_self (&dcomp);
+
+      crank_mat_cplx_float_n_set (r, i, i, &dcomp);
+    }
+
+  for (i = 1; i < a->rn; i++)
+    {
+      for (j = 0; j < a->rn - i; j++)
+        {
+
+          CrankCplxFloat sum = {0.0f, 0.0f};
+          CrankCplxFloat div;
+
+          for (k = 1; k <= i; k++)
+            {
+              CrankCplxFloat acomp;
+              CrankCplxFloat rcomp;
+              CrankCplxFloat addment;
+
+              crank_mat_cplx_float_n_get (a, j, j + k, &acomp);
+              crank_mat_cplx_float_n_get (r, j + k, j + i, &rcomp);
+
+              crank_cplx_float_mul (&acomp, &rcomp, &addment);
+              crank_cplx_float_add_self (&sum, &addment);
+            }
+
+          crank_mat_cplx_float_n_get (a, j, j, &div);
+
+          crank_cplx_float_div_self (&sum, &div);
+          crank_cplx_float_neg_self (&sum);
+
+          crank_mat_cplx_float_n_set (r, j, j + i, &sum);
+        }
+    }
 }
 
 
@@ -3222,53 +3369,57 @@ crank_mat_cplx_float_n_upper_tri_inverse (	CrankMatCplxFloatN*	a,
  * This is used to calculating inverse with decompositions.
  */
 void
-crank_mat_cplx_float_n_lower_tri_inverse (	CrankMatCplxFloatN*	a,
-											CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_lower_tri_inverse (CrankMatCplxFloatN *a,
+                                          CrankMatCplxFloatN *r)
 {
-	guint	i;
-	guint	j;
-	guint	k;
-	
-	static CrankCplxFloat ZERO = {0, 0};
+  guint i;
+  guint j;
+  guint k;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "lower-triangular-inverse", a);
-	
-	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
-	
-	
-	// Initialize diagonal components.
-	for (i = 0; i < a->rn; i++) {
-		CrankCplxFloat	dcomp;
-		crank_mat_cplx_float_n_get (a, i, i, &dcomp);
-		
-		crank_cplx_float_inverse_self (&dcomp);
-		
-		crank_mat_cplx_float_n_set (r, i, i, &dcomp);
-	}
-	
-	for (i = 1; i < a->rn; i++) {
-		for (j = 0; j < a->rn - i; j++) {
-			CrankCplxFloat	sum = {0.0f, 0.0f};
-			CrankCplxFloat	div;
-			for (k = 1; k <= i; k++) {
-				CrankCplxFloat	acomp;
-				CrankCplxFloat	rcomp;
-				CrankCplxFloat	addment;
-				
-				crank_mat_cplx_float_n_get (a, j + k, j, &acomp);
-				crank_mat_cplx_float_n_get (r, j + i, j + k, &rcomp);
-				
-				crank_cplx_float_mul (&acomp, &rcomp, &addment);
-				crank_cplx_float_add_self (&sum, &addment);
-			}
-			crank_mat_cplx_float_n_get (a, j, j, &div);
-			
-			crank_cplx_float_div_self (&sum, &div);
-			crank_cplx_float_neg_self (&sum);
-			
-			crank_mat_cplx_float_n_set (r, j + i, j, &sum);
-		}
-	}
+  static CrankCplxFloat ZERO = {0, 0};
+
+  CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "lower-triangular-inverse", a);
+
+  crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+
+
+  // Initialize diagonal components.
+  for (i = 0; i < a->rn; i++)
+    {
+      CrankCplxFloat dcomp;
+      crank_mat_cplx_float_n_get (a, i, i, &dcomp);
+
+      crank_cplx_float_inverse_self (&dcomp);
+
+      crank_mat_cplx_float_n_set (r, i, i, &dcomp);
+    }
+
+  for (i = 1; i < a->rn; i++)
+    {
+      for (j = 0; j < a->rn - i; j++)
+        {
+          CrankCplxFloat sum = {0.0f, 0.0f};
+          CrankCplxFloat div;
+          for (k = 1; k <= i; k++)
+            {
+              CrankCplxFloat acomp;
+              CrankCplxFloat rcomp;
+              CrankCplxFloat addment;
+
+              crank_mat_cplx_float_n_get (a, j + k, j, &acomp);
+              crank_mat_cplx_float_n_get (r, j + i, j + k, &rcomp);
+
+              crank_cplx_float_mul (&acomp, &rcomp, &addment);
+              crank_cplx_float_add_self (&sum, &addment);
+            }
+          crank_mat_cplx_float_n_get (a, j, j, &div);
+
+          crank_cplx_float_div_self (&sum, &div);
+          crank_cplx_float_neg_self (&sum);
+
+          crank_mat_cplx_float_n_set (r, j + i, j, &sum);
+        }
+    }
 }
 
 
@@ -3282,40 +3433,44 @@ crank_mat_cplx_float_n_lower_tri_inverse (	CrankMatCplxFloatN*	a,
  * This is used to calculating inverse with decompositions.
  */
 void
-crank_mat_cplx_float_n_diag_inverse (	CrankMatCplxFloatN*	a,
-										CrankMatCplxFloatN*	r	)
+crank_mat_cplx_float_n_diag_inverse (CrankMatCplxFloatN *a,
+                                     CrankMatCplxFloatN *r)
 {
-	guint	i;
-	
-	static CrankCplxFloat ZERO = {0, 0};
+  guint i;
 
-	CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "diag-inverse", a);
-	
-	crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
-	
-	// Initialize diagonal components.
-	for (i = 0; i < a->rn; i++) {
-		CrankCplxFloat	dcomp;
-		crank_mat_cplx_float_n_get (a, i, i, &dcomp);
-		
-		crank_cplx_float_inverse_self (&dcomp);
-		
-		crank_mat_cplx_float_n_set (r, i, i, &dcomp);
-	}
+  static CrankCplxFloat ZERO = {0, 0};
+
+  CRANK_MAT_WARN_IF_NON_SQUARE ("MatCplxFloatN", "diag-inverse", a);
+
+  crank_mat_cplx_float_n_init_fill (r, a->rn, a->rn, &ZERO);
+
+  // Initialize diagonal components.
+  for (i = 0; i < a->rn; i++)
+    {
+      CrankCplxFloat dcomp;
+      crank_mat_cplx_float_n_get (a, i, i, &dcomp);
+
+      crank_cplx_float_inverse_self (&dcomp);
+
+      crank_mat_cplx_float_n_set (r, i, i, &dcomp);
+    }
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
 
 static void
-crank_mat_cplx_float_n_transform_from_mf (	const GValue*	src,
-											GValue*			dest )
+crank_mat_cplx_float_n_transform_from_mf (const GValue *src,
+                                          GValue       *dest)
 {
-  CrankMatCplxFloatN*	res = g_new (CrankMatCplxFloatN, 1);
+  CrankMatCplxFloatN *res = g_new (CrankMatCplxFloatN, 1);
 }
 
-static void crank_mat_cplx_float_n_transform_to_string (	const GValue*	src,
-															GValue*			dest )
+static void
+crank_mat_cplx_float_n_transform_to_string (const GValue *src,
+                                            GValue       *dest)
 {
   g_value_take_string (dest,
-					   crank_mat_cplx_float_n_to_string ((CrankMatCplxFloatN*) g_value_get_boxed (src) ) );
+                       crank_mat_cplx_float_n_to_string ((CrankMatCplxFloatN*)
+                                                         g_value_get_boxed (
+                                                           src) ) );
 }

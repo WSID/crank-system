@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 #ifndef _CRANKBASE_INSIDE
 #error "crankmatcommon.h cannot be included directly."
 #endif
@@ -48,7 +48,7 @@ typedef struct _CrankMatFloat3 CrankMatFloat3;
 typedef struct _CrankMatFloat4 CrankMatFloat4;
 typedef struct _CrankMatFloatN CrankMatFloatN;
 
-typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
+typedef struct _CrankMatCplxFloatN CrankMatCplxFloatN;
 
 /**
  * SECTION: crankmatcommon
@@ -81,12 +81,12 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Allocates variable size matrix's storage.
  */
-#define CRANK_MAT_ALLOC(m,G,_rn,_cn)										\
-	G_STMT_START {															\
-		(m)->data = g_new (G, _rn * _cn);									\
-		(m)->rn = _rn;														\
-		(m)->cn = _cn;														\
-	} G_STMT_END
+#define CRANK_MAT_ALLOC(m,G,_rn,_cn)                                        \
+  G_STMT_START {                                                          \
+    (m)->data = g_new (G, _rn * _cn);                                   \
+    (m)->rn = _rn;                                                      \
+    (m)->cn = _cn;                                                      \
+  } G_STMT_END
 
 /**
  * CRANK_MAT_ALLOC0:
@@ -97,12 +97,12 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Allocates variable size matrix's storage, with 0-initialized.
  */
-#define CRANK_MAT_ALLOC0(m,G,_rn,_cn)										\
-	G_STMT_START {															\
-		(m)->data = g_new0 (G, _rn * _cn);									\
-		(m)->rn = _rn;														\
-		(m)->cn = _cn;														\
-	} G_STMT_END
+#define CRANK_MAT_ALLOC0(m,G,_rn,_cn)                                       \
+  G_STMT_START {                                                          \
+    (m)->data = g_new0 (G, _rn * _cn);                                  \
+    (m)->rn = _rn;                                                      \
+    (m)->cn = _cn;                                                      \
+  } G_STMT_END
 
 //////// Getter and setter /////////////////////////////////////////////////////
 
@@ -116,7 +116,8 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Returns: an item at (@_ri, @_ci).
  */
-#define CRANK_MAT_GET(m,_ri,_ci)	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)])
+#define CRANK_MAT_GET(m,_ri, \
+                      _ci)    ((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)])
 
 /**
  * CRANK_MAT_SET:
@@ -127,8 +128,8 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Sets an item at (@_ri, @_ci) as @_value.
  */
-#define CRANK_MAT_SET(m,_ri,_ci,_value)	\
-	((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)] = (_value))
+#define CRANK_MAT_SET(m,_ri,_ci,_value) \
+  ((m)->data[CRANK_MAT_FLAT_INDEX(m, _ri, _ci)] = (_value))
 
 /**
  * CRANK_MAT_GETP:
@@ -140,8 +141,8 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Returns: a pointer to an item at (@_ri, @_ci).
  */
-#define CRANK_MAT_GETP(m,_ri,_ci)	\
-	((m)->data + CRANK_MAT_FLAT_INDEX (m, _ri, _ci))
+#define CRANK_MAT_GETP(m,_ri,_ci)   \
+  ((m)->data + CRANK_MAT_FLAT_INDEX (m, _ri, _ci))
 
 /**
  * CRANK_MAT_GET_ROWP:
@@ -152,8 +153,8 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Returns: a pointer to a row at @_ri.
  */
-#define CRANK_MAT_GET_ROWP(m,_ri)	\
-	((m)->data + CRANK_MAT_FLAT_ROW_INDEX (m, _ri))
+#define CRANK_MAT_GET_ROWP(m,_ri)   \
+  ((m)->data + CRANK_MAT_FLAT_ROW_INDEX (m, _ri))
 
 
 
@@ -164,23 +165,24 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  * @m: Variable sized matrix item.
  * @_ri: Row index.
  * @_ci: Column index.
- * 
+ *
  * Gets flatten element index from 2-dimensional indices.
  *
  * Returns: Flatten index.
  */
-#define CRANK_MAT_FLAT_INDEX(m,_ri,_ci)	(CRANK_MAT_FLAT_ROW_INDEX(m,_ri) + (_ci))
+#define CRANK_MAT_FLAT_INDEX(m,_ri, \
+                             _ci) (CRANK_MAT_FLAT_ROW_INDEX(m,_ri) + (_ci))
 
 /**
  * CRANK_MAT_FLAT_ROW_INDEX:
  * @m: Variable sized matrix item.
  * @_ri: Row index.
- * 
+ *
  * Gets flatten element index of first item in given row.
  *
  * Returns: Flatten index of first element in the row.
  */
-#define CRANK_MAT_FLAT_ROW_INDEX(m,_ri)	((m)->cn * (_ri))
+#define CRANK_MAT_FLAT_ROW_INDEX(m,_ri) ((m)->cn * (_ri))
 
 
 //////// Warning macro /////////////////////////////////////////////////////////
@@ -194,14 +196,14 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Warns and return if two matrices has different size.
  */
-#define CRANK_MAT_WARN_IF_SIZE_MISMATCH2(t,op,a,b)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn))) {		\
-			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u",				\
-						t, op, (a)->rn, (a)->cn, (b)->rn, (b)->cn	);		\
-			return; 														\
-		}																	\
-	} G_STMT_END
+#define CRANK_MAT_WARN_IF_SIZE_MISMATCH2(t,op,a,b)                          \
+  G_STMT_START {                                                          \
+    if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn))) {     \
+        g_warning ("%s: %s: size mismatch: %ux%u, %ux%u",               \
+                   t, op, (a)->rn, (a)->cn, (b)->rn, (b)->cn);      \
+        return;                                                         \
+      }                                                                   \
+  } G_STMT_END
 
 
 /**
@@ -214,18 +216,18 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Warns and return if three matrices has different size.
  */
-#define CRANK_MAT_WARN_IF_SIZE_MISMATCH3(t,op,a,b,c)						\
-	G_STMT_START { 															\
-		if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn) &&		\
-						((a)->rn != (c)->rn) && ((a)->cn != (c)->cn) )) {	\
-			g_warning ("%s: %s: size mismatch: %ux%u, %ux%u, %ux%u",		\
-						t, op,												\
-						(a)->rn, (a)->cn,									\
-						(b)->rn, (b)->cn,									\
-						(c)->rn, (c)->cn	);								\
-			return; 														\
-		}																	\
-	} G_STMT_END
+#define CRANK_MAT_WARN_IF_SIZE_MISMATCH3(t,op,a,b,c)                        \
+  G_STMT_START {                                                          \
+    if (G_UNLIKELY(((a)->rn != (b)->rn) && ((a)->cn != (b)->cn) &&      \
+                   ((a)->rn != (c)->rn) && ((a)->cn != (c)->cn) )) {   \
+        g_warning ("%s: %s: size mismatch: %ux%u, %ux%u, %ux%u",        \
+                   t, op,                                              \
+                   (a)->rn, (a)->cn,                                   \
+                   (b)->rn, (b)->cn,                                   \
+                   (c)->rn, (c)->cn);                              \
+        return;                                                         \
+      }                                                                   \
+  } G_STMT_END
 
 
 /**
@@ -236,14 +238,14 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Warns and return if the matrix is not square.
  */
-#define CRANK_MAT_WARN_IF_NON_SQUARE(t,op,a)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
-			g_warning ("%s: %s: non square: %ux%u",				\
-						t, op, (a)->rn, (a)->cn);		\
-			return; 														\
-		}																	\
-	} G_STMT_END
+#define CRANK_MAT_WARN_IF_NON_SQUARE(t,op,a)                            \
+  G_STMT_START {                                                          \
+    if (G_UNLIKELY((a)->rn != (a)->cn)) {       \
+        g_warning ("%s: %s: non square: %ux%u",             \
+                   t, op, (a)->rn, (a)->cn);       \
+        return;                                                         \
+      }                                                                   \
+  } G_STMT_END
 
 /**
  * CRANK_MAT_WARN_IF_NON_SQUARE_RET:
@@ -254,13 +256,13 @@ typedef struct _CrankMatCplxFloatN	CrankMatCplxFloatN;
  *
  * Warns and return if the matrix is not square.
  */
-#define CRANK_MAT_WARN_IF_NON_SQUARE_RET(t,op,a,r)							\
-	G_STMT_START { 															\
-		if (G_UNLIKELY((a)->rn != (a)->cn)) {		\
-			g_warning ("%s: %s: non square: %ux%u",				\
-						t, op, (a)->rn, (a)->cn);		\
-			return (r); 														\
-		}																	\
-	} G_STMT_END
+#define CRANK_MAT_WARN_IF_NON_SQUARE_RET(t,op,a,r)                          \
+  G_STMT_START {                                                          \
+    if (G_UNLIKELY((a)->rn != (a)->cn)) {       \
+        g_warning ("%s: %s: non square: %ux%u",             \
+                   t, op, (a)->rn, (a)->cn);       \
+        return (r);                                                         \
+      }                                                                   \
+  } G_STMT_END
 
 #endif

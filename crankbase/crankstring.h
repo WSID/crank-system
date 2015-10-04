@@ -49,10 +49,10 @@ G_BEGIN_DECLS
  * string.
  */
 typedef enum _CrankReadDecResult {
-	CRANK_READ_DEC_OVERFLOW = 1 << 0,
-	CRANK_READ_DEC_UNDERFLOW = 1 << 1,
-	CRANK_READ_DEC_TRUNC_PRECISE = 1 << 2,
-	CRANK_READ_DEC_SYMBOL = 1 << 3
+  CRANK_READ_DEC_OVERFLOW = 1 << 0,
+    CRANK_READ_DEC_UNDERFLOW = 1 << 1,
+    CRANK_READ_DEC_TRUNC_PRECISE = 1 << 2,
+    CRANK_READ_DEC_SYMBOL = 1 << 3
 } CrankReadDecResult;
 
 /**
@@ -69,86 +69,86 @@ typedef enum _CrankReadDecResult {
  * This flag is used to adjust check operations.
  */
 typedef enum _CrankStrCheckFlags {
-	CRANK_STR_CHECK_MASK_CASE_INSENSITIVE = 3 << 0,
-	CRANK_STR_CHECK_CI_NORMAL =	   1 << 0,
-	CRANK_STR_CHECK_CI_IN_LOWERCASE = 2 << 0,
-	CRANK_STR_CHECK_CI_IN_UPPERCASE = 3 << 2
+  CRANK_STR_CHECK_MASK_CASE_INSENSITIVE = 3 << 0,
+    CRANK_STR_CHECK_CI_NORMAL =    1 << 0,
+    CRANK_STR_CHECK_CI_IN_LOWERCASE = 2 << 0,
+    CRANK_STR_CHECK_CI_IN_UPPERCASE = 3 << 2
 } CrankStrCheckFlags;
 
 //////// Reading functions
 
-gboolean			crank_str_read_space				(	const gchar*		str,
-															guint*				position,
-															guint*				space	);
+gboolean crank_str_read_space                (const gchar *str,
+                                              guint       *position,
+                                              guint       *space);
 
-gboolean			crank_str_read_plusminus			(	const gchar*		str,
-															guint*				position,
-															gboolean*			negate	);
+gboolean crank_str_read_plusminus            (const gchar *str,
+                                              guint       *position,
+                                              gboolean    *negate);
 
-gboolean			crank_str_read_word					(	const gchar*		str,
-															guint*				position,
-															gchar**				word_ptr	);
+gboolean crank_str_read_word                 (const gchar *str,
+                                              guint       *position,
+                                              gchar      **word_ptr);
 
-gboolean			crank_str_read_uint64				(	const gchar*		str,
-															guint*				position,
-															guint64*			uint_ptr,
-															gboolean*			overflowed	);
+gboolean crank_str_read_uint64               (const gchar *str,
+                                              guint       *position,
+                                              guint64     *uint_ptr,
+                                              gboolean    *overflowed);
 
-gboolean			crank_str_read_int64				(	const gchar*		str,
-															guint*				position,
-															gint64*				int_ptr,
-															gint*				overflowed	);
+gboolean crank_str_read_int64                (const gchar *str,
+                                              guint       *position,
+                                              gint64      *int_ptr,
+                                              gint        *overflowed);
 
-gboolean			crank_str_read_double				(	const gchar*		str,
-															guint*				position,
-															gdouble*			value_ptr,
-															CrankReadDecResult*	read_flags	);
-															
+gboolean crank_str_read_double               (const gchar        *str,
+                                              guint              *position,
+                                              gdouble            *value_ptr,
+                                              CrankReadDecResult *read_flags);
+
 
 //////// Scanning Function
 
-gboolean			crank_str_scan_word					(	const gchar*		str,
-															guint*				position,
-															gchar**				word_ptr	);
+gboolean crank_str_scan_word                 (const gchar *str,
+                                              guint       *position,
+                                              gchar      **word_ptr);
 
-gboolean			crank_str_scan_char					(	const gchar*		str,
-															guint*				position,
-															gchar*				char_ptr	);
+gboolean crank_str_scan_char                 (const gchar *str,
+                                              guint       *position,
+                                              gchar       *char_ptr);
 
-gboolean			crank_str_scan_uint64				(	const gchar*		str,
-															guint*				position,
-															guint64*			uint_ptr,
-															gboolean*			overflowed	);
+gboolean crank_str_scan_uint64               (const gchar *str,
+                                              guint       *position,
+                                              guint64     *uint_ptr,
+                                              gboolean    *overflowed);
 
-gboolean			crank_str_scan_int64				(	const gchar*		str,
-															guint*				position,
-															gint64*				int_ptr,
-															gint*				overflowed	);
+gboolean crank_str_scan_int64                (const gchar *str,
+                                              guint       *position,
+                                              gint64      *int_ptr,
+                                              gint        *overflowed);
 
-gboolean			crank_str_scan_double				(	const gchar*		str,
-															guint*				position,
-															gdouble*			value_ptr,
-															CrankReadDecResult*	result		);
+gboolean crank_str_scan_double               (const gchar        *str,
+                                              guint              *position,
+                                              gdouble            *value_ptr,
+                                              CrankReadDecResult *result);
 
 //////// Checking Function
 
-gboolean			crank_str_check_char				(	const gchar*		str,
-															guint*				position,
-															gchar				check_item	);
+gboolean crank_str_check_char                (const gchar *str,
+                                              guint       *position,
+                                              gchar        check_item);
 
-gint				crank_str_check_chars				(	const gchar*		str,
-															guint*				position,
-															const gchar*		check_items,
-															guint				ncheck_items	);
+gint     crank_str_check_chars               (const gchar *str,
+                                              guint       *position,
+                                              const gchar *check_items,
+                                              guint        ncheck_items);
 
-gint				crank_str_check_chars_str			(	const gchar*		str,
-															guint*				position,
-															const gchar*		check_items	);
+gint     crank_str_check_chars_str           (const gchar *str,
+                                              guint       *position,
+                                              const gchar *check_items);
 
-gint				crank_str_check_words				(	const gchar*		str,
-															guint*				position,
-															gchar**				check_words,
-															CrankStrCheckFlags	flags	);
+gint     crank_str_check_words               (const gchar       *str,
+                                              guint             *position,
+                                              gchar            **check_words,
+                                              CrankStrCheckFlags flags);
 
 
 G_END_DECLS

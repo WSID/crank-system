@@ -90,12 +90,12 @@ G_DEFINE_BOXED_TYPE(CrankRanPtr, crank_ran_ptr, crank_ran_ptr_dup, g_free)
  * Initialize a range with given two points.
  */
 void
-crank_ran_uint_init (	CrankRanUint*	ran,
-						const guint		start,
-						const guint		end		)
+crank_ran_uint_init (CrankRanUint *ran,
+                     const guint   start,
+                     const guint   end)
 {
-	ran->start = start;
-	ran->end = end;
+  ran->start = start;
+  ran->end = end;
 }
 
 
@@ -108,11 +108,11 @@ crank_ran_uint_init (	CrankRanUint*	ran,
  * Initialize a range with start point and difference.
  */
 void
-crank_ran_uint_init_diff (	CrankRanUint*	ran,
-							const guint		start,
-							const guint		diff	)
+crank_ran_uint_init_diff (CrankRanUint *ran,
+                          const guint   start,
+                          const guint   diff)
 {
-	crank_ran_uint_init (ran, start, start + diff);
+  crank_ran_uint_init (ran, start, start + diff);
 }
 
 
@@ -126,10 +126,10 @@ crank_ran_uint_init_diff (	CrankRanUint*	ran,
  * For numeric values, it is 1.
  */
 void
-crank_ran_uint_init_unit (	CrankRanUint*	ran,
-							const guint		start	)
+crank_ran_uint_init_unit (CrankRanUint *ran,
+                          const guint   start)
 {
-	crank_ran_uint_init_diff (ran, start, 1);
+  crank_ran_uint_init_diff (ran, start, 1);
 }
 
 
@@ -144,10 +144,10 @@ crank_ran_uint_init_unit (	CrankRanUint*	ran,
  * Copies a range to other
  */
 void
-crank_ran_uint_copy (	CrankRanUint*	ran,
-						CrankRanUint*	other	)
+crank_ran_uint_copy (CrankRanUint *ran,
+                     CrankRanUint *other)
 {
-	crank_ran_uint_init (other, ran->start, ran->end	);
+  crank_ran_uint_init (other, ran->start, ran->end);
 }
 
 
@@ -160,10 +160,10 @@ crank_ran_uint_copy (	CrankRanUint*	ran,
  * Returns: (transfer full): Copied range, free with g_free()
  */
 CrankRanUint*
-crank_ran_uint_dup (	CrankRanUint*	ran	)
+crank_ran_uint_dup (CrankRanUint *ran)
 {
-	CrankRanUint*	result = g_new (CrankRanUint, 1);
-	crank_ran_uint_copy (ran, result);
+  CrankRanUint *result = g_new (CrankRanUint, 1);
+  crank_ran_uint_copy (ran, result);
 }
 
 
@@ -177,13 +177,13 @@ crank_ran_uint_dup (	CrankRanUint*	ran	)
  * Returns: Whether the two are same.
  */
 gboolean
-crank_ran_uint_equal (	gconstpointer	a,
-						gconstpointer	b	)
+crank_ran_uint_equal (gconstpointer a,
+                      gconstpointer b)
 {
-	CrankRanUint*	aran = (CrankRanUint*)	a;
-	CrankRanUint*	bran = (CrankRanUint*)	b;
-	
-	return ((aran->start == bran->start) && (aran->end == bran->end));
+  CrankRanUint *aran = (CrankRanUint*)  a;
+  CrankRanUint *bran = (CrankRanUint*)  b;
+
+  return ((aran->start == bran->start) && (aran->end == bran->end));
 }
 
 
@@ -196,12 +196,12 @@ crank_ran_uint_equal (	gconstpointer	a,
  * Returns: Hash value of range.
  */
 guint
-crank_ran_uint_hash (	gconstpointer	a	)
+crank_ran_uint_hash (gconstpointer a)
 {
-	CrankRanUint*	ran = (CrankRanUint*) a;
-	
-	return	g_int_hash (& (ran->start)) * 33 +
-			g_int_hash (& (ran->end));
+  CrankRanUint *ran = (CrankRanUint*) a;
+
+  return g_int_hash (&(ran->start)) * 33 +
+         g_int_hash (&(ran->end));
 }
 
 
@@ -214,9 +214,9 @@ crank_ran_uint_hash (	gconstpointer	a	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_uint_to_string (	CrankRanUint*	ran	)
+crank_ran_uint_to_string (CrankRanUint *ran)
 {
-	return crank_ran_uint_to_string_full (ran, CRANK_RAN_UINT_DEFFORMAT);
+  return crank_ran_uint_to_string_full (ran, CRANK_RAN_UINT_DEFFORMAT);
 }
 
 
@@ -230,10 +230,10 @@ crank_ran_uint_to_string (	CrankRanUint*	ran	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_uint_to_string_full (	CrankRanUint*	ran,
-								const gchar*	format	)
+crank_ran_uint_to_string_full (CrankRanUint *ran,
+                               const gchar  *format)
 {
-	return g_strdup_printf (format, ran->start, ran->end);
+  return g_strdup_printf (format, ran->start, ran->end);
 }
 
 //////// Classification ////////////////////////////////////////////////////////
@@ -247,9 +247,9 @@ crank_ran_uint_to_string_full (	CrankRanUint*	ran,
  * Returns: whether it is empty range.
  */
 gboolean
-crank_ran_uint_is_empty (	CrankRanUint*	ran	)
+crank_ran_uint_is_empty (CrankRanUint *ran)
 {
-	return (ran->start == ran->end);
+  return (ran->start == ran->end);
 }
 
 
@@ -262,9 +262,9 @@ crank_ran_uint_is_empty (	CrankRanUint*	ran	)
  * Returns: whether it is unit range.
  */
 gboolean
-crank_ran_uint_is_unit (	CrankRanUint*	ran )
+crank_ran_uint_is_unit (CrankRanUint *ran)
 {
-	return (crank_ran_uint_get_length (ran) == 1);
+  return (crank_ran_uint_get_length (ran) == 1);
 }
 
 //////// Attributes ////////////////////////////////////////////////////////////
@@ -278,9 +278,9 @@ crank_ran_uint_is_unit (	CrankRanUint*	ran )
  * Returns: The length of range.
  */
 guint
-crank_ran_uint_get_length (	CrankRanUint*	ran	)
+crank_ran_uint_get_length (CrankRanUint *ran)
 {
-	return ran->end - ran->start;
+  return ran->end - ran->start;
 }
 
 //////// Range function ////////////////////////////////////////////////////////
@@ -295,10 +295,10 @@ crank_ran_uint_get_length (	CrankRanUint*	ran	)
  * Returns: Whetehr the value is in the range.
  */
 gboolean
-crank_ran_uint_contains (	CrankRanUint*	ran,
-							const guint		value	)
+crank_ran_uint_contains (CrankRanUint *ran,
+                         const guint   value)
 {
-	return ((ran->start) <= value) && (value < (ran->end));
+  return ((ran->start) <= value) && (value < (ran->end));
 }
 
 /**
@@ -312,15 +312,17 @@ crank_ran_uint_contains (	CrankRanUint*	ran,
  * also out of range [@ran->start, @ran->end].
  *
  * Returns: A interpolated value.
- */ 
+ */
 guint
-crank_ran_uint_get (	CrankRanUint*	ran,
-						const gfloat	index	)
+crank_ran_uint_get (CrankRanUint *ran,
+                    const gfloat  index)
 {
-	guint	len = crank_ran_uint_get_length (ran);
-	
-	if (index < 0)	return ran->start - (guint)(-index * len);
-	else			return ran->start + (guint)(index * len);
+  guint len = crank_ran_uint_get_length (ran);
+
+  if (index < 0)
+    return ran->start - (guint)(-index * len);
+  else
+    return ran->start + (guint)(index * len);
 }
 
 /**
@@ -336,20 +338,22 @@ crank_ran_uint_get (	CrankRanUint*	ran,
  * Returns: A index for given value.
  */
 gfloat
-crank_ran_uint_index_of (	CrankRanUint*	ran,
-							const guint		value	)
+crank_ran_uint_index_of (CrankRanUint *ran,
+                         const guint   value)
 {
-	guint	len = crank_ran_uint_get_length (ran);
-	
-	if (value < ran->start)	return -(gfloat)(ran->start - value) / len;
-	else					return (gfloat)(value - ran->start) / len;
+  guint len = crank_ran_uint_get_length (ran);
+
+  if (value < ran->start)
+    return -(gfloat)(ran->start - value) / len;
+  else
+    return (gfloat)(value - ran->start) / len;
 }
 
 /**
  * crank_ran_uint_clamp:
  * @ran: A Range.
  * @value: A Value.
- * 
+ *
  * Clamps a given value with in the range.
  *
  * Note
@@ -360,10 +364,10 @@ crank_ran_uint_index_of (	CrankRanUint*	ran,
  * Returns: A Clamped value.
  */
 guint
-crank_ran_uint_clamp (	CrankRanUint*	ran,
-						const guint		value	)
+crank_ran_uint_clamp (CrankRanUint *ran,
+                      const guint   value)
 {
-	return CLAMP (value, ran->start, ran->end);
+  return CLAMP (value, ran->start, ran->end);
 }
 
 
@@ -383,21 +387,23 @@ crank_ran_uint_clamp (	CrankRanUint*	ran,
  * Returns: whether if @a and @b has intersection.
  */
 gboolean
-crank_ran_uint_intersection (	CrankRanUint*	a,
-								CrankRanUint*	b,
-								CrankRanUint*	r	)
+crank_ran_uint_intersection (CrankRanUint *a,
+                             CrankRanUint *b,
+                             CrankRanUint *r)
 {
-	if ((b->start) < (a->end) && (a->start) < (b->end)) {
-		crank_ran_uint_init (	r,
-			MAX(a->start, b->start),
-			MIN(a->end, b->end)	);
-		return TRUE;
-	}
-	else {
-		r->start = 0;
-		r->end = 0;
-		return FALSE;
-	}
+  if ((b->start) < (a->end) && (a->start) < (b->end))
+    {
+      crank_ran_uint_init (r,
+                           MAX(a->start, b->start),
+                           MIN(a->end, b->end) );
+      return TRUE;
+    }
+  else
+    {
+      r->start = 0;
+      r->end = 0;
+      return FALSE;
+    }
 }
 
 
@@ -414,12 +420,12 @@ crank_ran_uint_intersection (	CrankRanUint*	a,
  * Initialize a range with given two points.
  */
 void
-crank_ran_int_init (	CrankRanInt*	ran,
-						const gint		start,
-						const gint		end		)
+crank_ran_int_init (CrankRanInt *ran,
+                    const gint   start,
+                    const gint   end)
 {
-	ran->start = start;
-	ran->end = end;
+  ran->start = start;
+  ran->end = end;
 }
 
 /**
@@ -431,11 +437,11 @@ crank_ran_int_init (	CrankRanInt*	ran,
  * Initialize a range with start point and difference.
  */
 void
-crank_ran_int_init_diff (	CrankRanInt*	ran,
-							const gint		start,
-							const guint		diff	)
+crank_ran_int_init_diff (CrankRanInt *ran,
+                         const gint   start,
+                         const guint  diff)
 {
-	crank_ran_int_init (ran, start, start + diff);
+  crank_ran_int_init (ran, start, start + diff);
 }
 
 /**
@@ -448,10 +454,10 @@ crank_ran_int_init_diff (	CrankRanInt*	ran,
  * For numeric values, it is 1.
  */
 void
-crank_ran_int_init_unit (	CrankRanInt*	ran,
-							const gint		start 	)
+crank_ran_int_init_unit (CrankRanInt *ran,
+                         const gint   start)
 {
-	crank_ran_int_init_diff (ran, start, 1);
+  crank_ran_int_init_diff (ran, start, 1);
 }
 
 
@@ -466,10 +472,10 @@ crank_ran_int_init_unit (	CrankRanInt*	ran,
  * Copies a range to other
  */
 void
-crank_ran_int_copy (	CrankRanInt*	ran,
-						CrankRanInt*	other	)
+crank_ran_int_copy (CrankRanInt *ran,
+                    CrankRanInt *other)
 {
-	crank_ran_int_init (other, ran->start, ran->end);
+  crank_ran_int_init (other, ran->start, ran->end);
 }
 
 /**
@@ -481,11 +487,11 @@ crank_ran_int_copy (	CrankRanInt*	ran,
  * Returns: (transfer full): Copied range, free with g_free()
  */
 CrankRanInt*
-crank_ran_int_dup (	CrankRanInt*	ran	)
+crank_ran_int_dup (CrankRanInt *ran)
 {
-	CrankRanInt*	result = g_new (CrankRanInt, 1);
-	crank_ran_int_copy (ran, result);
-	return result;
+  CrankRanInt *result = g_new (CrankRanInt, 1);
+  crank_ran_int_copy (ran, result);
+  return result;
 }
 
 /**
@@ -498,12 +504,12 @@ crank_ran_int_dup (	CrankRanInt*	ran	)
  * Returns: Whether the two are same.
  */
 gboolean
-crank_ran_int_equal (	gconstpointer	a,
-						gconstpointer	b	)
+crank_ran_int_equal (gconstpointer a,
+                     gconstpointer b)
 {
-	CrankRanInt*	rana = (CrankRanInt*)a;
-	CrankRanInt*	ranb = (CrankRanInt*)b;
-	return (rana->start == ranb->start) && (rana->end == ranb->end);
+  CrankRanInt *rana = (CrankRanInt*)a;
+  CrankRanInt *ranb = (CrankRanInt*)b;
+  return (rana->start == ranb->start) && (rana->end == ranb->end);
 }
 
 /**
@@ -515,12 +521,12 @@ crank_ran_int_equal (	gconstpointer	a,
  * Returns: Hash value of range.
  */
 guint
-crank_ran_int_hash (	gconstpointer	a	)
+crank_ran_int_hash (gconstpointer a)
 {
-	CrankRanInt*	ran = (CrankRanInt*)a;
-	
-	return	g_int_hash (& ran->start) * 33 +
-			g_int_hash (& ran->end);
+  CrankRanInt *ran = (CrankRanInt*)a;
+
+  return g_int_hash (&ran->start) * 33 +
+         g_int_hash (&ran->end);
 }
 
 /**
@@ -532,10 +538,10 @@ crank_ran_int_hash (	gconstpointer	a	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_int_to_string (	CrankRanInt*	ran	)
+crank_ran_int_to_string (CrankRanInt *ran)
 {
-	return crank_ran_int_to_string_full (ran,
-			CRANK_RAN_INT_DEFFORMAT);
+  return crank_ran_int_to_string_full (ran,
+                                       CRANK_RAN_INT_DEFFORMAT);
 }
 
 /**
@@ -547,13 +553,14 @@ crank_ran_int_to_string (	CrankRanInt*	ran	)
  *
  * Returns: (transfer full): String representation, free with g_free().
  */
-gchar*		crank_ran_int_to_string_full (	CrankRanInt*	ran,
-											const gchar*	format	)
+gchar*
+crank_ran_int_to_string_full (CrankRanInt *ran,
+                              const gchar *format)
 {
-	return g_strdup_printf (format, ran->start, ran->end);
+  return g_strdup_printf (format, ran->start, ran->end);
 }
 
-								
+
 //////// Classification ////////////////////////////////////////////////////////
 
 /**
@@ -565,9 +572,9 @@ gchar*		crank_ran_int_to_string_full (	CrankRanInt*	ran,
  * Returns: whether it is empty range.
  */
 gboolean
-crank_ran_int_is_empty (	CrankRanInt*	ran		)
+crank_ran_int_is_empty (CrankRanInt *ran)
 {
-	return (ran->start == ran->end);
+  return (ran->start == ran->end);
 }
 
 
@@ -580,9 +587,9 @@ crank_ran_int_is_empty (	CrankRanInt*	ran		)
  * Returns: whether it is unit range.
  */
 gboolean
-crank_ran_int_is_unit (	CrankRanInt*	ran		)
+crank_ran_int_is_unit (CrankRanInt *ran)
 {
-	return crank_ran_int_get_length (ran) == 1;
+  return crank_ran_int_get_length (ran) == 1;
 }
 
 //////// Attributes ////////////////////////////////////////////////////////////
@@ -596,9 +603,9 @@ crank_ran_int_is_unit (	CrankRanInt*	ran		)
  * Returns: The length of range.
  */
 guint
-crank_ran_int_get_length (	CrankRanInt*	ran	)
+crank_ran_int_get_length (CrankRanInt *ran)
 {
-	return (guint)(ran->end - ran->start);
+  return (guint)(ran->end - ran->start);
 }
 
 
@@ -614,10 +621,10 @@ crank_ran_int_get_length (	CrankRanInt*	ran	)
  * Returns: Whether the value is in the range.
  */
 gboolean
-crank_ran_int_contains (	CrankRanInt*	ran,
-							const gint		value	)
+crank_ran_int_contains (CrankRanInt *ran,
+                        const gint   value)
 {
-	return (ran->start < value) && (value < ran->end);
+  return (ran->start < value) && (value < ran->end);
 }
 
 
@@ -632,15 +639,17 @@ crank_ran_int_contains (	CrankRanInt*	ran,
  * also out of range [@ran->start, @ran->end].
  *
  * Returns: A interpolated value.
- */ 
+ */
 gint
-crank_ran_int_get (	CrankRanInt*	ran,
-					const gfloat	index	)
+crank_ran_int_get (CrankRanInt *ran,
+                   const gfloat index)
 {
-	guint	len = crank_ran_int_get_length (ran);
-	
-	if (index < 0)	return ran->start - (gint)(-index * len);
-	else			return ran->start + (gint)(index * len);
+  guint len = crank_ran_int_get_length (ran);
+
+  if (index < 0)
+    return ran->start - (gint)(-index * len);
+  else
+    return ran->start + (gint)(index * len);
 }
 
 
@@ -657,13 +666,15 @@ crank_ran_int_get (	CrankRanInt*	ran,
  * Returns: A index for given value.
  */
 gfloat
-crank_ran_int_index_of (	CrankRanInt*	ran,
-							const gint		value	)
+crank_ran_int_index_of (CrankRanInt *ran,
+                        const gint   value)
 {
-	guint	len = crank_ran_int_get_length (ran);
-	
-	if (value < ran->start)	return -(gfloat)(ran->start - value) / len;
-	else					return (gfloat)(value - ran->start) / len;
+  guint len = crank_ran_int_get_length (ran);
+
+  if (value < ran->start)
+    return -(gfloat)(ran->start - value) / len;
+  else
+    return (gfloat)(value - ran->start) / len;
 }
 
 
@@ -671,7 +682,7 @@ crank_ran_int_index_of (	CrankRanInt*	ran,
  * crank_ran_int_clamp:
  * @ran: A Range.
  * @value: A Value.
- * 
+ *
  * Clamps a given value with in the range.
  *
  * clamp function and contains function has different checking boundary. See
@@ -680,10 +691,10 @@ crank_ran_int_index_of (	CrankRanInt*	ran,
  * Returns: A Clamped value.
  */
 gint
-crank_ran_int_clamp (	CrankRanInt*	ran,
-						const gint		value	)
+crank_ran_int_clamp (CrankRanInt *ran,
+                     const gint   value)
 {
-	return CLAMP (value, ran->start, ran->end);
+  return CLAMP (value, ran->start, ran->end);
 }
 
 
@@ -701,21 +712,23 @@ crank_ran_int_clamp (	CrankRanInt*	ran,
  * Returns: whether if @a and @b has intersection.
  */
 gboolean
-crank_ran_int_intersection (	CrankRanInt*	a,
-								CrankRanInt*	b,
-								CrankRanInt*	r	)
+crank_ran_int_intersection (CrankRanInt *a,
+                            CrankRanInt *b,
+                            CrankRanInt *r)
 {
-	if ((b->start) < (a->end) && (a->start) < (b->end)) {
-		crank_ran_int_init (	r,
-			MAX(a->start, b->start),
-			MIN(a->end, b->end)	);
-		return TRUE;
-	}
-	else {
-		r->start = 0;
-		r->end = 0;
-		return FALSE;
-	}
+  if ((b->start) < (a->end) && (a->start) < (b->end))
+    {
+      crank_ran_int_init (r,
+                          MAX(a->start, b->start),
+                          MIN(a->end, b->end) );
+      return TRUE;
+    }
+  else
+    {
+      r->start = 0;
+      r->end = 0;
+      return FALSE;
+    }
 }
 
 
@@ -734,12 +747,12 @@ crank_ran_int_intersection (	CrankRanInt*	a,
  * Initialize a range with given two points.
  */
 void
-crank_ran_float_init (	CrankRanFloat*	ran,
-						const gfloat	start,
-						const gfloat	end		)
+crank_ran_float_init (CrankRanFloat *ran,
+                      const gfloat   start,
+                      const gfloat   end)
 {
-	ran->start = start;
-	ran->end = end;
+  ran->start = start;
+  ran->end = end;
 }
 
 /**
@@ -751,11 +764,11 @@ crank_ran_float_init (	CrankRanFloat*	ran,
  * Initialize a range with start point and difference.
  */
 void
-crank_ran_float_init_diff (	CrankRanFloat*	ran,
-							const gfloat	start,
-							const gfloat	diff	)
+crank_ran_float_init_diff (CrankRanFloat *ran,
+                           const gfloat   start,
+                           const gfloat   diff)
 {
-	crank_ran_float_init (ran, start, start + diff);
+  crank_ran_float_init (ran, start, start + diff);
 }
 
 /**
@@ -768,10 +781,10 @@ crank_ran_float_init_diff (	CrankRanFloat*	ran,
  * For numeric values, it is 1.
  */
 void
-crank_ran_float_init_unit (	CrankRanFloat*	ran,
-							const gfloat	start 	)
+crank_ran_float_init_unit (CrankRanFloat *ran,
+                           const gfloat   start)
 {
-	crank_ran_float_init_diff (ran, start, 1);
+  crank_ran_float_init_diff (ran, start, 1);
 }
 
 
@@ -785,10 +798,10 @@ crank_ran_float_init_unit (	CrankRanFloat*	ran,
  * Copies a range to other
  */
 void
-crank_ran_float_copy (	CrankRanFloat*	ran,
-						CrankRanFloat*	other	)
+crank_ran_float_copy (CrankRanFloat *ran,
+                      CrankRanFloat *other)
 {
-	crank_ran_float_init (other, ran->start, ran->end);
+  crank_ran_float_init (other, ran->start, ran->end);
 }
 
 /**
@@ -800,11 +813,11 @@ crank_ran_float_copy (	CrankRanFloat*	ran,
  * Returns: (transfer full): Copied range, free with g_free()
  */
 CrankRanFloat*
-crank_ran_float_dup (	CrankRanFloat*	ran	)
+crank_ran_float_dup (CrankRanFloat *ran)
 {
-	CrankRanFloat*	result = g_new (CrankRanFloat, 1);
-	crank_ran_float_copy (ran, result);
-	return result;
+  CrankRanFloat *result = g_new (CrankRanFloat, 1);
+  crank_ran_float_copy (ran, result);
+  return result;
 }
 
 /**
@@ -817,10 +830,10 @@ crank_ran_float_dup (	CrankRanFloat*	ran	)
  * Returns: Whether the two are same.
  */
 gboolean
-crank_ran_float_equal (	gconstpointer	a,
-						gconstpointer	b	)
+crank_ran_float_equal (gconstpointer a,
+                       gconstpointer b)
 {
-	return crank_ran_float_equal_delta (a, b, 0.0001f);
+  return crank_ran_float_equal_delta (a, b, 0.0001f);
 }
 
 /**
@@ -835,18 +848,18 @@ crank_ran_float_equal (	gconstpointer	a,
  * Returns: Whether the two are sufficiently same.
  */
 gboolean
-crank_ran_float_equal_delta (	gconstpointer	a,
-								gconstpointer	b,
-								const gfloat	d	)
+crank_ran_float_equal_delta (gconstpointer a,
+                             gconstpointer b,
+                             const gfloat  d)
 {
-	CrankRanFloat*	rana;
-	CrankRanFloat*	ranb;
-	
-	gfloat			err;
+  CrankRanFloat *rana;
+  CrankRanFloat *ranb;
 
-	err = ABS(ranb->start - rana->start) + ABS(ranb->end - rana->end);
+  gfloat err;
 
-	return (err < d);
+  err = ABS(ranb->start - rana->start) + ABS(ranb->end - rana->end);
+
+  return (err < d);
 }
 
 
@@ -859,15 +872,15 @@ crank_ran_float_equal_delta (	gconstpointer	a,
  * Returns: Hash value of range.
  */
 guint
-crank_ran_float_hash (	gconstpointer	a	)
+crank_ran_float_hash (gconstpointer a)
 {
-	CrankRanFloat*	ran;
-	
-	gdouble	start = ran->start;
-	gdouble end = ran->end;
-	
-	return	g_double_hash (&start) * 33 +
-			g_double_hash (&end);
+  CrankRanFloat *ran;
+
+  gdouble start = ran->start;
+  gdouble end = ran->end;
+
+  return g_double_hash (&start) * 33 +
+         g_double_hash (&end);
 }
 
 /**
@@ -879,10 +892,10 @@ crank_ran_float_hash (	gconstpointer	a	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_float_to_string (	CrankRanFloat*	ran	)
+crank_ran_float_to_string (CrankRanFloat *ran)
 {
-	crank_ran_float_to_string_full (ran,
-			CRANK_RAN_FLOAT_DEFFORMAT	);
+  crank_ran_float_to_string_full (ran,
+                                  CRANK_RAN_FLOAT_DEFFORMAT);
 }
 
 /**
@@ -895,13 +908,13 @@ crank_ran_float_to_string (	CrankRanFloat*	ran	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_float_to_string_full (	CrankRanFloat*	ran,
-									const gchar*	format	)
+crank_ran_float_to_string_full (CrankRanFloat *ran,
+                                const gchar   *format)
 {
-	return g_strdup_printf (format, ran->start, ran->end);
+  return g_strdup_printf (format, ran->start, ran->end);
 }
 
-											
+
 //////// Classification ////////////////////////////////////////////////////////
 
 /**
@@ -913,9 +926,9 @@ crank_ran_float_to_string_full (	CrankRanFloat*	ran,
  * Returns: whether it is empty range.
  */
 gboolean
-crank_ran_float_is_empty (	CrankRanFloat*	ran		)
+crank_ran_float_is_empty (CrankRanFloat *ran)
 {
-	return (ran->start == ran->end);
+  return (ran->start == ran->end);
 }
 
 /**
@@ -927,9 +940,9 @@ crank_ran_float_is_empty (	CrankRanFloat*	ran		)
  * Returns: whether it is unit range.
  */
 gboolean
-crank_ran_float_is_unit (	CrankRanFloat*	ran		)
+crank_ran_float_is_unit (CrankRanFloat *ran)
 {
-	return crank_ran_float_get_length (ran) == 1;
+  return crank_ran_float_get_length (ran) == 1;
 }
 
 /**
@@ -946,9 +959,9 @@ crank_ran_float_is_unit (	CrankRanFloat*	ran		)
  * Returns: whether it is NaN range.
  */
 gboolean
-crank_ran_float_is_nan (	CrankRanFloat*	ran		)
+crank_ran_float_is_nan (CrankRanFloat *ran)
 {
-	return isnanf(ran->start) || isnanf(ran->end);
+  return isnanf(ran->start) || isnanf(ran->end);
 }
 
 /**
@@ -960,10 +973,10 @@ crank_ran_float_is_nan (	CrankRanFloat*	ran		)
  * Returns: whether it has infinity.
  */
 gboolean
-crank_ran_float_has_inf (	CrankRanFloat*	ran		)
+crank_ran_float_has_inf (CrankRanFloat *ran)
 {
-	return	crank_ran_float_has_pinf (ran) ||
-			crank_ran_float_has_ninf (ran);
+  return crank_ran_float_has_pinf (ran) ||
+         crank_ran_float_has_ninf (ran);
 }
 
 /**
@@ -975,9 +988,9 @@ crank_ran_float_has_inf (	CrankRanFloat*	ran		)
  * Returns: whether it has positive infinity.
  */
 gboolean
-crank_ran_float_has_pinf (	CrankRanFloat*	ran	)
+crank_ran_float_has_pinf (CrankRanFloat *ran)
 {
-	return	isinff (ran->end) && (0 < ran->end);
+  return isinff (ran->end) && (0 < ran->end);
 }
 
 /**
@@ -989,9 +1002,9 @@ crank_ran_float_has_pinf (	CrankRanFloat*	ran	)
  * Returns: whether it has negative infinity.
  */
 gboolean
-crank_ran_float_has_ninf (	CrankRanFloat*	ran		)
+crank_ran_float_has_ninf (CrankRanFloat *ran)
 {
-	return	isinff (ran->start) && (ran->start < 0);
+  return isinff (ran->start) && (ran->start < 0);
 }
 
 //////// Attributes ////////////////////////////////////////////////////////////
@@ -1005,9 +1018,9 @@ crank_ran_float_has_ninf (	CrankRanFloat*	ran		)
  * Returns: The length of range.
  */
 gfloat
-crank_ran_float_get_length (	CrankRanFloat*	ran	)
+crank_ran_float_get_length (CrankRanFloat *ran)
 {
-	return ran->end - ran->start;
+  return ran->end - ran->start;
 }
 
 //////// Range function ////////////////////////////////////////////////////////
@@ -1022,10 +1035,10 @@ crank_ran_float_get_length (	CrankRanFloat*	ran	)
  * Returns: Whether the value is in the range.
  */
 gboolean
-crank_ran_float_contains (	CrankRanFloat*	ran,
-							const gfloat	value	)
+crank_ran_float_contains (CrankRanFloat *ran,
+                          const gfloat   value)
 {
-	return	(ran->start <= value) && (value < ran->end);
+  return (ran->start <= value) && (value < ran->end);
 }
 
 /**
@@ -1039,12 +1052,12 @@ crank_ran_float_contains (	CrankRanFloat*	ran,
  * also out of range [@ran->start, @ran->end].
  *
  * Returns: A interpolated value.
- */ 
+ */
 gfloat
-crank_ran_float_get (	CrankRanFloat*	ran,
-						const gfloat	index	)
+crank_ran_float_get (CrankRanFloat *ran,
+                     const gfloat   index)
 {
-	return	fmaf (crank_ran_float_get_length (ran), index, ran->start);
+  return fmaf (crank_ran_float_get_length (ran), index, ran->start);
 }
 
 /**
@@ -1060,19 +1073,19 @@ crank_ran_float_get (	CrankRanFloat*	ran,
  * Returns: A index for given value.
  */
 gfloat
-crank_ran_float_index_of (	CrankRanFloat*	ran,
-							const gfloat	value	)
+crank_ran_float_index_of (CrankRanFloat *ran,
+                          const gfloat   value)
 {
-	gfloat	len = crank_ran_float_get_length (ran);
-	gfloat	diff = value - ran->start;
-	return diff / len;
+  gfloat len = crank_ran_float_get_length (ran);
+  gfloat diff = value - ran->start;
+  return diff / len;
 }
 
 /**
  * crank_ran_float_clamp:
  * @ran: A Range.
  * @value: A Value.
- * 
+ *
  * Clamps a given value with in the range.
  *
  * clamp function and contains function has different checking boundary. See
@@ -1081,10 +1094,10 @@ crank_ran_float_index_of (	CrankRanFloat*	ran,
  * Returns: A Clamped value.
  */
 gfloat
-crank_ran_float_clamp (	CrankRanFloat*	ran,
-						const gfloat	value	)
+crank_ran_float_clamp (CrankRanFloat *ran,
+                       const gfloat   value)
 {
-	return CLAMP(value, ran->start, ran->end);
+  return CLAMP(value, ran->start, ran->end);
 }
 
 /**
@@ -1101,21 +1114,23 @@ crank_ran_float_clamp (	CrankRanFloat*	ran,
  * Returns: whether if @a and @b has intersection.
  */
 gboolean
-crank_ran_float_intersection (	CrankRanFloat*	a,
-								CrankRanFloat*	b,
-								CrankRanFloat*	r	)
+crank_ran_float_intersection (CrankRanFloat *a,
+                              CrankRanFloat *b,
+                              CrankRanFloat *r)
 {
-	if ((b->start) < (a->end) && (a->start) < (b->end)) {
-		crank_ran_float_init (	r,
-			MAX(a->start, b->start),
-			MIN(a->end, b->end)	);
-		return TRUE;
-	}
-	else {
-		r->start = 0;
-		r->end = 0;
-		return FALSE;
-	}
+  if ((b->start) < (a->end) && (a->start) < (b->end))
+    {
+      crank_ran_float_init (r,
+                            MAX(a->start, b->start),
+                            MIN(a->end, b->end) );
+      return TRUE;
+    }
+  else
+    {
+      r->start = 0;
+      r->end = 0;
+      return FALSE;
+    }
 }
 
 
@@ -1134,12 +1149,12 @@ crank_ran_float_intersection (	CrankRanFloat*	a,
  * Initialize a range with given two points.
  */
 void
-crank_ran_ptr_init (	CrankRanPtr*	ran,
-						gpointer		start,
-						gpointer		end		)
+crank_ran_ptr_init (CrankRanPtr *ran,
+                    gpointer     start,
+                    gpointer     end)
 {
-	ran->start = start;
-	ran->end = end;
+  ran->start = start;
+  ran->end = end;
 }
 
 /**
@@ -1151,11 +1166,11 @@ crank_ran_ptr_init (	CrankRanPtr*	ran,
  * Initialize a range with start point and difference.
  */
 void
-crank_ran_ptr_init_diff (	CrankRanPtr*	ran,
-							gpointer		start,
-							gsize			diff	)
+crank_ran_ptr_init_diff (CrankRanPtr *ran,
+                         gpointer     start,
+                         gsize        diff)
 {
-	crank_ran_ptr_init (ran, start, CRANK_PTR_ADD (start, diff));
+  crank_ran_ptr_init (ran, start, CRANK_PTR_ADD (start, diff));
 }
 
 //////// Basic Functions ///////////////////////////////////////////////////////
@@ -1168,10 +1183,10 @@ crank_ran_ptr_init_diff (	CrankRanPtr*	ran,
  * Copies a range to other
  */
 void
-crank_ran_ptr_copy (	CrankRanPtr*	ran,
-						CrankRanPtr*	other	)
+crank_ran_ptr_copy (CrankRanPtr *ran,
+                    CrankRanPtr *other)
 {
-	crank_ran_ptr_init (other, ran->start, ran->end);
+  crank_ran_ptr_init (other, ran->start, ran->end);
 }
 
 /**
@@ -1183,11 +1198,11 @@ crank_ran_ptr_copy (	CrankRanPtr*	ran,
  * Returns: (transfer full): Copied range, free with g_free()
  */
 CrankRanPtr*
-crank_ran_ptr_dup (	CrankRanPtr*	ran	)
+crank_ran_ptr_dup (CrankRanPtr *ran)
 {
-	CrankRanPtr*	result = g_new (CrankRanPtr, 1);
-	crank_ran_ptr_copy (ran, result);
-	return result;
+  CrankRanPtr *result = g_new (CrankRanPtr, 1);
+  crank_ran_ptr_copy (ran, result);
+  return result;
 }
 
 /**
@@ -1200,13 +1215,13 @@ crank_ran_ptr_dup (	CrankRanPtr*	ran	)
  * Returns: Whether the two are same.
  */
 gboolean
-crank_ran_ptr_equal (	gconstpointer	a,
-						gconstpointer	b	)
+crank_ran_ptr_equal (gconstpointer a,
+                     gconstpointer b)
 {
-	CrankRanPtr*	rana = (CrankRanPtr*)a;
-	CrankRanPtr*	ranb = (CrankRanPtr*)b;
-	
-	return (rana->start == ranb->start) && (rana->end == ranb->end);
+  CrankRanPtr *rana = (CrankRanPtr*)a;
+  CrankRanPtr *ranb = (CrankRanPtr*)b;
+
+  return (rana->start == ranb->start) && (rana->end == ranb->end);
 }
 
 /**
@@ -1218,12 +1233,12 @@ crank_ran_ptr_equal (	gconstpointer	a,
  * Returns: Hash value of range.
  */
 guint
-crank_ran_ptr_hash (	gconstpointer	a	)
+crank_ran_ptr_hash (gconstpointer a)
 {
-	CrankRanPtr*	ran = (CrankRanPtr*)a;
+  CrankRanPtr *ran = (CrankRanPtr*)a;
 
-	return	g_direct_hash (ran->start) * 33 +
-			g_direct_hash (ran->end);
+  return g_direct_hash (ran->start) * 33 +
+         g_direct_hash (ran->end);
 }
 
 /**
@@ -1235,10 +1250,10 @@ crank_ran_ptr_hash (	gconstpointer	a	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_ptr_to_string (	CrankRanPtr*	ran	)
+crank_ran_ptr_to_string (CrankRanPtr *ran)
 {
-	return crank_ran_ptr_to_string_full (ran,
-			CRANK_RAN_PTR_DEFFORMAT);
+  return crank_ran_ptr_to_string_full (ran,
+                                       CRANK_RAN_PTR_DEFFORMAT);
 }
 
 /**
@@ -1251,14 +1266,14 @@ crank_ran_ptr_to_string (	CrankRanPtr*	ran	)
  * Returns: (transfer full): String representation, free with g_free().
  */
 gchar*
-crank_ran_ptr_to_string_full (	CrankRanPtr*	ran,
-								const gchar*	format	)
+crank_ran_ptr_to_string_full (CrankRanPtr *ran,
+                              const gchar *format)
 {
-	return g_strdup_printf (format, ran->start, ran->end);
+  return g_strdup_printf (format, ran->start, ran->end);
 }
-											
-											
-											
+
+
+
 //////// Classification ////////////////////////////////////////////////////////
 
 /**
@@ -1270,9 +1285,9 @@ crank_ran_ptr_to_string_full (	CrankRanPtr*	ran,
  * Returns: whether it is empty range.
  */
 gboolean
-crank_ran_ptr_is_empty (	CrankRanPtr*	ran		)
+crank_ran_ptr_is_empty (CrankRanPtr *ran)
 {
-	return ran->start == ran->end;
+  return ran->start == ran->end;
 }
 
 //////// Attributes ////////////////////////////////////////////////////////////
@@ -1286,9 +1301,9 @@ crank_ran_ptr_is_empty (	CrankRanPtr*	ran		)
  * Returns: The length of range.
  */
 gsize
-crank_ran_ptr_get_length (	CrankRanPtr*	ran	)
+crank_ran_ptr_get_length (CrankRanPtr *ran)
 {
-	return CRANK_PTR_DIFF(ran->end, ran->start);
+  return CRANK_PTR_DIFF(ran->end, ran->start);
 }
 
 //////// Range function ////////////////////////////////////////////////////////
@@ -1305,10 +1320,10 @@ crank_ran_ptr_get_length (	CrankRanPtr*	ran	)
  * Returns: The count of chunk.
  */
 guint
-crank_ran_ptr_get_count (	CrankRanPtr*	ran,
-							const gsize		size	)
+crank_ran_ptr_get_count (CrankRanPtr *ran,
+                         const gsize  size)
 {
-	return (guint)(crank_ran_ptr_get_length(ran)/size);
+  return (guint)(crank_ran_ptr_get_length(ran) / size);
 }
 
 /**
@@ -1321,10 +1336,10 @@ crank_ran_ptr_get_count (	CrankRanPtr*	ran,
  * Returns: Whether the value is in the range.
  */
 gboolean
-crank_ran_ptr_contains (	CrankRanPtr*	ran,
-							gpointer		value	)
+crank_ran_ptr_contains (CrankRanPtr *ran,
+                        gpointer     value)
 {
-	return (ran->start <= value) && (value < ran->end);	
+  return (ran->start <= value) && (value < ran->end);
 }
 
 /**
@@ -1338,14 +1353,14 @@ crank_ran_ptr_contains (	CrankRanPtr*	ran,
  * also out of range [@ran->start, @ran->end].
  *
  * Returns: (transfer none): A interpolated value.
- */ 
+ */
 gpointer
-crank_ran_ptr_get (	CrankRanPtr*	ran,
-					const gfloat	index	)
+crank_ran_ptr_get (CrankRanPtr *ran,
+                   const gfloat index)
 {
-	gsize	len = crank_ran_ptr_get_length (ran);
-	
-	return CRANK_PTR_ADD(ran->start, (gsize)(len * index));
+  gsize len = crank_ran_ptr_get_length (ran);
+
+  return CRANK_PTR_ADD(ran->start, (gsize)(len * index));
 }
 
 /**
@@ -1361,20 +1376,20 @@ crank_ran_ptr_get (	CrankRanPtr*	ran,
  * Returns: A index for given value.
  */
 gfloat
-crank_ran_ptr_index_of (	CrankRanPtr*	ran,
-							gpointer		value	)
+crank_ran_ptr_index_of (CrankRanPtr *ran,
+                        gpointer     value)
 {
-	gsize	len = crank_ran_ptr_get_length (ran);
-	gsize	diff = (gsize)value - (gsize)ran->start;
-	
-	return ((gfloat)diff) / len;
+  gsize len = crank_ran_ptr_get_length (ran);
+  gsize diff = (gsize)value - (gsize)ran->start;
+
+  return ((gfloat)diff) / len;
 }
 
 /**
  * crank_ran_ptr_clamp:
  * @ran: A Range.
  * @value: A Value.
- * 
+ *
  * Clamps a given value with in the range.
  *
  * clamp function and contains function has different checking boundary. See
@@ -1383,10 +1398,10 @@ crank_ran_ptr_index_of (	CrankRanPtr*	ran,
  * Returns: (transfer none): A Clamped value.
  */
 gpointer
-crank_ran_ptr_clamp (	CrankRanPtr*	ran,
-						gpointer		value	)
+crank_ran_ptr_clamp (CrankRanPtr *ran,
+                     gpointer     value)
 {
-	return CLAMP (value, ran->start, ran->end);
+  return CLAMP (value, ran->start, ran->end);
 }
 
 
@@ -1395,18 +1410,18 @@ crank_ran_ptr_clamp (	CrankRanPtr*	ran,
  * @ran: A Range.
  * @step: Count of steps.
  * @step_size: Size of steps.
- * 
+ *
  * Gets pointer that away given step from start. It might be useful for working
  * with arrays.
  *
  * Returns: (transfer none): A Stepped pointer from start.
  */
 gpointer
-crank_ran_ptr_get_step (	CrankRanPtr*	ran,
-							const guint		step,
-							const gsize		step_size	)
+crank_ran_ptr_get_step (CrankRanPtr *ran,
+                        const guint  step,
+                        const gsize  step_size)
 {
-	return CRANK_PTR_ADD2 (ran->start, step_size, step);
+  return CRANK_PTR_ADD2 (ran->start, step_size, step);
 }
 
 /**
@@ -1414,17 +1429,17 @@ crank_ran_ptr_get_step (	CrankRanPtr*	ran,
  * @ran: A Range.
  * @value: value to count steps.
  * @step_size: Size of steps.
- * 
+ *
  * Count the steps to @value. It might be useful for working with arrays.
  *
  * Returns: Count of step to @value.
  */
 guint
-crank_ran_ptr_n_step (	CrankRanPtr*	ran,
-						gpointer		value,
-						const gsize		step_size	)
+crank_ran_ptr_n_step (CrankRanPtr *ran,
+                      gpointer     value,
+                      const gsize  step_size)
 {
-	return (guint)(((gsize)value - (gsize)ran->start) / step_size);
+  return (guint)(((gsize)value - (gsize)ran->start) / step_size);
 }
 
 /**
@@ -1441,20 +1456,21 @@ crank_ran_ptr_n_step (	CrankRanPtr*	ran,
  * Returns: whether if @a and @b has intersection.
  */
 gboolean
-crank_ran_ptr_intersection (	CrankRanPtr*	a,
-								CrankRanPtr*	b,
-								CrankRanPtr*	r	)
+crank_ran_ptr_intersection (CrankRanPtr *a,
+                            CrankRanPtr *b,
+                            CrankRanPtr *r)
 {
-	if ((b->start) < (a->end) && (a->start) < (b->end)) {
-		crank_ran_ptr_init (	r,
-			MAX(a->start, b->start),
-			MIN(a->end, b->end)	);
-		return TRUE;
-	}
-	else {
-		r->start = NULL;
-		r->end = NULL;
-		return FALSE;
-	}
+  if ((b->start) < (a->end) && (a->start) < (b->end))
+    {
+      crank_ran_ptr_init (r,
+                          MAX(a->start, b->start),
+                          MIN(a->end, b->end) );
+      return TRUE;
+    }
+  else
+    {
+      r->start = NULL;
+      r->end = NULL;
+      return FALSE;
+    }
 }
-

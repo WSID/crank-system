@@ -50,7 +50,7 @@
  * It is compared to vec in GLSL
  *
  * # Type Conversion.
- * 
+ *
  * Float vector types are frequently used and can be converted to other types.
  *
  * For fixed-sized types, it can be converted to variadic sized vector types.
@@ -182,33 +182,33 @@
 
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
-static void crank_vec_float2_transform_from_vb (	const GValue*	src,
-													GValue*			dest	);
-													
-static void crank_vec_float2_transform_from_vi (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float2_transform_from_vb (const GValue *src,
+                                                GValue       *dest);
 
-static void	crank_vec_float2_transform_to_string (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float2_transform_from_vi (const GValue *src,
+                                                GValue       *dest);
+
+static void crank_vec_float2_transform_to_string (const GValue *src,
+                                                  GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
-		CrankVecFloat2,
-		crank_vec_float2,
-		crank_vec_float2_dup,
-		g_free,
-		{
-			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL2,
-												g_define_type_id,
-												crank_vec_float2_transform_from_vb	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_INT2,
-												g_define_type_id,
-												crank_vec_float2_transform_from_vi	);
-												
-			g_value_register_transform_func (	g_define_type_id,
-												G_TYPE_STRING,
-												crank_vec_float2_transform_to_string	);
-		} )
+  CrankVecFloat2,
+  crank_vec_float2,
+  crank_vec_float2_dup,
+  g_free,
+  {
+    g_value_register_transform_func (CRANK_TYPE_VEC_BOOL2,
+                                     g_define_type_id,
+                                     crank_vec_float2_transform_from_vb);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_INT2,
+                                     g_define_type_id,
+                                     crank_vec_float2_transform_from_vi);
+
+    g_value_register_transform_func (g_define_type_id,
+                                     G_TYPE_STRING,
+                                     crank_vec_float2_transform_to_string);
+  })
 
 /**
  * crank_vec_float2_init:
@@ -219,12 +219,12 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  * Initializes vector with given components.
  */
 void
-crank_vec_float2_init	(	CrankVecFloat2*	vec,
-							gfloat			x,
-							gfloat			y	)
+crank_vec_float2_init (CrankVecFloat2 *vec,
+                       gfloat          x,
+                       gfloat          y)
 {
-	vec->x = x;
-	vec->y = y;
+  vec->x = x;
+  vec->y = y;
 }
 
 /**
@@ -235,11 +235,11 @@ crank_vec_float2_init	(	CrankVecFloat2*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float2_init_arr	(	CrankVecFloat2*	vec,
-								gfloat*			arr	)
+crank_vec_float2_init_arr (CrankVecFloat2 *vec,
+                           gfloat         *arr)
 {
-	vec->x = arr[0];
-	vec->y = arr[1];
+  vec->x = arr[0];
+  vec->y = arr[1];
 }
 
 /**
@@ -250,11 +250,11 @@ crank_vec_float2_init_arr	(	CrankVecFloat2*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float2_init_valist	(	CrankVecFloat2*	vec,
-									va_list			varargs	)
+crank_vec_float2_init_valist (CrankVecFloat2 *vec,
+                              va_list         varargs)
 {
-	vec->x = va_arg (varargs, gdouble);
-	vec->y = va_arg (varargs, gdouble);
+  vec->x = va_arg (varargs, gdouble);
+  vec->y = va_arg (varargs, gdouble);
 }
 
 /**
@@ -265,11 +265,11 @@ crank_vec_float2_init_valist	(	CrankVecFloat2*	vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_float2_init_fill	(	CrankVecFloat2*	vec,
-								gfloat			fill	)
+crank_vec_float2_init_fill (CrankVecFloat2 *vec,
+                            gfloat          fill)
 {
-	vec->x = fill;
-	vec->y = fill;
+  vec->x = fill;
+  vec->y = fill;
 }
 
 /**
@@ -280,11 +280,11 @@ crank_vec_float2_init_fill	(	CrankVecFloat2*	vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float2_init_from_vb	(	CrankVecFloat2*	vec,
-								CrankVecBool2*	vb		)
+crank_vec_float2_init_from_vb (CrankVecFloat2 *vec,
+                               CrankVecBool2  *vb)
 {
-	vec->x = vb->x ? 1 : 0;
-	vec->y = vb->y ? 1 : 0;
+  vec->x = vb->x ? 1 : 0;
+  vec->y = vb->y ? 1 : 0;
 }
 
 /**
@@ -295,11 +295,11 @@ crank_vec_float2_init_from_vb	(	CrankVecFloat2*	vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float2_init_from_vi	(	CrankVecFloat2*	vec,
-									CrankVecInt2*	vi		)
+crank_vec_float2_init_from_vi (CrankVecFloat2 *vec,
+                               CrankVecInt2   *vi)
 {
-	vec->x = vi->x;
-	vec->y = vi->y;
+  vec->x = vi->x;
+  vec->y = vi->y;
 }
 
 
@@ -311,10 +311,10 @@ crank_vec_float2_init_from_vi	(	CrankVecFloat2*	vec,
  * Copies vector.
  */
 void
-crank_vec_float2_copy			(	CrankVecFloat2*	vec,
-						 			CrankVecFloat2*	other	)
+crank_vec_float2_copy (CrankVecFloat2 *vec,
+                       CrankVecFloat2 *other)
 {
-	memcpy (other, vec, sizeof(CrankVecFloat2));
+  memcpy (other, vec, sizeof(CrankVecFloat2));
 }
 
 /**
@@ -326,9 +326,9 @@ crank_vec_float2_copy			(	CrankVecFloat2*	vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat2*
-crank_vec_float2_dup			(	CrankVecFloat2*	vec	)
+crank_vec_float2_dup (CrankVecFloat2 *vec)
 {
-  	return (CrankVecFloat2*) g_memdup (vec, sizeof (CrankVecFloat2));
+  return (CrankVecFloat2*) g_memdup (vec, sizeof (CrankVecFloat2));
 }
 
 /**
@@ -341,10 +341,10 @@ crank_vec_float2_dup			(	CrankVecFloat2*	vec	)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float2_get	(	CrankVecFloat2*	vec,
-							const guint		index	)
+crank_vec_float2_get (CrankVecFloat2 *vec,
+                      const guint     index)
 {
-	return ((gfloat*)vec)[index];
+  return ((gfloat*)vec)[index];
 }
 
 /**
@@ -356,11 +356,11 @@ crank_vec_float2_get	(	CrankVecFloat2*	vec,
  * Sets element of vector at @index, by @value.
  */
 void
-crank_vec_float2_set			(	CrankVecFloat2*	vec,
-									const guint		index,
-									const gfloat		value	)
+crank_vec_float2_set (CrankVecFloat2 *vec,
+                      const guint     index,
+                      const gfloat    value)
 {
-	((gfloat*)vec)[index] = value;
+  ((gfloat*)vec)[index] = value;
 }
 
 /**
@@ -376,15 +376,15 @@ crank_vec_float2_set			(	CrankVecFloat2*	vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float2_foreach (	CrankVecFloat2*		vec,
-						  	CrankBoolFloatFunc	func,
-						  	gpointer			userdata	)
+crank_vec_float2_foreach (CrankVecFloat2    *vec,
+                          CrankBoolFloatFunc func,
+                          gpointer           userdata)
 {
-	if (	func (vec->x, userdata) &&
-	 		func (vec->y, userdata))
-		return TRUE;
-  	else
-	  	return FALSE;
+  if (func (vec->x, userdata) &&
+      func (vec->y, userdata))
+    return TRUE;
+  else
+    return FALSE;
 }
 
 /**
@@ -395,10 +395,10 @@ crank_vec_float2_foreach (	CrankVecFloat2*		vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_float2_iterator (	CrankVecFloat2*		vec,
-							CrankIterMemFloat*	iter	)
+crank_vec_float2_iterator (CrankVecFloat2    *vec,
+                           CrankIterMemFloat *iter)
 {
-	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 2);
+  crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 2);
 }
 
 //////// Basic operation ////////
@@ -413,21 +413,21 @@ crank_vec_float2_iterator (	CrankVecFloat2*		vec,
  * Returns: hash value of vector.
  */
 guint
-crank_vec_float2_hash (	gconstpointer	a	)
+crank_vec_float2_hash (gconstpointer a)
 {
-	const CrankVecFloat2*	vec = a;
-	
-	gdouble	dx;
-	gdouble	dy;
-	guint	hash;
-	
-	dx = vec->x;
-	dy = vec->y;
-	
-	hash =	g_double_hash (&dx) +
-			g_double_hash (&dy) + 37;
-	
-	return hash;
+  const CrankVecFloat2 *vec = a;
+
+  gdouble dx;
+  gdouble dy;
+  guint hash;
+
+  dx = vec->x;
+  dy = vec->y;
+
+  hash =  g_double_hash (&dx) +
+         g_double_hash (&dy) + 37;
+
+  return hash;
 }
 
 /**
@@ -439,14 +439,15 @@ crank_vec_float2_hash (	gconstpointer	a	)
  *
  * Returns: whether that the two vectors are same.
  */
-gboolean		crank_vec_float2_equal (			gconstpointer	a,
-												gconstpointer	b	)
+gboolean
+crank_vec_float2_equal (gconstpointer a,
+                        gconstpointer b)
 {
-	CrankVecFloat2*	veca = (CrankVecFloat2*)a;
-	CrankVecFloat2*	vecb = (CrankVecFloat2*)b;
-	
-	return ((veca->x == vecb->x) &&
-			(veca->y == vecb->y));
+  CrankVecFloat2 *veca = (CrankVecFloat2*)a;
+  CrankVecFloat2 *vecb = (CrankVecFloat2*)b;
+
+  return ((veca->x == vecb->x) &&
+          (veca->y == vecb->y));
 }
 
 /**
@@ -460,9 +461,9 @@ gboolean		crank_vec_float2_equal (			gconstpointer	a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float2_to_string (	CrankVecFloat2*	vec	)
+crank_vec_float2_to_string (CrankVecFloat2 *vec)
 {
-	return crank_vec_float2_to_string_full (vec, "(", ", ", ")", "%g");
+  return crank_vec_float2_to_string_full (vec, "(", ", ", ")", "%g");
 }
 
 /**
@@ -478,26 +479,26 @@ crank_vec_float2_to_string (	CrankVecFloat2*	vec	)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float2_to_string_full (	CrankVecFloat2*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	format	)
+crank_vec_float2_to_string_full (CrankVecFloat2 *vec,
+                                 const gchar    *left,
+                                 const gchar    *in,
+                                 const gchar    *right,
+                                 const gchar    *format)
 {
-	GString*	strb = g_string_new (left);
-	gchar*		result;
-	
-	g_string_append_printf (strb, format, vec->x);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->y);
-	g_string_append (strb, right);
-	
-	result = strb->str;
-	
-	g_string_free (strb, FALSE);
-	
-	return result;
+  GString *strb = g_string_new (left);
+  gchar *result;
+
+  g_string_append_printf (strb, format, vec->x);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->y);
+  g_string_append (strb, right);
+
+  result = strb->str;
+
+  g_string_free (strb, FALSE);
+
+  return result;
 }
 
 
@@ -512,10 +513,10 @@ crank_vec_float2_to_string_full (	CrankVecFloat2*	vec,
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float2_get_magn_sq	(	CrankVecFloat2*	vec	)
+crank_vec_float2_get_magn_sq (CrankVecFloat2 *vec)
 {
-	return 	(vec->x * vec->x) +
-			(vec->y * vec->y);
+  return (vec->x * vec->x) +
+         (vec->y * vec->y);
 }
 
 /**
@@ -527,10 +528,10 @@ crank_vec_float2_get_magn_sq	(	CrankVecFloat2*	vec	)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float2_get_magn	(	CrankVecFloat2*	vec	)
+crank_vec_float2_get_magn (CrankVecFloat2 *vec)
 {
-	gfloat sq = crank_vec_float2_get_magn_sq (vec);
-	return sqrtf (sq);
+  gfloat sq = crank_vec_float2_get_magn_sq (vec);
+  return sqrtf (sq);
 }
 
 
@@ -546,11 +547,11 @@ crank_vec_float2_get_magn	(	CrankVecFloat2*	vec	)
  * Applies negation.
  */
 void
-crank_vec_float2_neg (	CrankVecFloat2*	a,
-						CrankVecFloat2*	r	)
+crank_vec_float2_neg (CrankVecFloat2 *a,
+                      CrankVecFloat2 *r)
 {
-	r->x = - (a->x);
-	r->y = - (a->y);
+  r->x = -(a->x);
+  r->y = -(a->y);
 }
 
 
@@ -561,10 +562,10 @@ crank_vec_float2_neg (	CrankVecFloat2*	a,
  * Applies negation.
  */
 void
-crank_vec_float2_neg_self (	CrankVecFloat2*	a	)
+crank_vec_float2_neg_self (CrankVecFloat2 *a)
 {
-	a->x = - (a->x);
-	a->y = - (a->y);
+  a->x = -(a->x);
+  a->y = -(a->y);
 }
 
 
@@ -576,10 +577,10 @@ crank_vec_float2_neg_self (	CrankVecFloat2*	a	)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float2_unit (	CrankVecFloat2*	a,
-						CrankVecFloat2*	r	)
+crank_vec_float2_unit (CrankVecFloat2 *a,
+                       CrankVecFloat2 *r)
 {
-	crank_vec_float2_divs (a, crank_vec_float2_get_magn (a), r);
+  crank_vec_float2_divs (a, crank_vec_float2_get_magn (a), r);
 }
 
 
@@ -590,9 +591,9 @@ crank_vec_float2_unit (	CrankVecFloat2*	a,
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float2_unit_self (	CrankVecFloat2*	a	)
+crank_vec_float2_unit_self (CrankVecFloat2 *a)
 {
-	crank_vec_float2_divs_self (a, crank_vec_float2_get_magn (a));
+  crank_vec_float2_divs_self (a, crank_vec_float2_get_magn (a));
 }
 
 //////// Scalar operations ////////
@@ -606,14 +607,14 @@ crank_vec_float2_unit_self (	CrankVecFloat2*	a	)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float2_muls	(	CrankVecFloat2*	a,
-							const gfloat		b,
-							CrankVecFloat2*	r	)
+crank_vec_float2_muls (CrankVecFloat2 *a,
+                       const gfloat    b,
+                       CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
+  g_return_if_fail (a != r);
 
-	r->x = a->x * b;
-	r->y = a->y * b;
+  r->x = a->x * b;
+  r->y = a->y * b;
 }
 
 /**
@@ -624,11 +625,11 @@ crank_vec_float2_muls	(	CrankVecFloat2*	a,
  * Applies scalar multiplication.
  */
 void
-crank_vec_float2_muls_self	(	CrankVecFloat2*	a,
-								const gfloat	b	)
+crank_vec_float2_muls_self (CrankVecFloat2 *a,
+                            const gfloat    b)
 {
-	a->x *= b;
-	a->y *= b;
+  a->x *= b;
+  a->y *= b;
 }
 
 /**
@@ -640,14 +641,14 @@ crank_vec_float2_muls_self	(	CrankVecFloat2*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float2_divs	(	CrankVecFloat2*	a,
-						const gfloat		b,
-						CrankVecFloat2*	r	)
+crank_vec_float2_divs (CrankVecFloat2 *a,
+                       const gfloat    b,
+                       CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
+  g_return_if_fail (a != r);
 
-	r->x = a->x / b;
-	r->y = a->y / b;
+  r->x = a->x / b;
+  r->y = a->y / b;
 }
 
 /**
@@ -658,11 +659,11 @@ crank_vec_float2_divs	(	CrankVecFloat2*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float2_divs_self	(	CrankVecFloat2*	a,
-								const gfloat	b	)
+crank_vec_float2_divs_self (CrankVecFloat2 *a,
+                            const gfloat    b)
 {
-	a->x /= b;
-	a->y /= b;
+  a->x /= b;
+  a->y /= b;
 }
 
 
@@ -677,15 +678,15 @@ crank_vec_float2_divs_self	(	CrankVecFloat2*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float2_add	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecFloat2*	r	)
+crank_vec_float2_add (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b,
+                      CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = a->x + b->x;
-	r->y = a->y + b->y;
+  r->x = a->x + b->x;
+  r->y = a->y + b->y;
 }
 
 /**
@@ -696,11 +697,11 @@ crank_vec_float2_add	(	CrankVecFloat2*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float2_add_self	(	CrankVecFloat2*	a,
-								CrankVecFloat2*	b	)
+crank_vec_float2_add_self (CrankVecFloat2 *a,
+                           CrankVecFloat2 *b)
 {
-	a->x += b->x;
-	a->y += b->y;
+  a->x += b->x;
+  a->y += b->y;
 }
 
 /**
@@ -712,15 +713,15 @@ crank_vec_float2_add_self	(	CrankVecFloat2*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float2_sub	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecFloat2*	r	)
+crank_vec_float2_sub (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b,
+                      CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = a->x - b->x;
-	r->y = a->y - b->y;
+  r->x = a->x - b->x;
+  r->y = a->y - b->y;
 }
 
 /**
@@ -731,11 +732,11 @@ crank_vec_float2_sub	(	CrankVecFloat2*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float2_sub_self	(	CrankVecFloat2*	a,
-								CrankVecFloat2*	b	)
+crank_vec_float2_sub_self (CrankVecFloat2 *a,
+                           CrankVecFloat2 *b)
 {
-	a->x -= b->x;
-	a->y -= b->y;
+  a->x -= b->x;
+  a->y -= b->y;
 }
 
 /**
@@ -748,10 +749,10 @@ crank_vec_float2_sub_self	(	CrankVecFloat2*	a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float2_dot	(	CrankVecFloat2*	a,
-						CrankVecFloat2*	b	)
+crank_vec_float2_dot (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b)
 {
-	return (a->x) * (b->x) + (a->y) * (b->y);
+  return (a->x) * (b->x) + (a->y) * (b->y);
 }
 
 //////// Component vector operations ////////
@@ -761,34 +762,34 @@ crank_vec_float2_dot	(	CrankVecFloat2*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float2_cmpmul	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecFloat2*	r	)
+crank_vec_float2_cmpmul (CrankVecFloat2 *a,
+                         CrankVecFloat2 *b,
+                         CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = a->x * b->x;
-	r->y = a->y * b->y;
+  r->x = a->x * b->x;
+  r->y = a->y * b->y;
 }
 
 /**
  * crank_vec_float2_cmpmul_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float2_cmpmul_self	(	CrankVecFloat2*	a,
-									CrankVecFloat2*	b	)
+crank_vec_float2_cmpmul_self (CrankVecFloat2 *a,
+                              CrankVecFloat2 *b)
 {
-	a->x *= b->x;
-	a->y *= b->y;
+  a->x *= b->x;
+  a->y *= b->y;
 }
 
 /**
@@ -796,34 +797,34 @@ crank_vec_float2_cmpmul_self	(	CrankVecFloat2*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float2_cmpdiv	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecFloat2*	r	)
+crank_vec_float2_cmpdiv (CrankVecFloat2 *a,
+                         CrankVecFloat2 *b,
+                         CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = a->x / b->x;
-	r->y = a->y / b->y;
+  r->x = a->x / b->x;
+  r->y = a->y / b->y;
 }
 
 /**
  * crank_vec_float2_cmpdiv_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float2_cmpdiv_self	(	CrankVecFloat2*	a,
-									CrankVecFloat2*	b	)
+crank_vec_float2_cmpdiv_self (CrankVecFloat2 *a,
+                              CrankVecFloat2 *b)
 {
-	a->x /= b->x;
-	a->y /= b->y;
+  a->x /= b->x;
+  a->y /= b->y;
 }
 
 /**
@@ -831,67 +832,67 @@ crank_vec_float2_cmpdiv_self	(	CrankVecFloat2*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float2_cmpless	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecBool2*	r	)
+crank_vec_float2_cmpless (CrankVecFloat2 *a,
+                          CrankVecFloat2 *b,
+                          CrankVecBool2  *r)
 {
-	r->x = (a->x) < (b->x);
-	r->y = (a->y) < (b->y);
+  r->x = (a->x) < (b->x);
+  r->y = (a->y) < (b->y);
 }
-												
+
 /**
  * crank_vec_float2_cmpeq:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float2_cmpeq	(	CrankVecFloat2*	a,
-							CrankVecFloat2*	b,
-							CrankVecBool2*	r	)
+crank_vec_float2_cmpeq (CrankVecFloat2 *a,
+                        CrankVecFloat2 *b,
+                        CrankVecBool2  *r)
 {
-	r->x = (a->x) == (b->x);
-	r->y = (a->y) == (b->y);
+  r->x = (a->x) == (b->x);
+  r->y = (a->y) == (b->y);
 }
-												
+
 /**
  * crank_vec_float2_cmpgreater:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is greater than counterpart of @b
- */					
+ */
 void
-crank_vec_float2_cmpgreater	(	CrankVecFloat2*	a,
-								CrankVecFloat2*	b,
-								CrankVecBool2*	r	)
+crank_vec_float2_cmpgreater (CrankVecFloat2 *a,
+                             CrankVecFloat2 *b,
+                             CrankVecBool2  *r)
 {
-	r->x = (a->x) > (b->x);
-	r->y = (a->y) > (b->y);
+  r->x = (a->x) > (b->x);
+  r->y = (a->y) > (b->y);
 }
-					
+
 /**
  * crank_vec_float2_cmpcmp:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets compare result of each components.
- */	
+ */
 void
-crank_vec_float2_cmpcmp	(		CrankVecFloat2*	a,
-								CrankVecFloat2*	b,
-								CrankVecInt2*	r	)
+crank_vec_float2_cmpcmp (CrankVecFloat2 *a,
+                         CrankVecFloat2 *b,
+                         CrankVecInt2   *r)
 {
-	r->x = CMP(a->x, b->x);
-	r->y = CMP(a->y, b->y);
+  r->x = CMP(a->x, b->x);
+  r->y = CMP(a->y, b->y);
 }
 
 /**
@@ -903,15 +904,15 @@ crank_vec_float2_cmpcmp	(		CrankVecFloat2*	a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float2_min (	CrankVecFloat2*	a,
-						CrankVecFloat2*	b,
-						CrankVecFloat2*	r	)
+crank_vec_float2_min (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b,
+                      CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = MIN (a->x, b->x);
-	r->y = MIN (a->y, b->y);
+  r->x = MIN (a->x, b->x);
+  r->y = MIN (a->y, b->y);
 }
 
 /**
@@ -923,15 +924,15 @@ crank_vec_float2_min (	CrankVecFloat2*	a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float2_max (	CrankVecFloat2*	a,
-						CrankVecFloat2*	b,
-						CrankVecFloat2*	r	)
+crank_vec_float2_max (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b,
+                      CrankVecFloat2 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
 
-	r->x = MAX (a->x, b->x);
-	r->y = MAX (a->y, b->y);
+  r->x = MAX (a->x, b->x);
+  r->y = MAX (a->y, b->y);
 }
 
 
@@ -944,19 +945,19 @@ crank_vec_float2_max (	CrankVecFloat2*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float2_mulm (	CrankVecFloat2*	a,
-					   	CrankMatFloat2*	b,
-					   	CrankVecFloat2*	r	)
+crank_vec_float2_mulm (CrankVecFloat2 *a,
+                       CrankMatFloat2 *b,
+                       CrankVecFloat2 *r)
 {
-  	gfloat nx, ny;
-  	
-	g_return_if_fail (a != r);
+  gfloat nx, ny;
 
-	nx = (a->x * b->m00) + (a->y * b->m10);
-	ny = (a->x * b->m01) + (a->y * b->m11);
+  g_return_if_fail (a != r);
 
-  	r->x = nx;
-  	r->y = ny;
+  nx = (a->x * b->m00) + (a->y * b->m10);
+  ny = (a->x * b->m01) + (a->y * b->m11);
+
+  r->x = nx;
+  r->y = ny;
 }
 
 
@@ -968,16 +969,16 @@ crank_vec_float2_mulm (	CrankVecFloat2*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float2_mulm_self (	CrankVecFloat2*	a,
-					   			CrankMatFloat2*	b	)
+crank_vec_float2_mulm_self (CrankVecFloat2 *a,
+                            CrankMatFloat2 *b)
 {
-  	gfloat nx, ny;
+  gfloat nx, ny;
 
-	nx = (a->x * b->m00) + (a->y * b->m10);
-	ny = (a->x * b->m01) + (a->y * b->m11);
+  nx = (a->x * b->m00) + (a->y * b->m10);
+  ny = (a->x * b->m01) + (a->y * b->m11);
 
-  	a->x = nx;
-  	a->y = ny;
+  a->x = nx;
+  a->y = ny;
 }
 
 /**
@@ -993,18 +994,18 @@ crank_vec_float2_mulm_self (	CrankVecFloat2*	a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float2_mixs (	CrankVecFloat2*	a,
-						CrankVecFloat2*	b,
-						const gfloat	c,
-						CrankVecFloat2*	r	)
+crank_vec_float2_mixs (CrankVecFloat2 *a,
+                       CrankVecFloat2 *b,
+                       const gfloat    c,
+                       CrankVecFloat2 *r)
 {
-	gfloat d = 1.0f - c;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x * d + b->x * c;
-	r->y = a->y * d + b->y * c;
+  gfloat d = 1.0f - c;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x * d + b->x * c;
+  r->y = a->y * d + b->y * c;
 }
 
 
@@ -1021,55 +1022,55 @@ crank_vec_float2_mixs (	CrankVecFloat2*	a,
  *    (a cmpmul c) + (b cmpmul ({1, 1} - c))
  */
 void
-crank_vec_float2_mix (	CrankVecFloat2*	a,
-						CrankVecFloat2*	b,
-						CrankVecFloat2*	c,
-						CrankVecFloat2*	r	)
+crank_vec_float2_mix (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b,
+                      CrankVecFloat2 *c,
+                      CrankVecFloat2 *r)
 {
-	CrankVecFloat2 d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	g_return_if_fail (c != r);
+  CrankVecFloat2 d;
 
-	d.x = 1.0f - c->x;
-	d.y = 1.0f - c->y;
-	
-	r->x = a->x * d.x + b->x * c->x;
-	r->y = a->y * d.y + b->y * c->y;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  g_return_if_fail (c != r);
+
+  d.x = 1.0f - c->x;
+  d.y = 1.0f - c->y;
+
+  r->x = a->x * d.x + b->x * c->x;
+  r->y = a->y * d.y + b->y * c->y;
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
 
 static void
-crank_vec_float2_transform_from_vb (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float2_transform_from_vb (const GValue *src,
+                                    GValue       *dest)
 {
-	CrankVecFloat2*	vf = g_new (CrankVecFloat2, 1);
-	
-	crank_vec_float2_init_from_vb (vf, (CrankVecBool2*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float2_transform_from_vi (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloat2*	vf = g_new (CrankVecFloat2, 1);
-	
-	crank_vec_float2_init_from_vi (vf, (CrankVecInt2*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
+  CrankVecFloat2 *vf = g_new (CrankVecFloat2, 1);
+
+  crank_vec_float2_init_from_vb (vf, (CrankVecBool2*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
 }
 
 static void
-crank_vec_float2_transform_to_string (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float2_transform_from_vi (const GValue *src,
+                                    GValue       *dest)
 {
-	g_value_take_string (dest,
-			crank_vec_float2_to_string (
-					(CrankVecFloat2*) g_value_get_boxed(src) ) );
+  CrankVecFloat2 *vf = g_new (CrankVecFloat2, 1);
+
+  crank_vec_float2_init_from_vi (vf, (CrankVecInt2*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float2_transform_to_string (const GValue *src,
+                                      GValue       *dest)
+{
+  g_value_take_string (dest,
+                       crank_vec_float2_to_string (
+                         (CrankVecFloat2*) g_value_get_boxed(src) ) );
 }
 
 
@@ -1078,33 +1079,33 @@ crank_vec_float2_transform_to_string (	const GValue*	src,
 
 
 
-static void crank_vec_float3_transform_from_vb (	const GValue*	src,
-													GValue*			dest	);
-													
-static void crank_vec_float3_transform_from_vi (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float3_transform_from_vb (const GValue *src,
+                                                GValue       *dest);
 
-static void	crank_vec_float3_transform_to_string (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float3_transform_from_vi (const GValue *src,
+                                                GValue       *dest);
+
+static void crank_vec_float3_transform_to_string (const GValue *src,
+                                                  GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
-		CrankVecFloat3,
-		crank_vec_float3,
-		crank_vec_float3_dup,
-		g_free,
-		{
-			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL3,
-												g_define_type_id,
-												crank_vec_float3_transform_from_vb	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_INT3,
-												g_define_type_id,
-												crank_vec_float3_transform_from_vi	);
-												
-			g_value_register_transform_func (	g_define_type_id,
-												G_TYPE_STRING,
-												crank_vec_float3_transform_to_string	);
-		} )
+  CrankVecFloat3,
+  crank_vec_float3,
+  crank_vec_float3_dup,
+  g_free,
+  {
+    g_value_register_transform_func (CRANK_TYPE_VEC_BOOL3,
+                                     g_define_type_id,
+                                     crank_vec_float3_transform_from_vb);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_INT3,
+                                     g_define_type_id,
+                                     crank_vec_float3_transform_from_vi);
+
+    g_value_register_transform_func (g_define_type_id,
+                                     G_TYPE_STRING,
+                                     crank_vec_float3_transform_to_string);
+  })
 
 /**
  * crank_vec_float3_init:
@@ -1116,14 +1117,14 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  * Initializes vector with given components.
  */
 void
-crank_vec_float3_init	(	CrankVecFloat3*	vec,
-							gfloat			x,
-							gfloat			y,
-							gfloat			z	)
+crank_vec_float3_init (CrankVecFloat3 *vec,
+                       gfloat          x,
+                       gfloat          y,
+                       gfloat          z)
 {
-	vec->x = x;
-	vec->y = y;
-	vec->z = z;
+  vec->x = x;
+  vec->y = y;
+  vec->z = z;
 }
 
 /**
@@ -1134,12 +1135,12 @@ crank_vec_float3_init	(	CrankVecFloat3*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float3_init_arr	(	CrankVecFloat3*	vec,
-								gfloat*			arr	)
+crank_vec_float3_init_arr (CrankVecFloat3 *vec,
+                           gfloat         *arr)
 {
-	vec->x = arr[0];
-	vec->y = arr[1];
-	vec->z = arr[2];
+  vec->x = arr[0];
+  vec->y = arr[1];
+  vec->z = arr[2];
 }
 
 /**
@@ -1150,12 +1151,12 @@ crank_vec_float3_init_arr	(	CrankVecFloat3*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float3_init_valist	(	CrankVecFloat3*	vec,
-									va_list			varargs	)
+crank_vec_float3_init_valist (CrankVecFloat3 *vec,
+                              va_list         varargs)
 {
-	vec->x = va_arg (varargs, gdouble);
-	vec->y = va_arg (varargs, gdouble);
-	vec->z = va_arg (varargs, gdouble);
+  vec->x = va_arg (varargs, gdouble);
+  vec->y = va_arg (varargs, gdouble);
+  vec->z = va_arg (varargs, gdouble);
 }
 
 /**
@@ -1166,12 +1167,12 @@ crank_vec_float3_init_valist	(	CrankVecFloat3*	vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_float3_init_fill	(	CrankVecFloat3*	vec,
-								gfloat			fill	)
+crank_vec_float3_init_fill (CrankVecFloat3 *vec,
+                            gfloat          fill)
 {
-	vec->x = fill;
-	vec->y = fill;
-	vec->z = fill;
+  vec->x = fill;
+  vec->y = fill;
+  vec->z = fill;
 }
 
 /**
@@ -1182,12 +1183,12 @@ crank_vec_float3_init_fill	(	CrankVecFloat3*	vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float3_init_from_vb	(	CrankVecFloat3*	vec,
-									CrankVecBool3*	vb		)
+crank_vec_float3_init_from_vb (CrankVecFloat3 *vec,
+                               CrankVecBool3  *vb)
 {
-	vec->x = vb->x ? 1 : 0;
-	vec->y = vb->y ? 1 : 0;
-	vec->z = vb->z ? 1 : 0;
+  vec->x = vb->x ? 1 : 0;
+  vec->y = vb->y ? 1 : 0;
+  vec->z = vb->z ? 1 : 0;
 }
 
 /**
@@ -1198,12 +1199,12 @@ crank_vec_float3_init_from_vb	(	CrankVecFloat3*	vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float3_init_from_vi	(	CrankVecFloat3*	vec,
-									CrankVecInt3*	vi		)
+crank_vec_float3_init_from_vi (CrankVecFloat3 *vec,
+                               CrankVecInt3   *vi)
 {
-	vec->x = vi->x;
-	vec->y = vi->y;
-	vec->z = vi->z;
+  vec->x = vi->x;
+  vec->y = vi->y;
+  vec->z = vi->z;
 }
 
 
@@ -1215,10 +1216,10 @@ crank_vec_float3_init_from_vi	(	CrankVecFloat3*	vec,
  * Copies vector.
  */
 void
-crank_vec_float3_copy			(	CrankVecFloat3*	vec,
-						 			CrankVecFloat3*	other	)
+crank_vec_float3_copy (CrankVecFloat3 *vec,
+                       CrankVecFloat3 *other)
 {
-	memcpy (other, vec, sizeof(CrankVecFloat3));
+  memcpy (other, vec, sizeof(CrankVecFloat3));
 }
 
 /**
@@ -1230,9 +1231,9 @@ crank_vec_float3_copy			(	CrankVecFloat3*	vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat3*
-crank_vec_float3_dup			(	CrankVecFloat3*	vec	)
+crank_vec_float3_dup (CrankVecFloat3 *vec)
 {
-  	return (CrankVecFloat3*) g_memdup (vec, sizeof (CrankVecFloat3));
+  return (CrankVecFloat3*) g_memdup (vec, sizeof (CrankVecFloat3));
 }
 
 /**
@@ -1245,10 +1246,10 @@ crank_vec_float3_dup			(	CrankVecFloat3*	vec	)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float3_get	(	CrankVecFloat3*	vec,
-							const guint		index	)
+crank_vec_float3_get (CrankVecFloat3 *vec,
+                      const guint     index)
 {
-	return ((gfloat*)vec)[index];
+  return ((gfloat*)vec)[index];
 }
 
 /**
@@ -1260,11 +1261,11 @@ crank_vec_float3_get	(	CrankVecFloat3*	vec,
  * Sets element of vector at @index, by @value.
  */
 void
-crank_vec_float3_set			(	CrankVecFloat3*	vec,
-									const guint		index,
-									const gfloat		value	)
+crank_vec_float3_set (CrankVecFloat3 *vec,
+                      const guint     index,
+                      const gfloat    value)
 {
-	((gfloat*)vec)[index] = value;
+  ((gfloat*)vec)[index] = value;
 }
 
 /**
@@ -1280,16 +1281,16 @@ crank_vec_float3_set			(	CrankVecFloat3*	vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float3_foreach (	CrankVecFloat3*		vec,
-						  	CrankBoolFloatFunc	func,
-						  	gpointer			userdata	)
+crank_vec_float3_foreach (CrankVecFloat3    *vec,
+                          CrankBoolFloatFunc func,
+                          gpointer           userdata)
 {
-	if (	func (vec->x, userdata) &&
-	 		func (vec->y, userdata) &&
-	 		func (vec->z, userdata))
-		return TRUE;
-  	else
-	  	return FALSE;
+  if (func (vec->x, userdata) &&
+      func (vec->y, userdata) &&
+      func (vec->z, userdata))
+    return TRUE;
+  else
+    return FALSE;
 }
 
 /**
@@ -1300,10 +1301,10 @@ crank_vec_float3_foreach (	CrankVecFloat3*		vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_float3_iterator (	CrankVecFloat3*		vec,
-							CrankIterMemFloat*	iter	)
+crank_vec_float3_iterator (CrankVecFloat3    *vec,
+                           CrankIterMemFloat *iter)
 {
-	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 3);
+  crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 3);
 }
 
 
@@ -1319,24 +1320,24 @@ crank_vec_float3_iterator (	CrankVecFloat3*		vec,
  * Returns: hash value of vector.
  */
 guint
-crank_vec_float3_hash (	gconstpointer	a	)
+crank_vec_float3_hash (gconstpointer a)
 {
-	const CrankVecFloat3*	vec = a;
-	
-	gdouble	dx;
-	gdouble	dy;
-	gdouble	dz;
-	guint	hash;
-	
-	dx = vec->x;
-	dy = vec->y;
-	dz = vec->z;
-	
-	hash =	g_double_hash (&dx) +
-			g_double_hash (&dy) + 37 +
-			g_double_hash (&dz) + 129;
-	
-	return hash;
+  const CrankVecFloat3 *vec = a;
+
+  gdouble dx;
+  gdouble dy;
+  gdouble dz;
+  guint hash;
+
+  dx = vec->x;
+  dy = vec->y;
+  dz = vec->z;
+
+  hash =  g_double_hash (&dx) +
+         g_double_hash (&dy) + 37 +
+         g_double_hash (&dz) + 129;
+
+  return hash;
 }
 
 /**
@@ -1348,15 +1349,16 @@ crank_vec_float3_hash (	gconstpointer	a	)
  *
  * Returns: whether that the two vectors are same.
  */
-gboolean		crank_vec_float3_equal (			gconstpointer	a,
-												gconstpointer	b	)
+gboolean
+crank_vec_float3_equal (gconstpointer a,
+                        gconstpointer b)
 {
-	CrankVecFloat3*	veca = (CrankVecFloat3*)a;
-	CrankVecFloat3*	vecb = (CrankVecFloat3*)b;
-	
-	return ((veca->x == vecb->x) &&
-			(veca->y == vecb->y) &&
-			(veca->z == vecb->z));
+  CrankVecFloat3 *veca = (CrankVecFloat3*)a;
+  CrankVecFloat3 *vecb = (CrankVecFloat3*)b;
+
+  return ((veca->x == vecb->x) &&
+          (veca->y == vecb->y) &&
+          (veca->z == vecb->z));
 }
 
 /**
@@ -1370,9 +1372,9 @@ gboolean		crank_vec_float3_equal (			gconstpointer	a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float3_to_string (	CrankVecFloat3*	vec	)
+crank_vec_float3_to_string (CrankVecFloat3 *vec)
 {
-	return crank_vec_float3_to_string_full (vec, "(", ", ", ")", "%g");
+  return crank_vec_float3_to_string_full (vec, "(", ", ", ")", "%g");
 }
 
 /**
@@ -1388,29 +1390,29 @@ crank_vec_float3_to_string (	CrankVecFloat3*	vec	)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float3_to_string_full (	CrankVecFloat3*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	format	)
+crank_vec_float3_to_string_full (CrankVecFloat3 *vec,
+                                 const gchar    *left,
+                                 const gchar    *in,
+                                 const gchar    *right,
+                                 const gchar    *format)
 {
-	GString*	strb = g_string_new (left);
-	gchar*		result;
-	
-	g_string_append_printf (strb, format, vec->x);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->y);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->z);
-	g_string_append (strb, right);
-	
-	result = strb->str;
-	
-	g_string_free (strb, FALSE);
-	
-	return result;
+  GString *strb = g_string_new (left);
+  gchar *result;
+
+  g_string_append_printf (strb, format, vec->x);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->y);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->z);
+  g_string_append (strb, right);
+
+  result = strb->str;
+
+  g_string_free (strb, FALSE);
+
+  return result;
 }
 
 
@@ -1425,11 +1427,11 @@ crank_vec_float3_to_string_full (	CrankVecFloat3*	vec,
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float3_get_magn_sq	(	CrankVecFloat3*	vec	)
+crank_vec_float3_get_magn_sq (CrankVecFloat3 *vec)
 {
-	return 	(vec->x * vec->x) +
-			(vec->y * vec->y) +
-			(vec->z * vec->z);
+  return (vec->x * vec->x) +
+         (vec->y * vec->y) +
+         (vec->z * vec->z);
 }
 
 /**
@@ -1441,10 +1443,10 @@ crank_vec_float3_get_magn_sq	(	CrankVecFloat3*	vec	)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float3_get_magn	(	CrankVecFloat3*	vec	)
+crank_vec_float3_get_magn (CrankVecFloat3 *vec)
 {
-	gfloat sq = crank_vec_float3_get_magn_sq (vec);
-	return sqrtf (sq);
+  gfloat sq = crank_vec_float3_get_magn_sq (vec);
+  return sqrtf (sq);
 }
 
 
@@ -1460,12 +1462,12 @@ crank_vec_float3_get_magn	(	CrankVecFloat3*	vec	)
  * Applies negation.
  */
 void
-crank_vec_float3_neg (	CrankVecFloat3*	a,
-						CrankVecFloat3*	r	)
+crank_vec_float3_neg (CrankVecFloat3 *a,
+                      CrankVecFloat3 *r)
 {
-	r->x = - (a->x);
-	r->y = - (a->y);
-	r->z = - (a->z);
+  r->x = -(a->x);
+  r->y = -(a->y);
+  r->z = -(a->z);
 }
 
 /**
@@ -1475,11 +1477,11 @@ crank_vec_float3_neg (	CrankVecFloat3*	a,
  * Applies negation.
  */
 void
-crank_vec_float3_neg_self (	CrankVecFloat3*	a	)
+crank_vec_float3_neg_self (CrankVecFloat3 *a)
 {
-	a->x = - (a->x);
-	a->y = - (a->y);
-	a->z = - (a->z);
+  a->x = -(a->x);
+  a->y = -(a->y);
+  a->z = -(a->z);
 }
 
 /**
@@ -1490,10 +1492,10 @@ crank_vec_float3_neg_self (	CrankVecFloat3*	a	)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float3_unit (	CrankVecFloat3*	a,
-						CrankVecFloat3*	r	)
+crank_vec_float3_unit (CrankVecFloat3 *a,
+                       CrankVecFloat3 *r)
 {
-	crank_vec_float3_divs (a, crank_vec_float3_get_magn (a), r);
+  crank_vec_float3_divs (a, crank_vec_float3_get_magn (a), r);
 }
 
 /**
@@ -1503,9 +1505,9 @@ crank_vec_float3_unit (	CrankVecFloat3*	a,
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float3_unit_self (	CrankVecFloat3*	a	)
+crank_vec_float3_unit_self (CrankVecFloat3 *a)
 {
-	crank_vec_float3_divs_self (a, crank_vec_float3_get_magn (a));
+  crank_vec_float3_divs_self (a, crank_vec_float3_get_magn (a));
 }
 
 
@@ -1520,15 +1522,15 @@ crank_vec_float3_unit_self (	CrankVecFloat3*	a	)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float3_muls	(	CrankVecFloat3*	a,
-							const gfloat		b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_muls (CrankVecFloat3 *a,
+                       const gfloat    b,
+                       CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	
-	r->x = a->x * b;
-	r->y = a->y * b;
-	r->z = a->z * b;
+  g_return_if_fail (a != r);
+
+  r->x = a->x * b;
+  r->y = a->y * b;
+  r->z = a->z * b;
 }
 
 /**
@@ -1539,12 +1541,12 @@ crank_vec_float3_muls	(	CrankVecFloat3*	a,
  * Applies scalar multiplication.
  */
 void
-crank_vec_float3_muls_self	(	CrankVecFloat3*	a,
-								const gfloat	b	)
+crank_vec_float3_muls_self (CrankVecFloat3 *a,
+                            const gfloat    b)
 {
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
+  a->x *= b;
+  a->y *= b;
+  a->z *= b;
 }
 
 /**
@@ -1556,15 +1558,15 @@ crank_vec_float3_muls_self	(	CrankVecFloat3*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float3_divs	(	CrankVecFloat3*	a,
-						const gfloat		b,
-						CrankVecFloat3*	r	)
+crank_vec_float3_divs (CrankVecFloat3 *a,
+                       const gfloat    b,
+                       CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	
-	r->x = a->x / b;
-	r->y = a->y / b;
-	r->z = a->z / b;
+  g_return_if_fail (a != r);
+
+  r->x = a->x / b;
+  r->y = a->y / b;
+  r->z = a->z / b;
 }
 
 /**
@@ -1575,12 +1577,12 @@ crank_vec_float3_divs	(	CrankVecFloat3*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float3_divs_self	(	CrankVecFloat3*	a,
-								const gfloat	b	)
+crank_vec_float3_divs_self (CrankVecFloat3 *a,
+                            const gfloat    b)
 {
-	a->x /= b;
-	a->y /= b;
-	a->z /= b;
+  a->x /= b;
+  a->y /= b;
+  a->z /= b;
 }
 
 
@@ -1595,16 +1597,16 @@ crank_vec_float3_divs_self	(	CrankVecFloat3*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float3_add	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_add (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x + b->x;
-	r->y = a->y + b->y;
-	r->z = a->z + b->z;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x + b->x;
+  r->y = a->y + b->y;
+  r->z = a->z + b->z;
 }
 
 /**
@@ -1615,12 +1617,12 @@ crank_vec_float3_add	(	CrankVecFloat3*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float3_add_self	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b	)
+crank_vec_float3_add_self (CrankVecFloat3 *a,
+                           CrankVecFloat3 *b)
 {
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
+  a->x += b->x;
+  a->y += b->y;
+  a->z += b->z;
 }
 
 /**
@@ -1632,16 +1634,16 @@ crank_vec_float3_add_self	(	CrankVecFloat3*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float3_sub	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_sub (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x - b->x;
-	r->y = a->y - b->y;
-	r->z = a->z - b->z;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x - b->x;
+  r->y = a->y - b->y;
+  r->z = a->z - b->z;
 }
 
 /**
@@ -1652,12 +1654,12 @@ crank_vec_float3_sub	(	CrankVecFloat3*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float3_sub_self	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b	)
+crank_vec_float3_sub_self (CrankVecFloat3 *a,
+                           CrankVecFloat3 *b)
 {
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
+  a->x -= b->x;
+  a->y -= b->y;
+  a->z -= b->z;
 }
 
 /**
@@ -1670,10 +1672,10 @@ crank_vec_float3_sub_self	(	CrankVecFloat3*	a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float3_dot	(	CrankVecFloat3*	a,
-						CrankVecFloat3*	b	)
+crank_vec_float3_dot (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b)
 {
-	return (a->x) * (b->x) + (a->y) * (b->y) + (a->z) * (b->z);
+  return (a->x) * (b->x) + (a->y) * (b->y) + (a->z) * (b->z);
 }
 
 /**
@@ -1685,24 +1687,24 @@ crank_vec_float3_dot	(	CrankVecFloat3*	a,
  * Get cross product of two vectors.
  */
 void
-crank_vec_float3_crs	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_crs (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *r)
 {
-	gfloat	nx;
-	gfloat	ny;
-	gfloat	nz;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	nx = (a->y * b->z) - (a->z * b->y);
-	ny = (a->z * b->x) - (a->x * b->z);
-	nz = (a->x * b->y) - (a->y * b->x);
+  gfloat nx;
+  gfloat ny;
+  gfloat nz;
 
-	r->x = nx;
-	r->y = ny;
-	r->z = nz;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  nx = (a->y * b->z) - (a->z * b->y);
+  ny = (a->z * b->x) - (a->x * b->z);
+  nz = (a->x * b->y) - (a->y * b->x);
+
+  r->x = nx;
+  r->y = ny;
+  r->z = nz;
 }
 
 /**
@@ -1713,16 +1715,16 @@ crank_vec_float3_crs	(	CrankVecFloat3*	a,
  * Get cross product of two vectors.
  */
 void
-crank_vec_float3_crs_self	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b	)
+crank_vec_float3_crs_self (CrankVecFloat3 *a,
+                           CrankVecFloat3 *b)
 {
-	gfloat	nx = (a->y * b->z) - (a->z * b->y);
-	gfloat	ny = (a->z * b->x) - (a->x * b->z);
-	gfloat	nz = (a->x * b->y) - (a->y * b->x);
+  gfloat nx = (a->y * b->z) - (a->z * b->y);
+  gfloat ny = (a->z * b->x) - (a->x * b->z);
+  gfloat nz = (a->x * b->y) - (a->y * b->x);
 
-	a->x = nx;
-	a->y = ny;
-	a->z = nz;
+  a->x = nx;
+  a->y = ny;
+  a->z = nz;
 }
 
 //////// Component vector operations ////////
@@ -1732,36 +1734,36 @@ crank_vec_float3_crs_self	(	CrankVecFloat3*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float3_cmpmul	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_cmpmul (CrankVecFloat3 *a,
+                         CrankVecFloat3 *b,
+                         CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x * b->x;
-	r->y = a->y * b->y;
-	r->z = a->z * b->z;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x * b->x;
+  r->y = a->y * b->y;
+  r->z = a->z * b->z;
 }
 
 /**
  * crank_vec_float3_cmpmul_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float3_cmpmul_self	(	CrankVecFloat3*	a,
-									CrankVecFloat3*	b	)
+crank_vec_float3_cmpmul_self (CrankVecFloat3 *a,
+                              CrankVecFloat3 *b)
 {
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
+  a->x *= b->x;
+  a->y *= b->y;
+  a->z *= b->z;
 }
 
 /**
@@ -1769,36 +1771,36 @@ crank_vec_float3_cmpmul_self	(	CrankVecFloat3*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float3_cmpdiv	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecFloat3*	r	)
+crank_vec_float3_cmpdiv (CrankVecFloat3 *a,
+                         CrankVecFloat3 *b,
+                         CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x / b->x;
-	r->y = a->y / b->y;
-	r->z = a->z / b->z;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x / b->x;
+  r->y = a->y / b->y;
+  r->z = a->z / b->z;
 }
 
 /**
  * crank_vec_float3_cmpdiv_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float3_cmpdiv_self	(	CrankVecFloat3*	a,
-									CrankVecFloat3*	b	)
+crank_vec_float3_cmpdiv_self (CrankVecFloat3 *a,
+                              CrankVecFloat3 *b)
 {
-	a->x /= b->x;
-	a->y /= b->y;
-	a->z /= b->z;
+  a->x /= b->x;
+  a->y /= b->y;
+  a->z /= b->z;
 }
 
 /**
@@ -1806,71 +1808,71 @@ crank_vec_float3_cmpdiv_self	(	CrankVecFloat3*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float3_cmpless	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecBool3*	r	)
+crank_vec_float3_cmpless (CrankVecFloat3 *a,
+                          CrankVecFloat3 *b,
+                          CrankVecBool3  *r)
 {
-	r->x = (a->x) < (b->x);
-	r->y = (a->y) < (b->y);
-	r->z = (a->z) < (b->z);
+  r->x = (a->x) < (b->x);
+  r->y = (a->y) < (b->y);
+  r->z = (a->z) < (b->z);
 }
-												
+
 /**
  * crank_vec_float3_cmpeq:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float3_cmpeq	(	CrankVecFloat3*	a,
-							CrankVecFloat3*	b,
-							CrankVecBool3*	r	)
+crank_vec_float3_cmpeq (CrankVecFloat3 *a,
+                        CrankVecFloat3 *b,
+                        CrankVecBool3  *r)
 {
-	r->x = (a->x) == (b->x);
-	r->y = (a->y) == (b->y);
-	r->z = (a->z) == (b->z);
+  r->x = (a->x) == (b->x);
+  r->y = (a->y) == (b->y);
+  r->z = (a->z) == (b->z);
 }
-												
+
 /**
  * crank_vec_float3_cmpgreater:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is greater than counterpart of @b
- */					
+ */
 void
-crank_vec_float3_cmpgreater	(	CrankVecFloat3*	a,
-								CrankVecFloat3*	b,
-								CrankVecBool3*	r	)
+crank_vec_float3_cmpgreater (CrankVecFloat3 *a,
+                             CrankVecFloat3 *b,
+                             CrankVecBool3  *r)
 {
-	r->x = (a->x) > (b->x);
-	r->y = (a->y) > (b->y);
-	r->z = (a->z) > (b->z);
+  r->x = (a->x) > (b->x);
+  r->y = (a->y) > (b->y);
+  r->z = (a->z) > (b->z);
 }
-					
+
 /**
  * crank_vec_float3_cmpcmp:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets compare result of each components.
- */	
+ */
 void
-crank_vec_float3_cmpcmp	(		CrankVecFloat3*	a,
-								CrankVecFloat3*	b,
-								CrankVecInt3*	r	)
+crank_vec_float3_cmpcmp (CrankVecFloat3 *a,
+                         CrankVecFloat3 *b,
+                         CrankVecInt3   *r)
 {
-	r->x = CMP(a->x, b->x);
-	r->y = CMP(a->y, b->y);
-	r->z = CMP(a->z, b->z);
+  r->x = CMP(a->x, b->x);
+  r->y = CMP(a->y, b->y);
+  r->z = CMP(a->z, b->z);
 }
 
 /**
@@ -1882,16 +1884,16 @@ crank_vec_float3_cmpcmp	(		CrankVecFloat3*	a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float3_min (	CrankVecFloat3*	a,
-						CrankVecFloat3*	b,
-						CrankVecFloat3*	r	)
+crank_vec_float3_min (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = MIN (a->x, b->x);
-	r->y = MIN (a->y, b->y);
-	r->z = MIN (a->z, b->z);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = MIN (a->x, b->x);
+  r->y = MIN (a->y, b->y);
+  r->z = MIN (a->z, b->z);
 }
 
 /**
@@ -1903,16 +1905,16 @@ crank_vec_float3_min (	CrankVecFloat3*	a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float3_max (	CrankVecFloat3*	a,
-						CrankVecFloat3*	b,
-						CrankVecFloat3*	r	)
+crank_vec_float3_max (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = MAX (a->x, b->x);
-	r->y = MAX (a->y, b->y);
-	r->z = MAX (a->z, b->z);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = MAX (a->x, b->x);
+  r->y = MAX (a->y, b->y);
+  r->z = MAX (a->z, b->z);
 }
 
 
@@ -1925,21 +1927,21 @@ crank_vec_float3_max (	CrankVecFloat3*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float3_mulm (	CrankVecFloat3*	a,
-					   	CrankMatFloat3*	b,
-					   	CrankVecFloat3*	r	)
+crank_vec_float3_mulm (CrankVecFloat3 *a,
+                       CrankMatFloat3 *b,
+                       CrankVecFloat3 *r)
 {
-  	gfloat nx, ny, nz;
-  	
-	g_return_if_fail (a != r);
+  gfloat nx, ny, nz;
 
-	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
-	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
-	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22);
+  g_return_if_fail (a != r);
 
-  	r->x = nx;
-  	r->y = ny;
-  	r->z = nz;
+  nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
+  ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
+  nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22);
+
+  r->x = nx;
+  r->y = ny;
+  r->z = nz;
 }
 
 /**
@@ -1950,18 +1952,18 @@ crank_vec_float3_mulm (	CrankVecFloat3*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float3_mulm_self (	CrankVecFloat3*	a,
-					   			CrankMatFloat3*	b	)
+crank_vec_float3_mulm_self (CrankVecFloat3 *a,
+                            CrankMatFloat3 *b)
 {
-  	gfloat nx, ny, nz;
+  gfloat nx, ny, nz;
 
-	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
-	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
-	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22);
+  nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20);
+  ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21);
+  nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22);
 
-  	a->x = nx;
-  	a->y = ny;
-  	a->z = nz;
+  a->x = nx;
+  a->y = ny;
+  a->z = nz;
 }
 
 
@@ -1978,21 +1980,21 @@ crank_vec_float3_mulm_self (	CrankVecFloat3*	a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float3_mixs (	CrankVecFloat3*	a,
-						CrankVecFloat3*	b,
-						const gfloat	c,
-						CrankVecFloat3*	r	)
+crank_vec_float3_mixs (CrankVecFloat3 *a,
+                       CrankVecFloat3 *b,
+                       const gfloat    c,
+                       CrankVecFloat3 *r)
 {
-	gfloat d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	d = 1.0f - c;
-	
-	r->x = a->x * d + b->x * c;
-	r->y = a->y * d + b->y * c;
-	r->z = a->z * d + b->z * c;
+  gfloat d;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  d = 1.0f - c;
+
+  r->x = a->x * d + b->x * c;
+  r->y = a->y * d + b->y * c;
+  r->z = a->z * d + b->z * c;
 }
 
 
@@ -2009,57 +2011,57 @@ crank_vec_float3_mixs (	CrankVecFloat3*	a,
  *    (a cmpmul c) + (b cmpmul ({1, 1, 1} - c))
  */
 void
-crank_vec_float3_mix (	CrankVecFloat3*	a,
-						CrankVecFloat3*	b,
-						CrankVecFloat3*	c,
-						CrankVecFloat3*	r	)
+crank_vec_float3_mix (CrankVecFloat3 *a,
+                      CrankVecFloat3 *b,
+                      CrankVecFloat3 *c,
+                      CrankVecFloat3 *r)
 {
-	CrankVecFloat3 d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	g_return_if_fail (c != r);
-	
-	d.x = 1.0f - c->x;
-	d.y = 1.0f - c->y;
-	d.z = 1.0f - c->z;
-	
-	r->x = a->x * d.x + b->x * c->x;
-	r->y = a->y * d.y + b->y * c->y;
-	r->z = a->z * d.z + b->z * c->z;
+  CrankVecFloat3 d;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  g_return_if_fail (c != r);
+
+  d.x = 1.0f - c->x;
+  d.y = 1.0f - c->y;
+  d.z = 1.0f - c->z;
+
+  r->x = a->x * d.x + b->x * c->x;
+  r->y = a->y * d.y + b->y * c->y;
+  r->z = a->z * d.z + b->z * c->z;
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
 
 static void
-crank_vec_float3_transform_from_vb (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float3_transform_from_vb (const GValue *src,
+                                    GValue       *dest)
 {
-	CrankVecFloat3*	vf = g_new (CrankVecFloat3, 1);
-	
-	crank_vec_float3_init_from_vb (vf, (CrankVecBool3*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float3_transform_from_vi (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloat3*	vf = g_new (CrankVecFloat3, 1);
-	
-	crank_vec_float3_init_from_vi (vf, (CrankVecInt3*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
+  CrankVecFloat3 *vf = g_new (CrankVecFloat3, 1);
+
+  crank_vec_float3_init_from_vb (vf, (CrankVecBool3*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
 }
 
 static void
-crank_vec_float3_transform_to_string (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float3_transform_from_vi (const GValue *src,
+                                    GValue       *dest)
 {
-	g_value_take_string (dest,
-			crank_vec_float3_to_string (
-					(CrankVecFloat3*) g_value_get_boxed(src) ) );
+  CrankVecFloat3 *vf = g_new (CrankVecFloat3, 1);
+
+  crank_vec_float3_init_from_vi (vf, (CrankVecInt3*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float3_transform_to_string (const GValue *src,
+                                      GValue       *dest)
+{
+  g_value_take_string (dest,
+                       crank_vec_float3_to_string (
+                         (CrankVecFloat3*) g_value_get_boxed(src) ) );
 }
 
 
@@ -2067,33 +2069,33 @@ crank_vec_float3_transform_to_string (	const GValue*	src,
 
 
 
-static void crank_vec_float4_transform_from_vb (	const GValue*	src,
-													GValue*			dest	);
-													
-static void crank_vec_float4_transform_from_vi (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float4_transform_from_vb (const GValue *src,
+                                                GValue       *dest);
 
-static void	crank_vec_float4_transform_to_string (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float4_transform_from_vi (const GValue *src,
+                                                GValue       *dest);
+
+static void crank_vec_float4_transform_to_string (const GValue *src,
+                                                  GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
-		CrankVecFloat4,
-		crank_vec_float4,
-		crank_vec_float4_dup,
-		g_free,
-		{
-			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL4,
-												g_define_type_id,
-												crank_vec_float4_transform_from_vb	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_INT4,
-												g_define_type_id,
-												crank_vec_float4_transform_from_vi	);
-												
-			g_value_register_transform_func (	g_define_type_id,
-												G_TYPE_STRING,
-												crank_vec_float4_transform_to_string	);
-		} )
+  CrankVecFloat4,
+  crank_vec_float4,
+  crank_vec_float4_dup,
+  g_free,
+  {
+    g_value_register_transform_func (CRANK_TYPE_VEC_BOOL4,
+                                     g_define_type_id,
+                                     crank_vec_float4_transform_from_vb);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_INT4,
+                                     g_define_type_id,
+                                     crank_vec_float4_transform_from_vi);
+
+    g_value_register_transform_func (g_define_type_id,
+                                     G_TYPE_STRING,
+                                     crank_vec_float4_transform_to_string);
+  })
 
 /**
  * crank_vec_float4_init:
@@ -2106,16 +2108,16 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  * Initializes vector with given components.
  */
 void
-crank_vec_float4_init	(	CrankVecFloat4*	vec,
-							gfloat			x,
-							gfloat			y,
-							gfloat			z,
-							gfloat			w	)
+crank_vec_float4_init (CrankVecFloat4 *vec,
+                       gfloat          x,
+                       gfloat          y,
+                       gfloat          z,
+                       gfloat          w)
 {
-	vec->x = x;
-	vec->y = y;
-	vec->z = z;
-	vec->w = w;
+  vec->x = x;
+  vec->y = y;
+  vec->z = z;
+  vec->w = w;
 }
 
 /**
@@ -2126,13 +2128,13 @@ crank_vec_float4_init	(	CrankVecFloat4*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float4_init_arr	(	CrankVecFloat4*	vec,
-								gfloat*			arr	)
+crank_vec_float4_init_arr (CrankVecFloat4 *vec,
+                           gfloat         *arr)
 {
-	vec->x = arr[0];
-	vec->y = arr[1];
-	vec->z = arr[2];
-	vec->w = arr[3];
+  vec->x = arr[0];
+  vec->y = arr[1];
+  vec->z = arr[2];
+  vec->w = arr[3];
 }
 
 /**
@@ -2143,13 +2145,13 @@ crank_vec_float4_init_arr	(	CrankVecFloat4*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float4_init_valist	(	CrankVecFloat4*	vec,
-									va_list			varargs	)
+crank_vec_float4_init_valist (CrankVecFloat4 *vec,
+                              va_list         varargs)
 {
-	vec->x = va_arg (varargs, gdouble);
-	vec->y = va_arg (varargs, gdouble);
-	vec->z = va_arg (varargs, gdouble);
-	vec->w = va_arg (varargs, gdouble);
+  vec->x = va_arg (varargs, gdouble);
+  vec->y = va_arg (varargs, gdouble);
+  vec->z = va_arg (varargs, gdouble);
+  vec->w = va_arg (varargs, gdouble);
 }
 
 /**
@@ -2160,13 +2162,13 @@ crank_vec_float4_init_valist	(	CrankVecFloat4*	vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_float4_init_fill	(	CrankVecFloat4*	vec,
-								gfloat			fill	)
+crank_vec_float4_init_fill (CrankVecFloat4 *vec,
+                            gfloat          fill)
 {
-	vec->x = fill;
-	vec->y = fill;
-	vec->z = fill;
-	vec->w = fill;
+  vec->x = fill;
+  vec->y = fill;
+  vec->z = fill;
+  vec->w = fill;
 }
 
 /**
@@ -2177,13 +2179,13 @@ crank_vec_float4_init_fill	(	CrankVecFloat4*	vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float4_init_from_vb	(	CrankVecFloat4*	vec,
-									CrankVecBool4*	vb		)
+crank_vec_float4_init_from_vb (CrankVecFloat4 *vec,
+                               CrankVecBool4  *vb)
 {
-	vec->x = vb->x ? 1 : 0;
-	vec->y = vb->y ? 1 : 0;
-	vec->z = vb->z ? 1 : 0;
-	vec->w = vb->w ? 1 : 0;
+  vec->x = vb->x ? 1 : 0;
+  vec->y = vb->y ? 1 : 0;
+  vec->z = vb->z ? 1 : 0;
+  vec->w = vb->w ? 1 : 0;
 }
 
 /**
@@ -2194,13 +2196,13 @@ crank_vec_float4_init_from_vb	(	CrankVecFloat4*	vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float4_init_from_vi	(	CrankVecFloat4*	vec,
-									CrankVecInt4*	vi		)
+crank_vec_float4_init_from_vi (CrankVecFloat4 *vec,
+                               CrankVecInt4   *vi)
 {
-	vec->x = vi->x;
-	vec->y = vi->y;
-	vec->z = vi->z;
-	vec->w = vi->w;
+  vec->x = vi->x;
+  vec->y = vi->y;
+  vec->z = vi->z;
+  vec->w = vi->w;
 }
 
 
@@ -2212,10 +2214,10 @@ crank_vec_float4_init_from_vi	(	CrankVecFloat4*	vec,
  * Copies vector.
  */
 void
-crank_vec_float4_copy			(	CrankVecFloat4*	vec,
-						 			CrankVecFloat4*	other	)
+crank_vec_float4_copy (CrankVecFloat4 *vec,
+                       CrankVecFloat4 *other)
 {
-	memcpy (other, vec, sizeof(CrankVecFloat4));
+  memcpy (other, vec, sizeof(CrankVecFloat4));
 }
 
 /**
@@ -2227,9 +2229,9 @@ crank_vec_float4_copy			(	CrankVecFloat4*	vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat4*
-crank_vec_float4_dup			(	CrankVecFloat4*	vec	)
+crank_vec_float4_dup (CrankVecFloat4 *vec)
 {
-  	return (CrankVecFloat4*) g_memdup (vec, sizeof (CrankVecFloat4));
+  return (CrankVecFloat4*) g_memdup (vec, sizeof (CrankVecFloat4));
 }
 
 /**
@@ -2242,10 +2244,10 @@ crank_vec_float4_dup			(	CrankVecFloat4*	vec	)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float4_get	(	CrankVecFloat4*	vec,
-							const guint		index	)
+crank_vec_float4_get (CrankVecFloat4 *vec,
+                      const guint     index)
 {
-	return ((gfloat*)vec)[index];
+  return ((gfloat*)vec)[index];
 }
 
 /**
@@ -2257,11 +2259,11 @@ crank_vec_float4_get	(	CrankVecFloat4*	vec,
  * Sets element of vector at @index, by @value.
  */
 void
-crank_vec_float4_set			(	CrankVecFloat4*	vec,
-									const guint		index,
-									const gfloat		value	)
+crank_vec_float4_set (CrankVecFloat4 *vec,
+                      const guint     index,
+                      const gfloat    value)
 {
-	((gfloat*)vec)[index] = value;
+  ((gfloat*)vec)[index] = value;
 }
 
 /**
@@ -2277,17 +2279,17 @@ crank_vec_float4_set			(	CrankVecFloat4*	vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float4_foreach (	CrankVecFloat4*		vec,
-						  	CrankBoolFloatFunc	func,
-						  	gpointer			userdata	)
+crank_vec_float4_foreach (CrankVecFloat4    *vec,
+                          CrankBoolFloatFunc func,
+                          gpointer           userdata)
 {
-	if (	func (vec->x, userdata) &&
-	 		func (vec->y, userdata) &&
-	 		func (vec->z, userdata) &&
-	 		func (vec->w, userdata))
-		return TRUE;
-  	else
-	  	return FALSE;
+  if (func (vec->x, userdata) &&
+      func (vec->y, userdata) &&
+      func (vec->z, userdata) &&
+      func (vec->w, userdata))
+    return TRUE;
+  else
+    return FALSE;
 }
 
 /**
@@ -2298,10 +2300,10 @@ crank_vec_float4_foreach (	CrankVecFloat4*		vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_float4_iterator (	CrankVecFloat4*		vec,
-							CrankIterMemFloat*	iter	)
+crank_vec_float4_iterator (CrankVecFloat4    *vec,
+                           CrankIterMemFloat *iter)
 {
-	crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 4);
+  crank_iter_mem_float_init_with_count (iter, (gfloat*)vec, 4);
 }
 
 
@@ -2317,27 +2319,27 @@ crank_vec_float4_iterator (	CrankVecFloat4*		vec,
  * Returns: hash value of vector.
  */
 guint
-crank_vec_float4_hash (	gconstpointer	a	)
+crank_vec_float4_hash (gconstpointer a)
 {
-	const CrankVecFloat4*	vec = a;
-	
-	gdouble	dx;
-	gdouble	dy;
-	gdouble	dz;
-	gdouble dw;
-	guint	hash;
-	
-	dx = vec->x;
-	dy = vec->y;
-	dz = vec->z;
-	dw = vec->w;
-	
-	hash =	g_double_hash (&dx) +
-			g_double_hash (&dy) + 37 +
-			g_double_hash (&dz) + 129 +
-			g_double_hash (&dw) + 1973;
-	
-	return hash;
+  const CrankVecFloat4 *vec = a;
+
+  gdouble dx;
+  gdouble dy;
+  gdouble dz;
+  gdouble dw;
+  guint hash;
+
+  dx = vec->x;
+  dy = vec->y;
+  dz = vec->z;
+  dw = vec->w;
+
+  hash =  g_double_hash (&dx) +
+         g_double_hash (&dy) + 37 +
+         g_double_hash (&dz) + 129 +
+         g_double_hash (&dw) + 1973;
+
+  return hash;
 }
 
 /**
@@ -2349,16 +2351,17 @@ crank_vec_float4_hash (	gconstpointer	a	)
  *
  * Returns: whether that the two vectors are same.
  */
-gboolean		crank_vec_float4_equal (			gconstpointer	a,
-												gconstpointer	b	)
+gboolean
+crank_vec_float4_equal (gconstpointer a,
+                        gconstpointer b)
 {
-	CrankVecFloat4*	veca = (CrankVecFloat4*)a;
-	CrankVecFloat4*	vecb = (CrankVecFloat4*)b;
-	
-	return ((veca->x == vecb->x) &&
-			(veca->y == vecb->y) &&
-			(veca->z == vecb->z) &&
-			(veca->w == vecb->w));
+  CrankVecFloat4 *veca = (CrankVecFloat4*)a;
+  CrankVecFloat4 *vecb = (CrankVecFloat4*)b;
+
+  return ((veca->x == vecb->x) &&
+          (veca->y == vecb->y) &&
+          (veca->z == vecb->z) &&
+          (veca->w == vecb->w));
 }
 
 /**
@@ -2372,9 +2375,9 @@ gboolean		crank_vec_float4_equal (			gconstpointer	a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float4_to_string (	CrankVecFloat4*	vec	)
+crank_vec_float4_to_string (CrankVecFloat4 *vec)
 {
-	return crank_vec_float4_to_string_full (vec, "(", ", ", ")", "%g");
+  return crank_vec_float4_to_string_full (vec, "(", ", ", ")", "%g");
 }
 
 /**
@@ -2390,32 +2393,32 @@ crank_vec_float4_to_string (	CrankVecFloat4*	vec	)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float4_to_string_full (	CrankVecFloat4*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	format	)
+crank_vec_float4_to_string_full (CrankVecFloat4 *vec,
+                                 const gchar    *left,
+                                 const gchar    *in,
+                                 const gchar    *right,
+                                 const gchar    *format)
 {
-	GString*	strb = g_string_new (left);
-	gchar*		result;
-	
-	g_string_append_printf (strb, format, vec->x);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->y);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->z);
-	g_string_append (strb, in);
-	
-	g_string_append_printf (strb, format, vec->w);
-	g_string_append (strb, right);
-	
-	result = strb->str;
-	
-	g_string_free (strb, FALSE);
-	
-	return result;
+  GString *strb = g_string_new (left);
+  gchar *result;
+
+  g_string_append_printf (strb, format, vec->x);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->y);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->z);
+  g_string_append (strb, in);
+
+  g_string_append_printf (strb, format, vec->w);
+  g_string_append (strb, right);
+
+  result = strb->str;
+
+  g_string_free (strb, FALSE);
+
+  return result;
 }
 
 
@@ -2430,12 +2433,12 @@ crank_vec_float4_to_string_full (	CrankVecFloat4*	vec,
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float4_get_magn_sq	(	CrankVecFloat4*	vec	)
+crank_vec_float4_get_magn_sq (CrankVecFloat4 *vec)
 {
-	return 	(vec->x * vec->x) +
-			(vec->y * vec->y) +
-			(vec->z * vec->z) +
-			(vec->w * vec->w);
+  return (vec->x * vec->x) +
+         (vec->y * vec->y) +
+         (vec->z * vec->z) +
+         (vec->w * vec->w);
 }
 
 /**
@@ -2447,10 +2450,10 @@ crank_vec_float4_get_magn_sq	(	CrankVecFloat4*	vec	)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float4_get_magn	(	CrankVecFloat4*	vec	)
+crank_vec_float4_get_magn (CrankVecFloat4 *vec)
 {
-	gfloat sq = crank_vec_float4_get_magn_sq (vec);
-	return sqrtf (sq);
+  gfloat sq = crank_vec_float4_get_magn_sq (vec);
+  return sqrtf (sq);
 }
 
 
@@ -2466,13 +2469,13 @@ crank_vec_float4_get_magn	(	CrankVecFloat4*	vec	)
  * Applies negation.
  */
 void
-crank_vec_float4_neg (	CrankVecFloat4*	a,
-						CrankVecFloat4*	r	)
+crank_vec_float4_neg (CrankVecFloat4 *a,
+                      CrankVecFloat4 *r)
 {
-	r->x = - (a->x);
-	r->y = - (a->y);
-	r->z = - (a->z);
-	r->w = - (a->w);
+  r->x = -(a->x);
+  r->y = -(a->y);
+  r->z = -(a->z);
+  r->w = -(a->w);
 }
 
 /**
@@ -2482,12 +2485,12 @@ crank_vec_float4_neg (	CrankVecFloat4*	a,
  * Applies negation.
  */
 void
-crank_vec_float4_neg_self (	CrankVecFloat4*	a	)
+crank_vec_float4_neg_self (CrankVecFloat4 *a)
 {
-	a->x = - (a->x);
-	a->y = - (a->y);
-	a->z = - (a->z);
-	a->w = - (a->w);
+  a->x = -(a->x);
+  a->y = -(a->y);
+  a->z = -(a->z);
+  a->w = -(a->w);
 }
 
 /**
@@ -2498,10 +2501,10 @@ crank_vec_float4_neg_self (	CrankVecFloat4*	a	)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float4_unit (	CrankVecFloat4*	a,
-						CrankVecFloat4*	r	)
+crank_vec_float4_unit (CrankVecFloat4 *a,
+                       CrankVecFloat4 *r)
 {
-	crank_vec_float4_divs (a, crank_vec_float4_get_magn (a), r);
+  crank_vec_float4_divs (a, crank_vec_float4_get_magn (a), r);
 }
 
 /**
@@ -2511,9 +2514,9 @@ crank_vec_float4_unit (	CrankVecFloat4*	a,
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float4_unit_self (	CrankVecFloat4*	a	)
+crank_vec_float4_unit_self (CrankVecFloat4 *a)
 {
-	crank_vec_float4_divs_self (a, crank_vec_float4_get_magn (a));
+  crank_vec_float4_divs_self (a, crank_vec_float4_get_magn (a));
 }
 
 
@@ -2528,16 +2531,16 @@ crank_vec_float4_unit_self (	CrankVecFloat4*	a	)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float4_muls	(	CrankVecFloat4*	a,
-							const gfloat		b,
-							CrankVecFloat4*	r	)
+crank_vec_float4_muls (CrankVecFloat4 *a,
+                       const gfloat    b,
+                       CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	
-	r->x = a->x * b;
-	r->y = a->y * b;
-	r->z = a->z * b;
-	r->w = a->w * b;
+  g_return_if_fail (a != r);
+
+  r->x = a->x * b;
+  r->y = a->y * b;
+  r->z = a->z * b;
+  r->w = a->w * b;
 }
 
 /**
@@ -2548,13 +2551,13 @@ crank_vec_float4_muls	(	CrankVecFloat4*	a,
  * Applies scalar multiplication.
  */
 void
-crank_vec_float4_muls_self	(	CrankVecFloat4*	a,
-								const gfloat	b	)
+crank_vec_float4_muls_self (CrankVecFloat4 *a,
+                            const gfloat    b)
 {
-	a->x *= b;
-	a->y *= b;
-	a->z *= b;
-	a->w *= b;
+  a->x *= b;
+  a->y *= b;
+  a->z *= b;
+  a->w *= b;
 }
 
 /**
@@ -2566,16 +2569,16 @@ crank_vec_float4_muls_self	(	CrankVecFloat4*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float4_divs	(	CrankVecFloat4*	a,
-						const gfloat		b,
-						CrankVecFloat4*	r	)
+crank_vec_float4_divs (CrankVecFloat4 *a,
+                       const gfloat    b,
+                       CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	
-	r->x = a->x / b;
-	r->y = a->y / b;
-	r->z = a->z / b;
-	r->w = a->w / b;
+  g_return_if_fail (a != r);
+
+  r->x = a->x / b;
+  r->y = a->y / b;
+  r->z = a->z / b;
+  r->w = a->w / b;
 }
 
 /**
@@ -2586,13 +2589,13 @@ crank_vec_float4_divs	(	CrankVecFloat4*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float4_divs_self	(	CrankVecFloat4*	a,
-								const gfloat	b	)
+crank_vec_float4_divs_self (CrankVecFloat4 *a,
+                            const gfloat    b)
 {
-	a->x /= b;
-	a->y /= b;
-	a->z /= b;
-	a->w /= b;
+  a->x /= b;
+  a->y /= b;
+  a->z /= b;
+  a->w /= b;
 }
 
 
@@ -2607,17 +2610,17 @@ crank_vec_float4_divs_self	(	CrankVecFloat4*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float4_add	(	CrankVecFloat4*	a,
-							CrankVecFloat4*	b,
-							CrankVecFloat4*	r	)
+crank_vec_float4_add (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b,
+                      CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x + b->x;
-	r->y = a->y + b->y;
-	r->z = a->z + b->z;
-	r->w = a->w + b->w;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x + b->x;
+  r->y = a->y + b->y;
+  r->z = a->z + b->z;
+  r->w = a->w + b->w;
 }
 
 /**
@@ -2628,13 +2631,13 @@ crank_vec_float4_add	(	CrankVecFloat4*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float4_add_self	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b	)
+crank_vec_float4_add_self (CrankVecFloat4 *a,
+                           CrankVecFloat4 *b)
 {
-	a->x += b->x;
-	a->y += b->y;
-	a->z += b->z;
-	a->w += b->w;
+  a->x += b->x;
+  a->y += b->y;
+  a->z += b->z;
+  a->w += b->w;
 }
 
 /**
@@ -2646,17 +2649,17 @@ crank_vec_float4_add_self	(	CrankVecFloat4*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float4_sub	(	CrankVecFloat4*	a,
-							CrankVecFloat4*	b,
-							CrankVecFloat4*	r	)
+crank_vec_float4_sub (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b,
+                      CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x - b->x;
-	r->y = a->y - b->y;
-	r->z = a->z - b->z;
-	r->w = a->w - b->w;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x - b->x;
+  r->y = a->y - b->y;
+  r->z = a->z - b->z;
+  r->w = a->w - b->w;
 }
 
 /**
@@ -2667,13 +2670,13 @@ crank_vec_float4_sub	(	CrankVecFloat4*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float4_sub_self	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b	)
+crank_vec_float4_sub_self (CrankVecFloat4 *a,
+                           CrankVecFloat4 *b)
 {
-	a->x -= b->x;
-	a->y -= b->y;
-	a->z -= b->z;
-	a->w -= b->w;
+  a->x -= b->x;
+  a->y -= b->y;
+  a->z -= b->z;
+  a->w -= b->w;
 }
 
 /**
@@ -2686,13 +2689,13 @@ crank_vec_float4_sub_self	(	CrankVecFloat4*	a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float4_dot	(	CrankVecFloat4*	a,
-						CrankVecFloat4*	b	)
+crank_vec_float4_dot (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b)
 {
-	return	(a->x) * (b->x) +
-			(a->y) * (b->y) +
-			(a->z) * (b->z) +
-			(a->w) * (b->w);
+  return (a->x) * (b->x) +
+         (a->y) * (b->y) +
+         (a->z) * (b->z) +
+         (a->w) * (b->w);
 }
 
 
@@ -2703,38 +2706,38 @@ crank_vec_float4_dot	(	CrankVecFloat4*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float4_cmpmul	(	CrankVecFloat4*	a,
-							CrankVecFloat4*	b,
-							CrankVecFloat4*	r	)
+crank_vec_float4_cmpmul (CrankVecFloat4 *a,
+                         CrankVecFloat4 *b,
+                         CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x * b->x;
-	r->y = a->y * b->y;
-	r->z = a->z * b->z;
-	r->w = a->w * b->w;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x * b->x;
+  r->y = a->y * b->y;
+  r->z = a->z * b->z;
+  r->w = a->w * b->w;
 }
 
 /**
  * crank_vec_float4_cmpmul_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float4_cmpmul_self	(	CrankVecFloat4*	a,
-									CrankVecFloat4*	b	)
+crank_vec_float4_cmpmul_self (CrankVecFloat4 *a,
+                              CrankVecFloat4 *b)
 {
-	a->x *= b->x;
-	a->y *= b->y;
-	a->z *= b->z;
-	a->w *= b->w;
+  a->x *= b->x;
+  a->y *= b->y;
+  a->z *= b->z;
+  a->w *= b->w;
 }
 
 /**
@@ -2742,38 +2745,38 @@ crank_vec_float4_cmpmul_self	(	CrankVecFloat4*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float4_cmpdiv	(	CrankVecFloat4*	a,
-							CrankVecFloat4*	b,
-							CrankVecFloat4*	r	)
+crank_vec_float4_cmpdiv (CrankVecFloat4 *a,
+                         CrankVecFloat4 *b,
+                         CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = a->x / b->x;
-	r->y = a->y / b->y;
-	r->z = a->z / b->z;
-	r->w = a->w / b->w;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = a->x / b->x;
+  r->y = a->y / b->y;
+  r->z = a->z / b->z;
+  r->w = a->w / b->w;
 }
 
 /**
  * crank_vec_float4_cmpdiv_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float4_cmpdiv_self	(	CrankVecFloat4*	a,
-									CrankVecFloat4*	b	)
+crank_vec_float4_cmpdiv_self (CrankVecFloat4 *a,
+                              CrankVecFloat4 *b)
 {
-	a->x /= b->x;
-	a->y /= b->y;
-	a->z /= b->z;
-	a->w /= b->w;
+  a->x /= b->x;
+  a->y /= b->y;
+  a->z /= b->z;
+  a->w /= b->w;
 }
 
 
@@ -2782,75 +2785,75 @@ crank_vec_float4_cmpdiv_self	(	CrankVecFloat4*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float4_cmpless	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b,
-								CrankVecBool4*	r	)
+crank_vec_float4_cmpless (CrankVecFloat4 *a,
+                          CrankVecFloat4 *b,
+                          CrankVecBool4  *r)
 {
-	r->x = (a->x) < (b->x);
-	r->y = (a->y) < (b->y);
-	r->z = (a->z) < (b->z);
-	r->w = (a->w) < (b->w);
+  r->x = (a->x) < (b->x);
+  r->y = (a->y) < (b->y);
+  r->z = (a->z) < (b->z);
+  r->w = (a->w) < (b->w);
 }
-												
+
 /**
  * crank_vec_float4_cmpeq:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float4_cmpeq	(	CrankVecFloat4*	a,
-							CrankVecFloat4*	b,
-							CrankVecBool4*	r	)
+crank_vec_float4_cmpeq (CrankVecFloat4 *a,
+                        CrankVecFloat4 *b,
+                        CrankVecBool4  *r)
 {
-	r->x = (a->x) == (b->x);
-	r->y = (a->y) == (b->y);
-	r->z = (a->z) == (b->z);
-	r->w = (a->w) == (b->w);
+  r->x = (a->x) == (b->x);
+  r->y = (a->y) == (b->y);
+  r->z = (a->z) == (b->z);
+  r->w = (a->w) == (b->w);
 }
-												
+
 /**
  * crank_vec_float4_cmpgreater:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is greater than counterpart of @b
- */					
+ */
 void
-crank_vec_float4_cmpgreater	(	CrankVecFloat4*	a,
-								CrankVecFloat4*	b,
-								CrankVecBool4*	r	)
+crank_vec_float4_cmpgreater (CrankVecFloat4 *a,
+                             CrankVecFloat4 *b,
+                             CrankVecBool4  *r)
 {
-	r->x = (a->x) > (b->x);
-	r->y = (a->y) > (b->y);
-	r->z = (a->z) > (b->z);
-	r->w = (a->w) > (b->w);
+  r->x = (a->x) > (b->x);
+  r->y = (a->y) > (b->y);
+  r->z = (a->z) > (b->z);
+  r->w = (a->w) > (b->w);
 }
-					
+
 /**
  * crank_vec_float4_cmpcmp:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets compare result of each components.
- */	
+ */
 void
-crank_vec_float4_cmpcmp	(		CrankVecFloat4*	a,
-								CrankVecFloat4*	b,
-								CrankVecInt4*	r	)
+crank_vec_float4_cmpcmp (CrankVecFloat4 *a,
+                         CrankVecFloat4 *b,
+                         CrankVecInt4   *r)
 {
-	r->x = CMP(a->x, b->x);
-	r->y = CMP(a->y, b->y);
-	r->z = CMP(a->z, b->z);
-	r->w = CMP(a->w, b->w);
+  r->x = CMP(a->x, b->x);
+  r->y = CMP(a->y, b->y);
+  r->z = CMP(a->z, b->z);
+  r->w = CMP(a->w, b->w);
 }
 
 /**
@@ -2862,17 +2865,17 @@ crank_vec_float4_cmpcmp	(		CrankVecFloat4*	a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float4_min (	CrankVecFloat4*	a,
-						CrankVecFloat4*	b,
-						CrankVecFloat4*	r	)
+crank_vec_float4_min (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b,
+                      CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = MIN (a->x, b->x);
-	r->y = MIN (a->y, b->y);
-	r->z = MIN (a->z, b->z);
-	r->w = MIN (a->w, b->w);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = MIN (a->x, b->x);
+  r->y = MIN (a->y, b->y);
+  r->z = MIN (a->z, b->z);
+  r->w = MIN (a->w, b->w);
 }
 
 /**
@@ -2884,17 +2887,17 @@ crank_vec_float4_min (	CrankVecFloat4*	a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float4_max (	CrankVecFloat4*	a,
-						CrankVecFloat4*	b,
-						CrankVecFloat4*	r	)
+crank_vec_float4_max (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b,
+                      CrankVecFloat4 *r)
 {
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	r->x = MAX (a->x, b->x);
-	r->y = MAX (a->y, b->y);
-	r->z = MAX (a->z, b->z);
-	r->w = MAX (a->w, b->w);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  r->x = MAX (a->x, b->x);
+  r->y = MAX (a->y, b->y);
+  r->z = MAX (a->z, b->z);
+  r->w = MAX (a->w, b->w);
 }
 
 
@@ -2907,23 +2910,23 @@ crank_vec_float4_max (	CrankVecFloat4*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float4_mulm (	CrankVecFloat4*	a,
-					   	CrankMatFloat4*	b,
-					   	CrankVecFloat4*	r	)
+crank_vec_float4_mulm (CrankVecFloat4 *a,
+                       CrankMatFloat4 *b,
+                       CrankVecFloat4 *r)
 {
-  	gfloat nx, ny, nz, nw;
-  	
-	g_return_if_fail (a != r);
+  gfloat nx, ny, nz, nw;
 
-	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
-	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
-	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22) + (a->w * b->m32);
-	nw = (a->x * b->m03) + (a->y * b->m13) + (a->z * b->m23) + (a->w * b->m33);
+  g_return_if_fail (a != r);
 
-  	r->x = nx;
-  	r->y = ny;
-  	r->z = nz;
-  	r->w = nw;
+  nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
+  ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
+  nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22) + (a->w * b->m32);
+  nw = (a->x * b->m03) + (a->y * b->m13) + (a->z * b->m23) + (a->w * b->m33);
+
+  r->x = nx;
+  r->y = ny;
+  r->z = nz;
+  r->w = nw;
 }
 
 /**
@@ -2934,20 +2937,20 @@ crank_vec_float4_mulm (	CrankVecFloat4*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float4_mulm_self (	CrankVecFloat4*	a,
-					   			CrankMatFloat4*	b	)
+crank_vec_float4_mulm_self (CrankVecFloat4 *a,
+                            CrankMatFloat4 *b)
 {
-  	gfloat nx, ny, nz, nw;
+  gfloat nx, ny, nz, nw;
 
-	nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
-	ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
-	nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22) + (a->w * b->m32);
-	nw = (a->x * b->m03) + (a->y * b->m13) + (a->z * b->m23) + (a->w * b->m33);
+  nx = (a->x * b->m00) + (a->y * b->m10) + (a->z * b->m20) + (a->w * b->m30);
+  ny = (a->x * b->m01) + (a->y * b->m11) + (a->z * b->m21) + (a->w * b->m31);
+  nz = (a->x * b->m02) + (a->y * b->m12) + (a->z * b->m22) + (a->w * b->m32);
+  nw = (a->x * b->m03) + (a->y * b->m13) + (a->z * b->m23) + (a->w * b->m33);
 
-  	a->x = nx;
-  	a->y = ny;
-  	a->z = nz;
-  	a->w = nw;
+  a->x = nx;
+  a->y = ny;
+  a->z = nz;
+  a->w = nw;
 }
 
 /**
@@ -2963,22 +2966,22 @@ crank_vec_float4_mulm_self (	CrankVecFloat4*	a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float4_mixs (	CrankVecFloat4*	a,
-						CrankVecFloat4*	b,
-						const gfloat	c,
-						CrankVecFloat4*	r	)
+crank_vec_float4_mixs (CrankVecFloat4 *a,
+                       CrankVecFloat4 *b,
+                       const gfloat    c,
+                       CrankVecFloat4 *r)
 {
-	gfloat d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	d = 1.0f - c;
-	
-	r->x = a->x * d + b->x * c;
-	r->y = a->y * d + b->y * c;
-	r->z = a->z * d + b->z * c;
-	r->w = a->w * d + b->w * c;
+  gfloat d;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  d = 1.0f - c;
+
+  r->x = a->x * d + b->x * c;
+  r->y = a->y * d + b->y * c;
+  r->z = a->z * d + b->z * c;
+  r->w = a->w * d + b->w * c;
 }
 
 
@@ -2995,59 +2998,59 @@ crank_vec_float4_mixs (	CrankVecFloat4*	a,
  *    (a cmpmul c) + (b cmpmul ({1, 1, 1, 1} - c))
  */
 void
-crank_vec_float4_mix (	CrankVecFloat4*	a,
-						CrankVecFloat4*	b,
-						CrankVecFloat4*	c,
-						CrankVecFloat4*	r	)
+crank_vec_float4_mix (CrankVecFloat4 *a,
+                      CrankVecFloat4 *b,
+                      CrankVecFloat4 *c,
+                      CrankVecFloat4 *r)
 {
-	CrankVecFloat4 d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	g_return_if_fail (c != r);
-	
-	d.x = 1.0f - c->x;
-	d.y = 1.0f - c->y;
-	d.z = 1.0f - c->z;
-	d.w = 1.0f - c->w;
-	
-	r->x = a->x * d.x + b->x * c->x;
-	r->y = a->y * d.y + b->y * c->y;
-	r->z = a->z * d.z + b->z * c->z;
-	r->w = a->w * d.w + b->w * c->w;
+  CrankVecFloat4 d;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  g_return_if_fail (c != r);
+
+  d.x = 1.0f - c->x;
+  d.y = 1.0f - c->y;
+  d.z = 1.0f - c->z;
+  d.w = 1.0f - c->w;
+
+  r->x = a->x * d.x + b->x * c->x;
+  r->y = a->y * d.y + b->y * c->y;
+  r->z = a->z * d.z + b->z * c->z;
+  r->w = a->w * d.w + b->w * c->w;
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
 
 static void
-crank_vec_float4_transform_from_vb (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float4_transform_from_vb (const GValue *src,
+                                    GValue       *dest)
 {
-	CrankVecFloat4*	vf = g_new (CrankVecFloat4, 1);
-	
-	crank_vec_float4_init_from_vb (vf, (CrankVecBool4*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float4_transform_from_vi (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloat4*	vf = g_new (CrankVecFloat4, 1);
-	
-	crank_vec_float4_init_from_vi (vf, (CrankVecInt4*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
+  CrankVecFloat4 *vf = g_new (CrankVecFloat4, 1);
+
+  crank_vec_float4_init_from_vb (vf, (CrankVecBool4*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
 }
 
 static void
-crank_vec_float4_transform_to_string (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float4_transform_from_vi (const GValue *src,
+                                    GValue       *dest)
 {
-	g_value_take_string (dest,
-			crank_vec_float2_to_string (
-					(CrankVecFloat2*) g_value_get_boxed(src) ) );
+  CrankVecFloat4 *vf = g_new (CrankVecFloat4, 1);
+
+  crank_vec_float4_init_from_vi (vf, (CrankVecInt4*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float4_transform_to_string (const GValue *src,
+                                      GValue       *dest)
+{
+  g_value_take_string (dest,
+                       crank_vec_float2_to_string (
+                         (CrankVecFloat2*) g_value_get_boxed(src) ) );
 }
 
 
@@ -3057,54 +3060,54 @@ crank_vec_float4_transform_to_string (	const GValue*	src,
 
 
 
-static void crank_vec_float_n_transform_from_vb (	const GValue*	src,
-													GValue*			dest	);
-													
-static void crank_vec_float_n_transform_from_vi (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float_n_transform_from_vb (const GValue *src,
+                                                 GValue       *dest);
 
-static void crank_vec_float_n_transform_from_v2 (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float_n_transform_from_vi (const GValue *src,
+                                                 GValue       *dest);
 
-static void crank_vec_float_n_transform_from_v3 (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float_n_transform_from_v2 (const GValue *src,
+                                                 GValue       *dest);
 
-static void crank_vec_float_n_transform_from_v4 (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float_n_transform_from_v3 (const GValue *src,
+                                                 GValue       *dest);
 
-static void	crank_vec_float_n_transform_to_string (	const GValue*	src,
-													GValue*			dest	);
+static void crank_vec_float_n_transform_from_v4 (const GValue *src,
+                                                 GValue       *dest);
+
+static void crank_vec_float_n_transform_to_string (const GValue *src,
+                                                   GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
-		CrankVecFloatN,
-		crank_vec_float_n,
-		crank_vec_float_n_dup,
-		g_free,
-		{
-			g_value_register_transform_func (	CRANK_TYPE_VEC_BOOL_N,
-												g_define_type_id,
-												crank_vec_float_n_transform_from_vb	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_INT_N,
-												g_define_type_id,
-												crank_vec_float_n_transform_from_vi	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT2,
-												g_define_type_id,
-												crank_vec_float_n_transform_from_v2	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT3,
-												g_define_type_id,
-												crank_vec_float_n_transform_from_v3	);
-												
-			g_value_register_transform_func (	CRANK_TYPE_VEC_FLOAT4,
-												g_define_type_id,
-												crank_vec_float_n_transform_from_v4	);
-												
-			g_value_register_transform_func (	g_define_type_id,
-												G_TYPE_STRING,
-												crank_vec_float_n_transform_to_string	);
-		} )
+  CrankVecFloatN,
+  crank_vec_float_n,
+  crank_vec_float_n_dup,
+  g_free,
+  {
+    g_value_register_transform_func (CRANK_TYPE_VEC_BOOL_N,
+                                     g_define_type_id,
+                                     crank_vec_float_n_transform_from_vb);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_INT_N,
+                                     g_define_type_id,
+                                     crank_vec_float_n_transform_from_vi);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_FLOAT2,
+                                     g_define_type_id,
+                                     crank_vec_float_n_transform_from_v2);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_FLOAT3,
+                                     g_define_type_id,
+                                     crank_vec_float_n_transform_from_v3);
+
+    g_value_register_transform_func (CRANK_TYPE_VEC_FLOAT4,
+                                     g_define_type_id,
+                                     crank_vec_float_n_transform_from_v4);
+
+    g_value_register_transform_func (g_define_type_id,
+                                     G_TYPE_STRING,
+                                     crank_vec_float_n_transform_to_string);
+  })
 
 /**
  * crank_vec_float_n_init:
@@ -3115,17 +3118,17 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  * Initializes vector with given components.
  */
 void
-crank_vec_float_n_init	(	CrankVecFloatN*	vec,
-							const guint		n,
-							...	)
+crank_vec_float_n_init (CrankVecFloatN *vec,
+                        const guint     n,
+                        ...)
 {
-	va_list	varargs;
-	
-	va_start (varargs, n);
-	
-	crank_vec_float_n_init_valist (vec, n, varargs);
-	
-	va_end (varargs);
+  va_list varargs;
+
+  va_start (varargs, n);
+
+  crank_vec_float_n_init_valist (vec, n, varargs);
+
+  va_end (varargs);
 }
 
 /**
@@ -3137,14 +3140,15 @@ crank_vec_float_n_init	(	CrankVecFloatN*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float_n_init_arr	(	CrankVecFloatN*	vec,
-								const guint		n,
-								const gfloat*	arr	)
+crank_vec_float_n_init_arr (CrankVecFloatN *vec,
+                            const guint     n,
+                            const gfloat   *arr)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC (vec, gfloat, n);
-	for (i = 0; i < n; i++)	vec->data[i] = arr[i];
+  guint i;
+
+  CRANK_VEC_ALLOC (vec, gfloat, n);
+  for (i = 0; i < n; i++)
+    vec->data[i] = arr[i];
 }
 
 /**
@@ -3156,12 +3160,12 @@ crank_vec_float_n_init_arr	(	CrankVecFloatN*	vec,
  * Initializes vector by taking array as data.
  */
 void
-crank_vec_float_n_init_arr_take (	CrankVecFloatN*	vec,
-								 	const guint		n,
-								 	gfloat*			arr	)
+crank_vec_float_n_init_arr_take (CrankVecFloatN *vec,
+                                 const guint     n,
+                                 gfloat         *arr)
 {
-  	vec->n = n;
-  	vec->data = arr;
+  vec->n = n;
+  vec->data = arr;
 }
 
 /**
@@ -3173,14 +3177,15 @@ crank_vec_float_n_init_arr_take (	CrankVecFloatN*	vec,
  * Initializes vector with given array.
  */
 void
-crank_vec_float_n_init_valist	(	CrankVecFloatN*	vec,
-									const guint		n,
-									va_list			varargs	)
+crank_vec_float_n_init_valist (CrankVecFloatN *vec,
+                               const guint     n,
+                               va_list         varargs)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC(vec,gfloat,n);
-	for (i = 0; i < n; i++) vec->data[i] = va_arg (varargs, gdouble);
+  guint i;
+
+  CRANK_VEC_ALLOC(vec,gfloat,n);
+  for (i = 0; i < n; i++)
+    vec->data[i] = va_arg (varargs, gdouble);
 }
 
 /**
@@ -3192,14 +3197,15 @@ crank_vec_float_n_init_valist	(	CrankVecFloatN*	vec,
  * Initializes vector by filling single value.
  */
 void
-crank_vec_float_n_init_fill	(	CrankVecFloatN*	vec,
-								const guint		n,
-								gfloat			fill	)
+crank_vec_float_n_init_fill (CrankVecFloatN *vec,
+                             const guint     n,
+                             gfloat          fill)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC(vec,gfloat,n);
-	for (i = 0; i < n; i++) vec->data[i] = fill;
+  guint i;
+
+  CRANK_VEC_ALLOC(vec,gfloat,n);
+  for (i = 0; i < n; i++)
+    vec->data[i] = fill;
 }
 
 /**
@@ -3210,13 +3216,14 @@ crank_vec_float_n_init_fill	(	CrankVecFloatN*	vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float_n_init_from_vb	(	CrankVecFloatN*	vec,
-									CrankVecBoolN*	vb		)
+crank_vec_float_n_init_from_vb (CrankVecFloatN *vec,
+                                CrankVecBoolN  *vb)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC(vec,gfloat,vb->n);
-	for (i = 0; i < vb->n; i++) vec->data[i] = vb->data[i] ? 1.0f : 0.0f;
+  guint i;
+
+  CRANK_VEC_ALLOC(vec,gfloat,vb->n);
+  for (i = 0; i < vb->n; i++)
+    vec->data[i] = vb->data[i] ? 1.0f : 0.0f;
 }
 
 /**
@@ -3227,13 +3234,14 @@ crank_vec_float_n_init_from_vb	(	CrankVecFloatN*	vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float_n_init_from_vi	(	CrankVecFloatN*	vec,
-									CrankVecIntN*	vi		)
+crank_vec_float_n_init_from_vi (CrankVecFloatN *vec,
+                                CrankVecIntN   *vi)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC(vec,gfloat,vi->n);
-	for (i = 0; i < vi->n; i++) vec->data[i] = vi->data[i];
+  guint i;
+
+  CRANK_VEC_ALLOC(vec,gfloat,vi->n);
+  for (i = 0; i < vi->n; i++)
+    vec->data[i] = vi->data[i];
 }
 
 
@@ -3244,11 +3252,11 @@ crank_vec_float_n_init_from_vi	(	CrankVecFloatN*	vec,
  * Frees all allocated memory and unsets @vec to point 0-sized vector at %NULL.
  */
 void
-crank_vec_float_n_fini (	CrankVecFloatN*	vec	)
+crank_vec_float_n_fini (CrankVecFloatN *vec)
 {
-	g_free (vec->data);
-	vec->data = NULL;
-	vec->n = 0;
+  g_free (vec->data);
+  vec->data = NULL;
+  vec->n = 0;
 }
 
 
@@ -3260,10 +3268,10 @@ crank_vec_float_n_fini (	CrankVecFloatN*	vec	)
  * Copies vector.
  */
 void
-crank_vec_float_n_copy			(	CrankVecFloatN*	vec,
-						 			CrankVecFloatN*	other	)
+crank_vec_float_n_copy (CrankVecFloatN *vec,
+                        CrankVecFloatN *other)
 {
-  	crank_vec_float_n_init_arr (other, vec->n, vec->data);
+  crank_vec_float_n_init_arr (other, vec->n, vec->data);
 }
 
 /**
@@ -3275,11 +3283,11 @@ crank_vec_float_n_copy			(	CrankVecFloatN*	vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloatN*
-crank_vec_float_n_dup			(	CrankVecFloatN*	vec	)
+crank_vec_float_n_dup (CrankVecFloatN *vec)
 {
-  	CrankVecFloatN*	result = g_new0 (CrankVecFloatN, 1);
-  	crank_vec_float_n_init_arr (result, vec->n, vec->data);
-  	return result;
+  CrankVecFloatN *result = g_new0 (CrankVecFloatN, 1);
+  crank_vec_float_n_init_arr (result, vec->n, vec->data);
+  return result;
 }
 
 /**
@@ -3289,10 +3297,10 @@ crank_vec_float_n_dup			(	CrankVecFloatN*	vec	)
  * Frees all allocated memory and frees struct too.
  */
 void
-crank_vec_float_n_free (	CrankVecFloatN*	vec	)
+crank_vec_float_n_free (CrankVecFloatN *vec)
 {
-	crank_vec_float_n_fini (vec);
-	g_free (vec);
+  crank_vec_float_n_fini (vec);
+  g_free (vec);
 }
 
 /**
@@ -3304,9 +3312,9 @@ crank_vec_float_n_free (	CrankVecFloatN*	vec	)
  * Returns: Size of vector.
  */
 guint
-crank_vec_float_n_get_size (	CrankVecFloatN*	vec	)
+crank_vec_float_n_get_size (CrankVecFloatN *vec)
 {
-	return vec->n;
+  return vec->n;
 }
 
 /**
@@ -3319,10 +3327,10 @@ crank_vec_float_n_get_size (	CrankVecFloatN*	vec	)
  * Returns: element on vector.
  */
 gfloat
-(crank_vec_float_n_get)	(	CrankVecFloatN*	vec,
-							const guint		index	)
+(crank_vec_float_n_get) (CrankVecFloatN *vec,
+                         const guint     index)
 {
-	return CRANK_VEC_GET (vec, index);
+  return CRANK_VEC_GET (vec, index);
 }
 
 /**
@@ -3334,11 +3342,11 @@ gfloat
  * Sets element of vector at @index, by @value.
  */
 void
-(crank_vec_float_n_set)	(	CrankVecFloatN*	vec,
-							const guint		index,
-							const gfloat	value	)
+(crank_vec_float_n_set) (CrankVecFloatN *vec,
+                         const guint     index,
+                         const gfloat    value)
 {
-	CRANK_VEC_SET (vec, index, value);
+  CRANK_VEC_SET (vec, index, value);
 }
 
 /**
@@ -3349,10 +3357,10 @@ void
  * Prepends an element to vector.
  */
 void
-crank_vec_float_n_prepend (	CrankVecFloatN*	vec,
-						   	const gfloat	value	)
+crank_vec_float_n_prepend (CrankVecFloatN *vec,
+                           const gfloat    value)
 {
-	crank_vec_float_n_insert (vec, 0, value);
+  crank_vec_float_n_insert (vec, 0, value);
 }
 
 /**
@@ -3363,10 +3371,10 @@ crank_vec_float_n_prepend (	CrankVecFloatN*	vec,
  * Appends an element to vector.
  */
 void
-crank_vec_float_n_append (	CrankVecFloatN* vec,
-						  	const gfloat	value	)
+crank_vec_float_n_append (CrankVecFloatN *vec,
+                          const gfloat    value)
 {
-	crank_vec_float_n_insert (vec, vec->n, value);
+  crank_vec_float_n_insert (vec, vec->n, value);
 }
 
 /**
@@ -3378,21 +3386,21 @@ crank_vec_float_n_append (	CrankVecFloatN* vec,
  * Inserts an element to vector.
  */
 void
-crank_vec_float_n_insert (	CrankVecFloatN*	vec,
-						  	const guint		index,
-						  	const gfloat	value	)
+crank_vec_float_n_insert (CrankVecFloatN *vec,
+                          const guint     index,
+                          const gfloat    value)
 {
-  	guint	i;
+  guint i;
 
-	g_return_if_fail (index <= vec->n);
+  g_return_if_fail (index <= vec->n);
 
-  	vec->n++;
-  	vec->data = g_renew (gfloat, vec->data, vec->n);
+  vec->n++;
+  vec->data = g_renew (gfloat, vec->data, vec->n);
 
-  	for (i = vec->n - 1; index < i; i--)
-		vec->data[i] = vec->data[i - 1];
+  for (i = vec->n - 1; index < i; i--)
+    vec->data[i] = vec->data[i - 1];
 
-  	vec->data[index] = value;
+  vec->data[index] = value;
 }
 
 /**
@@ -3403,19 +3411,19 @@ crank_vec_float_n_insert (	CrankVecFloatN*	vec,
  * Removes an element from vector.
  */
 void
-crank_vec_float_n_remove (	CrankVecFloatN*	vec,
-						  	const guint		index	)
+crank_vec_float_n_remove (CrankVecFloatN *vec,
+                          const guint     index)
 {
-	guint	i;
+  guint i;
 
-  	g_return_if_fail (index < vec->n);
+  g_return_if_fail (index < vec->n);
 
-	vec->n--;
+  vec->n--;
 
-  	for (i = index; i < vec->n; i++)
-	  	vec->data[i] = vec->data[i + 1];
+  for (i = index; i < vec->n; i++)
+    vec->data[i] = vec->data[i + 1];
 
-  	vec->data = g_renew (gfloat, vec->data, vec->n);
+  vec->data = g_renew (gfloat, vec->data, vec->n);
 }
 
 /**
@@ -3431,16 +3439,17 @@ crank_vec_float_n_remove (	CrankVecFloatN*	vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float_n_foreach (	CrankVecFloatN*		vec,
-						  	CrankBoolFloatFunc	func,
-						  	gpointer			userdata	)
+crank_vec_float_n_foreach (CrankVecFloatN    *vec,
+                           CrankBoolFloatFunc func,
+                           gpointer           userdata)
 {
-  	guint	i;
+  guint i;
 
-  	for (i = 0; i < vec->n; i++)
-	  	if (! func (vec->data[i], userdata)) return FALSE;
+  for (i = 0; i < vec->n; i++)
+    if (!func (vec->data[i], userdata))
+      return FALSE;
 
-	return TRUE;
+  return TRUE;
 }
 
 /**
@@ -3451,10 +3460,10 @@ crank_vec_float_n_foreach (	CrankVecFloatN*		vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_float_n_iterator (	CrankVecFloatN*		vec,
-								CrankIterMemFloat*	iter	)
+crank_vec_float_n_iterator (CrankVecFloatN    *vec,
+                            CrankIterMemFloat *iter)
 {
-	crank_iter_mem_float_init_with_count (iter, vec->data, vec->n);
+  crank_iter_mem_float_init_with_count (iter, vec->data, vec->n);
 }
 
 
@@ -3470,19 +3479,20 @@ crank_vec_float_n_iterator (	CrankVecFloatN*		vec,
  * Returns: hash value of vector.
  */
 guint
-crank_vec_float_n_hash (	gconstpointer	a	)
+crank_vec_float_n_hash (gconstpointer a)
 {
-	const CrankVecFloatN*	vec = a;
-	
-	guint	i;
-	guint	hash = 0;
-	
-	for (i = 0; i < vec->n; i++) {
-		hash *= 33;
-		hash += crank_float_hash (vec->data + i);
-	}
-	
-	return hash;
+  const CrankVecFloatN *vec = a;
+
+  guint i;
+  guint hash = 0;
+
+  for (i = 0; i < vec->n; i++)
+    {
+      hash *= 33;
+      hash += crank_float_hash (vec->data + i);
+    }
+
+  return hash;
 }
 
 /**
@@ -3494,24 +3504,28 @@ crank_vec_float_n_hash (	gconstpointer	a	)
  *
  * Returns: whether that the two vectors are same.
  */
-gboolean		crank_vec_float_n_equal (	gconstpointer	a,
-											gconstpointer	b	)
+gboolean
+crank_vec_float_n_equal (gconstpointer a,
+                         gconstpointer b)
 {
-	CrankVecFloatN*	veca = (CrankVecFloatN*)a;
-	CrankVecFloatN*	vecb = (CrankVecFloatN*)b;
-	
-	guint	n;
-	guint	i;
-	
-	if (veca->n != vecb->n) return FALSE;
-	
-	n = veca->n;
-	
-	for (i = 0; i < n; i++) {
-		if (veca->data[i] != vecb->data[i]) return FALSE;
-	}
-	
-	return TRUE;
+  CrankVecFloatN *veca = (CrankVecFloatN*)a;
+  CrankVecFloatN *vecb = (CrankVecFloatN*)b;
+
+  guint n;
+  guint i;
+
+  if (veca->n != vecb->n)
+    return FALSE;
+
+  n = veca->n;
+
+  for (i = 0; i < n; i++)
+    {
+      if (veca->data[i] != vecb->data[i])
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 /**
@@ -3525,9 +3539,9 @@ gboolean		crank_vec_float_n_equal (	gconstpointer	a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float_n_to_string (	CrankVecFloatN*	vec	)
+crank_vec_float_n_to_string (CrankVecFloatN *vec)
 {
-	return crank_vec_float_n_to_string_full (vec, "(", ", ", ")", "%g");
+  return crank_vec_float_n_to_string_full (vec, "(", ", ", ")", "%g");
 }
 
 /**
@@ -3543,32 +3557,34 @@ crank_vec_float_n_to_string (	CrankVecFloatN*	vec	)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float_n_to_string_full (	CrankVecFloatN*	vec,
-								const gchar*	left,
-								const gchar*	in,
-								const gchar*	right,
-								const gchar*	format	)
+crank_vec_float_n_to_string_full (CrankVecFloatN *vec,
+                                  const gchar    *left,
+                                  const gchar    *in,
+                                  const gchar    *right,
+                                  const gchar    *format)
 {
-	GString*	strb = g_string_new (left);
-	gchar*		result;
-	
-	guint		i;
-	
-	if (vec->n != 0) {
-		g_string_append_printf (strb, format, vec->data[0]);
-		
-		for (i = 1; i < vec->n; i++) {
-			g_string_append (strb, in);
-			g_string_append_printf (strb, format, vec->data[i]);
-		}
-	}
-	g_string_append (strb, right);
-	
-	result = strb->str;
-	
-	g_string_free (strb, FALSE);
-	
-	return result;
+  GString *strb = g_string_new (left);
+  gchar *result;
+
+  guint i;
+
+  if (vec->n != 0)
+    {
+      g_string_append_printf (strb, format, vec->data[0]);
+
+      for (i = 1; i < vec->n; i++)
+        {
+          g_string_append (strb, in);
+          g_string_append_printf (strb, format, vec->data[i]);
+        }
+    }
+  g_string_append (strb, right);
+
+  result = strb->str;
+
+  g_string_free (strb, FALSE);
+
+  return result;
 }
 
 
@@ -3577,57 +3593,61 @@ crank_vec_float_n_to_string_full (	CrankVecFloatN*	vec,
 /**
  * crank_vec_float_n_is_zero:
  * @vec: A Vector
- * 
+ *
  * Checks whether the vector is "Zero Vector", whose all components are 0.
  *
  * Returns: Whether the vector is "zero vector".
  */
 gboolean
-crank_vec_float_n_is_zero (	CrankVecFloatN*	vec	)
+crank_vec_float_n_is_zero (CrankVecFloatN *vec)
 {
-	guint	i;
-	
-	for (i = 0; i < vec->n; i++) {
-		if (vec->data[i] != 0) return FALSE;
-	}
-	
-	return TRUE;
+  guint i;
+
+  for (i = 0; i < vec->n; i++)
+    {
+      if (vec->data[i] != 0)
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 /**
  * crank_vec_float_n_is_one:
  * @vec: A Vector
- * 
+ *
  * Checks whether the vector has all components as 1.
  *
  * Returns: Whether the vector has all components as 1.
  */
 gboolean
-crank_vec_float_n_is_one (	CrankVecFloatN*	vec	)
+crank_vec_float_n_is_one (CrankVecFloatN *vec)
 {
-	guint	i;
-	
-	for (i = 0; i < vec->n; i++) {
-		if (vec->data[i] != 1) return FALSE;
-	}
-	
-	return TRUE;
+  guint i;
+
+  for (i = 0; i < vec->n; i++)
+    {
+      if (vec->data[i] != 1)
+        return FALSE;
+    }
+
+  return TRUE;
 }
 
 /**
  * crank_vec_float_n_is_unit:
  * @vec: A Vector
- * 
+ *
  * Checks whether the magnitude of vector is 1.
  *
  * Returns: Whether the magnitude of vector is 1.
  */
 gboolean
-crank_vec_float_n_is_unit (	CrankVecFloatN*	vec	)
+crank_vec_float_n_is_unit (CrankVecFloatN *vec)
 {
-	gfloat	magnsq = crank_vec_float_n_get_magn_sq (vec);
-	
-	return (0.9999f <= magnsq) && (magnsq <= 1.0001f);
+  gfloat magnsq = crank_vec_float_n_get_magn_sq (vec);
+
+  return (0.9999f <= magnsq) && (magnsq <= 1.0001f);
 }
 
 /**
@@ -3639,9 +3659,9 @@ crank_vec_float_n_is_unit (	CrankVecFloatN*	vec	)
  * Returns: Whether the vector is empty.
  */
 gboolean
-crank_vec_float_n_is_empty ( CrankVecFloatN* vec	)
+crank_vec_float_n_is_empty (CrankVecFloatN *vec)
 {
-	return vec->n == 0;
+  return vec->n == 0;
 }
 
 /**
@@ -3653,14 +3673,16 @@ crank_vec_float_n_is_empty ( CrankVecFloatN* vec	)
  * Returns: Whether the vector has NaN.
  */
 gboolean
-crank_vec_float_n_has_nan ( CrankVecFloatN*	vec	)
+crank_vec_float_n_has_nan (CrankVecFloatN *vec)
 {
-	guint	i;
-	
-	for (i = 0; i < vec->n; i++) {
-		if (isnanf (vec->data[i])) return TRUE;
-	}
-	return FALSE;
+  guint i;
+
+  for (i = 0; i < vec->n; i++)
+    {
+      if (isnanf (vec->data[i]))
+        return TRUE;
+    }
+  return FALSE;
 }
 
 /**
@@ -3672,14 +3694,16 @@ crank_vec_float_n_has_nan ( CrankVecFloatN*	vec	)
  * Returns: Whether the vector has (inf).
  */
 gboolean
-crank_vec_float_n_has_inf ( CrankVecFloatN*	vec	)
+crank_vec_float_n_has_inf (CrankVecFloatN *vec)
 {
-	guint	i;
-	
-	for (i = 0; i < vec->n; i++) {
-		if (isinff (vec->data[i])) return TRUE;
-	}
-	return FALSE;
+  guint i;
+
+  for (i = 0; i < vec->n; i++)
+    {
+      if (isinff (vec->data[i]))
+        return TRUE;
+    }
+  return FALSE;
 }
 
 //////// Standard vector property ///////
@@ -3693,14 +3717,14 @@ crank_vec_float_n_has_inf ( CrankVecFloatN*	vec	)
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float_n_get_magn_sq	(	CrankVecFloatN*	vec	)
+crank_vec_float_n_get_magn_sq (CrankVecFloatN *vec)
 {
-	gfloat	result = 0;
-	
-	CRANK_FOREACH_ARRAY_DO (vec->data, gfloat, e, vec->n,
-			{result += e * e;}	)
-	
-	return result;
+  gfloat result = 0;
+
+  CRANK_FOREACH_ARRAY_DO (vec->data, gfloat, e, vec->n,
+                          {result += e * e; })
+
+  return result;
 }
 
 /**
@@ -3712,10 +3736,10 @@ crank_vec_float_n_get_magn_sq	(	CrankVecFloatN*	vec	)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float_n_get_magn	(	CrankVecFloatN*	vec	)
+crank_vec_float_n_get_magn (CrankVecFloatN *vec)
 {
-	gfloat sq = crank_vec_float_n_get_magn_sq (vec);
-	return sqrtf (sq);
+  gfloat sq = crank_vec_float_n_get_magn_sq (vec);
+  return sqrtf (sq);
 }
 
 
@@ -3731,14 +3755,15 @@ crank_vec_float_n_get_magn	(	CrankVecFloatN*	vec	)
  * Applies negation.
  */
 void
-crank_vec_float_n_neg (	CrankVecFloatN*	a,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_neg (CrankVecFloatN *a,
+                       CrankVecFloatN *r)
 {
-	guint	i;
-	
-	CRANK_VEC_ALLOC (r, gfloat, a->n);
-	
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i];
+  guint i;
+
+  CRANK_VEC_ALLOC (r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i];
 }
 
 
@@ -3749,11 +3774,12 @@ crank_vec_float_n_neg (	CrankVecFloatN*	a,
  * Applies negation.
  */
 void
-crank_vec_float_n_neg_self (	CrankVecFloatN*	a	)
+crank_vec_float_n_neg_self (CrankVecFloatN *a)
 {
-	guint	i;
-	
-	for (i = 0; i < a->n; i++) a->data[i] = - a->data[i];
+  guint i;
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] = -a->data[i];
 }
 
 
@@ -3765,10 +3791,10 @@ crank_vec_float_n_neg_self (	CrankVecFloatN*	a	)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float_n_unit (	CrankVecFloatN*	a,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_unit (CrankVecFloatN *a,
+                        CrankVecFloatN *r)
 {
-	crank_vec_float_n_divs (a, crank_vec_float_n_get_magn (a), r);
+  crank_vec_float_n_divs (a, crank_vec_float_n_get_magn (a), r);
 }
 
 
@@ -3779,9 +3805,9 @@ crank_vec_float_n_unit (	CrankVecFloatN*	a,
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float_n_unit_self (	CrankVecFloatN*	a	)
+crank_vec_float_n_unit_self (CrankVecFloatN *a)
 {
-	crank_vec_float_n_divs_self (a, crank_vec_float_n_get_magn (a));
+  crank_vec_float_n_divs_self (a, crank_vec_float_n_get_magn (a));
 }
 
 
@@ -3796,16 +3822,17 @@ crank_vec_float_n_unit_self (	CrankVecFloatN*	a	)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float_n_muls	(	CrankVecFloatN*	a,
-							const gfloat	b,
-							CrankVecFloatN*	r	)
+crank_vec_float_n_muls (CrankVecFloatN *a,
+                        const gfloat    b,
+                        CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	
-	CRANK_VEC_ALLOC(r,gfloat,a->n);
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * b;
+  guint i;
+
+  g_return_if_fail (a != r);
+
+  CRANK_VEC_ALLOC(r,gfloat,a->n);
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] * b;
 }
 
 /**
@@ -3816,12 +3843,13 @@ crank_vec_float_n_muls	(	CrankVecFloatN*	a,
  * Applies scalar multiplication.
  */
 void
-crank_vec_float_n_muls_self	(	CrankVecFloatN*	a,
-								const gfloat	b	)
+crank_vec_float_n_muls_self (CrankVecFloatN *a,
+                             const gfloat    b)
 {
-	guint	i;
-	
-	for (i = 0; i < a->n; i++)	a->data[i] *= b;
+  guint i;
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] *= b;
 }
 
 /**
@@ -3833,16 +3861,17 @@ crank_vec_float_n_muls_self	(	CrankVecFloatN*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float_n_divs	(	CrankVecFloatN*	a,
-						const gfloat		b,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_divs (CrankVecFloatN *a,
+                        const gfloat    b,
+                        CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	
-	CRANK_VEC_ALLOC(r,gfloat,a->n);
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b;
+  guint i;
+
+  g_return_if_fail (a != r);
+
+  CRANK_VEC_ALLOC(r,gfloat,a->n);
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] / b;
 }
 
 /**
@@ -3853,12 +3882,13 @@ crank_vec_float_n_divs	(	CrankVecFloatN*	a,
  * Applies scalar division.
  */
 void
-crank_vec_float_n_divs_self	(	CrankVecFloatN*	a,
-								const gfloat	b	)
+crank_vec_float_n_divs_self (CrankVecFloatN *a,
+                             const gfloat    b)
 {
-	guint	i;
-	
-	for (i = 0; i < a->n; i++)	a->data[i] /= b;
+  guint i;
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] /= b;
 }
 
 
@@ -3873,19 +3903,20 @@ crank_vec_float_n_divs_self	(	CrankVecFloatN*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float_n_add	(	CrankVecFloatN*	a,
-							CrankVecFloatN*	b,
-							CrankVecFloatN*	r	)
+crank_vec_float_n_add (CrankVecFloatN *a,
+                       CrankVecFloatN *b,
+                       CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] + b->data[i];
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] + b->data[i];
 }
 
 /**
@@ -3896,14 +3927,15 @@ crank_vec_float_n_add	(	CrankVecFloatN*	a,
  * Adds two vectors.
  */
 void
-crank_vec_float_n_add_self	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b	)
+crank_vec_float_n_add_self (CrankVecFloatN *a,
+                            CrankVecFloatN *b)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] += b->data[i];
+  guint i;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "add-self", a, b);
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] += b->data[i];
 }
 
 /**
@@ -3915,19 +3947,20 @@ crank_vec_float_n_add_self	(	CrankVecFloatN*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float_n_sub	(	CrankVecFloatN*	a,
-							CrankVecFloatN*	b,
-							CrankVecFloatN*	r	)
+crank_vec_float_n_sub (CrankVecFloatN *a,
+                       CrankVecFloatN *b,
+                       CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-		
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
-	
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] - b->data[i];
+  guint i;
+
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] - b->data[i];
 }
 
 /**
@@ -3938,14 +3971,15 @@ crank_vec_float_n_sub	(	CrankVecFloatN*	a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float_n_sub_self	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b	)
+crank_vec_float_n_sub_self (CrankVecFloatN *a,
+                            CrankVecFloatN *b)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub-self", a, b);
-	
-	for (i = 0; i < a->n; i++)	a->data[i] -= b->data[i];
+  guint i;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "sub-self", a, b);
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] -= b->data[i];
 }
 
 /**
@@ -3958,16 +3992,17 @@ crank_vec_float_n_sub_self	(	CrankVecFloatN*	a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float_n_dot	(	CrankVecFloatN*	a,
-							CrankVecFloatN*	b	)
+crank_vec_float_n_dot (CrankVecFloatN *a,
+                       CrankVecFloatN *b)
 {
-	gfloat	result = 0;
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET ("VecFloatN", "dot", a, b, 0.0f);
-	
-	for (i = 0; i < a->n; i++) result += a->data[i] * b->data[i];
-	return result;
+  gfloat result = 0;
+  guint i;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET ("VecFloatN", "dot", a, b, 0.0f);
+
+  for (i = 0; i < a->n; i++)
+    result += a->data[i] * b->data[i];
+  return result;
 }
 
 //////// Component vector operations ////////
@@ -3977,40 +4012,42 @@ crank_vec_float_n_dot	(	CrankVecFloatN*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float_n_cmpmul	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b,
-								CrankVecFloatN*	r	)
+crank_vec_float_n_cmpmul (CrankVecFloatN *a,
+                          CrankVecFloatN *b,
+                          CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * b->data[i];
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] * b->data[i];
 }
 
 /**
  * crank_vec_float_n_cmpmul_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float_n_cmpmul_self	(	CrankVecFloatN*	a,
-									CrankVecFloatN*	b	)
+crank_vec_float_n_cmpmul_self (CrankVecFloatN *a,
+                               CrankVecFloatN *b)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul-self", a, b);
-	for (i = 0; i < a->n; i++) a->data[i] *= b->data[i];
+  guint i;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpmul-self", a, b);
+  for (i = 0; i < a->n; i++)
+    a->data[i] *= b->data[i];
 }
 
 /**
@@ -4018,40 +4055,42 @@ crank_vec_float_n_cmpmul_self	(	CrankVecFloatN*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float_n_cmpdiv	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b,
-								CrankVecFloatN*	r	)
+crank_vec_float_n_cmpdiv (CrankVecFloatN *a,
+                          CrankVecFloatN *b,
+                          CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpdiv", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] / b->data[i];
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpdiv", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] / b->data[i];
 }
 
 /**
  * crank_vec_float_n_cmpdiv_self:
  * @a: A vector.
  * @b: A vector.
- * 
+ *
  * Gets component-wise division.
  */
 void
-crank_vec_float_n_cmpdiv_self	(	CrankVecFloatN*	a,
-									CrankVecFloatN*	b	)
+crank_vec_float_n_cmpdiv_self (CrankVecFloatN *a,
+                               CrankVecFloatN *b)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpdiv-self", a, b);
-	for (i = 0; i < a->n; i++) a->data[i] /= b->data[i];
+  guint i;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpdiv-self", a, b);
+  for (i = 0; i < a->n; i++)
+    a->data[i] /= b->data[i];
 }
 
 /**
@@ -4059,83 +4098,87 @@ crank_vec_float_n_cmpdiv_self	(	CrankVecFloatN*	a,
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float_n_cmpless	(	CrankVecFloatN*	a,
-								CrankVecFloatN*	b,
-								CrankVecBoolN*	r	)
+crank_vec_float_n_cmpless (CrankVecFloatN *a,
+                           CrankVecFloatN *b,
+                           CrankVecBoolN  *r)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpless", a, b);
-	CRANK_VEC_ALLOC(r, gboolean, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] < b->data[i];
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpless", a, b);
+  CRANK_VEC_ALLOC(r, gboolean, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] < b->data[i];
 }
-												
+
 /**
  * crank_vec_float_n_cmpeq:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float_n_cmpeq	(	CrankVecFloatN*	a,
-							CrankVecFloatN*	b,
-							CrankVecBoolN*	r	)
+crank_vec_float_n_cmpeq (CrankVecFloatN *a,
+                         CrankVecFloatN *b,
+                         CrankVecBoolN  *r)
 {
-	guint	i;
+  guint i;
 
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpeq", a, b);
-	CRANK_VEC_ALLOC(r, gboolean, a->n);
-	
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] == b->data[i];
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpeq", a, b);
+  CRANK_VEC_ALLOC(r, gboolean, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] == b->data[i];
 }
-												
+
 /**
  * crank_vec_float_n_cmpgreater:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets each component of @a is greater than counterpart of @b
- */					
+ */
 void
-crank_vec_float_n_cmpgreater	(	CrankVecFloatN*	a,
-									CrankVecFloatN*	b,
-									CrankVecBoolN*	r	)
+crank_vec_float_n_cmpgreater (CrankVecFloatN *a,
+                              CrankVecFloatN *b,
+                              CrankVecBoolN  *r)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpgreater", a, b);
-	CRANK_VEC_ALLOC(r, gboolean, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] > b->data[i];
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpgreater", a, b);
+  CRANK_VEC_ALLOC(r, gboolean, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] > b->data[i];
 }
-					
+
 /**
  * crank_vec_float_n_cmpcmp:
  * @a: A vector.
  * @b: A vector.
  * @r: (out): A vector to store result.
- * 
+ *
  * Gets compare result of each components.
- */	
+ */
 void
-crank_vec_float_n_cmpcmp	(		CrankVecFloatN*	a,
-									CrankVecFloatN*	b,
-									CrankVecIntN*	r	)
+crank_vec_float_n_cmpcmp (CrankVecFloatN *a,
+                          CrankVecFloatN *b,
+                          CrankVecIntN   *r)
 {
-	guint	i;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpcmp", a, b);
-	CRANK_VEC_ALLOC(r, gint, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = CMP (a->data[i], b->data[i]);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "cmpcmp", a, b);
+  CRANK_VEC_ALLOC(r, gint, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = CMP (a->data[i], b->data[i]);
 }
 
 /**
@@ -4147,19 +4190,20 @@ crank_vec_float_n_cmpcmp	(		CrankVecFloatN*	a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float_n_min (	CrankVecFloatN*	a,
-						CrankVecFloatN*	b,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_min (CrankVecFloatN *a,
+                       CrankVecFloatN *b,
+                       CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "min", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = MIN (a->data[i], b->data[i]);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "min", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = MIN (a->data[i], b->data[i]);
 }
 
 /**
@@ -4171,19 +4215,20 @@ crank_vec_float_n_min (	CrankVecFloatN*	a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float_n_max (	CrankVecFloatN*	a,
-						CrankVecFloatN*	b,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_max (CrankVecFloatN *a,
+                       CrankVecFloatN *b,
+                       CrankVecFloatN *r)
 {
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "max", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
 
-	for (i = 0; i < a->n; i++) r->data[i] = MAX (a->data[i], b->data[i]);
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "max", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = MAX (a->data[i], b->data[i]);
 }
 
 
@@ -4196,26 +4241,30 @@ crank_vec_float_n_max (	CrankVecFloatN*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float_n_mulm (	CrankVecFloatN*	a,
-							CrankMatFloatN*	b,
-							CrankVecFloatN*	r	)
+crank_vec_float_n_mulm (CrankVecFloatN *a,
+                        CrankMatFloatN *b,
+                        CrankVecFloatN *r)
 {
-	g_return_if_fail (a != r);
-	
-  	if (a->n == b->rn) {
-		guint	i;
-	  	guint	j;
-	  	gfloat*	data;
+  g_return_if_fail (a != r);
 
-	  	data = g_new0 (gfloat, b->cn);
+  if (a->n == b->rn)
+    {
+      guint i;
+      guint j;
+      gfloat *data;
 
-	  	for (i = 0; i < b->cn; i++)
-	  		for (j = 0; j < a->n; j++)
-		  		data[i] += a->data[j] * b->data[(b->cn * j) + i];
+      data = g_new0 (gfloat, b->cn);
 
-	  	crank_vec_float_n_init_arr_take (r, b->cn, data);
-	}
-  	else g_warning ("VecFloatN: mulm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
+      for (i = 0; i < b->cn; i++)
+        for (j = 0; j < a->n; j++)
+          data[i] += a->data[j] * b->data[(b->cn * j) + i];
+
+      crank_vec_float_n_init_arr_take (r, b->cn, data);
+    }
+  else
+    g_warning ("VecFloatN: mulm: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
+
+
 }
 
 
@@ -4227,24 +4276,29 @@ crank_vec_float_n_mulm (	CrankVecFloatN*	a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float_n_mulm_self (	CrankVecFloatN*	a,
-								CrankMatFloatN*	b	)
+crank_vec_float_n_mulm_self (CrankVecFloatN *a,
+                             CrankMatFloatN *b)
 {
-  	if (a->n == b->rn) {
-		guint	i;
-	  	guint	j;
-	  	gfloat*	data;
+  if (a->n == b->rn)
+    {
+      guint i;
+      guint j;
+      gfloat *data;
 
-	  	data = g_new0 (gfloat, b->cn);
+      data = g_new0 (gfloat, b->cn);
 
-	  	for (i = 0; i < b->cn; i++)
-	  		for (j = 0; j < a->n; j++)
-		  		data[i] += a->data[j] * b->data[(b->cn * j) + i];
+      for (i = 0; i < b->cn; i++)
+        for (j = 0; j < a->n; j++)
+          data[i] += a->data[j] * b->data[(b->cn * j) + i];
 
-		g_free (a->data);
-	  	crank_vec_float_n_init_arr_take (a, b->cn, data);
-	}
-  	else g_warning ("VecFloatN: mulm-self: size mismatch: %u, %ux%u", a->n, b->rn, b->cn);
+      g_free (a->data);
+      crank_vec_float_n_init_arr_take (a, b->cn, data);
+    }
+  else
+    g_warning ("VecFloatN: mulm-self: size mismatch: %u, %ux%u",
+               a->n,
+               b->rn,
+               b->cn);
 }
 
 /**
@@ -4260,23 +4314,24 @@ crank_vec_float_n_mulm_self (	CrankVecFloatN*	a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float_n_mixs (	CrankVecFloatN*	a,
-							CrankVecFloatN*	b,
-							const gfloat	c,
-							CrankVecFloatN*	r	)
+crank_vec_float_n_mixs (CrankVecFloatN *a,
+                        CrankVecFloatN *b,
+                        const gfloat    c,
+                        CrankVecFloatN *r)
 {
-	guint	i;
-	gfloat	d;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	
-	d = 1.0f - c;
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "mixs", a, b);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  guint i;
+  gfloat d;
 
-	for (i = 0; i < a->n; i++) r->data[i] = a->data[i] * d + b->data[i] * c;
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+
+  d = 1.0f - c;
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2 ("VecFloatN", "mixs", a, b);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = a->data[i] * d + b->data[i] * c;
 }
 
 
@@ -4293,89 +4348,90 @@ crank_vec_float_n_mixs (	CrankVecFloatN*	a,
  *    (a cmpmul c) + (b cmpmul ({1, 1, ..., 1} - c))
  */
 void
-crank_vec_float_n_mix (	CrankVecFloatN*	a,
-						CrankVecFloatN*	b,
-						CrankVecFloatN*	c,
-						CrankVecFloatN*	r	)
+crank_vec_float_n_mix (CrankVecFloatN *a,
+                       CrankVecFloatN *b,
+                       CrankVecFloatN *c,
+                       CrankVecFloatN *r)
 {
-	gfloat	d;
-	guint	i;
-	
-	g_return_if_fail (a != r);
-	g_return_if_fail (b != r);
-	g_return_if_fail (c != r);
-	
-	CRANK_VEC_WARN_IF_SIZE_MISMATCH3 ("VecFloatN", "mix", a, b, c);
-	CRANK_VEC_ALLOC(r, gfloat, a->n);
+  gfloat d;
+  guint i;
 
-	for (i = 0; i < a->n; i++) {
-		d = 1.0f - c->data[i];
-		r->data[i] =	a->data[i] * d + b->data[i] * c->data[i];
-	}
+  g_return_if_fail (a != r);
+  g_return_if_fail (b != r);
+  g_return_if_fail (c != r);
+
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH3 ("VecFloatN", "mix", a, b, c);
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    {
+      d = 1.0f - c->data[i];
+      r->data[i] =    a->data[i] * d + b->data[i] * c->data[i];
+    }
 }
 
 //////// GValue Transform //////////////////////////////////////////////////////
 
 static void
-crank_vec_float_n_transform_from_vb (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float_n_transform_from_vb (const GValue *src,
+                                     GValue       *dest)
 {
-	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_from_vb (vf, (CrankVecBoolN*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float_n_transform_from_vi (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_from_vi (vf, (CrankVecIntN*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float_n_transform_from_v2 (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_arr (vf, 2, (gfloat*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float_n_transform_from_v3 (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_arr (vf, 3, (gfloat*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
-}
-													
-static void
-crank_vec_float_n_transform_from_v4 (	const GValue*	src,
-										GValue*			dest	)
-{
-	CrankVecFloatN*	vf = g_new (CrankVecFloatN, 1);
-	
-	crank_vec_float_n_init_arr (vf, 4, (gfloat*) g_value_get_boxed (src));
-	
-	g_value_take_boxed (dest, vf);
+  CrankVecFloatN *vf = g_new (CrankVecFloatN, 1);
+
+  crank_vec_float_n_init_from_vb (vf, (CrankVecBoolN*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
 }
 
 static void
-crank_vec_float_n_transform_to_string (	const GValue*	src,
-										GValue*			dest	)
+crank_vec_float_n_transform_from_vi (const GValue *src,
+                                     GValue       *dest)
 {
-	g_value_take_string (dest,
-			crank_vec_float_n_to_string (
-					(CrankVecFloatN*) g_value_get_boxed(src) ) );
+  CrankVecFloatN *vf = g_new (CrankVecFloatN, 1);
+
+  crank_vec_float_n_init_from_vi (vf, (CrankVecIntN*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float_n_transform_from_v2 (const GValue *src,
+                                     GValue       *dest)
+{
+  CrankVecFloatN *vf = g_new (CrankVecFloatN, 1);
+
+  crank_vec_float_n_init_arr (vf, 2, (gfloat*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float_n_transform_from_v3 (const GValue *src,
+                                     GValue       *dest)
+{
+  CrankVecFloatN *vf = g_new (CrankVecFloatN, 1);
+
+  crank_vec_float_n_init_arr (vf, 3, (gfloat*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float_n_transform_from_v4 (const GValue *src,
+                                     GValue       *dest)
+{
+  CrankVecFloatN *vf = g_new (CrankVecFloatN, 1);
+
+  crank_vec_float_n_init_arr (vf, 4, (gfloat*) g_value_get_boxed (src));
+
+  g_value_take_boxed (dest, vf);
+}
+
+static void
+crank_vec_float_n_transform_to_string (const GValue *src,
+                                       GValue       *dest)
+{
+  g_value_take_string (dest,
+                       crank_vec_float_n_to_string (
+                         (CrankVecFloatN*) g_value_get_boxed(src) ) );
 }

@@ -42,7 +42,7 @@
  * frequently used and might be useful for generic uses.
  *
  * # Function types
- * 
+ *
  * This section contains frequently used function types, for examples, boolean
  * evaluation functions (CrankBool{Type}Func).
  *
@@ -79,14 +79,14 @@
  * Returns: Hash of float values.
  */
 guint
-crank_float_hash (	gconstpointer	a	)
+crank_float_hash (gconstpointer a)
 {
-	gfloat	fvalue = *(gfloat*)a;
-	gint 	ivalue = 	(fvalue < G_MININT) ? G_MININT :
-						(G_MAXINT < fvalue) ? G_MAXINT :
-						/*default*/			  (gint)fvalue;
-	
-	return (guint) ivalue;
+  gfloat fvalue = *(gfloat*)a;
+  gint ivalue =    (fvalue < G_MININT) ? G_MININT :
+                (G_MAXINT < fvalue) ? G_MAXINT :
+                /*default*/ (gint)fvalue;
+
+  return (guint) ivalue;
 }
 
 /**
@@ -100,14 +100,14 @@ crank_float_hash (	gconstpointer	a	)
  * Returns: Hash of float values.
  */
 guint
-crank_float_hash1 (	gconstpointer	a	)
+crank_float_hash1 (gconstpointer a)
 {
-	gfloat	fvalue = *(gfloat*)a * 1048576;
-	gint 	ivalue = 	(fvalue < G_MININT) ? G_MININT :
-						(G_MAXINT < fvalue) ? G_MAXINT :
-						/*default*/			  (gint)fvalue;
-	
-	return (guint) ivalue;
+  gfloat fvalue = *(gfloat*)a * 1048576;
+  gint ivalue =    (fvalue < G_MININT) ? G_MININT :
+                (G_MAXINT < fvalue) ? G_MAXINT :
+                /*default*/ (gint)fvalue;
+
+  return (guint) ivalue;
 }
 
 /**
@@ -121,12 +121,12 @@ crank_float_hash1 (	gconstpointer	a	)
  * Returns: whether (*@a) and (*@b) are equal.
  */
 gboolean
-crank_bool_equal (	gconstpointer	a,
-					gconstpointer	b	)
+crank_bool_equal (gconstpointer a,
+                  gconstpointer b)
 {
-	gboolean av = ! *(gboolean*)a;
-	gboolean bv = ! *(gboolean*)b;
-	return av == bv;
+  gboolean av = !*(gboolean*)a;
+  gboolean bv = !*(gboolean*)b;
+  return av == bv;
 }
 
 /**
@@ -139,12 +139,12 @@ crank_bool_equal (	gconstpointer	a,
  * Returns: whether (*@a) and (*@b) are equal.
  */
 gboolean
-crank_uint_equal (	gconstpointer	a,
-					gconstpointer	b	)
+crank_uint_equal (gconstpointer a,
+                  gconstpointer b)
 {
-	guint av = *(guint*)a;
-	guint bv = *(guint*)b;
-	return av == bv;
+  guint av = *(guint*)a;
+  guint bv = *(guint*)b;
+  return av == bv;
 }
 
 /**
@@ -157,10 +157,10 @@ crank_uint_equal (	gconstpointer	a,
  * Returns: whether (*@a) and (*@b) are equal.
  */
 gboolean
-crank_float_equal (	gconstpointer	a,
-					gconstpointer	b	)
+crank_float_equal (gconstpointer a,
+                   gconstpointer b)
 {
-	crank_float_equal_delta(a, b, 0.0001f);
+  crank_float_equal_delta(a, b, 0.0001f);
 }
 
 
@@ -178,13 +178,13 @@ crank_float_equal (	gconstpointer	a,
  * Returns: Whether @a and @b are sufficiently equal.
  */
 gboolean
-crank_float_equal_delta (	gconstpointer	a,
-							gconstpointer	b,
-							const gfloat	d	)
+crank_float_equal_delta (gconstpointer a,
+                         gconstpointer b,
+                         const gfloat  d)
 {
-	gfloat av = *(gfloat*)a;
-	gfloat bv = *(gfloat*)b;
-	return (bv - d < av) && (av < bv + d);
+  gfloat av = *(gfloat*)a;
+  gfloat bv = *(gfloat*)b;
+  return (bv - d < av) && (av < bv + d);
 }
 
 
@@ -199,13 +199,13 @@ crank_float_equal_delta (	gconstpointer	a,
  * Returns: Comparsion result.
  */
 gint
-crank_int_compare (	gconstpointer	a,
-					gconstpointer	b )
+crank_int_compare (gconstpointer a,
+                   gconstpointer b)
 {
-	gint	av = *(gint*) a;
-	gint	bv = *(gint*) b;
-	
-	return (bv < av) - (av < bv);
+  gint av = *(gint*) a;
+  gint bv = *(gint*) b;
+
+  return (bv < av) - (av < bv);
 }
 
 /**
@@ -218,13 +218,13 @@ crank_int_compare (	gconstpointer	a,
  * Returns: Comparsion result.
  */
 gint
-crank_uint_compare (	gconstpointer	a,
-						gconstpointer	b )
+crank_uint_compare (gconstpointer a,
+                    gconstpointer b)
 {
-	guint	av = *(guint*) a;
-	guint	bv = *(guint*) b;
-	
-	return (bv < av) - (av < bv);
+  guint av = *(guint*) a;
+  guint bv = *(guint*) b;
+
+  return (bv < av) - (av < bv);
 }
 
 /**
@@ -237,13 +237,13 @@ crank_uint_compare (	gconstpointer	a,
  * Returns: Comparsion result.
  */
 gint
-crank_float_compare (	gconstpointer	a,
-						gconstpointer	b )
+crank_float_compare (gconstpointer a,
+                     gconstpointer b)
 {
-	gfloat	av = *(gfloat*) a;
-	gfloat	bv = *(gfloat*) b;
-	
-	return (bv < av) - (av < bv);
+  gfloat av = *(gfloat*) a;
+  gfloat bv = *(gfloat*) b;
+
+  return (bv < av) - (av < bv);
 }
 
 
@@ -258,10 +258,10 @@ crank_float_compare (	gconstpointer	a,
  * Returns: string represents of float. free with g_free()
  */
 gchar*
-crank_bool_to_string (	gpointer	value,
-						gpointer	userdata	)
+crank_bool_to_string (gpointer value,
+                      gpointer userdata)
 {
-	return g_strdup (*(gboolean*)value ? "TRUE" : "FALSE");
+  return g_strdup (*(gboolean*)value ? "TRUE" : "FALSE");
 }
 
 /**
@@ -274,11 +274,11 @@ crank_bool_to_string (	gpointer	value,
  * Returns: string representf integer value. free with g_free()
  */
 gchar*
-crank_int_to_string (	gpointer	value,
-						gpointer	userdata	)
+crank_int_to_string (gpointer value,
+                     gpointer userdata)
 {
-	gchar*	format = (userdata != NULL) ? (gchar*)userdata : "%d";
-	return g_strdup_printf (format, *(gint*)value);
+  gchar *format = (userdata != NULL) ? (gchar*)userdata : "%d";
+  return g_strdup_printf (format, *(gint*)value);
 }
 
 /**
@@ -291,11 +291,11 @@ crank_int_to_string (	gpointer	value,
  * Returns: string representf integer value. free with g_free()
  */
 gchar*
-crank_uint_to_string (	gpointer	value,
-						gpointer	userdata	)
+crank_uint_to_string (gpointer value,
+                      gpointer userdata)
 {
-	gchar*	format = (userdata != NULL) ? (gchar*)userdata : "%u";
-	return g_strdup_printf (format, *(gint*)value);
+  gchar *format = (userdata != NULL) ? (gchar*)userdata : "%u";
+  return g_strdup_printf (format, *(gint*)value);
 }
 
 
@@ -309,11 +309,11 @@ crank_uint_to_string (	gpointer	value,
  * Returns: string represents of float. free with g_free()
  */
 gchar*
-crank_float_to_string (	gpointer	value,
-						gpointer	userdata)
+crank_float_to_string (gpointer value,
+                       gpointer userdata)
 {
-	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%g";
-	return g_strdup_printf (format, *(gfloat*)value); 
+  gchar *format = (userdata != NULL) ? (gchar*)userdata : "%g";
+  return g_strdup_printf (format, *(gfloat*)value);
 }
 
 /**
@@ -326,9 +326,9 @@ crank_float_to_string (	gpointer	value,
  * Returns: string represents pointer. free with g_free()
  */
 gchar*
-crank_pointer_to_string (	gpointer	value,
-						gpointer	userdata)
+crank_pointer_to_string (gpointer value,
+                         gpointer userdata)
 {
-	gchar* format = (userdata != NULL) ? (gchar*)userdata : "%p";
-	return g_strdup_printf (format, value); 
+  gchar *format = (userdata != NULL) ? (gchar*)userdata : "%p";
+  return g_strdup_printf (format, value);
 }

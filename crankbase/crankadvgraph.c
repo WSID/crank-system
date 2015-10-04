@@ -57,28 +57,32 @@
  *    add dijkstra on MatFloatN
  *    add A* on MatFloatN
  */
- 
+
 static void
-crank_advgraph_free_float (gpointer	f)
+crank_advgraph_free_float (gpointer f)
 {
-	g_slice_free (gfloat, f);
+  g_slice_free (gfloat, f);
 }
 
 static void
-crank_advgraph_set_float (GHashTable* table, gpointer key, gfloat value)
+crank_advgraph_set_float (GHashTable *table,
+                          gpointer    key,
+                          gfloat      value)
 {
-	gfloat*	ptr = g_slice_new (gfloat);
-	
-	*ptr = value;
-	
-	g_hash_table_insert (table, key, ptr);
+  gfloat *ptr = g_slice_new (gfloat);
+
+  *ptr = value;
+
+  g_hash_table_insert (table, key, ptr);
 }
 
 static gfloat
-crank_advgraph_get_float (GHashTable* table, gpointer key, const gfloat def)
+crank_advgraph_get_float (GHashTable  *table,
+                          gpointer     key,
+                          const gfloat def)
 {
-	gfloat*	ptr = (gfloat*) g_hash_table_lookup (table, key);
-	return (ptr == NULL) ? def : *ptr;
+  gfloat *ptr = (gfloat*) g_hash_table_lookup (table, key);
+  return (ptr == NULL) ? def : *ptr;
 }
 
 
@@ -99,97 +103,108 @@ crank_advgraph_get_float (GHashTable* table, gpointer key, const gfloat def)
  *    The path as list of #CrankDigraphNode
  */
 GList*
-crank_dijkstra_digraph (	CrankDigraphNode*			from,
-							CrankDigraphNode*			to,
-							CrankDigraphEdgeFloatFunc	edge_func,
-							gpointer					userdata	)
+crank_dijkstra_digraph (CrankDigraphNode         *from,
+                        CrankDigraphNode         *to,
+                        CrankDigraphEdgeFloatFunc edge_func,
+                        gpointer                  userdata)
 {
-	GList*				result = NULL;
-	CrankDigraphNode*	result_node;
-	
-	GHashTable*	dist;
-	GHashTable*	visited;
-	GHashTable*	visiting;
-	GHashTable*	prev;
-	
-	// Initializing
-	dist 		= g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, crank_advgraph_free_float);
-	visited		= g_hash_table_new (g_direct_hash, g_direct_equal);
-	visiting	= g_hash_table_new (g_direct_hash, g_direct_equal);
-	prev 		= g_hash_table_new (g_direct_hash, g_direct_equal);
-	
-	g_hash_table_add (visiting, from);
-	crank_advgraph_set_float (dist, from, 0.0f);
-	
-	// Looping.
-	while (g_hash_table_size (visiting) != 0) {
-		GHashTableIter		visiting_iter;
-		
-		// TODO: Pick more better name
-		gfloat				cost = INFINITY;
-		CrankDigraphNode*	node;
-		gfloat				cost_candidate;
-		CrankDigraphNode* 	node_candidate;
-	
-	
-		// Pick next node to check.
-		g_hash_table_iter_init (&visiting_iter, visiting);
-		while (	g_hash_table_iter_next (
-				&visiting_iter,
-				(gpointer*)&node_candidate,
-				NULL) )
-		{
-			cost_candidate = crank_advgraph_get_float (dist, node_candidate, INFINITY);
-			if (cost_candidate < cost) {
-				node = node_candidate;
-				cost = cost_candidate;
-			}
-		}
-		g_hash_table_remove (visiting, node);
-		
-		// Process node
-		g_hash_table_add (visited, node);
-		
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
-				crank_digraph_node_get_out_edges (node),
-				CrankDigraphEdge*, edge
-		)
-			CrankDigraphNode*	next_node = crank_digraph_edge_get_head (edge);
-			gfloat				edge_cost = edge_func (edge, userdata);
-			gfloat				next_cost = crank_advgraph_get_float (dist, next_node, INFINITY);
-			gfloat				next_cost_new = cost + edge_cost;
-			
-			if (next_cost_new < next_cost) {
-				g_hash_table_insert (prev, next_node, node);
-				crank_advgraph_set_float (dist, next_node, next_cost_new);
-			
-				if (! g_hash_table_contains (visited, next_node))
-					g_hash_table_add (visiting, next_node);
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
-		
-		// If we found the way to @to, then stop loop.
-		if (node == to) break;
-	}
-	
-	// Build up path.
-	result_node = to;
-	while (result_node != NULL) {
-		 result = g_list_prepend (result, result_node);
-		 result_node = g_hash_table_lookup (prev, result_node);
-	}
-	
-	if (result->data != from) {
-		g_list_free (result);
-		result = NULL;
-	}
-	
-	g_hash_table_unref (dist);
-	g_hash_table_unref (visited);
-	g_hash_table_unref (visiting);
-	g_hash_table_unref (prev);
-	
-	return result;
+  GList *result = NULL;
+  CrankDigraphNode *result_node;
+
+  GHashTable *dist;
+  GHashTable *visited;
+  GHashTable *visiting;
+  GHashTable *prev;
+
+  // Initializing
+  dist        = g_hash_table_new_full (g_direct_hash,
+                                       g_direct_equal,
+                                       NULL,
+                                       crank_advgraph_free_float);
+  visited     = g_hash_table_new (g_direct_hash, g_direct_equal);
+  visiting    = g_hash_table_new (g_direct_hash, g_direct_equal);
+  prev        = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  g_hash_table_add (visiting, from);
+  crank_advgraph_set_float (dist, from, 0.0f);
+
+  // Looping.
+  while (g_hash_table_size (visiting) != 0)
+    {
+      GHashTableIter visiting_iter;
+
+      // TODO: Pick more better name
+      gfloat cost = INFINITY;
+      CrankDigraphNode *node;
+      gfloat cost_candidate;
+      CrankDigraphNode *node_candidate;
+
+
+      // Pick next node to check.
+      g_hash_table_iter_init (&visiting_iter, visiting);
+      while (g_hash_table_iter_next (
+               &visiting_iter,
+               (gpointer*)&node_candidate,
+               NULL) )
+        {
+          cost_candidate = crank_advgraph_get_float (dist,
+                                                     node_candidate,
+                                                     INFINITY);
+          if (cost_candidate < cost)
+            {
+              node = node_candidate;
+              cost = cost_candidate;
+            }
+        }
+      g_hash_table_remove (visiting, node);
+
+      // Process node
+      g_hash_table_add (visited, node);
+
+      CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
+        crank_digraph_node_get_out_edges (node),
+        CrankDigraphEdge*, edge
+                                      )
+      CrankDigraphNode *   next_node = crank_digraph_edge_get_head (edge);
+      gfloat edge_cost = edge_func (edge, userdata);
+      gfloat next_cost = crank_advgraph_get_float (dist, next_node, INFINITY);
+      gfloat next_cost_new = cost + edge_cost;
+
+      if (next_cost_new < next_cost)
+        {
+          g_hash_table_insert (prev, next_node, node);
+          crank_advgraph_set_float (dist, next_node, next_cost_new);
+
+          if (!g_hash_table_contains (visited, next_node))
+            g_hash_table_add (visiting, next_node);
+        }
+      CRANK_FOREACH_G_PTR_ARRAY_END
+
+      // If we found the way to @to, then stop loop.
+      if (node == to)
+        break;
+    }
+
+  // Build up path.
+  result_node = to;
+  while (result_node != NULL)
+    {
+      result = g_list_prepend (result, result_node);
+      result_node = g_hash_table_lookup (prev, result_node);
+    }
+
+  if (result->data != from)
+    {
+      g_list_free (result);
+      result = NULL;
+    }
+
+  g_hash_table_unref (dist);
+  g_hash_table_unref (visited);
+  g_hash_table_unref (visiting);
+  g_hash_table_unref (prev);
+
+  return result;
 }
 
 /**
@@ -211,109 +226,129 @@ crank_dijkstra_digraph (	CrankDigraphNode*			from,
  *    Path as list of Nodes.
  */
 GList*
-crank_astar_digraph (	CrankDigraphNode*			from,
-						CrankDigraphNode*			to,
-						CrankDigraphEdgeFloatFunc	edge_func,
-						gpointer					edge_userdata,
-						CrankDigraphHeuristicFunc	heuristic_func,
-						gpointer					heuristic_userdata	)
+crank_astar_digraph (CrankDigraphNode         *from,
+                     CrankDigraphNode         *to,
+                     CrankDigraphEdgeFloatFunc edge_func,
+                     gpointer                  edge_userdata,
+                     CrankDigraphHeuristicFunc heuristic_func,
+                     gpointer                  heuristic_userdata)
 {
-	GList*				result = NULL;
-	CrankDigraphNode*	result_node;
-	
-	GHashTable*	dist_from;
-	GHashTable*	dist_to;
-	GHashTable*	visited;
-	GHashTable*	visiting;
-	GHashTable*	prev;
-	
-	// Initializing
-	dist_from	= g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, crank_advgraph_free_float);
-	dist_to		= g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, crank_advgraph_free_float);
-	visited		= g_hash_table_new (g_direct_hash, g_direct_equal);
-	visiting	= g_hash_table_new (g_direct_hash, g_direct_equal);
-	prev 		= g_hash_table_new (g_direct_hash, g_direct_equal);
-	
-	g_hash_table_add (visiting, from);
-	crank_advgraph_set_float (dist_from, from, 0.0f);
-	crank_advgraph_set_float (dist_to, from, heuristic_func (from, to, heuristic_userdata));
-	
-	g_message ("From: %p [%f]", from, heuristic_func (from, to, heuristic_userdata));
-	
-	// Looping.
-	while (g_hash_table_size (visiting) != 0) {
-		GHashTableIter		visiting_iter;
-		
-		// TODO: Pick more better name
-		gfloat				cost = INFINITY;
-		CrankDigraphNode*	node = NULL;
-		gfloat				cost_candidate;
-		CrankDigraphNode* 	node_candidate;
-	
-	
-		// Pick next node to check.
-		g_hash_table_iter_init (&visiting_iter, visiting);
-		while (	g_hash_table_iter_next (
-				&visiting_iter,
-				(gpointer*)&node_candidate,
-				NULL) )
-		{
-			cost_candidate = crank_advgraph_get_float (dist_to, node_candidate, INFINITY);
-			if (cost_candidate < cost) {
-				node = node_candidate;
-				cost = cost_candidate;
-			}
-		}
-		g_hash_table_remove (visiting, node);
-		
-		// Process node
-		g_hash_table_add (visited, node);
-		
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
-				crank_digraph_node_get_out_edges (node),
-				CrankDigraphEdge*, edge
-		)
-			CrankDigraphNode*	next_node = crank_digraph_edge_get_head (edge);
-			gfloat				edge_cost = edge_func (edge, edge_userdata);
-			gfloat				next_cost = crank_advgraph_get_float (dist_from, next_node, INFINITY);
-			gfloat				next_cost_new = cost + edge_cost;
-			
-			if (next_cost_new < next_cost) {
-				g_hash_table_insert (prev, next_node, node);
-				crank_advgraph_set_float (dist_from, next_node, next_cost_new);
-				crank_advgraph_set_float (dist_to, next_node,
-						next_cost_new +
-						heuristic_func (next_node, to, heuristic_userdata) );
-						
-				if (! g_hash_table_contains (visited, next_node))
-					g_hash_table_add (visiting, next_node);
-			}
-			
-		CRANK_FOREACH_G_PTR_ARRAY_END
-		
-		// If we found the way to @to, then stop loop.
-		if (node == to) break;
-	}
-	
-	// Build up path.
-	result_node = to;
-	while (result_node != NULL) {
-		 result = g_list_prepend (result, result_node);
-		 result_node = g_hash_table_lookup (prev, result_node);
-	}
-	
-	if (result->data != from) {
-		g_list_free (result);
-		result = NULL;
-	}
-	
-	g_hash_table_unref (dist_from);
-	g_hash_table_unref (dist_to);
-	g_hash_table_unref (visited);
-	g_hash_table_unref (visiting);
-	g_hash_table_unref (prev);
-	
-	return result;
+  GList *result = NULL;
+  CrankDigraphNode *result_node;
+
+  GHashTable *dist_from;
+  GHashTable *dist_to;
+  GHashTable *visited;
+  GHashTable *visiting;
+  GHashTable *prev;
+
+  // Initializing
+  dist_from   = g_hash_table_new_full (g_direct_hash,
+                                       g_direct_equal,
+                                       NULL,
+                                       crank_advgraph_free_float);
+  dist_to     = g_hash_table_new_full (g_direct_hash,
+                                       g_direct_equal,
+                                       NULL,
+                                       crank_advgraph_free_float);
+  visited     = g_hash_table_new (g_direct_hash, g_direct_equal);
+  visiting    = g_hash_table_new (g_direct_hash, g_direct_equal);
+  prev        = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  g_hash_table_add (visiting, from);
+  crank_advgraph_set_float (dist_from, from, 0.0f);
+  crank_advgraph_set_float (dist_to, from,
+                            heuristic_func (from, to, heuristic_userdata));
+
+  g_message ("From: %p [%f]", from, heuristic_func (from,
+                                                    to,
+                                                    heuristic_userdata));
+
+  // Looping.
+  while (g_hash_table_size (visiting) != 0)
+    {
+      GHashTableIter visiting_iter;
+
+      // TODO: Pick more better name
+      gfloat cost = INFINITY;
+      CrankDigraphNode *node = NULL;
+      gfloat cost_candidate;
+      CrankDigraphNode *node_candidate;
+
+
+      // Pick next node to check.
+      g_hash_table_iter_init (&visiting_iter, visiting);
+      while (g_hash_table_iter_next (
+               &visiting_iter,
+               (gpointer*)&node_candidate,
+               NULL) )
+        {
+          cost_candidate = crank_advgraph_get_float (dist_to,
+                                                     node_candidate,
+                                                     INFINITY);
+          if (cost_candidate < cost)
+            {
+              node = node_candidate;
+              cost = cost_candidate;
+            }
+        }
+      g_hash_table_remove (visiting, node);
+
+      // Process node
+      g_hash_table_add (visited, node);
+
+      CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
+        crank_digraph_node_get_out_edges (node),
+        CrankDigraphEdge*, edge
+                                      )
+      CrankDigraphNode *   next_node = crank_digraph_edge_get_head (edge);
+      gfloat edge_cost = edge_func (edge, edge_userdata);
+      gfloat next_cost = crank_advgraph_get_float (dist_from,
+                                                   next_node,
+                                                   INFINITY);
+      gfloat next_cost_new = cost + edge_cost;
+
+      if (next_cost_new < next_cost)
+        {
+          g_hash_table_insert (prev, next_node, node);
+          crank_advgraph_set_float (dist_from, next_node, next_cost_new);
+          crank_advgraph_set_float (dist_to, next_node,
+                                    next_cost_new +
+                                    heuristic_func (next_node, to,
+                                                    heuristic_userdata) );
+
+          if (!g_hash_table_contains (visited, next_node))
+            g_hash_table_add (visiting, next_node);
+        }
+
+      CRANK_FOREACH_G_PTR_ARRAY_END
+
+      // If we found the way to @to, then stop loop.
+      if (node == to)
+        break;
+    }
+
+  // Build up path.
+  result_node = to;
+  while (result_node != NULL)
+    {
+      result = g_list_prepend (result, result_node);
+      result_node = g_hash_table_lookup (prev, result_node);
+    }
+
+  if (result->data != from)
+    {
+      g_list_free (result);
+      result = NULL;
+    }
+
+  g_hash_table_unref (dist_from);
+  g_hash_table_unref (dist_to);
+  g_hash_table_unref (visited);
+  g_hash_table_unref (visiting);
+  g_hash_table_unref (prev);
+
+  return result;
 }
 
 
@@ -333,85 +368,93 @@ crank_astar_digraph (	CrankDigraphNode*			from,
  * Returns: (transfer container) (element-type CerankDigraphNode): The tree of #CrankDigraphNode
  */
 GNode*
-crank_dijkstra_full_digraph (	CrankDigraphNode*			from,
-								CrankDigraphEdgeFloatFunc	edge_func,
-								gpointer					userdata	)
+crank_dijkstra_full_digraph (CrankDigraphNode         *from,
+                             CrankDigraphEdgeFloatFunc edge_func,
+                             gpointer                  userdata)
 {
-	GNode*				result = NULL;
-	
-	GHashTable*	dist;
-	GHashTable*	visited;
-	GHashTable*	visiting;
-	GHashTable*	treenode;
-	
-	// Initializing
-	dist 		= g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, crank_advgraph_free_float);
-	visited		= g_hash_table_new (g_direct_hash, g_direct_equal);
-	visiting	= g_hash_table_new (g_direct_hash, g_direct_equal);
-	treenode 	= g_hash_table_new (g_direct_hash, g_direct_equal);
-	
-	g_hash_table_add (visiting, from);
-	g_hash_table_insert (visiting, from, g_node_new (from));
-	crank_advgraph_set_float (dist, from, 0.0f);
-	
-	// Looping.
-	while (g_hash_table_size (visiting) != 0) {
-		GHashTableIter		visiting_iter;
-		
-		gfloat				cost = INFINITY;
-		CrankDigraphNode*	node;
-		gfloat				cost_candidate;
-		CrankDigraphNode* 	node_candidate;
-	
-	
-		// Pick next node to check.
-		g_hash_table_iter_init (&visiting_iter, visiting);
-		while (	g_hash_table_iter_next (
-				&visiting_iter,
-				(gpointer*)&node_candidate,
-				NULL) )
-		{
-			cost_candidate = crank_advgraph_get_float (dist, node_candidate, INFINITY);
-			if (cost_candidate < cost) {
-				node = node_candidate;
-				cost = cost_candidate;
-			}
-		}
-		g_hash_table_remove (visiting, node);
-		
-		
-		// Process node
-		g_hash_table_add (visited, node);
-		
-		CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
-				crank_digraph_node_get_out_edges (node),
-				CrankDigraphEdge*, edge
-		)
-			CrankDigraphNode*	next_node = crank_digraph_edge_get_head (edge);
-			gfloat				edge_cost = edge_func (edge, userdata);
-			gfloat				next_cost = crank_advgraph_get_float (dist, next_node, INFINITY);
-			gfloat				next_cost_new = cost + edge_cost;
-			
-			if (next_cost_new < next_cost) {
-				GNode*	gnode = g_hash_table_lookup (treenode, node);
-				GNode*	next_gnode = g_hash_table_lookup (treenode, next_node);
-				
-				g_node_unlink (next_gnode);
-				g_node_append (gnode, next_gnode);
-				
-				g_hash_table_insert (treenode, next_node, next_gnode);
-				crank_advgraph_set_float (dist, next_node, next_cost_new);
-			
-				if (! g_hash_table_contains (visited, next_node))
-					g_hash_table_add (visiting, next_node);
-			}
-		CRANK_FOREACH_G_PTR_ARRAY_END
-	}
-	
-	g_hash_table_unref (dist);
-	g_hash_table_unref (visited);
-	g_hash_table_unref (visiting);
-	g_hash_table_unref (treenode);
-	
-	return result;
+  GNode *result = NULL;
+
+  GHashTable *dist;
+  GHashTable *visited;
+  GHashTable *visiting;
+  GHashTable *treenode;
+
+  // Initializing
+  dist        = g_hash_table_new_full (g_direct_hash,
+                                       g_direct_equal,
+                                       NULL,
+                                       crank_advgraph_free_float);
+  visited     = g_hash_table_new (g_direct_hash, g_direct_equal);
+  visiting    = g_hash_table_new (g_direct_hash, g_direct_equal);
+  treenode    = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  g_hash_table_add (visiting, from);
+  g_hash_table_insert (visiting, from, g_node_new (from));
+  crank_advgraph_set_float (dist, from, 0.0f);
+
+  // Looping.
+  while (g_hash_table_size (visiting) != 0)
+    {
+      GHashTableIter visiting_iter;
+
+      gfloat cost = INFINITY;
+      CrankDigraphNode *node;
+      gfloat cost_candidate;
+      CrankDigraphNode *node_candidate;
+
+
+      // Pick next node to check.
+      g_hash_table_iter_init (&visiting_iter, visiting);
+      while (g_hash_table_iter_next (
+               &visiting_iter,
+               (gpointer*)&node_candidate,
+               NULL) )
+        {
+          cost_candidate = crank_advgraph_get_float (dist,
+                                                     node_candidate,
+                                                     INFINITY);
+          if (cost_candidate < cost)
+            {
+              node = node_candidate;
+              cost = cost_candidate;
+            }
+        }
+      g_hash_table_remove (visiting, node);
+
+
+      // Process node
+      g_hash_table_add (visited, node);
+
+      CRANK_FOREACH_G_PTR_ARRAY_BEGIN (
+        crank_digraph_node_get_out_edges (node),
+        CrankDigraphEdge*, edge
+                                      )
+      CrankDigraphNode *   next_node = crank_digraph_edge_get_head (edge);
+      gfloat edge_cost = edge_func (edge, userdata);
+      gfloat next_cost = crank_advgraph_get_float (dist, next_node, INFINITY);
+      gfloat next_cost_new = cost + edge_cost;
+
+      if (next_cost_new < next_cost)
+        {
+          GNode *gnode = g_hash_table_lookup (treenode, node);
+          GNode *next_gnode = g_hash_table_lookup (treenode, next_node);
+
+          g_node_unlink (next_gnode);
+          g_node_append (gnode, next_gnode);
+
+          g_hash_table_insert (treenode, next_node, next_gnode);
+          crank_advgraph_set_float (dist, next_node, next_cost_new);
+
+          if (!g_hash_table_contains (visited, next_node))
+            g_hash_table_add (visiting, next_node);
+        }
+      CRANK_FOREACH_G_PTR_ARRAY_END
+    }
+
+  g_hash_table_unref (dist);
+  g_hash_table_unref (visited);
+  g_hash_table_unref (visiting);
+  g_hash_table_unref (treenode);
+
+  return result;
 }

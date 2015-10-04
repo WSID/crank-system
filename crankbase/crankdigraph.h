@@ -31,15 +31,15 @@
 G_BEGIN_DECLS
 
 
-typedef struct _CrankDigraph		CrankDigraph;
-typedef struct _CrankDigraphNode	CrankDigraphNode;
-typedef struct _CrankDigraphEdge	CrankDigraphEdge;
+typedef struct _CrankDigraph CrankDigraph;
+typedef struct _CrankDigraphNode CrankDigraphNode;
+typedef struct _CrankDigraphEdge CrankDigraphEdge;
 
-#define	CRANK_TYPE_DIGRAPH		(crank_digraph_get_type())
-GType			crank_digraph_get_type (void);
+#define CRANK_TYPE_DIGRAPH      (crank_digraph_get_type())
+GType crank_digraph_get_type (void);
 
 
-typedef struct _CrankDigraphEdgeIndex	CrankDigraphEdgeIndex;
+typedef struct _CrankDigraphEdgeIndex CrankDigraphEdgeIndex;
 
 /**
  * CrankDigraphEdgeIndex:
@@ -52,10 +52,10 @@ typedef struct _CrankDigraphEdgeIndex	CrankDigraphEdgeIndex;
  * As nodes are not available on construction, nodes are specified by indices.
  */
 struct _CrankDigraphEdgeIndex {
-	GValue		data;
+  GValue data;
 
-  	guint		tail;
-  	guint		head;
+  guint tail;
+  guint head;
 };
 
 
@@ -68,221 +68,224 @@ struct _CrankDigraphEdgeIndex {
  *
  * Returns: Return %TRUE to keep iteration.
  */
-typedef	gboolean	(*CrankDigraphNodeFunc)		(		CrankDigraphNode*	node,
-														gpointer			userdata	);
+typedef gboolean (*CrankDigraphNodeFunc)     (CrankDigraphNode *node,
+                                              gpointer          userdata);
 
-CrankDigraph*		crank_digraph_new (void);
+CrankDigraph     *crank_digraph_new (void);
 
-CrankDigraph*		crank_digraph_new_with_nodes (		const guint			nnodes,
-											 			const GValue*		values	);
+CrankDigraph     *crank_digraph_new_with_nodes (const guint   nnodes,
+                                                const GValue *values);
 
-CrankDigraph*		crank_digraph_new_full		(		const guint			nnodes,
-														const GValue*		values,
-														const guint			nedges,
-														const CrankDigraphEdgeIndex*	edges	);
-														
+CrankDigraph     *crank_digraph_new_full      (
+  const guint                  nnodes,
+  const GValue                *values,
+  const guint                  nedges,
+  const CrankDigraphEdgeIndex *edges);
 
-CrankDigraph*		crank_digraph_ref (					CrankDigraph*		graph	);
 
-void				crank_digraph_unref (				CrankDigraph*		graph	);
+CrankDigraph     *crank_digraph_ref (CrankDigraph *graph);
 
+void              crank_digraph_unref (CrankDigraph *graph);
 
-GPtrArray*			crank_digraph_get_nodes (			CrankDigraph*		graph	);
 
-GPtrArray*			crank_digraph_get_edges (			CrankDigraph*		graph	);
+GPtrArray        *crank_digraph_get_nodes (CrankDigraph *graph);
 
-gint				crank_digraph_index_of_node (		CrankDigraph*		graph,
-														CrankDigraphNode*	node	);
+GPtrArray        *crank_digraph_get_edges (CrankDigraph *graph);
 
-gint				crank_digraph_index_of_edge (		CrankDigraph*		graph,
-														CrankDigraphEdge*	edge	);
+gint              crank_digraph_index_of_node (CrankDigraph     *graph,
+                                               CrankDigraphNode *node);
 
-CrankDigraphNode*	crank_digraph_nth_node (			CrankDigraph*		graph,
-														guint				index	);
+gint              crank_digraph_index_of_edge (CrankDigraph     *graph,
+                                               CrankDigraphEdge *edge);
 
-CrankDigraphEdge*	crank_digraph_nth_edge (			CrankDigraph*		graph,
-														guint				index	);
-														
+CrankDigraphNode *crank_digraph_nth_node (CrankDigraph *graph,
+                                          guint         index);
 
-CrankDigraphNode*	crank_digraph_add (					CrankDigraph*		graph,
-														const GValue*		value	);
+CrankDigraphEdge *crank_digraph_nth_edge (CrankDigraph *graph,
+                                          guint         index);
 
-void				crank_digraph_remove (				CrankDigraph*		graph,
-														CrankDigraphNode*	node	);
 
-CrankDigraphEdge*	crank_digraph_connect (				CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode* 	head,
-														const GValue*		edge_value		);
+CrankDigraphNode *crank_digraph_add (CrankDigraph *graph,
+                                     const GValue *value);
 
-gboolean			crank_digraph_disconnect (			CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head	);
+void              crank_digraph_remove (CrankDigraph     *graph,
+                                        CrankDigraphNode *node);
 
-void				crank_digraph_disconnect_edge (		CrankDigraph*		graph,
-                             	      					CrankDigraphEdge*	e	);
+CrankDigraphEdge *crank_digraph_connect (CrankDigraph     *graph,
+                                         CrankDigraphNode *tail,
+                                         CrankDigraphNode *head,
+                                         const GValue     *edge_value);
 
+gboolean          crank_digraph_disconnect (CrankDigraph     *graph,
+                                            CrankDigraphNode *tail,
+                                            CrankDigraphNode *head);
 
-void				crank_digraph_reverse (				CrankDigraph*		graph	);
+void              crank_digraph_disconnect_edge (CrankDigraph     *graph,
+                                                 CrankDigraphEdge *e);
 
-CrankDigraph*		crank_digraph_copy (				CrankDigraph*		graph	);
 
+void              crank_digraph_reverse (CrankDigraph *graph);
 
+CrankDigraph     *crank_digraph_copy (CrankDigraph *graph);
 
 
 
-void				crank_digraph_node_get_data (		CrankDigraphNode*	node,
-														GValue*				value	);
-														
-void				crank_digraph_node_set_data (		CrankDigraphNode*	node,
-														const GValue*		value	);
 
-GType				crank_digraph_node_type_of (		CrankDigraphNode*	node	);
 
-GList*				crank_digraph_node_get_in_nodes (	CrankDigraphNode*	node	);
+void              crank_digraph_node_get_data (CrankDigraphNode *node,
+                                               GValue           *value);
 
-GList*				crank_digraph_node_get_out_nodes (	CrankDigraphNode*	node	);
+void              crank_digraph_node_set_data (CrankDigraphNode *node,
+                                               const GValue     *value);
 
-GPtrArray*			crank_digraph_node_get_in_edges (	CrankDigraphNode* 	node	);
+GType             crank_digraph_node_type_of (CrankDigraphNode *node);
 
-GPtrArray*			crank_digraph_node_get_out_edges (	CrankDigraphNode*	node	);
+GList            *crank_digraph_node_get_in_nodes (CrankDigraphNode *node);
 
-guint				crank_digraph_node_get_indegree (	CrankDigraphNode*	node	);
+GList            *crank_digraph_node_get_out_nodes (CrankDigraphNode *node);
 
-guint				crank_digraph_node_get_outdegree(	CrankDigraphNode*	node	);
+GPtrArray        *crank_digraph_node_get_in_edges (CrankDigraphNode *node);
 
+GPtrArray        *crank_digraph_node_get_out_edges (CrankDigraphNode *node);
 
+guint             crank_digraph_node_get_indegree (CrankDigraphNode *node);
 
-gboolean			crank_digraph_node_is_adjacent (	CrankDigraphNode*	node,
-														CrankDigraphNode*	other	);
+guint             crank_digraph_node_get_outdegree(CrankDigraphNode *node);
 
-gboolean			crank_digraph_node_is_adjacent_from (	CrankDigraphNode*	node,
-															CrankDigraphNode*	other	);
 
-gboolean			crank_digraph_node_is_adjacent_to (	CrankDigraphNode*	node,
-														CrankDigraphNode*	other	);
 
-gboolean			crank_digraph_node_foreach_depth (	CrankDigraphNode*		node,
-														CrankDigraphNodeFunc	func,
-														gpointer				userdata	);
+gboolean          crank_digraph_node_is_adjacent (CrankDigraphNode *node,
+                                                  CrankDigraphNode *other);
 
-gboolean			crank_digraph_node_foreach_breadth (	CrankDigraphNode*		node,
-														CrankDigraphNodeFunc	func,
-														gpointer				userdata	);
+gboolean          crank_digraph_node_is_adjacent_from (
+  CrankDigraphNode *node,
+  CrankDigraphNode *other);
 
-														
+gboolean          crank_digraph_node_is_adjacent_to (CrankDigraphNode *node,
+                                                     CrankDigraphNode *other);
 
+gboolean          crank_digraph_node_foreach_depth (CrankDigraphNode    *node,
+                                                    CrankDigraphNodeFunc func,
+                                                    gpointer             userdata);
 
+gboolean          crank_digraph_node_foreach_breadth (
+  CrankDigraphNode    *node,
+  CrankDigraphNodeFunc func,
+  gpointer             userdata);
 
-void				crank_digraph_edge_get_data (		CrankDigraphEdge*	edge,
-														GValue*				value	);
 
-void				crank_digraph_edge_set_data (		CrankDigraphEdge*	edge,
-														const GValue*		value	);
 
-GType				crank_digraph_edge_type_of (		CrankDigraphEdge*	edge	);
 
-CrankDigraphNode*	crank_digraph_edge_get_tail (		CrankDigraphEdge*	edge	);
 
-CrankDigraphNode*	crank_digraph_edge_get_head (		CrankDigraphEdge*	edge	);
+void              crank_digraph_edge_get_data (CrankDigraphEdge *edge,
+                                               GValue           *value);
 
+void              crank_digraph_edge_set_data (CrankDigraphEdge *edge,
+                                               const GValue     *value);
 
+GType             crank_digraph_edge_type_of (CrankDigraphEdge *edge);
 
+CrankDigraphNode *crank_digraph_edge_get_tail (CrankDigraphEdge *edge);
 
+CrankDigraphNode *crank_digraph_edge_get_head (CrankDigraphEdge *edge);
 
 
-CrankDigraphNode*	crank_digraph_add_pointer (			CrankDigraph*		graph,
-														const GType			ptype,
-														gpointer			pointer	);
 
-CrankDigraphNode*	crank_digraph_add_boxed	(			CrankDigraph*		graph,
-														const GType			btype,
-														gpointer			boxed	);
 
-CrankDigraphNode*	crank_digraph_add_object	(		CrankDigraph*		graph,
-														GObject*			object	);
 
 
-												
-CrankDigraphEdge*	crank_digraph_connect_void (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode* 	head	);
+CrankDigraphNode *crank_digraph_add_pointer (CrankDigraph *graph,
+                                             const GType   ptype,
+                                             gpointer      pointer);
 
-CrankDigraphEdge*	crank_digraph_connect_float (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head,
-														gfloat				value	);
+CrankDigraphNode *crank_digraph_add_boxed (CrankDigraph *graph,
+                                           const GType   btype,
+                                           gpointer      boxed);
 
-CrankDigraphEdge*	crank_digraph_connect_double (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head,
-														gdouble				value	);
+CrankDigraphNode *crank_digraph_add_object    (CrankDigraph *graph,
+                                               GObject      *object);
 
-CrankDigraphEdge*	crank_digraph_connect_pointer (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head,
-														const GType			ptype,
-														gpointer			pointer	);
-														
-CrankDigraphEdge*	crank_digraph_connect_boxed (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head,
-														const GType			btype,
-														gpointer			boxed	);
-														
-CrankDigraphEdge*	crank_digraph_connect_object (		CrankDigraph*		graph,
-														CrankDigraphNode*	tail,
-														CrankDigraphNode*	head,
-														GObject*			object	);
 
 
+CrankDigraphEdge *crank_digraph_connect_void (CrankDigraph     *graph,
+                                              CrankDigraphNode *tail,
+                                              CrankDigraphNode *head);
 
-gpointer			crank_digraph_node_get_pointer (	CrankDigraphNode*	node	);
+CrankDigraphEdge *crank_digraph_connect_float (CrankDigraph     *graph,
+                                               CrankDigraphNode *tail,
+                                               CrankDigraphNode *head,
+                                               gfloat            value);
 
-gpointer			crank_digraph_node_get_boxed (		CrankDigraphNode*	node	);
+CrankDigraphEdge *crank_digraph_connect_double (CrankDigraph     *graph,
+                                                CrankDigraphNode *tail,
+                                                CrankDigraphNode *head,
+                                                gdouble           value);
 
-GObject*			crank_digraph_node_get_object (		CrankDigraphNode*	node	);
+CrankDigraphEdge *crank_digraph_connect_pointer (CrankDigraph     *graph,
+                                                 CrankDigraphNode *tail,
+                                                 CrankDigraphNode *head,
+                                                 const GType       ptype,
+                                                 gpointer          pointer);
 
+CrankDigraphEdge *crank_digraph_connect_boxed (CrankDigraph     *graph,
+                                               CrankDigraphNode *tail,
+                                               CrankDigraphNode *head,
+                                               const GType       btype,
+                                               gpointer          boxed);
 
-gfloat				crank_digraph_edge_get_float (		CrankDigraphEdge*	edge	);
+CrankDigraphEdge *crank_digraph_connect_object (CrankDigraph     *graph,
+                                                CrankDigraphNode *tail,
+                                                CrankDigraphNode *head,
+                                                GObject          *object);
 
-gdouble				crank_digraph_edge_get_double (		CrankDigraphEdge*	edge	);
 
-gpointer			crank_digraph_edge_get_pointer (	CrankDigraphEdge*	edge	);
 
-gpointer			crank_digraph_edge_get_boxed (		CrankDigraphEdge*	edge	);
+gpointer          crank_digraph_node_get_pointer (CrankDigraphNode *node);
 
-GObject*			crank_digraph_edge_get_object (		CrankDigraphEdge*	edge	);
+gpointer          crank_digraph_node_get_boxed (CrankDigraphNode *node);
 
+GObject          *crank_digraph_node_get_object (CrankDigraphNode *node);
 
-void				crank_digraph_node_set_pointer (	CrankDigraphNode*	node,
-														const GType			ptype,
-														gpointer			pointer	);
 
-void				crank_digraph_node_set_boxed (		CrankDigraphNode*	node,
-														const GType			btype,
-														gpointer			boxed	);
+gfloat            crank_digraph_edge_get_float (CrankDigraphEdge *edge);
 
-void				crank_digraph_node_set_object (		CrankDigraphNode*	node,
-														GObject*			object	);
+gdouble           crank_digraph_edge_get_double (CrankDigraphEdge *edge);
 
+gpointer          crank_digraph_edge_get_pointer (CrankDigraphEdge *edge);
 
-void				crank_digraph_edge_set_float (		CrankDigraphEdge*	edge,
-														const gfloat		value	);
+gpointer          crank_digraph_edge_get_boxed (CrankDigraphEdge *edge);
 
-void				crank_digraph_edge_set_double (		CrankDigraphEdge*	edge,
-														const gdouble		value	);
+GObject          *crank_digraph_edge_get_object (CrankDigraphEdge *edge);
 
-void				crank_digraph_edge_set_pointer (	CrankDigraphEdge*	edge,
-														const GType			ptype,
-														gpointer			pointer	);
 
-void				crank_digraph_edge_set_boxed (		CrankDigraphEdge*	edge,
-														const GType			btype,
-														gpointer			boxed	);
+void              crank_digraph_node_set_pointer (CrankDigraphNode *node,
+                                                  const GType       ptype,
+                                                  gpointer          pointer);
 
-void				crank_digraph_edge_set_object (		CrankDigraphEdge*	edge,
-														GObject*			object	);
+void              crank_digraph_node_set_boxed (CrankDigraphNode *node,
+                                                const GType       btype,
+                                                gpointer          boxed);
+
+void              crank_digraph_node_set_object (CrankDigraphNode *node,
+                                                 GObject          *object);
+
+
+void              crank_digraph_edge_set_float (CrankDigraphEdge *edge,
+                                                const gfloat      value);
+
+void              crank_digraph_edge_set_double (CrankDigraphEdge *edge,
+                                                 const gdouble     value);
+
+void              crank_digraph_edge_set_pointer (CrankDigraphEdge *edge,
+                                                  const GType       ptype,
+                                                  gpointer          pointer);
+
+void              crank_digraph_edge_set_boxed (CrankDigraphEdge *edge,
+                                                const GType       btype,
+                                                gpointer          boxed);
+
+void              crank_digraph_edge_set_object (CrankDigraphEdge *edge,
+                                                 GObject          *object);
 
 G_END_DECLS
 

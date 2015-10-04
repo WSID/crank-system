@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 #ifndef _CRANKBASE_INSIDE
 #error "crankfunction.h cannot be directly included."
 #endif
@@ -43,7 +43,7 @@ G_BEGIN_DECLS
  * This is not used for actual callback type, but a placeholder for any function
  * type.
  */
-typedef void		(*CrankCallback) (		gpointer		userdata	);
+typedef void (*CrankCallback) (gpointer userdata);
 
 
 /**
@@ -58,8 +58,8 @@ typedef void		(*CrankCallback) (		gpointer		userdata	);
  *
  * Returns: A boolean value.
  */
-typedef gboolean	(*CrankBoolBoolFunc) (	const gboolean	value,
-											gpointer		userdata	);
+typedef gboolean (*CrankBoolBoolFunc) (const gboolean value,
+                                       gpointer       userdata);
 
 /**
  * CrankBoolUintFunc:
@@ -73,8 +73,8 @@ typedef gboolean	(*CrankBoolBoolFunc) (	const gboolean	value,
  *
  * Returns: A boolean value.
  */
-typedef gboolean 	(*CrankBoolUintFunc) (	const guint		value,
-											gpointer		userdata	);
+typedef gboolean (*CrankBoolUintFunc) (const guint value,
+                                       gpointer    userdata);
 
 /**
  * CrankBoolIntFunc:
@@ -88,8 +88,8 @@ typedef gboolean 	(*CrankBoolUintFunc) (	const guint		value,
  *
  * Returns: A boolean value.
  */
-typedef gboolean	(*CrankBoolIntFunc) (	const gint		value,
-											gpointer		userdata	);
+typedef gboolean (*CrankBoolIntFunc) (const gint value,
+                                      gpointer   userdata);
 
 
 /**
@@ -104,8 +104,8 @@ typedef gboolean	(*CrankBoolIntFunc) (	const gint		value,
  *
  * Returns: A boolean value.
  */
-typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
-											gpointer		userdata	);
+typedef gboolean (*CrankBoolFloatFunc) (const gfloat value,
+                                        gpointer     userdata);
 
 
 /**
@@ -120,8 +120,8 @@ typedef gboolean	(*CrankBoolFloatFunc) (	const gfloat	value,
  *
  * Returns: A boolean value.
  */
-typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
-												gpointer		userdata	);
+typedef gboolean (*CrankBoolCplxFloatFunc) (CrankCplxFloat *value,
+                                            gpointer        userdata);
 
 
 /**
@@ -136,8 +136,8 @@ typedef gboolean	(*CrankBoolCplxFloatFunc) (	CrankCplxFloat*	value,
  *
  * Returns: A boolean value.
  */
-typedef gboolean	(*CrankBoolPtrFunc) (	gconstpointer	value,
-											gpointer		userdata	);
+typedef gboolean (*CrankBoolPtrFunc) (gconstpointer value,
+                                      gpointer      userdata);
 
 
 
@@ -153,8 +153,8 @@ typedef gboolean	(*CrankBoolPtrFunc) (	gconstpointer	value,
  *
  * Returns: (transfer full): A String value.
  */
-typedef gchar*		(*CrankStrPtrFunc) (		gpointer		value,
-												gpointer		userdata	);
+typedef gchar*(*CrankStrPtrFunc) (gpointer value,
+                                  gpointer userdata);
 
 /**
  * CrankEqualDeltaFunc:
@@ -169,58 +169,58 @@ typedef gchar*		(*CrankStrPtrFunc) (		gpointer		value,
  *
  * Returns: Whether @a and @b are "sufficiently equal" - difference is less than @d
  */
-typedef gboolean	(*CrankEqualDeltaFunc) (	gconstpointer	a,
-												gconstpointer	b,
-												const gfloat	d	);
-												
-
-guint		crank_float_hash (			gconstpointer	a	);
-
-guint		crank_float_hash1 (			gconstpointer	a	);
-
-												
-gboolean	crank_bool_equal (			gconstpointer	a,
-										gconstpointer	b	);
-										
-gboolean	crank_uint_equal (			gconstpointer	a,
-										gconstpointer	b	);
-
-gboolean	crank_float_equal (			gconstpointer	a,
-										gconstpointer	b	);
+typedef gboolean (*CrankEqualDeltaFunc) (gconstpointer a,
+                                         gconstpointer b,
+                                         const gfloat  d);
 
 
+guint    crank_float_hash (gconstpointer a);
 
-gboolean	crank_float_equal_delta	(	gconstpointer	a,
-										gconstpointer	b,
-										const gfloat	d	);
-
-
-gint		crank_uint_compare (		gconstpointer	a,
-										gconstpointer	b	);
-										
-gint		crank_int_compare (			gconstpointer	a,
-										gconstpointer	b	);
-										
-gint		crank_float_compare (		gconstpointer	a,
-										gconstpointer	b	);
+guint    crank_float_hash1 (gconstpointer a);
 
 
-gchar*		crank_bool_to_string (		gpointer	value,
-										gpointer	userdata	);
-										
-gchar*		crank_int_to_string (		gpointer	value,
-										gpointer	userdata	);
-										
-gchar*		crank_uint_to_string (		gpointer	value,
-										gpointer	userdata	);
+gboolean crank_bool_equal (gconstpointer a,
+                           gconstpointer b);
 
-gchar*		crank_float_to_string (		gpointer	value,
-										gpointer	userdata	);
+gboolean crank_uint_equal (gconstpointer a,
+                           gconstpointer b);
 
-gchar*		crank_pointer_to_string (	gpointer	value,
-										gpointer	userdata	);
-										
-										
+gboolean crank_float_equal (gconstpointer a,
+                            gconstpointer b);
+
+
+
+gboolean crank_float_equal_delta (gconstpointer a,
+                                  gconstpointer b,
+                                  const gfloat  d);
+
+
+gint     crank_uint_compare (gconstpointer a,
+                             gconstpointer b);
+
+gint     crank_int_compare (gconstpointer a,
+                            gconstpointer b);
+
+gint     crank_float_compare (gconstpointer a,
+                              gconstpointer b);
+
+
+gchar   *crank_bool_to_string (gpointer value,
+                               gpointer userdata);
+
+gchar   *crank_int_to_string (gpointer value,
+                              gpointer userdata);
+
+gchar   *crank_uint_to_string (gpointer value,
+                               gpointer userdata);
+
+gchar   *crank_float_to_string (gpointer value,
+                                gpointer userdata);
+
+gchar   *crank_pointer_to_string (gpointer value,
+                                  gpointer userdata);
+
+
 G_END_DECLS
 
 #endif

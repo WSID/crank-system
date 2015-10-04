@@ -29,7 +29,7 @@
  * The functions defined here are used to manipulate #GValue, which
  * Crank System uses frequently.
  *
- * #GValue needs to be initialized before use. Functions in this section 
+ * #GValue needs to be initialized before use. Functions in this section
  * initializes and sets values at once, for convenience.
  *
  * Crank System provides two kind of functions.
@@ -57,12 +57,13 @@
  * Unset @value if it holds value, and re-initialize it with @type.
  */
 void
-crank_value_overwrite_init	(	GValue*		value,
-							  	const GType	type	)
+crank_value_overwrite_init (GValue     *value,
+                            const GType type)
 {
-	if (G_IS_VALUE(value)) g_value_unset (value);
+  if (G_IS_VALUE(value))
+    g_value_unset (value);
 
-  	g_value_init (value, type);
+  g_value_init (value, type);
 }
 
 /**
@@ -74,15 +75,17 @@ crank_value_overwrite_init	(	GValue*		value,
  * copy value of @from onto @value.
  */
 void
-crank_value_overwrite (	GValue*			value,
-					   	const GValue*	from	)
+crank_value_overwrite (GValue       *value,
+                       const GValue *from)
 {
-	if (G_IS_VALUE (value)) g_value_unset (value);
-	
-	if ((from != NULL) && (G_IS_VALUE (from))) {
-	  	crank_value_overwrite_init (value, G_VALUE_TYPE(from));
-	  	g_value_copy (from, value);
-	}
+  if (G_IS_VALUE (value))
+    g_value_unset (value);
+
+  if ((from != NULL) && (G_IS_VALUE (from)))
+    {
+      crank_value_overwrite_init (value, G_VALUE_TYPE(from));
+      g_value_copy (from, value);
+    }
 }
 
 /**
@@ -93,11 +96,11 @@ crank_value_overwrite (	GValue*			value,
  * Overwrites boolean value to @value.
  */
 void
-crank_value_overwrite_boolean (	GValue*			value,
-							   	const gboolean	bool_value	)
+crank_value_overwrite_boolean (GValue        *value,
+                               const gboolean bool_value)
 {
-	crank_value_overwrite_init (value, G_TYPE_BOOLEAN);
-	g_value_set_boolean (value, bool_value);
+  crank_value_overwrite_init (value, G_TYPE_BOOLEAN);
+  g_value_set_boolean (value, bool_value);
 }
 
 /**
@@ -108,11 +111,11 @@ crank_value_overwrite_boolean (	GValue*			value,
  * Overwrites integer value to @value.
  */
 void
-crank_value_overwrite_int (	GValue*			value,
-						   	const gint		int_value	)
+crank_value_overwrite_int (GValue    *value,
+                           const gint int_value)
 {
-  	crank_value_overwrite_init (value, G_TYPE_INT);
-  	g_value_set_int (value, int_value);
+  crank_value_overwrite_init (value, G_TYPE_INT);
+  g_value_set_int (value, int_value);
 }
 
 /**
@@ -123,11 +126,11 @@ crank_value_overwrite_int (	GValue*			value,
  * Overwrites string value to @value.
  */
 void
-crank_value_overwrite_string (	GValue*			value,
-							  	const gchar*	str_value	)
+crank_value_overwrite_string (GValue      *value,
+                              const gchar *str_value)
 {
-  	crank_value_overwrite_init (value, G_TYPE_STRING);
-  	g_value_set_string (value, str_value);
+  crank_value_overwrite_init (value, G_TYPE_STRING);
+  g_value_set_string (value, str_value);
 }
 
 /**
@@ -138,11 +141,11 @@ crank_value_overwrite_string (	GValue*			value,
  * Overwrites #GObject value to @value.
  */
 void
-crank_value_overwrite_object (	GValue*		value,
-							  	GObject*	obj_value	)
+crank_value_overwrite_object (GValue  *value,
+                              GObject *obj_value)
 {
-	crank_value_overwrite_init (value, G_TYPE_OBJECT);
-	g_value_set_object (value, obj_value);
+  crank_value_overwrite_init (value, G_TYPE_OBJECT);
+  g_value_set_object (value, obj_value);
 }
 
 /**
@@ -155,12 +158,12 @@ crank_value_overwrite_object (	GValue*		value,
  * information by itself, GType should be provided.
  */
 void
-crank_value_overwrite_boxed (	GValue*			value,
-							 	const GType		value_type,
-							 	gpointer		boxed_value	)
+crank_value_overwrite_boxed (GValue     *value,
+                             const GType value_type,
+                             gpointer    boxed_value)
 {
-	crank_value_overwrite_init (value, value_type);
-	g_value_set_boxed (value, boxed_value);
+  crank_value_overwrite_init (value, value_type);
+  g_value_set_boxed (value, boxed_value);
 }
 
 
@@ -176,12 +179,12 @@ crank_value_overwrite_boxed (	GValue*			value,
  * holds other pointer type.
  */
 void
-crank_value_overwrite_pointer (	GValue*			value,
-								const GType		value_type,
-							   	gpointer		pointer_value	)
+crank_value_overwrite_pointer (GValue     *value,
+                               const GType value_type,
+                               gpointer    pointer_value)
 {
-	crank_value_overwrite_init (value, value_type);
-  	g_value_set_pointer (value, pointer_value);
+  crank_value_overwrite_init (value, value_type);
+  g_value_set_pointer (value, pointer_value);
 }
 
 
@@ -194,17 +197,17 @@ crank_value_overwrite_pointer (	GValue*			value,
  * Copies GValue from variadic arguments to array.
  */
 void
-crank_value_array_overwrite (	GValue*		array,
-								gint		nitem,
-								...	)
+crank_value_array_overwrite (GValue *array,
+                             gint    nitem,
+                             ...)
 {
-	va_list		varargs;
-	
-	va_start (varargs, nitem);
-	
-	crank_value_array_overwrite_va (array, nitem, varargs);
-	
-	va_end (varargs);
+  va_list varargs;
+
+  va_start (varargs, nitem);
+
+  crank_value_array_overwrite_va (array, nitem, varargs);
+
+  va_end (varargs);
 }
 
 
@@ -218,14 +221,14 @@ crank_value_array_overwrite (	GValue*		array,
  * convert va_list into array.
  */
 void
-crank_value_array_overwrite_va (GValue*		array,
-								gint		nitem,
-								va_list		varargs	)
+crank_value_array_overwrite_va (GValue *array,
+                                gint    nitem,
+                                va_list varargs)
 {
-	guint	i;
-	
-	for (i = 0; i < nitem; i++)
-		crank_value_overwrite (array + i, va_arg (varargs, GValue*));
+  guint i;
+
+  for (i = 0; i < nitem; i++)
+    crank_value_overwrite (array + i, va_arg (varargs, GValue*));
 }
 
 /**
@@ -237,13 +240,14 @@ crank_value_array_overwrite_va (GValue*		array,
  * Copies array of GValue to other array.
  */
 void
-crank_value_array_overwrite_array ( GValue*	array,
-									gint	nitem,
-									GValue*	other	)
+crank_value_array_overwrite_array (GValue *array,
+                                   gint    nitem,
+                                   GValue *other)
 {
-	guint	i;
-	
-	for (i = 0; i < nitem; i++) crank_value_overwrite (array + i, other + i);
+  guint i;
+
+  for (i = 0; i < nitem; i++)
+    crank_value_overwrite (array + i, other + i);
 }
 
 /**
@@ -254,10 +258,11 @@ crank_value_array_overwrite_array ( GValue*	array,
  * Unsets each #GValue of @array.
  */
 void
-crank_value_array_unset (	GValue*	array,
-							guint	narray	)
+crank_value_array_unset (GValue *array,
+                         guint   narray)
 {
-	guint	i;
-	
-	for (i = 0; i < narray; i ++ )	g_value_unset (array + i);
+  guint i;
+
+  for (i = 0; i < narray; i++)
+    g_value_unset (array + i);
 }

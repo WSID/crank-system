@@ -40,8 +40,8 @@ G_BEGIN_DECLS
  *
  * Returns: evaluation for @node
  */
-typedef	gfloat	(*CrankDigraphNodeFloatFunc)	(	CrankDigraphNode*	node,
-													gpointer			userdata	);
+typedef gfloat (*CrankDigraphNodeFloatFunc)    (CrankDigraphNode *node,
+                                                gpointer          userdata);
 
 /**
  * CrankDigraphNodeDoubleFunc:
@@ -52,8 +52,8 @@ typedef	gfloat	(*CrankDigraphNodeFloatFunc)	(	CrankDigraphNode*	node,
  *
  * Returns: evaluation for @node
  */
-typedef gdouble	(*CrankDigraphNodeDoubleFunc)	(	CrankDigraphNode*	node,
-													gpointer			userdata	);
+typedef gdouble (*CrankDigraphNodeDoubleFunc)   (CrankDigraphNode *node,
+                                                 gpointer          userdata);
 
 /**
  * CrankDigraphEdgeFloatFunc:
@@ -64,8 +64,8 @@ typedef gdouble	(*CrankDigraphNodeDoubleFunc)	(	CrankDigraphNode*	node,
  *
  * Returns: evaluation for @edge
  */
-typedef gfloat	(*CrankDigraphEdgeFloatFunc)	(	CrankDigraphEdge*	edge,
-													gpointer			userdata	);
+typedef gfloat (*CrankDigraphEdgeFloatFunc)    (CrankDigraphEdge *edge,
+                                                gpointer          userdata);
 
 /**
  * CrankDigraphEdgeDoubleFunc:
@@ -76,8 +76,8 @@ typedef gfloat	(*CrankDigraphEdgeFloatFunc)	(	CrankDigraphEdge*	edge,
  *
  * Returns: evaluation for @edge
  */
-typedef gdouble	(*CrankDigraphEdgeDoubleFunc)	(	CrankDigraphEdge*	edge,
-													gpointer			userdata	);
+typedef gdouble (*CrankDigraphEdgeDoubleFunc)   (CrankDigraphEdge *edge,
+                                                 gpointer          userdata);
 
 /**
  * CrankDigraphHeuristicFunc:
@@ -89,29 +89,29 @@ typedef gdouble	(*CrankDigraphEdgeDoubleFunc)	(	CrankDigraphEdge*	edge,
  *
  * Returns: estimation of cost between @from and @to.
  */
-typedef gfloat	(*CrankDigraphHeuristicFunc)	(	CrankDigraphNode*	from,
-													CrankDigraphNode*	to,
-													gpointer			userdata	);
+typedef gfloat (*CrankDigraphHeuristicFunc)    (CrankDigraphNode *from,
+                                                CrankDigraphNode *to,
+                                                gpointer          userdata);
 
 
 
 
 
-GList*		crank_dijkstra_digraph (				CrankDigraphNode*			from,
-													CrankDigraphNode*			to,
-													CrankDigraphEdgeFloatFunc	edge_func,
-													gpointer					userdata	);
+GList *crank_dijkstra_digraph (CrankDigraphNode         *from,
+                               CrankDigraphNode         *to,
+                               CrankDigraphEdgeFloatFunc edge_func,
+                               gpointer                  userdata);
 
-GList*		crank_astar_digraph (					CrankDigraphNode*			from,
-													CrankDigraphNode*			to,
-													CrankDigraphEdgeFloatFunc	edge_func,
-													gpointer					edge_userdata,
-													CrankDigraphHeuristicFunc	heuristic_func,
-													gpointer					heuristic_userdata	);
+GList *crank_astar_digraph (CrankDigraphNode         *from,
+                            CrankDigraphNode         *to,
+                            CrankDigraphEdgeFloatFunc edge_func,
+                            gpointer                  edge_userdata,
+                            CrankDigraphHeuristicFunc heuristic_func,
+                            gpointer                  heuristic_userdata);
 
-GNode*		crank_dijkstra_full_digraph (			CrankDigraphNode*			from,
-													CrankDigraphEdgeFloatFunc	edge_func,
-													gpointer					userdata	);
+GNode *crank_dijkstra_full_digraph (CrankDigraphNode         *from,
+                                    CrankDigraphEdgeFloatFunc edge_func,
+                                    gpointer                  userdata);
 
 G_END_DECLS
 

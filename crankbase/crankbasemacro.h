@@ -64,7 +64,7 @@
  *		}
  *   </programlisting>
  * </example>
- 
+
  * <example>
  *   <title>Getting sum of #gint from variadic arguments.</title>
  *   <programlisting language="C">
@@ -92,7 +92,7 @@ G_BEGIN_DECLS
  *
  * Returns: Addition of pointer and size.
  */
-#define CRANK_PTR_ADD(p,sz)	(gpointer)((gsize)(p) + (sz))
+#define CRANK_PTR_ADD(p,sz) (gpointer)((gsize)(p) + (sz))
 
 /**
  * CRANK_PTR_ADD2:
@@ -105,7 +105,7 @@ G_BEGIN_DECLS
  *
  * Returns: Addition of pointer and size.
  */
-#define CRANK_PTR_ADD2(p,sz,n) CRANK_PTR_ADD(p,(sz)*(n))
+#define CRANK_PTR_ADD2(p,sz,n) CRANK_PTR_ADD(p,(sz) * (n))
 
 /**
  * CRANK_PTR_DIFF:
@@ -163,7 +163,7 @@ G_BEGIN_DECLS
  * array by g_renew()
  */
 #define CRANK_ARRAY_ADD(T, a, n, c, I) \
-	if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
+  if (n == c) { c = (c) ? (c << 1) : 1; a = g_renew(T, a, c); } a[n++] = (I)
 
 /**
  * CRANK_ARRAY_FILL:
@@ -175,7 +175,7 @@ G_BEGIN_DECLS
  * Fill an array by given value.
  */
 #define CRANK_ARRAY_FILL(a, G, n, v) \
-	CRANK_FOREACH_IRANGE_DO(i, n, {a[i] = (G)v;})
+  CRANK_FOREACH_IRANGE_DO(i, n, {a[i] = (G)v; })
 
 
 
@@ -194,8 +194,8 @@ G_BEGIN_DECLS
  * Mark end with #CRANK_FOREACH_RANGE_END
  */
 #define CRANK_FOREACH_RANGE_BEGIN(G, e, rs, re, inc) \
-	{	G e; \
-		for (e = rs; e < re; e = e + inc) {
+  {   G e; \
+      for (e = rs; e < re; e = e + inc) {
 
 /**
  * CRANK_FOREACH_RANGE_END:
@@ -203,7 +203,7 @@ G_BEGIN_DECLS
  * Marks end of loop of %CRANK_FOREACH_RANGE_BEGIN
  */
 #define CRANK_FOREACH_RANGE_END \
-	} }
+  } }
 
 /**
  * CRANK_FOREACH_RANGE_DO:
@@ -217,9 +217,9 @@ G_BEGIN_DECLS
  * Iterates over range [@rs, @re) with @BLOCK.
  */
 #define CRANK_FOREACH_RANGE_DO(G, e, rs, re, inc, BLOCK) \
-	CRANK_FOREACH_RANGE_BEGIN (G, e, rs, re, inc) \
-		BLOCK \
-	CRANK_FOREACH_RANGE_END
+  CRANK_FOREACH_RANGE_BEGIN (G, e, rs, re, inc) \
+  BLOCK \
+  CRANK_FOREACH_RANGE_END
 
 
 
@@ -234,7 +234,7 @@ G_BEGIN_DECLS
  * Mark end with #CRANK_FOREACH_IRANGE_END
  */
 #define CRANK_FOREACH_IRANGE_BEGIN(e, n) \
-	CRANK_FOREACH_RANGE_BEGIN (gint, e, 0, n, 1)
+  CRANK_FOREACH_RANGE_BEGIN (gint, e, 0, n, 1)
 
 /**
  * CRANK_FOREACH_IRANGE_END:
@@ -242,7 +242,7 @@ G_BEGIN_DECLS
  * Marks end of loop of %CRANK_FOREACH_IRANGE_BEGIN
  */
 #define CRANK_FOREACH_IRANGE_END \
-	CRANK_FOREACH_RANGE_END
+  CRANK_FOREACH_RANGE_END
 
 /**
  * CRANK_FOREACH_IRANGE_DO:
@@ -253,9 +253,9 @@ G_BEGIN_DECLS
  * Iterates over range [0, @n) with @BLOCK.
  */
 #define CRANK_FOREACH_IRANGE_DO(e, n, BLOCK) \
-	CRANK_FOREACH_IRANGE_BEGIN (e, n) \
-		BLOCK \
-	CRANK_FOREACH_IRANGE_END
+  CRANK_FOREACH_IRANGE_BEGIN (e, n) \
+  BLOCK \
+  CRANK_FOREACH_IRANGE_END
 
 
 /**
@@ -270,16 +270,16 @@ G_BEGIN_DECLS
  * Mark end with #CRANK_FOREACH_ARRAY_END
  */
 #define CRANK_FOREACH_ARRAY_BEGIN(a, G, e, l) \
-	CRANK_FOREACH_IRANGE_BEGIN (_crank_macro_i, l) \
-		G e = a[_crank_macro_i];
+  CRANK_FOREACH_IRANGE_BEGIN (_crank_macro_i, l) \
+  G e = a[_crank_macro_i];
 
 /**
  * CRANK_FOREACH_ARRAY_END:
- * 
+ *
  * Marks end of loop from %CRANK_FOREACH_ARRAY_BEGIN
  */
 #define CRANK_FOREACH_ARRAY_END \
-	CRANK_FOREACH_IRANGE_END
+  CRANK_FOREACH_IRANGE_END
 
 /**
  * CRANK_FOREACH_ARRAY_DO:
@@ -292,9 +292,9 @@ G_BEGIN_DECLS
  * Iterate over @a with @BLOCK
  */
 #define CRANK_FOREACH_ARRAY_DO(a, G, e, l, BLOCK) \
-	CRANK_FOREACH_ARRAY_BEGIN (a, G, e, l) \
-		BLOCK \
-	CRANK_FOREACH_ARRAY_END
+  CRANK_FOREACH_ARRAY_BEGIN (a, G, e, l) \
+  BLOCK \
+  CRANK_FOREACH_ARRAY_END
 
 
 
@@ -311,7 +311,7 @@ G_BEGIN_DECLS
  * Mark end with #CRANK_FOREACH_VALIST_END.
  */
 #define CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
-    do { \
+  do { \
       G e = va_arg (va, G); \
       if (e == f) break;
 
@@ -322,7 +322,7 @@ G_BEGIN_DECLS
  * Marks end of %CRANK_FOREACH_VALIST_BEGIN.
  */
 #define CRANK_FOREACH_VALIST_END \
-    } while (TRUE);
+  } while (TRUE) ;
 
 
 /**
@@ -336,9 +336,9 @@ G_BEGIN_DECLS
  * Iterates over @va with @BLOCK.
  */
 #define CRANK_FOREACH_VALIST_DO(va, G, e, f, BLOCK) \
-	CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
-		BLOCK \
-	CRANK_FOREACH_VALIST_END
+  CRANK_FOREACH_VALIST_BEGIN(va, G, e, f) \
+  BLOCK \
+  CRANK_FOREACH_VALIST_END
 
 
 
@@ -355,10 +355,10 @@ G_BEGIN_DECLS
  * Mark end with %CRANK_FOREACH_VARARG_END.
  */
 #define CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
-    { \
-      va_list _crank_macro_varargs; \
-      va_start (_crank_macro_varargs, param_last); \
-      CRANK_FOREACH_VALIST_BEGIN (_crank_macro_varargs, G, e, f)
+  { \
+    va_list _crank_macro_varargs; \
+    va_start (_crank_macro_varargs, param_last); \
+    CRANK_FOREACH_VALIST_BEGIN (_crank_macro_varargs, G, e, f)
 
 /**
  * CRANK_FOREACH_VARARG_END:
@@ -366,9 +366,9 @@ G_BEGIN_DECLS
  * Marks end of %CRANK_FOREACH_VARARG_BEGIN.
  */
 #define CRANK_FOREACH_VARARG_END \
-      CRANK_FOREACH_VALIST_END \
-      va_end (_crank_macro_varargs); \
-    }
+  CRANK_FOREACH_VALIST_END \
+  va_end (_crank_macro_varargs); \
+  }
 
 
 /**
@@ -382,9 +382,9 @@ G_BEGIN_DECLS
  * Iterates over variadic arguments with @BLOCK.
  */
 #define CRANK_FOREACH_VARARG_DO(param_last, G, e, f, BLOCK) \
-	CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
-		BLOCK \
-	CRANK_FOREACH_VARARG_END
+  CRANK_FOREACH_VARARG_BEGIN(param_last, G, e, f) \
+  BLOCK \
+  CRANK_FOREACH_VARARG_END
 
 
 /**
@@ -398,12 +398,12 @@ G_BEGIN_DECLS
  * Mark end with %CRANK_FOREACH_GLIST_END
  */
 #define CRANK_FOREACH_GLIST_BEGIN(l, G, e) \
-	{ \
-		GList*	_crank_macro_iter; 			\
-		for (	_crank_macro_iter = l; 		\
-				_crank_macro_iter != NULL;	\
-				_crank_macro_iter = _crank_macro_iter -> next ) { \
-			G	e = (G) _crank_macro_iter -> data;
+  { \
+    GList *_crank_macro_iter;          \
+    for (_crank_macro_iter = l;      \
+         _crank_macro_iter != NULL;  \
+         _crank_macro_iter = _crank_macro_iter->next) { \
+        G e = (G) _crank_macro_iter->data;
 
 /**
  * CRANK_FOREACH_GLIST_END:
@@ -411,8 +411,8 @@ G_BEGIN_DECLS
  * Marks end of %CRANK_FOREACH_GLIST_BEGIN.
  */
 #define CRANK_FOREACH_GLIST_END \
-		} \
-	}
+  } \
+  }
 
 /**
  * CRANK_FOREACH_GLIST_DO:
@@ -424,9 +424,9 @@ G_BEGIN_DECLS
  * Iterates over a #GList with @BLOCK.
  */
 #define CRANK_FOREACH_GLIST_DO(l, G, e, BLOCK) \
-	CRANK_FOREACH_GLIST_BEGIN (l, G, e) \
-		BLOCK \
-	CRANK_FOREACH_GLIST_END
+  CRANK_FOREACH_GLIST_BEGIN (l, G, e) \
+  BLOCK \
+  CRANK_FOREACH_GLIST_END
 
 
 /**
@@ -440,8 +440,9 @@ G_BEGIN_DECLS
  * Mark end with %CRANK_FOREACH_ARRAY_END.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
-	CRANK_FOREACH_ARRAY_BEGIN((arr)->pdata, gpointer, _crank_macro_ptr, (arr)->len) \
-	G e = (G) _crank_macro_ptr;
+  CRANK_FOREACH_ARRAY_BEGIN((arr)->pdata, gpointer, _crank_macro_ptr, \
+                            (arr)->len) \
+  G e = (G) _crank_macro_ptr;
 
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_END:
@@ -449,7 +450,7 @@ G_BEGIN_DECLS
  * Marks end of %CRANK_FOREACH_G_PTR_ARRAY_BEGIN.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_END \
-	CRANK_FOREACH_ARRAY_END
+  CRANK_FOREACH_ARRAY_END
 
 /**
  * CRANK_FOREACH_G_PTR_ARRAY_DO:
@@ -461,9 +462,9 @@ G_BEGIN_DECLS
  * Iterates over a #GPtrArray, with @BLOCK.
  */
 #define CRANK_FOREACH_G_PTR_ARRAY_DO(arr, G, e, BLOCK) \
-	CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
-		BLOCK \
-	CRANK_FOREACH_G_PTR_ARRAY_END
+  CRANK_FOREACH_G_PTR_ARRAY_BEGIN(arr, G, e) \
+  BLOCK \
+  CRANK_FOREACH_G_PTR_ARRAY_END
 
 G_END_DECLS
 

@@ -75,27 +75,27 @@
 //////// Internal Declaration //////////////////////////////////////////////////
 
 struct _CrankPermutationSortData {
-	gpointer			array;
-	gsize				esize;
-	
-	GCompareDataFunc	func;
-	gpointer			userdata;
-};										
+  gpointer array;
+  gsize esize;
 
-static gint		crank_permutation_sortf (	gconstpointer	a,
-											gconstpointer	b,
-											gpointer		udata	);
+  GCompareDataFunc func;
+  gpointer userdata;
+};
 
-static gint		crank_permutation_sortpf (	gconstpointer	a,
-											gconstpointer	b,
-											gpointer		udata	);
+static gint crank_permutation_sortf (gconstpointer a,
+                                     gconstpointer b,
+                                     gpointer      udata);
+
+static gint crank_permutation_sortpf (gconstpointer a,
+                                      gconstpointer b,
+                                      gpointer      udata);
 
 
 G_DEFINE_BOXED_TYPE (
-		CrankPermutation,
-		crank_permutation,
-		crank_permutation_dup,
-		crank_permutation_free	);
+  CrankPermutation,
+  crank_permutation,
+  crank_permutation_dup,
+  crank_permutation_free);
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -111,16 +111,16 @@ G_DEFINE_BOXED_TYPE (
  * crank_permutation_is_valid(), before using.
  */
 void
-crank_permutation_init (	CrankPermutation*	p,
-							const guint			n,
-							...	)
+crank_permutation_init (CrankPermutation *p,
+                        const guint       n,
+                        ...)
 {
-	va_list	varargs;
-	va_start (varargs, n);
-	
-	crank_permutation_init_valist (p, n, varargs);
-	
-	va_end (varargs);
+  va_list varargs;
+  va_start (varargs, n);
+
+  crank_permutation_init_valist (p, n, varargs);
+
+  va_end (varargs);
 }
 
 /**
@@ -135,14 +135,14 @@ crank_permutation_init (	CrankPermutation*	p,
  * crank_permutation_is_valid(), before using.
  */
 void
-crank_permutation_init_arr (	CrankPermutation*	p,
-								const guint			n,
-								const guint*		data	)
+crank_permutation_init_arr (CrankPermutation *p,
+                            const guint       n,
+                            const guint      *data)
 {
-	g_return_if_fail (p != NULL);
+  g_return_if_fail (p != NULL);
 
-	p->n = n;
-	p->data = g_memdup (data, n * sizeof (guint));
+  p->n = n;
+  p->data = g_memdup (data, n * sizeof (guint));
 }
 
 /**
@@ -157,14 +157,14 @@ crank_permutation_init_arr (	CrankPermutation*	p,
  * crank_permutation_is_valid(), before using.
  */
 void
-crank_permutation_init_arr_take (	CrankPermutation*	p,
-									const guint			n,
-									guint*				data	)
+crank_permutation_init_arr_take (CrankPermutation *p,
+                                 const guint       n,
+                                 guint            *data)
 {
-	g_return_if_fail (p != NULL);
-	
-	p->n = n;
-	p->data = data;
+  g_return_if_fail (p != NULL);
+
+  p->n = n;
+  p->data = data;
 }
 
 
@@ -180,18 +180,19 @@ crank_permutation_init_arr_take (	CrankPermutation*	p,
  * crank_permutation_is_valid(), before using.
  */
 void
-crank_permutation_init_valist (	CrankPermutation*	p,
-								const guint			n,
-								va_list				varargs	)
+crank_permutation_init_valist (CrankPermutation *p,
+                               const guint       n,
+                               va_list           varargs)
 {
-	guint	i;
-	
-	g_return_if_fail (p != NULL);
-	
-	p->n = n;
-	p->data = g_new (guint, n);
-	
-	for (i = 0; i < n; i++) p->data[i] = va_arg (varargs, guint);
+  guint i;
+
+  g_return_if_fail (p != NULL);
+
+  p->n = n;
+  p->data = g_new (guint, n);
+
+  for (i = 0; i < n; i++)
+    p->data[i] = va_arg (varargs, guint);
 }
 
 
@@ -204,16 +205,17 @@ crank_permutation_init_valist (	CrankPermutation*	p,
  * * {0, 1, 2, .... (n-1)}
  */
 void
-crank_permutation_init_identity (	CrankPermutation*	p,
-									const guint			n	)
+crank_permutation_init_identity (CrankPermutation *p,
+                                 const guint       n)
 {
-	guint	i;
-	
-	g_return_if_fail (p != NULL);
-	
-	p->n = n;
-	p->data = g_new (guint, n);
-	for (i = 0; i < n; i++)	p->data[i] = i;
+  guint i;
+
+  g_return_if_fail (p != NULL);
+
+  p->n = n;
+  p->data = g_new (guint, n);
+  for (i = 0; i < n; i++)
+    p->data[i] = i;
 }
 
 
@@ -231,14 +233,18 @@ crank_permutation_init_identity (	CrankPermutation*	p,
  * ordering, the permutation will be initialized into identity permutation.
  */
 void
-crank_permutation_init_compare_sarray (	CrankPermutation*	p,
-										const guint			n,
-										const gsize			gsz,
-										gpointer			garr,
-										GCompareFunc		gcmp	)
+crank_permutation_init_compare_sarray (CrankPermutation *p,
+                                       const guint       n,
+                                       const gsize       gsz,
+                                       gpointer          garr,
+                                       GCompareFunc      gcmp)
 {
-	crank_permutation_init_compare_sarray_data (p, n, gsz, garr,
-			(GCompareDataFunc) (void*) gcmp, NULL);
+  crank_permutation_init_compare_sarray_data (p,
+                                              n,
+                                              gsz,
+                                              garr,
+                                              (GCompareDataFunc) (void*) gcmp,
+                                              NULL);
 }
 
 
@@ -256,30 +262,32 @@ crank_permutation_init_compare_sarray (	CrankPermutation*	p,
  * @userdata.
  */
 void
-crank_permutation_init_compare_sarray_data (	CrankPermutation*	p,
-												const guint			n,
-												const gsize			gsz,
-												gpointer			garr,
-												GCompareDataFunc	gcmp,
-												gpointer			userdata	)
+crank_permutation_init_compare_sarray_data (CrankPermutation *p,
+                                            const guint       n,
+                                            const gsize       gsz,
+                                            gpointer          garr,
+                                            GCompareDataFunc  gcmp,
+                                            gpointer          userdata)
 {
-	struct _CrankPermutationSortData	sdata = {garr, sizeof(gpointer),gcmp, userdata};
-	GArray*	arr;
-	guint	i;
-	
-	g_return_if_fail (p != NULL);
+  struct _CrankPermutationSortData sdata =
+  {garr, sizeof(gpointer),gcmp, userdata};
+  GArray *arr;
+  guint i;
 
-	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
+  g_return_if_fail (p != NULL);
 
-	guint*	data = g_new (guint, n);
-	
-	for (i = 0; i < n; i++) g_array_append_val (arr, i);
-	
-	g_array_sort_with_data (arr, crank_permutation_sortf, &sdata);
-	
-	crank_permutation_init_arr_take (p, n, (guint*)arr->data);
-	
-	g_array_free (arr, FALSE);
+  arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
+
+  guint *data = g_new (guint, n);
+
+  for (i = 0; i < n; i++)
+    g_array_append_val (arr, i);
+
+  g_array_sort_with_data (arr, crank_permutation_sortf, &sdata);
+
+  crank_permutation_init_arr_take (p, n, (guint*)arr->data);
+
+  g_array_free (arr, FALSE);
 }
 
 
@@ -295,13 +303,16 @@ crank_permutation_init_compare_sarray_data (	CrankPermutation*	p,
  * rather than address of elements.
  */
 void
-crank_permutation_init_compare_parray (	CrankPermutation*	p,
-										const guint			n,
-										gpointer*			garr,
-										GCompareFunc		gcmp	)
+crank_permutation_init_compare_parray (CrankPermutation *p,
+                                       const guint       n,
+                                       gpointer         *garr,
+                                       GCompareFunc      gcmp)
 {
-	crank_permutation_init_compare_parray_data (p, n, garr,
-			(GCompareDataFunc) (void*) gcmp, NULL);
+  crank_permutation_init_compare_parray_data (p,
+                                              n,
+                                              garr,
+                                              (GCompareDataFunc) (void*) gcmp,
+                                              NULL);
 }
 
 
@@ -318,30 +329,32 @@ crank_permutation_init_compare_parray (	CrankPermutation*	p,
  * @userdata.
  */
 void
-crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
-												const guint			n,
-												gpointer*			garr,
-												GCompareDataFunc	gcmp,
-												gpointer			userdata	)
+crank_permutation_init_compare_parray_data (CrankPermutation *p,
+                                            const guint       n,
+                                            gpointer         *garr,
+                                            GCompareDataFunc  gcmp,
+                                            gpointer          userdata)
 {
-	struct _CrankPermutationSortData	sdata = {garr, sizeof(gpointer),gcmp, userdata};
-	GArray*	arr;
-	guint*	data;
-	
-	guint	i;
-	
-	g_return_if_fail (p != NULL);
-	
-	arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
-	data = g_new (guint, n);
-	
-	for (i = 0; i < n; i++) g_array_append_val (arr, i);
-	
-	g_array_sort_with_data (arr, crank_permutation_sortpf, &sdata);
-	
-	crank_permutation_init_arr_take (p, n, (guint*)arr->data);
-	
-	g_array_free (arr, FALSE);
+  struct _CrankPermutationSortData sdata =
+  {garr, sizeof(gpointer),gcmp, userdata};
+  GArray *arr;
+  guint *data;
+
+  guint i;
+
+  g_return_if_fail (p != NULL);
+
+  arr = g_array_sized_new (FALSE, FALSE, sizeof (gint), n);
+  data = g_new (guint, n);
+
+  for (i = 0; i < n; i++)
+    g_array_append_val (arr, i);
+
+  g_array_sort_with_data (arr, crank_permutation_sortpf, &sdata);
+
+  crank_permutation_init_arr_take (p, n, (guint*)arr->data);
+
+  g_array_free (arr, FALSE);
 }
 
 
@@ -355,18 +368,19 @@ crank_permutation_init_compare_parray_data (	CrankPermutation*	p,
  *
  * Initialize a permutation with ordering of elements in array. This function
  * works on int arrays.
- * 
+ *
  * This function expectes comparsion function that compares int pointers, not
  * ints.
  */
 void
-crank_permutation_init_compare_array_int (	CrankPermutation*	p,
-											const guint			n,
-											gint*				arr,
-											GCompareFunc		cmp	)
+crank_permutation_init_compare_array_int (CrankPermutation *p,
+                                          const guint       n,
+                                          gint             *arr,
+                                          GCompareFunc      cmp)
 {
-	if (cmp == NULL) cmp = crank_int_compare;
-	crank_permutation_init_compare_array (p, n, gint, arr, cmp);
+  if (cmp == NULL)
+    cmp = crank_int_compare;
+  crank_permutation_init_compare_array (p, n, gint, arr, cmp);
 }
 
 /**
@@ -379,18 +393,19 @@ crank_permutation_init_compare_array_int (	CrankPermutation*	p,
  *
  * Initialize a permutation with ordering of elements in array. This function
  * works on unsigned int arrays.
- * 
+ *
  * This function expectes comparsion function that compares uint pointers, not
  * uints.
  */
 void
-crank_permutation_init_compare_array_uint (	CrankPermutation*	p,
-											const guint			n,
-											guint*				arr,
-											GCompareFunc		cmp	)
+crank_permutation_init_compare_array_uint (CrankPermutation *p,
+                                           const guint       n,
+                                           guint            *arr,
+                                           GCompareFunc      cmp)
 {
-	if (cmp == NULL) cmp = crank_uint_compare;
-	crank_permutation_init_compare_array (p, n, guint, arr, cmp);
+  if (cmp == NULL)
+    cmp = crank_uint_compare;
+  crank_permutation_init_compare_array (p, n, guint, arr, cmp);
 }
 
 /**
@@ -405,13 +420,14 @@ crank_permutation_init_compare_array_uint (	CrankPermutation*	p,
  * works on float arrays.
  */
 void
-crank_permutation_init_compare_array_float (	CrankPermutation*	p,
-												const guint			n,
-												gfloat*				arr,
-												GCompareFunc		cmp	)
+crank_permutation_init_compare_array_float (CrankPermutation *p,
+                                            const guint       n,
+                                            gfloat           *arr,
+                                            GCompareFunc      cmp)
 {
-	if (cmp == NULL) cmp = crank_float_compare;
-	crank_permutation_init_compare_array (p, n, gfloat, arr, cmp);
+  if (cmp == NULL)
+    cmp = crank_float_compare;
+  crank_permutation_init_compare_array (p, n, gfloat, arr, cmp);
 }
 
 
@@ -426,19 +442,20 @@ crank_permutation_init_compare_array_float (	CrankPermutation*	p,
  *
  * Initialize a permutation with ordering of elements in array. This function
  * works on int arrays.
- * 
+ *
  * This function expectes comparsion function that compares int pointers, not
  * ints.
  */
 void
-crank_permutation_init_compare_array_int_data (	CrankPermutation*	p,
-												const guint			n,
-												gint*				arr,
-												GCompareDataFunc	cmp,
-												gpointer			userdata	)
+crank_permutation_init_compare_array_int_data (CrankPermutation *p,
+                                               const guint       n,
+                                               gint             *arr,
+                                               GCompareDataFunc  cmp,
+                                               gpointer          userdata)
 {
-	if (cmp == NULL) cmp = (GCompareDataFunc) crank_int_compare;
-	crank_permutation_init_compare_array_data (p, n, gint, arr, cmp, userdata);
+  if (cmp == NULL)
+    cmp = (GCompareDataFunc) crank_int_compare;
+  crank_permutation_init_compare_array_data (p, n, gint, arr, cmp, userdata);
 }
 
 /**
@@ -452,19 +469,20 @@ crank_permutation_init_compare_array_int_data (	CrankPermutation*	p,
  *
  * Initialize a permutation with ordering of elements in array. This function
  * works on unsigned int arrays.
- * 
+ *
  * This function expectes comparsion function that compares uint pointers, not
  * uints.
  */
 void
-crank_permutation_init_compare_array_uint_data (	CrankPermutation*	p,
-													const guint			n,
-													guint*				arr,
-													GCompareDataFunc	cmp,
-													gpointer			userdata	)
+crank_permutation_init_compare_array_uint_data (CrankPermutation *p,
+                                                const guint       n,
+                                                guint            *arr,
+                                                GCompareDataFunc  cmp,
+                                                gpointer          userdata)
 {
-	if (cmp == NULL) cmp = (GCompareDataFunc) crank_uint_compare;
-	crank_permutation_init_compare_array_data (p, n, guint, arr, cmp, userdata);
+  if (cmp == NULL)
+    cmp = (GCompareDataFunc) crank_uint_compare;
+  crank_permutation_init_compare_array_data (p, n, guint, arr, cmp, userdata);
 }
 
 /**
@@ -480,14 +498,15 @@ crank_permutation_init_compare_array_uint_data (	CrankPermutation*	p,
  * works on float arrays.
  */
 void
-crank_permutation_init_compare_array_float_data (	CrankPermutation*	p,
-													const guint			n,
-													gfloat*				arr,
-													GCompareDataFunc	cmp,
-													gpointer			userdata	)
+crank_permutation_init_compare_array_float_data (CrankPermutation *p,
+                                                 const guint       n,
+                                                 gfloat           *arr,
+                                                 GCompareDataFunc  cmp,
+                                                 gpointer          userdata)
 {
-	if (cmp == NULL) cmp = (GCompareDataFunc) crank_float_compare;
-	crank_permutation_init_compare_array_data (p, n, gfloat, arr, cmp, userdata);
+  if (cmp == NULL)
+    cmp = (GCompareDataFunc) crank_float_compare;
+  crank_permutation_init_compare_array_data (p, n, gfloat, arr, cmp, userdata);
 }
 
 
@@ -500,10 +519,10 @@ crank_permutation_init_compare_array_float_data (	CrankPermutation*	p,
  * Copies a permutation to @q.
  */
 void
-crank_permutation_copy (	CrankPermutation*	p,
-							CrankPermutation*	q	)
+crank_permutation_copy (CrankPermutation *p,
+                        CrankPermutation *q)
 {
-	crank_permutation_init_arr (q, p->n, p->data);
+  crank_permutation_init_arr (q, p->n, p->data);
 }
 
 /**
@@ -515,13 +534,13 @@ crank_permutation_copy (	CrankPermutation*	p,
  * Returns: new allocated permutation. free with crank_permutation_free()
  */
 CrankPermutation*
-crank_permutation_dup (	CrankPermutation*	p	)
+crank_permutation_dup (CrankPermutation *p)
 {
-	CrankPermutation*	result = g_new (CrankPermutation, 1);
-	
-	crank_permutation_copy (p, result);
-	
-	return result;
+  CrankPermutation *result = g_new (CrankPermutation, 1);
+
+  crank_permutation_copy (p, result);
+
+  return result;
 }
 
 
@@ -533,10 +552,10 @@ crank_permutation_dup (	CrankPermutation*	p	)
  * Resets a permutation into 0 sized permutation, and frees associated memories.
  */
 void
-crank_permutation_fini (	CrankPermutation*	p	)
+crank_permutation_fini (CrankPermutation *p)
 {
-	g_clear_pointer (& p->data, g_free);
-	p->n = 0;
+  g_clear_pointer (&p->data, g_free);
+  p->n = 0;
 }
 
 /**
@@ -546,10 +565,10 @@ crank_permutation_fini (	CrankPermutation*	p	)
  * Frees an allocated permutation.
  */
 void
-crank_permutation_free (	CrankPermutation*	p	)
+crank_permutation_free (CrankPermutation *p)
 {
-	crank_permutation_fini (p);
-	g_free (p);
+  crank_permutation_fini (p);
+  g_free (p);
 }
 
 
@@ -565,24 +584,29 @@ crank_permutation_free (	CrankPermutation*	p	)
  * Returns: If two permutations are same.
  */
 gboolean
-crank_permutation_equal (	gconstpointer		p,
-							gconstpointer		q	)
+crank_permutation_equal (gconstpointer p,
+                         gconstpointer q)
 {
-	CrankPermutation*	pp = (CrankPermutation*)p;
-	CrankPermutation*	pq = (CrankPermutation*)q;
-	
-	if (pp == NULL)			return pq == NULL;
-	else if (pq == NULL)	return FALSE;
-	
-	if (pp->n == pq->n) {
-		guint	i;
-		for (i = 0; i < pp->n; i++) {
-			if (pp->data[i] != pq->data[i]) return FALSE;
-		}
-		return TRUE;
-	}
-	
-	return FALSE;
+  CrankPermutation *pp = (CrankPermutation*)p;
+  CrankPermutation *pq = (CrankPermutation*)q;
+
+  if (pp == NULL)
+    return pq == NULL;
+  else if (pq == NULL)
+    return FALSE;
+
+  if (pp->n == pq->n)
+    {
+      guint i;
+      for (i = 0; i < pp->n; i++)
+        {
+          if (pp->data[i] != pq->data[i])
+            return FALSE;
+        }
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 
@@ -595,20 +619,22 @@ crank_permutation_equal (	gconstpointer		p,
  * Returns: Hash value of permutation
  */
 guint
-crank_permutation_hash (	gconstpointer		p	)
+crank_permutation_hash (gconstpointer p)
 {
-	CrankPermutation*	pp = (CrankPermutation*)p;
-	guint 	sum = 0;
-	guint	i;
-	
-	if (pp == NULL) return 0;
-	
-	for (i = 0; i < pp->n; i++) {
-		sum += g_int_hash (pp->data + i);
-		sum *= 23;
-	}
-	
-	return sum;
+  CrankPermutation *pp = (CrankPermutation*)p;
+  guint sum = 0;
+  guint i;
+
+  if (pp == NULL)
+    return 0;
+
+  for (i = 0; i < pp->n; i++)
+    {
+      sum += g_int_hash (pp->data + i);
+      sum *= 23;
+    }
+
+  return sum;
 }
 
 
@@ -621,30 +647,31 @@ crank_permutation_hash (	gconstpointer		p	)
  * Returns: (transfer full): String representation of permutation.
  */
 gchar*
-crank_permutation_to_string (	CrankPermutation*	p	)
+crank_permutation_to_string (CrankPermutation *p)
 {
-	GString*	builder;
-	gchar*		result;
-	guint		i;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	
-	builder = g_string_new ("(");
-	
-	if (0 < p->n) {
-		g_string_append_printf(builder, "%u", p->data[0]);
-	
-		for (i = 1; i < p->n; i++)
-			g_string_append_printf (builder, ", %u", p->data[i]);
-	}
-	
-	g_string_append_c (builder, ')');
-	
-	result = builder->str;
-	
-	g_string_free (builder, FALSE);
-	
-	return result;
+  GString *builder;
+  gchar *result;
+  guint i;
+
+  g_return_val_if_fail (p != NULL, NULL);
+
+  builder = g_string_new ("(");
+
+  if (0 < p->n)
+    {
+      g_string_append_printf(builder, "%u", p->data[0]);
+
+      for (i = 1; i < p->n; i++)
+        g_string_append_printf (builder, ", %u", p->data[i]);
+    }
+
+  g_string_append_c (builder, ')');
+
+  result = builder->str;
+
+  g_string_free (builder, FALSE);
+
+  return result;
 }
 
 
@@ -661,11 +688,11 @@ crank_permutation_to_string (	CrankPermutation*	p	)
  * Returns: Whether it is empty.
  */
 gboolean
-crank_permutation_is_empty (	CrankPermutation*	p	)
+crank_permutation_is_empty (CrankPermutation *p)
 {
-	g_return_val_if_fail (p != NULL, TRUE);
-	
-	return p->n == 0;
+  g_return_val_if_fail (p != NULL, TRUE);
+
+  return p->n == 0;
 }
 
 /**
@@ -677,11 +704,11 @@ crank_permutation_is_empty (	CrankPermutation*	p	)
  * Returns: size of permutation.
  */
 guint
-crank_permutation_get_size (	CrankPermutation*	p	)
+crank_permutation_get_size (CrankPermutation *p)
 {
-	g_return_val_if_fail (p != NULL, 0);
+  g_return_val_if_fail (p != NULL, 0);
 
-	return p->n;
+  return p->n;
 }
 
 /**
@@ -697,13 +724,13 @@ crank_permutation_get_size (	CrankPermutation*	p	)
  * Returns: Value of element.
  */
 guint
-crank_permutation_get (	CrankPermutation*	p,
-						const guint			i	)
+crank_permutation_get (CrankPermutation *p,
+                       const guint       i)
 {
-	g_return_val_if_fail (p != NULL, 0);
-	g_return_val_if_fail (i < p->n, 0);
-	
-	return p->data[i];
+  g_return_val_if_fail (p != NULL, 0);
+  g_return_val_if_fail (i < p->n, 0);
+
+  return p->data[i];
 }
 
 /**
@@ -716,17 +743,18 @@ crank_permutation_get (	CrankPermutation*	p,
  * Returns: Index of element or, -1 if value is not found.
  */
 gint
-crank_permutation_index_of (	CrankPermutation*	p,
-								const guint			v	)
+crank_permutation_index_of (CrankPermutation *p,
+                            const guint       v)
 {
-	guint	i;
-	
-	g_return_val_if_fail (v < p->n, -1);
-	
-	for (i = 0; i < p->n; i++)
-		if (p->data[i] == v) return i;
-	
-	return -1;
+  guint i;
+
+  g_return_val_if_fail (v < p->n, -1);
+
+  for (i = 0; i < p->n; i++)
+    if (p->data[i] == v)
+      return i;
+
+  return -1;
 }
 
 /**
@@ -742,26 +770,27 @@ crank_permutation_index_of (	CrankPermutation*	p,
  * Returns: (array) (transfer full) (nullable): sliced data in permutation.
  */
 guint*
-crank_permutation_slice (	CrankPermutation*	p,
-							const guint			from,
-							const guint			to	)
+crank_permutation_slice (CrankPermutation *p,
+                         const guint       from,
+                         const guint       to)
 {
-	guint*	result;
-	guint	i;
-	guint	n;
+  guint *result;
+  guint i;
+  guint n;
 
-	g_return_val_if_fail (p, NULL);
-	g_return_val_if_fail (from <= to, NULL);
-	g_return_val_if_fail (to <= p->n, NULL);
-	
-	n = to - from;
-	result = g_new (guint, n);
-	
-	for (i = 0; i < n; i++) {
-		result [i] = p->data [i + from];
-	}
-	
-	return result;
+  g_return_val_if_fail (p, NULL);
+  g_return_val_if_fail (from <= to, NULL);
+  g_return_val_if_fail (to <= p->n, NULL);
+
+  n = to - from;
+  result = g_new (guint, n);
+
+  for (i = 0; i < n; i++)
+    {
+      result [i] = p->data [i + from];
+    }
+
+  return result;
 }
 
 /**
@@ -772,10 +801,10 @@ crank_permutation_slice (	CrankPermutation*	p,
  * Initializes a iterator for a permutation.
  */
 void
-crank_permutation_iterator (	CrankPermutation*	p,
-								CrankIterMemUint*	iter )
+crank_permutation_iterator (CrankPermutation *p,
+                            CrankIterMemUint *iter)
 {
-	crank_iter_mem_uint_init_with_count (iter, p->data, p->n);
+  crank_iter_mem_uint_init_with_count (iter, p->data, p->n);
 }
 
 /**
@@ -792,16 +821,17 @@ crank_permutation_iterator (	CrankPermutation*	p,
  * Returns: Whether iteration was fully done without breaking.
  */
 gboolean
-crank_permutation_foreach (	CrankPermutation*	p,
-							CrankBoolUintFunc	func,
-							gpointer			userdata	)
+crank_permutation_foreach (CrankPermutation *p,
+                           CrankBoolUintFunc func,
+                           gpointer          userdata)
 {
-	guint		i;
-	
-	for (i = 0; i < p->n; i++)
-		if (! func (p->data[i], userdata)) return FALSE;
-	
-	return TRUE;
+  guint i;
+
+  for (i = 0; i < p->n; i++)
+    if (!func (p->data[i], userdata))
+      return FALSE;
+
+  return TRUE;
 }
 
 
@@ -817,24 +847,27 @@ crank_permutation_foreach (	CrankPermutation*	p,
  * Returns: Whether @p is valid permutation.
  */
 gboolean
-crank_permutation_is_valid (	CrankPermutation*	p	)
+crank_permutation_is_valid (CrankPermutation *p)
 {
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, FALSE);
-	
-	for (i = 0; i < p->n; i++) {
-		if (p->n <= p->data[i]) return FALSE;
-	
-		for (j = i + 1; j < p->n; j++)
-			if (p->data[i] == p->data[j]) return FALSE;
-	}
-	
-	return TRUE;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, FALSE);
+
+  for (i = 0; i < p->n; i++)
+    {
+      if (p->n <= p->data[i])
+        return FALSE;
+
+      for (j = i + 1; j < p->n; j++)
+        if (p->data[i] == p->data[j])
+          return FALSE;
+    }
+
+  return TRUE;
 }
- 
- 
+
+
 /**
  * crank_permutation_is_identity:
  * @p: A Permutation.
@@ -844,14 +877,16 @@ crank_permutation_is_valid (	CrankPermutation*	p	)
  * Returns: Whether it is identity permutation.
  */
 gboolean
-crank_permutation_is_identity (	CrankPermutation*	p	)
+crank_permutation_is_identity (CrankPermutation *p)
 {
-	guint i;
+  guint i;
 
-	g_return_val_if_fail (p != NULL, FALSE);
-	
-	for (i = 0; i < p->n; i++) if (p->data[i] != i) return FALSE;
-	return TRUE;
+  g_return_val_if_fail (p != NULL, FALSE);
+
+  for (i = 0; i < p->n; i++)
+    if (p->data[i] != i)
+      return FALSE;
+  return TRUE;
 }
 
 
@@ -864,21 +899,22 @@ crank_permutation_is_identity (	CrankPermutation*	p	)
  * Returns: Inversion number of pemutation.
  */
 guint
-crank_permutation_get_inversion (	CrankPermutation*	p	)
+crank_permutation_get_inversion (CrankPermutation *p)
 {
-	guint	i;
-	guint	j;
-	guint	inversion = 0;
-	
-	g_return_val_if_fail (p != NULL, 0);
-	
-	for (i = 0; i < p->n; i++)
-		for (j = i + 1; j < p->n; j++)
-			if (p->data[i] < p->data[j]) inversion++;
-	
-	return inversion;
+  guint i;
+  guint j;
+  guint inversion = 0;
+
+  g_return_val_if_fail (p != NULL, 0);
+
+  for (i = 0; i < p->n; i++)
+    for (j = i + 1; j < p->n; j++)
+      if (p->data[i] < p->data[j])
+        inversion++;
+
+  return inversion;
 }
-	
+
 
 /**
  * crank_permutation_get_sign:
@@ -891,11 +927,12 @@ crank_permutation_get_inversion (	CrankPermutation*	p	)
  * Returns: 1 or -1, or 0.
  */
 gint
-crank_permutation_get_sign (	CrankPermutation*	p	)
+crank_permutation_get_sign (CrankPermutation *p)
 {
-	g_return_val_if_fail (p != NULL, 0);
-	if (crank_permutation_is_empty (p)) return 0;
-	return (crank_permutation_get_inversion (p) % 2 != 0) ? -1 : 1;
+  g_return_val_if_fail (p != NULL, 0);
+  if (crank_permutation_is_empty (p))
+    return 0;
+  return (crank_permutation_get_inversion (p) % 2 != 0) ? -1 : 1;
 }
 
 
@@ -913,26 +950,28 @@ crank_permutation_get_sign (	CrankPermutation*	p	)
  *    Indices of ascents.
  */
 guint*
-crank_permutation_get_ascents (	CrankPermutation*	p,
-								guint*				rn	)
+crank_permutation_get_ascents (CrankPermutation *p,
+                               guint            *rn)
 {
-	guint	i;
-	guint*	result;
-	guint	n = 0;
+  guint i;
+  guint *result;
+  guint n = 0;
 
-	g_return_val_if_fail (rn != NULL, NULL);
-	g_return_val_if_fail (p != NULL, NULL);
-	
-	result = g_new (guint, p->n - 1);
-	
-	for (i = 0; i < p->n - 1; i++) {
-		if (p->data[i] < p->data[i+1]) {
-			result[n] = i;
-			n++;
-		}
-	}
-	*rn = n;
-	return g_renew (guint, result, n);
+  g_return_val_if_fail (rn != NULL, NULL);
+  g_return_val_if_fail (p != NULL, NULL);
+
+  result = g_new (guint, p->n - 1);
+
+  for (i = 0; i < p->n - 1; i++)
+    {
+      if (p->data[i] < p->data[i + 1])
+        {
+          result[n] = i;
+          n++;
+        }
+    }
+  *rn = n;
+  return g_renew (guint, result, n);
 }
 
 /**
@@ -949,26 +988,28 @@ crank_permutation_get_ascents (	CrankPermutation*	p,
  *    Indices of descents.
  */
 guint*
-crank_permutation_get_descents (	CrankPermutation*	p,
-									guint*				rn	)
+crank_permutation_get_descents (CrankPermutation *p,
+                                guint            *rn)
 {
-	guint	i;
-	guint*	result;
-	guint	n = 0;
+  guint i;
+  guint *result;
+  guint n = 0;
 
-	g_return_val_if_fail (rn != NULL, NULL);
-	g_return_val_if_fail (p != NULL, NULL);
-	
-	result = g_new (guint, p->n - 1);
-	
-	for (i = 0; i < p->n - 1; i++) {
-		if (p->data[i] > p->data[i+1]) {
-			result[n] = i;
-			n++;
-		}
-	}
-	*rn = n;
-	return g_renew (guint, result, n);
+  g_return_val_if_fail (rn != NULL, NULL);
+  g_return_val_if_fail (p != NULL, NULL);
+
+  result = g_new (guint, p->n - 1);
+
+  for (i = 0; i < p->n - 1; i++)
+    {
+      if (p->data[i] > p->data[i + 1])
+        {
+          result[n] = i;
+          n++;
+        }
+    }
+  *rn = n;
+  return g_renew (guint, result, n);
 }
 
 /**
@@ -982,26 +1023,28 @@ crank_permutation_get_descents (	CrankPermutation*	p,
  *    Indices of excedances.
  */
 guint*
-crank_permutation_get_excedances (	CrankPermutation*	p,
-									guint*				rn	)
+crank_permutation_get_excedances (CrankPermutation *p,
+                                  guint            *rn)
 {
-	guint	i;
-	guint*	result;
-	guint	n = 0;
+  guint i;
+  guint *result;
+  guint n = 0;
 
-	g_return_val_if_fail (rn != NULL, NULL);
-	g_return_val_if_fail (p != NULL, NULL);
-	
-	result = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		if (p->data[i] > i) {
-			result[n] = i;
-			n++;
-		}
-	}
-	*rn = n;
-	return g_renew (guint, result, n);
+  g_return_val_if_fail (rn != NULL, NULL);
+  g_return_val_if_fail (p != NULL, NULL);
+
+  result = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      if (p->data[i] > i)
+        {
+          result[n] = i;
+          n++;
+        }
+    }
+  *rn = n;
+  return g_renew (guint, result, n);
 }
 
 /**
@@ -1015,17 +1058,17 @@ crank_permutation_get_excedances (	CrankPermutation*	p,
  * This inverts sign of permutation.
  */
 void
-crank_permutation_swap (	CrankPermutation*	p,
-							const guint			i,
-							const guint			j	)
+crank_permutation_swap (CrankPermutation *p,
+                        const guint       i,
+                        const guint       j)
 {
-	guint	temp;
-	
-	g_return_if_fail (p != NULL);
-	
-	temp = p->data[i];
-	p->data[i] = p->data[j];
-	p->data[j] = temp;
+  guint temp;
+
+  g_return_if_fail (p != NULL);
+
+  temp = p->data[i];
+  p->data[i] = p->data[j];
+  p->data[j] = temp;
 }
 
 /**
@@ -1044,22 +1087,22 @@ crank_permutation_swap (	CrankPermutation*	p,
  * * {5, 2, 4, 3, 1}
  */
 void
-crank_permutation_reverse (		CrankPermutation*	p,
-								CrankPermutation*	q	)
+crank_permutation_reverse (CrankPermutation *p,
+                           CrankPermutation *q)
 {
-	guint	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	g_return_if_fail (q != NULL);
-	g_return_if_fail (p != q);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)
-		data[p->n - 1 - i] = p->data[i];
-	
-	crank_permutation_init_arr_take (q, p->n, data);
+  guint i;
+  guint *data;
+
+  g_return_if_fail (p != NULL);
+  g_return_if_fail (q != NULL);
+  g_return_if_fail (p != q);
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[p->n - 1 - i] = p->data[i];
+
+  crank_permutation_init_arr_take (q, p->n, data);
 }
 
 /**
@@ -1069,19 +1112,20 @@ crank_permutation_reverse (		CrankPermutation*	p,
  * Reverses a permutation. See crank_permutation_reverse().
  */
 void
-crank_permutation_reverse_self (	CrankPermutation*	p	)
+crank_permutation_reverse_self (CrankPermutation *p)
 {
-	guint 	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)	data[p->n - 1 - i] = p->data[i];
-	
-	g_free (p->data);
-	p->data = data;
+  guint i;
+  guint *data;
+
+  g_return_if_fail (p != NULL);
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[p->n - 1 - i] = p->data[i];
+
+  g_free (p->data);
+  p->data = data;
 }
 
 
@@ -1100,22 +1144,22 @@ crank_permutation_reverse_self (	CrankPermutation*	p	)
  * * {5, 4, 2, 3, 1}
  */
 void
-crank_permutation_inverse (	CrankPermutation*	p,
-							CrankPermutation*	q	)
+crank_permutation_inverse (CrankPermutation *p,
+                           CrankPermutation *q)
 {
-	guint	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	g_return_if_fail (q != NULL);
-	g_return_if_fail (p != q);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)
-		data[p->data[i]] = i;
+  guint i;
+  guint *data;
 
-	crank_permutation_init_arr_take (q, p->n, data);
+  g_return_if_fail (p != NULL);
+  g_return_if_fail (q != NULL);
+  g_return_if_fail (p != q);
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[p->data[i]] = i;
+
+  crank_permutation_init_arr_take (q, p->n, data);
 }
 
 /**
@@ -1125,19 +1169,20 @@ crank_permutation_inverse (	CrankPermutation*	p,
  * Inverses a permutation. See crank_permutation_inverse().
  */
 void
-crank_permutation_inverse_self (	CrankPermutation*	p	)
+crank_permutation_inverse_self (CrankPermutation *p)
 {
-	guint 	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)	data[p->data[i]] = i;
-	
-	g_free (p->data);
-	p->data = data;
+  guint i;
+  guint *data;
+
+  g_return_if_fail (p != NULL);
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[p->data[i]] = i;
+
+  g_free (p->data);
+  p->data = data;
 }
 
 
@@ -1152,31 +1197,32 @@ crank_permutation_inverse_self (	CrankPermutation*	p	)
  * The sign of result, is product of two permutations.
  */
 void
-crank_permutation_shuffle (	CrankPermutation*	p,
-							CrankPermutation*	q,
-							CrankPermutation*	r	)
+crank_permutation_shuffle (CrankPermutation *p,
+                           CrankPermutation *q,
+                           CrankPermutation *r)
 {
-	guint 	i;
-	guint*	data;
-	
-	crank_permutation_init (r, 0);
-	
-	g_return_if_fail (p != NULL);
-	g_return_if_fail (q != NULL);
-	g_return_if_fail (r != NULL);
-	g_return_if_fail (p != r);
-	
-	if (p->n != q->n) {
-		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
-		return;
-	}
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)
-		data[i] = p->data[ q->data[i] ];
-	
-	crank_permutation_init_arr_take (r, p->n, data);
+  guint i;
+  guint *data;
+
+  crank_permutation_init (r, 0);
+
+  g_return_if_fail (p != NULL);
+  g_return_if_fail (q != NULL);
+  g_return_if_fail (r != NULL);
+  g_return_if_fail (p != r);
+
+  if (p->n != q->n)
+    {
+      g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
+      return;
+    }
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[i] = p->data[ q->data[i] ];
+
+  crank_permutation_init_arr_take (r, p->n, data);
 }
 
 /**
@@ -1187,27 +1233,28 @@ crank_permutation_shuffle (	CrankPermutation*	p,
  * Shuffles permutation with other permutation. See crank_permutation_shuffle().
  */
 void
-crank_permutation_shuffle_self (CrankPermutation*	p,
-								CrankPermutation*	q	)
+crank_permutation_shuffle_self (CrankPermutation *p,
+                                CrankPermutation *q)
 {
-	guint 	i;
-	guint*	data;
-	
-	g_return_if_fail (p != NULL);
-	g_return_if_fail (q != NULL);
-	
-	if (p->n != q->n) {
-		g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
-		return;
-	}
-	
-	data = g_new (guint, p->n);
-	
-	for (i = 0; i < p->n; i++)
-		data[i] = p->data[ q->data[i] ];
-	
-	g_free (p->data);
-	p->data = data;
+  guint i;
+  guint *data;
+
+  g_return_if_fail (p != NULL);
+  g_return_if_fail (q != NULL);
+
+  if (p->n != q->n)
+    {
+      g_warning ("Permutation: shuffle: size mismatch: %u, %u", p->n, q->n);
+      return;
+    }
+
+  data = g_new (guint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    data[i] = p->data[ q->data[i] ];
+
+  g_free (p->data);
+  p->data = data;
 }
 
 
@@ -1223,31 +1270,32 @@ crank_permutation_shuffle_self (CrankPermutation*	p,
  * Stores shuffle result into newly allocated array. Copy is done by memcpy.
  *
  * Returns: An array holding shuffled elemets.
- */ 
+ */
 gpointer
-crank_permutation_shuffle_sarray (	CrankPermutation*	p,
-									const gsize			gsz,
-									gpointer			arr	)
+crank_permutation_shuffle_sarray (CrankPermutation *p,
+                                  const gsize       gsz,
+                                  gpointer          arr)
 {
-	guint8*	arr_mem = (guint8*) arr;
-	guint8* result = g_malloc (gsz * p->n);
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (gsz != 0, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	arr_mem = (guint8*) arr;
-	result = g_malloc (gsz * p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		
-		memcpy (result + (gsz * j),  arr_mem + (gsz * i),   gsz);
-	}
-	
-	return result;
+  guint8 *arr_mem = (guint8*) arr;
+  guint8 *result = g_malloc (gsz * p->n);
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (gsz != 0, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  arr_mem = (guint8*) arr;
+  result = g_malloc (gsz * p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+
+      memcpy (result + (gsz * j),  arr_mem + (gsz * i),   gsz);
+    }
+
+  return result;
 }
 
 /**
@@ -1258,26 +1306,27 @@ crank_permutation_shuffle_sarray (	CrankPermutation*	p,
  * Stores shuffle result into newly allocated array.
  *
  * Returns: An array holding shuffled elemets.
- */ 
+ */
 gpointer*
-crank_permutation_shuffle_parray (	CrankPermutation*	p,
-									gpointer*			arr	)
+crank_permutation_shuffle_parray (CrankPermutation *p,
+                                  gpointer         *arr)
 {
-	gpointer* result;
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	result = g_new (gpointer, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		result[j] = arr[i];
-	}
-	
-	return result;
+  gpointer *result;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  result = g_new (gpointer, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+      result[j] = arr[i];
+    }
+
+  return result;
 }
 
 
@@ -1292,24 +1341,25 @@ crank_permutation_shuffle_parray (	CrankPermutation*	p,
  * Returns: An array holding shuffled elemets.
  */
 gboolean*
-crank_permutation_shuffle_array_boolean (	CrankPermutation*	p,
-											gboolean*			arr	)
+crank_permutation_shuffle_array_boolean (CrankPermutation *p,
+                                         gboolean         *arr)
 {
-	gboolean* result;
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	result = g_new (gboolean, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		result[j] = arr[i];
-	}
-	
-	return result;
+  gboolean *result;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  result = g_new (gboolean, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+      result[j] = arr[i];
+    }
+
+  return result;
 }
 
 /**
@@ -1322,24 +1372,25 @@ crank_permutation_shuffle_array_boolean (	CrankPermutation*	p,
  * Returns: (transfer container): An array holding shuffled elemets.
  */
 gint*
-crank_permutation_shuffle_array_int (	CrankPermutation*	p,
-										gint*				arr	)
+crank_permutation_shuffle_array_int (CrankPermutation *p,
+                                     gint             *arr)
 {
-	gint* result;
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	result = g_new (gint, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		result[j] = arr[i];
-	}
-	
-	return result;
+  gint *result;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  result = g_new (gint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+      result[j] = arr[i];
+    }
+
+  return result;
 }
 
 /**
@@ -1352,24 +1403,25 @@ crank_permutation_shuffle_array_int (	CrankPermutation*	p,
  * Returns: (transfer container): An array holding shuffled elemets.
  */
 guint*
-crank_permutation_shuffle_array_uint (	CrankPermutation*	p,
-										guint*				arr	)
+crank_permutation_shuffle_array_uint (CrankPermutation *p,
+                                      guint            *arr)
 {
-	guint* result;
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	result = g_new (gint, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		result[j] = arr[i];
-	}
-	
-	return result;
+  guint *result;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  result = g_new (gint, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+      result[j] = arr[i];
+    }
+
+  return result;
 }
 
 
@@ -1383,24 +1435,25 @@ crank_permutation_shuffle_array_uint (	CrankPermutation*	p,
  * Returns: (transfer container): An array holding shuffled elemets.
  */
 gfloat*
-crank_permutation_shuffle_array_float (	CrankPermutation*	p,
-										gfloat*				arr	)
+crank_permutation_shuffle_array_float (CrankPermutation *p,
+                                       gfloat           *arr)
 {
-	gfloat* result;
-	guint	i;
-	guint	j;
-	
-	g_return_val_if_fail (p != NULL, NULL);
-	g_return_val_if_fail (arr != NULL, NULL);
-	
-	result = g_new (gfloat, p->n);
-	
-	for (i = 0; i < p->n; i++) {
-		j = crank_permutation_get (p, i);
-		result[j] = arr[i];
-	}
-	
-	return result;
+  gfloat *result;
+  guint i;
+  guint j;
+
+  g_return_val_if_fail (p != NULL, NULL);
+  g_return_val_if_fail (arr != NULL, NULL);
+
+  result = g_new (gfloat, p->n);
+
+  for (i = 0; i < p->n; i++)
+    {
+      j = crank_permutation_get (p, i);
+      result[j] = arr[i];
+    }
+
+  return result;
 }
 
 
@@ -1421,16 +1474,16 @@ crank_permutation_shuffle_array_float (	CrankPermutation*	p,
  *    sliced data in permutation.
  */
 guint*
-crank_permutation__gi_slice (	CrankPermutation*	p,
-								const guint			from,
-								const guint			to,
-								guint*				result_len	)
+crank_permutation__gi_slice (CrankPermutation *p,
+                             const guint       from,
+                             const guint       to,
+                             guint            *result_len)
 {
-	guint*	result = crank_permutation_slice (p, from, to);
-	
-	*result_len = G_UNLIKELY(result == NULL) ? 0 : (to - from);
-	
-	return result;
+  guint *result = crank_permutation_slice (p, from, to);
+
+  *result_len = G_UNLIKELY(result == NULL) ? 0 : (to - from);
+
+  return result;
 }
 
 
@@ -1443,14 +1496,14 @@ crank_permutation__gi_slice (	CrankPermutation*	p,
  * @p: (out): A Permutation.
  *
  * Vala specific function.
- */ 
+ */
 void
-crank_permutation__vala_init_compare_parray (	const guint			n,
-												gpointer*			garr,
-												GCompareFunc		gcmp,
-												CrankPermutation*	p	)
+crank_permutation__vala_init_compare_parray (const guint       n,
+                                             gpointer         *garr,
+                                             GCompareFunc      gcmp,
+                                             CrankPermutation *p)
 {
-	crank_permutation_init_compare_parray (p, n, garr, gcmp);
+  crank_permutation_init_compare_parray (p, n, garr, gcmp);
 }
 
 /**
@@ -1462,17 +1515,17 @@ crank_permutation__vala_init_compare_parray (	const guint			n,
  * @p: (out): A Permutation.
  *
  * Vala specific function.
- */ 
+ */
 void
-crank_permutation__vala_init_compare_parray_data (	const guint			n,
-													gpointer*			garr,
-													GCompareDataFunc	gcmp,
-													gpointer			userdata,
-													CrankPermutation*	p	)
+crank_permutation__vala_init_compare_parray_data (const guint       n,
+                                                  gpointer         *garr,
+                                                  GCompareDataFunc  gcmp,
+                                                  gpointer          userdata,
+                                                  CrankPermutation *p)
 {
-	crank_permutation_init_compare_parray_data (p, n, garr, gcmp, userdata);
+  crank_permutation_init_compare_parray_data (p, n, garr, gcmp, userdata);
 }
-															
+
 /**
  * crank_permutation__vala_shuffle_parray: (skip)
  * @p: A Permutation
@@ -1485,14 +1538,15 @@ crank_permutation__vala_init_compare_parray_data (	const guint			n,
  *
  * Returns: (array length=rn) (transfer container):
  *    An array holding shuffled elemets. Free with g_free().
- */ 
+ */
 gpointer*
-crank_permutation__vala_shuffle_parray (	CrankPermutation*	p,
-										gpointer*			arr,
-										guint*				rn	)
+crank_permutation__vala_shuffle_parray (CrankPermutation *p,
+                                        gpointer         *arr,
+                                        guint            *rn)
 {
-	if (rn != NULL) *rn = p->n;
-	return crank_permutation_shuffle_parray (p, arr);
+  if (rn != NULL)
+    *rn = p->n;
+  return crank_permutation_shuffle_parray (p, arr);
 }
 
 /**
@@ -1507,14 +1561,15 @@ crank_permutation__vala_shuffle_parray (	CrankPermutation*	p,
  *
  * Returns: (array length=rn) (transfer container):
  *    An array holding shuffled elemets. Free with g_free().
- */ 
+ */
 gboolean*
-crank_permutation__vala_shuffle_array_boolean (	CrankPermutation*	p,
-												gboolean*			arr,
-												guint*				rn	)
+crank_permutation__vala_shuffle_array_boolean (CrankPermutation *p,
+                                               gboolean         *arr,
+                                               guint            *rn)
 {
-	if (rn != NULL) *rn = p->n;
-	return crank_permutation_shuffle_array_boolean (p, arr);
+  if (rn != NULL)
+    *rn = p->n;
+  return crank_permutation_shuffle_array_boolean (p, arr);
 }
 
 /**
@@ -1529,14 +1584,15 @@ crank_permutation__vala_shuffle_array_boolean (	CrankPermutation*	p,
  *
  * Returns: (array length=rn) (transfer container):
  *    An array holding shuffled elemets. Free with g_free().
- */ 
+ */
 gint*
-crank_permutation__vala_shuffle_array_int (	CrankPermutation*	p,
-											gint*				arr,
-											guint*				rn	)
+crank_permutation__vala_shuffle_array_int (CrankPermutation *p,
+                                           gint             *arr,
+                                           guint            *rn)
 {
-	if (rn != NULL) *rn = p->n;
-	return crank_permutation_shuffle_array_int (p, arr);
+  if (rn != NULL)
+    *rn = p->n;
+  return crank_permutation_shuffle_array_int (p, arr);
 }
 
 /**
@@ -1551,14 +1607,15 @@ crank_permutation__vala_shuffle_array_int (	CrankPermutation*	p,
  *
  * Returns: (array length=rn) (transfer container):
  *    An array holding shuffled elemets. Free with g_free().
- */ 
+ */
 guint*
-crank_permutation__vala_shuffle_array_uint (	CrankPermutation*	p,
-												guint*				arr,
-												guint*				rn	)
+crank_permutation__vala_shuffle_array_uint (CrankPermutation *p,
+                                            guint            *arr,
+                                            guint            *rn)
 {
-	if (rn != NULL) *rn = p->n;
-	return crank_permutation_shuffle_array_uint (p, arr);
+  if (rn != NULL)
+    *rn = p->n;
+  return crank_permutation_shuffle_array_uint (p, arr);
 }
 
 /**
@@ -1573,42 +1630,43 @@ crank_permutation__vala_shuffle_array_uint (	CrankPermutation*	p,
  *
  * Returns: (array length=rn) (transfer container):
  *    An array holding shuffled elemets. Free with g_free().
- */ 
+ */
 gfloat*
-crank_permutation__vala_shuffle_array_float (	CrankPermutation*	p,
-												gfloat*				arr,
-												guint*				rn	)
+crank_permutation__vala_shuffle_array_float (CrankPermutation *p,
+                                             gfloat           *arr,
+                                             guint            *rn)
 {
-	if (rn != NULL) *rn = p->n;
-	return crank_permutation_shuffle_array_float (p, arr);
+  if (rn != NULL)
+    *rn = p->n;
+  return crank_permutation_shuffle_array_float (p, arr);
 }
 
 //////// Internal Definition ///////////////////////////////////////////////////
 
 static gint
-crank_permutation_sortf (	gconstpointer		a,
-							gconstpointer		b,
-							gpointer			userdata	)
+crank_permutation_sortf (gconstpointer a,
+                         gconstpointer b,
+                         gpointer      userdata)
 {
-	struct _CrankPermutationSortData*	sdata =
-		(struct _CrankPermutationSortData*)	userdata;
-	
-	gpointer	apt = ((guint8*)(sdata->array)) + *((guint*)a) * sdata->esize;
-	gpointer	bpt = ((guint8*)(sdata->array)) + *((guint*)b) * sdata->esize;
-	
-	return sdata->func (apt, bpt, sdata->userdata);
+  struct _CrankPermutationSortData *sdata =
+    (struct _CrankPermutationSortData*) userdata;
+
+  gpointer apt = ((guint8*)(sdata->array)) + *((guint*)a) * sdata->esize;
+  gpointer bpt = ((guint8*)(sdata->array)) + *((guint*)b) * sdata->esize;
+
+  return sdata->func (apt, bpt, sdata->userdata);
 }
 
 static gint
-crank_permutation_sortpf (	gconstpointer		a,
-							gconstpointer		b,
-							gpointer			userdata	)
+crank_permutation_sortpf (gconstpointer a,
+                          gconstpointer b,
+                          gpointer      userdata)
 {
-	struct _CrankPermutationSortData*	sdata =
-		(struct _CrankPermutationSortData*)	userdata;
-	
-	gpointer	apt = ((gpointer*)(sdata->array)) [*((guint*)a)];
-	gpointer	bpt = ((gpointer*)(sdata->array)) [*((guint*)b)];
-	
-	return sdata->func (apt, bpt, sdata->userdata);
+  struct _CrankPermutationSortData *sdata =
+    (struct _CrankPermutationSortData*) userdata;
+
+  gpointer apt = ((gpointer*)(sdata->array)) [*((guint*)a)];
+  gpointer bpt = ((gpointer*)(sdata->array)) [*((guint*)b)];
+
+  return sdata->func (apt, bpt, sdata->userdata);
 }

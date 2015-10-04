@@ -28,9 +28,9 @@
 
 #include <glib.h>
 
-guint	crank_bits_shift_to_left32 (	guint32*	subject);
+guint crank_bits_shift_to_left32 (guint32 *subject);
 
-guint	crank_bits_shift_to_left64 (	guint64*	subject);
+guint crank_bits_shift_to_left64 (guint64 *subject);
 
 
 /**
@@ -42,7 +42,7 @@ guint	crank_bits_shift_to_left64 (	guint64*	subject);
  * Adds two 64-bit integer and returns its carry.
  * It is used to perform additions in various operations.
  */
-#define CRANK_ADD_CARRY64(a,b,r)	((*(r) = (a) + (b)), (b) > *(r))
+#define CRANK_ADD_CARRY64(a,b,r)    ((*(r) = (a) + (b)), (b) > *(r))
 /**
  * CRANK_IADD_CARRY64:
  * @a: A 64-bit integer.
@@ -51,7 +51,7 @@ guint	crank_bits_shift_to_left64 (	guint64*	subject);
  * Adds two 64-bit integer and returns its carry.
  * It is used to perform additions in various operations.
  */
-#define CRANK_IADD_CARRY64(a,b)		((*(a) += (b)), (b) > *(a))
+#define CRANK_IADD_CARRY64(a,b)     ((*(a) += (b)), (b) > *(a))
 
 /**
  * CRANK_SUB_CARRY64:
@@ -62,7 +62,7 @@ guint	crank_bits_shift_to_left64 (	guint64*	subject);
  * Subtracts two 64-bit integer and returns its takeover.
  * It is used to perform additions in various operations.
  */
-#define CRANK_SUB_CARRY64(a,b,r)	((*(r) = (a) - (b)), (a) < (b))
+#define CRANK_SUB_CARRY64(a,b,r)    ((*(r) = (a) - (b)), (a) < (b))
 
 
 #endif //CRANKBITS_H

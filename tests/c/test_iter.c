@@ -24,80 +24,84 @@
 #include "crankbase.h"
 
 //////// Declaration ///////////////////////////////////////////////////////////
-static void	test_uint_iter (void);
+static void test_uint_iter (void);
 
 static void test_uint_iter_foreach (void);
 
 //////// Main //////////////////////////////////////////////////////////////////
 
 gint
-main (	gint   argc,
-      	gchar *argv[] )
+main (gint   argc,
+      gchar *argv[])
 {
-	g_test_init (&argc, &argv, NULL);
+  g_test_init (&argc, &argv, NULL);
 
-	g_test_add_func ("/crank/base/iter/uint",			test_uint_iter	);
-	g_test_add_func ("/crank/base/iter/uint/foreach",	test_uint_iter_foreach	);
-	
-	g_test_run ();
+  g_test_add_func ("/crank/base/iter/uint",           test_uint_iter);
+  g_test_add_func ("/crank/base/iter/uint/foreach",   test_uint_iter_foreach);
 
-	return 0;
+  g_test_run ();
+
+  return 0;
 }
 
 
 //////// Definition ////////////////////////////////////////////////////////////
 static gboolean
-test_accum_uint (const guint	value, gpointer	pointer)
+test_accum_uint (const guint value,
+                 gpointer    pointer)
 {
-	guint*	prod_sum = (guint*)pointer;
-	
-	prod_sum[0] *= value;
-	prod_sum[1] += value;
-	
-	g_message ("value: %u", value);
-	
-	return TRUE;
+  guint *prod_sum = (guint*)pointer;
+
+  prod_sum[0] *= value;
+  prod_sum[1] += value;
+
+  g_message ("value: %u", value);
+
+  return TRUE;
 }
 
 
 static void
-test_uint_iter (void) {
-	guint	array[] = {3, 9, 1, 3, 2, 5, 5 ,9, 7};	
-	guint	narray = G_N_ELEMENTS(array);
-	
-	guint	prod = 1;
-	guint	sum = 0;
+test_uint_iter (void)
+{
+  guint array[] = {3, 9, 1, 3, 2, 5, 5,9, 7};
+  guint narray = G_N_ELEMENTS(array);
 
-	CrankIterMemUint	iter;
-	
-	
-	crank_iter_mem_uint_init_with_count (&iter, array, narray);
-	
-	
-	while (crank_iter_mem_uint_next (&iter)) {
-		guint	val = crank_iter_mem_uint_get (&iter);
-		
-		prod *= val;
-		sum += val;
-	}
-	
-	g_assert_cmpuint (prod, ==, 255150);
-	g_assert_cmpuint (sum, ==, 44);
+  guint prod = 1;
+  guint sum = 0;
+
+  CrankIterMemUint iter;
+
+
+  crank_iter_mem_uint_init_with_count (&iter, array, narray);
+
+
+  while (crank_iter_mem_uint_next (&iter))
+    {
+      guint val = crank_iter_mem_uint_get (&iter);
+
+      prod *= val;
+      sum += val;
+    }
+
+  g_assert_cmpuint (prod, ==, 255150);
+  g_assert_cmpuint (sum, ==, 44);
 }
 
 static void
-test_uint_iter_foreach (void) {
-	guint	array[] = {3, 9, 1, 3, 2, 5, 5 ,9, 7};	
-	guint	narray = G_N_ELEMENTS(array);
-	
-	guint	prod_sum[2] = {1, 0};
-	
-	CrankIterMemUint	iter;
-	
-	crank_iter_mem_uint_init_with_count (&iter, array, narray);
-	
-	crank_iter_mem_uint_foreach (&iter, test_accum_uint, &prod_sum);
-	
-	g_assert_cmpuint (prod_sum[0], ==, 255150);
-	g_assert_cmpuint (prod_sum[1], ==, 44);
+test_uint_iter_foreach (void)
+{
+  guint array[] = {3, 9, 1, 3, 2, 5, 5,9, 7};
+  guint narray = G_N_ELEMENTS(array);
+
+  guint prod_sum[2] = {1, 0};
+
+  CrankIterMemUint iter;
+
+  crank_iter_mem_uint_init_with_count (&iter, array, narray);
+
+  crank_iter_mem_uint_foreach (&iter, test_accum_uint, &prod_sum);
+
+  g_assert_cmpuint (prod_sum[0], ==, 255150);
+  g_assert_cmpuint (prod_sum[1], ==, 44);
 }
