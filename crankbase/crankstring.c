@@ -42,8 +42,8 @@
  *
  * The functions provides simple function to read data from string.
  *
- * For complex string functions like parsing, Libraries that provides these
- * function should be consulted.
+ * Note that this functions provides only for basic functions, and not capable
+ * to perform complex parsing like JSON or etc.
  * 
  * If possible, when using other language like python, use their own string
  * functions rather than using this functions.

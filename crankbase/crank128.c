@@ -31,8 +31,8 @@
 #include "crank128.h"
 /**
  * SECTION: crank128
- * @title: Operations on 128-bit.
- * @short_description: An 128-bit integer.
+ * @title: 128bit Unsigned Integer.
+ * @short_description: An 128-bit unsigned integer.
  *
  * 128-bit integers are not used frequently. As most of operations are done by
  * multiple 64-bit operations, they are much slower than 64-bit ones.
@@ -50,7 +50,7 @@
  *
  * Initialize 128 from sum of 64-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_init_add)	(CrankUint128*	i,
@@ -102,7 +102,8 @@ crank_uint128_init_mul	(CrankUint128*	i,
  *
  * Copys a 128-bit integer.
  *
- * This is simple function.
+ *
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_copy)	(CrankUint128*	i,
@@ -116,11 +117,13 @@ void
  * @i: A instance.
  *
  * Increase 128-bit integer by one.
+ *
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_inc)	(CrankUint128*	i)
 {
-	i++;
+	i->l++;
 	i->h += !(i->l);
 }
 
@@ -129,12 +132,14 @@ void
  * @i: A instance.
  *
  * Decrease 128-bit integer by one.
+ *
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_dec)	(CrankUint128*	i)
 {
 	i->h -= !(i->l);
-	i--;
+	i->l--;
 }
 
 
@@ -146,7 +151,7 @@ void
  *
  * Adds 64-bit integer to 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_add64)	(CrankUint128*	a,
@@ -163,7 +168,7 @@ void
  *
  * Adds 64-bit integer to 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_add64_self)	(CrankUint128*	a,
@@ -180,7 +185,7 @@ void
  *
  * Adds 128-bit integer to 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_add)	(CrankUint128*	a,
@@ -197,7 +202,7 @@ void
  *
  * Adds 128-bit integer to 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_add_self)	(CrankUint128*	a,
@@ -215,7 +220,7 @@ void
  *
  * Subtracts 64-bit integer from 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_sub64)	(CrankUint128*	a,
@@ -232,7 +237,7 @@ void
  *
  * Subtracts 64-bit integer from 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_sub64_self)	(CrankUint128*	a,
@@ -250,7 +255,7 @@ void
  *
  * Subtracts 128-bit integer from 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_sub)	(CrankUint128*	a,
@@ -267,7 +272,7 @@ void
  *
  * Subtracts 128-bit integer from 128-bit integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_sub_self)	(CrankUint128*	a,
@@ -685,7 +690,7 @@ crank_uint128_remquo32_self (CrankUint128*	a,
  *
  * Shifts a integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_lsh) (	CrankUint128*	a,
@@ -703,7 +708,7 @@ void
  *
  * Shifts a integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_lsh_self) (	CrankUint128*	a,
@@ -721,7 +726,7 @@ void
  *
  * Shifts a integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_rsh) (	CrankUint128*	a,
@@ -739,7 +744,7 @@ void
  *
  * Shifts a integer.
  *
- * This is simple function.
+ * This is [simple function][simple-function].
  */
 void
 (crank_uint128_rsh_self) (	CrankUint128*	a,

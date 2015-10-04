@@ -28,8 +28,8 @@
 
 /**
  * SECTION:crankbasemacro
- * @title: Crank System Basic Macros
- * @short_description: Defines macros for basic actinos
+ * @title: Basic Utility Macros
+ * @short_description: Basic utility macros that frequently used.
  * @stability: Unstable
  * @include: crankbase.h
  *

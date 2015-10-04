@@ -35,8 +35,8 @@
  * @stability: unstable
  * @include: crankbase.h
  *
- * Low level bits operations are not used frequently, as game applications are
- * not optimized by low level operations today. For Crank System, sometimes it
+ * Low level bits operations are not used frequently, as game development does
+ * not have to low level optimization today. For Crank System, sometimes it
  * need to perform bit manipulation.
  */
 
