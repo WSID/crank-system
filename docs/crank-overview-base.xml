@@ -14,14 +14,15 @@
     <refpurpose>Crank Base Overview</refpurpose>
   </refnamediv>
 
-  <refsect1 id="fundamentals">
-    <title>Fundamental Support</title>
+  <refsect1 id="basic-utility">
+    <title>Basic Utility</title>
     <para>
       Crank System is fairly a large library which provides complex features,
       from basic vector computations, to scene rendering, and other tasks.
-      
-      Fundamental part of Crank System provides versioning and general purpose
-      macros, typedefs.
+    </para>
+    <para>
+      Basic part of Crank System provides general purpose macros, typedefs, and
+      functions, to ease out Crank System its own and other users.
     </para>
   </refsect1>
 
@@ -39,7 +40,8 @@
     <para>
       Vectors and Matrix types are frequently used in 3D applications, and also
       in games, as they can represent arbitarly position in 2D/3D space.
-      
+    </para>
+    <para>
       Might not useful in most of games, but Crank System also provides complex
       vector and matrix for modeling, and simulating.
     </para>
@@ -49,7 +51,8 @@
     <title>Graphs</title>
     <para>
       Crank System also provides graphs which are used through out games.
-      Currently, Crank System only provides digraph implementation.
+      Currently, Crank System only provides digraph implementation and simple
+      functions.
     </para>
   </refsect1>
 

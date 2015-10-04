@@ -27,23 +27,25 @@
   </preface>
   
   <part> <title>Crank Base</title>
+  
+    <xi:include href="crank-basic-data-abbreviation.xml"/>
+    
     <chapter>
 	  <title>Basic Utility</title>
 	  <xi:include href="crank-chapter-base-fundamental.xml"/>
 	
       <xi:include href="xml/crankbasemacro.xml"/>
+	  <xi:include href="xml/crankvalue.xml"/>
       <xi:include href="xml/crankfunction.xml"/>
       <xi:include href="xml/crankbits.xml"/>
       <xi:include href="xml/crank128.xml"/>
 	  <xi:include href="xml/crankstring.xml"/>
-	  <xi:include href="xml/crankvalue.xml"/>
+	  <xi:include href="xml/crankbasetest.xml"/>
     </chapter>
   
   <chapter>
     <title>Basic Data Structures</title>
 	<xi:include href="crank-chapter-base-basic-data.xml"/>
-	
-    <xi:include href="crank-basic-data-abbreviation.xml"/>
     <xi:include href="xml/crankrange.xml"/>
 	<xi:include href="xml/crankiter.xml"/>
     <xi:include href="xml/crankpermutation.xml"/>
@@ -67,12 +69,11 @@
   </chapter>
   
   <chapter>
-    <title>Data structures</title>
+    <title>Graphs</title>
 	<xi:include href="crank-chapter-base-data.xml"/>
 	
    	<xi:include href="xml/crankdigraph.xml"/>
 	<xi:include href="xml/crankadvgraph.xml"/>
-	<xi:include href="xml/crankbasetest.xml"/>
   </chapter>
   </part>
   

@@ -13,91 +13,148 @@
     <refname>General Notes about Crank System</refname>
   </refnamediv>
 
-  <refsect1 id="documentation-annotation">
-    <title>Documentations by Annotations</title>
+  <refsect1 id="struct-alloc-fini">
+    <title>Structure Allocation and Finalization</title>
     <para>
-      For avoiding redundancy and mismatch of documentation, some informations
-      will be documented by annotations, and not in text form. (like “Free this
-      after use.”) If there is no annotation appropriate for some information,
-      text form would be used. (Example: Time: O(n))
+      In Crank System, structure allocation and finalization follows simple
+      rules. If there is cases that do not follow the rules, this will be stated
+      at their descriptions.
+      
+      <itemizedlist>
+        <listitem>
+          Arrays are allocated via
+          <link linkend="g-malloc"><function>g_malloc()</function></link> (or
+          <link linkend="g-new"><function>g_new()</function></link>)
+          <itemizedlist>
+            <listitem>
+              This includes string. 
+            </listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          Structures.
+          <itemizedlist>
+            <listitem>
+              If type has <function>*_alloc ()</function> functions, structure
+              will be allocated from this function. If don't, it will be
+              allocated by <link linkend="g-malloc"><function>g_malloc()</function></link>.
+            </listitem>
+            <listitem>
+              If type has <function>*_free ()</function> functions, structure
+              will be deallocated by this function. If don't, it will be
+              deallocated by <link linkend="g-free"><function>g_free()</function></link>.
+            </listitem>
+            <listitem>
+              If type has <function>*_fini ()</function> functions, structure
+              should be finalized by this function, after use. If don't, it does
+              not have to be finalized.
+            </listitem>
+            <listitem>
+              Both of <function>*_copy ()</function> and
+              <function>*_dup ()</function> function performs copy. While
+              <function>*_copy ()</function> receives already allocated structure,
+              <function>*_dup ()</function> allocates structure.
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
     </para>
   </refsect1>
   
-  <refsect1 id="macro-simple-function">
+  <refsect1 id="simple-function">
     <title>Simple Functions with macro.</title>
     <para>
-      Crank System defines macro versions of simple functions, so that overhead
-      can be avoided and even has chance to being optimized. If a function is
-      such kind of function, it will be documented that "This function is
-      simple function."
+      For simple functions, they has macro versions with same name. This enables
+      these functions can be inlined with C compilers and still can be passed
+      around other functions.
+    </para>
+    <para>
+      To prevent macro expansions, parenthesis may be used, like this.
+      <programlisting> (some_simple_func) (3, TRUE); </programlisting>
     </para>
   </refsect1>
   
-  <refsect1 id="macro-c11-generic-selector">
-    <title>C11 Generic Selector</title>
+  <refsect1 id="representative-function">
+    <title>Representative Function</title>
     <para>
-        Crank System also defines macros with generic selectors. They are
-        defined for some operations that works for various types, and they
-        enables programmers to do same operations with different types by
-        same representative name of functions.
+      Many of operations has a function family with different types of
+      parameters. For such function groups, there is a “representative function”
+      to represent the operation or task.
     </para>
     <para>
-      If a operation is such kind of operation, its representative function will
-      be documented that "This function is representative function of operation
-      ...". They will be defined only when C11 is available.
-    </para>
-  </refsect1>
-
-  <refsect1 id="function-fini">
-    <title>Fini functions</title>
-    <para>
-      Some structure might allocate some memory or resources, so that, they need
-      to clear their all allocated resources after use.
-    </para>
-    <para>
-      If some structure has fini () funciton, it need such kind of clean up. For
-      others, they are just need to be deallocated.
-    </para>
-  </refsect1>
-
-  <refsect1 id="function-free">
-    <title>Free functions</title>
-    <para>
-      Some structure might allocate some memory or resources, so that, they need
-      to clear their all allocated resources after use.
-    </para>
-    <para>
-      If some structure has fini () funciton, it need such kind of clean up. For
-      others, they are just need to be deallocated.
+      If Compiler supports C11, Crank System have a representative macro that
+      expands into C11 Generic Selector. So that appropriate function can be
+      invoked.
     </para>
   </refsect1>
 
   <refsect1 id="conversion-to-other-types">
     <title>Conversion to other types.</title>
     <para>
-      Crank System provides 2 ways to converting a structure to the structure
-      with other types, which preserving meaning of datas.
-    </para>
-    <para>
-      First way is using appropriate functions. Generally the functions are
-      one of init functions for "from conversion", and to_.... functions for "to
-      conversion".
-    </para>
-    <para>
-      Second way is using Gvalue Transformation. Crank System also registers
-      transformation functions for each appropriate conversion.
-    </para>
-    <para>
-      Detailed are documented in each section, under subsection "Conversion to
-      other types."
-    </para>
-  </refsect1>
-  
-  <refsect1 id="type-as-collection">
-    <title>A Type as collection</title>
-    <para>
-      Some types are associated or aggregation of other datas. 
-    </para>
-  </refsect1>
+      Data structures in Crank Systems can be converted into other type. Crank
+      System does not provide conversion function explicitly but some functions
+      can be used for conversions. Sections of each structure has “Conversion
+      to other types” paragraph, and they show which functions should be used
+      for conversion.
+      <table><title>Example: Conversion of <link linkend="CrankCplxFloat"><type>CrankCplxFloat</type></link></title>
+        <tgroup cols="3" align="left" colsep="1" rowsep="0">
+          <colspec colname="op" />
+          <thead>
+            <row>
+              <entry>Type</entry>
+              <entry>Related Functions</entry>
+              <entry>Remarks</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row><entry>from <link linkend="gfloat"><type>gfloat</type></link></entry>
+                 <entry><link linkend="crank-cplx-float-init"><function>crank_cplx_float_init()</function></link></entry>
+                 <entry>GValue Transform</entry></row>
 
+            <row><entry morerows="1">to <link linkend="gchar"><type>gchar</type></link>*</entry>
+                 <entry><link linkend="crank-cplx-float-to-string"><function>crank_cplx_float_to_string()</function></link></entry>
+                 <entry>GValue Transform</entry></row>
+            <row><entry><link linkend="crank-cplx-float-to-string-full"><function>crank_cplx_float_to_string_full()</function></link></entry></row>
+
+            <row><entry>to <link linkend="CrankQuatFloat"><type>CrankQuatFloat</type></link></entry>
+                 <entry><link linkend="crank-quat-float-init-cplx"><function>crank_quat_float_init_cplx()</function></link></entry>
+                 <entry>GValue Transform, Defined at <link linkend="CrankQuatFloat"><type>CrankQuatFloat</type></link></entry></row>
+          </tbody>
+        </tgroup>
+      </table>
+    </para>
+    <para>
+      Crank System also registers GValue Transformation functions for these
+      conversion. Conversion can be done easily when using GValue.
+    </para>
+    <para>
+      Following kind of conversions are stated in the sections.
+      <itemizedlist>
+        <listitem>
+          <para>
+            Conversion that does not lose meaning. 
+          </para>
+          <para>
+            (Eg. n-size vector → 4-size vector: losing meaning from 5th
+            elements)
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Conversion that each type has single canonical meaning to each other.
+          </para>
+          <para>
+            (Eg. Vector → Matrix: As row vector or column vector
+            <footnote><para>
+              Crank System does not distinguish row vectors and column vectors
+            </para></footnote> or diagonal
+            matrix...)
+          </para>
+        </listitem>
+        <listitem>
+          Conversion to and from strings are stated.
+        </listitem>
+      </itemizedlist>
+    </para>
+  </refsect1>
 </refentry>

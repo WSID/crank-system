@@ -26,9 +26,12 @@
       <note>
         <title>Notes for C11 Generic Selector</title>
         <para>
-          If C11 is supported, some operation function may have companion macro,
-          which expands to generic selector, so that user may provide any type
-          that supported by the operations.
+          If C11 is supported, some operations have representative macros, which
+          expand into C11 Generic Selector.
+        </para>
+        <para>
+          Please refer to <link linkend="representative-function">Representative
+          Function</link> Paragraph.
         </para>
         <para>
           In Crank System itself, these macros are not used, as some compiler

@@ -37,19 +37,12 @@
  *
  * Currently, Crank System provides following macros.
  *
- * - Operations on Arrays.
- * - Iteration macros.
+ * * Pointer airthmetics
+ * * Operations on Arrays.
+ * * Iteration macros.
  *
- *
- * # Operations on Arrays.
- *
- * Macros are provided for simplified oprations involved with arrays.
- * 
  * # Iteration macros
  *
- * There are so many time to iterate over something. The macros defined here
- * helps iterate over them.
- * 
  * The macros are fall into two category.
  *
  * * BEGIN and END
@@ -107,8 +100,8 @@ G_BEGIN_DECLS
  * @sz: A size.
  * @n: Multiplication cofactor; count of @sz.
  *
- * Performs airthmetic addition on pointer, which is @p + (@sz * @n). This will
- * be useful when dealing with arrays.
+ * Performs airthmetic addition on pointer, which is @p + (@sz * @n). This is
+ * useful when dealing with arrays.
  *
  * Returns: Addition of pointer and size.
  */
@@ -119,8 +112,7 @@ G_BEGIN_DECLS
  * @p: A Pointer.
  * @q: Another pointer.
  *
- * Performes airthmetic subtract on pointer, which is @p - @q. This will be
- * useful.
+ * Performes airthmetic subtract on pointer, which is @p - @q.
  *
  * Returns: Subtraction of pointer, in type of gsize.
  */
