@@ -348,7 +348,7 @@ static void
 test_mulc ( void )
 {
 	CrankQuatFloat	a = {3.0f, 4.0f, 5.0f, 12.0f};
-	CrankQuatFloat	b = {2.0f, 3.0f};
+	CrankCplxFloat	b = {2.0f, 3.0f};
 	CrankQuatFloat	c;
 	
 	crank_quat_float_mulc (&a, &b, &c);
