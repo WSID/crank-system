@@ -28,10 +28,12 @@
 
 #include <glib.h>
 
-guint crank_bits_shift_to_left32 (guint32 *subject);
+guint   crank_bits_shift_to_left32  (guint32 *subject);
 
-guint crank_bits_shift_to_left64 (guint64 *subject);
+guint   crank_bits_shift_to_left64  (guint64 *subject);
 
+guint64 crank_bits_remquo_2_64      (guint64  divisor,
+                                     guint64 *remainder);
 
 /**
  * CRANK_ADD_CARRY64:

@@ -151,26 +151,28 @@ void crank_uint128_rsh_self          (CrankUint128 *a,
 
 #if (!defined (CRANK_NO_C11_GENERIC_SELECTOR)) && (__STDC_VERSION__ >= 201112L)
 
-    #define crank_uint128_div(a, b, r) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_div,      \
-           guint64:            crank_uint128_div64,    \
-           gint64:             crank_uint128_div64,    \
-           guint32:            crank_uint128_div32,    \
-           gint32:             crank_uint128_div32,    \
-           gchar:              crank_uint128_div32,    \
-           guchar:             crank_uint128_div32,    \
-         default:            crank_uint128_div64)    \
+#define crank_uint128_div(a, b, r)        \
+  _Generic((b),                           \
+    CrankUint128* : crank_uint128_div,    \
+    guint64:        crank_uint128_div64,  \
+    gint64:         crank_uint128_div64,  \
+    guint32:        crank_uint128_div32,  \
+    gint32:         crank_uint128_div32,  \
+    gchar:          crank_uint128_div32,  \
+    guchar:         crank_uint128_div32,  \
+    default:        crank_uint128_div64)  \
   (a,b,r)
 
-    #define crank_uint128_div_self(a, b) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_div_self,     \
-           guint64:            crank_uint128_div64_self,   \
-           gint64:             crank_uint128_div64_self,   \
-           guint32:            crank_uint128_div32_self,   \
-           gint32:             crank_uint128_div32_self,   \
-           gchar:              crank_uint128_div32_self,   \
-           guchar:             crank_uint128_div32_self,   \
-         default:            crank_uint128_div64_self)   \
+#define crank_uint128_div_self(a, b)          \
+  _Generic((b),                               \
+    CrankUint128* : crank_uint128_div_self,   \
+    guint64:        crank_uint128_div64_self, \
+    gint64:         crank_uint128_div64_self, \
+    guint32:        crank_uint128_div32_self, \
+    gint32:         crank_uint128_div32_self, \
+    gchar:          crank_uint128_div32_self, \
+    guchar:         crank_uint128_div32_self, \
+    default:        crank_uint128_div64_self) \
   (a,b)
 #endif //(! defined (CRANK_NO_C11_GENERIC_SELECTOR)) && (__STDC_VERSION__ >= 201112L)
 
@@ -178,71 +180,70 @@ void crank_uint128_rsh_self          (CrankUint128 *a,
 //////// Macro variants of simple functions ////////////////////////////////////
 
 #ifndef CRANK_NO_SIMPLE_FUNCTION_MACRO
-    #define crank_uint128_init_add(i,a,b)   \
-  (i)->h = CRANK_ADD_CARRY64(a,b,&((i)->l))
+#define crank_uint128_init_add(i,a,b)  (i)->h = CRANK_ADD_CARRY64(a,b,&((i)->l))
 
-    #define crank_uint128_copy(i,r) \
-  G_STMT_START {          \
-    (r)->h = (i)->h;    \
-    (r)->l = (i)->l;    \
+#define crank_uint128_copy(i,r) \
+  G_STMT_START {                \
+    (r)->h = (i)->h;            \
+    (r)->l = (i)->l;            \
   } G_STMT_END
 
-    #define crank_uint128_inc(i)        \
+#define crank_uint128_inc(i)  \
   G_STMT_START {              \
-    (i)->l++;               \
-    (i)->h += (!(i)->l);   \
+    (i)->l++;                 \
+    (i)->h += (!(i)->l);      \
   } G_STMT_END
 
-    #define crank_uint128_dec(i)        \
+#define crank_uint128_dec(i)  \
   G_STMT_START {              \
-    (i)->h -= (!(i)->l);   \
-    (i)->l--;               \
+    (i)->h -= (!(i)->l);      \
+    (i)->l--;                 \
   } G_STMT_END
 
-    #define crank_uint128_add64(a,b,r)                                      \
-  G_STMT_START {                                                  \
-    (r)->h = (a)->h + CRANK_ADD_CARRY64((a)->l, b, &((r)->l));  \
+#define crank_uint128_add64(a,b,r)                            \
+  G_STMT_START {                                              \
+    (r)->h = (a)->h + CRANK_ADD_CARRY64((a)->l, b, &((r)->l));\
   } G_STMT_END
 
-    #define crank_uint128_add64_self(a,b)                   \
-  G_STMT_START {                                  \
+#define crank_uint128_add64_self(a,b)           \
+  G_STMT_START {                                \
     (a)->h += CRANK_IADD_CARRY64(&((a)->l), b); \
   } G_STMT_END
 
-    #define crank_uint128_sub64(a,b,r)              \
-  G_STMT_START {                          \
-    (r)->h = (a)->h - ((a)->l < (b));   \
-    (r)->l = (a)->l - b;                \
+#define crank_uint128_sub64(a,b,r)    \
+  G_STMT_START {                      \
+    (r)->h = (a)->h - ((a)->l < (b)); \
+    (r)->l = (a)->l - b;              \
   } G_STMT_END
 
-    #define crank_uint128_sub64_self(a,b,r)         \
-  G_STMT_START {                          \
+#define crank_uint128_sub64_self(a,b,r) \
+  G_STMT_START {                        \
     (a)->h -= ((a)->l < b);             \
     (a)->l -= (b);                      \
   } G_STMT_END
 
-    #define crank_uint128_lsh(a,b,r)                            \
-  G_STMT_START {                                      \
-    (r)->h = ((a)->h << (b)) | ((a)->l >> (64 - (b)));    \
+#define crank_uint128_lsh(a,b,r)                        \
+  G_STMT_START {                                        \
+    (r)->h = ((a)->h << (b)) | ((a)->l >> (64 - (b)));  \
     (r)->l = ((a)->l << (b));                           \
   } G_STMT_END
 
-    #define crank_uint128_lsh_self(a,b)                         \
-  G_STMT_START {                                          \
-    (a)->h = ((a)->h << (b)) | ((a)->l >> (64 - (b)));    \
-    (a)->l <<= (b);                                     \
+#define crank_uint128_lsh_self(a,b)                    \
+  G_STMT_START {                                       \
+    (a)->h = ((a)->h << (b)) | ((a)->l >> (64 - (b))); \
+    (a)->l <<= (b);                                    \
   } G_STMT_END
 
-    #define crank_uint128_rsh(a,b,r)                            \
+#define crank_uint128_rsh(a,b,r)                      \
   G_STMT_START {                                      \
-    (r)->h = (a)->h >> (b);                         \
+    (r)->h = (a)->h >> (b);                           \
     (r)->l = ((a)->h << (64 - b)) | ((a)->l >> (b));  \
   } G_STMT_END
 
-    #define crank_uint128_rsh_self(a,b)                     \
+#define crank_uint128_rsh_self(a,b)                   \
   G_STMT_START {                                      \
     (a)->l = ((a)->h << (64 - b)) | ((a)->l >> (b));  \
-    (a)->h >>= (b);                         \
+    (a)->h >>= (b);                                   \
   } G_STMT_END
 #endif //CRANK_NO_SIMPLE_FUNCTION
 
@@ -254,24 +255,28 @@ void crank_uint128_rsh_self          (CrankUint128 *a,
   (!defined (CRANK_NO_C11_GENERIC_SELECTOR)) && \
   (__STDC_VERSION__ >= 201112L)
 
-    #define crank_uint128_add(a, b, r) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_add,  \
-           defalut:            crank_uint128_add64)    \
+#define crank_uint128_add(a, b, r)        \
+  _Generic((b),                           \
+    CrankUint128* : crank_uint128_add,    \
+    defalut:        crank_uint128_add64)  \
   (a,b,r)
 
-    #define crank_uint128_add_self(a, b) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_add_self, \
-           defalut:            crank_uint128_add64_self)   \
+#define crank_uint128_add_self(a, b)          \
+  _Generic((b),                               \
+    CrankUint128* : crank_uint128_add_self,   \
+    defalut:        crank_uint128_add64_self) \
   (a,b)
 
-    #define crank_uint128_sub(a, b, r) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_sub,  \
-           defalut:            crank_uint128_sub64)    \
+#define crank_uint128_sub(a, b, r)        \
+  _Generic((b),                           \
+    CrankUint128* : crank_uint128_sub,    \
+    defalut:        crank_uint128_sub64)  \
   (a,b,r)
 
-    #define crank_uint128_sub_self(a, b) \
-  _Generic((b),   CrankUint128 * :      crank_uint128_sub_self, \
-           defalut:            crank_uint128_sub64_self)   \
+#define crank_uint128_sub_self(a, b)          \
+  _Generic((b),                               \
+    CrankUint128* : crank_uint128_sub_self,   \
+    defalut:        crank_uint128_sub64_self) \
   (a,b)
 #endif
 
@@ -280,28 +285,28 @@ void crank_uint128_rsh_self          (CrankUint128 *a,
   (!((!defined (CRANK_NO_C11_GENERIC_SELECTOR)) && \
   (__STDC_VERSION__ >= 201112L)))
 
-    #define crank_uint128_add(a,b,r)                                    \
-  G_STMT_START {                                              \
+#define crank_uint128_add(a,b,r)                            \
+  G_STMT_START {                                            \
     (r)->h = (a)->h + (b)->h +                              \
              CRANK_ADD_CARRY64((a)->l, (b)->l, &((r)->l));  \
   } G_STMT_END
 
-    #define crank_uint128_add_self(a,b)                             \
-  G_STMT_START {                                          \
-    (a)->h += (b)->h +                                  \
-              CRANK_IADD_CARRY64(&((a)->l), (b)->l);    \
-  } G_STMT_END
-
-    #define crank_uint128_sub(a,b,r)                            \
+#define crank_uint128_add_self(a,b)                   \
   G_STMT_START {                                      \
-    (r)->h = (a)->h - (b)->h - ((a)->l < (b)->l);   \
-    (r)->l = (a)->l - (b)->l;                       \
+    (a)->h += (b)->h +                                \
+              CRANK_IADD_CARRY64(&((a)->l), (b)->l);  \
   } G_STMT_END
 
-    #define crank_uint128_sub_self(a,b)                     \
+#define crank_uint128_sub(a,b,r)                  \
   G_STMT_START {                                  \
-    (a)->h -= (b)->h + ((a)->l < (b)->l);       \
-    (a)->l -= (b)->l;                           \
+    (r)->h = (a)->h - (b)->h - ((a)->l < (b)->l); \
+    (r)->l = (a)->l - (b)->l;                     \
+  } G_STMT_END
+
+#define crank_uint128_sub_self(a,b)       \
+  G_STMT_START {                          \
+    (a)->h -= (b)->h + ((a)->l < (b)->l); \
+    (a)->l -= (b)->l;                     \
   } G_STMT_END
 
 #endif
@@ -311,39 +316,39 @@ void crank_uint128_rsh_self          (CrankUint128 *a,
 #if (defined CRANK_NO_SIMPLE_FUNCTION) && \
   (!defined (CRANK_NO_C11_GENERIC_SELECTOR)) && (__STDC_VERSION__ >= 201112L)
 
-    #define crank_uint128_add(a,b,r)                                                    \
-  G_STMT_START {                                                              \
-    (r)->h = (a)->h + _CRANK_UINT128_HIGH(b) +                              \
-             CRANK_ADD_CARRY64((a)->l, _CRANK_UINT128_LOW(b), &((r)->l));   \
+#define crank_uint128_add(a,b,r)                                          \
+  G_STMT_START {                                                          \
+    (r)->h = (a)->h + _CRANK_UINT128_HIGH(b) +                            \
+             CRANK_ADD_CARRY64((a)->l, _CRANK_UINT128_LOW(b), &((r)->l)); \
   } G_STMT_END
 
-    #define crank_uint128_add_self(a,b)                                         \
-  G_STMT_START {                                                      \
+#define crank_uint128_add_self(a,b)                                 \
+  G_STMT_START {                                                    \
     (a)->h += _CRANK_UINT128_HIGH(b) +                              \
               CRANK_IADD_CARRY64(&((a)->l), _CRANK_UINT128_LOW(b)); \
   } G_STMT_END
 
-    #define crank_uint128_sub(a,b,r)                            \
-  G_STMT_START {                                      \
-    (r)->h = (a)->h - _CRANK_UINT128_HIGH(b) -      \
-             ((a)->l < _CRANK_UINT128_LOW(b));   \
-    (r)->l = (a)->l - _CRANK_UINT128_LOW(b);        \
+#define crank_uint128_sub(a,b,r)                \
+  G_STMT_START {                                \
+    (r)->h = (a)->h - _CRANK_UINT128_HIGH(b) -  \
+             ((a)->l < _CRANK_UINT128_LOW(b));  \
+    (r)->l = (a)->l - _CRANK_UINT128_LOW(b);    \
   } G_STMT_END
 
-    #define crank_uint128_sub_self(a,b)                             \
+#define crank_uint128_sub_self(a,b)                       \
   G_STMT_START {                                          \
-    (a)->h -= (b)->h + ((a)->l < _CRANK_UINT128_LOW(b));    \
-    (a)->l -= _CRANK_UINT128_LOW(b);                    \
+    (a)->h -= (b)->h + ((a)->l < _CRANK_UINT128_LOW(b));  \
+    (a)->l -= _CRANK_UINT128_LOW(b);                      \
   } G_STMT_END
 
 #endif
 
 //////// Private macros ////////////////////////////////////////////////////////
 #if (!defined (CRANK_NO_C11_GENERIC_SELECTOR)) && (__STDC_VERSION__ >= 201112L)
-    #define _CRANK_UINT128_LOW(i)   \
+#define _CRANK_UINT128_LOW(i)   \
   _Generic((i), CrankUint128 * : ((i)->l), default: (i))
 
-    #define _CRANK_UINT128_HIGH(i)  \
+#define _CRANK_UINT128_HIGH(i)  \
   _Generic((i), CrankUint128 * : ((i)->h), default: (0))
 #endif
 

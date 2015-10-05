@@ -54,9 +54,9 @@
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_init_add)    (CrankUint128 *i,
-                             guint64       a,
-                             guint64       b)
+(crank_uint128_init_add) (CrankUint128 *i,
+                          guint64       a,
+                          guint64       b)
 {
   i->h = CRANK_ADD_CARRY64 (a, b, &(i->l));
 }
@@ -107,8 +107,8 @@ crank_uint128_init_mul (CrankUint128 *i,
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_copy)    (CrankUint128 *i,
-                         CrankUint128 *r)
+(crank_uint128_copy) (CrankUint128 *i,
+                      CrankUint128 *r)
 {
   r->h = i->h;    r->l = i->l;
 }
@@ -155,9 +155,9 @@ void
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_add64)   (CrankUint128 *a,
-                         guint64       b,
-                         CrankUint128 *r)
+(crank_uint128_add64) (CrankUint128 *a,
+                       guint64       b,
+                       CrankUint128 *r)
 {
   r->h = a->h + CRANK_ADD_CARRY64(a->l, b, &(r->l));
 }
@@ -172,8 +172,8 @@ void
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_add64_self)  (CrankUint128 *a,
-                             guint64       b)
+(crank_uint128_add64_self) (CrankUint128 *a,
+                            guint64       b)
 {
   a->h += CRANK_IADD_CARRY64(&(a->l), b);
 }
@@ -208,8 +208,8 @@ void
  * [representative function][representative-function].
  */
 void
-(crank_uint128_add_self)    (CrankUint128 *a,
-                             CrankUint128 *b)
+(crank_uint128_add_self) (CrankUint128 *a,
+                          CrankUint128 *b)
 {
   a->h += b->h;
   a->h += CRANK_IADD_CARRY64(&(a->l), b->l);
@@ -226,9 +226,9 @@ void
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_sub64)   (CrankUint128 *a,
-                         guint64       b,
-                         CrankUint128 *r)
+(crank_uint128_sub64) (CrankUint128 *a,
+                       guint64       b,
+                       CrankUint128 *r)
 {
   r->h = a->h - CRANK_SUB_CARRY64(a->l, b, &(r->l));
 }
@@ -243,8 +243,8 @@ void
  * This is [simple function][simple-function].
  */
 void
-(crank_uint128_sub64_self)  (CrankUint128 *a,
-                             guint64       b)
+(crank_uint128_sub64_self) (CrankUint128 *a,
+                            guint64       b)
 {
   a->h -= (a->l < b);
   a->l -= b;
@@ -337,14 +337,14 @@ crank_uint128_div (CrankUint128 *a,
                    CrankUint128 *r)
 {
 
-  CrankUint128 ac;
-  CrankUint128 bc;
-  guint64 add = 1;
-
   if (b->h == 0)
     crank_uint128_div64 (a, b->l, r);
   else
     {
+      CrankUint128 ac;
+      CrankUint128 bc;
+      guint64 add = 1;
+
       r->h = 0;
       r->l = 0;
 
@@ -358,7 +358,7 @@ crank_uint128_div (CrankUint128 *a,
       add <<= sha;
 
 
-      while (add)
+      while (add != 0)
         {
           if ((bc.h < ac.h) || ((bc.h == ac.h) && (bc.l <= ac.l)))
             {
@@ -384,15 +384,14 @@ void
 crank_uint128_div_self (CrankUint128 *a,
                         CrankUint128 *b)
 {
-
-  CrankUint128 ac;
-  CrankUint128 bc;
-  guint64 add = 1;
-
   if (b->h == 0)
     crank_uint128_div64_self (a, b->l);
   else
     {
+      CrankUint128 ac;
+      CrankUint128 bc;
+      guint64 add = 1;
+
       crank_uint128_copy (a, &ac);
       crank_uint128_copy (b, &bc);
 
@@ -406,7 +405,7 @@ crank_uint128_div_self (CrankUint128 *a,
       add <<= sha;
 
 
-      while (add)
+      while (add != 0)
         {
           if ((bc.h < ac.h) || ((bc.h == ac.h) && (bc.l <= ac.l)))
             {
@@ -447,7 +446,7 @@ crank_uint128_div64 (CrankUint128 *a,
   // Shift right and subtract.
   add = 0x8000000000000000LU;
   crank_uint128_lsh_self (&ac, 1);
-  while (add)
+  while (add != 0)
     {
       if (b <= ac.h)
         {
@@ -487,7 +486,7 @@ crank_uint128_div64_self (CrankUint128 *a,
   // Shift right and subtract.
   add = 0x8000000000000000LU;
   crank_uint128_lsh_self (&ac, 1);
-  while (add)
+  while (add != 0)
     {
       if (b <= ac.h)
         {
@@ -520,25 +519,12 @@ crank_uint128_div32 (CrankUint128 *a,
   guint64 mod64;
   guint64 q64;
 
-  CrankUint128 ap = {0, 0};
-  CrankUint128 ac = {0, 0};
-
   guint64 hr;
   guint64 lr;
 
   guint64 hrr;
 
-  // Performs division on (2^64 - 1)
-  mod64 = 0xFFFFFFFFFFFFFFFF % b;
-  q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-  // Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-  mod64++;
-  if (mod64 == b)
-    {
-      mod64 = 0;
-      q64++;
-    }
+  q64 = crank_bits_remquo_2_64 (b, &mod64);
 
   r->h = a->h / b;
   r->l = a->l / b;
@@ -570,25 +556,12 @@ crank_uint128_div32_self (CrankUint128 *a,
   guint64 mod64;
   guint64 q64;
 
-  CrankUint128 ap = {0, 0};
-  CrankUint128 ac = {0, 0};
-
   guint64 hr;
   guint64 lr;
 
   guint64 hrr;
 
-  // Performs division on (2^64 - 1)
-  mod64 = 0xFFFFFFFFFFFFFFFF % b;
-  q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-  // Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-  mod64++;
-  if (mod64 == b)
-    {
-      mod64 = 0;
-      q64++;
-    }
+  q64 = crank_bits_remquo_2_64 (b, &mod64);
 
   hr = a->h % b;
   lr = a->l % b;
@@ -629,17 +602,7 @@ crank_uint128_remquo32 (CrankUint128 *a,
 
   guint64 hrr;
 
-  // Performs division on (2^64 - 1)
-  mod64 = 0xFFFFFFFFFFFFFFFF % b;
-  q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-  // Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-  mod64++;
-  if (mod64 == b)
-    {
-      mod64 = 0;
-      q64++;
-    }
+  q64 = crank_bits_remquo_2_64 (b, &mod64);
 
   q->h = a->h / b;
   q->l = a->l / b;
@@ -670,29 +633,17 @@ crank_uint128_remquo32_self (CrankUint128 *a,
                              guint32       b,
                              guint32      *r)
 {
+
   // this is about modular.
   guint64 mod64;
   guint64 q64;
-
-  CrankUint128 ap = {0, 0};
-  CrankUint128 ac = {0, 0};
 
   guint64 hr;
   guint64 lr;
 
   guint64 hrr;
 
-  // Performs division on (2^64 - 1)
-  mod64 = 0xFFFFFFFFFFFFFFFF % b;
-  q64 = 0xFFFFFFFFFFFFFFFF / b;
-
-  // Make results of (2^64 /% b) from ((2^64 - 1) /% b).
-  mod64++;
-  if (mod64 == b)
-    {
-      mod64 = 0;
-      q64++;
-    }
+  q64 = crank_bits_remquo_2_64 (b, &mod64);
 
   hr = a->h % b;
   lr = a->l % b;
