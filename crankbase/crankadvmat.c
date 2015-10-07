@@ -175,23 +175,8 @@ crank_lu_mat_float_n (CrankMatFloatN *a,
   if (n == 0)
     return TRUE;
 
-  if (n == 1)
-    {
-      if (a->data[0] != 0)
-        {
-          crank_mat_float_n_init (l, 1, 1, a->data[0]);
-          crank_mat_float_n_init (u, 1, 1, 1.0f);
-          return TRUE;
-        }
-      // If a == [[0]] then a is singular and cannot be defactorized.
-      else
-        return FALSE;
-    }
-
-
   crank_mat_float_n_init_fill (l, n, n, 0);
   crank_mat_float_n_init_fill (&ut, n, n, 0);
-
 
   for (i = 0; i < n; i++)
     {
