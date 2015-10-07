@@ -97,21 +97,21 @@ typedef gfloat (*CrankDigraphHeuristicFunc)    (CrankDigraphNode *from,
 
 
 
-GList *crank_dijkstra_digraph (CrankDigraphNode         *from,
-                               CrankDigraphNode         *to,
-                               CrankDigraphEdgeFloatFunc edge_func,
-                               gpointer                  userdata);
+GList *crank_dijkstra_digraph           (CrankDigraphNode          *from,
+                                         CrankDigraphNode          *to,
+                                         CrankDigraphEdgeFloatFunc  edge_func,
+                                         gpointer                   userdata);
 
-GList *crank_astar_digraph (CrankDigraphNode         *from,
-                            CrankDigraphNode         *to,
-                            CrankDigraphEdgeFloatFunc edge_func,
-                            gpointer                  edge_userdata,
-                            CrankDigraphHeuristicFunc heuristic_func,
-                            gpointer                  heuristic_userdata);
+GList *crank_astar_digraph              (CrankDigraphNode          *from,
+                                         CrankDigraphNode          *to,
+                                         CrankDigraphEdgeFloatFunc  edge_func,
+                                         gpointer                   edge_userdata,
+                                         CrankDigraphHeuristicFunc  heuristic_func,
+                                         gpointer                   heuristic_userdata);
 
-GNode *crank_dijkstra_full_digraph (CrankDigraphNode         *from,
-                                    CrankDigraphEdgeFloatFunc edge_func,
-                                    gpointer                  userdata);
+GNode *crank_dijkstra_full_digraph      (CrankDigraphNode          *from,
+                                         CrankDigraphEdgeFloatFunc  edge_func,
+                                         gpointer                   userdata);
 
 G_END_DECLS
 
