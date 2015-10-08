@@ -427,15 +427,12 @@ crank_mat_float2_hash (gconstpointer a)
 {
   const CrankMatFloat2 *mat = (const CrankMatFloat2*)a;
 
-  gdouble dm00 = mat->m00;
-  gdouble dm01 = mat->m01;
-  gdouble dm10 = mat->m10;
-  gdouble dm11 = mat->m11;
-
-  return g_double_hash (&dm00) +
-         g_double_hash (&dm01) +
-         g_double_hash (&dm10) +
-         g_double_hash (&dm11);
+  guint hash;
+  hash =  crank_float_hash (&(mat->m00));
+  hash =  crank_float_hash (&(mat->m01)) + hash * 37;
+  hash =  crank_float_hash (&(mat->m10)) + hash * 37;
+  hash =  crank_float_hash (&(mat->m11)) + hash * 37;
+  return hash;
 }
 
 /**
@@ -1472,25 +1469,16 @@ crank_mat_float3_hash (gconstpointer a)
 {
   const CrankMatFloat3 *mat = (const CrankMatFloat3*)a;
 
-  gdouble dm00 = mat->m00;
-  gdouble dm01 = mat->m01;
-  gdouble dm02 = mat->m02;
-  gdouble dm10 = mat->m10;
-  gdouble dm11 = mat->m11;
-  gdouble dm12 = mat->m12;
-  gdouble dm20 = mat->m20;
-  gdouble dm21 = mat->m21;
-  gdouble dm22 = mat->m22;
-
-  return g_double_hash (&dm00) +
-         g_double_hash (&dm01) +
-         g_double_hash (&dm02) +
-         g_double_hash (&dm10) +
-         g_double_hash (&dm11) +
-         g_double_hash (&dm12) +
-         g_double_hash (&dm20) +
-         g_double_hash (&dm21) +
-         g_double_hash (&dm22);
+  guint hash = crank_float_hash (&(mat->m00));
+  hash = crank_float_hash (&(mat->m01)) + hash * 37;
+  hash = crank_float_hash (&(mat->m02)) + hash * 37;
+  hash = crank_float_hash (&(mat->m10)) + hash * 37;
+  hash = crank_float_hash (&(mat->m11)) + hash * 37;
+  hash = crank_float_hash (&(mat->m12)) + hash * 37;
+  hash = crank_float_hash (&(mat->m20)) + hash * 37;
+  hash = crank_float_hash (&(mat->m21)) + hash * 37;
+  hash = crank_float_hash (&(mat->m22)) + hash * 37;
+  return hash;
 }
 
 /**
@@ -2682,39 +2670,28 @@ crank_mat_float4_hash (gconstpointer a)
 {
   const CrankMatFloat4 *mat = (const CrankMatFloat4*)a;
 
-  gdouble dm00 = mat->m00;
-  gdouble dm01 = mat->m01;
-  gdouble dm02 = mat->m02;
-  gdouble dm03 = mat->m03;
-  gdouble dm10 = mat->m10;
-  gdouble dm11 = mat->m11;
-  gdouble dm12 = mat->m12;
-  gdouble dm13 = mat->m13;
-  gdouble dm20 = mat->m20;
-  gdouble dm21 = mat->m21;
-  gdouble dm22 = mat->m22;
-  gdouble dm23 = mat->m23;
-  gdouble dm30 = mat->m30;
-  gdouble dm31 = mat->m31;
-  gdouble dm32 = mat->m32;
-  gdouble dm33 = mat->m33;
-
-  return g_double_hash (&dm00) +
-         g_double_hash (&dm01) +
-         g_double_hash (&dm02) +
-         g_double_hash (&dm03) +
-         g_double_hash (&dm10) +
-         g_double_hash (&dm11) +
-         g_double_hash (&dm12) +
-         g_double_hash (&dm13) +
-         g_double_hash (&dm20) +
-         g_double_hash (&dm21) +
-         g_double_hash (&dm22) +
-         g_double_hash (&dm23) +
-         g_double_hash (&dm30) +
-         g_double_hash (&dm31) +
-         g_double_hash (&dm32) +
-         g_double_hash (&dm33);
+  guint hash;
+  hash = crank_float_hash (&(mat->m00));
+  hash = crank_float_hash (&(mat->m01)) + hash * 37;
+  hash = crank_float_hash (&(mat->m02)) + hash * 37;
+  hash = crank_float_hash (&(mat->m03)) + hash * 37;
+  hash = crank_float_hash (&(mat->m10)) + hash * 37;
+  hash = crank_float_hash (&(mat->m11)) + hash * 37;
+  hash = crank_float_hash (&(mat->m12)) + hash * 37;
+  hash = crank_float_hash (&(mat->m13)) + hash * 37;
+  hash = crank_float_hash (&(mat->m20)) + hash * 37;
+  hash = crank_float_hash (&(mat->m21)) + hash * 37;
+  hash = crank_float_hash (&(mat->m22)) + hash * 37;
+  hash = crank_float_hash (&(mat->m23)) + hash * 37;
+  hash = crank_float_hash (&(mat->m30)) + hash * 37;
+  hash = crank_float_hash (&(mat->m31)) + hash * 37;
+  hash = crank_float_hash (&(mat->m32)) + hash * 37;
+  hash = crank_float_hash (&(mat->m33)) + hash * 37;
+  hash = crank_float_hash (&(mat->m40)) + hash * 37;
+  hash = crank_float_hash (&(mat->m41)) + hash * 37;
+  hash = crank_float_hash (&(mat->m42)) + hash * 37;
+  hash = crank_float_hash (&(mat->m43)) + hash * 37;
+  return hash;
 }
 
 /**
