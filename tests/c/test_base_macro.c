@@ -19,8 +19,6 @@
  * THE SOFTWARE.
  */
 
-#include <stdarg.h>
-
 #include <glib.h>
 
 #include "crankbase.h"
@@ -28,37 +26,10 @@
 
 //////// Declaration ///////////////////////////////////////////////////////////
 
-static gint subject_function_FOREACH_VALIST (gint a,
-                                             ...);
-static gint subject_function_FOREACH_VARARG (gint a,
-                                             ...);
-static gint subject_function_FOREACH_VALIST_DO (gint a,
-                                                ...);
-static gint subject_function_FOREACH_VARARG_DO (gint a,
-                                                ...);
-
-
 static void test_macro_ARRAY_DUP (void);
 static void test_macro_ARRAY_CMP (void);
 static void test_macro_ARRAY_ADD (void);
 static void test_macro_ARRAY_FILL (void);
-
-static void test_macro_FOREACH_RANGE (void);
-static void test_macro_FOREACH_IRANGE (void);
-static void test_macro_FOREACH_ARRAY (void);
-static void test_macro_FOREACH_VALIST (void);
-static void test_macro_FOREACH_VARARG (void);
-static void test_macro_FOREACH_GLIST (void);
-static void test_macro_FOREACH_G_PTR_ARRAY (void);
-
-static void test_macro_FOREACH_RANGE_DO (void);
-static void test_macro_FOREACH_IRANGE_DO (void);
-static void test_macro_FOREACH_ARRAY_DO (void);
-static void test_macro_FOREACH_VALIST_DO (void);
-static void test_macro_FOREACH_VARARG_DO (void);
-static void test_macro_FOREACH_GLIST_DO (void);
-static void test_macro_FOREACH_G_PTR_ARRAY_DO (void);
-
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -80,49 +51,6 @@ main (gint    argc,
   g_test_add_func ("/crank/base/macro/array/fill",
                    test_macro_ARRAY_FILL);
 
-  g_test_add_func ("/crank/base/macro/foreach/range",
-                   test_macro_FOREACH_RANGE);
-
-  g_test_add_func ("/crank/base/macro/foreach/irange",
-                   test_macro_FOREACH_IRANGE);
-
-  g_test_add_func ("/crank/base/macro/foreach/array",
-                   test_macro_FOREACH_ARRAY);
-
-  g_test_add_func ("/crank/base/macro/foreach/valist",
-                   test_macro_FOREACH_VALIST);
-
-  g_test_add_func ("/crank/base/macro/foreach/vararg",
-                   test_macro_FOREACH_VARARG);
-
-  g_test_add_func ("/crank/base/macro/foreach/glist",
-                   test_macro_FOREACH_GLIST);
-
-  g_test_add_func ("/crank/base/macro/foreach/g_ptr_array",
-                   test_macro_FOREACH_G_PTR_ARRAY);
-
-
-
-  g_test_add_func ("/crank/base/macro/foreach/range_do",
-                   test_macro_FOREACH_RANGE_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/irange_do",
-                   test_macro_FOREACH_IRANGE_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/array_do",
-                   test_macro_FOREACH_ARRAY_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/valist_do",
-                   test_macro_FOREACH_VALIST_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/vararg_do",
-                   test_macro_FOREACH_VARARG_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/glist_do",
-                   test_macro_FOREACH_GLIST_DO);
-
-  g_test_add_func ("/crank/base/macro/foreach/g_ptr_array_do",
-                   test_macro_FOREACH_G_PTR_ARRAY_DO);
 
   g_test_run ();
 
@@ -131,66 +59,6 @@ main (gint    argc,
 
 
 //////// Definition ////////////////////////////////////////////////////////////
-
-static gint
-subject_function_FOREACH_VALIST (gint a,
-                                 ...)
-{
-  va_list vararg;
-  gint result;
-
-  va_start (vararg, a);
-
-  result = a;
-  CRANK_FOREACH_VALIST_BEGIN (vararg, gint, e, 0)
-  result += e;
-  CRANK_FOREACH_VALIST_END
-
-  return result;
-}
-
-
-static gint
-subject_function_FOREACH_VARARG (gint a,
-                                 ...)
-{
-  gint result = a;
-
-  CRANK_FOREACH_VARARG_BEGIN (a, gint, e, 0)
-  result += e;
-  CRANK_FOREACH_VARARG_END
-
-  return result;
-}
-
-
-static gint
-subject_function_FOREACH_VALIST_DO (gint a,
-                                    ...)
-{
-  va_list vararg;
-  gint result;
-
-  va_start (vararg, a);
-
-  result = a;
-  CRANK_FOREACH_VALIST_DO (vararg, gint, e, 0, {result += e; })
-
-  return result;
-}
-
-
-static gint
-subject_function_FOREACH_VARARG_DO (gint a,
-                                    ...)
-{
-  gint result = a;
-
-  CRANK_FOREACH_VARARG_DO (a, gint, e, 0, {result += e; })
-
-  return result;
-}
-
 
 static void
 test_macro_ARRAY_DUP (void)
@@ -254,178 +122,3 @@ test_macro_ARRAY_FILL (void)
 }
 
 
-static void
-test_macro_FOREACH_RANGE (void)
-{
-  gint fact = 1;
-
-  CRANK_FOREACH_RANGE_BEGIN (gint, i, 2, 7, 1)
-  fact *= i;
-  CRANK_FOREACH_RANGE_END g_assert_cmpint (fact,
-                                           ==,
-                                           720);
-}
-
-static void
-test_macro_FOREACH_IRANGE (void)
-{
-  gint sum = 0;
-
-  CRANK_FOREACH_IRANGE_BEGIN (i, 10)
-  sum += i;
-  CRANK_FOREACH_IRANGE_END g_assert_cmpint (sum,
-                                            ==,
-                                            45);
-}
-
-static void
-test_macro_FOREACH_ARRAY (void)
-{
-  gint subject[7] = {1, 1, 2, 3, 5, 8, 13};
-  gint sum = 0;
-
-  CRANK_FOREACH_ARRAY_BEGIN(subject, gint, e, 7)
-  sum += e;
-  CRANK_FOREACH_ARRAY_END g_assert_cmpint (sum,
-                                           ==,
-                                           33);
-}
-
-static void
-test_macro_FOREACH_VALIST (void)
-{
-  g_assert_cmpint (subject_function_FOREACH_VALIST (3, 2, 5, 1, 0), ==, 11);
-}
-
-static void
-test_macro_FOREACH_VARARG (void)
-{
-  g_assert_cmpint (subject_function_FOREACH_VARARG (2, 4, 8, 1, 0), ==, 15);
-}
-
-static void
-test_macro_FOREACH_GLIST (void)
-{
-  GList *subject = NULL;
-  gint sum = 0;
-
-  subject = g_list_append (subject, GINT_TO_POINTER (3));
-  subject = g_list_append (subject, GINT_TO_POINTER (4));
-  subject = g_list_append (subject, GINT_TO_POINTER (1));
-  subject = g_list_append (subject, GINT_TO_POINTER (7));
-
-  CRANK_FOREACH_GLIST_BEGIN (subject, gpointer, e)
-  sum += GPOINTER_TO_INT(e);
-  CRANK_FOREACH_GLIST_END g_assert_cmpint (sum,
-                                           ==,
-                                           15);
-}
-
-static void
-test_macro_FOREACH_G_PTR_ARRAY (void)
-{
-  GPtrArray *subject;
-  gint sum;
-
-  subject = g_ptr_array_new ();
-  sum = 0;
-
-  g_ptr_array_add(subject, GINT_TO_POINTER(2));
-  g_ptr_array_add(subject, GINT_TO_POINTER(3));
-  g_ptr_array_add(subject, GINT_TO_POINTER(5));
-  g_ptr_array_add(subject, GINT_TO_POINTER(7));
-  g_ptr_array_add(subject, GINT_TO_POINTER(11));
-
-  CRANK_FOREACH_G_PTR_ARRAY_BEGIN(subject, gpointer, e)
-  sum += GPOINTER_TO_INT(e);
-  CRANK_FOREACH_G_PTR_ARRAY_END g_assert_cmpint (sum,
-                                                 ==,
-                                                 28);
-}
-
-
-static void
-test_macro_FOREACH_RANGE_DO (void)
-{
-  gint fact = 1;
-
-  CRANK_FOREACH_RANGE_DO (gint, i, 2, 7, 1, fact *= i; )
-
-
-
-  g_assert_cmpint (fact, ==, 720);
-}
-
-static void
-test_macro_FOREACH_IRANGE_DO (void)
-{
-  gint sum = 0;
-
-  CRANK_FOREACH_IRANGE_DO (i, 10, sum += i; )
-
-  g_assert_cmpint (sum, ==, 45);
-}
-static void
-test_macro_FOREACH_ARRAY_DO (void)
-{
-  gint subject[7] = {1, 1, 2, 3, 5, 8, 13};
-  gint sum = 0;
-
-  CRANK_FOREACH_ARRAY_DO (subject, gint, e, 7, {sum += e; })
-
-  g_assert_cmpint (sum, ==, 33);
-}
-
-static void
-test_macro_FOREACH_VALIST_DO (void)
-{
-  g_assert_cmpint (subject_function_FOREACH_VALIST_DO (18,
-                                                       3,
-                                                       7,
-                                                       2,
-                                                       4,
-                                                       0), ==, 34);
-}
-
-static void
-test_macro_FOREACH_VARARG_DO (void)
-{
-  g_assert_cmpint (subject_function_FOREACH_VARARG_DO (9, 6, 3, 0), ==, 18);
-}
-
-static void
-test_macro_FOREACH_G_PTR_ARRAY_DO (void)
-{
-  GPtrArray *subject;
-  gint sum;
-
-  subject = g_ptr_array_new ();
-  sum = 0;
-
-  g_ptr_array_add(subject, GINT_TO_POINTER(2));
-  g_ptr_array_add(subject, GINT_TO_POINTER(3));
-  g_ptr_array_add(subject, GINT_TO_POINTER(5));
-  g_ptr_array_add(subject, GINT_TO_POINTER(7));
-  g_ptr_array_add(subject, GINT_TO_POINTER(11));
-
-  CRANK_FOREACH_G_PTR_ARRAY_DO(subject, gpointer, e, {sum += GPOINTER_TO_INT(
-                                                        e); })
-
-  g_assert_cmpint (sum, ==, 28);
-}
-
-static void
-test_macro_FOREACH_GLIST_DO (void)
-{
-  GList *subject = NULL;
-  gint sum = 0;
-
-  subject = g_list_append (subject, GINT_TO_POINTER (3));
-  subject = g_list_append (subject, GINT_TO_POINTER (4));
-  subject = g_list_append (subject, GINT_TO_POINTER (1));
-  subject = g_list_append (subject, GINT_TO_POINTER (7));
-
-  CRANK_FOREACH_GLIST_DO (subject, gpointer, e, {sum += GPOINTER_TO_INT(e); })
-
-  g_assert_cmpint (sum, ==, 15);
-}

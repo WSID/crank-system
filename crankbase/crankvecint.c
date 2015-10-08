@@ -3142,8 +3142,8 @@ crank_vec_int_n_hash (gconstpointer a)
 
   guint i;
 
-  CRANK_FOREACH_ARRAY_DO (vec->data, gint, e, vec->n,
-                          {hash += g_direct_hash (GINT_TO_POINTER(e)) + 37; })
+  for (i = 0; i < vec->n; i++)
+    hash = (hash * 37) + g_direct_hash (GINT_TO_POINTER(vec->data[i]));
 
   return hash;
 }
@@ -3306,11 +3306,13 @@ guint
 crank_vec_int_n_get_magn_sq (CrankVecIntN *vec)
 {
   guint result = 0;
+  guint i;
 
-  CRANK_FOREACH_ARRAY_BEGIN (vec->data, gint, e, vec->n)
-  guint u = (guint) ABS(e);
-  result += u * u;
-  CRANK_FOREACH_ARRAY_END
+  for (i = 0; i < vec->n; i++)
+    {
+      guint u = (guint) ABS(vec->data[i]);
+      result += u * u;
+    }
 
   return result;
 }

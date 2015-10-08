@@ -2184,12 +2184,14 @@ crank_vec_bool_n_to_string_full (CrankVecBoolN *vec,
 
   if (0 < vec->n)
     {
+      guint i;
       g_string_append (str, vec->data[0] ? on_true : on_false);
 
-      CRANK_FOREACH_ARRAY_BEGIN ((vec->data + 1), gboolean, e, (vec->n - 1))
-      g_string_append (str, in);
-      g_string_append (str, e ? on_true : on_false);
-      CRANK_FOREACH_ARRAY_END
+      for (i = 1; i < vec->n; i++)
+        {
+          g_string_append (str, in);
+          g_string_append (str, vec->data[i] ? on_true : on_false);
+        }
     }
 
   g_string_append (str, right);
@@ -2214,11 +2216,12 @@ crank_vec_bool_n_to_string_full (CrankVecBoolN *vec,
 gboolean
 crank_vec_bool_n_is_false (CrankVecBoolN *vec)
 {
-  CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-  if (e)
-    return FALSE;
-  CRANK_FOREACH_ARRAY_END
-
+  guint i;
+  for (i = 0; i < vec->n; i++)
+    {
+      if (vec->data[i])
+        return FALSE;
+    }
   return TRUE;
 }
 
@@ -2233,11 +2236,12 @@ crank_vec_bool_n_is_false (CrankVecBoolN *vec)
 gboolean
 crank_vec_bool_n_is_true (CrankVecBoolN *vec)
 {
-  CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-  if (!e)
-    return TRUE;
-  CRANK_FOREACH_ARRAY_END
-
+  guint i;
+  for (i = 0; i < vec->n; i++)
+    {
+      if (! vec->data[i])
+        return TRUE;
+    }
   return FALSE;
 }
 
@@ -2270,11 +2274,13 @@ crank_vec_bool_n_is_empty (CrankVecBoolN *vec)
 gboolean
 crank_vec_bool_n_get_any (CrankVecBoolN *vec)
 {
-  CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-  if (e)
-    return TRUE;
-  CRANK_FOREACH_ARRAY_END
+  guint i;
 
+  for (i = 0; i < vec->n; i++)
+    {
+      if (vec->data[i])
+        return TRUE;
+    }
   return FALSE;
 }
 
@@ -2289,11 +2295,12 @@ crank_vec_bool_n_get_any (CrankVecBoolN *vec)
 gboolean
 crank_vec_bool_n_get_all (CrankVecBoolN *vec)
 {
-  CRANK_FOREACH_ARRAY_BEGIN (vec->data, gboolean, e, vec->n)
-  if (!e)
-    return FALSE;
-  CRANK_FOREACH_ARRAY_END
-
+  guint i;
+  for (i = 0; i < vec->n; i++)
+    {
+      if (! vec->data[i])
+        return FALSE;
+    }
   return TRUE;
 }
 
@@ -2310,11 +2317,13 @@ crank_vec_bool_n_get_count (CrankVecBoolN *vec)
 {
   guint count = 0;
 
-  CRANK_FOREACH_ARRAY_BEGIN(vec->data, gboolean, e, vec->n)
-  if (e)
-    count++;
-  CRANK_FOREACH_ARRAY_END
+  guint i;
 
+  for (i = 0; i < vec->n; i++)
+    {
+      if (vec->data[i])
+        count++;
+    }
   return count;
 }
 

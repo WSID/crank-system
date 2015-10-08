@@ -389,6 +389,7 @@ test_digraph_disconnect (TestDigraphFixture *fixture,
                          gconstpointer       userdata)
 {
   GPtrArray *edges;
+  guint i;
 
   g_assert (crank_digraph_disconnect (fixture->digraph,
                                       fixture->nodes[2],
@@ -420,12 +421,12 @@ test_digraph_disconnect (TestDigraphFixture *fixture,
 
   edges = crank_digraph_get_edges (fixture->digraph);
 
-  CRANK_FOREACH_G_PTR_ARRAY_BEGIN (edges, CrankDigraphEdge*, edge)
-
-  g_assert (edge != fixture->edges[2]);
-  g_assert (edge != fixture->edges[4]);
-
-  CRANK_FOREACH_G_PTR_ARRAY_END
+  for (i = 0; i < edges->len; i++)
+    {
+      CrankDigraphEdge *edge = edges->pdata[i];
+      g_assert (edge != fixture->edges[2]);
+      g_assert (edge != fixture->edges[4]);
+    }
 }
 
 static void
@@ -433,6 +434,7 @@ test_digraph_disconnect_edge (TestDigraphFixture *fixture,
                               gconstpointer       userdata)
 {
   GPtrArray *edges;
+  guint i;
 
   crank_digraph_disconnect_edge (fixture->digraph, fixture->edges[2]);
   crank_digraph_disconnect_edge (fixture->digraph, fixture->edges[4]);
@@ -440,12 +442,13 @@ test_digraph_disconnect_edge (TestDigraphFixture *fixture,
 
   edges = crank_digraph_get_edges (fixture->digraph);
 
-  CRANK_FOREACH_G_PTR_ARRAY_BEGIN (edges, CrankDigraphEdge*, edge)
 
-  g_assert (edge != fixture->edges[2]);
-  g_assert (edge != fixture->edges[4]);
-
-  CRANK_FOREACH_G_PTR_ARRAY_END
+  for (i = 0; i < edges->len; i++)
+    {
+      CrankDigraphEdge *edge = edges->pdata[i];
+      g_assert (edge != fixture->edges[2]);
+      g_assert (edge != fixture->edges[4]);
+    }
 }
 
 

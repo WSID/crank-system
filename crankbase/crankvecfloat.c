@@ -3720,9 +3720,10 @@ gfloat
 crank_vec_float_n_get_magn_sq (CrankVecFloatN *vec)
 {
   gfloat result = 0;
+  guint i;
 
-  CRANK_FOREACH_ARRAY_DO (vec->data, gfloat, e, vec->n,
-                          {result += e * e; })
+  for (i = 0; i < vec->n; i++)
+    result += vec->data[i] * vec->data[i];
 
   return result;
 }
