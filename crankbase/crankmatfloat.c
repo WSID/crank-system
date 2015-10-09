@@ -474,14 +474,7 @@ crank_mat_float2_equal (gconstpointer a,
 gchar*
 crank_mat_float2_to_string (CrankMatFloat2 *mat)
 {
-  return crank_mat_float2_to_string_full (mat,
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "%g");
+  return crank_mat_float2_to_string_full (mat, "[", ", ", "]", "[", ", ", "]", "%g");
 }
 
 /**
@@ -1164,9 +1157,9 @@ static void
 crank_mat_float2_transform_to_string (const GValue *src,
                                       GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_mat_float2_to_string (
-                         (CrankMatFloat2*) g_value_get_boxed (src) ) );
+  CrankMatFloat2 *mf = (CrankMatFloat2*) g_value_get_boxed (src);
+  gchar *str = crank_mat_float2_to_string (mf);
+  g_value_take_string (dest, str);
 }
 
 
@@ -1525,14 +1518,7 @@ crank_mat_float3_equal (gconstpointer a,
 gchar*
 crank_mat_float3_to_string (CrankMatFloat3 *mat)
 {
-  return crank_mat_float3_to_string_full (mat,
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "%g");
+  return crank_mat_float3_to_string_full (mat, "[", ", ", "]", "[", ", ", "]", "%g");
 }
 
 /**
@@ -2305,9 +2291,9 @@ static void
 crank_mat_float3_transform_to_string (const GValue *src,
                                       GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_mat_float3_to_string (
-                         (CrankMatFloat3*) g_value_get_boxed (src) ) );
+  CrankMatFloat3 *mf = (CrankMatFloat3*) g_value_get_boxed (src);
+  gchar *str = crank_mat_float3_to_string (mf);
+  g_value_take_string (dest, str);
 }
 
 
@@ -2687,10 +2673,6 @@ crank_mat_float4_hash (gconstpointer a)
   hash = crank_float_hash (&(mat->m31)) + hash * 37;
   hash = crank_float_hash (&(mat->m32)) + hash * 37;
   hash = crank_float_hash (&(mat->m33)) + hash * 37;
-  hash = crank_float_hash (&(mat->m40)) + hash * 37;
-  hash = crank_float_hash (&(mat->m41)) + hash * 37;
-  hash = crank_float_hash (&(mat->m42)) + hash * 37;
-  hash = crank_float_hash (&(mat->m43)) + hash * 37;
   return hash;
 }
 
@@ -2745,14 +2727,7 @@ crank_mat_float4_equal (gconstpointer a,
 gchar*
 crank_mat_float4_to_string (CrankMatFloat4 *mat)
 {
-  return crank_mat_float4_to_string_full (mat,
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "[",
-                                          ", ",
-                                          "]",
-                                          "%g");
+  return crank_mat_float4_to_string_full (mat, "[", ", ", "]", "[", ", ", "]", "%g");
 }
 
 /**
@@ -2848,7 +2823,7 @@ crank_mat_float4_set (CrankMatFloat4 *mat,
                       const guint     j,
                       const gfloat    value)
 {
-  ((gfloat*)mat) [(3 * i)  +  j] = value;
+  ((gfloat*)mat) [(4 * i)  +  j] = value;
 }
 
 /**
@@ -3732,9 +3707,10 @@ static void
 crank_mat_float4_transform_to_string (const GValue *src,
                                       GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_mat_float4_to_string (
-                         (CrankMatFloat4*) g_value_get_boxed (src) ) );
+  CrankMatFloat4 *mf = (CrankMatFloat4*) g_value_get_boxed (src);
+  gchar *str = crank_mat_float4_to_string (mf);
+
+  g_value_take_string (dest, str);
 }
 
 
@@ -3962,9 +3938,7 @@ crank_mat_float_n_init_col (CrankMatFloatN *mat,
       CrankVecFloatN *col = va_arg (varargs_data, CrankVecFloatN*);
 
       for (j = 0; j < col->n; j++)
-        {
-          crank_mat_float_n_set (mat, j, i, col->data[j]);
-        }
+        crank_mat_float_n_set (mat, j, i, col->data[j]);
     }
   va_end (varargs_data);
 
@@ -3995,9 +3969,7 @@ crank_mat_float_n_init_col_arr (CrankMatFloatN *mat,
   for (i = 0; i < cn; i++)
     {
       for (j = 0; j < col_arr[i].n; j++)
-        {
-          crank_mat_float_n_set (mat, j, i, col_arr[i].data[j]);
-        }
+        crank_mat_float_n_set (mat, j, i, col_arr[i].data[j]);
     }
 }
 
@@ -4025,9 +3997,7 @@ crank_mat_float_n_init_col_parr (CrankMatFloatN  *mat,
   for (i = 0; i < cn; i++)
     {
       for (j = 0; j < col_parr[i]->n; j++)
-        {
-          crank_mat_float_n_set (mat, j, i, col_parr[i]->data[j]);
-        }
+        crank_mat_float_n_set (mat, j, i, col_parr[i]->data[j]);
     }
 }
 
@@ -4203,10 +4173,7 @@ crank_mat_float_n_hash (gconstpointer a)
          g_direct_hash (GINT_TO_POINTER (mat->cn));
 
   for (i = 0; i < n; i++)
-    {
-      hash *= 33;
-      hash += crank_float_hash (mat->data + i);
-    }
+    hash = crank_float_hash (mat->data + i) + hash * 37;
 
   return hash;
 }
@@ -4261,14 +4228,7 @@ crank_mat_float_n_equal (gconstpointer a,
 gchar*
 crank_mat_float_n_to_string (CrankMatFloatN *mat)
 {
-  return crank_mat_float_n_to_string_full (mat,
-                                           "[",
-                                           ", ",
-                                           "]",
-                                           "[",
-                                           ", ",
-                                           "]",
-                                           "%g");
+  return crank_mat_float_n_to_string_full (mat, "[", ", ", "]", "[", ", ", "]", "%g");
 }
 
 /**
@@ -5890,39 +5850,41 @@ static void
 crank_mat_float_n_transform_from_m2 (const GValue *src,
                                      GValue       *dest)
 {
-  CrankMatFloatN *mat = g_new (CrankMatFloatN, 1);
+  CrankMatFloatN *mf = g_new (CrankMatFloatN, 1);
+  gfloat *array = (gfloat*) g_value_get_boxed (src);
 
-  crank_mat_float_n_init_arr (mat, 2, 2, (gfloat*) g_value_get_boxed (src));
-
-  g_value_take_boxed (dest, mat);
+  crank_mat_float_n_init_arr (mf, 2, 2, array);
+  g_value_take_boxed (dest, mf);
 }
 
 static void
 crank_mat_float_n_transform_from_m3 (const GValue *src,
                                      GValue       *dest)
 {
-  CrankMatFloatN *mat = g_new (CrankMatFloatN, 1);
+  CrankMatFloatN *mf = g_new (CrankMatFloatN, 1);
+  gfloat *array = (gfloat*) g_value_get_boxed (src);
 
-  crank_mat_float_n_init_arr (mat, 3, 3, (gfloat*) g_value_get_boxed (src));
-
-  g_value_take_boxed (dest, mat);
+  crank_mat_float_n_init_arr (mf, 3, 3, array);
+  g_value_take_boxed (dest, mf);
 }
 
 static void
 crank_mat_float_n_transform_from_m4 (const GValue *src,
                                      GValue       *dest)
 {
-  CrankMatFloatN *mat = g_new (CrankMatFloatN, 1);
+  CrankMatFloatN *mf = g_new (CrankMatFloatN, 1);
+  gfloat *array = (gfloat*) g_value_get_boxed (src);
 
-  crank_mat_float_n_init_arr (mat, 4, 4, (gfloat*) g_value_get_boxed (src));
+  crank_mat_float_n_init_arr (mf, 4, 4, array);
 
-  g_value_take_boxed (dest, mat);
+  g_value_take_boxed (dest, mf);
 }
 static void
 crank_mat_float_n_transform_to_string (const GValue *src,
                                        GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_mat_float_n_to_string (
-                         (CrankMatFloatN*) g_value_get_boxed (src) ) );
+  CrankMatFloatN *mf = (CrankMatFloatN*) g_value_get_boxed (src);
+  gchar *str = crank_mat_float_n_to_string (mf);
+
+  g_value_take_string (dest, str);
 }

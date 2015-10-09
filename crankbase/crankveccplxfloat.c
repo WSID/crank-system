@@ -383,11 +383,15 @@ crank_vec_cplx_float_n_init_ucv (CrankVecCplxFloatN *vec,
   CRANK_VEC_ALLOC0(vec, CrankCplxFloat, n);
 
   if (real != NULL)
-    for (i = 0; i < real->n; i++)
-      vec->data[i].real = real->data[i];
+    {
+      for (i = 0; i < real->n; i++)
+        vec->data[i].real = real->data[i];
+    }
   if (imag != NULL)
-    for (i = 0; i < imag->n; i++)
-      vec->data[i].imag = imag->data[i];
+    {
+      for (i = 0; i < imag->n; i++)
+        vec->data[i].imag = imag->data[i];
+    }
 }
 
 
@@ -407,9 +411,7 @@ crank_vec_cplx_float_n_init_from_vb (CrankVecCplxFloatN *vec,
   CRANK_VEC_ALLOC(vec,CrankCplxFloat,vb->n);
 
   for (i = 0; i < vb->n; i++)
-    crank_cplx_float_init (vec->data + i,
-                           vb->data[i] ? 1.0f : 0.0f,
-                           0.0f);
+    crank_cplx_float_init (vec->data + i, vb->data[i] ? 1.0f : 0.0f, 0.0f);
 }
 
 /**
@@ -428,9 +430,7 @@ crank_vec_cplx_float_n_init_from_vi (CrankVecCplxFloatN *vec,
   CRANK_VEC_ALLOC(vec,CrankCplxFloat,vi->n);
 
   for (i = 0; i < vi->n; i++)
-    crank_cplx_float_init (vec->data + i,
-                           vi->data[i],
-                           0);
+    crank_cplx_float_init (vec->data + i, vi->data[i], 0);
 }
 
 /**
@@ -449,9 +449,7 @@ crank_vec_cplx_float_n_init_from_vf (CrankVecCplxFloatN *vec,
   CRANK_VEC_ALLOC(vec,CrankCplxFloat,vf->n);
 
   for (i = 0; i < vf->n; i++)
-    crank_cplx_float_init (vec->data + i,
-                           vf->data[i],
-                           0);
+    crank_cplx_float_init (vec->data + i, vf->data[i], 0);
 }
 
 
@@ -778,15 +776,17 @@ crank_vec_cplx_float_n_to_string_full (CrankVecCplxFloatN *vec,
 
   if (vec->n != 0)
     {
-      g_string_append (strb,
-                       crank_cplx_float_to_string_full (vec->data + i, format));
+      gchar *str_elem = crank_cplx_float_to_string_full (vec->data + i, format);
+      g_string_append (strb, str_elem);
+
+      g_free (str_elem);
 
       for (i = 1; i < vec->n; i++)
         {
+          str_elem = crank_cplx_float_to_string_full (vec->data + i, format);
           g_string_append (strb, vec_in);
-          g_string_append (strb,
-                           crank_cplx_float_to_string_full (vec->data + i,
-                                                            format));
+          g_string_append (strb, str_elem);
+          g_free (str_elem);
         }
     }
   g_string_append (strb, vec_right);
@@ -1933,9 +1933,7 @@ crank_vec_cplx_float_n_mix (CrankVecCplxFloatN *a,
   CRANK_VEC_ALLOC (r, CrankCplxFloat, a->n);
 
   for (i = 0; i < a->n; i++)
-    {
-      crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);
-    }
+    crank_cplx_float_mix (a->data + i, b->data + i, c->data[i], r->data + i);
 }
 
 
@@ -1946,13 +1944,11 @@ static void
 crank_vec_cplx_float_n_transform_from_vbn (const GValue *src,
                                            GValue       *dest)
 {
-  CrankVecCplxFloatN *res = g_new (CrankVecCplxFloatN, 1);
+  CrankVecCplxFloatN *vcf = g_new (CrankVecCplxFloatN, 1);
+  CrankVecBoolN *vb = (CrankVecBoolN*) g_value_get_boxed (src);
 
-  crank_vec_cplx_float_n_init_from_vb (
-    res,
-    (CrankVecBoolN*) g_value_get_boxed (src) );
-
-  g_value_take_boxed (dest, res);
+  crank_vec_cplx_float_n_init_from_vb (vcf, vb);
+  g_value_take_boxed (dest, vcf);
 }
 
 static void
@@ -1960,26 +1956,22 @@ crank_vec_cplx_float_n_transform_from_vin (const GValue *src,
                                            GValue       *dest)
 
 {
-  CrankVecCplxFloatN *res = g_new (CrankVecCplxFloatN, 1);
+  CrankVecCplxFloatN *vcf = g_new (CrankVecCplxFloatN, 1);
+  CrankVecIntN *vi = (CrankVecIntN*) g_value_get_boxed (src);
 
-  crank_vec_cplx_float_n_init_from_vi (
-    res,
-    (CrankVecIntN*) g_value_get_boxed (src) );
-
-  g_value_take_boxed (dest, res);
+  crank_vec_cplx_float_n_init_from_vi (vcf, vi);
+  g_value_take_boxed (dest, vcf);
 }
 
 static void
 crank_vec_cplx_float_n_transform_from_vfn (const GValue *src,
                                            GValue       *dest)
 {
-  CrankVecCplxFloatN *res = g_new (CrankVecCplxFloatN, 1);
+  CrankVecCplxFloatN *vcf = g_new (CrankVecCplxFloatN, 1);
+  CrankVecFloatN *vf = (CrankVecFloatN*) g_value_get_boxed (src);
 
-  crank_vec_cplx_float_n_init_from_vf (
-    res,
-    (CrankVecFloatN*) g_value_get_boxed (src) );
-
-  g_value_take_boxed (dest, res);
+  crank_vec_cplx_float_n_init_from_vf (vcf, vf);
+  g_value_take_boxed (dest, vcf);
 }
 
 
@@ -1987,7 +1979,8 @@ static void
 crank_vec_cplx_float_n_transform_to_string (const GValue *src,
                                             GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_vec_cplx_float_n_to_string (
-                         (CrankVecCplxFloatN*) g_value_get_boxed (dest) ) );
+  CrankVecCplxFloatN *vcf = (CrankVecCplxFloatN*) g_value_get_boxed (src);
+  gchar *str = crank_vec_cplx_float_n_to_string (vcf);
+
+  g_value_take_string (dest, str);
 }

@@ -526,9 +526,9 @@ crank_digraph_reverse (CrankDigraph *graph)
 CrankDigraph*
 crank_digraph_copy (CrankDigraph *graph)
 {
-  // Hash table은 노드-인덱스를 보관하기 위해 사용합니다.
+  // Hash table is used for store index.
   CrankDigraph *clone;
-  GHashTable *table;
+  GHashTable *table; // GHashTable <CrankDigraphNode, CrankDigraphNode>
 
   guint i;
 
@@ -549,8 +549,8 @@ crank_digraph_copy (CrankDigraph *graph)
       CrankDigraphNode *tail;
       CrankDigraphNode *head;
 
-      tail = g_hash_table_lookup (table, edge->tail);
-      head = g_hash_table_lookup (table, edge->head);
+      tail = (CrankDigraphNode*) g_hash_table_lookup (table, edge->tail);
+      head = (CrankDigraphNode*) g_hash_table_lookup (table, edge->head);
 
       crank_digraph_connect (graph, tail, head, &edge->data);
     }
@@ -802,8 +802,8 @@ crank_digraph_node_foreach_depth (CrankDigraphNode    *node,
                                   CrankDigraphNodeFunc func,
                                   gpointer             userdata)
 {
-  GHashTable *visited_set;
-  GQueue *visiting_queue;
+  GHashTable *visited_set; // Set <CrankDigraphNode>
+  GQueue *visiting_queue; // Queue <CrankDigraphNode>
 
   CrankDigraphNode *subnode;
   gboolean result;
@@ -864,8 +864,8 @@ crank_digraph_node_foreach_breadth (CrankDigraphNode    *node,
                                     CrankDigraphNodeFunc func,
                                     gpointer             userdata)
 {
-  GHashTable *visited_set;
-  GQueue *visiting_queue;
+  GHashTable *visited_set; // Set <CrankDigraphNode>
+  GQueue *visiting_queue; // Queue <CrankDigraphNode>
 
   CrankDigraphNode *subnode;
   gboolean result;

@@ -95,9 +95,10 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (CrankCplxFloat,
                                    G_TYPE_STRING,
                                    crank_cplx_float_transform_to_string);
 
-                                 g_value_register_transform_func (G_TYPE_FLOAT,
-                                                                  g_define_type_id,
-                                                                  crank_cplx_float_transform_from_float);
+                                 g_value_register_transform_func (
+                                   G_TYPE_FLOAT,
+                                   g_define_type_id,
+                                   crank_cplx_float_transform_from_float);
                                });
 
 //////// Initialization ////////////////////////////////////////////////////////

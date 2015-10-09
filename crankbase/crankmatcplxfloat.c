@@ -286,9 +286,7 @@ crank_mat_cplx_float_n_init_col (CrankMatCplxFloatN *mat,
       CrankVecCplxFloatN *cv = va_arg (varargs_data, CrankVecCplxFloatN*);
 
       for (j = 0; j < cv->n; j++)
-        {
-          crank_cplx_float_copy ((cv->data + j), mat->data + (rn * j) + i);
-        }
+        crank_cplx_float_copy ((cv->data + j), mat->data + (rn * j) + i);
     }
   va_end (varargs_data);
 
@@ -351,9 +349,7 @@ crank_mat_cplx_float_n_init_col_parr (CrankMatCplxFloatN  *mat,
   for (i = 0; i < cn; i++)
     {
       for (j = 0; j < cparrv[i]->n; j++)
-        {
-          crank_cplx_float_copy(cparrv[i]->data + j, mat->data + (rn * j) + i);
-        }
+        crank_cplx_float_copy(cparrv[i]->data + j, mat->data + (rn * j) + i);
     }
 }
 
@@ -779,9 +775,7 @@ crank_mat_cplx_float_n_init_col_parruc (CrankMatCplxFloatN *mat,
   guint j;
 
   for (i = 0; i < cn * 2; i++)
-    {
-      rn = MAX (rn, carrucpv[i]->n);
-    }
+    rn = MAX (rn, carrucpv[i]->n);
 
   CRANK_MAT_ALLOC (mat, CrankCplxFloat, rn, cn);
 
@@ -3462,15 +3456,19 @@ static void
 crank_mat_cplx_float_n_transform_from_mf (const GValue *src,
                                           GValue       *dest)
 {
-  CrankMatCplxFloatN *res = g_new (CrankMatCplxFloatN, 1);
+  CrankMatCplxFloatN *mcf = g_new (CrankMatCplxFloatN, 1);
+  CrankMatFloatN *mf = (CrankMatFloatN*) g_value_get_boxed (src);
+
+  crank_mat_cplx_float_n_init_ucm (mcf, mf, NULL);
+  g_value_set_boxed (dest, mcf);
 }
 
 static void
 crank_mat_cplx_float_n_transform_to_string (const GValue *src,
                                             GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_mat_cplx_float_n_to_string ((CrankMatCplxFloatN*)
-                                                         g_value_get_boxed (
-                                                           src) ) );
+  CrankMatCplxFloatN *mcf = (CrankMatCplxFloatN*) g_value_get_boxed (src);
+  gchar *str = crank_mat_cplx_float_n_to_string (mcf);
+
+  g_value_take_string (dest, str);
 }

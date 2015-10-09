@@ -362,8 +362,7 @@ crank_vec_int2_foreach (CrankVecInt2    *vec,
                         CrankBoolIntFunc func,
                         gpointer         userdata)
 {
-  if (func (vec->x, userdata) &&
-      func (vec->y, userdata) )
+  if (func (vec->x, userdata) && func (vec->y, userdata) )
     return TRUE;
   else
     return FALSE;
@@ -400,8 +399,8 @@ crank_vec_int2_hash (gconstpointer a)
   const CrankVecInt2 *vec = a;
   guint hash;
 
-  hash  = g_direct_hash (GINT_TO_POINTER(vec->x));
-  hash += g_direct_hash (GINT_TO_POINTER(vec->y)) + 37;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->x));
+  hash = g_direct_hash (GINT_TO_POINTER(vec->y)) + hash * 37;
 
   return hash;
 }
@@ -422,8 +421,7 @@ crank_vec_int2_equal (gconstpointer a,
   CrankVecInt2 *veca = (CrankVecInt2*)a;
   CrankVecInt2 *vecb = (CrankVecInt2*)b;
 
-  return ((veca->x == vecb->x) &&
-          (veca->y == vecb->y));
+  return ((veca->x == vecb->x) && (veca->y == vecb->y));
 }
 
 /**
@@ -965,18 +963,19 @@ static void
 crank_vec_int2_transform_from_b (const GValue *src,
                                  GValue       *dest)
 {
-  CrankVecInt2 *res = g_new (CrankVecInt2, 1);
-  crank_vec_int2_init_from_vb (res, (CrankVecBool2*) g_value_get_boxed (src));
-  g_value_take_boxed (dest, res);
+  CrankVecInt2 *vi = g_new (CrankVecInt2, 1);
+  CrankVecBool2 *vb = (CrankVecBool2*) g_value_get_boxed (src);
+  crank_vec_int2_init_from_vb (vi, vb);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int2_transform_to_string (const GValue *src,
                                     GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_vec_int2_to_string ((CrankVecInt2*)
-                                                 g_value_get_boxed (src)));
+  CrankVecInt2 *vi = (CrankVecInt2*) g_value_get_boxed (src);
+  gchar *str = crank_vec_int2_to_string (vi);
+  g_value_take_string (dest, str);
 }
 
 
@@ -1208,9 +1207,9 @@ crank_vec_int3_hash (gconstpointer a)
   const CrankVecInt3 *vec = a;
   guint hash;
 
-  hash  = g_direct_hash (GINT_TO_POINTER(vec->x));
-  hash += g_direct_hash (GINT_TO_POINTER(vec->y)) + 37;
-  hash += g_direct_hash (GINT_TO_POINTER(vec->z)) + 129;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->x));
+  hash = g_direct_hash (GINT_TO_POINTER(vec->y)) + hash * 37;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->z)) + hash * 37;
 
   return hash;
 }
@@ -1855,18 +1854,20 @@ static void
 crank_vec_int3_transform_from_b (const GValue *src,
                                  GValue       *dest)
 {
-  CrankVecInt3 *res = g_new (CrankVecInt3, 1);
-  crank_vec_int3_init_from_vb (res, (CrankVecBool3*) g_value_get_boxed (src));
-  g_value_take_boxed (dest, res);
+  CrankVecInt3 *vi = g_new (CrankVecInt3, 1);
+  CrankVecBool3 *vb = (CrankVecBool3*) g_value_get_boxed (src);
+
+  crank_vec_int3_init_from_vb (vi, vb);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int3_transform_to_string (const GValue *src,
                                     GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_vec_int3_to_string ((CrankVecInt3*)
-                                                 g_value_get_boxed (src)));
+  CrankVecInt3 *vi = (CrankVecInt3*) g_value_get_boxed (src);
+  gchar *str = crank_vec_int3_to_string (vi);
+  g_value_take_string (dest, str);
 }
 
 
@@ -2107,10 +2108,10 @@ crank_vec_int4_hash (gconstpointer a)
   const CrankVecInt4 *vec = a;
   guint hash;
 
-  hash  = g_direct_hash (GINT_TO_POINTER(vec->x));
-  hash += g_direct_hash (GINT_TO_POINTER(vec->y)) + 37;
-  hash += g_direct_hash (GINT_TO_POINTER(vec->z)) + 129;
-  hash += g_direct_hash (GINT_TO_POINTER(vec->w)) + 1973;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->x));
+  hash = g_direct_hash (GINT_TO_POINTER(vec->y)) + hash * 37;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->z)) + hash * 37;
+  hash = g_direct_hash (GINT_TO_POINTER(vec->w)) + hash * 37;
 
   return hash;
 }
@@ -2732,18 +2733,19 @@ static void
 crank_vec_int4_transform_from_b (const GValue *src,
                                  GValue       *dest)
 {
-  CrankVecInt4 *res = g_new (CrankVecInt4, 1);
-  crank_vec_int4_init_from_vb (res, (CrankVecBool4*) g_value_get_boxed (src));
-  g_value_take_boxed (dest, res);
+  CrankVecInt4 *vi = g_new (CrankVecInt4, 1);
+  CrankVecBool4 *vb = (CrankVecBool4*) g_value_get_boxed (src);
+  crank_vec_int4_init_from_vb (vi, vb);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int4_transform_to_string (const GValue *src,
                                     GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_vec_int4_to_string ((CrankVecInt4*)
-                                                 g_value_get_boxed (src)));
+  CrankVecInt4 *vi = (CrankVecInt4*) g_value_get_boxed (src);
+  gchar *str = crank_vec_int4_to_string (vi);
+  g_value_take_string (dest, str);
 }
 
 
@@ -3881,46 +3883,50 @@ static void
 crank_vec_int_n_transform_from_b (const GValue *src,
                                   GValue       *dest)
 {
-  CrankVecIntN *res = g_new (CrankVecIntN, 1);
-  crank_vec_int_n_init_from_vb (res, (CrankVecBoolN*) g_value_get_boxed (src));
-  g_value_take_boxed (dest, res);
+  CrankVecIntN *vi = g_new (CrankVecIntN, 1);
+  CrankVecBoolN *vb = (CrankVecBoolN*) g_value_get_boxed (src);
+  crank_vec_int_n_init_from_vb (vi, vb);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int_n_transform_from_v2 (const GValue *src,
                                    GValue       *dest)
 {
-  CrankVecIntN *res = g_new (CrankVecIntN, 1);
-  crank_vec_int_n_init_arr (res, 2, (gint*) g_value_get_boxed (src));
+  CrankVecIntN *vi = g_new (CrankVecIntN, 1);
+  gint *array = (gint*) g_value_get_boxed (src);
 
-  g_value_take_boxed (dest, res);
+  crank_vec_int_n_init_arr (vi, 2, array);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int_n_transform_from_v3 (const GValue *src,
                                    GValue       *dest)
 {
-  CrankVecIntN *res = g_new (CrankVecIntN, 1);
-  crank_vec_int_n_init_arr (res, 3, (gint*) g_value_get_boxed (src));
+  CrankVecIntN *vi = g_new (CrankVecIntN, 1);
+  gint *array = (gint*) g_value_get_boxed (src);
 
-  g_value_take_boxed (dest, res);
+  crank_vec_int_n_init_arr (vi, 3, array);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int_n_transform_from_v4 (const GValue *src,
                                    GValue       *dest)
 {
-  CrankVecIntN *res = g_new (CrankVecIntN, 1);
-  crank_vec_int_n_init_arr (res, 4, (gint*) g_value_get_boxed (src));
+  CrankVecIntN *vi = g_new (CrankVecIntN, 1);
+  gint *array = (gint*) g_value_get_boxed (src);
 
-  g_value_take_boxed (dest, res);
+  crank_vec_int_n_init_arr (vi, 4, array);
+  g_value_take_boxed (dest, vi);
 }
 
 static void
 crank_vec_int_n_transform_to_string (const GValue *src,
                                      GValue       *dest)
 {
-  g_value_take_string (dest,
-                       crank_vec_int_n_to_string ((CrankVecIntN*)
-                                                  g_value_get_boxed (src)));
+  CrankVecIntN *vi = (CrankVecIntN*) g_value_get_boxed (src);
+  gchar *str = crank_vec_int_n_to_string (vi);
+  g_value_take_string (dest, str);
 }

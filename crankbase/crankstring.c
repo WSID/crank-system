@@ -228,26 +228,22 @@ crank_str_read_decstring (const gchar *str,
   guint ee;
   //// Phase 1: Check effective range.
   // Read leading zeros.
-  for (i = *position; str[i] == '0'; i++)
-    {}
+  for (i = *position; str[i] == '0'; i++) {}
   if (str[i] == '.')
     {
       dp_pp = 1;
       sd = i;
-      for (i++; str[i] == '0'; i++)
-        {}
+      for (i++; str[i] == '0'; i++) {}
     }
 
   // Read numbers.
   ss = i;
-  for (; isdigit (str[i]); i++)
-    {}
+  for (; isdigit (str[i]); i++) {}
   if ((str[i] == '.') && (dp_pp == 0))
     {
       dp_pp = 2;
       sd = i;
-      for (i++; isdigit (str[i]); i++)
-        {}
+      for (i++; isdigit (str[i]); i++) {}
     }
 
   // If decimal point is not found, think decimal point is at end of numbers.
@@ -257,12 +253,10 @@ crank_str_read_decstring (const gchar *str,
   // Trace back numbers.
   if (ss < i)
     {
-      for (se = i - 1; str[se] == '0'; se--)
-        {}
+      for (se = i - 1; str[se] == '0'; se--) {}
       if (str[se] == '.')
         {
-          for (se--; str[se] == '0'; se--)
-            {}
+          for (se--; str[se] == '0'; se--) {}
           dp_pp = 3;
         }
       se++;
@@ -411,8 +405,7 @@ crank_str_read_space (const gchar *str,
 
   i_start = *position;
 
-  for (i = i_start; g_ascii_isspace (str[i]); i++)
-    {}
+  for (i = i_start; g_ascii_isspace (str[i]); i++) {}
 
   if (space != NULL)
     *space = i - i_start;
@@ -488,8 +481,7 @@ crank_str_read_word (const gchar *str,
 
   i_start = *position;
 
-  for (i = i_start; g_ascii_isalnum (str[i]); i++)
-    {}
+  for (i = i_start; g_ascii_isalnum (str[i]); i++) {}
   i_len = i - i_start;
 
   if (word_ptr != NULL)
@@ -532,10 +524,8 @@ crank_str_read_uint64 (const gchar *str,
   rstart = *position;
 
   // Get range for numeric numbers.
-  for (nzstart = rstart; str[nzstart] == '0'; nzstart++)
-    {}
-  for (rend = nzstart; isdigit (str[rend]); rend++)
-    {}
+  for (nzstart = rstart; str[nzstart] == '0'; nzstart++) {}
+  for (rend = nzstart; isdigit (str[rend]); rend++) {}
 
   n = rend - nzstart;
   n1 = MIN(n, I64_N10 - 1);
@@ -1203,8 +1193,7 @@ crank_str_check_words (const gchar       *str,
   gchar *word;
   gchar *cword;
 
-  gchar*(*convfunc) (const gchar*,
-                     gssize) = NULL;
+  gchar*(*convfunc) (const gchar*, gssize) = NULL;
   gchar *ccword = NULL;
 
   guint case_insensitive;

@@ -36,11 +36,6 @@
  * * Boolean vectors have logical operations while float ones have airthmetic operations
  * * Boolean vectors have any, all property while float ones have magnitude/norm.
  *
- * Provided macros are following
- *
- * * TRUE, FALSE: Initialization list that all elements are %TRUE or %FALSE.
- * * I, J, K, L: Initialization list that one of element is %TRUE.
- *
  * Compared to bvec in GLSL.
  *
  * # Type Conversion.
@@ -734,8 +729,10 @@ static void
 crank_vec_bool2_transform_to_string (const GValue *src,
                                      GValue       *dest)
 {
-  CrankVecBool2 *vec = g_value_get_boxed (src);
-  g_value_take_string (dest, crank_vec_bool2_to_string (vec));
+  CrankVecBool2 *vec = (CrankVecBool2*) g_value_get_boxed (src);
+  gchar *str = crank_vec_bool2_to_string (vec);
+
+  g_value_take_string (dest, str);
 }
 
 
@@ -1295,8 +1292,9 @@ static void
 crank_vec_bool3_transform_to_string (const GValue *src,
                                      GValue       *dest)
 {
-  CrankVecBool3 *vec = g_value_get_boxed (src);
-  g_value_take_string (dest, crank_vec_bool3_to_string (vec));
+  CrankVecBool3 *vb = (CrankVecBool3*) g_value_get_boxed (src);
+  gchar *str = crank_vec_bool3_to_string (vb);
+  g_value_take_string (dest, str);
 }
 
 
@@ -1310,15 +1308,15 @@ static void crank_vec_bool4_transform_to_string (const GValue *src,
 
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (CrankVecBool4,
-                               crank_vec_bool4,
-                               crank_vec_bool4_dup,
-                               g_free,
-                               {
-                                 g_value_register_transform_func (
-                                   g_define_type_id,
-                                   G_TYPE_STRING,
-                                   crank_vec_bool4_transform_to_string);
-                               })
+  crank_vec_bool4,
+  crank_vec_bool4_dup,
+  g_free,
+  {
+   g_value_register_transform_func (
+     g_define_type_id,
+     G_TYPE_STRING,
+     crank_vec_bool4_transform_to_string);
+  })
 
 //////// Initialization ////////////////////////////////////////////////////////
 
@@ -1884,8 +1882,9 @@ static void
 crank_vec_bool4_transform_to_string (const GValue *src,
                                      GValue       *dest)
 {
-  CrankVecBool4 *vec = g_value_get_boxed (src);
-  g_value_take_string (dest, crank_vec_bool4_to_string (vec));
+  CrankVecBool4 *vb = (CrankVecBool4*) g_value_get_boxed (src);
+  gchar *str = crank_vec_bool4_to_string (vb);
+  g_value_take_string (dest, str);
 }
 
 
@@ -2731,39 +2730,41 @@ static void
 crank_vec_bool_n_transform_from_v2 (const GValue *src,
                                     GValue       *dest)
 {
-  CrankVecBool2 *v2 = g_value_get_boxed (src);
-  CrankVecBoolN *vec = g_new (CrankVecBoolN, 1);
+  CrankVecBoolN *vb = g_new (CrankVecBoolN, 1);
+  gboolean *array = (gboolean*) g_value_get_boxed (src);
 
-  crank_vec_bool_n_init_arr (vec, 2, (gboolean*)v2);
-  g_value_take_boxed (dest, vec);
+  crank_vec_bool_n_init_arr (vb, 2, array);
+  g_value_take_boxed (dest, vb);
 }
 
 static void
 crank_vec_bool_n_transform_from_v3 (const GValue *src,
                                     GValue       *dest)
 {
-  CrankVecBool3 *v3 = g_value_get_boxed (src);
-  CrankVecBoolN *vec = g_new (CrankVecBoolN, 1);
+  CrankVecBoolN *vb = g_new (CrankVecBoolN, 1);
+  gboolean *array = (gboolean*) g_value_get_boxed (src);
 
-  crank_vec_bool_n_init_arr (vec, 3, (gboolean*)v3);
-  g_value_take_boxed (dest, vec);
+  crank_vec_bool_n_init_arr (vb, 3, array);
+  g_value_take_boxed (dest, vb);
 }
 
 static void
 crank_vec_bool_n_transform_from_v4 (const GValue *src,
                                     GValue       *dest)
 {
-  CrankVecBool4 *v4 = g_value_get_boxed (src);
-  CrankVecBoolN *vec = g_new (CrankVecBoolN, 1);
+  CrankVecBoolN *vb = g_new (CrankVecBoolN, 1);
+  gboolean *array = (gboolean*) g_value_get_boxed (src);
 
-  crank_vec_bool_n_init_arr (vec, 4, (gboolean*)v4);
-  g_value_take_boxed (dest, vec);
+  crank_vec_bool_n_init_arr (vb, 4, array);
+  g_value_take_boxed (dest, vb);
 }
 
 static void
 crank_vec_bool_n_transform_to_string (const GValue *src,
                                       GValue       *dest)
 {
-  CrankVecBoolN *vec = g_value_get_boxed (src);
-  g_value_take_string (dest, crank_vec_bool_n_to_string (vec));
+  CrankVecBoolN *vb = g_value_get_boxed (src);
+  gchar *str = crank_vec_bool_n_to_string (vb);
+
+  g_value_take_string (dest, str);
 }
