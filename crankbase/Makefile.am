@@ -124,6 +124,6 @@ vapidir= $(datadir)/vala/vapi
 vapi_DATA= $(VAPIGEN_VAPIS)
 endif
 
-CLEANFILES = $(gir_DATA) $(typelib_DATA)
+CLEANFILES = $(gir_DATA) $(typelib_DATA) $(vapi_DATA)
 
 endif

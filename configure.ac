@@ -22,8 +22,20 @@ AC_SUBST(GETTEXT_PACKAGE, crank)
 PKG_PROG_PKG_CONFIG
 AC_PROG_CC
 
+
+
 ######## Module configure ######################################################
-PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0 gtk+-3.0])
+PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
+
+
+######## Build demo ############################################################
+AC_ARG_ENABLE(demo,
+  AS_HELP_STRING([--enable-demo[=@<:@no/yes@:>@]],
+                 [Enable build of demos to show functions of Crank System]),
+  [AS_IF([test s$enableval == s"yes"],
+         [PKG_CHECK_MODULES([CRANK_BASE_DEMO],
+                            [glib-2.0 gobject-2.0 gtk+-3.0]) ] ) ] )
+AM_CONDITIONAL([CRANK_DEMO], [test s$enable_demo == s"yes"])
 
 ######## Testing ###############################################################
 GLIB_TESTS
@@ -83,6 +95,9 @@ AM_CONDITIONAL([TEST_PYTHON], [test S$enable_test_python == S"yes"])
 VAPIGEN_CHECK()
 AS_IF([test S"$enable_vala" = S"yes"],
       [AM_PROG_VALAC])
+
+
+
 
 
 ######## Prints configuration results ##########################################

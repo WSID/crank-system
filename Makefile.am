@@ -7,8 +7,11 @@ SUBDIRS= \
 		docs \
 		tests \
 		bench \
-		po \
-		demo
+		po
+if CRANK_DEMO
+  SUBDIRS+= demo
+endif
+
 
 pkgconfigdir= $(libdir)/pkgconfig
 pkgconfig_DATA= \
