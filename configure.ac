@@ -22,22 +22,19 @@ AC_SUBST(GETTEXT_PACKAGE, crank)
 PKG_PROG_PKG_CONFIG
 AC_PROG_CC
 
-
 ######## Module configure ######################################################
 PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0 gtk+-3.0])
-
-
 
 ######## Testing ###############################################################
 GLIB_TESTS
 
 
+
+
 ######## GTK-Doc ###############################################################
-m4_ifdef([GTK_DOC_CHECK], [
-GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
-],[
-AM_CONDITIONAL([ENABLE_GTK_DOC], false)
-])
+m4_ifdef([GTK_DOC_CHECK],
+  [GTK_DOC_CHECK([1.14], [--flavour no-tmpl])],
+  [AM_CONDITIONAL([ENABLE_GTK_DOC], false)]    )
 
 ######## GObject Introspection #################################################
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
@@ -45,39 +42,47 @@ GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 ######## Introspection Test for Python #########################################
 AC_ARG_ENABLE(test-python,
-		  AS_HELP_STRING([--enable-test-python[=@<:@no/auto/yes@:>@]],
-		                 [Enable tests on gir with python]),
-		  , 
-		  [enable_test_python=auto])
+  AS_HELP_STRING([--enable-test-python[=@<:@no/auto/yes@:>@]],
+                 [Enable tests on gir with python]),
+  ,
+  [enable_test_python=auto] )
 
-AC_MSG_CHECKING([Checking for test-python])
+AS_IF([test s$enable_test_python != s"no"],
+      [AM_PATH_PYTHON([], [have_python="yes"], [have_python="no"])] )
+
+AC_MSG_CHECKING([for test-python])
 
 AS_CASE([$enable_test_python],
 	[no],
-		[test_python="no"],
-		
+	[],
+
 	[yes],
-		[if test S$found_introspection != S"yes"
-			then AC_MSG_ERROR([Introspection feature is required for python test])
-		 fi
-		 AM_PATH_PYTHON([],[test_python="yes"], [AC_MSG_ERROR([Python is not found!])])	],
-		 
+	[if test S$enable_introspection != S"yes"
+	   then AC_MSG_ERROR([Introspection feature is required for python test])
+	 fi
+	 if test s$have_python != s"yes"
+	   then AC_MSG_ERROR([Python interpreter is required for python test])
+	 fi	],
+
 	[auto],
-		[if test S$found_introspection == S"yes"
-			then AM_PATH_PYTHON([],[test_python="yes"], [test_python="no"])
-		 fi	],
+	[if test S$enable_introspection == S"yes" ; then
+	   enable_test_python=$have_python
+	 else
+	   enable_test_python="no"
+	 fi	],
 		 
 	[AC_MSG_ERROR([only yes/no/auto option for enable-test-python])	]	)
 
-AC_MSG_RESULT([$test_python])
-AM_CONDITIONAL([TEST_PYTHON], [test S$test_python == S"yes"])
+AC_MSG_RESULT([$enable_test_python])
+AM_CONDITIONAL([TEST_PYTHON], [test S$enable_test_python == S"yes"])
 
 
 
 ######## Test for vapigen to build .vapi file ##################################
+# VAPIGEN_CHECK() will check for Introspection check.
 VAPIGEN_CHECK()
 AS_IF([test S"$enable_vala" = S"yes"],
-		[AM_PROG_VALAC])
+      [AM_PROG_VALAC])
 
 
 ######## Prints configuration results ##########################################

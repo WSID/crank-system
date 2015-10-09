@@ -112,10 +112,3 @@ vec_*_init*			skip
 MatFloat* 			struct=true
 
 mat_*_init*			skip
-
-
-
-//////// Digraph
-DigraphNode.get_data.value ref
-DigraphEdge.get_data.value ref
-

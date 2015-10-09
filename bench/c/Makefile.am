@@ -25,11 +25,11 @@ noinst_PROGRAMS= $(bench_programs)
 
 clean-local:
 	for bench in $(bench_programs); \
-	do rm $$bench.log ; \
+	do rm -f $$bench.log ; \
 	done
 
 mostlyclean-local:
-	rm *.log
+	rm -f *.log
 
 # We are using gtester, a kind of deprecated tool
 # This is not a Pass-Fail Tests. TAP protocol would not be appropriate for it.

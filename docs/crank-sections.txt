@@ -49,6 +49,7 @@ CRANK_SUB_CARRY64
 
 crank_bits_shift_to_left32
 crank_bits_shift_to_left64
+crank_bits_remquo_2_64
 </SECTION>
 
 <SECTION>
@@ -1187,9 +1188,11 @@ crank_vec_cplx_float_n_get_type
 <FILE>crankmatcommon</FILE>
 CRANK_MAT_ALLOC
 CRANK_MAT_ALLOC0
+CRANK_MAT_FLAT_ROW_INDEX
 CRANK_MAT_FLAT_INDEX
 CRANK_MAT_GET
 CRANK_MAT_GETP
+CRANK_MAT_GET_ROWP
 CRANK_MAT_SET
 CRANK_MAT_WARN_IF_SIZE_MISMATCH2
 CRANK_MAT_WARN_IF_SIZE_MISMATCH3
@@ -1385,6 +1388,8 @@ crank_mat_float_n_set_col
 crank_mat_float_n_slice_row
 crank_mat_float_n_slice_col
 crank_mat_float_n_slice
+crank_mat_float_n_getp
+crank_mat_float_n_get_rowp
 crank_mat_float_n_get_tr
 crank_mat_float_n_get_det
 crank_mat_float_n_get_cof
@@ -1425,6 +1430,7 @@ crank_mat_float_n_shuffle_col
 crank_mat_float_n_lower_tri_inverse
 crank_mat_float_n_upper_tri_inverse
 crank_mat_float_n_diag_inverse
+crank_mat_float_n_mul_ul
 <SUBSECTION Standard>
 CRANK_TYPE_MAT_FLOAT2
 CRANK_TYPE_MAT_FLOAT3
@@ -1635,6 +1641,9 @@ crank_digraph_edge_set_object
 <SUBSECTION Standard>
 CRANK_TYPE_DIGRAPH
 crank_digraph_get_type
+<SUBSECTION Private>
+crank_digraph_node__gi_get_data
+crank_digraph_edge__gi_get_data
 </SECTION>
 
 <SECTION>

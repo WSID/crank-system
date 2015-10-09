@@ -1015,7 +1015,7 @@ void     crank_mat_float_n_mul_ul (CrankMatFloatN *u,
 #define crank_mat_float_n_set(mat,ri,ci,value)  \
   CRANK_MAT_SET(mat,ri,ci,value)
 
-#define crank_mat_flpat_n_getp(mat,ri,ci)   \
+#define crank_mat_float_n_getp(mat,ri,ci)   \
   CRANK_MAT_GETP(mat,ri,ci)
 
 #define crank_mat_float_n_get_rowp(mat,ri)  \

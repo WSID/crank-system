@@ -155,7 +155,7 @@ crank_bits_shift_to_left64 (guint64 *subject)
  * @divisor: A divisor
  * @remainder: (out): A Remainder
  *
- * divide 2<suprescript>64</suprescript> by given @divisor.
+ * divide 2<superscript>64</superscript> by given @divisor.
  *
  * Returns: Quotient of this division.
  */

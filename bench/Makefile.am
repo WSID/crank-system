@@ -8,8 +8,6 @@ SUBDIRS=c
 # SUBDIRS+= vala
 # endif
 
-EXTRA_DIST=	bench_helper.sh
-
 .PHONY: bench
 
 bench:

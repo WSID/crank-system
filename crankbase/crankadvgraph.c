@@ -39,23 +39,12 @@
  * Crank System provides advanced operations on graphs (and matrices)
  *
  * # Operations result in list of Nodes
- * * Topology sorting
  * * Minimum distance path
  *   * Dijkstra
  *   * A*
  * # Operations result in tree of Nodes
- * * Spanning Tree
+ * * Minimum distance path
  *   * Dijkstra full
- *   * Minimum Spanning Tree algorithms.
- *
- * TODO:
- *    add tsort (topology sort)
- *    add A*
- *
- * TODO-future:
- *    add tsort on MatBoolN
- *    add dijkstra on MatFloatN
- *    add A* on MatFloatN
  */
 
 static void
@@ -236,7 +225,7 @@ crank_dijkstra_digraph (CrankDigraphNode         *from,
  * If @edge_func returns negative value, this will behave incorrectly.
  * If @edge_func returns 0 or positive constant value, this will behave like dijkstra.
  *
- * Returns: (nullable) (transfer container) (element-type CrankDigraphNode)
+ * Returns: (nullable) (transfer container) (element-type CrankDigraphNode):
  *    Path as list of Nodes.
  */
 GList*
@@ -358,8 +347,7 @@ crank_astar_digraph (CrankDigraphNode         *from,
  *
  * If @from is sole disconnected node, then the tree contains only @from
  *
- * Returns: (transfer container) (element-type CerankDigraphNode):
- *     The tree of #CrankDigraphNode
+ * Returns: The tree of #CrankDigraphNode
  */
 GNode*
 crank_dijkstra_full_digraph (CrankDigraphNode         *from,

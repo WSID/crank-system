@@ -10,8 +10,8 @@
     <subtitle>Crank System - Game Development Support Library</subtitle>
     <edition>0.0.1 - Cranknomicon</edition>
     <copyright>
-    	<year>2015</year>
-    	<holder>WSID</holder>
+      <year>2015</year>
+      <holder>WSID</holder>
     </copyright>
     <releaseinfo>
       Crank System is under heavy development! :-u
@@ -20,9 +20,9 @@
   
   <preface>
     <title>Overview</title>
-	<xi:include href="crank-chapter-overview.xml"/>
-	
-	<xi:include href="crank-overview-general.xml"/>
+    <xi:include href="crank-chapter-overview.xml"/>
+
+    <xi:include href="crank-overview-general.xml"/>
     <xi:include href="crank-overview-base.xml"/>
   </preface>
   
@@ -31,50 +31,50 @@
     <xi:include href="crank-basic-data-abbreviation.xml"/>
     
     <chapter>
-	  <title>Basic Utility</title>
-	  <xi:include href="crank-chapter-base-fundamental.xml"/>
+      <title>Basic Utility</title>
+      <xi:include href="crank-chapter-base-fundamental.xml"/>
 	
       <xi:include href="xml/crankbasemacro.xml"/>
-	  <xi:include href="xml/crankvalue.xml"/>
+      <xi:include href="xml/crankvalue.xml"/>
       <xi:include href="xml/crankfunction.xml"/>
       <xi:include href="xml/crankbits.xml"/>
       <xi:include href="xml/crank128.xml"/>
-	  <xi:include href="xml/crankstring.xml"/>
-	  <xi:include href="xml/crankbasetest.xml"/>
+      <xi:include href="xml/crankstring.xml"/>
+      <xi:include href="xml/crankbasetest.xml"/>
     </chapter>
   
-  <chapter>
-    <title>Basic Data Structures</title>
-	<xi:include href="crank-chapter-base-basic-data.xml"/>
-    <xi:include href="xml/crankrange.xml"/>
-	<xi:include href="xml/crankiter.xml"/>
-    <xi:include href="xml/crankpermutation.xml"/>
-    <xi:include href="xml/crankcomplex.xml"/>
-    <xi:include href="xml/crankquaternion.xml"/>
-  </chapter>
+    <chapter>
+      <title>Basic Data Structures</title>
+      <xi:include href="crank-chapter-base-basic-data.xml"/>
+      <xi:include href="xml/crankrange.xml"/>
+      <xi:include href="xml/crankiter.xml"/>
+      <xi:include href="xml/crankpermutation.xml"/>
+      <xi:include href="xml/crankcomplex.xml"/>
+      <xi:include href="xml/crankquaternion.xml"/>
+    </chapter>
   
-  <chapter>
-    <title>Vectorized types and matrix types</title>
-	<xi:include href="crank-chapter-base-vec-data.xml"/>
+    <chapter>
+      <title>Vectorized types and matrix types</title>
+      <xi:include href="crank-chapter-base-vec-data.xml"/>
 	
-    <xi:include href="xml/crankveccommon.xml"/>
-    <xi:include href="xml/crankmatcommon.xml"/>
-	<xi:include href="xml/crankvecbool.xml"/>
-	<xi:include href="xml/crankvecint.xml"/>
-	<xi:include href="xml/crankvecfloat.xml"/>
-	<xi:include href="xml/crankveccplxfloat.xml"/>
-	<xi:include href="xml/crankmatfloat.xml"/>
-	<xi:include href="xml/crankmatcplxfloat.xml"/>
-	<xi:include href="xml/crankadvmat.xml"/>
-  </chapter>
+      <xi:include href="xml/crankveccommon.xml"/>
+      <xi:include href="xml/crankmatcommon.xml"/>
+      <xi:include href="xml/crankvecbool.xml"/>
+      <xi:include href="xml/crankvecint.xml"/>
+      <xi:include href="xml/crankvecfloat.xml"/>
+      <xi:include href="xml/crankveccplxfloat.xml"/>
+      <xi:include href="xml/crankmatfloat.xml"/>
+      <xi:include href="xml/crankmatcplxfloat.xml"/>
+      <xi:include href="xml/crankadvmat.xml"/>
+    </chapter>
   
-  <chapter>
-    <title>Graphs</title>
-	<xi:include href="crank-chapter-base-data.xml"/>
-	
-   	<xi:include href="xml/crankdigraph.xml"/>
-	<xi:include href="xml/crankadvgraph.xml"/>
-  </chapter>
+    <chapter>
+      <title>Graphs</title>
+      <xi:include href="crank-chapter-base-data.xml"/>
+
+      <xi:include href="xml/crankdigraph.xml"/>
+      <xi:include href="xml/crankadvgraph.xml"/>
+    </chapter>
   </part>
   
   <chapter id="object-tree">
