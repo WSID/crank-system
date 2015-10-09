@@ -1,3 +1,11 @@
+Crank System 0.3.0
+====================
+
+ * Added Crank Base module.
+   * This provides basic utility, numeric definition, vectors and matrices, and digraph.
+   * Matrix demo is added.
+
+
 Crank System 0.0.0
 ====================
 

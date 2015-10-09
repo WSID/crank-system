@@ -13,11 +13,12 @@ build system is ready, you can build and install by following commands.
 make
 make install
 
-You may add additional arguments to customize building process.
+You may add additional arguments to customize building process. (For example,
+building static library, or disabling unused modules.)
 
 
 
 2. Library Overview.
 Goal of this library is provide classes and functions for a game.
 
-Currently this library provides none of functions.
+Currently this library provides basic vector and matrix manipulation.
