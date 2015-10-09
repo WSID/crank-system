@@ -420,7 +420,7 @@ crank_str_read_space (const gchar *str,
  * @position: (inout): position.
  * @negate: (out): Whether it read minus. If it cannot read, %FALSE is returned.
  *
- * Reads +- within @str and move @position if is.
+ * Reads '+' or '-' within @str and move @position if is.
  *
  * This is used to implement numeric reading function.
  *
@@ -630,11 +630,20 @@ crank_str_read_int64 (const gchar *str,
  *             be returned.
  * @read_flags: (optional) (out): Flags about @value_ptr.
  *
- * Reads @str and moves position into non-numeric character. This function may
- * read special words like "NaN" or "inf". If so, @CRANK_READ_DEC_SYMBOL
- * is returned through @read_flags.
+ * Reads @str and moves position into non-numeric character.
  *
- * This implementation uses naive implementation but using 36 digits of mantissa.
+ * This function reads following patterns.
+ *
+ * * Symbolic words (Case Insensitive and this results %CRANK_READ_DEC_SYMBOL)
+ *   * "inf", "infinity", "nan"
+ * * Numeric
+ *   * (0 or more numbers) [.(0 or more numbers)] [(e or E)(1 or more numbers)]
+ *
+ *     or
+ *
+ *     (1 or more numbres) [(e or E)(1 or more numbers)]
+ *
+ * This implementation uses naive implementation but using 18 digits of mantissa.
  * Some precision loss might be expected.
  */
 gboolean

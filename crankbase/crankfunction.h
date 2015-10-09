@@ -174,51 +174,51 @@ typedef gboolean (*CrankEqualDeltaFunc) (gconstpointer a,
                                          const gfloat  d);
 
 
-guint    crank_float_hash (gconstpointer a);
+guint    crank_float_hash          (gconstpointer a);
 
-guint    crank_float_hash1 (gconstpointer a);
-
-
-gboolean crank_bool_equal (gconstpointer a,
-                           gconstpointer b);
-
-gboolean crank_uint_equal (gconstpointer a,
-                           gconstpointer b);
-
-gboolean crank_float_equal (gconstpointer a,
-                            gconstpointer b);
+guint    crank_float_hash1         (gconstpointer a);
 
 
+gboolean crank_bool_equal          (gconstpointer a,
+                                    gconstpointer b);
 
-gboolean crank_float_equal_delta (gconstpointer a,
-                                  gconstpointer b,
-                                  const gfloat  d);
+gboolean crank_uint_equal          (gconstpointer a,
+                                    gconstpointer b);
 
-
-gint     crank_uint_compare (gconstpointer a,
-                             gconstpointer b);
-
-gint     crank_int_compare (gconstpointer a,
-                            gconstpointer b);
-
-gint     crank_float_compare (gconstpointer a,
-                              gconstpointer b);
+gboolean crank_float_equal         (gconstpointer a,
+                                    gconstpointer b);
 
 
-gchar   *crank_bool_to_string (gpointer value,
-                               gpointer userdata);
 
-gchar   *crank_int_to_string (gpointer value,
-                              gpointer userdata);
+gboolean crank_float_equal_delta   (gconstpointer a,
+                                    gconstpointer b,
+                                    const gfloat  d);
 
-gchar   *crank_uint_to_string (gpointer value,
-                               gpointer userdata);
 
-gchar   *crank_float_to_string (gpointer value,
-                                gpointer userdata);
+gint     crank_uint_compare        (gconstpointer a,
+                                    gconstpointer b);
 
-gchar   *crank_pointer_to_string (gpointer value,
-                                  gpointer userdata);
+gint     crank_int_compare         (gconstpointer a,
+                                    gconstpointer b);
+
+gint     crank_float_compare       (gconstpointer a,
+                                    gconstpointer b);
+
+
+gchar   *crank_bool_to_string      (gpointer value,
+                                    gpointer userdata);
+
+gchar   *crank_int_to_string       (gpointer value,
+                                    gpointer userdata);
+
+gchar   *crank_uint_to_string      (gpointer value,
+                                    gpointer userdata);
+
+gchar   *crank_float_to_string     (gpointer value,
+                                    gpointer userdata);
+
+gchar   *crank_pointer_to_string   (gpointer value,
+                                    gpointer userdata);
 
 
 G_END_DECLS

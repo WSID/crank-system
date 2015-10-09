@@ -58,7 +58,8 @@
  * This section contains predefined functions, for examples, stringifies
  * pointers to primitives like float.
  *
- * There are three kind of functions, like
+ * There are three kind of functions, like *
+ * * Hashing for #gfloat.
  * * Equality testing.
  * * Delta-Equality testing for #gfloat.
  * * comparsion.

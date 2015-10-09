@@ -35,9 +35,11 @@
  * @stability: unstable
  * @include: crankbase.h
  *
- * Low level bits operations are not used frequently, as game development does
- * not have to low level optimization today. For Crank System, sometimes it
- * need to perform bit manipulation.
+ * Programmers don't have to manipulate bits, in recent days. Because of
+ * increased memory space and automatic optimizations done by compilers.
+ *
+ * But sometimes, low level bit manipulation is done, for implementing little
+ * bit complex data structures.
  */
 
 /**

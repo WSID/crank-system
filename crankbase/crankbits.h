@@ -42,7 +42,9 @@ guint64 crank_bits_remquo_2_64      (guint64  divisor,
  * @r: (out): A 64-bit result.
  *
  * Adds two 64-bit integer and returns its carry.
- * It is used to perform additions in various operations.
+ * It is used to perform additions in various operations. *
+ *
+ * Returns: The carry of its result, as #gboolean.
  */
 #define CRANK_ADD_CARRY64(a,b,r)    ((*(r) = (a) + (b)), (b) > *(r))
 /**
@@ -52,6 +54,8 @@ guint64 crank_bits_remquo_2_64      (guint64  divisor,
  *
  * Adds two 64-bit integer and returns its carry.
  * It is used to perform additions in various operations.
+ *
+ * Returns: The carry of its result, as #gboolean.
  */
 #define CRANK_IADD_CARRY64(a,b)     ((*(a) += (b)), (b) > *(a))
 
@@ -61,8 +65,10 @@ guint64 crank_bits_remquo_2_64      (guint64  divisor,
  * @b: A 64-bit integer.
  * @r: (out): A 64-bit result.
  *
- * Subtracts two 64-bit integer and returns its takeover.
+ * Subtracts two 64-bit integer and returns its burrow.
  * It is used to perform additions in various operations.
+ *
+ * Returns: The burrow of its result, as #gboolean.
  */
 #define CRANK_SUB_CARRY64(a,b,r)    ((*(r) = (a) - (b)), (a) < (b))
 

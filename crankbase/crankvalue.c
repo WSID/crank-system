@@ -51,7 +51,7 @@
 
 /**
  * crank_value_overwrite_init: (skip)
- * @value: (out caller-allocates): GValue to overwrite
+ * @value: (out caller-allocates): #GValue to overwrite
  * @type: Type to initialize value.
  *
  * Unset @value if it holds value, and re-initialize it with @type.
@@ -68,7 +68,7 @@ crank_value_overwrite_init (GValue     *value,
 
 /**
  * crank_value_overwrite: (skip)
- * @value: (out caller-allocates): GValue to overwrite
+ * @value: (out caller-allocates): #GValue to overwrite
  * @from: GValue to copy
  *
  * Unset @value if it holds value, and initialize it with type of @from, and
@@ -90,7 +90,7 @@ crank_value_overwrite (GValue       *value,
 
 /**
  * crank_value_overwrite_boolean: (skip)
- * @value: (out caller-allocates): GValue to overwrite
+ * @value: (out caller-allocates): #GValue to overwrite
  * @bool_value: boolean value to set @value.
  *
  * Overwrites boolean value to @value.
@@ -105,7 +105,7 @@ crank_value_overwrite_boolean (GValue        *value,
 
 /**
  * crank_value_overwrite_int: (skip)
- * @value: (out caller-allocates): GValue to overwrite
+ * @value: (out caller-allocates): #GValue to overwrite
  * @int_value: int value to set @value.
  *
  * Overwrites integer value to @value.
@@ -120,7 +120,7 @@ crank_value_overwrite_int (GValue    *value,
 
 /**
  * crank_value_overwrite_string: (skip)
- * @value: (out caller-allocates): GValue to overwrite
+ * @value: (out caller-allocates): #GValue to overwrite
  * @str_value: string value to set @value.
  *
  * Overwrites string value to @value.
@@ -150,8 +150,8 @@ crank_value_overwrite_object (GValue  *value,
 
 /**
  * crank_value_overwrite_boxed: (skip)
- * @value: (out caller-allocates): GValue to overwrite.
- * @value_type: GType of @boxed_value.
+ * @value: (out caller-allocates): #GValue to overwrite.
+ * @value_type: #GType of @boxed_value.
  * @boxed_value: Boxed value to set @value.
  *
  * Overwrites boxed value to @value. As boxed type does not hold type
@@ -170,12 +170,12 @@ crank_value_overwrite_boxed (GValue     *value,
 
 /**
  * crank_value_overwrite_pointer: (skip)
- * @value: (out caller-allocates): GValue to overwrite.
- * @value_type: GType of @pointer_value.
+ * @value: (out caller-allocates): #GValue to overwrite.
+ * @value_type: #GType of @pointer_value.
  * @pointer_value: pointer to set @value.
  *
  * Overwrites pointer to @value. Generally you can pass %G_TYPE_POINTER to
- * @value_type. You can pass other G_TYPE_POINTER derived type to mark @value
+ * @value_type. You can pass other %G_TYPE_POINTER derived type to mark @value
  * holds other pointer type.
  */
 void
@@ -194,7 +194,7 @@ crank_value_overwrite_pointer (GValue     *value,
  * @nitem: Number of items to overwrite on @array
  * @...: (type GValue): variadic arguments of GValue to copy.
  *
- * Copies GValue from variadic arguments to array.
+ * Copies #GValue from variadic arguments to array.
  */
 void
 crank_value_array_overwrite (GValue *array,
@@ -217,8 +217,8 @@ crank_value_array_overwrite (GValue *array,
  * @nitem: Number of items to overwrite on @array
  * @varargs: va_list of GValue to copy
  *
- * Cpoies GValue from va_list to array. This function is used to
- * convert va_list into array.
+ * Cpoies #GValue from <struct>va_list</struct> to array. This function is used
+ * to convert <struct>va_list</struct> into array.
  */
 void
 crank_value_array_overwrite_va (GValue *array,
@@ -237,7 +237,7 @@ crank_value_array_overwrite_va (GValue *array,
  * @nitem: Number of items to overwrite on @array
  * @other: (array length=nitem): array of GValue to copy.
  *
- * Copies array of GValue to other array.
+ * Copies array of #GValue to other array.
  */
 void
 crank_value_array_overwrite_array (GValue *array,

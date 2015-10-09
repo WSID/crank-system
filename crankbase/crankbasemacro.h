@@ -35,9 +35,7 @@
  *
  * This section defines utility macros that used in Crank System.
  *
- * Currently, Crank System provides following macros.
- *
- * * Pointer airthmetics
+ * * Pointer arithmetics
  * * Operations on Arrays.
  */
 
@@ -52,7 +50,7 @@ G_BEGIN_DECLS
  * @p: A Pointer to add.
  * @sz: A size.
  *
- * Performs airthmetic addition on pointer, which is @p + @sz.
+ * Performs arithmetic addition on pointer, which is @p + @sz.
  *
  * Returns: Addition of pointer and size.
  */
@@ -64,7 +62,7 @@ G_BEGIN_DECLS
  * @sz: A size.
  * @n: Multiplication cofactor; count of @sz.
  *
- * Performs airthmetic addition on pointer, which is @p + (@sz * @n). This is
+ * Performs arithmetic addition on pointer, which is @p + (@sz * @n). This is
  * useful when dealing with arrays.
  *
  * Returns: Addition of pointer and size.
@@ -76,7 +74,7 @@ G_BEGIN_DECLS
  * @p: A Pointer.
  * @q: Another pointer.
  *
- * Performes airthmetic subtract on pointer, which is @p - @q.
+ * Performes arithmetic subtract on pointer, which is @p - @q.
  *
  * Returns: Subtraction of pointer, in type of gsize.
  */
@@ -118,9 +116,8 @@ G_BEGIN_DECLS
  * @I: (type T): Item to append.
  *
  * <note><para>
- * #GArray and #GPtrArray provides more convinient functions and macros to
- * manipulate. You are advised to use them, rather than using triplet of pointer,
- * length, alloc-size.
+ * #GArray and #GPtrArray are more easier to manipulate. You are advised to use
+ * them, rather than using triplet of pointer, length, alloc-size.
  * </para></note>
  *
  * Append item in array. If allocation size is sufficient, then reallocates
