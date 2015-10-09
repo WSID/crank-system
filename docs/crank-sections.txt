@@ -115,6 +115,7 @@ crank_value_overwrite_string
 crank_value_overwrite_object
 crank_value_overwrite_boxed
 crank_value_overwrite_pointer
+crank_value_dup
 crank_value_array_overwrite
 crank_value_array_overwrite_va
 crank_value_array_overwrite_array

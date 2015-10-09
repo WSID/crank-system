@@ -69,7 +69,7 @@ crank_value_overwrite_init (GValue     *value,
 /**
  * crank_value_overwrite: (skip)
  * @value: (out caller-allocates): #GValue to overwrite
- * @from: GValue to copy
+ * @from: (nullable): GValue to copy
  *
  * Unset @value if it holds value, and initialize it with type of @from, and
  * copy value of @from onto @value.
@@ -185,6 +185,30 @@ crank_value_overwrite_pointer (GValue     *value,
 {
   crank_value_overwrite_init (value, value_type);
   g_value_set_pointer (value, pointer_value);
+}
+
+
+/**
+ * crank_value_dup: (skip)
+ * @value: #GValue to duplicate.
+ *
+ * Duplicates @value. This returns %NULL if @value is not initialized, frequently
+ * when @value is left un-initialized to be used as 'void' #GValue.
+ *
+ * Returns: (nullable): Duplicated @value, or %NULL if @value is not initialized.
+ */
+GValue*
+crank_value_dup (GValue *value)
+{
+  GValue *result = NULL;
+
+  if (G_IS_VALUE (value))
+    {
+      result = g_slice_new0 (GValue);
+      crank_value_overwrite (result, value);
+    }
+
+  return result;
 }
 
 
