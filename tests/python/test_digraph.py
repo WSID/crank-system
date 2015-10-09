@@ -81,9 +81,8 @@ class TestDigraph(unittest.TestCase):
 		node_v = GObject.Value (value_type=int)
 		
 		for i in range (9):
-			self.nodes[i].get_data (node_v)
-			self.assertEqual (node_v.get_int (), i)
-	
+			self.assertEqual (self.nodes[i].get_data (), i)
+
 	def test_node_get_in_edges (self):
 		self.assertEqual (
 				self.nodes[3].get_in_edges (),
@@ -196,12 +195,8 @@ class TestDigraph(unittest.TestCase):
 				self.nodes[8]]	)
 
 	def test_edge_get_data (self):
-		edge_v = GObject.Value (value_type=float)
-		
-		self.edges[5].get_data (edge_v);
-		
-		self.assertEqual (edge_v.get_double (), 17.5)
-	
+		self.assertEqual (self.edges[5].get_data (), 17.5)
+
 	def test_edge_get_tail (self):
 		self.assertEqual (self.edges[3].get_tail (), self.nodes[4])
 		self.assertEqual (self.edges[5].get_tail (), self.nodes[4])

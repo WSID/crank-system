@@ -287,6 +287,13 @@ void              crank_digraph_edge_set_boxed (CrankDigraphEdge *edge,
 void              crank_digraph_edge_set_object (CrankDigraphEdge *edge,
                                                  GObject          *object);
 
+
+//////// GI Support ////////////////////////////////////////////////////////////
+
+GValue           *crank_digraph_node__gi_get_data   (CrankDigraphNode *node);
+
+GValue           *crank_digraph_edge__gi_get_data   (CrankDigraphEdge *edge);
+
 G_END_DECLS
 
 #endif /* CRANKGRAPH_H */

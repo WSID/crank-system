@@ -120,25 +120,15 @@ class TestDigraph(unittest.TestCase):
 
 	@staticmethod
 	def edge_distance (e):
-		node_v = GObject.Value (value_type=CrankBase.VecInt2)
-
-		e.get_head().get_data (node_v);
-		disp = node_v.get_boxed();
-
-		e.get_tail().get_data (node_v);
-		disp = disp.sub (node_v.get_boxed ());
+		disp = e.get_head ().get_data ();
+		disp = disp.sub (e.get_tail ().get_data ());
 
 		return disp.get_magn ();
 
 	@staticmethod
 	def heuristic (f, t):
-		node_v = GObject.Value (value_type=CrankBase.VecInt2)
-
-		t.get_data (node_v);
-		disp = node_v.get_boxed();
-
-		f.get_data (node_v);
-		disp = disp.sub (node_v.get_boxed ());
+		disp = t.get_data ();
+		disp = disp.sub (f.get_data ());
 
 		return disp.get_magn ();
 

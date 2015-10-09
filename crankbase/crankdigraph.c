@@ -566,7 +566,7 @@ crank_digraph_copy (CrankDigraph *graph)
 
 
 /**
- * crank_digraph_node_get_data:
+ * crank_digraph_node_get_data: (skip)
  * @node: A node to get data.
  * @value: #GValue to store value of node.
  *
@@ -913,7 +913,7 @@ crank_digraph_node_foreach_breadth (CrankDigraphNode    *node,
 
 
 /**
- * crank_digraph_edge_get_data:
+ * crank_digraph_edge_get_data: (skip)
  * @edge: An edge.
  * @value: A #GValue to store edge's value. Should be initialized with
  *        appropriate type.
@@ -1499,6 +1499,34 @@ crank_digraph_edge_set_object (CrankDigraphEdge *edge,
 }
 
 
+//////// GI Support ////////////////////////////////////////////////////////////
+/**
+ * crank_digraph_node__gi_get_data: (rename-to crank_digraph_node_get_data)
+ * @node: Node to get data
+ *
+ * Gets value from a node.
+ *
+ * Returns: (nullable): Data of node.
+ */
+GValue*
+crank_digraph_node__gi_get_data (CrankDigraphNode *node)
+{
+  return crank_value_dup (&node->data);
+}
+
+/**
+ * crank_digraph_edge__gi_get_data: (rename-to crank_digraph_edge_get_data)
+ * @edge: Edge to get data
+ *
+ * Gets value from an edge.
+ *
+ * Returns: (nullable): Data of edge
+ */
+GValue*
+crank_digraph_edge__gi_get_data (CrankDigraphEdge *edge)
+{
+  return crank_value_dup (&edge->data);
+}
 
 //////// Internal Functions ////////
 

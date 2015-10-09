@@ -134,8 +134,7 @@ private void test_digraph_node_get_data () {
 	GLib.Value node_v = GLib.Value (typeof (int));
 	
 	for (int i = 0; i < 9; i++) {
-		fixture.nodes[i].get_data (ref node_v);
-		assert (node_v.get_int () == i);
+		assert (fixture.nodes[i].get_data ().get_int () == i);
 	}
 }
 
@@ -304,12 +303,7 @@ private void test_digraph_node_foreach_breadth () {
 
 private void test_digraph_edge_get_data () {
 	TestDigraphFixture	fixture = TestDigraphFixture ();
-	
-	GLib.Value edge_v = GLib.Value (typeof (float));
-	
-	fixture.edges[5].get_data (ref edge_v);
-	
-	assert (edge_v.get_float () == 17.5f);
+	assert (fixture.edges[5].get_data ().get_float () == 17.5f);
 }
 
 private void test_digraph_edge_get_tail () {
