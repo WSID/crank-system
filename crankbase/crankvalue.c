@@ -204,7 +204,7 @@ crank_value_dup (GValue *value)
 
   if (G_IS_VALUE (value))
     {
-      result = g_slice_new0 (GValue);
+      result = g_new0 (GValue, 1);
       crank_value_overwrite (result, value);
     }
 
@@ -241,8 +241,8 @@ crank_value_array_overwrite (GValue *array,
  * @nitem: Number of items to overwrite on @array
  * @varargs: va_list of GValue to copy
  *
- * Cpoies #GValue from <struct>va_list</struct> to array. This function is used
- * to convert <struct>va_list</struct> into array.
+ * Copies #GValue from <structname>va_list</structname> to array. This function is used
+ * to convert <structname>va_list</structname> into array.
  */
 void
 crank_value_array_overwrite_va (GValue *array,
