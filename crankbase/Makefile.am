@@ -35,7 +35,8 @@ include_HEADERS = \
 		crankdigraph.h \
 		crankadvgraph.h \
 		\
-		crankbasetest.h
+		crankbasetest.h \
+		crankbench.h
 
 
 

@@ -52,6 +52,7 @@
 #include "crankadvgraph.h"
 
 #include "crankbasetest.h"
+#include "crankbench.h"
 
 
 #undef _CRANKBASE_INSIDE
