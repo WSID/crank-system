@@ -3,7 +3,7 @@
 
 ######## Basic configure #######################################################
 AC_PREREQ([2.69])
-AC_INIT([crank-system],[0.0],[jongsome@gmail.com])
+AC_INIT([crank-system],[0.3],[jongsome@gmail.com])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
