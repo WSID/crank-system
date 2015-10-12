@@ -29,7 +29,6 @@ G_BEGIN_DECLS
 
 //////// Structure declaration /////////////////////////////////////////////////
 
-typedef struct _CrankBenchParamStore CrankBenchParamStore;
 typedef struct _CrankBenchSuite CrankBenchSuite;
 typedef struct _CrankBenchCase CrankBenchCase;
 typedef struct _CrankBenchRun CrankBenchRun;
@@ -48,82 +47,14 @@ gint                  crank_bench_run                     (void);
 
 CrankBenchSuite      *crank_bench_get_root                (void);
 
-//////// CrankBenchParamStore ///////////////////////////////////////////////////////
-
-CrankBenchParamStore *crank_bench_param_store_new         (const guint            length);
-
-guint                 crank_bench_param_store_get_length  (CrankBenchParamStore  *param);
-
-void                  crank_bench_param_store_set_length  (CrankBenchParamStore  *param,
-                                                           const guint            length);
-
-guint                 crank_bench_param_store_get_repeat  (CrankBenchParamStore  *param,
-                                                           const guint            index);
-
-void                  crank_bench_param_store_set_repeat  (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const guint            repeat);
-
-GHashTable           *crank_bench_param_store_get_table   (CrankBenchParamStore  *param,
-                                                           const guint            index);
-
-void                  crank_bench_param_store_set_table   (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           GHashTable            *table);
-
-
-GValue               *crank_bench_param_store_get         (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name);
-
-void                  crank_bench_param_store_set         (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name,
-                                                           GValue                *value);
-
-gint                  crank_bench_param_store_get_int     (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name);
-
-guint                 crank_bench_param_store_get_uint    (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name);
-
-gfloat                crank_bench_param_store_get_float   (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name);
-
-gdouble               crank_bench_param_store_get_double  (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name);
-
-
-void                  crank_bench_param_store_set_int     (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name,
-                                                           const gint             value);
-
-void                  crank_bench_param_store_set_uint    (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name,
-                                                           const guint            value);
-
-void                  crank_bench_param_store_set_float   (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name,
-                                                           const gfloat           value);
-
-void                  crank_bench_param_store_set_double  (CrankBenchParamStore  *param,
-                                                           const guint            index,
-                                                           const gchar           *name,
-                                                           const gdouble          value);
-
-
 
 //////// CrankBenchSuite ///////////////////////////////////////////////////////
 
-void                  crank_bench_suite_new               (const gchar           *name,
-                                                           CrankBenchParamStore  *param);
+CrankBenchSuite      *crank_bench_suite_new               (const gchar           *name,
+                                                           GNode                 *param);
+
+void                  crank_bench_suite_free              (CrankBenchSuite       *suite);
+
 
 const gchar          *crank_bench_suite_get_name          (CrankBenchSuite       *suite);
 
@@ -132,29 +63,35 @@ void                  crank_bench_suite_set_name          (CrankBenchSuite      
                                                            const gchar           *name);
 
 
-CrankBenchParamStore  *crank_bench_suite_get_param        (CrankBenchSuite       *suite);
+GNode                *crank_bench_suite_get_param         (CrankBenchSuite       *suite);
 
 void                  crank_bench_suite_set_param         (CrankBenchSuite       *suite,
-                                                           CrankBenchParamStore  *param);
+                                                           GNode                 *param);
 
 
 void                  crank_bench_suite_add_suite         (CrankBenchSuite       *suite,
                                                            CrankBenchSuite       *child);
 
+void                  crank_bench_suite_remove_suite      (CrankBenchSuite       *suite,
+                                                           CrankBenchSuite       *child);
+
 void                  crank_bench_suite_add_case          (CrankBenchSuite       *suite,
                                                            CrankBenchCase        *bcase);
 
-GList*                crank_bench_suite_run               (CrankBenchSuite       *suite);
+void                  crank_bench_suite_remove_case       (CrankBenchSuite       *suite,
+                                                           CrankBenchCase        *bcase);
+
+GNode                *crank_bench_suite_run               (CrankBenchSuite       *suite);
 
 
 //////// CrankBenchCase ////////////////////////////////////////////////////////
 
-void              crank_bench_case_new                    (const gchar           *name,
-                                                           CrankBenchParamStore  *param,
+CrankBenchCase       *crank_bench_case_new                (const gchar           *name,
+                                                           GNode                 *param,
                                                            CrankBenchFunc         func,
                                                            gpointer               userdata);
 
-GList*            crank_bench_case_run                    (CrankBenchCase        *bcase);
+GNode                *crank_bench_case_run                (CrankBenchCase        *bcase);
 
 
 //////// CrankBenchRun /////////////////////////////////////////////////////////
