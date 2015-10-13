@@ -29,6 +29,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
+
 G_BEGIN_DECLS
 
 /**
@@ -85,9 +87,19 @@ gboolean crank_str_read_plusminus            (const gchar *str,
                                               guint       *position,
                                               gboolean    *negate);
 
+gboolean crank_str_read_string               (const gchar *str,
+                                              guint       *position,
+                                              gchar      **str_ptr,
+                                              CrankBoolCharFunc func,
+                                              gpointer          userdata);
+
 gboolean crank_str_read_word                 (const gchar *str,
                                               guint       *position,
                                               gchar      **word_ptr);
+
+gboolean crank_str_read_canonical_word       (const gchar  *str,
+                                              guint        *position,
+                                              gchar       **word_ptr);
 
 gboolean crank_str_read_uint64               (const gchar *str,
                                               guint       *position,
@@ -150,6 +162,8 @@ gint     crank_str_check_words               (const gchar       *str,
                                               gchar            **check_words,
                                               CrankStrCheckFlags flags);
 
+
+//////// Basic reading function
 
 G_END_DECLS
 

@@ -92,7 +92,9 @@ CrankStrCheckFlags
 
 crank_str_read_space
 crank_str_read_plusminus
+crank_str_read_string
 crank_str_read_word
+crank_str_read_canonical_word
 crank_str_read_uint64
 crank_str_read_int64
 crank_str_read_double
@@ -126,6 +128,8 @@ crank_value_array_overwrite
 crank_value_array_overwrite_va
 crank_value_array_overwrite_array
 crank_value_array_unset
+crank_value_table_create
+crank_value_table_create_full
 crank_value_table_get_boolean
 crank_value_table_get_uint
 crank_value_table_get_int
