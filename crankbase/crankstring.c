@@ -944,6 +944,63 @@ crank_str_read_double (const gchar        *str,
   return success;
 }
 
+/**
+ * crank_str_read_path:
+ * @str: String to read.
+ * @position: (inout): position
+ * @path: (nullable) (optional) (out) (array zero-terminated):
+ *     Path entries.
+ * @func: (scope call): function to read entries. Should not accept '/'.
+ * @userdata: (closure): userdata for @func.
+ *
+ * Reads @path from @str and moves @position into next non-path characters.
+ *
+ * This function does not overwrap @func, so @func should not accept '/', or
+ * @func will read path as single string chunk.
+ *
+ * If path portion of @str ends with '/', @path will have empty string at the
+ * end. If it starts with '/', @path will have empty string at the start.
+ */
+gboolean
+crank_str_read_path (const gchar        *str,
+                     guint              *position,
+                     gchar            ***path,
+                     CrankReadStrFunc    func,
+                     gpointer            userdata)
+{
+  guint start = *position;
+
+  if (path != NULL)
+    {
+      GPtrArray *path_ptrarray = g_ptr_array_new ();
+      do
+        {
+          gchar *entry;
+
+          if (! func (str, position, &entry, userdata))
+            g_ptr_array_add (path_ptrarray, g_strdup (""));
+          else
+            g_ptr_array_add (path_ptrarray, entry);
+        }
+      while (str[(*position)++] == '/');
+
+
+      g_ptr_array_add (path_ptrarray, NULL); // Append NULL to make sure null-terminated
+                                             //
+      *path = (gchar**)g_ptr_array_free (path_ptrarray, start == *position);
+    }
+
+  else
+    {
+      do
+        func (str, position, NULL, userdata);
+      while (str[(*position)++] == '/');
+    }
+
+  return start != *position;
+}
+
+
 //////// Scanning Function
 
 /**

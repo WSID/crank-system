@@ -89,6 +89,7 @@ crank_uint128_rsh_self
 <FILE>crankstring</FILE>
 CrankReadDecResult
 CrankStrCheckFlags
+CrankReadStrFunc
 
 crank_str_read_space
 crank_str_read_plusminus
@@ -98,6 +99,7 @@ crank_str_read_canonical_word
 crank_str_read_uint64
 crank_str_read_int64
 crank_str_read_double
+crank_str_read_path
 crank_str_scan_char
 crank_str_scan_word
 crank_str_scan_uint64

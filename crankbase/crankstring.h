@@ -77,6 +77,23 @@ typedef enum _CrankStrCheckFlags {
     CRANK_STR_CHECK_CI_IN_UPPERCASE = 3 << 2
 } CrankStrCheckFlags;
 
+/**
+ * CrankReadStrFunc:
+ * @str: A reading string.
+ * @position: (inout): position.
+ * @str_ptr: (nullable) (optional) (out): Read string. If it cannot read, %NULL
+ *     should be returned.
+ * @userdata: (closure): userdata for this function.
+ *
+ * Represents any function type that reads part of string from @str.
+ *
+ * Returns: whether reading was successful.
+ */
+typedef gboolean        (*CrankReadStrFunc) (const gchar  *str,
+                                             guint        *position,
+                                             gchar       **str_ptr,
+                                             gpointer      userdata);
+
 //////// Reading functions
 
 gboolean crank_str_read_space                (const gchar *str,
@@ -115,6 +132,12 @@ gboolean crank_str_read_double               (const gchar        *str,
                                               guint              *position,
                                               gdouble            *value_ptr,
                                               CrankReadDecResult *read_flags);
+
+gboolean crank_str_read_path                 (const gchar        *str,
+                                              guint              *position,
+                                              gchar            ***path,
+                                              CrankReadStrFunc    func,
+                                              gpointer            userdata);
 
 
 //////// Scanning Function
