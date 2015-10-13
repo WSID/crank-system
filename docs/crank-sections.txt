@@ -13,6 +13,7 @@ CRANK_ARRAY_FILL
 <FILE>crankfunction</FILE>
 CrankCallback
 CrankBoolBoolFunc
+CrankBoolCharFunc
 CrankBoolIntFunc
 CrankBoolUintFunc
 CrankBoolFloatFunc

@@ -62,6 +62,21 @@ typedef gboolean (*CrankBoolBoolFunc) (const gboolean value,
                                        gpointer       userdata);
 
 /**
+ * CrankBoolCharFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gchar and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value
+ */
+typedef gboolean (*CrankBoolCharFunc) (const gchar value,
+                                       gpointer    userdata);
+
+/**
  * CrankBoolUintFunc:
  * @value: Value for function.
  * @userdata: (closure): A userdata for callback.
