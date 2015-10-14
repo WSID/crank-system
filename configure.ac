@@ -111,6 +111,7 @@ AC_CONFIG_FILES([
 		docs/Makefile
 		bench/Makefile
 		bench/c/Makefile
+		bench/newc/Makefile
 		po/Makefile.in
 		
 		demo/Makefile
