@@ -456,7 +456,7 @@ crank_bench_suite_get_path (CrankBenchSuite *suite)
   path_builder = g_string_new (NULL);
   while (! g_queue_is_empty (&path_queue))
     {
-      iter = (CrankBenchSuite*) g_queue_pop_head (&path_queue);
+      iter = (CrankBenchSuite*) g_queue_pop_tail (&path_queue);
       g_string_append (path_builder, iter->name);
       g_string_append_c (path_builder, '/');
     }
@@ -786,7 +786,7 @@ crank_bench_case_get_path (CrankBenchCase *bcase)
   path_builder = g_string_new (NULL);
   while (! g_queue_is_empty (&path_queue))
     {
-      iter = (CrankBenchSuite*) g_queue_pop_head (&path_queue);
+      iter = (CrankBenchSuite*) g_queue_pop_tail (&path_queue);
       g_string_append (path_builder, iter->name);
       g_string_append_c (path_builder, '/');
     }
