@@ -319,6 +319,8 @@ test_read_path (void)
   g_assert_cmpstr (pathlist[5], ==, "");
   g_assert_cmpstr (pathlist[6], ==, NULL);
 
+  g_assert_cmpuint (pos, ==, 30);
+
   g_strfreev (pathlist);
 
 
@@ -337,7 +339,28 @@ test_read_path (void)
   g_assert_cmpstr (pathlist[3], ==, "configure-ac");
   g_assert_cmpstr (pathlist[4], ==, NULL);
 
+  g_assert_cmpuint (pos, ==, 44);
+
   g_strfreev (pathlist);
+
+
+  subject = "/";
+  pos = 0;
+
+  g_assert (crank_str_read_path (subject,
+                                 &pos,
+                                 &pathlist,
+                                 (CrankReadStrFunc)crank_str_read_canonical_word,
+                                 NULL));
+
+  g_assert_cmpstr (pathlist[0], ==, "");
+  g_assert_cmpstr (pathlist[1], ==, "");
+  g_assert_cmpstr (pathlist[2], ==, NULL);
+
+  g_assert_cmpuint (pos, ==, 1);
+
+  g_strfreev (pathlist);
+
 }
 
 static void

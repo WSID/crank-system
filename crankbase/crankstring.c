@@ -973,7 +973,7 @@ crank_str_read_path (const gchar        *str,
   if (path != NULL)
     {
       GPtrArray *path_ptrarray = g_ptr_array_new ();
-      do
+      while (TRUE)
         {
           gchar *entry;
 
@@ -981,9 +981,10 @@ crank_str_read_path (const gchar        *str,
             g_ptr_array_add (path_ptrarray, g_strdup (""));
           else
             g_ptr_array_add (path_ptrarray, entry);
-        }
-      while (str[(*position)++] == '/');
 
+          if (str[*position] != '/') break;
+          (*position) ++;
+        }
 
       g_ptr_array_add (path_ptrarray, NULL); // Append NULL to make sure null-terminated
                                              //
@@ -992,9 +993,13 @@ crank_str_read_path (const gchar        *str,
 
   else
     {
-      do
-        func (str, position, NULL, userdata);
-      while (str[(*position)++] == '/');
+      while (TRUE)
+        {
+          func (str, position, NULL, userdata);
+
+          if (str[*position] != '/') break;
+          (*position) ++;
+        }
     }
 
   return start != *position;

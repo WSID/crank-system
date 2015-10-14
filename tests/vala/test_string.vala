@@ -243,6 +243,7 @@ private void test_read_path () {
 	assert (pathlist[3] == "Downloads");
 	assert (pathlist[4] == "Incoming");
 	assert (pathlist[5] == "");
+	assert (pos == 30);
 
 	subject = "Documents/projects/crank-system/configure-ac";
 	pos = 0;
@@ -258,6 +259,21 @@ private void test_read_path () {
 	assert (pathlist[1] == "projects");
 	assert (pathlist[2] == "crank-system");
 	assert (pathlist[3] == "configure-ac");
+	assert (pos == 44);
+
+	subject = "/";
+	pos = 0;
+
+	assert (Crank.Str.read_path (
+			subject,
+			ref pos,
+			out pathlist,
+			Crank.Str.read_canonical_word));
+
+	assert (pathlist.length == 2);
+	assert (pathlist[0] == "");
+	assert (pathlist[1] == "");
+	assert (pos == 1);
 }
 	
 
