@@ -636,6 +636,28 @@ crank_value_table_get_pointer   (GHashTable    *table,
 }
 
 /**
+ * crank_value_table_set: (skip)
+ * @table: (transfer none) (element-type gpointer GValue):
+ *     A hash table.
+ * @key: A key.
+ * @value: A Value
+ *
+ * Sets @value to given key.
+ */
+void
+crank_value_table_set (GHashTable   *table,
+                       gpointer      key,
+                       const GValue *value)
+{
+  GValue *tableval = g_hash_table_lookup (table, key);
+
+  if (tableval != NULL)
+    crank_value_overwrite (tableval, value);
+  else
+    g_hash_table_insert (table, key, crank_value_dup (value));
+}
+
+/**
  * crank_value_table_set_boolean: (skip)
  * @table: (transfer none) (element-type gpointer GValue):
  *      A hash table.

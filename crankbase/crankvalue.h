@@ -128,6 +128,10 @@ gpointer        crank_value_table_get_pointer   (GHashTable    *table,
                                                  GType         *type);
 
 
+void            crank_value_table_set           (GHashTable    *table,
+                                                 gpointer       key,
+                                                 const GValue  *value);
+
 void            crank_value_table_set_boolean   (GHashTable    *table,
                                                  gpointer       key,
                                                  const gboolean value);
