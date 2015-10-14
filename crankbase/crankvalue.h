@@ -66,7 +66,7 @@ void    crank_value_overwrite_pointer      (GValue      *value,
                                             const GType  value_type,
                                             gpointer     pointer_value);
 
-GValue *crank_value_dup                    (GValue      *value);
+GValue *crank_value_dup                    (const GValue *value);
 
 void    crank_value_free                   (GValue      *value);
 

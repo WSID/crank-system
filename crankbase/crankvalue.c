@@ -244,7 +244,7 @@ crank_value_overwrite_pointer (GValue     *value,
  * Returns: (nullable): Duplicated @value, or %NULL if @value is not initialized.
  */
 GValue*
-crank_value_dup (GValue *value)
+crank_value_dup (const GValue *value)
 {
   GValue *result = NULL;
 
