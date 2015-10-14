@@ -1901,18 +1901,11 @@ _crank_bench_table_composite (GHashTable *prev,
 
       GHashTableIter i;
       gpointer       ik;
-      GValue        *iv;
+      gpointer       iv;
 
       g_hash_table_iter_init (&i, add);
-      while (g_hash_table_iter_next (&i, &ik, (gpointer*) &iv))
-        {
-          GValue *value = g_hash_table_lookup (result, ik);
-
-          if (value != NULL)
-            crank_value_overwrite (value, iv);
-          else
-            g_hash_table_insert (result, ik, crank_value_dup (iv));
-        }
+      while (g_hash_table_iter_next (&i, &ik, &iv))
+        crank_value_table_set (result, ik, (GValue*)iv);
       return result;
     }
 }
