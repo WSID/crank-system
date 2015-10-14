@@ -38,6 +38,9 @@ include_HEADERS = \
 		crankbasetest.h \
 		crankbench.h
 
+noinst_HEADERS = \
+		crankbench-private.h
+
 
 
 # crankbase.la
@@ -74,7 +77,8 @@ libcrankbase_la_SOURCES= \
 		crankadvgraph.c \
 		crankadvmat.c\
 		\
-		crankbasetest.c
+		crankbasetest.c \
+		crankbench.c
 
 
 
