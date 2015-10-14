@@ -307,6 +307,8 @@ crank_bench_set_param (const gchar *path,
     crank_bench_case_set_param (bcase, param);
   else if (suite != NULL)
     crank_bench_suite_set_param (suite, param);
+  else
+    g_warning ("Suite or case at path does not exist: %s", path);
 }
 
 
