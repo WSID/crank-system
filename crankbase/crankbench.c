@@ -1508,16 +1508,16 @@ _crank_bench_get_suite_common (const gchar  *path,
           for (i = 1; i < npath_entries; i++)
             {
               suite = crank_bench_suite_get_suite (psuite, path_entries[i]);
+              psuite = suite;
               if (suite == NULL)
                 break;
-              psuite = suite;
             }
         }
       *case_name = (i == npath_entries) ? g_strdup (path_entries[i]) : NULL;
     }
 
   g_strfreev (path_entries);
-  return suite;
+  return psuite;
 }
 
 /*
