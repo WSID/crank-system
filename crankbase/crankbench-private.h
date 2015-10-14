@@ -68,9 +68,9 @@ struct _CrankBenchParamNode {
  * A structure represents a collection of benchmark cases.
  */
 struct _CrankBenchSuite {
-  gchar           *name;
-  CrankBenchSuite *parent;
-  GNode           *param;
+  gchar               *name;
+  CrankBenchSuite     *parent;
+  CrankBenchParamNode *param;
 
   GPtrArray *subsuites;
   GPtrArray *cases;
@@ -82,9 +82,9 @@ struct _CrankBenchSuite {
  * A structure represents a benchmark case.
  */
 struct _CrankBenchCase {
-  gchar           *name;
-  CrankBenchSuite *parent;
-  GNode           *param;
+  gchar               *name;
+  CrankBenchSuite     *parent;
+  CrankBenchParamNode *param;
 
   CrankBenchFunc func;
   gpointer       userdata;
@@ -118,26 +118,16 @@ struct _CrankBenchRun {
 
 GHashTable             *_crank_bench_dup_table          (GHashTable   *other);
 
-gboolean                _crank_bench_node_free_table    (GNode        *node,
-                                                         gpointer      userdata);
-
-GNode                  *_crank_bench_dup_param          (GNode        *param);
-
-void                    _crank_bench_free_param         (GNode        *param);
-
 GHashTable             *_crank_bench_table_composite    (GHashTable   *prev,
                                                          GHashTable   *add);
-
-GNode                  *_crank_bench_param_composite    (GNode        *prev,
-                                                         GNode        *add);
 
 CrankBenchSuite        *_crank_bench_get_suite_common   (const gchar  *path,
                                                          gchar       **case_name,
                                                          gboolean      make_suite);
 
-GList                  *_crank_bench_case_run1          (CrankBenchCase *bcase,
-                                                         GNode          *param,
-                                                         GHashTable     *param_prev);
+GList                  *_crank_bench_case_run1          (CrankBenchCase      *bcase,
+                                                         CrankBenchParamNode *param,
+                                                         GHashTable          *param_prev);
 
 CrankBenchRun          *_crank_bench_run_new            (CrankBenchCase *bcase,
                                                          GHashTable     *param,

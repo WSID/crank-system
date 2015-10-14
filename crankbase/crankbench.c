@@ -49,10 +49,13 @@
  *   * Suite, Case style hierarchy
  *
  * * Differece
+ *   * Test Input
+ *     * Benchmarking system accepts parameters in form of GHashTable
+ *     * GTest Framework: Does not accept parameter.
  *   * Testing Result
  *     * Benchmarking System: Each test case adds result.
  *     * GTest Framework: Each test case performs assertions.
- *   * Output
+ *   * Output Format
  *     * Benchmarking System: Test results are printed as CSV.
  *     * GTest Framework: Pass or Fail, optionally performance (though not used
  *       frequently). Recently, TAP protocol can be used.
@@ -229,17 +232,16 @@ crank_bench_add (const gchar    *path,
  * @func: (scope notified): A Benchmarking function.
  * @userdata: (closure): Userdata for @func
  * @destroy: (destroy userdata): Destroy for @func
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable): A Parameter node.
  *
  * Adds benchmark case at given @path, with @func, applying @param.
  */
 void
-crank_bench_add_with_param (const gchar    *path,
-                            CrankBenchFunc  func,
-                            gpointer        userdata,
-                            GDestroyNotify  destroy,
-                            GNode          *param)
+crank_bench_add_with_param (const gchar         *path,
+                            CrankBenchFunc       func,
+                            gpointer             userdata,
+                            GDestroyNotify       destroy,
+                            CrankBenchParamNode *param)
 {
   CrankBenchSuite *suite = NULL;
   CrankBenchCase  *bcase = NULL;
@@ -278,14 +280,13 @@ crank_bench_add_with_param (const gchar    *path,
 /**
  * crank_bench_set_param:
  * @path: A Benchmark path.
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable): A Parameter node.
  *
  * sets a parameter to suite or case at @path.
  */
 void
-crank_bench_set_param (const gchar *path,
-                       GNode       *param)
+crank_bench_set_param (const gchar         *path,
+                       CrankBenchParamNode *param)
 {
   CrankBenchSuite *suite = NULL;
   CrankBenchCase  *bcase = NULL;
@@ -344,6 +345,9 @@ crank_bench_param_node_new (void)
 void
 crank_bench_param_node_free (CrankBenchParamNode *node)
 {
+  if (node == NULL)
+    return;
+
   g_ptr_array_unref (node->children);
   g_hash_table_unref (node->table);
   g_slice_free (CrankBenchParamNode, node);
@@ -359,9 +363,13 @@ crank_bench_param_node_free (CrankBenchParamNode *node)
 CrankBenchParamNode*
 crank_bench_param_node_dup (CrankBenchParamNode *node)
 {
-  CrankBenchParamNode *dup = crank_bench_param_node_dup1 (node);
+  CrankBenchParamNode *dup;
   guint i;
 
+  if (node == NULL)
+    return NULL;
+
+  dup = crank_bench_param_node_dup1 (node);
   for (i = 0; i < node->children->len; i++)
     {
       CrankBenchParamNode *subnode;
@@ -384,8 +392,12 @@ crank_bench_param_node_dup (CrankBenchParamNode *node)
 CrankBenchParamNode*
 crank_bench_param_node_dup1 (CrankBenchParamNode *node)
 {
-  CrankBenchParamNode *dup = crank_bench_param_node_new ();
+  CrankBenchParamNode *dup;
 
+  if (node == NULL)
+    return NULL;
+
+  dup = crank_bench_param_node_new ();
   crank_bench_param_node_set_table (dup, node->table);
 
   return dup;
@@ -510,7 +522,7 @@ crank_bench_param_node_set (CrankBenchParamNode *node,
                             const gchar         *name,
                             const GValue        *value)
 {
-  GQuark qname = g_quark_try_string (name);
+  GQuark qname = g_quark_from_string (name);
   crank_value_table_set (node->table,
                          GINT_TO_POINTER (qname),
                          value);
@@ -529,7 +541,7 @@ crank_bench_param_node_set_uint (CrankBenchParamNode *node,
                                  const gchar         *name,
                                  const guint          value)
 {
-  GQuark qname = g_quark_try_string (name);
+  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_uint (node->table,
                               GINT_TO_POINTER (qname),
                               value);
@@ -548,7 +560,7 @@ crank_bench_param_node_set_int (CrankBenchParamNode *node,
                                 const gchar         *name,
                                 const gint          value)
 {
-  GQuark qname = g_quark_try_string (name);
+  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_int (node->table,
                              GINT_TO_POINTER (qname),
                              value);
@@ -567,7 +579,7 @@ crank_bench_param_node_set_float (CrankBenchParamNode *node,
                                   const gchar         *name,
                                   const gfloat         value)
 {
-  GQuark qname = g_quark_try_string (name);
+  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_float (node->table,
                                GINT_TO_POINTER (qname),
                                value);
@@ -586,7 +598,7 @@ crank_bench_param_node_set_double (CrankBenchParamNode *node,
                                    const gchar         *name,
                                    const gdouble        value)
 {
-  GQuark qname = g_quark_try_string (name);
+  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_double (node->table,
                                 GINT_TO_POINTER (qname),
                                 value);
@@ -688,7 +700,7 @@ void
 crank_bench_param_node_add_child (CrankBenchParamNode *node,
                                   CrankBenchParamNode *child)
 {
-  g_return_if_fail (child->parent != NULL);
+  g_return_if_fail (child->parent == NULL);
 
   child->parent = node;
   g_ptr_array_add (node->children, child);
@@ -746,6 +758,7 @@ crank_bench_param_node_add_placeholders (CrankBenchParamNode *node,
   guint i;
 
   result = (CrankBenchParamNode**) (node->children->pdata + node->children->len);
+
   for (i = 0; i < n; i++)
     crank_bench_param_node_add_child (node, crank_bench_param_node_new ());
 
@@ -831,16 +844,15 @@ crank_bench_param_node_composite (CrankBenchParamNode *a,
 /**
  * crank_bench_suite_new:
  * @name: A Name of benchmark suite.
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable) (transfer none): A Parameter node to use.
  *
  * Creates new benchmark suite.
  *
  * Returns: (transfer full): A newly created benchmark suite.
  */
 CrankBenchSuite*
-crank_bench_suite_new (const gchar *name,
-                       GNode       *param)
+crank_bench_suite_new (const gchar         *name,
+                       CrankBenchParamNode *param)
 {
   CrankBenchSuite *suite = g_slice_new (CrankBenchSuite);
 
@@ -848,7 +860,7 @@ crank_bench_suite_new (const gchar *name,
   suite->parent = NULL;
   suite->subsuites = g_ptr_array_new_with_free_func ((GDestroyNotify)crank_bench_suite_free);
   suite->cases = g_ptr_array_new_with_free_func ((GDestroyNotify)crank_bench_case_free);
-  suite->param = _crank_bench_dup_param (param);
+  suite->param = crank_bench_param_node_dup (param);
 
   return suite;
 }
@@ -866,7 +878,7 @@ crank_bench_suite_free (CrankBenchSuite *suite)
   g_free (suite->name);
   g_ptr_array_unref (suite->subsuites);
   g_ptr_array_unref (suite->cases);
-  _crank_bench_free_param (suite->param);
+  crank_bench_param_node_free (suite->param);
 
   g_slice_free (CrankBenchSuite, suite);
 }
@@ -904,12 +916,12 @@ crank_bench_suite_set_name (CrankBenchSuite *suite,
  * crank_bench_suite_get_param:
  * @suite: A benchmark suite.
  *
- * Gets benchmark parameter of suite.
+ * Gets benchmark parameters of suite.
  *
- * Returns: (nullable) (transfer none): Parameter of suite, which is
- *     #GNode <#GHashTable <#GQuark, #GValue*>>.
+ * Returns: (nullable) (transfer none): A Parameter node, or %NULL if there is
+ *     no parameter.
  */
-GNode*
+CrankBenchParamNode*
 crank_bench_suite_get_param (CrankBenchSuite *suite)
 {
   return suite->param;
@@ -918,17 +930,17 @@ crank_bench_suite_get_param (CrankBenchSuite *suite)
 /**
  * crank_bench_suite_set_param:
  * @suite: A benchmark suite.
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable) (transfer none): A tree of parameter node, or %NULL to
+ *     remove parameter.
  *
- * Sets benchmark parameter of suite.
+ * Sets benchmark parameters of suite.
  */
 void
-crank_bench_suite_set_param (CrankBenchSuite *suite,
-                             GNode           *param)
+crank_bench_suite_set_param (CrankBenchSuite     *suite,
+                             CrankBenchParamNode *param)
 {
-  _crank_bench_free_param (suite->param);
-  suite->param = _crank_bench_dup_param (param);
+  crank_bench_param_node_free (suite->param);
+  suite->param = crank_bench_param_node_dup (param);
 
 }
 
@@ -938,7 +950,7 @@ crank_bench_suite_set_param (CrankBenchSuite *suite,
  *
  * Gets parent suite of benchmark suite.
  *
- * Returns: (transfer none) (nullable): A parent suite.
+ * Returns: (transfer none) (nullable): A parent suite, or %NULL if it is root.
  */
 CrankBenchSuite*
 crank_bench_suite_get_parent (CrankBenchSuite *suite)
@@ -1152,18 +1164,18 @@ crank_bench_suite_get_case (CrankBenchSuite *suite,
 /**
  * crank_bench_suite_run:
  * @suite: A benchmark suite.
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable) (transfer none): A Parameter node, from higher suite or
+ *     test runner.
  *
  * Runs benchmark suite, recursively.
  *
- * Returns: (transfer none): A benchmark case with given @name.
+ * Returns: (transfer full): A benchmark result.
  */
 GNode*
-crank_bench_suite_run (CrankBenchSuite *suite,
-                       GNode           *param)
+crank_bench_suite_run (CrankBenchSuite     *suite,
+                       CrankBenchParamNode *param)
 {
-  GNode *mparam;
+  CrankBenchParamNode *mparam;
 
   GNode *node;
   guint i;
@@ -1173,7 +1185,7 @@ crank_bench_suite_run (CrankBenchSuite *suite,
   else if (param == NULL)
     mparam = suite->param;
   else
-    mparam = _crank_bench_param_composite (param, suite->param);
+    mparam = crank_bench_param_node_composite (param, suite->param);
 
   node = g_node_new (NULL);
 
@@ -1190,7 +1202,7 @@ crank_bench_suite_run (CrankBenchSuite *suite,
     }
 
   if ((suite->param != NULL) && (param != NULL))
-    _crank_bench_free_param (mparam);
+    crank_bench_param_node_free (mparam);
 
   return node;
 }
@@ -1200,8 +1212,7 @@ crank_bench_suite_run (CrankBenchSuite *suite,
 /**
  * crank_bench_case_new:
  * @name: name of benchmark case.
- * @param: (nullable): A Benchmark parameter in form of
- *     #GNode <#GHashTable <#GQuark, #GValue*>>
+ * @param: (nullable): A Parameter node.
  * @func: (scope notified): A benchmark function.
  * @userdata: (closure): Userdata for @func.
  * @destroy: (destroy userdata): Destroy function for @userdata.
@@ -1211,16 +1222,16 @@ crank_bench_suite_run (CrankBenchSuite *suite,
  * Returns: (transfer full): Newly created benchmark case.
  */
 CrankBenchCase*
-crank_bench_case_new (const gchar    *name,
-                      GNode          *param,
-                      CrankBenchFunc  func,
-                      gpointer        userdata,
-                      GDestroyNotify  destroy)
+crank_bench_case_new (const gchar         *name,
+                      CrankBenchParamNode *param,
+                      CrankBenchFunc       func,
+                      gpointer             userdata,
+                      GDestroyNotify       destroy)
 {
   CrankBenchCase *bcase = g_slice_new (CrankBenchCase);
 
   bcase->name = g_strdup (name);
-  bcase->param = _crank_bench_dup_param (param);
+  bcase->param = crank_bench_param_node_dup (param);
   bcase->func = func;
   bcase->userdata = userdata;
   bcase->destroy = destroy;
@@ -1238,7 +1249,7 @@ void
 crank_bench_case_free (CrankBenchCase *bcase)
 {
   g_free (bcase->name);
-  _crank_bench_free_param (bcase->param);
+  crank_bench_param_node_free (bcase->param);
   bcase->destroy (bcase->userdata);
 
   g_slice_free (CrankBenchCase, bcase);
@@ -1250,10 +1261,10 @@ crank_bench_case_free (CrankBenchCase *bcase)
  *
  * Gets benchmark parameter of case.
  *
- * Returns: (nullable) (transfer none): Benchmark parameter, which is
- *     #GNode <#GHashTable <#GQuark, #GValue*>>.
+ * Returns: (nullable) (transfer none): A Parameter node or %NULL, if case does
+ *     not have parameter.
  */
-GNode*
+CrankBenchParamNode*
 crank_bench_case_get_param (CrankBenchCase *bcase)
 {
   return bcase->param;
@@ -1262,17 +1273,17 @@ crank_bench_case_get_param (CrankBenchCase *bcase)
 /**
  * crank_bench_case_set_param:
  * @bcase: A benchmark case.
- * @param: (nullable) (transfer none): Benchmark parameter, which is
- *     #GNode <#GHashTable <#GQuark, #GValue*>>.
+ * @param: (nullable) (transfer none): A parameter node or %NULL, to remove
+ *     parameter.
  *
  * Sets benchmark parameter of case.
  */
 void
-crank_bench_case_set_param (CrankBenchCase *bcase,
-                            GNode          *param)
+crank_bench_case_set_param (CrankBenchCase      *bcase,
+                            CrankBenchParamNode *param)
 {
-  _crank_bench_free_param (bcase->param);
-  bcase->param = _crank_bench_dup_param (param);
+  crank_bench_param_node_free (bcase->param);
+  bcase->param = crank_bench_param_node_dup (param);
 }
 
 
@@ -1316,7 +1327,8 @@ crank_bench_case_get_path (CrankBenchCase *bcase)
  *
  * Gets parent of benchmark case.
  *
- * Returns: (transfer none): A parent suite of case.
+ * Returns: (transfer none): A parent suite of case or %NULL, if case is not
+ *     added yet.
  */
 CrankBenchSuite*
 crank_bench_case_get_parent (CrankBenchCase *bcase)
@@ -1327,18 +1339,18 @@ crank_bench_case_get_parent (CrankBenchCase *bcase)
 /**
  * crank_bench_case_run:
  * @bcase: A benchmark case.
- * @param: (nullable) (transfer none): Benchmark parameter, which is
- *     #GNode <#GHashTable <#GQuark, #GValue*>>.
+ * @param: (nullable) (transfer none): A Parameter node from suites or test
+ *     runners.
  *
- * Runs a single benchmark case.
+ * Runs benchmarks for single case.
  *
- * Returns: (transfer full): A run result, which is #GNode <#GList <#CrankBenchRun>>
+ * Returns: (transfer full): A run result.
  */
 GNode*
-crank_bench_case_run (CrankBenchCase *bcase,
-                      GNode          *param)
+crank_bench_case_run (CrankBenchCase      *bcase,
+                      CrankBenchParamNode *param)
 {
-  GNode *mparam;
+  CrankBenchParamNode *mparam;
   GNode *node;  // GNode < GList <CrankBenchRun>>
 
   if (bcase->param == NULL)
@@ -1346,12 +1358,12 @@ crank_bench_case_run (CrankBenchCase *bcase,
   else if (param == NULL)
     mparam = bcase->param;
   else
-    mparam = _crank_bench_param_composite (param, bcase->param);
+    mparam = crank_bench_param_node_composite (param, bcase->param);
 
   if (mparam == NULL)
     {
       gchar *path = crank_bench_case_get_path (bcase);
-      g_warning ("No test parameter for case %s", path);
+      g_warning ("No benchmark parameter for case %s", path);
       g_free (path);
       return g_node_new (NULL);
     }
@@ -1359,7 +1371,7 @@ crank_bench_case_run (CrankBenchCase *bcase,
   node = g_node_new (_crank_bench_case_run1 (bcase, mparam, NULL));
 
   if ((bcase->param != NULL) && (param != NULL))
-    _crank_bench_free_param (mparam);
+    crank_bench_param_node_free (mparam);
 
   return node;
 }
@@ -1854,35 +1866,6 @@ _crank_bench_dup_table (GHashTable *table)
     }
 }
 
-gboolean
-_crank_bench_node_free_table (GNode    *node,
-                              gpointer  userdata)
-{
-  if (node->data != NULL)
-    {
-      GHashTable *table = (GHashTable*) node->data;
-      g_hash_table_unref (table);
-    }
-}
-
-GNode*
-_crank_bench_dup_param (GNode *param)
-{
-  return (param == NULL) ? NULL : g_node_copy_deep (param,
-                                                    (GCopyFunc)_crank_bench_dup_table,
-                                                    NULL);
-}
-
-void
-_crank_bench_free_param (GNode *param)
-{
-  if (param != NULL)
-    {
-      g_node_traverse (param, G_IN_ORDER, G_TRAVERSE_ALL, -1, _crank_bench_node_free_table, NULL);
-      g_node_destroy (param);
-    }
-}
-
 GHashTable*
 _crank_bench_table_composite (GHashTable *prev,
                               GHashTable *add)
@@ -1908,46 +1891,6 @@ _crank_bench_table_composite (GHashTable *prev,
         crank_value_table_set (result, ik, (GValue*)iv);
       return result;
     }
-}
-
-GNode*
-_crank_bench_param_composite (GNode *prev,
-                              GNode *add)
-{
-  GNode *result = NULL;
-
-  if (add != NULL)
-    {
-      GHashTable *restable;
-      GNode *prevc = prev->children;
-      GNode *addc = add->children;
-
-      restable = _crank_bench_table_composite ((GHashTable*) prev->data,
-                                               (GHashTable*) add->data);
-      result = g_node_new (restable);
-
-      while ((prevc != NULL) && (addc != NULL))
-        {
-          g_node_append (result, _crank_bench_param_composite (prevc, addc));
-          prevc = prevc->next;
-          addc = addc->next;
-        }
-      while (prevc != NULL)
-        {
-          g_node_append (result, _crank_bench_dup_param(prevc));
-          prevc = prevc->next;
-        }
-      while (addc != NULL)
-        {
-          g_node_append (result, _crank_bench_dup_param(addc));
-          addc = addc->next;
-        }
-    }
-  else
-    {
-      result = _crank_bench_dup_param (prev);
-    }
-  return result;
 }
 
 /*
@@ -2041,11 +1984,10 @@ _crank_bench_get_suite_common (const gchar  *path,
  * Returns: A GList <CrankBenchRun>, which is list of each result of single run.
  */
 GList*
-_crank_bench_case_run1 (CrankBenchCase *bcase,
-                        GNode          *param,
-                        GHashTable     *param_prev)
+_crank_bench_case_run1 (CrankBenchCase      *bcase,
+                        CrankBenchParamNode *param,
+                        GHashTable          *param_prev)
 {
-  GNode         *param_child;
   GHashTable    *param1;
 
   GList         *list = NULL;
@@ -2053,12 +1995,12 @@ _crank_bench_case_run1 (CrankBenchCase *bcase,
   guint i;
   guint repeat;
 
-  if (param->data == NULL)
+  if (crank_bench_param_node_is_placeholder (param))
     param1 = param_prev;
   else if (param_prev == NULL)
-    param1 = (GHashTable*) param->data;
+    param1 = param->table;
   else
-    param1 = _crank_bench_table_composite (param_prev, (GHashTable*)param->data);
+    param1 = _crank_bench_table_composite (param_prev, param->table);
 
   repeat = crank_value_table_get_uint (param1,
                                        GINT_TO_POINTER(g_quark_from_static_string ("repeat")),
@@ -2078,15 +2020,19 @@ _crank_bench_case_run1 (CrankBenchCase *bcase,
 
 
   // Recurse to children.
-  param_child = param->children;
-  while (param_child != NULL)
+  for (i = 0; i < param->children->len; i++)
     {
-      list = g_list_concat (list, _crank_bench_case_run1 (bcase, param_child, param1));
-      param_child = param_child->next;
+      CrankBenchParamNode *param_child;
+
+      param_child = (CrankBenchParamNode*) param->children->pdata[i];
+      list = g_list_concat (list,
+                            _crank_bench_case_run1 (bcase,
+                                                    param_child,
+                                                    param1));
     }
 
 
-  if ((param->data != NULL) && (param_prev != NULL))
+  if ((! crank_bench_param_node_is_placeholder (param)) && (param_prev != NULL))
     g_hash_table_unref (param1);
 
   return list;

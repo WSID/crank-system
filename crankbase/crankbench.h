@@ -63,10 +63,10 @@ void                  crank_bench_add_with_param          (const gchar          
                                                            CrankBenchFunc         func,
                                                            gpointer               userdata,
                                                            GDestroyNotify         destroy,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 void                  crank_bench_set_param               (const gchar           *path,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 //////// CrankBenchParamNode ///////////////////////////////////////////////////
 
@@ -139,7 +139,7 @@ gboolean              crank_bench_param_node_remove_child (CrankBenchParamNode  
 
 CrankBenchParamNode  *crank_bench_param_node_add_placeholder(CrankBenchParamNode *node);
 
-void                  crank_bench_param_node_add_placeholders(CrankBenchParamNode *node,
+CrankBenchParamNode **crank_bench_param_node_add_placeholders(CrankBenchParamNode *node,
                                                               guint                n);
 
 
@@ -149,7 +149,7 @@ CrankBenchParamNode  *crank_bench_param_node_composite    (CrankBenchParamNode  
 //////// CrankBenchSuite ///////////////////////////////////////////////////////
 
 CrankBenchSuite      *crank_bench_suite_new               (const gchar           *name,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 void                  crank_bench_suite_free              (CrankBenchSuite       *suite);
 
@@ -161,10 +161,10 @@ void                  crank_bench_suite_set_name          (CrankBenchSuite      
                                                            const gchar           *name);
 
 
-GNode                *crank_bench_suite_get_param         (CrankBenchSuite       *suite);
+CrankBenchParamNode  *crank_bench_suite_get_param         (CrankBenchSuite       *suite);
 
 void                  crank_bench_suite_set_param         (CrankBenchSuite       *suite,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 CrankBenchSuite      *crank_bench_suite_get_parent        (CrankBenchSuite       *suite);
 
@@ -193,13 +193,13 @@ CrankBenchCase       *crank_bench_suite_get_case          (CrankBenchSuite      
                                                            const gchar           *name);
 
 GNode                *crank_bench_suite_run               (CrankBenchSuite       *suite,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 
 //////// CrankBenchCase ////////////////////////////////////////////////////////
 
 CrankBenchCase       *crank_bench_case_new                (const gchar           *name,
-                                                           GNode                 *param,
+                                                           CrankBenchParamNode   *param,
                                                            CrankBenchFunc         func,
                                                            gpointer               userdata,
                                                            GDestroyNotify         destroy);
@@ -207,10 +207,10 @@ CrankBenchCase       *crank_bench_case_new                (const gchar          
 void                  crank_bench_case_free               (CrankBenchCase        *bcase);
 
 
-GNode                *crank_bench_case_get_param          (CrankBenchCase        *bcase);
+CrankBenchParamNode  *crank_bench_case_get_param          (CrankBenchCase        *bcase);
 
 void                  crank_bench_case_set_param          (CrankBenchCase        *bcase,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 gchar                *crank_bench_case_get_path           (CrankBenchCase        *bcase);
 
@@ -218,7 +218,7 @@ gchar                *crank_bench_case_get_path           (CrankBenchCase       
 CrankBenchSuite      *crank_bench_case_get_parent         (CrankBenchCase        *bcase);
 
 GNode                *crank_bench_case_run                (CrankBenchCase        *bcase,
-                                                           GNode                 *param);
+                                                           CrankBenchParamNode   *param);
 
 
 //////// CrankBenchRun /////////////////////////////////////////////////////////
