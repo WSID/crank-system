@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 
 //////// Structure declaration /////////////////////////////////////////////////
 
+typedef struct _CrankBenchParamNode CrankBenchParamNode;
 typedef struct _CrankBenchSuite CrankBenchSuite;
 typedef struct _CrankBenchCase CrankBenchCase;
 typedef struct _CrankBenchRun CrankBenchRun;
@@ -67,6 +68,83 @@ void                  crank_bench_add_with_param          (const gchar          
 void                  crank_bench_set_param               (const gchar           *path,
                                                            GNode                 *param);
 
+//////// CrankBenchParamNode ///////////////////////////////////////////////////
+
+CrankBenchParamNode  *crank_bench_param_node_new          (void);
+
+void                  crank_bench_param_node_free         (CrankBenchParamNode   *node);
+
+CrankBenchParamNode  *crank_bench_param_node_dup          (CrankBenchParamNode   *node);
+
+CrankBenchParamNode  *crank_bench_param_node_dup1         (CrankBenchParamNode   *node);
+
+const GValue         *crank_bench_param_node_get          (CrankBenchParamNode   *node,
+                                                           const gchar           *name);
+
+guint                 crank_bench_param_node_get_uint     (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const guint            defval);
+
+gint                  crank_bench_param_node_get_int      (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gint             defval);
+
+gfloat                crank_bench_param_node_get_float    (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gfloat           defval);
+
+gdouble               crank_bench_param_node_get_double   (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gdouble          defval);
+
+void                  crank_bench_param_node_set          (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const GValue          *value);
+
+void                  crank_bench_param_node_set_uint     (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const guint            value);
+
+void                  crank_bench_param_node_set_int      (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gint             value);
+
+void                  crank_bench_param_node_set_float    (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gfloat           value);
+
+void                  crank_bench_param_node_set_double   (CrankBenchParamNode   *node,
+                                                           const gchar           *name,
+                                                           const gdouble          value);
+
+
+const GHashTable     *crank_bench_param_node_get_table    (CrankBenchParamNode   *node);
+
+void                  crank_bench_param_node_set_table    (CrankBenchParamNode   *node,
+                                                           GHashTable            *table);
+
+gboolean              crank_bench_param_node_is_placeholder(CrankBenchParamNode  *node);
+
+
+CrankBenchParamNode  *crank_bench_param_node_get_parent   (CrankBenchParamNode   *node);
+
+const GPtrArray      *crank_bench_param_node_get_children (CrankBenchParamNode   *node);
+
+
+void                  crank_bench_param_node_add_child    (CrankBenchParamNode   *node,
+                                                           CrankBenchParamNode   *child);
+
+gboolean              crank_bench_param_node_remove_child (CrankBenchParamNode   *node,
+                                                           CrankBenchParamNode   *child);
+
+CrankBenchParamNode  *crank_bench_param_node_add_placeholder(CrankBenchParamNode *node);
+
+void                  crank_bench_param_node_add_placeholders(CrankBenchParamNode *node,
+                                                              guint                n);
+
+
+CrankBenchParamNode  *crank_bench_param_node_composite    (CrankBenchParamNode   *a,
+                                                           CrankBenchParamNode   *b);
 
 //////// CrankBenchSuite ///////////////////////////////////////////////////////
 

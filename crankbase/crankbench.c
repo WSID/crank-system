@@ -312,6 +312,519 @@ crank_bench_set_param (const gchar *path,
 }
 
 
+//////// CrankBenchParamNode ///////////////////////////////////////////////////
+
+/**
+ * crank_bench_param_node_new:
+ *
+ * Constructs an empty #CrankBenchParamNode.
+ *
+ * Returns: (tranfer full): Newly created #CrankBenchParamNode.
+ */
+CrankBenchParamNode*
+crank_bench_param_node_new (void)
+{
+  CrankBenchParamNode *node = g_slice_new (CrankBenchParamNode);
+
+  node->parent = NULL;
+  node->children = g_ptr_array_new_with_free_func ((GDestroyNotify)
+                                                   crank_bench_param_node_free);
+  node->table = crank_value_table_create (g_direct_hash, g_direct_equal);
+
+  return node;
+}
+
+/**
+ * crank_bench_param_node_free:
+ * @node: A Parameter node.
+ *
+ * Frees a tree of #CrankBenchParamNode, which means that its children also
+ * freed.
+ */
+void
+crank_bench_param_node_free (CrankBenchParamNode *node)
+{
+  g_ptr_array_unref (node->children);
+  g_hash_table_unref (node->table);
+  g_slice_free (CrankBenchParamNode, node);
+}
+
+/**
+ * crank_bench_param_node_dup:
+ *
+ * Duplicates a tree of #CrankBenchParamNode.
+ *
+ * Returns: (transfer full): Duplicated node.
+ */
+CrankBenchParamNode*
+crank_bench_param_node_dup (CrankBenchParamNode *node)
+{
+  CrankBenchParamNode *dup = crank_bench_param_node_dup1 (node);
+  guint i;
+
+  for (i = 0; i < node->children->len; i++)
+    {
+      CrankBenchParamNode *subnode;
+
+      subnode = crank_bench_param_node_dup (node->children->pdata[i]);
+      crank_bench_param_node_add_child (dup, subnode);
+    }
+
+  return dup;
+}
+
+/**
+ * crank_bench_param_node_dup1:
+ * @node : A Parameter node.
+ *
+ * Duplicates single #CrankBenchParamNode. The duplication will have no child.
+ *
+ * Returns: (transfer full): Duplicated single node.
+ */
+CrankBenchParamNode*
+crank_bench_param_node_dup1 (CrankBenchParamNode *node)
+{
+  CrankBenchParamNode *dup = crank_bench_param_node_new ();
+
+  crank_bench_param_node_set_table (dup, node->table);
+
+  return dup;
+}
+
+/**
+ * crank_bench_param_node_get:
+ * @node: A Parameter node.
+ * @name: Parameter name.
+ *
+ * Gets a parameter by name, in form of #GValue.
+ *
+ * Returns: (transfer none) (nullable): A Value of parameter or %NULL if
+ *     parameter with @name does not exist.
+ */
+const GValue*
+crank_bench_param_node_get (CrankBenchParamNode *node,
+                            const gchar         *name)
+{
+  GQuark qname = g_quark_try_string (name);
+  return g_hash_table_lookup (node->table, GINT_TO_POINTER (qname));
+}
+
+/**
+ * crank_bench_param_node_get_uint:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @defval: Default value for failure
+ *
+ * Gets a unsigned integer parameter by name.
+ *
+ * Returns: A unsigned integer value of parameter or @defval if parameter with
+ *     @name does not exist or is not unsigned integer.
+ */
+guint
+crank_bench_param_node_get_uint (CrankBenchParamNode *node,
+                                 const gchar         *name,
+                                 const guint          defval)
+{
+  GQuark qname = g_quark_try_string (name);
+  return crank_value_table_get_uint (node->table,
+                                     GINT_TO_POINTER (qname),
+                                     defval);
+}
+
+/**
+ * crank_bench_param_node_get_int:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @defval: Default value for failure
+ *
+ * Gets a integer parameter by name.
+ *
+ * Returns: A integer value of parameter or @defval if parameter with @name does
+ *     not exist or is not integer.
+ */
+gint
+crank_bench_param_node_get_int (CrankBenchParamNode *node,
+                                const gchar         *name,
+                                const gint           defval)
+{
+  GQuark qname = g_quark_try_string (name);
+  return crank_value_table_get_int (node->table,
+                                    GINT_TO_POINTER (qname),
+                                    defval);
+}
+
+/**
+ * crank_bench_param_node_get_float:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @defval: Default value for failure
+ *
+ * Gets a float parameter by name.
+ *
+ * Returns: A float value of parameter or @defval if parameter with @name does
+ *     not exist or is not float.
+ */
+gfloat
+crank_bench_param_node_get_float (CrankBenchParamNode *node,
+                                  const gchar         *name,
+                                  const gfloat         defval)
+{
+  GQuark qname = g_quark_try_string (name);
+  return crank_value_table_get_float (node->table,
+                                      GINT_TO_POINTER (qname),
+                                      defval);
+}
+
+/**
+ * crank_bench_param_node_get_double:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @defval: Default value for failure
+ *
+ * Gets a double parameter by name.
+ *
+ * Returns: A double value of parameter or @defval if parameter with @name does
+ *     not exist or is not double.
+ */
+gdouble
+crank_bench_param_node_get_double (CrankBenchParamNode *node,
+                                   const gchar         *name,
+                                   const gdouble        defval)
+{
+  GQuark qname = g_quark_try_string (name);
+  return crank_value_table_get_double (node->table,
+                                       GINT_TO_POINTER (qname),
+                                       defval);
+}
+
+/**
+ * crank_bench_param_node_set:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @value: (transfer none): A value
+ *
+ * Sets a paramenter in form of #GValue.
+ */
+void
+crank_bench_param_node_set (CrankBenchParamNode *node,
+                            const gchar         *name,
+                            const GValue        *value)
+{
+  GQuark qname = g_quark_try_string (name);
+  crank_value_table_set (node->table,
+                         GINT_TO_POINTER (qname),
+                         value);
+}
+
+/**
+ * crank_bench_param_node_set_uint:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @value: A value
+ *
+ * Sets a unsigned integer paramenter.
+ */
+void
+crank_bench_param_node_set_uint (CrankBenchParamNode *node,
+                                 const gchar         *name,
+                                 const guint          value)
+{
+  GQuark qname = g_quark_try_string (name);
+  crank_value_table_set_uint (node->table,
+                              GINT_TO_POINTER (qname),
+                              value);
+}
+
+/**
+ * crank_bench_param_node_set_int:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @value: A value
+ *
+ * Sets a integer paramenter.
+ */
+void
+crank_bench_param_node_set_int (CrankBenchParamNode *node,
+                                const gchar         *name,
+                                const gint          value)
+{
+  GQuark qname = g_quark_try_string (name);
+  crank_value_table_set_int (node->table,
+                             GINT_TO_POINTER (qname),
+                             value);
+}
+
+/**
+ * crank_bench_param_node_set_float:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @value: A value
+ *
+ * Sets a float paramenter.
+ */
+void
+crank_bench_param_node_set_float (CrankBenchParamNode *node,
+                                  const gchar         *name,
+                                  const gfloat         value)
+{
+  GQuark qname = g_quark_try_string (name);
+  crank_value_table_set_float (node->table,
+                               GINT_TO_POINTER (qname),
+                               value);
+}
+
+/**
+ * crank_bench_param_node_set_float:
+ * @node : A Parameter node.
+ * @name: Parameter name.
+ * @value: A value
+ *
+ * Sets a double paramenter.
+ */
+void
+crank_bench_param_node_set_double (CrankBenchParamNode *node,
+                                   const gchar         *name,
+                                   const gdouble        value)
+{
+  GQuark qname = g_quark_try_string (name);
+  crank_value_table_set_double (node->table,
+                                GINT_TO_POINTER (qname),
+                                value);
+}
+
+/**
+ * crank_bench_param_node_get_table:
+ * @node : A Parameter node.
+ *
+ * Gets a parameter table, which is #GHashTable<#GQuark, #GValue*>.
+ *
+ * Returns: (transfer none) (element-type GQuark GValue): A parameter table.
+ */
+const GHashTable*
+crank_bench_param_node_get_table (CrankBenchParamNode *node)
+{
+  return node->table;
+}
+
+/**
+ * crank_bench_param_node_set_table:
+ * @node: A Parameter node.
+ * @table: (transfer none) (element-type GQuark GValue): A parameter table.
+ *
+ * Sets a parameter table, which is #GHashTable<#GQuark, #GValue*>.
+ */
+void
+crank_bench_param_node_set_table (CrankBenchParamNode *node,
+                                  GHashTable          *table)
+{
+  GHashTableIter i;
+  gpointer ik;
+  gpointer iv;
+
+  g_hash_table_remove_all (node->table);
+
+  g_hash_table_iter_init (&i, table);
+  while (g_hash_table_iter_next (&i, &ik, &iv))
+    crank_value_table_set (node->table, ik, (GValue*)iv);
+}
+
+/**
+ * crank_bench_param_node_is_placeholder:
+ * @node: A Parameter node.
+ *
+ * Checks whether it is a placeholder item.
+ *
+ * Often #CrankBenchParamNode s are composited through #CrankBenchSuite, some
+ * portion of tree are empty, so that higher entities can come in as they were
+ * in parent suites.
+ *
+ * See also: crank_bench_param_node_composite()
+ *
+ * Returns: whether it is a placeholder item.
+ */
+gboolean
+crank_bench_param_node_is_placeholder (CrankBenchParamNode *node)
+{
+  return g_hash_table_size (node->table) == 0;
+}
+
+/**
+ * crank_bench_param_node_get_parent:
+ * @node: A Parameter node.
+ *
+ * Gets parent node of this @node.
+ *
+ * Returns: (transfer none) (nullable): The parent node, or %NULL if it is root.
+ */
+CrankBenchParamNode*
+crank_bench_param_node_get_parent (CrankBenchParamNode *node)
+{
+  return node->parent;
+}
+
+/**
+ * crank_bench_param_node_get_children:
+ * @node: A parameter node.
+ *
+ * Gets childrens of this @node.
+ *
+ * Returns: (transfer none) (element-type CrankBenchParamNode):
+ *     The children nodes.
+ */
+const GPtrArray*
+crank_bench_param_node_get_children (CrankBenchParamNode *node)
+{
+  return node->children;
+}
+
+/**
+ * crank_bench_param_node_add_child:
+ * @node: A parameter node.
+ * @child: (transfer full): A children node.
+ *
+ * Add child node to this node.
+ */
+void
+crank_bench_param_node_add_child (CrankBenchParamNode *node,
+                                  CrankBenchParamNode *child)
+{
+  g_return_if_fail (child->parent != NULL);
+
+  child->parent = node;
+  g_ptr_array_add (node->children, child);
+}
+
+/**
+ * crank_bench_param_node_remove_child:
+ * @node: A parameter node.
+ * @child: (transfer none): A children node.
+ *
+ * Remove a child node from this node.
+ *
+ * Returns: Whether the child node was removed.
+ */
+gboolean
+crank_bench_param_node_remove_child (CrankBenchParamNode *node,
+                                     CrankBenchParamNode *child)
+{
+  if (child->parent != node) return FALSE;
+
+  child->parent = NULL;
+  return g_ptr_array_remove (node->children, child);
+}
+
+/**
+ * crank_bench_param_node_add_placeholder:
+ * @node: A parameter node.
+ *
+ * A shorthand for adding empty node to this node.
+ *
+ * Returns: (transfer none): Added placeholder.
+ */
+CrankBenchParamNode*
+crank_bench_param_node_add_placeholder (CrankBenchParamNode *node)
+{
+  CrankBenchParamNode *placeholder = crank_bench_param_node_new ();
+  crank_bench_param_node_add_child (node, placeholder);
+  return placeholder;
+}
+
+/**
+ * crank_bench_param_node_add_placeholder:
+ * @node: A parameter node.
+ * @n: Number of placeholders to add.
+ *
+ * A shorthand for adding multiple empty nodes to this node.
+ *
+ * Returns: (array) (transfer none): Array of added placeholders.
+ */
+CrankBenchParamNode**
+crank_bench_param_node_add_placeholders (CrankBenchParamNode *node,
+                                         guint                n)
+{
+  CrankBenchParamNode** result;
+  guint i;
+
+  result = (CrankBenchParamNode**) (node->children->pdata + node->children->len);
+  for (i = 0; i < n; i++)
+    crank_bench_param_node_add_child (node, crank_bench_param_node_new ());
+
+  return result;
+}
+
+/**
+ * crank_bench_param_node_composite:
+ * @a: A Parameter node.
+ * @b: (transfer none): Other parameter node to overlay on @a.
+ *
+ * Creates composite parameter node tree, of both tree of @a and @b. @b will
+ * override on @a when part of both overlaps to each other.
+ *
+ * Returns: (transfer full): A composite parameter node tree
+ */
+CrankBenchParamNode*
+crank_bench_param_node_composite (CrankBenchParamNode *a,
+                                  CrankBenchParamNode *b)
+{
+  CrankBenchParamNode *node;
+  // This is based on simple rule.
+  // If one part is missing, return dup of other.
+  // Both are present, composite and iterate.
+
+  if (a == NULL)
+    return crank_bench_param_node_dup (b);
+  else if (b == NULL)
+    return crank_bench_param_node_dup (a);
+
+  // First composite the nodes themselves.
+
+  {
+    GHashTableIter i;
+    gpointer ik;
+    gpointer iv;
+
+    node = crank_bench_param_node_dup1 (a);
+
+    g_hash_table_iter_init (&i, b->table);
+    while (g_hash_table_iter_next (&i, &ik, &iv))
+      crank_value_table_set (node->table, ik, (GValue*)iv);
+  }
+
+  {
+    guint i;
+    guint n;
+
+    n = MIN (a->children->len, b->children->len);
+
+    for (i = 0; i < n; i++)
+      {
+        CrankBenchParamNode *subnode;
+
+        subnode = crank_bench_param_node_composite (a->children->pdata[i],
+                                                    b->children->pdata[i]);
+
+        crank_bench_param_node_add_child (node, subnode);
+      }
+
+    for (; i < a->children->len; i++)
+      {
+        CrankBenchParamNode *subnode;
+        subnode = crank_bench_param_node_dup (a->children->pdata[i]);
+
+        crank_bench_param_node_add_child (node, subnode);
+      }
+
+    for (; i < b->children->len; i++)
+      {
+        CrankBenchParamNode *subnode;
+        subnode = crank_bench_param_node_dup (b->children->pdata[i]);
+
+        crank_bench_param_node_add_child (node, subnode);
+      }
+  }
+  return node;
+}
+
 
 //////// CrankBenchSuite ///////////////////////////////////////////////////////
 

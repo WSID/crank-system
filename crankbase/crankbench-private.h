@@ -52,6 +52,17 @@ typedef struct _CrankBenchResultEntry {
 //////// Structure Definition //////////////////////////////////////////////////
 
 /**
+ * CrankBenchParamNode:
+ *
+ * A structure represents benchmarking parameters variation hierarchy.
+ */
+struct _CrankBenchParamNode {
+  CrankBenchParamNode  *parent;
+  GPtrArray            *children;
+  GHashTable           *table;
+};
+
+/**
  * CrankBenchSuite:
  *
  * A structure represents a collection of benchmark cases.
@@ -102,7 +113,6 @@ struct _CrankBenchRun {
 
   GHashTable           *result;
 };
-
 
 //////// Private functions /////////////////////////////////////////////////////
 
