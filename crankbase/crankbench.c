@@ -833,6 +833,14 @@ crank_bench_case_run (CrankBenchCase *bcase,
   else
     mparam = _crank_bench_param_composite (param, bcase->param);
 
+  if (mparam == NULL)
+    {
+      gchar *path = crank_bench_case_get_path (bcase);
+      g_warning ("No test parameter for case %s", path);
+      g_free (path);
+      return g_node_new (NULL);
+    }
+
   node = g_node_new (_crank_bench_case_run1 (bcase, mparam, NULL));
 
   if ((bcase->param != NULL) && (param != NULL))
@@ -1673,6 +1681,7 @@ _crank_bench_run_do (CrankBenchRun *run)
   g_timer_stop (run->timer_run);
 
   // Process result.
+  run->result = crank_value_table_create (g_direct_hash, g_direct_equal);
   while (! g_queue_is_empty(run->result_journal))
     {
       CrankBenchResultEntry *entry;
@@ -1723,43 +1732,45 @@ _crank_bench_run_list_write (GList         *runlist,
   for (iter = runlist; iter != NULL; iter = iter->next)
     {
       CrankBenchRun *run;
-      GHashTableIter titer;
-      gpointer       titerkey;
+      GHashTableIter piter;
+      gpointer       piterkey;
+      GHashTableIter riter;
+      gpointer       riterkey;
 
       run = (CrankBenchRun*) iter->data;
 
-      g_hash_table_iter_init (&titer, run->param);
-      while (g_hash_table_iter_next (&titer, &titerkey, NULL))
+      g_hash_table_iter_init (&piter, run->param);
+      while (g_hash_table_iter_next (&piter, &piterkey, NULL))
         {
-          GQuark titerkeyq = (GQuark) GPOINTER_TO_INT(titerkey);
+          GQuark piterkeyq = (GQuark) GPOINTER_TO_INT(piterkey);
 
-          if (titerkeyq == quark_repeat)
+          if (piterkeyq == quark_repeat)
             continue;
 
           for (i = 0; i < param_order->len; i++)
             {
-              if (titerkeyq == g_array_index (param_order, GQuark, i))
+              if (piterkeyq == g_array_index (param_order, GQuark, i))
                 break;
             }
           if (i == param_order->len)
             {
-              g_array_append_val (param_order, titerkeyq);
+              g_array_append_val (param_order, piterkeyq);
             }
         }
 
-      g_hash_table_iter_init (&titer, run->result);
-      while (g_hash_table_iter_next (&titer, &titerkey, NULL))
+      g_hash_table_iter_init (&riter, run->result);
+      while (g_hash_table_iter_next (&riter, &riterkey, NULL))
         {
-          GQuark titerkeyq = (GQuark) GPOINTER_TO_INT(titerkey);
+          GQuark riterkeyq = (GQuark) GPOINTER_TO_INT(riterkey);
 
           for (i = 0; i < result_order->len; i++)
             {
-              if (titerkeyq == g_array_index (result_order, GQuark, i))
+              if (riterkeyq == g_array_index (result_order, GQuark, i))
                 break;
             }
           if (i == result_order->len)
             {
-              g_array_append_val (result_order, titerkeyq);
+              g_array_append_val (result_order, riterkeyq);
             }
         }
 
@@ -1788,7 +1799,7 @@ _crank_bench_run_list_write (GList         *runlist,
     {
       g_string_append_printf (strbuild,
                               ",\t%s",
-                              g_quark_to_string (g_array_index (param_order,
+                              g_quark_to_string (g_array_index (result_order,
                                                                 GQuark,
                                                                 i)));
     }
@@ -1848,7 +1859,7 @@ _crank_bench_run_list_write (GList         *runlist,
 
           g_value_init (&strvalue, G_TYPE_STRING);
 
-          pvalue = (GValue*) g_hash_table_lookup (run->param,
+          pvalue = (GValue*) g_hash_table_lookup (run->result,
                                                   GINT_TO_POINTER(result_quark));
 
           if (pvalue == NULL)
