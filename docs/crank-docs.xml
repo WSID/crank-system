@@ -41,6 +41,7 @@
       <xi:include href="xml/crank128.xml"/>
       <xi:include href="xml/crankstring.xml"/>
       <xi:include href="xml/crankbasetest.xml"/>
+      <xi:include href="xml/crankbench.xml"/>
     </chapter>
   
     <chapter>
