@@ -1810,6 +1810,7 @@ _crank_bench_run_list_write (GList         *runlist,
   for (iter = runlist; iter != NULL; iter = iter->next)
     {
       CrankBenchRun *run;
+      gchar *statestr = NULL;
 
       run = (CrankBenchRun*) iter->data;
 
@@ -1851,35 +1852,56 @@ _crank_bench_run_list_write (GList         *runlist,
           g_value_unset (&strvalue);
         }
 
-      for (i = 0; i < result_order->len; i++)
+      switch (run->state & CRANK_BENCH_RUN_MASK_RES_STATE)
         {
-          GValue  strvalue = {0};
-          GValue *pvalue;
-          GQuark  result_quark;
+        case CRANK_BENCH_RUN_SKIP:
+          statestr = "SKIP";
+          break;
 
-          result_quark = g_array_index (result_order, GQuark, i);
+        case CRANK_BENCH_RUN_FAIL:
+          statestr = "FAIL";
+          break;
 
-          g_value_init (&strvalue, G_TYPE_STRING);
+        case CRANK_BENCH_RUN_SUCCES:
+          break;
+        }
 
-          pvalue = (GValue*) g_hash_table_lookup (run->result,
-                                                  GINT_TO_POINTER(result_quark));
-
-          if (pvalue == NULL)
+      if (statestr != NULL)
+        {
+          g_string_append_printf (strbuild, ",\t%s - %s", statestr, run->message);
+        }
+      else
+        {
+          for (i = 0; i < result_order->len; i++)
             {
-              g_string_append (strbuild, ",\t<empty>");
-            }
-          else if (! g_value_transform (pvalue, &strvalue))
-            {
-              g_string_append (strbuild, ",\t<value>");
-            }
-          else
-            {
-              g_string_append_printf (strbuild,
-                                      ",\t%s",
-                                      g_value_get_string (&strvalue));
-            }
+              GValue  strvalue = {0};
+              GValue *pvalue;
+              GQuark  result_quark;
 
-          g_value_unset (&strvalue);
+              result_quark = g_array_index (result_order, GQuark, i);
+
+              g_value_init (&strvalue, G_TYPE_STRING);
+
+              pvalue = (GValue*) g_hash_table_lookup (run->result,
+                                                      GINT_TO_POINTER(result_quark));
+
+              if (pvalue == NULL)
+                {
+                  g_string_append (strbuild, ",\t<empty>");
+                }
+              else if (! g_value_transform (pvalue, &strvalue))
+                {
+                  g_string_append (strbuild, ",\t<value>");
+                }
+              else
+                {
+                  g_string_append_printf (strbuild,
+                                          ",\t%s",
+                                          g_value_get_string (&strvalue));
+                }
+
+              g_value_unset (&strvalue);
+            }
         }
       g_string_append_c (strbuild, '\n');
     }
