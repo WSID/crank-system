@@ -31,6 +31,10 @@
 
 G_BEGIN_DECLS
 
+GValue *crank_value_dup                    (const GValue *value);
+
+void    crank_value_free                   (GValue      *value);
+
 void    crank_value_overwrite_init         (GValue      *value,
                                             const GType  type);
 
@@ -65,10 +69,6 @@ void    crank_value_overwrite_boxed        (GValue      *value,
 void    crank_value_overwrite_pointer      (GValue      *value,
                                             const GType  value_type,
                                             gpointer     pointer_value);
-
-GValue *crank_value_dup                    (const GValue *value);
-
-void    crank_value_free                   (GValue      *value);
 
 
 void    crank_value_array_overwrite        (GValue *array,

@@ -50,6 +50,48 @@
 #include "crankbasemacro.h"
 #include "crankvalue.h"
 
+
+
+/**
+ * crank_value_dup: (skip)
+ * @value: #GValue to duplicate.
+ *
+ * Duplicates @value. This returns %NULL if @value is not initialized, frequently
+ * when @value is left un-initialized to be used as 'void' #GValue.
+ *
+ * Returns: (nullable): Duplicated @value, or %NULL if @value is not initialized.
+ */
+GValue*
+crank_value_dup (const GValue *value)
+{
+  GValue *result = NULL;
+
+  if (G_IS_VALUE (value))
+    {
+      result = g_new0 (GValue, 1);
+      crank_value_overwrite (result, value);
+    }
+
+  return result;
+}
+
+/**
+ * crank_value_free: (skip)
+ * @value: #GValue to free.
+ *
+ * Frees duplicated value.
+ */
+void
+crank_value_free (GValue *value)
+{
+  if (G_IS_VALUE (value))
+    g_value_unset (value);
+  g_free (value);
+}
+
+
+
+
 /**
  * crank_value_overwrite_init: (skip)
  * @value: (out caller-allocates): #GValue to overwrite
@@ -234,42 +276,6 @@ crank_value_overwrite_pointer (GValue     *value,
 }
 
 
-/**
- * crank_value_dup: (skip)
- * @value: #GValue to duplicate.
- *
- * Duplicates @value. This returns %NULL if @value is not initialized, frequently
- * when @value is left un-initialized to be used as 'void' #GValue.
- *
- * Returns: (nullable): Duplicated @value, or %NULL if @value is not initialized.
- */
-GValue*
-crank_value_dup (const GValue *value)
-{
-  GValue *result = NULL;
-
-  if (G_IS_VALUE (value))
-    {
-      result = g_new0 (GValue, 1);
-      crank_value_overwrite (result, value);
-    }
-
-  return result;
-}
-
-/**
- * crank_value_free: (skip)
- * @value: #GValue to free.
- *
- * Frees duplicated value.
- */
-void
-crank_value_free (GValue *value)
-{
-  if (G_IS_VALUE (value))
-    g_value_unset (value);
-  g_free (value);
-}
 
 
 /**
