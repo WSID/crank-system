@@ -61,10 +61,51 @@ namespace Crank {
 	public StrPtrFunc<void*>		pointer_to_string;
 	
 	
+	namespace Bench {
+		public class ParamNode {
+			public ParamNode ();
+
+			public GLib.GenericArray<Crank.Bench.ParamNode>	children {get;}
+			public Crank.Bench.ParamNode			parent {get;}
+			public GLib.HashTable<GLib.Quark, GLib.Value?> 	table {get; set;}
+		}
+
+		public class Suite {
+			public Suite 	(string			name,
+					 Crank.Bench.ParamNode?	param = null);
+
+			public string			name {get; set;}
+			public Crank.Bench.ParamNode?	param {get; set;}
+
+			public string			path {owned get;}
+			public Crank.Bench.Suite     	parent {get;}
+
+			public GLib.GenericArray<Crank.Bench.Suite>  suites {get;}
+			public GLib.GenericArray<Crank.Bench.Case>	cases {get;}
+		}
 	
-	
-	
-	
+		public class Case {
+			public Case 	(string			name,
+					 Crank.Bench.ParamNode?	param,
+					 owned Crank.Bench.Func func);
+
+			public string			name {get; set;}
+			public Crank.Bench.ParamNode?	param {get; set;}
+
+			public string			path {owned get;}
+			public Crank.Bench.Suite     	parent {get;}
+		}
+
+		public class Run {
+			public GLib.HashTable<GLib.Quark, GLib.Value?> @params {get;}
+			public bool running {[CCode(name="is_running")]get;}
+		}
+	}
+
+
+
+
+
 	public struct RanUint {
 		public RanUint		(uint	start, uint		end);
 		public RanUint.diff (uint	start, uint		diff);

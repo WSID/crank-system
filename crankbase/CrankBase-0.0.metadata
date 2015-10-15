@@ -57,6 +57,30 @@ pointer_to_string	skip
 str_*		parent="Crank.Str"	name="str_(.+)"
 
 
+//////// Benchmark /////////////////////////////////////////////////////////////
+
+bench_*         skip=false  parent="Crank.Bench" name="bench_(.+)"
+Bench*          skip=false  parent="Crank.Bench" name="Bench(.+)"
+Bench*.*        skip=false
+
+bench*new       skip=true
+
+bench_add                       skip=true
+bench_add_with_param            name="add"
+bench_add_with_param.param      default=null
+
+BenchSuite.run          type_arguments="GLib.List<Crank.Bench.Run>"
+BenchSuite.run.param    default=null
+BenchCase.run           type_arguments="GLib.List<Crank.Bench.Run>"
+BenchCase.run.param     default=null
+
+BenchRun.get_params  type_arguments="GLib.Quark,GLib.Value?"
+
+BenchParamNode.get_table          type_arguments="GLib.Quark,GLib.Value?"
+BenchParamNode.set_table.table    type_arguments="GLib.Quark,GLib.Value?"
+//BenchRun.get_params    skip=true
+
+
 //////// Data Structures ///////////////////////////////////////////////////////
 Ran*				struct=true
 .init*				skip
