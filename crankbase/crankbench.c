@@ -71,7 +71,7 @@ static CrankBenchSuite *crank_bench_root = NULL;
 //////// Overall ///////////////////////////////////////////////////////////////
 
 /**
- * crank_bench_init:
+ * crank_bench_init: (skip)
  * @argc: (inout): Number of commandline arguments
  * @argv: (inout) (array length=argc): Commandline arguments
  *
@@ -95,7 +95,7 @@ crank_bench_init (guint   *argc,
 }
 
 /**
- * crank_bench_is_initialized:
+ * crank_bench_is_initialized: (skip)
  *
  * Checks whether benchmarking system is initialized.
  *
@@ -110,7 +110,7 @@ crank_bench_is_initialized (void)
 
 
 /**
- * crank_bench_run:
+ * crank_bench_run: (skip)
  *
  * Runs benchmark and returns exit code to return in <function>main</function>.
  *
@@ -121,11 +121,7 @@ crank_bench_run (void)
 {
   GNode*         result_node;
 
-
-  // Perform benchmark.
-
   result_node = crank_bench_suite_run (crank_bench_root, NULL);
-
 
   // Write to output
   g_node_traverse (result_node,
@@ -141,7 +137,7 @@ crank_bench_run (void)
 
 
 /**
- * crank_bench_get_root:
+ * crank_bench_get_root: (skip)
  *
  * Gets root benchmark suite.
  *
@@ -154,7 +150,7 @@ crank_bench_get_root (void)
 }
 
 /**
- * crank_bench_get_suite:
+ * crank_bench_get_suite: (skip)
  * @path: A Benchmark path
  *
  * Gets a benchmark suite at @path. If suite is not present at @path, %NULL is
@@ -178,7 +174,7 @@ crank_bench_get_suite (const gchar *path)
 }
 
 /**
- * crank_bench_get_case:
+ * crank_bench_get_case: (skip)
  * @path: A Benchmark path.
  *
  * Gets a benchmark case at @path. If case is not present at @path, %NULL is
@@ -209,7 +205,7 @@ crank_bench_get_case (const gchar *path)
 
 
 /**
- * crank_bench_add:
+ * crank_bench_add: (skip)
  * @path: A Benchmark path.
  * @func: (scope notified): A Benchmarking function.
  * @userdata: (closure): Userdata for @func
@@ -227,7 +223,7 @@ crank_bench_add (const gchar    *path,
 }
 
 /**
- * crank_bench_add_with_param:
+ * crank_bench_add_with_param: (skip)
  * @path: A Benchmark path.
  * @func: (scope notified): A Benchmarking function.
  * @userdata: (closure): Userdata for @func
@@ -278,7 +274,7 @@ crank_bench_add_with_param (const gchar         *path,
 }
 
 /**
- * crank_bench_set_param:
+ * crank_bench_set_param: (skip)
  * @path: A Benchmark path.
  * @param: (nullable): A Parameter node.
  *
@@ -316,11 +312,11 @@ crank_bench_set_param (const gchar         *path,
 //////// CrankBenchParamNode ///////////////////////////////////////////////////
 
 /**
- * crank_bench_param_node_new:
+ * crank_bench_param_node_new: (skip)
  *
  * Constructs an empty #CrankBenchParamNode.
  *
- * Returns: (tranfer full): Newly created #CrankBenchParamNode.
+ * Returns: (transfer full): Newly created #CrankBenchParamNode.
  */
 CrankBenchParamNode*
 crank_bench_param_node_new (void)
@@ -336,7 +332,7 @@ crank_bench_param_node_new (void)
 }
 
 /**
- * crank_bench_param_node_free:
+ * crank_bench_param_node_free: (skip)
  * @node: A Parameter node.
  *
  * Frees a tree of #CrankBenchParamNode, which means that its children also
@@ -354,7 +350,8 @@ crank_bench_param_node_free (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_dup:
+ * crank_bench_param_node_dup: (skip)
+ * @node: A Parameter node.
  *
  * Duplicates a tree of #CrankBenchParamNode.
  *
@@ -382,7 +379,7 @@ crank_bench_param_node_dup (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_dup1:
+ * crank_bench_param_node_dup1: (skip)
  * @node : A Parameter node.
  *
  * Duplicates single #CrankBenchParamNode. The duplication will have no child.
@@ -404,7 +401,7 @@ crank_bench_param_node_dup1 (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_get:
+ * crank_bench_param_node_get: (skip)
  * @node: A Parameter node.
  * @name: Parameter name.
  *
@@ -422,7 +419,7 @@ crank_bench_param_node_get (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_get_uint:
+ * crank_bench_param_node_get_uint: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @defval: Default value for failure
@@ -444,7 +441,7 @@ crank_bench_param_node_get_uint (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_get_int:
+ * crank_bench_param_node_get_int: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @defval: Default value for failure
@@ -466,7 +463,7 @@ crank_bench_param_node_get_int (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_get_float:
+ * crank_bench_param_node_get_float: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @defval: Default value for failure
@@ -488,7 +485,7 @@ crank_bench_param_node_get_float (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_get_double:
+ * crank_bench_param_node_get_double: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @defval: Default value for failure
@@ -510,7 +507,7 @@ crank_bench_param_node_get_double (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_set:
+ * crank_bench_param_node_set: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @value: (transfer none): A value
@@ -529,7 +526,7 @@ crank_bench_param_node_set (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_set_uint:
+ * crank_bench_param_node_set_uint: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @value: A value
@@ -548,7 +545,7 @@ crank_bench_param_node_set_uint (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_set_int:
+ * crank_bench_param_node_set_int: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @value: A value
@@ -567,7 +564,7 @@ crank_bench_param_node_set_int (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_set_float:
+ * crank_bench_param_node_set_float: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @value: A value
@@ -586,7 +583,7 @@ crank_bench_param_node_set_float (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_set_float:
+ * crank_bench_param_node_set_double: (skip)
  * @node : A Parameter node.
  * @name: Parameter name.
  * @value: A value
@@ -605,7 +602,7 @@ crank_bench_param_node_set_double (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_get_table:
+ * crank_bench_param_node_get_table: (skip)
  * @node : A Parameter node.
  *
  * Gets a parameter table, which is #GHashTable<#GQuark, #GValue*>.
@@ -619,7 +616,7 @@ crank_bench_param_node_get_table (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_set_table:
+ * crank_bench_param_node_set_table: (skip)
  * @node: A Parameter node.
  * @table: (transfer none) (element-type GQuark GValue): A parameter table.
  *
@@ -641,7 +638,7 @@ crank_bench_param_node_set_table (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_is_placeholder:
+ * crank_bench_param_node_is_placeholder: (skip)
  * @node: A Parameter node.
  *
  * Checks whether it is a placeholder item.
@@ -661,7 +658,7 @@ crank_bench_param_node_is_placeholder (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_get_parent:
+ * crank_bench_param_node_get_parent: (skip)
  * @node: A Parameter node.
  *
  * Gets parent node of this @node.
@@ -675,7 +672,7 @@ crank_bench_param_node_get_parent (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_get_children:
+ * crank_bench_param_node_get_children: (skip)
  * @node: A parameter node.
  *
  * Gets childrens of this @node.
@@ -690,7 +687,7 @@ crank_bench_param_node_get_children (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_add_child:
+ * crank_bench_param_node_add_child: (skip)
  * @node: A parameter node.
  * @child: (transfer full): A children node.
  *
@@ -707,7 +704,7 @@ crank_bench_param_node_add_child (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_remove_child:
+ * crank_bench_param_node_remove_child: (skip)
  * @node: A parameter node.
  * @child: (transfer none): A children node.
  *
@@ -726,7 +723,7 @@ crank_bench_param_node_remove_child (CrankBenchParamNode *node,
 }
 
 /**
- * crank_bench_param_node_add_placeholder:
+ * crank_bench_param_node_add_placeholder: (skip)
  * @node: A parameter node.
  *
  * A shorthand for adding empty node to this node.
@@ -742,7 +739,7 @@ crank_bench_param_node_add_placeholder (CrankBenchParamNode *node)
 }
 
 /**
- * crank_bench_param_node_add_placeholder:
+ * crank_bench_param_node_add_placeholders: (skip)
  * @node: A parameter node.
  * @n: Number of placeholders to add.
  *
@@ -754,19 +751,19 @@ CrankBenchParamNode**
 crank_bench_param_node_add_placeholders (CrankBenchParamNode *node,
                                          guint                n)
 {
-  CrankBenchParamNode** result;
+  guint len;
   guint i;
 
-  result = (CrankBenchParamNode**) (node->children->pdata + node->children->len);
+  len = node->children->len;
 
   for (i = 0; i < n; i++)
     crank_bench_param_node_add_child (node, crank_bench_param_node_new ());
 
-  return result;
+  return (CrankBenchParamNode **)(node->children->pdata + len);
 }
 
 /**
- * crank_bench_param_node_composite:
+ * crank_bench_param_node_composite: (skip)
  * @a: A Parameter node.
  * @b: (transfer none): Other parameter node to overlay on @a.
  *
@@ -842,7 +839,7 @@ crank_bench_param_node_composite (CrankBenchParamNode *a,
 //////// CrankBenchSuite ///////////////////////////////////////////////////////
 
 /**
- * crank_bench_suite_new:
+ * crank_bench_suite_new: (skip)
  * @name: A Name of benchmark suite.
  * @param: (nullable) (transfer none): A Parameter node to use.
  *
@@ -866,7 +863,7 @@ crank_bench_suite_new (const gchar         *name,
 }
 
 /**
- * crank_bench_suite_free:
+ * crank_bench_suite_free: (skip)
  * @suite: A benchmark suite.
  *
  * Frees a benchmark suite, and deallocate all its resources. Sub-suites and
@@ -884,7 +881,7 @@ crank_bench_suite_free (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_get_name:
+ * crank_bench_suite_get_name: (skip)
  * @suite: A benchmark suite.
  *
  * Gets a name of suite.
@@ -898,7 +895,7 @@ crank_bench_suite_get_name (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_set_name:
+ * crank_bench_suite_set_name: (skip)
  * @suite: A benchmark suite.
  * @name: New name of suite.
  *
@@ -913,7 +910,7 @@ crank_bench_suite_set_name (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_get_param:
+ * crank_bench_suite_get_param: (skip)
  * @suite: A benchmark suite.
  *
  * Gets benchmark parameters of suite.
@@ -928,7 +925,7 @@ crank_bench_suite_get_param (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_set_param:
+ * crank_bench_suite_set_param: (skip)
  * @suite: A benchmark suite.
  * @param: (nullable) (transfer none): A tree of parameter node, or %NULL to
  *     remove parameter.
@@ -945,7 +942,7 @@ crank_bench_suite_set_param (CrankBenchSuite     *suite,
 }
 
 /**
- * crank_bench_suite_get_parent:
+ * crank_bench_suite_get_parent: (skip)
  * @suite: A benchmark suite.
  *
  * Gets parent suite of benchmark suite.
@@ -959,7 +956,7 @@ crank_bench_suite_get_parent (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_get_path:
+ * crank_bench_suite_get_path: (skip)
  * @suite: A benchmark suite.
  *
  * Gets path of benchmark suite.
@@ -992,7 +989,7 @@ crank_bench_suite_get_path (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_add_suite:
+ * crank_bench_suite_add_suite: (skip)
  * @suite: A benchmark suite.
  * @child: (transfer full): Child benchmark suite.
  *
@@ -1014,7 +1011,7 @@ crank_bench_suite_add_suite (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_remove_suite:
+ * crank_bench_suite_remove_suite: (skip)
  * @suite: A benchmark suite.
  * @child: Child benchmark suite.
  *
@@ -1038,7 +1035,7 @@ crank_bench_suite_remove_suite (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_add_case:
+ * crank_bench_suite_add_case: (skip)
  * @suite: A benchmark suite.
  * @bcase: (transfer full): A benchmark case.
  *
@@ -1060,7 +1057,7 @@ crank_bench_suite_add_case (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_remove_case:
+ * crank_bench_suite_remove_case: (skip)
  * @suite: A benchmark suite.
  * @bcase: A benchmark case.
  *
@@ -1084,7 +1081,7 @@ crank_bench_suite_remove_case (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_get_suites:
+ * crank_bench_suite_get_suites: (skip)
  * @suite: A benchmark suite.
  *
  * Gets all its child suites.
@@ -1098,7 +1095,7 @@ crank_bench_suite_get_suites (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_get_cases:
+ * crank_bench_suite_get_cases: (skip)
  * @suite: A benchmark suite.
  *
  * Gets all its benchmark cases.
@@ -1112,7 +1109,7 @@ crank_bench_suite_get_cases (CrankBenchSuite *suite)
 }
 
 /**
- * crank_bench_suite_get_suite:
+ * crank_bench_suite_get_suite: (skip)
  * @suite: A benchmark suite.
  * @name: A name of child suite.
  *
@@ -1137,7 +1134,7 @@ crank_bench_suite_get_suite (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_get_case:
+ * crank_bench_suite_get_case: (skip)
  * @suite: A benchmark suite.
  * @name: A name of benchmark case.
  *
@@ -1162,7 +1159,7 @@ crank_bench_suite_get_case (CrankBenchSuite *suite,
 }
 
 /**
- * crank_bench_suite_run:
+ * crank_bench_suite_run: (skip)
  * @suite: A benchmark suite.
  * @param: (nullable) (transfer none): A Parameter node, from higher suite or
  *     test runner.
@@ -1210,7 +1207,7 @@ crank_bench_suite_run (CrankBenchSuite     *suite,
 //////// CrankBenchCase ////////////////////////////////////////////////////////
 
 /**
- * crank_bench_case_new:
+ * crank_bench_case_new: (skip)
  * @name: name of benchmark case.
  * @param: (nullable): A Parameter node.
  * @func: (scope notified): A benchmark function.
@@ -1240,7 +1237,7 @@ crank_bench_case_new (const gchar         *name,
 }
 
 /**
- * crank_bench_case_free:
+ * crank_bench_case_free: (skip)
  * @bcase: A benchmark case.
  *
  * Frees a benchmark case, and deallocates its resources.
@@ -1256,7 +1253,7 @@ crank_bench_case_free (CrankBenchCase *bcase)
 }
 
 /**
- * crank_bench_case_get_param:
+ * crank_bench_case_get_param: (skip)
  * @bcase: A benchmark case.
  *
  * Gets benchmark parameter of case.
@@ -1271,7 +1268,7 @@ crank_bench_case_get_param (CrankBenchCase *bcase)
 }
 
 /**
- * crank_bench_case_set_param:
+ * crank_bench_case_set_param: (skip)
  * @bcase: A benchmark case.
  * @param: (nullable) (transfer none): A parameter node or %NULL, to remove
  *     parameter.
@@ -1288,7 +1285,7 @@ crank_bench_case_set_param (CrankBenchCase      *bcase,
 
 
 /**
- * crank_bench_case_get_path:
+ * crank_bench_case_get_path: (skip)
  * @bcase: A benchmark case.
  *
  * Gets path of benchmark case.
@@ -1322,7 +1319,7 @@ crank_bench_case_get_path (CrankBenchCase *bcase)
 }
 
 /**
- * crank_bench_case_get_parent:
+ * crank_bench_case_get_parent: (skip)
  * @bcase: A benchmark case.
  *
  * Gets parent of benchmark case.
@@ -1337,7 +1334,7 @@ crank_bench_case_get_parent (CrankBenchCase *bcase)
 }
 
 /**
- * crank_bench_case_run:
+ * crank_bench_case_run: (skip)
  * @bcase: A benchmark case.
  * @param: (nullable) (transfer none): A Parameter node from suites or test
  *     runners.
@@ -1379,7 +1376,7 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 //////// CrankBenchRun /////////////////////////////////////////////////////////
 
 /**
- * crank_bench_run_skip:
+ * crank_bench_run_skip: (skip)
  * @run: A benchmark run.
  * @message: A message for skipping.
  *
@@ -1425,7 +1422,7 @@ crank_bench_run_skip (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_fail:
+ * crank_bench_run_fail: (skip)
  * @run: A benchmark run.
  * @message: A message for failing.
  *
@@ -1474,7 +1471,7 @@ crank_bench_run_fail (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_is_running:
+ * crank_bench_is_running: (skip)
  * @run: A benchmark run.
  *
  * Gets whether this run is running.
@@ -1488,7 +1485,7 @@ crank_bench_is_running (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_get_params:
+ * crank_bench_run_get_params: (skip)
  * @run: A benchmark run.
  *
  * Gets benchmark parameters as #GHashTable<#GQuark, #GValue*>
@@ -1503,7 +1500,7 @@ crank_bench_run_get_params (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_get_param:
+ * crank_bench_run_get_param: (skip)
  * @run: A benchmark run.
  * @name: A parameter name.
  *
@@ -1522,7 +1519,7 @@ crank_bench_run_get_param (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_get_param_int:
+ * crank_bench_run_get_param_int: (skip)
  * @run: A benchmark run.
  * @name: A parameter name.
  * @defval: Default value if @name is not found.
@@ -1541,7 +1538,7 @@ crank_bench_run_get_param_int (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_get_param_uint:
+ * crank_bench_run_get_param_uint: (skip)
  * @run: A benchmark run.
  * @name: A parameter name.
  * @defval: Default value if @name is not found.
@@ -1560,7 +1557,7 @@ crank_bench_run_get_param_uint (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_get_param_float:
+ * crank_bench_run_get_param_float: (skip)
  * @run: A benchmark run.
  * @name: A parameter name.
  * @defval: Default value if @name is not found.
@@ -1579,7 +1576,7 @@ crank_bench_run_get_param_float (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_get_param_double:
+ * crank_bench_run_get_param_double: (skip)
  * @run: A benchmark run.
  * @name: A parameter name.
  * @defval: Default value if @name is not found.
@@ -1598,7 +1595,7 @@ crank_bench_run_get_param_double (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_add_result:
+ * crank_bench_run_add_result: (skip)
  * @run: A benchmark run.
  * @name: A result name.
  * @value: (transfer none): A value.
@@ -1619,7 +1616,7 @@ crank_bench_run_add_result (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_add_result_int:
+ * crank_bench_run_add_result_int: (skip)
  * @run: A benchmark run.
  * @name: A result name.
  * @value: A value.
@@ -1640,7 +1637,7 @@ crank_bench_run_add_result_int (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_add_result_uint:
+ * crank_bench_run_add_result_uint: (skip)
  * @run: A benchmark run.
  * @name: A result name.
  * @value: A value.
@@ -1661,7 +1658,7 @@ crank_bench_run_add_result_uint (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_add_result_float:
+ * crank_bench_run_add_result_float: (skip)
  * @run: A benchmark run.
  * @name: A result name.
  * @value: A value.
@@ -1682,7 +1679,7 @@ crank_bench_run_add_result_float (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_add_result_double:
+ * crank_bench_run_add_result_double: (skip)
  * @run: A benchmark run.
  * @name: A result name.
  * @value: A value.
@@ -1703,7 +1700,7 @@ crank_bench_run_add_result_double (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_timer_start:
+ * crank_bench_run_timer_start: (skip)
  * @run: A benchmark run.
  *
  * Starts a timer. CrankBenchRun will hold a #GTimer for you. If you need more
@@ -1717,7 +1714,7 @@ crank_bench_run_timer_start (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_timer_elapsed:
+ * crank_bench_run_timer_elapsed: (skip)
  * @run: A benchmark run.
  *
  * Gets elapsed time from when crank_bench_run_timer_start() .
@@ -1732,7 +1729,7 @@ crank_bench_run_timer_elapsed (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_timer_add_result_elapsed:
+ * crank_bench_run_timer_add_result_elapsed: (skip)
  * @run: A benchmark run.
  * @name: A result name
  *
@@ -1752,7 +1749,7 @@ crank_bench_run_timer_add_result_elapsed (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_rand_boolean:
+ * crank_bench_run_rand_boolean: (skip)
  * @run: A benchmark run.
  *
  * Returns random boolean; %TRUE or %FALSE randomly.
@@ -1768,7 +1765,7 @@ crank_bench_run_rand_boolean (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_rand_int:
+ * crank_bench_run_rand_int: (skip)
  * @run: A benchmark run.
  *
  * Returns random integer.
@@ -1782,7 +1779,7 @@ crank_bench_run_rand_int (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_rand_int_range:
+ * crank_bench_run_rand_int_range: (skip)
  * @run: A benchmark run.
  * @begin: Begin of range.
  * @end: End of range.
@@ -1800,7 +1797,7 @@ crank_bench_run_rand_int_range (CrankBenchRun *run,
 }
 
 /**
- * crank_bench_run_rand_double:
+ * crank_bench_run_rand_double: (skip)
  * @run: A benchmark run.
  *
  * Returns random double.
@@ -1814,7 +1811,7 @@ crank_bench_run_rand_double (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_rand_double_range:
+ * crank_bench_run_rand_double_range: (skip)
  * @run: A benchmark run.
  * @begin: Begin of range.
  * @end: End of range.
