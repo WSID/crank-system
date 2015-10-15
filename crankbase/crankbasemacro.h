@@ -143,5 +143,41 @@ G_BEGIN_DECLS
       *(_cbmp++) = v;                \
   } G_STMT_END
 
+
+/**
+ * CRANK_QUARK_TO_STRING:
+ * @p: (transfer none): A #GQuark casted into #gpointer.
+ *
+ * Gets string associated to a quark casted in pointer. This is useful when
+ * using #GQuark with container types.
+ *
+ * Returns: (transfer none): A string.
+ */
+#define CRANK_QUARK_TO_STRING(p) g_quark_to_string(GPOINTER_TO_INT(p))
+
+
+/**
+ * CRANK_QUARK_TRY_STRING:
+ * @s: A string to try get #GQuark
+ *
+ * Gets #GQuark associated to the string. This is useful when using #GQuark with
+ * container types.
+ *
+ * Returns: (transfer none): A #GQuark, casted into #gpointer
+ */
+#define CRANK_QUARK_TRY_STRING(s) GINT_TO_POINTER(g_quark_try_string(s))
+
+/**
+ * CRANK_QUARK_FROM_STRING:
+ * @s: A string to try get #GQuark
+ *
+ * Gets #GQuark associated to the string. This is useful when using #GQuark with
+ * container types.
+ *
+ * Returns: (transfer none): A #GQuark, casted into #gpointer
+ */
+#define CRANK_QUARK_FROM_STRING(s) GINT_TO_POINTER(g_quark_from_string(s))
+
+
 G_END_DECLS
 #endif
