@@ -295,12 +295,24 @@ gint32            crank_bench_run_rand_int_range          (CrankBenchRun        
                                                            const gint32           begin,
                                                            const gint32           end);
 
+gfloat            crank_bench_run_rand_float              (CrankBenchRun         *run);
+
+gfloat            crank_bench_run_rand_float_range        (CrankBenchRun         *run,
+                                                           const gfloat           begin,
+                                                           const gfloat           end);
+
 
 gdouble           crank_bench_run_rand_double             (CrankBenchRun         *run);
 
 gdouble           crank_bench_run_rand_double_range       (CrankBenchRun         *run,
                                                            const gdouble          begin,
                                                            const gdouble          end);
+
+gfloat*           crank_bench_run_rand_float_array        (CrankBenchRun         *run,
+                                                           const guint            length);
+
+gdouble*          crank_bench_run_rand_double_array       (CrankBenchRun         *run,
+                                                           const guint            length);
 
 
 

@@ -1797,6 +1797,38 @@ crank_bench_run_rand_int_range (CrankBenchRun *run,
 }
 
 /**
+ * crank_bench_run_rand_float: (skip)
+ * @run: A benchmark run.
+ *
+ * Returns random float.
+ *
+ * Returns: A random float.
+ */
+gfloat
+crank_bench_run_rand_float (CrankBenchRun *run)
+{
+  return (gfloat) g_rand_double (run->random);
+}
+
+/**
+ * crank_bench_run_rand_float_range: (skip)
+ * @run: A benchmark run.
+ * @begin: Begin of range.
+ * @end: End of range.
+ *
+ * Returns random float in the range: [@begin, @end).
+ *
+ * Returns: A random float in the range.
+ */
+gfloat
+crank_bench_run_rand_float_range (CrankBenchRun *run,
+                                   const gfloat   begin,
+                                   const gfloat   end)
+{
+  return (gfloat) g_rand_double_range (run->random, (gdouble)begin, (gdouble)end);
+}
+
+/**
  * crank_bench_run_rand_double: (skip)
  * @run: A benchmark run.
  *
@@ -1826,6 +1858,48 @@ crank_bench_run_rand_double_range (CrankBenchRun *run,
                                    const gdouble  end)
 {
   return g_rand_double_range (run->random, begin, end);
+}
+
+/**
+ * crank_bench_run_rand_float_array: (skip)
+ * @run: A benchmark run.
+ * @length: Length of required random array.
+ *
+ * Constructs random float array of given @length.
+ *
+ * Returns: (array) (transfer container): A random float array.
+ */
+gfloat*
+crank_bench_run_rand_float_array (CrankBenchRun *run,
+                                  const guint    length)
+{
+  gfloat *result = g_new (gfloat, length);
+  guint i;
+  for (i = 0;i < length; i++)
+    result[i] = (gfloat) g_rand_double (run->random);
+
+  return result;
+}
+
+/**
+ * crank_bench_run_rand_double_array: (skip)
+ * @run: A benchmark run.
+ * @length: Length of required random array.
+ *
+ * Constructs random double array of given @length.
+ *
+ * Returns: (array) (transfer container): A random double array.
+ */
+gdouble*
+crank_bench_run_rand_double_array (CrankBenchRun *run,
+                                  const guint    length)
+{
+  gdouble *result = g_new (gdouble, length);
+  guint i;
+  for (i = 0;i < length; i++)
+    result[i] = g_rand_double (run->random);
+
+  return result;
 }
 
 //////// Private functions /////////////////////////////////////////////////////
