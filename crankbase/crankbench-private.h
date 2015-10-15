@@ -153,7 +153,8 @@ CrankBenchSuite        *_crank_bench_get_suite_common   (const gchar  *path,
                                                          gchar       **case_name,
                                                          gboolean      make_suite);
 
-GList                  *_crank_bench_case_run1          (CrankBenchCase      *bcase,
+void                    _crank_bench_case_run1          (CrankBenchCase      *bcase,
+                                                         CrankBenchResultCase *result,
                                                          CrankBenchParamNode *param,
                                                          GHashTable          *param_prev);
 
@@ -165,11 +166,11 @@ void                    _crank_bench_run_free           (CrankBenchRun  *run);
 
 void                    _crank_bench_run_do             (CrankBenchRun  *run);
 
-void                    _crank_bench_run_list_write     (GList          *runlist,
-                                                         gpointer        stream);
+void                    _crank_bench_run_result_write   (CrankBenchResultSuite *result,
+                                                         gpointer               stream);
 
-gboolean                _crank_bench_run_list_write_node(GNode          *runnode,
-                                                         gpointer        userdata);
+void                    _crank_bench_run_list_write     (CrankBenchResultCase  *result,
+                                                         gpointer               stream);
 
 G_END_DECLS
 

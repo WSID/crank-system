@@ -119,17 +119,11 @@ crank_bench_is_initialized (void)
 gint
 crank_bench_run (void)
 {
-  GNode*         result_node;
+  CrankBenchResultSuite *result;
 
-  result_node = crank_bench_suite_run (crank_bench_root, NULL);
+  result = crank_bench_suite_run (crank_bench_root, NULL);
 
-  // Write to output
-  g_node_traverse (result_node,
-                   G_PRE_ORDER,
-                   G_TRAVERSE_LEAVES,
-                   -1,
-                   _crank_bench_run_list_write_node,
-                   NULL);
+  _crank_bench_run_result_write (result, NULL);
 
   return 0;
 }
@@ -1168,13 +1162,12 @@ crank_bench_suite_get_case (CrankBenchSuite *suite,
  *
  * Returns: (transfer full): A benchmark result.
  */
-GNode*
+CrankBenchResultSuite*
 crank_bench_suite_run (CrankBenchSuite     *suite,
                        CrankBenchParamNode *param)
 {
+  CrankBenchResultSuite *result;
   CrankBenchParamNode *mparam;
-
-  GNode *node;
   guint i;
 
   if (suite->param == NULL)
@@ -1184,24 +1177,26 @@ crank_bench_suite_run (CrankBenchSuite     *suite,
   else
     mparam = crank_bench_param_node_composite (param, suite->param);
 
-  node = g_node_new (NULL);
+  result = crank_bench_result_suite_new (suite);
 
   for (i = 0; i < suite->cases->len; i++)
     {
       CrankBenchCase *bcase = (CrankBenchCase*)suite->cases->pdata[i];
-      g_node_append (node, crank_bench_case_run (bcase, mparam));
+      CrankBenchResultCase *cres = crank_bench_case_run (bcase, mparam);
+      crank_bench_result_suite_add_cresult (result, cres);
     }
 
   for (i = 0; i < suite->subsuites->len; i++)
     {
       CrankBenchSuite *subsuite = (CrankBenchSuite*)suite->subsuites->pdata[i];
-      g_node_append (node, crank_bench_suite_run (subsuite, mparam));
+      CrankBenchResultSuite *sres = crank_bench_suite_run (subsuite, mparam);
+      crank_bench_result_suite_add_sresult (result, sres);
     }
 
   if ((suite->param != NULL) && (param != NULL))
     crank_bench_param_node_free (mparam);
 
-  return node;
+  return result;
 }
 
 //////// CrankBenchCase ////////////////////////////////////////////////////////
@@ -1343,12 +1338,12 @@ crank_bench_case_get_parent (CrankBenchCase *bcase)
  *
  * Returns: (transfer full): A run result.
  */
-GNode*
+CrankBenchResultCase*
 crank_bench_case_run (CrankBenchCase      *bcase,
                       CrankBenchParamNode *param)
 {
+  CrankBenchResultCase *result;
   CrankBenchParamNode *mparam;
-  GNode *node;  // GNode < GList <CrankBenchRun>>
 
   if (bcase->param == NULL)
     mparam = param;
@@ -1362,15 +1357,16 @@ crank_bench_case_run (CrankBenchCase      *bcase,
       gchar *path = crank_bench_case_get_path (bcase);
       g_warning ("No benchmark parameter for case %s", path);
       g_free (path);
-      return g_node_new (NULL);
+      return crank_bench_result_case_new (bcase);
     }
 
-  node = g_node_new (_crank_bench_case_run1 (bcase, mparam, NULL));
+  result = crank_bench_result_case_new (bcase);
+  _crank_bench_case_run1 (bcase, result, mparam, NULL);
 
   if ((bcase->param != NULL) && (param != NULL))
     crank_bench_param_node_free (mparam);
 
-  return node;
+  return result;
 }
 
 //////// CrankBenchRun /////////////////////////////////////////////////////////
@@ -2489,14 +2485,13 @@ _crank_bench_get_suite_common (const gchar  *path,
  *
  * Returns: A GList <CrankBenchRun>, which is list of each result of single run.
  */
-GList*
+void
 _crank_bench_case_run1 (CrankBenchCase      *bcase,
+                        CrankBenchResultCase *result,
                         CrankBenchParamNode *param,
                         GHashTable          *param_prev)
 {
   GHashTable    *param1;
-
-  GList         *list = NULL;
 
   guint i;
   guint repeat;
@@ -2520,10 +2515,10 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
           CrankBenchRun *run = _crank_bench_run_new (bcase, param1, i);
 
           _crank_bench_run_do (run);
-          list = g_list_append (list, run);
+
+          g_ptr_array_add (result->runs, run);
         }
     }
-
 
   // Recurse to children.
   for (i = 0; i < param->children->len; i++)
@@ -2531,18 +2526,11 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
       CrankBenchParamNode *param_child;
 
       param_child = (CrankBenchParamNode*) param->children->pdata[i];
-      list = g_list_concat (list,
-                            _crank_bench_case_run1 (bcase,
-                                                    param_child,
-                                                    param1));
+      _crank_bench_case_run1 (bcase, result, param_child, param1);
     }
-
 
   if ((! crank_bench_param_node_is_placeholder (param)) && (param_prev != NULL))
     g_hash_table_unref (param1);
-
-  return list;
-
 }
 
 /**
@@ -2662,22 +2650,45 @@ _crank_bench_run_do (CrankBenchRun *run)
 }
 
 void
-_crank_bench_run_list_write (GList         *runlist,
-                             gpointer       stream)
+_crank_bench_run_result_write (CrankBenchResultSuite *result,
+                               gpointer               stream)
+{
+  GList *caselist;
+  GList *iter;
+
+  caselist = crank_bench_result_suite_get_cresults_flat (result);
+
+  for (iter = caselist; iter != NULL; iter = iter->next)
+    {
+      CrankBenchResultCase *cres;
+      gchar *path;
+
+      cres = (CrankBenchResultCase*) iter->data;
+      path = crank_bench_case_get_path (cres->bcase);
+
+      g_message ("Processing %s", path);
+      g_free (path);
+      _crank_bench_run_list_write (cres, stream);
+    }
+}
+
+
+void
+_crank_bench_run_list_write (CrankBenchResultCase  *result,
+                             gpointer               stream)
 {
   GArray *param_order;  // GArray <GQuark>
   GArray *result_order; // GArray <GQuark>
 
   CrankBenchCase *bcase;
 
-  GList *iter;
-
   GString *strbuild;
   gchar *strhold;
 
   guint i;
+  guint j;
 
-  if (runlist == NULL)
+  if (result->runs->len == 0)
     return;
 
   param_order = g_array_new (FALSE, FALSE, sizeof (GQuark));
@@ -2685,11 +2696,11 @@ _crank_bench_run_list_write (GList         *runlist,
 
   GQuark quark_repeat = g_quark_from_string ("repeat");
 
-  bcase = ((CrankBenchRun*)runlist->data)->bcase;
+  bcase = result->bcase;
 
 
   // Collects used parameters and result names.
-  for (iter = runlist; iter != NULL; iter = iter->next)
+  for (i = 0; i < result->runs->len; i++)
     {
       CrankBenchRun *run;
       GHashTableIter piter;
@@ -2697,7 +2708,7 @@ _crank_bench_run_list_write (GList         *runlist,
       GHashTableIter riter;
       gpointer       riterkey;
 
-      run = (CrankBenchRun*) iter->data;
+      run = (CrankBenchRun*) result->runs->pdata[i];
 
       g_hash_table_iter_init (&piter, run->param);
       while (g_hash_table_iter_next (&piter, &piterkey, NULL))
@@ -2707,12 +2718,12 @@ _crank_bench_run_list_write (GList         *runlist,
           if (piterkeyq == quark_repeat)
             continue;
 
-          for (i = 0; i < param_order->len; i++)
+          for (j = 0; j < param_order->len; j++)
             {
-              if (piterkeyq == g_array_index (param_order, GQuark, i))
+              if (piterkeyq == g_array_index (param_order, GQuark, j))
                 break;
             }
-          if (i == param_order->len)
+          if (j == param_order->len)
             {
               g_array_append_val (param_order, piterkeyq);
             }
@@ -2723,17 +2734,16 @@ _crank_bench_run_list_write (GList         *runlist,
         {
           GQuark riterkeyq = (GQuark) GPOINTER_TO_INT(riterkey);
 
-          for (i = 0; i < result_order->len; i++)
+          for (j = 0; i < result_order->len; j++)
             {
-              if (riterkeyq == g_array_index (result_order, GQuark, i))
+              if (riterkeyq == g_array_index (result_order, GQuark, j))
                 break;
             }
-          if (i == result_order->len)
+          if (j == result_order->len)
             {
               g_array_append_val (result_order, riterkeyq);
             }
         }
-
     }
 
   // Print out case result.
@@ -2765,12 +2775,12 @@ _crank_bench_run_list_write (GList         *runlist,
     }
   g_string_append_c (strbuild, '\n');
 
-  for (iter = runlist; iter != NULL; iter = iter->next)
+  for (i = 0; i < result->runs->len; i++)
     {
       CrankBenchRun *run;
       gchar *statestr = NULL;
 
-      run = (CrankBenchRun*) iter->data;
+      run = (CrankBenchRun*) result->runs->pdata[i];
 
       g_string_append_printf (strbuild,
                               "%u,\t%u",
@@ -2779,13 +2789,13 @@ _crank_bench_run_list_write (GList         *runlist,
                                                           0),
                               run->runno);
 
-      for (i = 0; i < param_order->len; i++)
+      for (j = 0; j < param_order->len; j++)
         {
           GValue  strvalue = {0};
           GValue *pvalue;
           GQuark  param_quark;
 
-          param_quark = g_array_index (param_order, GQuark, i);
+          param_quark = g_array_index (param_order, GQuark, j);
 
           g_value_init (&strvalue, G_TYPE_STRING);
 
@@ -2830,13 +2840,13 @@ _crank_bench_run_list_write (GList         *runlist,
         }
       else
         {
-          for (i = 0; i < result_order->len; i++)
+          for (j = 0; j < result_order->len; j++)
             {
               GValue  strvalue = {0};
               GValue *pvalue;
               GQuark  result_quark;
 
-              result_quark = g_array_index (result_order, GQuark, i);
+              result_quark = g_array_index (result_order, GQuark, j);
 
               g_value_init (&strvalue, G_TYPE_STRING);
 
@@ -2871,14 +2881,4 @@ _crank_bench_run_list_write (GList         *runlist,
 
   g_array_unref (param_order);
   g_array_unref (result_order);
-}
-
-gboolean
-_crank_bench_run_list_write_node (GNode    *runnode,
-                                  gpointer  usredata)
-{
-  _crank_bench_run_list_write ((GList*)         runnode->data,
-                               NULL);
-
-  return FALSE;
 }

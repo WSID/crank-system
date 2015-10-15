@@ -202,7 +202,7 @@ CrankBenchSuite      *crank_bench_suite_get_suite         (CrankBenchSuite      
 CrankBenchCase       *crank_bench_suite_get_case          (CrankBenchSuite       *suite,
                                                            const gchar           *name);
 
-GNode                *crank_bench_suite_run               (CrankBenchSuite       *suite,
+CrankBenchResultSuite *crank_bench_suite_run              (CrankBenchSuite       *suite,
                                                            CrankBenchParamNode   *param);
 
 
@@ -227,7 +227,7 @@ gchar                *crank_bench_case_get_path           (CrankBenchCase       
 
 CrankBenchSuite      *crank_bench_case_get_parent         (CrankBenchCase        *bcase);
 
-GNode                *crank_bench_case_run                (CrankBenchCase        *bcase,
+CrankBenchResultCase *crank_bench_case_run                (CrankBenchCase        *bcase,
                                                            CrankBenchParamNode   *param);
 
 
