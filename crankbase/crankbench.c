@@ -25,7 +25,7 @@
 #include <string.h>
 #include <glib.h>
 
-
+#include "crankbasemacro.h"
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
@@ -410,8 +410,7 @@ const GValue*
 crank_bench_param_node_get (CrankBenchParamNode *node,
                             const gchar         *name)
 {
-  GQuark qname = g_quark_try_string (name);
-  return g_hash_table_lookup (node->table, GINT_TO_POINTER (qname));
+  return g_hash_table_lookup (node->table, CRANK_QUARK_FROM_STRING (name));
 }
 
 /**
@@ -430,9 +429,8 @@ crank_bench_param_node_get_uint (CrankBenchParamNode *node,
                                  const gchar         *name,
                                  const guint          defval)
 {
-  GQuark qname = g_quark_try_string (name);
   return crank_value_table_get_uint (node->table,
-                                     GINT_TO_POINTER (qname),
+                                     CRANK_QUARK_FROM_STRING (name),
                                      defval);
 }
 
@@ -452,9 +450,8 @@ crank_bench_param_node_get_int (CrankBenchParamNode *node,
                                 const gchar         *name,
                                 const gint           defval)
 {
-  GQuark qname = g_quark_try_string (name);
   return crank_value_table_get_int (node->table,
-                                    GINT_TO_POINTER (qname),
+                                    CRANK_QUARK_FROM_STRING (name),
                                     defval);
 }
 
@@ -474,9 +471,8 @@ crank_bench_param_node_get_float (CrankBenchParamNode *node,
                                   const gchar         *name,
                                   const gfloat         defval)
 {
-  GQuark qname = g_quark_try_string (name);
   return crank_value_table_get_float (node->table,
-                                      GINT_TO_POINTER (qname),
+                                      CRANK_QUARK_FROM_STRING (name),
                                       defval);
 }
 
@@ -496,9 +492,8 @@ crank_bench_param_node_get_double (CrankBenchParamNode *node,
                                    const gchar         *name,
                                    const gdouble        defval)
 {
-  GQuark qname = g_quark_try_string (name);
   return crank_value_table_get_double (node->table,
-                                       GINT_TO_POINTER (qname),
+                                       CRANK_QUARK_FROM_STRING (name),
                                        defval);
 }
 
@@ -515,10 +510,7 @@ crank_bench_param_node_set (CrankBenchParamNode *node,
                             const gchar         *name,
                             const GValue        *value)
 {
-  GQuark qname = g_quark_from_string (name);
-  crank_value_table_set (node->table,
-                         GINT_TO_POINTER (qname),
-                         value);
+  crank_value_table_set (node->table, CRANK_QUARK_FROM_STRING (name), value);
 }
 
 /**
@@ -534,9 +526,8 @@ crank_bench_param_node_set_uint (CrankBenchParamNode *node,
                                  const gchar         *name,
                                  const guint          value)
 {
-  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_uint (node->table,
-                              GINT_TO_POINTER (qname),
+                              CRANK_QUARK_FROM_STRING (name),
                               value);
 }
 
@@ -553,9 +544,8 @@ crank_bench_param_node_set_int (CrankBenchParamNode *node,
                                 const gchar         *name,
                                 const gint          value)
 {
-  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_int (node->table,
-                             GINT_TO_POINTER (qname),
+                             CRANK_QUARK_FROM_STRING (name),
                              value);
 }
 
@@ -572,9 +562,8 @@ crank_bench_param_node_set_float (CrankBenchParamNode *node,
                                   const gchar         *name,
                                   const gfloat         value)
 {
-  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_float (node->table,
-                               GINT_TO_POINTER (qname),
+                               CRANK_QUARK_FROM_STRING (name),
                                value);
 }
 
@@ -591,9 +580,8 @@ crank_bench_param_node_set_double (CrankBenchParamNode *node,
                                    const gchar         *name,
                                    const gdouble        value)
 {
-  GQuark qname = g_quark_from_string (name);
   crank_value_table_set_double (node->table,
-                                GINT_TO_POINTER (qname),
+                                CRANK_QUARK_FROM_STRING (name),
                                 value);
 }
 
@@ -2522,7 +2510,7 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
     param1 = _crank_bench_table_composite (param_prev, param->table);
 
   repeat = crank_value_table_get_uint (param1,
-                                       GINT_TO_POINTER(g_quark_from_static_string ("repeat")),
+                                       CRANK_QUARK_FROM_STRING("repeat"),
                                        0);
 
   // Run benchmarks.
@@ -2736,16 +2724,12 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
 
   for (i = 0; i < nparam_order; i++)
     {
-      g_string_append_printf (strbuild,
-                              ",\t%s",
-                              g_quark_to_string (GPOINTER_TO_INT(param_order[i])));
+      g_string_append_printf (strbuild, ",\t%s", CRANK_QUARK_TO_STRING (param_order[i]));
     }
 
   for (i = 0; i < nresult_order; i++)
     {
-      g_string_append_printf (strbuild,
-                              ",\t%s",
-                              g_quark_to_string (GPOINTER_TO_INT(result_order[i])));
+      g_string_append_printf (strbuild, ",\t%s", CRANK_QUARK_TO_STRING (result_order[i]));
     }
   g_string_append_c (strbuild, '\n');
 
