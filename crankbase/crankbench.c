@@ -2765,10 +2765,8 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
 
       for (j = 0; j < nparam_order; j++)
         {
-          GValue  strvalue = {0};
           GValue *pvalue;
-
-          g_value_init (&strvalue, G_TYPE_STRING);
+          gchar *str;
 
           pvalue = (GValue*) g_hash_table_lookup (run->param, param_order[j]);
 
@@ -2776,18 +2774,17 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
             {
               g_string_append (strbuild, ",\t<empty>");
             }
-          else if (! g_value_transform (pvalue, &strvalue))
-            {
-              g_string_append (strbuild, ",\t<value>");
-            }
           else
             {
-              g_string_append_printf (strbuild,
-                                      ",\t%s",
-                                      g_value_get_string (&strvalue));
-            }
+              str = crank_value_to_string (pvalue);
 
-          g_value_unset (&strvalue);
+              if (str == NULL)
+                g_string_append (strbuild, ",\t<value>");
+              else
+                g_string_append_printf (strbuild, ",\t%s", str);
+
+              g_free (str);
+            }
         }
 
       switch (run->state & CRANK_BENCH_RUN_MASK_RES_STATE)
@@ -2812,10 +2809,8 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
         {
           for (j = 0; j < nresult_order; j++)
             {
-              GValue  strvalue = {0};
               GValue *pvalue;
-
-              g_value_init (&strvalue, G_TYPE_STRING);
+              gchar *str;
 
               pvalue = (GValue*) g_hash_table_lookup (run->result, result_order[j]);
 
@@ -2823,18 +2818,18 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
                 {
                   g_string_append (strbuild, ",\t<empty>");
                 }
-              else if (! g_value_transform (pvalue, &strvalue))
-                {
-                  g_string_append (strbuild, ",\t<value>");
-                }
               else
                 {
-                  g_string_append_printf (strbuild,
-                                          ",\t%s",
-                                          g_value_get_string (&strvalue));
+                  str = crank_value_to_string (pvalue);
+
+                  if (str == NULL)
+                    g_string_append (strbuild, ",\t<value>");
+                  else
+                    g_string_append_printf (strbuild, ",\t%s", str);
+
+                  g_free (str);
                 }
 
-              g_value_unset (&strvalue);
             }
         }
       g_string_append_c (strbuild, '\n');
