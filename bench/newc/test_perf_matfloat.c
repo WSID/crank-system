@@ -49,14 +49,15 @@ main (gint   argc,
   crank_bench_param_node_set_uint (params, "repeat", 8);
   crank_bench_param_node_set_uint (params, "N", 128);
 
-  //vparams = crank_bench_param_node_add_placeholders (params, 3);
-  //crank_bench_param_node_set_uint (vparams[0], "N", 256);
-  //crank_bench_param_node_set_uint (vparams[1], "N", 512);
+  vparams = crank_bench_param_node_add_placeholders (params, 3);
+  crank_bench_param_node_set_uint (vparams[0], "N", 256);
+  crank_bench_param_node_set_uint (vparams[1], "N", 512);
 
-  //crank_bench_param_node_set_uint (vparams[2], "repeat", 2);
- //vparams = crank_bench_param_node_add_placeholders (vparams[2], 2);
-  //crank_bench_param_node_set_uint (vparams[0], "N", 1024);
-  //crank_bench_param_node_set_uint (vparams[1], "N", 2048);
+  crank_bench_param_node_set_uint (vparams[2], "repeat", 2);
+  crank_bench_param_node_set_uint (vparams[2], "N", 1024);
+  vparams = crank_bench_param_node_add_placeholders (vparams[2], 2);
+  crank_bench_param_node_set_uint (vparams[0], "N", 2048);
+  crank_bench_param_node_set_uint (vparams[1], "N", 4096);
 
 
   // Add Benchmark cases
@@ -115,7 +116,5 @@ bench_mat_slice4 (CrankBenchRun *run)
   crank_mat_float_n_fini (s + 1);
   crank_mat_float_n_fini (s + 2);
   crank_mat_float_n_fini (s + 3);
-
-  crank_bench_run_fail (run, "Fail test!");
 }
 
