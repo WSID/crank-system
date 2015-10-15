@@ -34,6 +34,14 @@ typedef struct _CrankBenchSuite CrankBenchSuite;
 typedef struct _CrankBenchCase CrankBenchCase;
 typedef struct _CrankBenchRun CrankBenchRun;
 
+/**
+ * CrankBenchFunc:
+ * @run: A Benchmark run.
+ * @userdata: (closure): A userdata for this function.
+ *
+ * A type for benchmarking function. As benchmarking can be repeated, Crank
+ * System provides state object, instead of providing access to global structures.
+ */
 typedef void (*CrankBenchFunc) (CrankBenchRun *run,
                                 gpointer       userdata);
 
