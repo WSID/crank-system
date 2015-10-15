@@ -33,6 +33,8 @@ typedef struct _CrankBenchParamNode CrankBenchParamNode;
 typedef struct _CrankBenchSuite CrankBenchSuite;
 typedef struct _CrankBenchCase CrankBenchCase;
 typedef struct _CrankBenchRun CrankBenchRun;
+typedef struct _CrankBenchResultSuite CrankBenchResultSuite;
+typedef struct _CrankBenchResultCase CrankBenchResultCase;
 
 /**
  * CrankBenchFunc:
@@ -313,6 +315,61 @@ gfloat*           crank_bench_run_rand_float_array        (CrankBenchRun        
 
 gdouble*          crank_bench_run_rand_double_array       (CrankBenchRun         *run,
                                                            const guint            length);
+
+
+//////// CrankBenchResult //////////////////////////////////////////////////////
+
+CrankBenchResultSuite  *crank_bench_result_suite_new            (CrankBenchSuite       *suite);
+
+void                    crank_bench_result_suite_free           (CrankBenchResultSuite *result);
+
+CrankBenchSuite        *crank_bench_result_suite_get_suite      (CrankBenchResultSuite *result);
+
+CrankBenchResultSuite  *crank_bench_result_suite_get_parent     (CrankBenchResultSuite *result);
+
+void                    crank_bench_result_suite_add_sresult    (CrankBenchResultSuite *result,
+                                                                 CrankBenchResultSuite *sres);
+
+void                    crank_bench_result_suite_add_cresult    (CrankBenchResultSuite *result,
+                                                                 CrankBenchResultCase  *cres);
+
+gboolean                crank_bench_result_suite_remove_sresult (CrankBenchResultSuite *result,
+                                                                 CrankBenchResultSuite *sres);
+
+gboolean                crank_bench_result_suite_remove_cresult (CrankBenchResultSuite *result,
+                                                                 CrankBenchResultCase  *cres);
+
+GPtrArray              *crank_bench_result_suite_get_sresults   (CrankBenchResultSuite *result);
+
+GPtrArray              *crank_bench_result_suite_get_cresults   (CrankBenchResultSuite *result);
+
+CrankBenchResultSuite  *crank_bench_result_suite_get_sresult    (CrankBenchResultSuite *result,
+                                                                 const gchar           *name);
+
+CrankBenchResultCase   *crank_bench_result_suite_get_cresult    (CrankBenchResultSuite *result,
+                                                                 const gchar           *name);
+
+GList                  *crank_bench_result_suite_get_cresults_flat (CrankBenchResultSuite *result);
+
+GList                  *crank_bench_result_suite_get_runs        (CrankBenchResultSuite *result);
+
+GList                  *crank_bench_result_suite_get_runs_flat   (CrankBenchResultSuite *result);
+
+
+
+CrankBenchResultCase   *crank_bench_result_case_new              (CrankBenchCase        *bcase);
+
+void                    crank_bench_result_case_free             (CrankBenchResultCase  *result);
+
+CrankBenchCase         *crank_bench_result_case_get_case         (CrankBenchResultCase  *result);
+
+CrankBenchResultSuite  *crank_bench_result_case_get_parent       (CrankBenchResultCase  *result);
+
+GPtrArray              *crank_bench_result_case_get_runs         (CrankBenchResultCase  *result);
+
+GHashTable             *crank_bench_result_case_get_param_names  (CrankBenchResultCase  *result);
+
+GHashTable             *crank_bench_result_case_get_result_names (CrankBenchResultCase  *result);
 
 
 

@@ -114,6 +114,34 @@ struct _CrankBenchRun {
   GHashTable           *result;
 };
 
+/**
+ * CrankBenchResultSuite:
+ *
+ * A Structure represents benchmark result.
+ */
+struct _CrankBenchResultSuite {
+  CrankBenchResultSuite *parent;
+  GPtrArray            *sresults;
+  GPtrArray            *cresults;
+
+  CrankBenchSuite      *suite;
+};
+
+/**
+ * CrankBenchResultCase:
+ *
+ * A Structure represents benchmark result.
+ */
+struct _CrankBenchResultCase {
+  CrankBenchResultSuite *parent;
+
+  CrankBenchCase        *bcase;
+  GPtrArray             *runs;
+
+  GHashTable            *param_names;
+  GHashTable            *result_names;
+};
+
 //////// Private functions /////////////////////////////////////////////////////
 
 GHashTable             *_crank_bench_dup_table          (GHashTable   *other);
