@@ -90,6 +90,32 @@ crank_value_free (GValue *value)
 }
 
 
+/**
+ * crank_value_to_string: (skip)
+ * @value: #GValue to stringify
+ *
+ * Stringify @value, utilizing transformation.
+ *
+ * Returns: (nullable) (transfer full): A stringified value or %NULL if @value
+ *     is %NULL, or not initialized, or not transformable.
+ */
+gchar*
+crank_value_to_string (GValue *value)
+{
+  gchar *result = NULL;
+  if ((value != NULL) && (G_IS_VALUE (value)))
+    {
+      GValue strval = {0};
+      g_value_init (&strval, G_TYPE_STRING);
+
+      if (g_value_transform (value, &strval))
+        result = g_value_dup_string (&strval);
+
+      g_value_unset (&strval);
+    }
+  return result;
+}
+
 
 
 /**
