@@ -21,9 +21,11 @@
 
 #define _CRANKBASE_INSIDE
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib/gprintf.h>
 
 #include "crankbasemacro.h"
 #include "crankvalue.h"
@@ -59,6 +61,7 @@
  *     * Benchmarking System: Test results are printed as CSV.
  *     * GTest Framework: Pass or Fail, optionally performance (though not used
  *       frequently). Recently, TAP protocol can be used.
+ *
  */
 
 
@@ -121,10 +124,15 @@ crank_bench_run (void)
 {
   CrankBenchResultSuite *result;
 
+  g_fprintf (stderr, "\nRunning\n");
   result = crank_bench_suite_run (crank_bench_root, NULL);
 
+
+  g_fprintf (stderr, "\nPostprocessing\n");
   _crank_bench_result_suite_postprocess (result);
 
+
+  g_fprintf (stderr, "\nPrinting\n");
   _crank_bench_run_result_write (result, NULL);
 
   return 0;
@@ -1334,6 +1342,9 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 {
   CrankBenchResultCase *result;
   CrankBenchParamNode *mparam;
+  gchar *path;
+
+  path = crank_bench_case_get_path (bcase);
 
   if (bcase->param == NULL)
     mparam = param;
@@ -1342,20 +1353,27 @@ crank_bench_case_run (CrankBenchCase      *bcase,
   else
     mparam = crank_bench_param_node_composite (param, bcase->param);
 
+  result = crank_bench_result_case_new (bcase);
+
+  g_fprintf (stderr, "%s: ", path);
+
   if (mparam == NULL)
     {
-      gchar *path = crank_bench_case_get_path (bcase);
+      g_fprintf (stderr, "SKIP\n");
       g_warning ("No benchmark parameter for case %s", path);
-      g_free (path);
-      return crank_bench_result_case_new (bcase);
+    }
+  else
+    {
+      _crank_bench_case_run1 (bcase, result, mparam, NULL);
+
+      if ((bcase->param != NULL) && (param != NULL))
+        crank_bench_param_node_free (mparam);
+
+      g_fprintf (stderr, "OK\n");
     }
 
-  result = crank_bench_result_case_new (bcase);
-  _crank_bench_case_run1 (bcase, result, mparam, NULL);
 
-  if ((bcase->param != NULL) && (param != NULL))
-    crank_bench_param_node_free (mparam);
-
+  g_free (path);
   return result;
 }
 
@@ -2671,13 +2689,7 @@ _crank_bench_run_result_write (CrankBenchResultSuite *result,
   for (iter = caselist; iter != NULL; iter = iter->next)
     {
       CrankBenchResultCase *cres;
-      gchar *path;
-
       cres = (CrankBenchResultCase*) iter->data;
-      path = crank_bench_case_get_path (cres->bcase);
-
-      g_message ("Processing %s", path);
-      g_free (path);
       _crank_bench_run_list_write (cres, stream);
     }
 }
@@ -2845,10 +2857,16 @@ _crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
 void
 _crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 {
+  gchar *path = crank_bench_case_get_path (result->bcase);
+
+  g_fprintf (stderr, "%s: ", path);
+
   g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_run_postprocess, NULL);
 
   // Accumulate all names used in runs.
   g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_result_case_pp_accum, result);
+
+  g_fprintf (stderr, "OK\n");
 }
 
 void
