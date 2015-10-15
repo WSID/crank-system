@@ -33,6 +33,7 @@
 #include "crankbench.h"
 #include "crankbench-private.h"
 #include "crankbenchrun.h"
+#include "crankbenchresult.h"
 
 /**
  * SECTION:crankbench
@@ -132,7 +133,7 @@ crank_bench_run (void)
 
 
   g_fprintf (stderr, "\nPostprocessing\n");
-  _crank_bench_result_suite_postprocess (result);
+  crank_bench_result_suite_postprocess (result);
 
 
   g_fprintf (stderr, "\nPrinting\n");
@@ -1569,17 +1570,11 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
                                        CRANK_QUARK_FROM_STRING("repeat"),
                                        0);
 
-  // Run benchmarks.
-  if (repeat != 0)
+  for (i = 0; i < repeat; i++)
     {
-      for (i = 0; i < repeat; i++)
-        {
-          CrankBenchRun *run = crank_bench_run_new (bcase, param1, i);
-
-          crank_bench_run_do (run);
-
-          g_ptr_array_add (result->runs, run);
-        }
+      CrankBenchRun *run = crank_bench_run_new (bcase, param1, i);
+      crank_bench_run_do (run);
+      crank_bench_result_case_add_run (result, run);
     }
 
   // Recurse to children.
@@ -1625,22 +1620,28 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
   guint nparam_order;
   guint nresult_order;
 
+  GPtrArray *runs;
+
   GString *strbuild;
   gchar *strhold;
 
   guint i;
   guint j;
 
-  if (result->runs->len == 0)
+  runs = crank_bench_result_case_get_runs (result);
+
+  if (runs->len == 0)
     return;
 
-  param_order = g_hash_table_get_keys_as_array (result->param_names, &nparam_order);
-  result_order = g_hash_table_get_keys_as_array (result->result_names, &nresult_order);
+  param_order = g_hash_table_get_keys_as_array (crank_bench_result_case_get_param_names (result),
+                                                &nparam_order);
+  result_order = g_hash_table_get_keys_as_array (crank_bench_result_case_get_result_names (result),
+                                                 &nresult_order);
 
   GQuark quark_repeat = g_quark_from_string ("repeat");
   gpointer quark_repeatq = GINT_TO_POINTER (quark_repeat);
 
-  bcase = result->bcase;
+  bcase = crank_bench_result_case_get_case (result);
 
   // Print out case result.
 
@@ -1663,12 +1664,12 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
     }
   g_string_append_c (strbuild, '\n');
 
-  for (i = 0; i < result->runs->len; i++)
+  for (i = 0; i < runs->len; i++)
     {
       CrankBenchRun *run;
       gchar *statestr = NULL;
 
-      run = (CrankBenchRun*) result->runs->pdata[i];
+      run = (CrankBenchRun*) runs->pdata[i];
 
       g_string_append_printf (strbuild,
                               "%u,\t%u",

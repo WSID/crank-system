@@ -91,35 +91,9 @@ struct _CrankBenchCase {
   GDestroyNotify destroy;
 };
 
-/**
- * CrankBenchResultSuite:
- *
- * A Structure represents benchmark result.
- */
-struct _CrankBenchResultSuite {
-  CrankBenchResultSuite *parent;
-  GPtrArray            *sresults;
-  GPtrArray            *cresults;
-
-  CrankBenchSuite      *suite;
-};
-
-/**
- * CrankBenchResultCase:
- *
- * A Structure represents benchmark result.
- */
-struct _CrankBenchResultCase {
-  CrankBenchResultSuite *parent;
-
-  CrankBenchCase        *bcase;
-  GPtrArray             *runs;
-
-  GHashTable            *param_names;
-  GHashTable            *result_names;
-};
-
 //////// Private functions /////////////////////////////////////////////////////
+
+
 
 GHashTable             *_crank_bench_dup_table          (GHashTable   *other);
 
@@ -143,14 +117,6 @@ void                    _crank_bench_run_result_write   (CrankBenchResultSuite *
 
 void                    _crank_bench_run_list_write     (CrankBenchResultCase  *result,
                                                          gpointer               stream);
-
-void                    _crank_bench_result_suite_postprocess (CrankBenchResultSuite *result);
-
-void                    _crank_bench_result_case_postprocess (CrankBenchResultCase *result);
-
-void                    _crank_bench_result_case_pp_accum(CrankBenchRun        *run,
-                                                          CrankBenchResultCase *result);
-
 G_END_DECLS
 
 #endif

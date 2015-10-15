@@ -54,6 +54,7 @@
 #include "crankbasetest.h"
 #include "crankbench.h"
 #include "crankbenchrun.h"
+#include "crankbenchresult.h"
 
 
 #undef _CRANKBASE_INSIDE

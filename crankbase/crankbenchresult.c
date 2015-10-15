@@ -33,6 +33,7 @@
 #include "crankbench.h"
 #include "crankbench-private.h"
 #include "crankbenchrun.h"
+#include "crankbenchresult.h"
 
 /**
  * SECTION: crankbenchresult
@@ -43,6 +44,39 @@
  *
  * This section describes Benchmark results.
  */
+
+
+/**
+ * CrankBenchResultSuite:
+ *
+ * A Structure represents benchmark result.
+ */
+struct _CrankBenchResultSuite {
+  CrankBenchResultSuite *parent;
+  GPtrArray            *sresults;
+  GPtrArray            *cresults;
+
+  CrankBenchSuite      *suite;
+};
+
+/**
+ * CrankBenchResultCase:
+ *
+ * A Structure represents benchmark result.
+ */
+struct _CrankBenchResultCase {
+  CrankBenchResultSuite *parent;
+
+  CrankBenchCase        *bcase;
+  GPtrArray             *runs;
+
+  GHashTable            *param_names;
+  GHashTable            *result_names;
+};
+
+
+void                    _crank_bench_result_case_pp_accum(CrankBenchRun        *run,
+                                                          CrankBenchResultCase *result);
 
 //////// CrankBenchResultSuite /////////////////////////////////////////////////
 
@@ -452,6 +486,20 @@ crank_bench_result_case_get_runs (CrankBenchResultCase *result)
 }
 
 /**
+ * crank_bench_result_case_add_run:
+ * @result: A Benchmark result.
+ * @run: (transfer full): A Benchmark run.
+ *
+ * Adds a benchmark run to the result.
+ */
+void
+crank_bench_result_case_add_run (CrankBenchResultCase *result,
+                                 CrankBenchRun        *run)
+{
+  g_ptr_array_add (result->runs, run);
+}
+
+/**
  * crank_bench_result_case_get_param_names: (skip)
  * @result: A Benchmark result.
  *
@@ -487,21 +535,21 @@ crank_bench_result_case_get_result_names (CrankBenchResultCase *result)
 //////// Private functions /////////////////////////////////////////////////////
 
 void
-_crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
+crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
 {
   // For now doing nothing, but propagate throughout to whole result trees.
 
   g_ptr_array_foreach (result->cresults,
-                       (GFunc)_crank_bench_result_case_postprocess,
+                       (GFunc)crank_bench_result_case_postprocess,
                        NULL);
 
   g_ptr_array_foreach (result->sresults,
-                       (GFunc)_crank_bench_result_suite_postprocess,
+                       (GFunc)crank_bench_result_suite_postprocess,
                        NULL);
 }
 
 void
-_crank_bench_result_case_postprocess (CrankBenchResultCase *result)
+crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 {
   gchar *path = crank_bench_case_get_path (result->bcase);
 
@@ -511,6 +559,8 @@ _crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 
   // Accumulate all names used in runs.
   g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_result_case_pp_accum, result);
+
+  g_hash_table_remove (result->param_names, CRANK_QUARK_FROM_STRING ("repeat"));
 
   g_fprintf (stderr, "OK\n");
 }
