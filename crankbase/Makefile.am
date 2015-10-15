@@ -78,7 +78,9 @@ libcrankbase_la_SOURCES= \
 		crankadvmat.c\
 		\
 		crankbasetest.c \
-		crankbench.c
+		crankbench.c \
+		crankbenchrun.c \
+		crankbenchresult.c
 
 
 
