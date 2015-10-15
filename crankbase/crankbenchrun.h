@@ -24,7 +24,7 @@
 
 #include <glib.h>
 
-
+#include "crankbench.h"
 
 //////// CrankBenchRun /////////////////////////////////////////////////////////
 
@@ -39,6 +39,17 @@ void              crank_bench_run_do                      (CrankBenchRun        
 void              crank_bench_run_postprocess             (CrankBenchRun         *run);
 
 
+guint             crank_bench_run_get_run_no              (CrankBenchRun         *run);
+
+
+gboolean          crank_bench_run_is_running              (CrankBenchRun         *run);
+
+gboolean          crank_bench_run_is_failed               (CrankBenchRun         *run);
+
+gboolean          crank_bench_run_is_skipped              (CrankBenchRun         *run);
+
+gchar            *crank_bench_run_get_message             (CrankBenchRun         *run);
+
 //////// Marking run as skip or fail ///////////////////////////////////////////
 //
 void              crank_bench_run_skip                    (CrankBenchRun         *run,
@@ -46,9 +57,6 @@ void              crank_bench_run_skip                    (CrankBenchRun        
 
 void              crank_bench_run_fail                    (CrankBenchRun         *run,
                                                            const gchar           *message);
-
-
-gboolean          crank_bench_run_is_running              (CrankBenchRun         *run);
 
 
 //////// Functions for benchmarking ////////////////////////////////////////////
@@ -128,7 +136,9 @@ gfloat*           crank_bench_run_rand_float_array        (CrankBenchRun        
 gdouble*          crank_bench_run_rand_double_array       (CrankBenchRun         *run,
                                                            const guint            length);
 
+/////// Functions for results //////////////////////////////////////////////////
 
+GHashTable       *crank_bench_run_get_results             (CrankBenchRun         *run);
 
 
 #endif

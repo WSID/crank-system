@@ -519,6 +519,6 @@ void
 _crank_bench_result_case_pp_accum (CrankBenchRun        *run,
                                    CrankBenchResultCase *result)
 {
-  _crank_bench_set_join (result->param_names, run->param);
-  _crank_bench_set_join (result->result_names, run->result);
+  _crank_bench_set_join (result->param_names, crank_bench_run_get_params (run));
+  _crank_bench_set_join (result->result_names, crank_bench_run_get_results (run));
 }

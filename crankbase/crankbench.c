@@ -1672,17 +1672,16 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
 
       g_string_append_printf (strbuild,
                               "%u,\t%u",
-                              crank_value_table_get_uint (run->param,
-                                                          quark_repeatq,
-                                                          0),
-                              run->runno);
+                              crank_bench_run_get_param_uint (run, "repeat", 0),
+                              crank_bench_run_get_run_no (run));
 
       for (j = 0; j < nparam_order; j++)
         {
+          GHashTable *params = crank_bench_run_get_params (run);
           GValue *pvalue;
           gchar *str;
 
-          pvalue = (GValue*) g_hash_table_lookup (run->param, param_order[j]);
+          pvalue = (GValue*) g_hash_table_lookup (params, param_order[j]);
 
           if (pvalue == NULL)
             {
@@ -1701,32 +1700,27 @@ _crank_bench_run_list_write (CrankBenchResultCase  *result,
             }
         }
 
-      switch (run->state & CRANK_BENCH_RUN_MASK_RES_STATE)
-        {
-        case CRANK_BENCH_RUN_SKIP:
-          statestr = "SKIP";
-          break;
-
-        case CRANK_BENCH_RUN_FAIL:
-          statestr = "FAIL";
-          break;
-
-        case CRANK_BENCH_RUN_SUCCES:
-          break;
-        }
+      if (crank_bench_run_is_failed (run))
+        statestr = "FAIL";
+      else if (crank_bench_run_is_skipped (run))
+        statestr = "SKIP";
 
       if (statestr != NULL)
         {
-          g_string_append_printf (strbuild, ",\t%s - %s", statestr, run->message);
+          g_string_append_printf (strbuild,
+                                  ",\t%s - %s",
+                                  statestr,
+                                  crank_bench_run_get_message (run));
         }
       else
         {
           for (j = 0; j < nresult_order; j++)
             {
+              GHashTable *results = crank_bench_run_get_results (run);
               GValue *pvalue;
               gchar *str;
 
-              pvalue = (GValue*) g_hash_table_lookup (run->result, result_order[j]);
+              pvalue = (GValue*) g_hash_table_lookup (results, result_order[j]);
 
               if (pvalue == NULL)
                 {

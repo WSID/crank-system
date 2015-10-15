@@ -126,6 +126,76 @@ crank_bench_run_free (CrankBenchRun *run)
   g_slice_free (CrankBenchRun, run);
 }
 
+/**
+ * crank_bench_get_run_no: (skip)
+ * @run: A Benchmark run.
+ *
+ * Get run number of this run. This is 0 for first repeat, and so on.
+ *
+ * Returns: Repeat numbers.
+ */
+guint
+crank_bench_run_get_run_no (CrankBenchRun *run)
+{
+  return run->runno;
+}
+
+/**
+ * crank_bench_is_running: (skip)
+ * @run: A benchmark run.
+ *
+ * Gets whether this run is running.
+ *
+ * Returns: Whether this run is running.
+ */
+gboolean
+crank_bench_run_is_running (CrankBenchRun *run)
+{
+  return (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE) == CRANK_BENCH_RUN_RUNNING;
+}
+
+/**
+ * crank_bench_run_is_failed: (skip)
+ * @run: A Benchmark run.
+ *
+ * Gets whether this run is marked failure.
+ *
+ * Returns: Whether this run is failed.
+ */
+gboolean
+crank_bench_run_is_failed (CrankBenchRun *run)
+{
+  return (run->state & CRANK_BENCH_RUN_MASK_RES_STATE) == CRANK_BENCH_RUN_FAIL;
+}
+
+/**
+ * crank_bench_run_is_skipped: (skip)
+ * @run: A Benchmark run.
+ *
+ * Gets whether this run is marked skip.
+ *
+ * Returns: Whether this run is skipped.
+ */
+gboolean
+crank_bench_run_is_skipped (CrankBenchRun *run)
+{
+  return (run->state & CRANK_BENCH_RUN_MASK_RES_STATE) == CRANK_BENCH_RUN_SKIP;
+}
+
+/**
+ * crank_bench_run_get_message: (skip)
+ * @run: A Benchmark run.
+ *
+ * Gets message on this run, if it was not succesful.
+ *
+ * Returns: (nullable) (transfer none): Message on the run or %NULL, if it was
+ *     succesful.
+ */
+gchar*
+crank_bench_run_get_message (CrankBenchRun *run)
+{
+  return run->message;
+}
 
 /**
  * crank_bench_run_skip: (skip)
@@ -220,20 +290,6 @@ crank_bench_run_fail (CrankBenchRun *run,
     case CRANK_BENCH_RUN_FAIL:
       break;
     }
-}
-
-/**
- * crank_bench_is_running: (skip)
- * @run: A benchmark run.
- *
- * Gets whether this run is running.
- *
- * Returns: Whether this run is running.
- */
-gboolean
-crank_bench_is_running (CrankBenchRun *run)
-{
-  return (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE) == CRANK_BENCH_RUN_RUNNING;
 }
 
 /**
@@ -717,5 +773,20 @@ crank_bench_run_postprocess (CrankBenchRun* run)
                                crank_value_dup (& entry->value));
         }
     }
+}
+
+/**
+ * crank_bench_run_get_results:
+ * @run: A Benchmark run.
+ *
+ * Gets result of run. Results will be ready after postprocessing.
+ *
+ * Returns: (nullable) (transfer none) (element-type GQuark GValue):
+ *     Results or %NULL, if postprocessed.
+ */
+GHashTable*
+crank_bench_run_get_results (CrankBenchRun *run)
+{
+  return run->result;
 }
 
