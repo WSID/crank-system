@@ -149,6 +149,9 @@ GHashTable             *_crank_bench_dup_table          (GHashTable   *other);
 GHashTable             *_crank_bench_table_composite    (GHashTable   *prev,
                                                          GHashTable   *add);
 
+void                    _crank_bench_set_join           (GHashTable *set,
+                                                         GHashTable *add);
+
 CrankBenchSuite        *_crank_bench_get_suite_common   (const gchar  *path,
                                                          gchar       **case_name,
                                                          gboolean      make_suite);
@@ -166,11 +169,20 @@ void                    _crank_bench_run_free           (CrankBenchRun  *run);
 
 void                    _crank_bench_run_do             (CrankBenchRun  *run);
 
+void                    _crank_bench_run_postprocess   (CrankBenchRun  *run);
+
 void                    _crank_bench_run_result_write   (CrankBenchResultSuite *result,
                                                          gpointer               stream);
 
 void                    _crank_bench_run_list_write     (CrankBenchResultCase  *result,
                                                          gpointer               stream);
+
+void                    _crank_bench_result_suite_postprocess (CrankBenchResultSuite *result);
+
+void                    _crank_bench_result_case_postprocess (CrankBenchResultCase *result);
+
+void                    _crank_bench_result_case_pp_accum(CrankBenchRun        *run,
+                                                          CrankBenchResultCase *result);
 
 G_END_DECLS
 
