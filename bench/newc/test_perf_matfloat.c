@@ -82,12 +82,8 @@ test_gen_mat_float_n (CrankBenchRun  *run,
   guint i;
   guint N = crank_bench_run_get_param_uint (run, "N", 4);
 
-  crank_mat_float_n_init_fill (mat, N, N, 0.0f);
-
-  for (i = 0; i < N * N; i++)
-    {
-      mat->data[i] = crank_bench_run_rand_double (run);
-    }
+  crank_mat_float_n_init_arr_take (mat, N, N,
+                                   crank_bench_run_rand_float_array (run, N*N));
 }
 
 
