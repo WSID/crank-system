@@ -32,6 +32,7 @@
 #include "crankstring.h"
 #include "crankbench.h"
 #include "crankbench-private.h"
+#include "crankbenchrun.h"
 
 /**
  * SECTION: crankbenchresult
@@ -381,7 +382,7 @@ crank_bench_result_case_new (CrankBenchCase *bcase)
   result->parent = NULL;
   result->bcase = bcase;
   result->runs = g_ptr_array_new_with_free_func ((GDestroyNotify)
-                                                 _crank_bench_run_free);
+                                                 crank_bench_run_free);
 
   result->param_names = g_hash_table_new (g_direct_hash, g_direct_equal);
   result->result_names =  g_hash_table_new (g_direct_hash, g_direct_equal);
@@ -506,7 +507,7 @@ _crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 
   g_fprintf (stderr, "%s: ", path);
 
-  g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_run_postprocess, NULL);
+  g_ptr_array_foreach (result->runs, (GFunc)crank_bench_run_postprocess, NULL);
 
   // Accumulate all names used in runs.
   g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_result_case_pp_accum, result);

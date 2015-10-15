@@ -92,29 +92,6 @@ struct _CrankBenchCase {
 };
 
 /**
- * CrankBenchRun:
- *
- * A structure represents a running benchmark.
- */
-struct _CrankBenchRun {
-  CrankBenchCase       *bcase;
-  guint                 runno;
-  CrankBenchRunState    state;
-  gchar                *message;
-
-  GHashTable           *param;
-  GQueue               *result_journal;
-
-  GTimer               *timer_run;
-  GTimer               *timer_user;
-
-  GRand                *random;
-
-
-  GHashTable           *result;
-};
-
-/**
  * CrankBenchResultSuite:
  *
  * A Structure represents benchmark result.
@@ -160,16 +137,6 @@ void                    _crank_bench_case_run1          (CrankBenchCase      *bc
                                                          CrankBenchResultCase *result,
                                                          CrankBenchParamNode *param,
                                                          GHashTable          *param_prev);
-
-CrankBenchRun          *_crank_bench_run_new            (CrankBenchCase *bcase,
-                                                         GHashTable     *param,
-                                                         const guint     run_no);
-
-void                    _crank_bench_run_free           (CrankBenchRun  *run);
-
-void                    _crank_bench_run_do             (CrankBenchRun  *run);
-
-void                    _crank_bench_run_postprocess   (CrankBenchRun  *run);
 
 void                    _crank_bench_run_result_write   (CrankBenchResultSuite *result,
                                                          gpointer               stream);

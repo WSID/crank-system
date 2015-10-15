@@ -32,6 +32,7 @@
 #include "crankstring.h"
 #include "crankbench.h"
 #include "crankbench-private.h"
+#include "crankbenchrun.h"
 
 /**
  * SECTION:crankbench
@@ -1573,9 +1574,9 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
     {
       for (i = 0; i < repeat; i++)
         {
-          CrankBenchRun *run = _crank_bench_run_new (bcase, param1, i);
+          CrankBenchRun *run = crank_bench_run_new (bcase, param1, i);
 
-          _crank_bench_run_do (run);
+          crank_bench_run_do (run);
 
           g_ptr_array_add (result->runs, run);
         }

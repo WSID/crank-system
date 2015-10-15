@@ -36,7 +36,8 @@ include_HEADERS = \
 		crankadvgraph.h \
 		\
 		crankbasetest.h \
-		crankbench.h
+		crankbench.h \
+		crankbenchrun.h
 
 noinst_HEADERS = \
 		crankbench-private.h

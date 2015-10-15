@@ -34,7 +34,98 @@
 #include "crankbench-private.h"
 
 
+
+/**
+ * CrankBenchRun:
+ *
+ * A structure represents a running benchmark.
+ */
+struct _CrankBenchRun {
+  CrankBenchCase       *bcase;
+  guint                 runno;
+  CrankBenchRunState    state;
+  gchar                *message;
+
+  GHashTable           *param;
+  GQueue               *result_journal;
+
+  GTimer               *timer_run;
+  GTimer               *timer_user;
+
+  GRand                *random;
+
+
+  GHashTable           *result;
+};
+
+
 //////// CrankBenchRun /////////////////////////////////////////////////////////
+
+
+
+/**
+ * crank_bench_run_new: (skip)
+ * @bcase: (transfer none): A Benchmark case.
+ * @param: (transfer none): Parameters for benchmark.
+ * @run_no: Run number.
+ *
+ * Creates a benchmark run for @run_no th run, with @param.
+ *
+ * Retunrs: (transfer full): A Benchmark run.
+ */
+CrankBenchRun*
+crank_bench_run_new (CrankBenchCase *bcase,
+                      GHashTable     *param,
+                      const guint     run_no)
+{
+  CrankBenchRun *run = g_slice_new (CrankBenchRun);
+
+  run->bcase = bcase;
+  run->runno = run_no;
+  run->state = CRANK_BENCH_RUN_NOT_RUN;
+  run->message = NULL;
+
+  run->param = g_hash_table_ref (param);
+  run->result_journal = g_queue_new ();
+
+  run->timer_run = g_timer_new ();
+  run->timer_user = g_timer_new ();
+
+  run->random = g_rand_new ();
+
+  run->result = NULL;
+
+  return run;
+}
+
+
+/**
+ * crank_bench_run_free:
+ * @run: A Benchmark run.
+ *
+ * Frees a benchmark run.
+ */
+void
+crank_bench_run_free (CrankBenchRun *run)
+{
+  g_free (run->message);
+
+  g_hash_table_unref (run->param);
+
+  while (! g_queue_is_empty (run->result_journal))
+    g_slice_free (CrankBenchResultEntry, g_queue_pop_tail (run->result_journal));
+  g_queue_free (run->result_journal);
+
+  g_timer_destroy (run->timer_run);
+  g_timer_destroy (run->timer_user);
+
+  g_rand_free (run->random);
+
+  g_hash_table_unref (run->result);
+
+  g_slice_free (CrankBenchRun, run);
+}
+
 
 /**
  * crank_bench_run_skip: (skip)
@@ -565,75 +656,13 @@ crank_bench_run_rand_double_array (CrankBenchRun *run,
 
 
 /**
- * _crank_bench_run_new:
- * @bcase: A Benchmark case.
- * @param: Parameters for benchmark.
- * @run_no: Run number.
- *
- * Creates a benchmark run for @run_no th run, with @param.
- *
- * Retunrs: (transfer full): A Benchmark run.
- */
-CrankBenchRun*
-_crank_bench_run_new (CrankBenchCase *bcase,
-                      GHashTable     *param,
-                      const guint     run_no)
-{
-  CrankBenchRun *run = g_slice_new (CrankBenchRun);
-
-  run->bcase = bcase;
-  run->runno = run_no;
-  run->state = CRANK_BENCH_RUN_NOT_RUN;
-  run->message = NULL;
-
-  run->param = g_hash_table_ref (param);
-  run->result_journal = g_queue_new ();
-
-  run->timer_run = g_timer_new ();
-  run->timer_user = g_timer_new ();
-
-  run->random = g_rand_new ();
-
-  run->result = NULL;
-
-  return run;
-}
-
-/*
- * _crank_bench_run_free:
+ * crank_bench_run_do:
  * @run: A Benchmark run.
  *
- * Frees a benchmark run.
+ * Performs single run of benchmark.
  */
 void
-_crank_bench_run_free (CrankBenchRun *run)
-{
-  g_free (run->message);
-
-  g_hash_table_unref (run->param);
-
-  while (! g_queue_is_empty (run->result_journal))
-    g_slice_free (CrankBenchResultEntry, g_queue_pop_tail (run->result_journal));
-  g_queue_free (run->result_journal);
-
-  g_timer_destroy (run->timer_run);
-  g_timer_destroy (run->timer_user);
-
-  g_rand_free (run->random);
-
-  g_hash_table_unref (run->result);
-
-  g_slice_free (CrankBenchRun, run);
-}
-
-/*
- * _crank_bench_run_do:
- * @run: A Benchmark run.
- *
- * Performs a run of benchmark.
- */
-void
-_crank_bench_run_do (CrankBenchRun *run)
+crank_bench_run_do (CrankBenchRun *run)
 {
   // Check run state.
   switch (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE)
@@ -660,8 +689,14 @@ _crank_bench_run_do (CrankBenchRun *run)
   g_timer_stop (run->timer_run);
 }
 
+/**
+ * crank_bench_run_postprocess:
+ * @run: A Benchmark run.
+ *
+ * Performs postprocess of run.
+ */
 void
-_crank_bench_run_postprocess (CrankBenchRun* run)
+crank_bench_run_postprocess (CrankBenchRun* run)
 {
   // Process result.
   run->result = crank_value_table_create (g_direct_hash, g_direct_equal);
