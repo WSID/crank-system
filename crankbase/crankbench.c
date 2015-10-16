@@ -676,15 +676,8 @@ void
 crank_bench_param_node_set_table (CrankBenchParamNode *node,
                                   GHashTable          *table)
 {
-  GHashTableIter i;
-  gpointer ik;
-  gpointer iv;
-
   g_hash_table_remove_all (node->table);
-
-  g_hash_table_iter_init (&i, table);
-  while (g_hash_table_iter_next (&i, &ik, &iv))
-    crank_value_table_set (node->table, ik, (GValue*)iv);
+  crank_value_table_overlay (node->table, table, NULL);
 }
 
 /**
