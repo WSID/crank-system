@@ -827,6 +827,8 @@ crank_bench_param_node_composite (CrankBenchParamNode *a,
                                   CrankBenchParamNode *b)
 {
   CrankBenchParamNode *node;
+  guint i;
+  guint n;
   // This is based on simple rule.
   // If one part is missing, return dup of other.
   // Both are present, composite and iterate.
@@ -838,50 +840,37 @@ crank_bench_param_node_composite (CrankBenchParamNode *a,
 
   // First composite the nodes themselves.
 
-  {
-    GHashTableIter i;
-    gpointer ik;
-    gpointer iv;
+  node = crank_bench_param_node_dup1 (a);
+  crank_value_table_overlay (node->table, b->table, NULL);
 
-    node = crank_bench_param_node_dup1 (a);
+  n = MIN (a->children->len, b->children->len);
 
-    g_hash_table_iter_init (&i, b->table);
-    while (g_hash_table_iter_next (&i, &ik, &iv))
-      crank_value_table_set (node->table, ik, (GValue*)iv);
-  }
+  for (i = 0; i < n; i++)
+    {
+      CrankBenchParamNode *subnode;
 
-  {
-    guint i;
-    guint n;
+      subnode = crank_bench_param_node_composite (a->children->pdata[i],
+                                                  b->children->pdata[i]);
 
-    n = MIN (a->children->len, b->children->len);
+      crank_bench_param_node_add_child (node, subnode);
+    }
 
-    for (i = 0; i < n; i++)
-      {
-        CrankBenchParamNode *subnode;
+  for (; i < a->children->len; i++)
+    {
+      CrankBenchParamNode *subnode;
+      subnode = crank_bench_param_node_dup (a->children->pdata[i]);
 
-        subnode = crank_bench_param_node_composite (a->children->pdata[i],
-                                                    b->children->pdata[i]);
+      crank_bench_param_node_add_child (node, subnode);
+    }
 
-        crank_bench_param_node_add_child (node, subnode);
-      }
+  for (; i < b->children->len; i++)
+    {
+      CrankBenchParamNode *subnode;
+      subnode = crank_bench_param_node_dup (b->children->pdata[i]);
 
-    for (; i < a->children->len; i++)
-      {
-        CrankBenchParamNode *subnode;
-        subnode = crank_bench_param_node_dup (a->children->pdata[i]);
+      crank_bench_param_node_add_child (node, subnode);
+    }
 
-        crank_bench_param_node_add_child (node, subnode);
-      }
-
-    for (; i < b->children->len; i++)
-      {
-        CrankBenchParamNode *subnode;
-        subnode = crank_bench_param_node_dup (b->children->pdata[i]);
-
-        crank_bench_param_node_add_child (node, subnode);
-      }
-  }
   return node;
 }
 
