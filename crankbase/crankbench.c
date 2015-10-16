@@ -1656,11 +1656,7 @@ _crank_bench_run_list_write_record (gpointer      *params,
 
   for (i = 0; i < nparams; i++)
     {
-      GHashTable *ptable = crank_bench_run_get_params (run);
-      GValue *pvalue;
-      gchar *str;
-
-      pvalue = (GValue*) g_hash_table_lookup (ptable, params[i]);
+      GValue *pvalue = crank_bench_run_getq_param (run, params[i]);
       _crank_bench_run_list_write_value (pvalue, strbuild);
     }
 
@@ -1678,13 +1674,10 @@ _crank_bench_run_list_write_record (gpointer      *params,
     }
   else
     {
+      GHashTable *rtable = crank_bench_run_get_results (run);
       for (i = 0; i < nresults; i++)
         {
-          GHashTable *rtable = crank_bench_run_get_results (run);
-          GValue *pvalue;
-          gchar *str;
-
-          pvalue = (GValue*) g_hash_table_lookup (rtable, results[i]);
+          GValue *pvalue = (GValue*) g_hash_table_lookup (rtable, results[i]);
           _crank_bench_run_list_write_value (pvalue, strbuild);
         }
     }
