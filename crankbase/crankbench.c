@@ -29,6 +29,7 @@
 #include <glib/gprintf.h>
 
 #include "crankbasemacro.h"
+#include "crankbasemisc.h"
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
@@ -160,7 +161,7 @@ crank_bench_run (void)
 
 
   crank_bench_message ("\nEmitting\n");
-  _crank_bench_run_result_write (result, NULL);
+  _crank_bench_run_result_emit (result);
 
   return 0;
 }
@@ -1590,182 +1591,160 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
 }
 
 void
-_crank_bench_run_result_write (CrankBenchResultSuite *result,
-                               gpointer               stream)
+_crank_bench_emit_output (const gchar *format,
+                          ...)
+{
+  va_list vararg;
+
+  va_start (vararg, format);
+  g_vprintf (format, vararg);
+  va_end (vararg);
+}
+
+
+void
+_crank_bench_run_result_emit (CrankBenchResultSuite *result)
 {
   GList *caselist;
   GList *iter;
 
   caselist = crank_bench_result_suite_get_cresults_flat (result);
-
-  for (iter = caselist; iter != NULL; iter = iter->next)
-    {
-      CrankBenchResultCase *cres;
-      cres = (CrankBenchResultCase*) iter->data;
-      _crank_bench_run_list_write (cres, stream);
-    }
-}
-
-
-
-
-void
-_crank_bench_run_list_write_header (gpointer    *params,
-                                    const guint  nparams,
-                                    gpointer    *results,
-                                    const guint  nresults,
-                                    GString     *strbuild)
-{
-  guint i;
-  g_string_append (strbuild, "R,\tN");
-
-  for (i = 0; i < nparams; i++)
-      g_string_append_printf (strbuild, ",\t%s", CRANK_QUARK_TO_STRING (params[i]));
-
-  for (i = 0; i < nresults; i++)
-      g_string_append_printf (strbuild, ",\t%s", CRANK_QUARK_TO_STRING (results[i]));
-
-  g_string_append_c (strbuild, '\n');
+  g_list_foreach (caselist, (GFunc) _crank_bench_run_result_emit_case, NULL);
 }
 
 void
-_crank_bench_run_list_write_value (GValue  *value,
-                                   GString *strbuild)
-{
-  if (value == NULL)
-    {
-      g_string_append (strbuild, ",\t<empty>");
-    }
-  else
-    {
-      gchar *str = crank_value_to_string (value);
-
-      if (str == NULL)
-        {
-          g_string_append (strbuild, ",\t<value>");
-          g_free (str);
-        }
-      else
-        {
-          g_string_append_printf (strbuild, ",\t%s", str);
-        }
-    }
-}
-
-
-
-void
-_crank_bench_run_list_write_record (gpointer      *params,
-                                    const guint    nparams,
-                                    gpointer      *results,
-                                    const guint    nresults,
-                                    CrankBenchRun *run,
-                                    GString       *strbuild)
-{
-  guint i;
-  gchar *statestr = NULL;
-
-  g_string_append_printf (strbuild,
-                          "%u,\t%u",
-                          crank_bench_run_get_param_uint (run, "repeat", 0),
-                          crank_bench_run_get_run_no (run));
-
-  for (i = 0; i < nparams; i++)
-    {
-      GValue *pvalue = crank_bench_run_getq_param (run, params[i]);
-      _crank_bench_run_list_write_value (pvalue, strbuild);
-    }
-
-  if (crank_bench_run_is_failed (run))
-    statestr = "FAIL";
-  else if (crank_bench_run_is_skipped (run))
-    statestr = "SKIP";
-
-  if (statestr != NULL)
-    {
-      g_string_append_printf (strbuild,
-                              ",\t%s - %s",
-                              statestr,
-                              crank_bench_run_get_message (run));
-    }
-  else
-    {
-      GHashTable *rtable = crank_bench_run_get_results (run);
-      for (i = 0; i < nresults; i++)
-        {
-          GValue *pvalue = (GValue*) g_hash_table_lookup (rtable, results[i]);
-          _crank_bench_run_list_write_value (pvalue, strbuild);
-        }
-    }
-  g_string_append_c (strbuild, '\n');
-}
-
-
-
-void
-_crank_bench_run_list_write (CrankBenchResultCase  *result,
-                             gpointer               stream)
+_crank_bench_run_result_emit_case (CrankBenchResultCase *result)
 {
   CrankBenchCase *bcase;
 
-  gpointer* param_order;
-  gpointer* result_order;
+  GList *run_list;
+  GList *run_iter;
 
-  guint nparam_order;
-  guint nresult_order;
+  GHashTable *params;
+  GHashTable *results;
 
-  GPtrArray *runs;
+  guint nparams;
+  guint nresults;
+
+  GQuark* parray;
+  GQuark* rarray;
+
+  GHashTableIter hi;
+  gpointer hik;
 
   GString *strbuild;
   gchar *strhold;
 
   guint i;
 
-  runs = crank_bench_result_case_get_runs (result);
 
-  if (runs->len == 0)
-    return;
-
-  param_order = g_hash_table_get_keys_as_array (crank_bench_result_case_get_param_names (result),
-                                                &nparam_order);
-  result_order = g_hash_table_get_keys_as_array (crank_bench_result_case_get_result_names (result),
-                                                 &nresult_order);
-
+  // Prepare things.
   GQuark quark_repeat = g_quark_from_string ("repeat");
   gpointer quark_repeatq = GINT_TO_POINTER (quark_repeat);
 
+
   bcase = crank_bench_result_case_get_case (result);
+  run_list = crank_bench_result_case_get_run_list (result);
+
+  if (run_list == NULL)
+    return;
+
+  params = crank_bench_run_list_get_param_names (run_list);
+  results = crank_bench_run_list_get_result_names (run_list);
+
+  g_hash_table_remove (params, quark_repeatq);
+
+  nparams = g_hash_table_size (params);
+  nresults = g_hash_table_size (results);
+
+
+  parray = g_new (GQuark, nparams);
+  rarray = g_new (GQuark, nresults);
+
+  i = 0;
+  g_hash_table_iter_init (&hi, params);
+  while (g_hash_table_iter_next (&hi, &hik, NULL))
+    parray[i++] = (GQuark) GPOINTER_TO_INT (hik);
+
+  i = 0;
+  g_hash_table_iter_init (&hi, results);
+  while (g_hash_table_iter_next (&hi, &hik, NULL))
+    rarray[i++] = (GQuark) GPOINTER_TO_INT (hik);
+
 
   // Print out case result.
 
+  // Print out path!
+  strbuild = g_string_new (NULL);
   strhold = crank_bench_case_get_path (bcase);
-  strbuild = g_string_new (strhold);
+  g_string_append_printf (strbuild, "%s\n", strhold);
   g_free (strhold);
 
-  g_string_append_c (strbuild, '\n');
-  _crank_bench_run_list_write_header (param_order,
-                                      nparam_order,
-                                      result_order,
-                                      nresult_order,
-                                      strbuild);
 
-  for (i = 0; i < runs->len; i++)
+  // Print header.
+  {
+    const gchar** headerpv;
+    const gchar** headerrv;
+    gchar* headerp;
+    gchar* headerr;
+
+    headerpv = crank_qarray_to_strv (parray, nparams);
+    headerrv = crank_qarray_to_strv (rarray, nresults);
+    headerp = g_strjoinv (",\t", (gchar**)headerpv);
+    headerr = g_strjoinv (",\t", (gchar**)headerrv);
+
+    g_string_append_printf (strbuild, "R   ,N   ,\t%s,\t%s\n", headerp, headerr);
+
+    g_free (headerpv);
+    g_free (headerrv);
+    g_free (headerp);
+    g_free (headerr);
+  }
+
+  for (run_iter = run_list; run_iter != NULL; run_iter = run_iter->next)
     {
       CrankBenchRun *run;
-      run = (CrankBenchRun*) runs->pdata[i];
+      gchar** recordpv = NULL;
+      gchar** recordrv = NULL;
+      gchar* recordp;
+      gchar* recordr;
 
-      _crank_bench_run_list_write_record (param_order,
-                                          nparam_order,
-                                          result_order,
-                                          nresult_order,
-                                          run,
-                                          strbuild);
+      run = (CrankBenchRun*) run_iter->data;
+
+      recordpv = crank_bench_run_getq_params_to_strv (run, parray, nparams);
+      recordp = g_strjoinv (",\t", recordpv);
+
+      if (crank_bench_run_is_failed (run))
+        recordr = g_strdup_printf ("FAIL: %s", crank_bench_run_get_message (run));
+      else if (crank_bench_run_is_skipped (run))
+        recordr = g_strdup_printf ("SKIP: %s", crank_bench_run_get_message (run));
+      else
+        {
+          recordrv = crank_bench_run_getq_results_to_strv (run, rarray, nresults);
+          recordr = g_strjoinv (",\t", recordrv);
+        }
+
+
+      g_string_append_printf (strbuild,
+                              "%3u,%3u,\t%s,\t%s\n",
+                              crank_bench_run_get_param_uint (run, "repeat", 0),
+                              crank_bench_run_get_run_no (run),
+                              recordp,
+                              recordr);
+
+      g_free (recordpv);
+      g_free (recordrv);
+      g_free (recordp);
+      g_free (recordr);
     }
 
-
-  g_print ("%s", strbuild->str);
+  _crank_bench_emit_output ("%s\n", strbuild->str);
   g_string_free (strbuild, TRUE);
 
-  g_free (param_order);
-  g_free (result_order);
+  g_hash_table_unref (params);
+  g_hash_table_unref (results);
+  g_free (parray);
+  g_free (rarray);
+
+  g_list_free (run_list);
 }

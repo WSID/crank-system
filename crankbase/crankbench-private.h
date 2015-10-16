@@ -83,6 +83,7 @@ struct _CrankBenchSuite {
  */
 struct _CrankBenchCase {
   gchar               *name;
+
   CrankBenchSuite     *parent;
   CrankBenchParamNode *param;
 
@@ -102,11 +103,11 @@ void                    _crank_bench_case_run1          (CrankBenchCase      *bc
                                                          CrankBenchParamNode *param,
                                                          GHashTable          *param_prev);
 
-void                    _crank_bench_run_result_write   (CrankBenchResultSuite *result,
-                                                         gpointer               stream);
+void                    _crank_bench_emit_output        (const gchar *format, ...);
 
-void                    _crank_bench_run_list_write     (CrankBenchResultCase  *result,
-                                                         gpointer               stream);
+void                    _crank_bench_run_result_emit    (CrankBenchResultSuite *result);
+
+void                    _crank_bench_run_result_emit_case(CrankBenchResultCase  *result);
 G_END_DECLS
 
 #endif
