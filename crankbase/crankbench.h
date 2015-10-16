@@ -58,6 +58,10 @@ gboolean              crank_bench_is_initialized          (void);
 
 gint                  crank_bench_run                     (void);
 
+
+gint                  crank_bench_message                 (const gchar           *format,
+                                                           ...) G_GNUC_PRINTF (1, 2);
+
 CrankBenchSuite      *crank_bench_get_root                (void);
 
 CrankBenchSuite      *crank_bench_get_suite               (const gchar           *path);

@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 
 #include "crankbasemacro.h"
 #include "crankvalue.h"
@@ -553,7 +552,7 @@ crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 {
   gchar *path = crank_bench_case_get_path (result->bcase);
 
-  g_fprintf (stderr, "%s: ", path);
+  crank_bench_message ("%s: ", path);
 
   g_ptr_array_foreach (result->runs, (GFunc)crank_bench_run_postprocess, NULL);
 
@@ -562,7 +561,7 @@ crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 
   g_hash_table_remove (result->param_names, CRANK_QUARK_FROM_STRING ("repeat"));
 
-  g_fprintf (stderr, "OK\n");
+  crank_bench_message ("OK\n");
 }
 
 void

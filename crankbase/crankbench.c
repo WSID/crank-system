@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -129,17 +130,51 @@ crank_bench_run (void)
   CrankBenchResultSuite *result;
 
   g_fprintf (stderr, "\nRunning\n");
+  crank_bench_message ("\nRunning\n");
   result = crank_bench_suite_run (crank_bench_root, NULL);
 
 
   g_fprintf (stderr, "\nPostprocessing\n");
+  crank_bench_message ("\nPostprocessing\n");
   crank_bench_result_suite_postprocess (result);
 
 
   g_fprintf (stderr, "\nPrinting\n");
+  crank_bench_message ("\nEmitting\n");
   _crank_bench_run_result_write (result, NULL);
 
   return 0;
+}
+
+
+/**
+ * crank_bench_message: (skip)
+ * @format: Format string for message.
+ * @...: Printf style parameters for @format.
+ *
+ * Prints messages. This will be printed through stderr, so this won't mess up
+ * with benchmark result. (though user has options to mix them if he wants both
+ * of result and message together.)
+ *
+ * Returns: the number of bytes emitted as message.
+ */
+gint
+crank_bench_message (const gchar *format,
+                     ...)
+{
+  va_list vararg;
+  gint result = 0;
+
+  if (crank_bench_progress_quiet)
+    return 0;
+
+  va_start (vararg, format);
+
+  result = g_vfprintf (crank_bench_progress_stdout ? stdout : stderr,
+                       format, vararg);
+
+  va_end (vararg);
+  return result;
 }
 
 
@@ -1360,10 +1395,12 @@ crank_bench_case_run (CrankBenchCase      *bcase,
   result = crank_bench_result_case_new (bcase);
 
   g_fprintf (stderr, "%s: ", path);
+  crank_bench_message ("%s: ", path);
 
   if (mparam == NULL)
     {
       g_fprintf (stderr, "SKIP\n");
+      crank_bench_message ("SKIP\n");
       g_warning ("No benchmark parameter for case %s", path);
     }
   else
@@ -1374,6 +1411,7 @@ crank_bench_case_run (CrankBenchCase      *bcase,
         crank_bench_param_node_free (mparam);
 
       g_fprintf (stderr, "OK\n");
+      crank_bench_message ("OK\n");
     }
 
 
