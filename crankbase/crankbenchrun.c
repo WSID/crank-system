@@ -1140,7 +1140,7 @@ crank_bench_run_getq_result_to_string (CrankBenchRun *run,
 
 
 /**
- * carnk_bench_run_get_params_to_strv:
+ * crank_bench_run_get_params_to_strv: (skip)
  * @run: A benchmark run.
  * @names: (array zero-terminated): Parameter names.
  *
@@ -1157,18 +1157,18 @@ crank_bench_run_get_params_to_strv (CrankBenchRun  *run,
   guint nnames;
   guint i;
 
-  nnames = g_strv_length (names);
+  nnames = g_strv_length ((gchar**) names);
   strv = g_new (gchar*, nnames + 1);
 
   for (i = 0; i < nnames; i++)
-    strv[i] = crank_bench_run_get_param_to_string (names[i]);
+    strv[i] = crank_bench_run_get_param_to_string (run, names[i]);
 
   strv[nnames] = NULL;
   return strv;
 }
 
 /**
- * carnk_bench_run_get_params_to_strv:
+ * crank_bench_run_getq_params_to_strv: (skip)
  * @run: A benchmark run.
  * @names: (array length=nnames): Parameter names.
  * @nnames: length of @names.
@@ -1186,18 +1186,18 @@ crank_bench_run_getq_params_to_strv (CrankBenchRun *run,
   gchar **strv;
   guint i;
 
-  nnames = g_strv_length (names);
   strv = g_new (gchar*, nnames + 1);
 
   for (i = 0; i < nnames; i++)
-    strv[i] = crank_bench_run_getq_param_to_string (names[i]);
+    strv[i] = crank_bench_run_getq_param_to_string (run, names[i]);
 
   strv[nnames] = NULL;
+
   return strv;
 }
 
 /**
- * carnk_bench_run_get_results_to_strv:
+ * crank_bench_run_get_results_to_strv: (skip)
  * @run: A benchmark run.
  * @names: (array zero-terminated): Parameter names.
  *
@@ -1208,24 +1208,24 @@ crank_bench_run_getq_params_to_strv (CrankBenchRun *run,
  */
 gchar**
 crank_bench_run_get_results_to_strv (CrankBenchRun *run,
-                                     const gchar   *names)
+                                     const gchar  **names)
 {
   gchar **strv;
   guint nnames;
   guint i;
 
-  nnames = g_strv_length (names);
+  nnames = g_strv_length ((gchar**)names);
   strv = g_new (gchar*, nnames + 1);
 
   for (i = 0; i < nnames; i++)
-    strv[i] = crank_bench_run_get_result_to_string (names[i]);
+    strv[i] = crank_bench_run_get_result_to_string (run, names[i]);
 
   strv[nnames] = NULL;
   return strv;
 }
 
 /**
- * carnk_bench_run_get_results_to_strv:
+ * crank_bench_run_getq_results_to_strv: (skip)
  * @run: A benchmark run.
  * @names: (array length=nnames): Parameter names.
  * @nnames: length of @names.
@@ -1243,11 +1243,10 @@ crank_bench_run_getq_results_to_strv (CrankBenchRun *run,
   gchar **strv;
   guint i;
 
-  nnames = g_strv_length (names);
   strv = g_new (gchar*, nnames + 1);
 
   for (i = 0; i < nnames; i++)
-    strv[i] = crank_bench_run_getq_result_to_string (names[i]);
+    strv[i] = crank_bench_run_getq_result_to_string (run, names[i]);
 
   strv[nnames] = NULL;
   return strv;
