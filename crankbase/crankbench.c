@@ -1425,66 +1425,6 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 }
 //////// Private functions /////////////////////////////////////////////////////
 
-/*
- * _crank_bench_dup_table:
- * @table: (transfer none) (element-type gpointer GValue):
- *     A table to duplicate.
- *
- * Duplicates a #GHashTable with duplicated #GValue. Keys are not duplicated.
- *
- * Returns: (transfer full) (element-type gpointer GValue):
- *     A duplicated table.
- */
-GHashTable*
-_crank_bench_dup_table (GHashTable *table)
-{
-  if (table == NULL)
-    {
-      return NULL;
-    }
-  else
-    {
-      GHashTable *res = crank_value_table_create (g_direct_hash, g_direct_equal);
-      GHashTableIter i;
-      gpointer       ik;
-      GValue        *iv;
-
-      g_hash_table_iter_init (&i, table);
-
-      while (g_hash_table_iter_next (&i, &ik, (gpointer*) &iv))
-        g_hash_table_insert (res, ik, crank_value_dup (iv));
-
-      return res;
-    }
-}
-
-GHashTable*
-_crank_bench_table_composite (GHashTable *prev,
-                              GHashTable *add)
-{
-  if (prev == NULL)
-    {
-      return _crank_bench_dup_table (add);
-    }
-  else if (add == NULL)
-    {
-      return _crank_bench_dup_table (prev);
-    }
-  else
-    {
-      GHashTable *result = _crank_bench_dup_table (prev);
-
-      GHashTableIter i;
-      gpointer       ik;
-      gpointer       iv;
-
-      g_hash_table_iter_init (&i, add);
-      while (g_hash_table_iter_next (&i, &ik, &iv))
-        crank_value_table_set (result, ik, (GValue*)iv);
-      return result;
-    }
-}
-
 void
 _crank_bench_set_join (GHashTable *set,
                        GHashTable *add)
@@ -1603,11 +1543,18 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
   guint repeat;
 
   if (crank_bench_param_node_is_placeholder (param))
-    param1 = param_prev;
+    {
+      param1 = param_prev;
+    }
   else if (param_prev == NULL)
-    param1 = param->table;
+    {
+      param1 = param->table;
+    }
   else
-    param1 = _crank_bench_table_composite (param_prev, param->table);
+    {
+      param1 = crank_value_table_dup (param_prev, g_direct_hash, g_direct_equal, NULL, NULL);
+      crank_value_table_overlay (param1, param->table, NULL);
+    }
 
   repeat = crank_value_table_get_uint (param1,
                                        CRANK_QUARK_FROM_STRING("repeat"),

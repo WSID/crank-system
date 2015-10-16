@@ -93,13 +93,6 @@ struct _CrankBenchCase {
 
 //////// Private functions /////////////////////////////////////////////////////
 
-
-
-GHashTable             *_crank_bench_dup_table          (GHashTable   *other);
-
-GHashTable             *_crank_bench_table_composite    (GHashTable   *prev,
-                                                         GHashTable   *add);
-
 void                    _crank_bench_set_join           (GHashTable *set,
                                                          GHashTable *add);
 
