@@ -1418,22 +1418,6 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 }
 //////// Private functions /////////////////////////////////////////////////////
 
-void
-_crank_bench_set_join (GHashTable *set,
-                       GHashTable *add)
-{
-  GHashTableIter i;
-  gpointer ik;
-
-  if (add == NULL)
-    return;
-
-
-  g_hash_table_iter_init (&i, add);
-  while (g_hash_table_iter_next (&i, &ik, NULL))
-    g_hash_table_add (set, ik);
-}
-
 /*
  * _crank_bench_get_suite_common:
  * @path: A Benchmark path.

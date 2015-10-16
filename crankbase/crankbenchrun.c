@@ -28,6 +28,7 @@
 #include <glib/gprintf.h>
 
 #include "crankbasemacro.h"
+#include "crankbasemisc.h"
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
@@ -910,14 +911,7 @@ crank_bench_run_list_get_param_names (GList *runlist)
     {
       CrankBenchRun *run = (CrankBenchRun*) i->data;
 
-      GHashTable *params = run->params;
-
-      GHashTableIter pi;
-      gpointer pik;
-
-      g_hash_table_iter_init (&pi, params);
-      while (g_hash_table_iter_next (&pi, &pik, NULL))
-        g_hash_table_add (names, pik);
+      crank_set_overlay (names, run->param);
     }
 
   return names;
@@ -948,14 +942,7 @@ crank_bench_run_list_get_result_names (GList *runlist)
     {
       CrankBenchRun *run = (CrankBenchRun*) i->data;
 
-      GHashTable *params = run->results;
-
-      GHashTableIter pi;
-      gpointer pik;
-
-      g_hash_table_iter_init (&pi, params);
-      while (g_hash_table_iter_next (&pi, &pik, NULL))
-        g_hash_table_add (names, pik);
+      crank_set_overlay (names, run->param);
     }
 
   return names;

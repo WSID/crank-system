@@ -93,9 +93,6 @@ struct _CrankBenchCase {
 
 //////// Private functions /////////////////////////////////////////////////////
 
-void                    _crank_bench_set_join           (GHashTable *set,
-                                                         GHashTable *add);
-
 CrankBenchSuite        *_crank_bench_get_suite_common   (const gchar  *path,
                                                          gchar       **case_name,
                                                          gboolean      make_suite);
