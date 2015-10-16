@@ -91,6 +91,7 @@ void    crank_value_array_overwrite_array  (GValue *array,
 void    crank_value_array_unset            (GValue *array,
                                             guint   narray);
 
+
 GHashTable     *crank_value_table_create        (GHashFunc      hash_func,
                                                  GEqualFunc     key_equal_func);
 
@@ -175,8 +176,15 @@ void            crank_value_table_set_pointer   (GHashTable    *table,
                                                  GType          type,
                                                  gpointer       value);
 
+GHashTable     *crank_value_table_dup           (GHashTable    *table,
+                                                 GHashFunc      keyhash,
+                                                 GEqualFunc     keyequal,
+                                                 GBoxedCopyFunc keycopy,
+                                                 GDestroyNotify keydestroy);
 
-
+void            crank_value_table_overlay       (GHashTable    *table,
+                                                 GHashTable    *overlay,
+                                                 GBoxedCopyFunc keycopy);
 
 G_END_DECLS
 

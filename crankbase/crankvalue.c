@@ -944,3 +944,80 @@ crank_value_table_set_pointer (GHashTable *table,
     }
 }
 
+
+/**
+ * crank_value_table_dup: (skip)
+ * @table: (transfer none) (element-type gpointer GValue) (nullable):
+ *     A hash table.
+ * @keyhash: (scope call): A Hash function.
+ * @keyequal: (scope call): A Equal function.
+ * @keycopy: (scope call) (nullable): A Key copy function to provide duplicated
+ *     key to newly duplicated table, or %NULL to not copy keys.
+ * @keydestroy: (scope call) (nullable): A Key destroy function to destroy keys
+ *     in new table. Generally it is %NULL if @keycopy is %NULL.
+ *
+ * Duplicates a hash table with #GValue. For %NULL, it simply returns %NULL.
+ *
+ * Returns: (transfer full) (element-type gpointer GValue) (nullable):
+ *     Duplicated table or %NULL, if @table is %NULL.
+ */
+GHashTable*
+crank_value_table_dup (GHashTable *table,
+                       GHashFunc keyhash,
+                       GEqualFunc keyequal,
+                       GBoxedCopyFunc keycopy,
+                       GDestroyNotify keydestroy)
+{
+  GHashTable *dup;
+
+  GHashTableIter i;
+  gpointer ik;
+  gpointer iv;
+
+  if (table == NULL)
+    return NULL;
+
+  dup = crank_value_table_create_full (keyhash, keyequal, keydestroy);
+
+  g_hash_table_iter_init (&i, table);
+  while (g_hash_table_iter_next (&i, &ik, &iv))
+    {
+      g_hash_table_insert (dup,
+                           (keycopy != NULL) ? keycopy (ik) : ik,
+                           crank_value_dup ((GValue*)iv));
+    }
+  return dup;
+}
+
+/**
+ * crank_value_table_overlay: (skip)
+ * @table: (transfer none) (element-type gpointer GValue):
+ *     A hash table.
+ * @overlay: (transfer none) (element-type gpointer GValue) (nullable):
+ *     A overlaying hash table.
+ * @keycopy: (scope call) (nullable): A Key copy function to provide duplicated
+ *     key to @table, or %NULL to not copy keys.
+ *
+ * Overlays content of @overlay to @table, which means @table will have all key
+ * and values in @overlay.
+ */
+void
+crank_value_table_overlay (GHashTable     *table,
+                           GHashTable     *overlay,
+                           GBoxedCopyFunc  keycopy)
+{
+  GHashTableIter i;
+  gpointer ik;
+  gpointer iv;
+
+  if (overlay == NULL)
+    return;
+
+  g_hash_table_iter_init (&i, overlay);
+  while (g_hash_table_iter_next (&i, &ik, &iv))
+    {
+      crank_value_table_set (table,
+                             (keycopy != NULL) ? keycopy (ik) : ik,
+                             (GValue*)iv );
+    }
+}
