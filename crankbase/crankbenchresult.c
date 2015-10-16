@@ -27,6 +27,7 @@
 #include <glib.h>
 
 #include "crankbasemacro.h"
+#include "crankbasemisc.h"
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
@@ -68,9 +69,6 @@ struct _CrankBenchResultCase {
 
   CrankBenchCase        *bcase;
   GPtrArray             *runs;
-
-  GHashTable            *param_names;
-  GHashTable            *result_names;
 };
 
 
@@ -349,16 +347,16 @@ crank_bench_result_suite_get_runs (CrankBenchResultSuite *result)
 {
   GList *list;
   guint i;
-  guint j;
 
   list = NULL;
   for (i = 0; i < result->cresults->len; i++)
     {
       CrankBenchResultCase *cresult;
+      GList                *sublist;
       cresult = (CrankBenchResultCase*) result->cresults->pdata[i];
+      sublist =  crank_bench_result_case_get_run_list (cresult);
 
-      for (j = 0; j < cresult->runs->len; j++)
-        list = g_list_append (list, cresult->runs->pdata[i]);
+      list = g_list_concat (list, sublist);
     }
 
   return list;
@@ -383,10 +381,11 @@ crank_bench_result_suite_get_runs_flat (CrankBenchResultSuite *result)
 
   for (i = 0; i <result->sresults->len; i++)
     {
-      CrankBenchResultSuite* subresult;
-      subresult = (CrankBenchResultSuite*) result->sresults->pdata[i];
+      CrankBenchResultSuite *subresult;
+      GList                 *sublist;
 
-      GList *sublist = crank_bench_result_suite_get_runs_flat (subresult);
+      subresult = (CrankBenchResultSuite*) result->sresults->pdata[i];
+      sublist = crank_bench_result_suite_get_runs_flat (subresult);
 
       list = g_list_concat (list, sublist);
     }
@@ -417,9 +416,6 @@ crank_bench_result_case_new (CrankBenchCase *bcase)
   result->runs = g_ptr_array_new_with_free_func ((GDestroyNotify)
                                                  crank_bench_run_free);
 
-  result->param_names = g_hash_table_new (g_direct_hash, g_direct_equal);
-  result->result_names =  g_hash_table_new (g_direct_hash, g_direct_equal);
-
   return result;
 }
 
@@ -433,9 +429,6 @@ void
 crank_bench_result_case_free (CrankBenchResultCase *result)
 {
   g_ptr_array_unref (result->runs);
-
-  g_hash_table_unref (result->param_names);
-  g_hash_table_unref (result->result_names);
 
   g_slice_free (CrankBenchResultCase, result);
 }
@@ -485,6 +478,28 @@ crank_bench_result_case_get_runs (CrankBenchResultCase *result)
 }
 
 /**
+ * crank_bench_result_case_get_run_list:
+ * @result: A Benchmark result.
+ *
+ * Gets all runs in this result, as GList.
+ *
+ * Returns: (transfer container) (element-type CrankBenchRun):
+ *     Runs in this result.
+ */
+GList*
+crank_bench_result_case_get_run_list (CrankBenchResultCase *result)
+{
+  GList *list = NULL;
+  guint  i;
+
+  for (i = 0; i < result->runs->len; i++)
+    list = g_list_prepend (list, result->runs->pdata[i]);
+
+  list = g_list_reverse (list);
+  return list;
+}
+
+/**
  * crank_bench_result_case_add_run:
  * @result: A Benchmark result.
  * @run: (transfer full): A Benchmark run.
@@ -497,37 +512,6 @@ crank_bench_result_case_add_run (CrankBenchResultCase *result,
 {
   g_ptr_array_add (result->runs, run);
 }
-
-/**
- * crank_bench_result_case_get_param_names: (skip)
- * @result: A Benchmark result.
- *
- * Gets parameter names used in this case, in form of #GHashTable<#GQuark>
- *
- * Returns: (transfer none) (element-type GQuark GQuark):
- *     Names of benchmark parameters.
- */
-GHashTable*
-crank_bench_result_case_get_param_names (CrankBenchResultCase *result)
-{
-  return result->param_names;
-}
-
-/**
- * crank_bench_result_case_get_result_names: (skip)
- * @result: A Benchmark result.
- *
- * Gets result names used in this case, in form of #GHashTable<#GQuark>
- *
- * Returns: (transfer none) (element-type GQuark GQuark):
- *     Names of benchmark result columns.
- */
-GHashTable*
-crank_bench_result_case_get_result_names (CrankBenchResultCase *result)
-{
-  return result->result_names;
-}
-
 
 
 
@@ -556,18 +540,5 @@ crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 
   g_ptr_array_foreach (result->runs, (GFunc)crank_bench_run_postprocess, NULL);
 
-  // Accumulate all names used in runs.
-  g_ptr_array_foreach (result->runs, (GFunc)_crank_bench_result_case_pp_accum, result);
-
-  g_hash_table_remove (result->param_names, CRANK_QUARK_FROM_STRING ("repeat"));
-
   crank_bench_message ("OK\n");
-}
-
-void
-_crank_bench_result_case_pp_accum (CrankBenchRun        *run,
-                                   CrankBenchResultCase *result)
-{
-  crank_set_overlay (result->param_names, crank_bench_run_get_params (run));
-  crank_set_overlay (result->result_names, crank_bench_run_get_results (run));
 }

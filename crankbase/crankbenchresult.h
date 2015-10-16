@@ -84,9 +84,9 @@ void                    crank_bench_result_case_add_run          (CrankBenchResu
 
 GPtrArray              *crank_bench_result_case_get_runs         (CrankBenchResultCase  *result);
 
-GHashTable             *crank_bench_result_case_get_param_names  (CrankBenchResultCase  *result);
+GList                  *crank_bench_result_case_get_run_list     (CrankBenchResultCase  *result);
 
-GHashTable             *crank_bench_result_case_get_result_names (CrankBenchResultCase  *result);
+
 
 void                    crank_bench_result_case_postprocess      (CrankBenchResultCase *result);
 
