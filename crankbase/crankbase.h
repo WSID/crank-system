@@ -25,6 +25,7 @@
 #define _CRANKBASE_INSIDE
 
 #include "crankbasemacro.h"
+#include "crankbasemisc.h"
 #include "crankstring.h"
 #include "crankvalue.h"
 #include "crankbits.h"
