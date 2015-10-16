@@ -1311,7 +1311,7 @@ crank_bench_run_list_get_result_names (GList *runlist)
     {
       CrankBenchRun *run = (CrankBenchRun*) i->data;
 
-      crank_set_overlay (names, run->param);
+      crank_set_overlay (names, run->result);
     }
 
   return names;
