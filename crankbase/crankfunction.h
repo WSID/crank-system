@@ -172,6 +172,22 @@ typedef gchar*(*CrankStrPtrFunc) (gpointer value,
                                   gpointer userdata);
 
 /**
+ * CrankPtrPtrFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives a pointer and returns a pointer. This is generally
+ * used as a mapping functions.
+ *
+ * This function type does not describes ownership of parameter and returned
+ * value. Consumer, holder and producer should describe ownership of them.
+ *
+ * Returns: A pointer.
+ */
+typedef gpointer (*CrankPtrPtrFunc) (gpointer value,
+                                     gpointer userdata);
+
+/**
  * CrankEqualDeltaFunc:
  * @a: Pointer to a value.
  * @b: Pointer to a value.
