@@ -93,14 +93,19 @@ crank_value_free (GValue *value)
 /**
  * crank_value_to_string: (skip)
  * @value: #GValue to stringify
+ * @transform_fail: (transfer none) (nullable): Default value when transform
+ *     fails.
  *
- * Stringify @value, utilizing transformation.
+ * Stringify @value, utilizing transformation. If fails, duplication of
+ * @transform_fail will be returned. If @value is %NULL or unsetted, %NULL is
+ * returned whether @transform_fail is %NULL or not.
  *
- * Returns: (nullable) (transfer full): A stringified value or %NULL if @value
- *     is %NULL, or not initialized, or not transformable.
+ * Returns: (nullable) (transfer full): A stringified value or @transform_fail,
+ * if transformation failed or %NULL, if @value is %NULL.
  */
 gchar*
-crank_value_to_string (GValue *value)
+crank_value_to_string (GValue      *value,
+                       const gchar *transform_fail)
 {
   gchar *result = NULL;
   if ((value != NULL) && (G_IS_VALUE (value)))
@@ -110,6 +115,8 @@ crank_value_to_string (GValue *value)
 
       if (g_value_transform (value, &strval))
         result = g_value_dup_string (&strval);
+      else
+        result = g_strdup (transform_fail);
 
       g_value_unset (&strval);
     }

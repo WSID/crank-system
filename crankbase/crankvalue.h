@@ -36,7 +36,8 @@ GValue *crank_value_dup                    (const GValue *value);
 void    crank_value_free                   (GValue      *value);
 
 
-gchar  *crank_value_to_string              (GValue      *value);
+gchar  *crank_value_to_string              (GValue      *value,
+                                            const gchar *transform_fail);
 
 
 
