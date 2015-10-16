@@ -28,6 +28,93 @@
 #include "crankbasemisc.h"
 
 /**
+ * crank_qarray_to_strv: (skip):
+ * @qarray: (array length=nqarray): A GQuark array.
+ * @nqarray: Length of @qarray.
+ *
+ * Constructs string array from #GQuark array.
+ *
+ * Each elements in same position are associated to each other.
+ *
+ * Returns: (array zero-terminated) (transfer container): A string array.
+ */
+const gchar**
+crank_qarray_to_strv (GQuark      *qarray,
+                      const guint  nqarray)
+{
+  const gchar **strv;
+  guint   i;
+
+  strv = g_new (const gchar*, nqarray + 1);
+
+  for (i = 0; i < nqarray; i++)
+    strv[i] = g_quark_to_string (qarray[i]);
+
+  strv[nqarray] = NULL;
+  return strv;
+}
+/**
+ * crank_qarray_try_strv: (skip):
+ * @strv: (array zero-terminated): A string array.
+ * @nqarray: (out): Length of returned value.
+ *
+ * Constructs #GQuark array from string array. If string element has no #GQuark
+ * association, 0 will placed for that position.
+ *
+ * Each elements in same position are associated to each other.
+ *
+ * Returns: (array length=nqarray) (transfer container): A #GQuark array.
+ */
+GQuark*
+crank_qarray_try_strv (const gchar **strv,
+                       guint        *nqarray)
+{
+  GQuark *qarray;
+  guint   n;
+  guint   i;
+
+  n = g_strv_length ((gchar**)strv);
+  qarray = g_new (GQuark, n);
+
+  for (i = 0; i < n; i++)
+    qarray[i] = g_quark_try_string (strv[i]);
+
+  *nqarray = n;
+  return qarray;
+}
+
+/**
+ * crank_qarray_from_strv: (skip):
+ * @strv: (array zero-terminated): A string array.
+ * @nqarray: (out): Length of returned value.
+ *
+ * Constructs #GQuark array from string array. If string element has no #GQuark
+ * association, new #GQuark value will be associated for that string.
+ *
+ * Each elements in same position are associated to each other.
+ *
+ * Returns: (array length=nqarray) (transfer container): A #GQuark array.
+ */
+GQuark*
+crank_qarray_from_strv (const gchar **strv,
+                        guint        *nqarray)
+{
+  GQuark *qarray;
+  guint   n;
+  guint   i;
+
+  n = g_strv_length ((gchar**)strv);
+  qarray = g_new (GQuark, n);
+
+  for (i = 0; i < n; i++)
+    qarray[i] = g_quark_from_string (strv[i]);
+
+  *nqarray = n;
+  return qarray;
+}
+
+
+/**
  * crank_table_dup: (skip)
  * @table: A Hash table to copy.
  * @keyhash: A hash function given for @table.
@@ -237,6 +324,9 @@ crank_set_overlay_full (GHashTable     *set,
 {
   GHashTableIter i;
   gpointer ik;
+
+  if (overlay == NULL)
+    return;
 
   g_hash_table_iter_init (&i, overlay);
   while (g_hash_table_iter_next (&i, &ik, NULL))

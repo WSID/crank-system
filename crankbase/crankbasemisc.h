@@ -30,6 +30,50 @@
 
 G_BEGIN_DECLS
 
+//////// GQuark manipulation
+
+/**
+ * CRANK_QUARK_TO_STRING:
+ * @p: (transfer none): A #GQuark casted into #gpointer.
+ *
+ * Gets string associated to a quark casted in pointer. This is useful when
+ * using #GQuark with container types.
+ *
+ * Returns: (transfer none): A string.
+ */
+#define CRANK_QUARK_TO_STRING(p) g_quark_to_string(GPOINTER_TO_INT(p))
+
+/**
+ * CRANK_QUARK_TRY_STRING:
+ * @s: A string to try get #GQuark
+ *
+ * Gets #GQuark associated to the string. This is useful when using #GQuark with
+ * container types.
+ *
+ * Returns: (transfer none): A #GQuark, casted into #gpointer
+ */
+#define CRANK_QUARK_TRY_STRING(s) GINT_TO_POINTER(g_quark_try_string(s))
+
+/**
+ * CRANK_QUARK_FROM_STRING:
+ * @s: A string to try get #GQuark
+ *
+ * Gets #GQuark associated to the string. This is useful when using #GQuark with
+ * container types.
+ *
+ * Returns: (transfer none): A #GQuark, casted into #gpointer
+ */
+#define CRANK_QUARK_FROM_STRING(s) GINT_TO_POINTER(g_quark_from_string(s))
+
+const gchar   **crank_qarray_to_strv    (GQuark         *qarray,
+                                         const guint     nqarray);
+
+GQuark         *crank_qarray_try_strv   (const gchar   **strv,
+                                         guint          *nqarray);
+
+GQuark         *crank_qarray_from_strv  (const gchar   **strv,
+                                         guint          *nqarray);
+
 //////// Table manipulation (GHashTable <K, V>)
 
 GHashTable     *crank_table_dup         (GHashTable     *table,
