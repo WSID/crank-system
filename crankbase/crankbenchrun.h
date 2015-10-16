@@ -161,4 +161,11 @@ gdouble*          crank_bench_run_rand_double_array       (CrankBenchRun        
 GHashTable       *crank_bench_run_get_results             (CrankBenchRun         *run);
 
 
+/////// Functions for list of runs /////////////////////////////////////////////
+
+GHashTable       *crank_bench_run_list_get_param_names    (GList                 *runlist);
+
+GHashTable       *crank_bench_run_list_get_result_names   (GList                 *runlist);
+
+
 #endif

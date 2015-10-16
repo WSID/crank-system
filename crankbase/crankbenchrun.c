@@ -885,3 +885,78 @@ crank_bench_run_get_results (CrankBenchRun *run)
   return run->result;
 }
 
+/**
+ * crank_bench_run_list_get_param_names: (skip)
+ * @runlist: (element-type CrankBenchRun): List of runs.
+ *
+ * Gets all parameter names among in run list, as #GHashTable<#GQuark, #GQuark>
+ *
+ * Returns: (transfer container) (element-type GQuark):
+ *     All parameter names used in all runs in @runlist.
+ */
+GHashTable*
+crank_bench_run_list_get_param_names (GList *runlist)
+{
+  GHashTable *names;
+
+  GList *i;
+
+  if (runlist == NULL)
+    return NULL;
+
+  names = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  for (i = runlist; i != NULL; i = i->next)
+    {
+      CrankBenchRun *run = (CrankBenchRun*) i->data;
+
+      GHashTable *params = run->params;
+
+      GHashTableIter pi;
+      gpointer pik;
+
+      g_hash_table_iter_init (&pi, params);
+      while (g_hash_table_iter_next (&pi, &pik, NULL))
+        g_hash_table_add (names, pik);
+    }
+
+  return names;
+}
+
+/**
+ * crank_bench_run_list_get_result_names: (skip)
+ * @runlist: (element-type CrankBenchRun): List of runs.
+ *
+ * Gets all result names among in run list, as #GHashTable<#GQuark, #GQuark>
+ *
+ * Returns: (transfer container) (element-type GQuark):
+ *     All parameter names used in all runs in @runlist.
+ */
+GHashTable*
+crank_bench_run_list_get_result_names (GList *runlist)
+{
+  GHashTable *names;
+
+  GList *i;
+
+  if (runlist == NULL)
+    return NULL;
+
+  names = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  for (i = runlist; i != NULL; i = i->next)
+    {
+      CrankBenchRun *run = (CrankBenchRun*) i->data;
+
+      GHashTable *params = run->results;
+
+      GHashTableIter pi;
+      gpointer pik;
+
+      g_hash_table_iter_init (&pi, params);
+      while (g_hash_table_iter_next (&pi, &pik, NULL))
+        g_hash_table_add (names, pik);
+    }
+
+  return names;
+}
