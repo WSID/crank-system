@@ -196,7 +196,39 @@ crank_bench_message (const gchar *format,
   return result;
 }
 
+/**
+ * crank_bench_value_string: (skip)
+ * @value: (nullable): A value to get string.
+ *
+ * Creates string value from @value.
+ *
+ * As benchmark have to check for various values, Crank System provides simple
+ * value stringification function.
+ *
+ * For %NULL, it returns "<empty>", for stringification is not availiable, it
+ * returns "<value>".
+ *
+ * Returns: (transfer full): a stringification result.
+ */
+gchar*
+crank_bench_value_string (const GValue *value)
+{
+  GValue strval = {0};
+  gchar* str;
 
+  if (value == NULL)
+    return g_strdup ("<empty>");
+
+  g_value_init (&strval, G_TYPE_STRING);
+
+  if (g_value_transform (value, &strval))
+    str = g_value_dup_string (&strval);
+  else
+    str = g_strdup ("<value>");
+
+  g_value_unset (&strval);
+  return str;
+}
 
 /**
  * crank_bench_get_root: (skip)
