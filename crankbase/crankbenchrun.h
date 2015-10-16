@@ -160,12 +160,49 @@ gdouble*          crank_bench_run_rand_double_array       (CrankBenchRun        
 
 GHashTable       *crank_bench_run_get_results             (CrankBenchRun         *run);
 
+GValue           *crank_bench_run_get_result              (CrankBenchRun         *run,
+                                                           const gchar           *name);
+
+gint              crank_bench_run_get_result_int          (CrankBenchRun         *run,
+                                                           const gchar           *name,
+                                                           const int              defval);
+
+guint             crank_bench_run_get_result_uint         (CrankBenchRun         *run,
+                                                           const gchar           *name,
+                                                           const guint            defval);
+
+gfloat            crank_bench_run_get_result_float        (CrankBenchRun         *run,
+                                                           const gchar           *name,
+                                                           const gfloat           defval);
+
+gdouble           crank_bench_run_get_result_double       (CrankBenchRun         *run,
+                                                           const gchar           *name,
+                                                           const gdouble          defval);
+
+GValue           *crank_bench_run_getq_result             (CrankBenchRun         *run,
+                                                           const GQuark           name);
+
+gint              crank_bench_run_getq_result_int         (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const int              defval);
+
+guint             crank_bench_run_getq_result_uint        (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const guint            defval);
+
+gfloat            crank_bench_run_getq_result_float       (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const gfloat           defval);
+
+gdouble           crank_bench_run_getq_result_double      (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const gdouble          defval);
+
 
 /////// Functions for list of runs /////////////////////////////////////////////
 
 GHashTable       *crank_bench_run_list_get_param_names    (GList                 *runlist);
 
 GHashTable       *crank_bench_run_list_get_result_names   (GList                 *runlist);
-
 
 #endif

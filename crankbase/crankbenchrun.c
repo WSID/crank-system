@@ -887,12 +887,195 @@ crank_bench_run_get_results (CrankBenchRun *run)
 }
 
 /**
+ * crank_bench_run_get_result: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ *
+ * Gets a benchmark result by @name.
+ *
+ * Returns: (transfer none) (nullable): A benchmark result as #GValue. or %NULL
+ *     if fail.
+ */
+GValue*
+crank_bench_run_get_result (CrankBenchRun *run,
+                            const gchar   *name)
+{
+  return (GValue*) g_hash_table_lookup (run->result, CRANK_QUARK_TRY_STRING(name));
+}
+
+/**
+ * crank_bench_run_get_result_int: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets integer result by @name.
+ *
+ * Returns: A integer result, or @defval if fail.
+ */
+gint
+crank_bench_run_get_result_int (CrankBenchRun *run,
+                                const gchar   *name,
+                                const gint     defval)
+{
+  return crank_value_table_get_int (run->result, CRANK_QUARK_TRY_STRING(name), defval);
+}
+
+/**
+ * crank_bench_run_get_result_uint: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets unsigned integer result by @name.
+ *
+ * Returns: A unsigned integer result, or @defval if fail.
+ */
+guint
+crank_bench_run_get_result_uint (CrankBenchRun *run,
+                                 const gchar   *name,
+                                 const guint    defval)
+{
+  return crank_value_table_get_uint (run->result, CRANK_QUARK_TRY_STRING(name), defval);
+}
+
+/**
+ * crank_bench_run_get_result_float: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets float result by @name.
+ *
+ * Returns: A float result, or @defval if fail.
+ */
+gfloat
+crank_bench_run_get_result_float (CrankBenchRun *run,
+                                  const gchar   *name,
+                                  const gfloat   defval)
+{
+  return crank_value_table_get_float (run->result, CRANK_QUARK_TRY_STRING(name), defval);
+}
+
+/**
+ * crank_bench_run_get_result_double: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets double result by @name.
+ *
+ * Returns: A double result, or @defval if fail.
+ */
+gdouble
+crank_bench_run_get_result_double (CrankBenchRun *run,
+                                   const gchar   *name,
+                                   const gdouble  defval)
+{
+  return crank_value_table_get_double (run->result, CRANK_QUARK_TRY_STRING(name), defval);
+}
+
+
+
+/**
+ * crank_bench_run_getq_result: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ *
+ * Gets a benchmark result by @name.
+ *
+ * Returns: (transfer none) (nullable): A benchmark parameter as #GValue. or
+ *     %NULL if fail.
+ */
+GValue*
+crank_bench_run_getq_result (CrankBenchRun *run,
+                             const GQuark   name)
+{
+  return (GValue*) g_hash_table_lookup (run->result, GINT_TO_POINTER(name));
+}
+
+/**
+ * crank_bench_run_getq_result_int: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets integer result by @name.
+ *
+ * Returns: A integer result, or @defval if fail.
+ */
+gint
+crank_bench_run_getq_result_int (CrankBenchRun *run,
+                                 const GQuark   name,
+                                 const gint     defval)
+{
+  return crank_value_table_get_int (run->result, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_result_uint: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets unsigned integer result by @name.
+ *
+ * Returns: A unsigned integer result, or @defval if fail.
+ */
+guint
+crank_bench_run_getq_result_uint (CrankBenchRun *run,
+                                  const GQuark   name,
+                                  const guint    defval)
+{
+  return crank_value_table_get_uint (run->result, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_result_float: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets float result by @name.
+ *
+ * Returns: A float result, or @defval if fail.
+ */
+gfloat
+crank_bench_run_getq_result_float (CrankBenchRun *run,
+                                   const GQuark   name,
+                                   const gfloat   defval)
+{
+  return crank_value_table_get_float (run->result, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_result_double: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets double benchmark parameter by @name.
+ *
+ * Returns: A double benchmark parameter, or @defval if fail.
+ */
+gdouble
+crank_bench_run_getq_result_double (CrankBenchRun *run,
+                                   const GQuark   name,
+                                   const gdouble  defval)
+{
+  return crank_value_table_get_double (run->result, GINT_TO_POINTER(name), defval);
+}
+
+
+
+
+/**
  * crank_bench_run_list_get_param_names: (skip)
  * @runlist: (element-type CrankBenchRun): List of runs.
  *
  * Gets all parameter names among in run list, as #GHashTable<#GQuark, #GQuark>
  *
- * Returns: (transfer container) (element-type GQuark):
+ * Returns: (transfer container) (element-type GQuark GQuark):
  *     All parameter names used in all runs in @runlist.
  */
 GHashTable*
@@ -923,7 +1106,7 @@ crank_bench_run_list_get_param_names (GList *runlist)
  *
  * Gets all result names among in run list, as #GHashTable<#GQuark, #GQuark>
  *
- * Returns: (transfer container) (element-type GQuark):
+ * Returns: (transfer container) (element-type GQuark GQuark):
  *     All parameter names used in all runs in @runlist.
  */
 GHashTable*
