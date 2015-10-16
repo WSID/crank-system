@@ -73,6 +73,21 @@
 static gboolean         crank_bench_initialized = FALSE;
 static CrankBenchSuite *crank_bench_root = NULL;
 
+static gboolean         crank_bench_message_stdout = FALSE;
+static gboolean         crank_bench_message_quiet = FALSE;
+
+static GOptionEntry crank_bench_options[] = {
+  {"message-stdout", '\0', G_OPTION_FLAG_NONE,
+    G_OPTION_ARG_NONE, &crank_bench_progress_stdout,
+    "Prints message into stdout.", NULL},
+
+  {"message-quiet", 'q', G_OPTION_FLAG_NONE,
+    G_OPTION_ARG_NONE, &crank_bench_message_quiet,
+    "Quiet: Do not print message.", NULL},
+
+  {NULL}
+};
+
 
 //////// Overall ///////////////////////////////////////////////////////////////
 
@@ -87,16 +102,23 @@ void
 crank_bench_init (guint   *argc,
                   gchar ***argv)
 {
+  GOptionContext *context;
+  GError *err = NULL;
+
   if (crank_bench_initialized)
     g_error ("CrankBench: Being doubly initialized.");
 
-  // for now, don't take arguments.
 
+  context = g_option_context_new ("- a benchmark.");
+  g_option_context_add_main_entries (context, crank_bench_options, NULL);
+  if (! g_option_context_parse (context, argc, argv, &err))
+    {
+      g_print ("Option parsing error: %s\n", err->message);
+      exit (0);
+    }
 
   // Initialize Benchmarking System.
-
   crank_bench_root = crank_bench_suite_new ("", NULL);
-
   crank_bench_initialized = TRUE;
 
 
@@ -129,17 +151,14 @@ crank_bench_run (void)
 {
   CrankBenchResultSuite *result;
 
-  g_fprintf (stderr, "\nRunning\n");
   crank_bench_message ("\nRunning\n");
   result = crank_bench_suite_run (crank_bench_root, NULL);
 
 
-  g_fprintf (stderr, "\nPostprocessing\n");
   crank_bench_message ("\nPostprocessing\n");
   crank_bench_result_suite_postprocess (result);
 
 
-  g_fprintf (stderr, "\nPrinting\n");
   crank_bench_message ("\nEmitting\n");
   _crank_bench_run_result_write (result, NULL);
 
@@ -165,7 +184,7 @@ crank_bench_message (const gchar *format,
   va_list vararg;
   gint result = 0;
 
-  if (crank_bench_progress_quiet)
+  if (crank_bench_message_quiet)
     return 0;
 
   va_start (vararg, format);
@@ -1394,12 +1413,10 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 
   result = crank_bench_result_case_new (bcase);
 
-  g_fprintf (stderr, "%s: ", path);
   crank_bench_message ("%s: ", path);
 
   if (mparam == NULL)
     {
-      g_fprintf (stderr, "SKIP\n");
       crank_bench_message ("SKIP\n");
       g_warning ("No benchmark parameter for case %s", path);
     }
@@ -1410,7 +1427,6 @@ crank_bench_case_run (CrankBenchCase      *bcase,
       if ((bcase->param != NULL) && (param != NULL))
         crank_bench_param_node_free (mparam);
 
-      g_fprintf (stderr, "OK\n");
       crank_bench_message ("OK\n");
     }
 
