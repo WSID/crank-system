@@ -113,7 +113,7 @@ crank_bench_init (guint   *argc,
   g_option_context_add_main_entries (context, crank_bench_options, NULL);
   if (! g_option_context_parse (context, argc, argv, &err))
     {
-      g_print ("Option parsing error: %s\n", err->message);
+      g_error ("Option parsing error: %s\n", err->message);
       exit (0);
     }
 
