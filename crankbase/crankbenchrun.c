@@ -1067,6 +1067,193 @@ crank_bench_run_getq_result_double (CrankBenchRun *run,
 }
 
 
+/**
+ * crank_bench_run_get_param_to_string: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ *
+ * Gets stringified parameter with @name.
+ *
+ * This function is not useful durning benchmarking, but useful when building
+ * output.
+ *
+ * Returns: (transfer full): A stringified parameter.
+ */
+gchar*
+crank_bench_run_get_param_to_string (CrankBenchRun *run,
+                                     const gchar   *name)
+{
+  return crank_bench_value_string (crank_bench_run_get_param (run, name));
+}
+
+/**
+ * crank_bench_run_getq_param_to_string: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ *
+ * Gets stringified parameter with @name.
+ *
+ * This function is not useful durning benchmarking, but useful when building
+ * output.
+ *
+ * Returns: (transfer full): A stringified parameter.
+ */
+gchar*
+crank_bench_run_getq_param_to_string (CrankBenchRun *run,
+                                     const GQuark   name)
+{
+  return crank_bench_value_string (crank_bench_run_getq_param (run, name));
+}
+
+
+/**
+ * crank_bench_run_get_result_to_string: (skip)
+ * @run: A benchmark run.
+ * @name: A result name.
+ *
+ * Gets stringified result with @name.
+ *
+ * Returns: (transfer full): A stringified result.
+ */
+gchar*
+crank_bench_run_get_result_to_string (CrankBenchRun *run,
+                                      const gchar   *name)
+{
+  return crank_bench_value_string (crank_bench_run_get_result (run, name));
+}
+
+/**
+ * crank_bench_run_getq_result_to_string: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ *
+ * Gets stringified parameter with @name.
+ *
+ * Returns: (transfer full): A stringified result.
+ */
+gchar*
+crank_bench_run_getq_result_to_string (CrankBenchRun *run,
+                                       const GQuark   name)
+{
+  return crank_bench_value_string (crank_bench_run_getq_result (run, name));
+}
+
+
+/**
+ * carnk_bench_run_get_params_to_strv:
+ * @run: A benchmark run.
+ * @names: (array zero-terminated): Parameter names.
+ *
+ * Gets stringified parameters with given @names.
+ *
+ * Returns: (transfer full) (array zero-terminated):
+ *     Stringified values of parameters.
+ */
+gchar**
+crank_bench_run_get_params_to_strv (CrankBenchRun  *run,
+                                    const gchar   **names)
+{
+  gchar **strv;
+  guint nnames;
+  guint i;
+
+  nnames = g_strv_length (names);
+  strv = g_new (gchar*, nnames + 1);
+
+  for (i = 0; i < nnames; i++)
+    strv[i] = crank_bench_run_get_param_to_string (names[i]);
+
+  strv[nnames] = NULL;
+  return strv;
+}
+
+/**
+ * carnk_bench_run_get_params_to_strv:
+ * @run: A benchmark run.
+ * @names: (array length=nnames): Parameter names.
+ * @nnames: length of @names.
+ *
+ * Gets stringified parameters with given @names.
+ *
+ * Returns: (transfer full) (array zero-terminated):
+ *     Stringified values of parameters.
+ */
+gchar**
+crank_bench_run_getq_params_to_strv (CrankBenchRun *run,
+                                     const GQuark  *names,
+                                     const guint    nnames)
+{
+  gchar **strv;
+  guint i;
+
+  nnames = g_strv_length (names);
+  strv = g_new (gchar*, nnames + 1);
+
+  for (i = 0; i < nnames; i++)
+    strv[i] = crank_bench_run_getq_param_to_string (names[i]);
+
+  strv[nnames] = NULL;
+  return strv;
+}
+
+/**
+ * carnk_bench_run_get_results_to_strv:
+ * @run: A benchmark run.
+ * @names: (array zero-terminated): Parameter names.
+ *
+ * Gets stringified results with given @names.
+ *
+ * Returns: (transfer full) (array zero-terminated):
+ *     Stringified values of results.
+ */
+gchar**
+crank_bench_run_get_results_to_strv (CrankBenchRun *run,
+                                     const gchar   *names)
+{
+  gchar **strv;
+  guint nnames;
+  guint i;
+
+  nnames = g_strv_length (names);
+  strv = g_new (gchar*, nnames + 1);
+
+  for (i = 0; i < nnames; i++)
+    strv[i] = crank_bench_run_get_result_to_string (names[i]);
+
+  strv[nnames] = NULL;
+  return strv;
+}
+
+/**
+ * carnk_bench_run_get_results_to_strv:
+ * @run: A benchmark run.
+ * @names: (array length=nnames): Parameter names.
+ * @nnames: length of @names.
+ *
+ * Gets stringified results with given @names.
+ *
+ * Returns: (transfer full) (array zero-terminated):
+ *     Stringified values of results.
+ */
+gchar**
+crank_bench_run_getq_results_to_strv (CrankBenchRun *run,
+                                      const GQuark  *names,
+                                      const guint    nnames)
+{
+  gchar **strv;
+  guint i;
+
+  nnames = g_strv_length (names);
+  strv = g_new (gchar*, nnames + 1);
+
+  for (i = 0; i < nnames; i++)
+    strv[i] = crank_bench_run_getq_result_to_string (names[i]);
+
+  strv[nnames] = NULL;
+  return strv;
+}
+
+
 
 
 /**

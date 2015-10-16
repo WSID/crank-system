@@ -199,6 +199,35 @@ gdouble           crank_bench_run_getq_result_double      (CrankBenchRun        
                                                            const gdouble          defval);
 
 
+gchar            *crank_bench_run_get_param_to_string     (CrankBenchRun         *run,
+                                                           const gchar           *name);
+
+gchar            *crank_bench_run_getq_param_to_string    (CrankBenchRun         *run,
+                                                           const GQuark           name);
+
+gchar            *crank_bench_run_get_result_to_string    (CrankBenchRun         *run,
+                                                           const gchar           *name);
+
+gchar            *crank_bench_run_getq_result_to_string   (CrankBenchRun         *run,
+                                                           const GQuark           name);
+
+
+
+gchar           **crank_bench_run_get_params_to_strv      (CrankBenchRun         *run,
+                                                           const gchar          **names);
+
+gchar           **crank_bench_run_getq_params_to_strv     (CrankBenchRun         *run,
+                                                           const GQuark          *names,
+                                                           const guint            nnames);
+
+gchar           **crank_bench_run_get_results_to_strv     (CrankBenchRun         *run,
+                                                           const gchar           *names);
+
+gchar           **crank_bench_run_getq_results_to_strv    (CrankBenchRun         *run,
+                                                           const GQuark          *names,
+                                                           const guint            nnames);
+
+
 /////// Functions for list of runs /////////////////////////////////////////////
 
 GHashTable       *crank_bench_run_list_get_param_names    (GList                 *runlist);
