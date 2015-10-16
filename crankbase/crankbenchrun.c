@@ -772,6 +772,7 @@ crank_bench_run_postprocess (CrankBenchRun* run)
                                GINT_TO_POINTER (entry->name),
                                crank_value_dup (& entry->value));
         }
+      g_slice_free (CrankBenchResultEntry, entry);
     }
 }
 
