@@ -82,6 +82,26 @@ gdouble           crank_bench_run_get_param_double        (CrankBenchRun        
                                                            const gchar           *name,
                                                            const gdouble          defval);
 
+GValue           *crank_bench_run_getq_param              (CrankBenchRun         *run,
+                                                           const GQuark           name);
+
+gint              crank_bench_run_getq_param_int          (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const int              defval);
+
+guint             crank_bench_run_getq_param_uint         (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const guint            defval);
+
+gfloat            crank_bench_run_getq_param_float        (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const gfloat           defval);
+
+gdouble           crank_bench_run_getq_param_double       (CrankBenchRun         *run,
+                                                           const GQuark           name,
+                                                           const gdouble          defval);
+
+
 void              crank_bench_run_add_result              (CrankBenchRun         *run,
                                                            const gchar           *name,
                                                            GValue                *value);

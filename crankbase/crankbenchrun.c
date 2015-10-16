@@ -402,6 +402,100 @@ crank_bench_run_get_param_double (CrankBenchRun *run,
   return crank_value_table_get_double (run->param, GINT_TO_POINTER(qname), defval);
 }
 
+
+
+/**
+ * crank_bench_run_getq_param: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ *
+ * Gets a benchmark parameter by @name.
+ *
+ * Returns: (transfer none) (nullable): A benchmark parameter as #GValue. or
+ *     %NULL if fail.
+ */
+GValue*
+crank_bench_run_getq_param (CrankBenchRun *run,
+                            const GQuark   name)
+{
+  return (GValue*) g_hash_table_lookup (run->param, GINT_TO_POINTER(name));
+}
+
+/**
+ * crank_bench_run_getq_param_int: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets integer benchmark parameter by @name.
+ *
+ * Returns: A integer benchmark parameter, or @defval if fail.
+ */
+gint
+crank_bench_run_getq_param_int (CrankBenchRun *run,
+                               const GQuark    name,
+                               const gint      defval)
+{
+  return crank_value_table_get_int (run->param, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_param_uint: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets unsigned integer benchmark parameter by @name.
+ *
+ * Returns: A unsigned integer benchmark parameter, or @defval if fail.
+ */
+guint
+crank_bench_run_getq_param_uint (CrankBenchRun *run,
+                                 const GQuark   name,
+                                 const guint    defval)
+{
+  return crank_value_table_get_uint (run->param, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_param_float: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets float benchmark parameter by @name.
+ *
+ * Returns: A float benchmark parameter, or @defval if fail.
+ */
+gfloat
+crank_bench_run_getq_param_float (CrankBenchRun *run,
+                                  const GQuark   name,
+                                  const gfloat   defval)
+{
+  return crank_value_table_get_float (run->param, GINT_TO_POINTER(name), defval);
+}
+
+/**
+ * crank_bench_run_getq_param_double: (skip)
+ * @run: A benchmark run.
+ * @name: A parameter name.
+ * @defval: Default value if @name is not found.
+ *
+ * Gets double benchmark parameter by @name.
+ *
+ * Returns: A double benchmark parameter, or @defval if fail.
+ */
+gdouble
+crank_bench_run_getq_param_double (CrankBenchRun *run,
+                                   const GQuark   name,
+                                   const gdouble  defval)
+{
+  return crank_value_table_get_double (run->param, GINT_TO_POINTER(name), defval);
+}
+
+
+
+
 /**
  * crank_bench_run_add_result: (skip)
  * @run: A benchmark run.
