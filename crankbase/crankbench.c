@@ -78,7 +78,7 @@ static gboolean         crank_bench_message_quiet = FALSE;
 
 static GOptionEntry crank_bench_options[] = {
   {"message-stdout", '\0', G_OPTION_FLAG_NONE,
-    G_OPTION_ARG_NONE, &crank_bench_progress_stdout,
+    G_OPTION_ARG_NONE, &crank_bench_message_stdout,
     "Prints message into stdout.", NULL},
 
   {"message-quiet", 'q', G_OPTION_FLAG_NONE,
@@ -189,7 +189,7 @@ crank_bench_message (const gchar *format,
 
   va_start (vararg, format);
 
-  result = g_vfprintf (crank_bench_progress_stdout ? stdout : stderr,
+  result = g_vfprintf (crank_bench_message_stdout ? stdout : stderr,
                        format, vararg);
 
   va_end (vararg);
