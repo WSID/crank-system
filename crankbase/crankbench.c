@@ -278,8 +278,8 @@ crank_bench_message (const gchar *format,
  * As benchmark have to check for various values, Crank System provides simple
  * value stringification function.
  *
- * For %NULL, it returns "<empty>", for stringification is not availiable, it
- * returns "<value>".
+ * For %NULL, it returns "&lt;empty&gt;", for stringification is not availiable,
+ * it returns "&lt;value&gt;".
  *
  * Returns: (transfer full): a stringification result.
  */
