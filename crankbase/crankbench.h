@@ -133,7 +133,7 @@ void                  crank_bench_param_node_set_double   (CrankBenchParamNode  
                                                            const gdouble          value);
 
 
-const GHashTable     *crank_bench_param_node_get_table    (CrankBenchParamNode   *node);
+GHashTable           *crank_bench_param_node_get_table    (CrankBenchParamNode   *node);
 
 void                  crank_bench_param_node_set_table    (CrankBenchParamNode   *node,
                                                            GHashTable            *table);
@@ -143,7 +143,7 @@ gboolean              crank_bench_param_node_is_placeholder(CrankBenchParamNode 
 
 CrankBenchParamNode  *crank_bench_param_node_get_parent   (CrankBenchParamNode   *node);
 
-const GPtrArray      *crank_bench_param_node_get_children (CrankBenchParamNode   *node);
+GPtrArray            *crank_bench_param_node_get_children (CrankBenchParamNode   *node);
 
 
 void                  crank_bench_param_node_add_child    (CrankBenchParamNode   *node,

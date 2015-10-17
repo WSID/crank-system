@@ -703,7 +703,7 @@ crank_bench_param_node_set_double (CrankBenchParamNode *node,
  *
  * Returns: (transfer none) (element-type GQuark GValue): A parameter table.
  */
-const GHashTable*
+GHashTable*
 crank_bench_param_node_get_table (CrankBenchParamNode *node)
 {
   return node->table;
@@ -767,7 +767,7 @@ crank_bench_param_node_get_parent (CrankBenchParamNode *node)
  * Returns: (transfer none) (element-type CrankBenchParamNode):
  *     The children nodes.
  */
-const GPtrArray*
+GPtrArray*
 crank_bench_param_node_get_children (CrankBenchParamNode *node)
 {
   return node->children;
