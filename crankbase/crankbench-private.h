@@ -115,6 +115,21 @@ void                    _crank_bench_list_case          (CrankBenchSuite     *su
 void                    _crank_bench_list_case_gstr     (CrankBenchSuite     *suite,
                                                          GString             *gstr);
 
+void                    _crank_bench_list_tree          (CrankBenchSuite     *suite);
+
+void                    _crank_bench_list_tree_suite    (CrankBenchSuite     *suite,
+                                                         const guint          depth);
+
+void                    _crank_bench_list_all           (CrankBenchSuite     *suite);
+
+void                    _crank_bench_list_all_suite     (CrankBenchSuite     *suite,
+                                                         const guint          depth);
+
+void                    _crank_bench_list_all_param     (CrankBenchParamNode *suite,
+                                                         const guint          depth);
+
+
+
 void                    _crank_bench_case_run1          (CrankBenchCase      *bcase,
                                                          CrankBenchResultCase *result,
                                                          CrankBenchParamNode *param,

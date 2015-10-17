@@ -158,11 +158,24 @@ crank_bench_run (void)
 {
   CrankBenchResultSuite *result;
 
-  if (crank_bench_list_option != CRANK_BENCH_LIST_NONE)
+  if (crank_bench_list_option == CRANK_BENCH_LIST_CASE)
     {
       _crank_bench_list_case (crank_bench_root);
       return 0;
     }
+
+  if (crank_bench_list_option == CRANK_BENCH_LIST_TREE)
+    {
+      _crank_bench_list_tree (crank_bench_root);
+      return 0;
+    }
+
+  if (crank_bench_list_option == CRANK_BENCH_LIST_ALL)
+    {
+      _crank_bench_list_all (crank_bench_root);
+      return 0;
+    }
+
 
 
   crank_bench_message ("\nRunning\n");
@@ -1618,6 +1631,139 @@ _crank_bench_list_case_gstr (CrankBenchSuite *suite,
       _crank_bench_list_case_gstr (subsuite, gstr);
     }
 }
+
+void
+_crank_bench_list_tree (CrankBenchSuite *suite)
+{
+  _crank_bench_list_tree_suite (suite, 0);
+}
+
+void
+_crank_bench_list_tree_suite (CrankBenchSuite *suite,
+                              const guint      depth)
+{
+  guint ndepth;
+  guint i;
+
+  ndepth = depth + 1;
+
+  crank_bench_message ("%*s%s/\n", depth * 2, "", suite->name);
+
+  for (i = 0; i < suite->cases->len; i++)
+    {
+      CrankBenchCase *bcase;
+
+      bcase = (CrankBenchCase*) suite->cases->pdata[i];
+
+      crank_bench_message ("%*s%s\n", ndepth * 2, "", bcase->name);
+    }
+
+  for (i = 0; i < suite->subsuites->len; i++)
+    {
+      CrankBenchSuite *subsuite;
+
+      subsuite = (CrankBenchSuite*) suite->subsuites->pdata[i];
+      _crank_bench_list_tree_suite (subsuite, ndepth);
+    }
+}
+
+
+void
+_crank_bench_list_all (CrankBenchSuite *suite)
+{
+  _crank_bench_list_all_suite (suite, 0);
+}
+
+void
+_crank_bench_list_all_suite (CrankBenchSuite *suite,
+                              const guint      depth)
+{
+  guint ndepth;
+  guint i;
+
+  ndepth = depth + 1;
+
+  crank_bench_message ("%*s%s/\n", depth * 2, "", suite->name);
+  _crank_bench_list_all_param (suite->param, ndepth);
+  crank_bench_message ("\n");
+
+  for (i = 0; i < suite->cases->len; i++)
+    {
+      CrankBenchCase *bcase;
+
+      bcase = (CrankBenchCase*) suite->cases->pdata[i];
+
+      crank_bench_message ("%*s%s\n", ndepth * 2, "", bcase->name);
+      _crank_bench_list_all_param (bcase->param, ndepth + 1);
+      crank_bench_message ("\n");
+    }
+
+  for (i = 0; i < suite->subsuites->len; i++)
+    {
+      CrankBenchSuite *subsuite;
+
+      subsuite = (CrankBenchSuite*) suite->subsuites->pdata[i];
+      _crank_bench_list_all_suite (subsuite, ndepth);
+    }
+}
+
+void
+_crank_bench_list_all_param (CrankBenchParamNode *param,
+                             const guint          depth)
+{
+  guint ndepth = depth + 1;
+
+  if (param == NULL)
+    {
+      crank_bench_message ("%*sNo Parameter Modification.\n", depth * 2, "");
+      return;
+    }
+
+  {
+    GHashTable *table;
+    GHashTableIter ti;
+    gpointer tik, tiv;
+
+    table = crank_bench_param_node_get_table (param);
+    g_hash_table_iter_init (&ti, table);
+    while (g_hash_table_iter_next (&ti, &tik, &tiv))
+      {
+        gchar *vstring = crank_bench_value_string ((GValue*)tiv);
+        crank_bench_message ("%*s%s = %s;\n",
+                             depth * 2,
+                             "",
+                             CRANK_QUARK_TO_STRING (tik),
+                             vstring);
+        g_free (vstring);
+      }
+  }
+
+  {
+    GPtrArray *children;
+    guint i;
+
+    children = crank_bench_param_node_get_children (param);
+
+    for (i = 0; i <children->len; i++)
+      {
+        CrankBenchParamNode *child = (CrankBenchParamNode*) children->pdata[i];
+
+        if (crank_bench_param_node_is_placeholder (child))
+          {
+            crank_bench_message ("%*s{}\n", depth * 2, "");
+          }
+        else
+          {
+            crank_bench_message ("%*s{\n", depth * 2, "");
+            _crank_bench_list_all_param (child, ndepth);
+            crank_bench_message ("%*s}\n", depth * 2, "");
+          }
+      }
+  }
+
+}
+
+
 
 /*
  * _crank_bench_case_run1:
