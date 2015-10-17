@@ -1733,7 +1733,6 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   gpointer hik;
 
   GString *strbuild;
-  gchar *strhold;
 
   guint nfail = 0;
   guint nskip = 0;
@@ -1781,7 +1780,7 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   // Print out path!
   {
     gchar *path = crank_bench_case_get_path (bcase);
-    g_string_append_printf (strbuild, "%s\n", strhold);
+    g_string_append_printf (strbuild, "%s\n", path);
     g_free (path);
   }
 
