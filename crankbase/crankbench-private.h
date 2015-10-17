@@ -38,19 +38,6 @@ typedef enum {
   CRANK_BENCH_LIST_ALL
 } CrankBenchListOption;
 
-typedef enum _CrankBenchRunState {
-  CRANK_BENCH_RUN_NOT_RUN = 0 << 0,
-  CRANK_BENCH_RUN_RUNNING = 1 << 0,
-  CRANK_BENCH_RUN_FINISHED = 2 << 0,
-
-  CRANK_BENCH_RUN_SUCCES = 0 << 4,
-  CRANK_BENCH_RUN_SKIP = 1 << 4,
-  CRANK_BENCH_RUN_FAIL = 2 << 4,
-
-  CRANK_BENCH_RUN_MASK_RUN_STATE = 15,
-  CRANK_BENCH_RUN_MASK_RES_STATE = 15 << 4
-} CrankBenchRunState;
-
 typedef struct _CrankBenchResultEntry {
   GQuark   name;
   GValue   value;

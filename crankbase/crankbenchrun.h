@@ -24,7 +24,42 @@
 
 #include <glib.h>
 
-#include "crankbench.h"
+typedef struct _CrankBenchCase CrankBenchCase;
+
+typedef enum _CrankBenchRunState CrankBenchRunState;
+typedef enum _CrankBenchRunMark CrankBenchRunMark;
+
+/**
+ * CrankBenchRunState: (skip)
+ * @CRANK_BENCH_RUN_NOT_RUN: Run is not runned.
+ * @CRANK_BENCH_RUN_RUNNING: Run is running.
+ * @CRANK_BENCH_RUN_FINISHED: Run is finished.
+ * @CRANK_BENCH_RUN_PROCESSED: Run is processed and its results are available.
+ *
+ * Enumeration for state of runs.
+ */
+enum _CrankBenchRunState {
+  CRANK_BENCH_RUN_NOT_RUN,
+  CRANK_BENCH_RUN_RUNNING,
+  CRANK_BENCH_RUN_FINISHED,
+  CRANK_BENCH_RUN_PROCESSED
+};
+
+/**
+ * CrankBenchRunMark: (skip)
+ * @CRANK_BENCH_RUN_SUCCESS: Run is finished succesfully.
+ * @CRANK_BENCH_RUN_SKIP: Run is skipped.
+ * @CRANK_BENCH_RUN_FAIL: Run is failed.
+ *
+ * Enumeration for marks on runs. As this is benchmark, generally all run should
+ * be finished successfully. Any errors should have been caught in unit test or
+ * etc.
+ */
+enum _CrankBenchRunMark {
+  CRANK_BENCH_RUN_SUCCESS,
+  CRANK_BENCH_RUN_SKIP,
+  CRANK_BENCH_RUN_FAIL
+};
 
 //////// CrankBenchRun /////////////////////////////////////////////////////////
 
@@ -44,9 +79,15 @@ guint             crank_bench_run_get_run_no              (CrankBenchRun        
 
 gboolean          crank_bench_run_is_running              (CrankBenchRun         *run);
 
+gboolean          crank_bench_run_is_processed            (CrankBenchRun         *run);
+
 gboolean          crank_bench_run_is_failed               (CrankBenchRun         *run);
 
 gboolean          crank_bench_run_is_skipped              (CrankBenchRun         *run);
+
+CrankBenchRunState crank_bench_run_get_state              (CrankBenchRun         *run);
+
+CrankBenchRunMark crank_bench_run_get_mark                (CrankBenchRun         *run);
 
 gchar            *crank_bench_run_get_message             (CrankBenchRun         *run);
 
@@ -56,6 +97,10 @@ void              crank_bench_run_skip                    (CrankBenchRun        
                                                            const gchar           *message);
 
 void              crank_bench_run_fail                    (CrankBenchRun         *run,
+                                                           const gchar           *message);
+
+void              crank_bench_run_set_mark                (CrankBenchRun         *run,
+                                                           CrankBenchRunMark      mark,
                                                            const gchar           *message);
 
 
@@ -221,7 +266,7 @@ gchar           **crank_bench_run_getq_params_to_strv     (CrankBenchRun        
                                                            const guint            nnames);
 
 gchar           **crank_bench_run_get_results_to_strv     (CrankBenchRun         *run,
-                                                           const gchar           *names);
+                                                           const gchar          **names);
 
 gchar           **crank_bench_run_getq_results_to_strv    (CrankBenchRun         *run,
                                                            const GQuark          *names,

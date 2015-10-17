@@ -1863,9 +1863,11 @@ crank_bench_run_get_run_no
 crank_bench_run_is_running
 crank_bench_run_is_failed
 crank_bench_run_is_skipped
+crank_bench_run_get_state
 crank_bench_run_get_message
 crank_bench_run_skip
 crank_bench_run_fail
+crank_bench_run_set_mark
 crank_bench_run_get_params
 crank_bench_run_get_param
 crank_bench_run_get_param_int
@@ -1915,6 +1917,8 @@ crank_bench_run_get_results_to_strv
 crank_bench_run_getq_results_to_strv
 crank_bench_run_list_get_param_names
 crank_bench_run_list_get_result_names
+CrankBenchRunState
+CrankBenchRunMark
 CrankBenchRun
 </SECTION>
 

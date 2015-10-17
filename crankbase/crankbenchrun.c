@@ -32,6 +32,7 @@
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
+#include "crankbenchrun.h"
 #include "crankbench-private.h"
 
 /**
@@ -63,21 +64,39 @@
  * A structure represents a running benchmark.
  */
 struct _CrankBenchRun {
+  /*<private>*/
   CrankBenchCase       *bcase;
   guint                 runno;
   CrankBenchRunState    state;
+  CrankBenchRunMark     mark;
   gchar                *message;
 
-  GHashTable           *param;
+  gconstpointer         _PADDING5;
+  gconstpointer         _PADDING6;
+  gconstpointer         _PADDING7;
+
   GQueue               *result_journal;
+  GHashTable           *param;
+
+  gconstpointer         _PADDING10;
+  gconstpointer         _PADDING11;
 
   GTimer               *timer_run;
   GTimer               *timer_user;
-
   GRand                *random;
+
+  gconstpointer         _PADDING15;
+  gconstpointer         _PADDING16;
+  gconstpointer         _PADDING17;
+  gconstpointer         _PADDING18;
+  gconstpointer         _PADDING19;
 
 
   GHashTable           *result;
+
+  gconstpointer         _PADDING21;
+  gconstpointer         _PADDING22;
+  gconstpointer         _PADDING23;
 };
 
 
@@ -105,6 +124,7 @@ crank_bench_run_new (CrankBenchCase *bcase,
   run->bcase = bcase;
   run->runno = run_no;
   run->state = CRANK_BENCH_RUN_NOT_RUN;
+  run->mark = CRANK_BENCH_RUN_SUCCESS;
   run->message = NULL;
 
   run->param = g_hash_table_ref (param);
@@ -173,7 +193,21 @@ crank_bench_run_get_run_no (CrankBenchRun *run)
 gboolean
 crank_bench_run_is_running (CrankBenchRun *run)
 {
-  return (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE) == CRANK_BENCH_RUN_RUNNING;
+  return run->state == CRANK_BENCH_RUN_RUNNING;
+}
+
+/**
+ * crank_bench_is_processed: (skip)
+ * @run: A benchmark run.
+ *
+ * Gets whether this run is processed, and its result is available.
+ *
+ * Returns: Whether this run is processed.
+ */
+gboolean
+crank_bench_run_is_processed (CrankBenchRun *run)
+{
+  return run->state == CRANK_BENCH_RUN_PROCESSED;
 }
 
 /**
@@ -187,7 +221,7 @@ crank_bench_run_is_running (CrankBenchRun *run)
 gboolean
 crank_bench_run_is_failed (CrankBenchRun *run)
 {
-  return (run->state & CRANK_BENCH_RUN_MASK_RES_STATE) == CRANK_BENCH_RUN_FAIL;
+  return run->state == CRANK_BENCH_RUN_FAIL;
 }
 
 /**
@@ -201,7 +235,36 @@ crank_bench_run_is_failed (CrankBenchRun *run)
 gboolean
 crank_bench_run_is_skipped (CrankBenchRun *run)
 {
-  return (run->state & CRANK_BENCH_RUN_MASK_RES_STATE) == CRANK_BENCH_RUN_SKIP;
+  return run->state == CRANK_BENCH_RUN_SKIP;
+}
+
+/**
+ * crank_bench_run_get_state: (skip)
+ * @run: A Benchmark run.
+ *
+ * Gets state of this run.
+ *
+ * Returns: State of this run.
+ */
+CrankBenchRunState
+crank_bench_run_get_state (CrankBenchRun *run)
+{
+  return run->state;
+}
+
+/**
+ * crank_bench_run_get_mark: (skip)
+ * @run: A Benchmark run.
+ *
+ * Gets mark of this run. As this is benchmarking, generally it should be
+ * %CRANK_BENCH_RUN_SUCCESS.
+ *
+ * Returns: Mark of this run.
+ */
+CrankBenchRunMark
+crank_bench_run_get_mark (CrankBenchRun *run)
+{
+  return run->mark;
 }
 
 /**
@@ -224,45 +287,17 @@ crank_bench_run_get_message (CrankBenchRun *run)
  * @run: A benchmark run.
  * @message: A message for skipping.
  *
- * Marks this run as skipped. This will not stop benchmarking, so function should
- * stop itself.
+ * Marks this run as skipped.
+ *
+ * This is only allowed before or during benchmark, and have not been marked.
+ *
+ * Exceptionally, multiple call of this functions are allowed.
  */
 void
 crank_bench_run_skip (CrankBenchRun *run,
                       const gchar   *message)
 {
-  gchar *path;
-
-  switch (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE)
-    {
-    case CRANK_BENCH_RUN_NOT_RUN:
-    case CRANK_BENCH_RUN_RUNNING:
-      break;
-
-    case CRANK_BENCH_RUN_FINISHED:
-      path = crank_bench_case_get_path (run->bcase);
-      g_error ("Marking skip on already finished run.");
-      g_free (path);
-      return;
-    }
-
-  switch (run->state & CRANK_BENCH_RUN_MASK_RES_STATE)
-    {
-    case CRANK_BENCH_RUN_SUCCES:
-      run->state = (run->state & ~CRANK_BENCH_RUN_MASK_RES_STATE) |
-                   CRANK_BENCH_RUN_SKIP;
-      run->message = g_strdup (message);
-      break;
-
-    case CRANK_BENCH_RUN_SKIP:
-      break;
-
-    case CRANK_BENCH_RUN_FAIL:
-      path = crank_bench_case_get_path (run->bcase);
-      g_error ("Marking skip on failed run.");
-      g_free (path);
-      break;
-    }
+  crank_bench_run_set_mark (run, CRANK_BENCH_RUN_SKIP, message);
 }
 
 /**
@@ -270,19 +305,47 @@ crank_bench_run_skip (CrankBenchRun *run,
  * @run: A benchmark run.
  * @message: A message for failing.
  *
- * Marks this run as failed. This will not stop benchmarking, so function should
- * stop itself.
+ * Marks this run as failed.
+ *
+ * This is only allowed before or during benchmark, and have not been marked.
+ *
+ * Exceptionally, multiple call of this functions are allowed.
+ *
+ * This does not finish calling function, so that function itself can produce
+ * more information before returning.
  *
  * Note that this is benchmarking, failing benchmarking should not happened
- * frequently.
+ * frequently, as bugs should be caught in unit tests or etc.
  */
 void
 crank_bench_run_fail (CrankBenchRun *run,
                       const gchar   *message)
 {
-  gchar *path;
+  crank_bench_run_set_mark (run, CRANK_BENCH_RUN_FAIL, message);
+}
 
-  switch (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE)
+/**
+ * crank_bench_run_set_mark: (skip)
+ * @run: A benchmark run.
+ * @mark: A mark.
+ * @message: A message for mark.
+ *
+ * Set mark for benchmark.
+ *
+ * This is only allowed before or during benchmark, and have not been marked.
+ *
+ * Exceptionally, marking for same mark is allowed.
+ *
+ * This does not finish calling function, so that function itself can produce
+ * more information before returning.
+ */
+void
+crank_bench_run_set_mark (CrankBenchRun     *run,
+                          CrankBenchRunMark  mark,
+                          const gchar       *message)
+{
+  gchar *path;
+  switch (run->state)
     {
     case CRANK_BENCH_RUN_NOT_RUN:
     case CRANK_BENCH_RUN_RUNNING:
@@ -290,27 +353,28 @@ crank_bench_run_fail (CrankBenchRun *run,
 
     case CRANK_BENCH_RUN_FINISHED:
       path = crank_bench_case_get_path (run->bcase);
-      g_error ("Marking fail on already finished run: %s", path);
+      g_error ("Marking on already finished run: %s", path);
+      g_free (path);
+      return;
+
+    case CRANK_BENCH_RUN_PROCESSED:
+      path = crank_bench_case_get_path (run->bcase);
+      g_error ("Marking on already processed run: %s", path);
       g_free (path);
       return;
     }
 
-  switch (run->state & CRANK_BENCH_RUN_MASK_RES_STATE)
+  if (run->mark == CRANK_BENCH_RUN_SUCCESS)
     {
-    case CRANK_BENCH_RUN_SUCCES:
-      run->state = (run->state & ~CRANK_BENCH_RUN_MASK_RES_STATE) |
-                   CRANK_BENCH_RUN_FAIL;
+      run->mark = mark;
       run->message = g_strdup (message);
-      break;
+    }
 
-    case CRANK_BENCH_RUN_SKIP:
+  else if (run->mark != mark)
+    {
       path = crank_bench_case_get_path (run->bcase);
-      g_error ("Marking fail on skipped run: %s", path);
+      g_error ("Marking already marked run: %s", path);
       g_free (path);
-      break;
-
-    case CRANK_BENCH_RUN_FAIL:
-      break;
     }
 }
 
@@ -837,14 +901,18 @@ void
 crank_bench_run_do (CrankBenchRun *run)
 {
   // Check run state.
-  switch (run->state & CRANK_BENCH_RUN_MASK_RUN_STATE)
+  switch (run->state)
     {
     case CRANK_BENCH_RUN_RUNNING:
       g_warning ("Try running already running run.");
       return;
 
     case CRANK_BENCH_RUN_FINISHED:
-      g_warning ("Try running already finished run.");
+      g_warning ("Try running finished run.");
+      return;
+
+    case CRANK_BENCH_RUN_PROCESSED:
+      g_warning ("Try running processed run.");
       return;
 
     case CRANK_BENCH_RUN_NOT_RUN:
@@ -853,8 +921,7 @@ crank_bench_run_do (CrankBenchRun *run)
     }
 
   // Run case.
-  run->state = (run->state & ~CRANK_BENCH_RUN_MASK_RUN_STATE) |
-                CRANK_BENCH_RUN_RUNNING;
+  run->state = CRANK_BENCH_RUN_RUNNING;
 
   g_timer_start (run->timer_run);
   run->bcase->func (run, run->bcase->userdata);
@@ -870,6 +937,23 @@ crank_bench_run_do (CrankBenchRun *run)
 void
 crank_bench_run_postprocess (CrankBenchRun* run)
 {
+  // Check for finished run.
+  // Check run state.
+  switch (run->state)
+    {
+    case CRANK_BENCH_RUN_NOT_RUN:
+    case CRANK_BENCH_RUN_RUNNING:
+      g_warning ("Try processing not finished run.");
+      return;
+
+    case CRANK_BENCH_RUN_FINISHED:
+      break;
+
+    case CRANK_BENCH_RUN_PROCESSED:
+      g_warning ("Try processing already processed run.");
+      return;
+    }
+
   // Process result.
   run->result = crank_value_table_create (g_direct_hash, g_direct_equal);
   while (! g_queue_is_empty(run->result_journal))
@@ -890,6 +974,8 @@ crank_bench_run_postprocess (CrankBenchRun* run)
         }
       g_slice_free (CrankBenchResultEntry, entry);
     }
+
+  run->state = CRANK_BENCH_RUN_PROCESSED;
 }
 
 /**
