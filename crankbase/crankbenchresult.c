@@ -31,7 +31,6 @@
 #include "crankvalue.h"
 #include "crankstring.h"
 #include "crankbench.h"
-#include "crankbench-private.h"
 #include "crankbenchrun.h"
 #include "crankbenchresult.h"
 
@@ -261,10 +260,12 @@ crank_bench_result_suite_get_sresult (CrankBenchResultSuite *result,
   for (i = 0; i < result->sresults->len; i++)
     {
       CrankBenchResultSuite* sres;
+      const gchar *sres_name;
 
       sres = (CrankBenchResultSuite*) result->sresults->pdata[i];
+      sres_name = crank_bench_suite_get_name (sres->suite);
 
-      if (strcmp (name, sres->suite->name) == 0)
+      if (strcmp (name, sres_name) == 0)
         return sres;
     }
   return NULL;
@@ -288,10 +289,12 @@ crank_bench_result_suite_get_cresult (CrankBenchResultSuite *result,
   for (i = 0; i < result->cresults->len; i++)
     {
       CrankBenchResultCase* cres;
+      const gchar *cres_name;
 
       cres = (CrankBenchResultCase*) result->cresults->pdata[i];
+      cres_name = crank_bench_case_get_name (cres->bcase);
 
-      if (strcmp (name, cres->bcase->name) == 0)
+      if (strcmp (name, cres_name) == 0)
         return cres;
     }
   return NULL;
