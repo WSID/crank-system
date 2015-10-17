@@ -1390,6 +1390,38 @@ crank_bench_case_free (CrankBenchCase *bcase)
   g_slice_free (CrankBenchCase, bcase);
 }
 
+
+/**
+ * crank_bench_case_get_name: (skip)
+ * @bcase: A Benchmark case.
+ *
+ * Gets name of benchmark case.
+ *
+ * Returns: (transfer none): The name of case.
+ */
+const gchar*
+crank_bench_case_get_name (CrankBenchCase *bcase)
+{
+  return bcase->name;
+}
+
+
+/**
+ * crank_bench_case_set_name: (skip)
+ * @bcase: A Benchmark case.
+ * @name: (transfer none): The new name of case.
+ *
+ * Set name of benchmark case.
+ */
+void
+crank_bench_case_set_name (CrankBenchCase *bcase,
+                           const gchar    *name)
+{
+  g_free (bcase->name);
+  bcase->name = g_strdup (name);
+}
+
+
 /**
  * crank_bench_case_get_param: (skip)
  * @bcase: A benchmark case.

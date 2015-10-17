@@ -1843,6 +1843,8 @@ crank_bench_suite_get_case
 crank_bench_suite_run
 crank_bench_case_new
 crank_bench_case_free
+crank_bench_case_get_name
+crank_bench_case_set_name
 crank_bench_case_get_param
 crank_bench_case_set_param
 crank_bench_case_get_path

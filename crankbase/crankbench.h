@@ -222,6 +222,13 @@ CrankBenchCase       *crank_bench_case_new                (const gchar          
 void                  crank_bench_case_free               (CrankBenchCase        *bcase);
 
 
+const gchar          *crank_bench_case_get_name           (CrankBenchCase        *bcase);
+
+
+void                  crank_bench_case_set_name           (CrankBenchCase        *bcase,
+                                                           const gchar           *name);
+
+
 CrankBenchParamNode  *crank_bench_case_get_param          (CrankBenchCase        *bcase);
 
 void                  crank_bench_case_set_param          (CrankBenchCase        *bcase,
