@@ -63,6 +63,7 @@ bench_*         skip=false  parent="Crank.Bench" name="bench_(.+)"
 Bench*          skip=false  parent="Crank.Bench" name="Bench(.+)"
 Bench*.*        skip=false
 
+Bench*.free     skip=true
 bench*new       skip=true
 
 bench_add                       skip=true
@@ -73,11 +74,15 @@ BenchSuite.run.param    default=null
 BenchCase.run.param     default=null
 
 BenchRun.get_params  type_arguments="GLib.Quark,GLib.Value?"
+BenchRun.get_results  type_arguments="GLib.Quark,GLib.Value?"
 
 BenchParamNode.get_table          type_arguments="GLib.Quark,GLib.Value?"
 BenchParamNode.set_table.table    type_arguments="GLib.Quark,GLib.Value?"
-//BenchRun.get_params    skip=true
 
+bench_run_list_get_param_names  type="GLib.GenericSet<GLib.Quark>" parent="Crank.Bench.Run" name="bench_run_(.+)"
+bench_run_list_get_result_names  type="GLib.GenericSet<GLib.Quark>" parent="Crank.Bench.Run" name="bench_run_(.+)"
+
+bench_message   printf_format=true
 
 //////// Data Structures ///////////////////////////////////////////////////////
 Ran*				struct=true

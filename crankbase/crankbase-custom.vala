@@ -62,6 +62,7 @@ namespace Crank {
 	
 	
 	namespace Bench {
+		[CCode (free_function="crank_bench_param_node_free")]
 		public class ParamNode {
 			public ParamNode ();
 
@@ -70,6 +71,7 @@ namespace Crank {
 			public GLib.HashTable<GLib.Quark, GLib.Value?> 	table {get; set;}
 		}
 
+		[CCode (free_function="crank_bench_suite_free")]
 		public class Suite {
 			public Suite 	(string			name,
 					 Crank.Bench.ParamNode?	param = null);
@@ -84,6 +86,7 @@ namespace Crank {
 			public GLib.GenericArray<Crank.Bench.Case>	cases {get;}
 		}
 	
+		[CCode (free_function="crank_bench_case_free")]
 		public class Case {
 			public Case 	(string			name,
 					 Crank.Bench.ParamNode?	param,
@@ -96,9 +99,64 @@ namespace Crank {
 			public Crank.Bench.Suite     	parent {get;}
 		}
 
+		[CCode (free_function="crank_bench_run_free")]
 		public class Run {
+			public Run (Crank.Bench.Case bcase,
+				    GLib.HashTable<GLib.Quark, GLib.Value?> param,
+				    uint run_no);
+
 			public GLib.HashTable<GLib.Quark, GLib.Value?> @params {get;}
+			public GLib.HashTable<GLib.Quark, GLib.Value?> results {get;}
+			public uint run_no {get;}
 			public bool running {[CCode(name="is_running")]get;}
+			public bool processed {[CCode(name="is_processed")]get;}
+			public bool failed {[CCode(name="is_failed")]get;}
+			public bool skipped {[CCode(name="is_skipped")]get;}
+			public Crank.Bench.RunState state {get;}
+			public Crank.Bench.RunMark mark {get;}
+			public string? message {get;}
+		}
+
+		[CCode (free_function="crank_bench_result_suite_free")]
+		public class ResultSuite {
+			public ResultSuite (Crank.Bench.Suite suite);
+
+			public Crank.Bench.Suite	suite {get;}
+			public Crank.Bench.ResultSuite  parent {get;}
+
+			public GLib.GenericArray<Crank.Bench.ResultSuite>	sresults {get;}
+			public GLib.GenericArray<Crank.Bench.ResultCase>	cresults {get;}
+
+			public GLib.List<Crank.Bench.ResultCase>		cresults_flat {owned get;}
+			public GLib.List<Crank.Bench.Run>			runs {owned get;}
+			public GLib.List<Crank.Bench.Run>			runs_flat {owned get;}
+		}
+
+
+		[CCode (free_function="crank_bench_result_case_free")]
+		public class ResultCase {
+			public ResultCase (Crank.Bench.Case bcase);
+
+			public Crank.Bench.Case		bcase {[CCode (name="crank_bench_result_get_case")]get;}
+			public Crank.Bench.Suite	parent {get;}
+
+			public GLib.GenericArray<Crank.Bench.Run>	runs {get;}
+			public GLib.List<Crank.Bench.Run>		run_list {owned get;}
+		}
+
+		[CCode (cprefix="CRANK_BENCH_RUN_")]
+		public enum RunState {
+			NOT_RUN,
+			RUNNING,
+			FINISHED,
+			PROCESSED
+		}
+
+		[CCode (cprefix="CRANK_BENCH_RUN_")]
+		public enum RunMark {
+			SUCCESS,
+			FAIL,
+			SKIP
 		}
 	}
 
