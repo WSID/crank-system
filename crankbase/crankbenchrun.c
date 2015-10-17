@@ -58,6 +58,13 @@
  * Results are added in queue and won't be available before postprocessing.
  */
 
+
+typedef struct _CrankBenchResultEntry {
+  GQuark   name;
+  GValue   value;
+} CrankBenchResultEntry;
+
+
 /**
  * CrankBenchRun:
  *

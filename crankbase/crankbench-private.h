@@ -38,11 +38,6 @@ typedef enum {
   CRANK_BENCH_LIST_ALL
 } CrankBenchListOption;
 
-typedef struct _CrankBenchResultEntry {
-  GQuark   name;
-  GValue   value;
-} CrankBenchResultEntry;
-
 //////// Structure Definition //////////////////////////////////////////////////
 
 /**
