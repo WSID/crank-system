@@ -23,42 +23,24 @@
 
 #include "crankbase.h"
 
-//////// Testing Variables /////////////////////////////////////////////////////
-
-static guint N   = 512;
-static guint R   = 8;
-
-
 //////// Declaration ///////////////////////////////////////////////////////////
+//
+static void test_gen_mat_float_n (CrankBenchRun *run, CrankMatFloatN *mat);
+static void test_gen_mat_float_n_sym (CrankBenchRun *run, CrankMatFloatN *mat);
+static void test_gen_mat_float_4 (CrankBenchRun *run, CrankMatFloat4 *mat);
 
-typedef void (*BenchFunc) (gpointer userdata);
+static void bench_mat_slice4 (CrankBenchRun *run);
+static void bench_mat_transpose (CrankBenchRun *run);
+static void bench_mat_mul (CrankBenchRun *run);
+static void bench_mat_inv (CrankBenchRun *run);
+static void bench_mat4_mul (CrankBenchRun *run);
 
-struct TestPayloadBench {
-  BenchFunc func;
-  gpointer user_data;
-};
-
-static void test_add_bench (const gchar *path,
-                            BenchFunc    bench,
-                            gpointer     user_data);
-static void test_meta_bench (gconstpointer data);
-
-static void test_gen_mat_float_n (CrankMatFloatN *mat);
-static void test_gen_mat_float_n_sym (CrankMatFloatN *mat);
-static void test_gen_mat_float_4 (CrankMatFloat4 *mat);
-
-static void bench_mat_slice4 (void);
-static void bench_mat_transpose (void);
-static void bench_mat_mul (void);
-static void bench_mat_inv (void);
-static void bench_mat4_mul (void);
-
-static void bench_mat_lu (void);
-static void bench_mat_ch (void);
-static void bench_mat_ldl (void);
-static void bench_mat_gram_schmidt (void);
-static void bench_mat_householder (void);
-static void bench_mat_givens (void);
+static void bench_mat_lu (CrankBenchRun *run);
+static void bench_mat_ch (CrankBenchRun *run);
+static void bench_mat_ldl (CrankBenchRun *run);
+static void bench_mat_gram_schmidt (CrankBenchRun *run);
+static void bench_mat_householder (CrankBenchRun *run);
+static void bench_mat_givens (CrankBenchRun *run);
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -66,36 +48,54 @@ gint
 main (gint   argc,
       gchar *argv[])
 {
-  g_test_init (&argc, &argv, NULL);
+  CrankBenchParamNode  *params;
+  CrankBenchParamNode **vparams;
 
-  g_test_message ("N: %u", N);
-  g_test_message ("R: %u", R);
+  crank_bench_init (&argc, &argv);
 
-  test_add_bench ("/crank/base/mat/float/n/bench/slice4",
-                  (BenchFunc)bench_mat_slice4, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/transpose",
-                  (BenchFunc)bench_mat_transpose, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/mul",
-                  (BenchFunc)bench_mat_mul, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/inv",
-                  (BenchFunc)bench_mat_inv, NULL);
-  test_add_bench ("/crank/base/mat/float/4/bench/mul",
-                  (BenchFunc)bench_mat4_mul, NULL);
 
-  test_add_bench ("/crank/base/mat/float/n/bench/lu",
-                  (BenchFunc)bench_mat_lu, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/ch",
-                  (BenchFunc)bench_mat_ch, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/ldl",
-                  (BenchFunc)bench_mat_ldl, NULL);
-  test_add_bench ("/crank/base/mat/float/n/bench/qr/gram-schmidt",
-                  (BenchFunc)bench_mat_gram_schmidt, NULL);
+  // Fill parameters
+  params = crank_bench_param_node_new ();
+
+  crank_bench_param_node_set_uint (params, "repeat", 8);
+  crank_bench_param_node_set_uint (params, "N", 128);
+
+  vparams = crank_bench_param_node_add_placeholders (params, 3);
+  crank_bench_param_node_set_uint (vparams[0], "N", 256);
+  crank_bench_param_node_set_uint (vparams[1], "N", 512);
+
+  crank_bench_param_node_set_uint (vparams[2], "repeat", 2);
+  crank_bench_param_node_set_uint (vparams[2], "N", 1024);
+  vparams = crank_bench_param_node_add_placeholders (vparams[2], 2);
+  crank_bench_param_node_set_uint (vparams[0], "N", 2048);
+  crank_bench_param_node_set_uint (vparams[1], "N", 4096);
+
+
+  crank_bench_add ("/crank/base/mat/float/n/bench/slice4",
+                   (CrankBenchFunc)bench_mat_slice4, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/transpose",
+                   (CrankBenchFunc)bench_mat_transpose, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/mul",
+                   (CrankBenchFunc)bench_mat_mul, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/inv",
+                   (CrankBenchFunc)bench_mat_inv, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/4/bench/mul",
+                   (CrankBenchFunc)bench_mat4_mul, NULL, NULL);
+
+  crank_bench_add ("/crank/base/mat/float/n/bench/lu",
+                   (CrankBenchFunc)bench_mat_lu, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/ch",
+                   (CrankBenchFunc)bench_mat_ch, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/ldl",
+                   (CrankBenchFunc)bench_mat_ldl, NULL, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/qr/gram-schmidt",
+                   (CrankBenchFunc)bench_mat_gram_schmidt, NULL, NULL);
   //test_add_bench ("/crank/base/mat/float/n/perf/qr/householder",
   //		(BenchFunc)bench_mat_householder, NULL	);
   // We don't use it for now.
   // This will take so long, as slicing out a matrix.
-  test_add_bench ("/crank/base/mat/float/n/bench/qr/givens",
-                  (BenchFunc)bench_mat_givens, NULL);
+  crank_bench_add ("/crank/base/mat/float/n/bench/qr/givens",
+                  (CrankBenchFunc)bench_mat_givens, NULL, NULL);
 
   // We don't do bench for eval algorithms for now.
   // The algorithms might be failing/ or may have different time to finish by
@@ -104,86 +104,64 @@ main (gint   argc,
   // Benchmarking them might meanning-less unless we have optimization like
   // eigenvalue shifting, etc..
 
-  g_test_run ();
+  crank_bench_set_param ("/", params);
 
-  return 0;
+  return crank_bench_run ();
 }
 
 
 //////// Definition ////////////////////////////////////////////////////////////
-static void
-test_add_bench (const gchar *test_path,
-                BenchFunc    bench,
-                gpointer     user_data)
-{
-  struct TestPayloadBench *payload = g_new (struct TestPayloadBench, 1);
 
-  payload->func = bench;
-  payload->user_data = user_data;
-
-  g_test_add_data_func_full (test_path, payload, test_meta_bench, g_free);
-}
 
 static void
-test_meta_bench (gconstpointer user_data)
+test_gen_mat_float_n (CrankBenchRun  *run,
+                      CrankMatFloatN *mat)
 {
   guint i;
+  guint n = crank_bench_run_get_param_uint (run, "N", 4);
 
-  struct  TestPayloadBench *payload = (struct TestPayloadBench*)user_data;
-
-  for (i = 0; i < R; i++)
-    payload->func (payload->user_data);
-}
-
-
-
-static void
-test_gen_mat_float_n (CrankMatFloatN *mat)
-{
-  guint i;
-
-  crank_mat_float_n_init_fill (mat, N, N, 0.0f);
-
-  for (i = 0; i < N * N; i++)
-    {
-      mat->data[i] = g_test_rand_double ();
-    }
+  crank_mat_float_n_init_arr_take (mat, n, n,
+                                   crank_bench_run_rand_float_array (run, n*n));
 }
 
 static void
-test_gen_mat_float_n_sym (CrankMatFloatN *mat)
+test_gen_mat_float_n_sym (CrankBenchRun  *run,
+                          CrankMatFloatN *mat)
 {
   guint i;
   guint j;
+  guint n = crank_bench_run_get_param_uint (run, "N", 4);
 
-  crank_mat_float_n_init_fill (mat, N, N, 0.0f);
+  crank_mat_float_n_init_fill (mat, n, n, 0.0f);
 
-  for (i = 0; i < N; i++)
+  for (i = 0; i < n; i++)
     {
-      crank_mat_float_n_set (mat, i, i, (gfloat) g_test_rand_double ());
+      crank_mat_float_n_set (mat, i, i, crank_bench_run_rand_float (run));
 
-      for (j = i + 1; j < N; j++)
+      for (j = i + 1; j < n; j++)
         {
-          crank_mat_float_n_set (mat, i, j, (gfloat) g_test_rand_double ());
-          crank_mat_float_n_set (mat, j, i, (gfloat) g_test_rand_double ());
+          crank_mat_float_n_set (mat, i, j, crank_bench_run_rand_float (run));
+          crank_mat_float_n_set (mat, j, i, crank_bench_run_rand_float (run));
         }
     }
 }
 
 static void
-test_gen_mat_float_n_pd (CrankMatFloatN *mat)
+test_gen_mat_float_n_pd (CrankBenchRun  *run,
+                         CrankMatFloatN *mat)
 {
   guint i;
+  guint n = crank_bench_run_get_param_uint (run, "N", 4);
 
   CrankMatFloatN a;
 
-  crank_mat_float_n_init_fill (&a, N, N, 0.0f);
+  crank_mat_float_n_init_fill (&a, n, n, 0.0f);
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  for (i = 0; i < N; i++)
+  for (i = 0; i < n; i++)
     {
-      gfloat *ep = a.data + (i * (N + 1));
+      gfloat *ep = a.data + (i * (n + 1));
       gfloat e = *ep;
 
       *ep = ABS (e) + 1.0f;
@@ -195,35 +173,39 @@ test_gen_mat_float_n_pd (CrankMatFloatN *mat)
 }
 
 static void
-test_gen_mat_float_4 (CrankMatFloat4 *mat)
+test_gen_mat_float_4 (CrankBenchRun  *run,
+                      CrankMatFloat4 *mat)
 {
   guint i;
   gfloat *matp = (gfloat*) mat;
 
   for (i = 0; i < 16; i++)
-    matp[i] = g_test_rand_double ();
+    matp[i] = crank_bench_run_rand_float (run);
 }
 
 
 
 
+
 static void
-bench_mat_slice4 (void)
+bench_mat_slice4 (CrankBenchRun *run)
 {
+  guint N = crank_bench_run_get_param_uint (run, "N", 4);
+
   CrankMatFloatN a;
   CrankMatFloatN s[4];
   guint hn = N / 2;
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   crank_mat_float_n_slice (&a, 0, 0, hn, hn, s + 0);
   crank_mat_float_n_slice (&a, hn, 0, N, hn, s + 1);
   crank_mat_float_n_slice (&a, 0, hn, hn, N, s + 2);
   crank_mat_float_n_slice (&a, hn, hn, N, N, s + 3);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "mul");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (s + 0);
@@ -232,19 +214,21 @@ bench_mat_slice4 (void)
   crank_mat_float_n_fini (s + 3);
 }
 
+
+
 static void
-bench_mat_transpose (void)
+bench_mat_transpose (CrankBenchRun *run)
 {
   CrankMatFloatN a;
   CrankMatFloatN b;
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   crank_mat_float_n_transpose (&a, &b);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "transpose");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
@@ -252,20 +236,20 @@ bench_mat_transpose (void)
 
 
 static void
-bench_mat_mul (void)
+bench_mat_mul (CrankBenchRun *run)
 {
   CrankMatFloatN a;
   CrankMatFloatN b;
   CrankMatFloatN c;
 
-  test_gen_mat_float_n (&a);
-  test_gen_mat_float_n (&b);
+  test_gen_mat_float_n (run, &a);
+  test_gen_mat_float_n (run, &b);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   crank_mat_float_n_mul (&a, &b, &c);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "mul");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
@@ -274,29 +258,32 @@ bench_mat_mul (void)
 
 
 static void
-bench_mat_inv (void)
+bench_mat_inv (CrankBenchRun *run)
 {
   CrankMatFloatN a;
   CrankMatFloatN b;
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   crank_mat_float_n_inverse (&a, &b);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "mul");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
 }
 
 static void
-bench_mat4_mul (void)
+bench_mat4_mul (CrankBenchRun *run)
 {
   guint j;
+  guint n;
 
-  CrankMatFloat4 *mats = g_new (CrankMatFloat4, N);
+  n = crank_bench_run_get_param_uint (run, "N", 0);
+
+  CrankMatFloat4 *mats = g_new (CrankMatFloat4, n);
   CrankMatFloat4 res = {
     1, 0, 0, 0,
     0, 1, 0, 0,
@@ -304,35 +291,33 @@ bench_mat4_mul (void)
     0, 0, 0, 1
   };
 
-  for (j = 0; j < N; j++)
-    {
-      test_gen_mat_float_4 (mats + j);
-    }
+  for (j = 0; j < n; j++)
+    test_gen_mat_float_4 (run, mats + j);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
-  for (j = 0; j < N; j++)
+  for (j = 0; j < n; j++)
     crank_mat_float4_mul_self (&res, mats + j);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "mul4");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   g_free (mats);
 }
 
 static void
-bench_mat_lu (void)
+bench_mat_lu (CrankBenchRun *run)
 {
   CrankMatFloatN a;
   CrankMatFloatN b;
   CrankMatFloatN c;
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   crank_lu_mat_float_n (&a, &b, &c);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "lu");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
@@ -340,22 +325,23 @@ bench_mat_lu (void)
 }
 
 static void
-bench_mat_ch (void)
+bench_mat_ch (CrankBenchRun *run)
 {
   gboolean res;
   CrankMatFloatN a;
   CrankMatFloatN b;
 
-  test_gen_mat_float_n_pd (&a);
+  test_gen_mat_float_n_pd (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   res = crank_ch_mat_float_n (&a, &b);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "ch");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
+
 
   if (!res)
-    g_test_message (
+    crank_bench_run_fail (run,
       "Cholesky decomp failed! This means that generation may have isssues.");
   else
     crank_mat_float_n_fini (&b);
@@ -364,23 +350,23 @@ bench_mat_ch (void)
 }
 
 static void
-bench_mat_ldl (void)
+bench_mat_ldl (CrankBenchRun *run)
 {
   gboolean res;
   CrankMatFloatN a;
   CrankMatFloatN b;
   CrankVecFloatN c;
 
-  test_gen_mat_float_n_pd (&a);
+  test_gen_mat_float_n_pd (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   res = crank_ldl_mat_float_n (&a, &b, &c);
 
-  g_test_minimized_result (g_test_timer_elapsed (), "ldl");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   if (!res)
-    g_test_message (
+    crank_bench_run_fail (run,
       "LDLT decomp failed! This means that generation may have isssues.");
   else
     {
@@ -393,23 +379,23 @@ bench_mat_ldl (void)
 
 
 static void
-bench_mat_gram_schmidt (void)
+bench_mat_gram_schmidt (CrankBenchRun *run)
 {
   CrankMatFloatN a = {0};
   CrankMatFloatN b = {0};
   CrankMatFloatN c = {0};
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   if (!crank_gram_schmidt_mat_float_n (&a, &b, &c))
     {
-      g_test_message (
+      crank_bench_run_fail (run,
         "QR decomp failed! This means that generation may have isssues.");
     }
 
-  g_test_minimized_result (g_test_timer_elapsed (), "qr-gram-schmidt");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
@@ -417,46 +403,46 @@ bench_mat_gram_schmidt (void)
 }
 
 static void
-bench_mat_householder (void)
+bench_mat_householder (CrankBenchRun *run)
 {
   CrankMatFloatN a = {0};
   CrankMatFloatN b = {0};
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   if (!crank_qr_householder_mat_float_n (&a, &b))
     {
-      g_test_message (
+      crank_bench_run_fail (run,
         "QR decomp failed! This means that generation may have isssues.");
     }
 
-  g_test_minimized_result (g_test_timer_elapsed (), "qr-householder");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
 }
 
 static void
-bench_mat_givens (void)
+bench_mat_givens (CrankBenchRun *run)
 {
   guint i;
 
   CrankMatFloatN a = {0};
   CrankMatFloatN b = {0};
 
-  test_gen_mat_float_n (&a);
+  test_gen_mat_float_n (run, &a);
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
 
   if (!crank_qr_givens_mat_float_n (&a, &b))
     {
-      g_test_message (
-        "QR decomp failed! This means that generation may have isssues.");
+      crank_bench_run_fail (run,
+         "QR decomp failed! This means that generation may have isssues.");
     }
 
-  g_test_minimized_result (g_test_timer_elapsed (), "qr-givens");
+  crank_bench_run_timer_add_result_elapsed (run, "time");
 
   crank_mat_float_n_fini (&a);
   //crank_mat_float_n_fini (&b);
