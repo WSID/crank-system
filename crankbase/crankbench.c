@@ -231,7 +231,7 @@ crank_bench_run (void)
 
 
   crank_bench_message ("\nPostprocessing\n");
-  crank_bench_result_suite_postprocess (result);
+  crank_bench_result_suite_process (result);
 
 
   crank_bench_message ("\nEmitting\n");
@@ -1857,7 +1857,7 @@ _crank_bench_case_run1 (CrankBenchCase      *bcase,
   for (i = 0; i < repeat; i++)
     {
       CrankBenchRun *run = crank_bench_run_new (bcase, param1, i);
-      crank_bench_run_do (run);
+      crank_bench_run_run (run);
       crank_bench_result_case_add_run (result, run);
     }
 

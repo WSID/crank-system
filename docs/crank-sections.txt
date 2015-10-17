@@ -1857,8 +1857,8 @@ CrankBenchSuite
 <FILE>crankbenchrun</FILE>
 crank_bench_run_new
 crank_bench_run_free
-crank_bench_run_do
-crank_bench_run_postprocess
+crank_bench_run_run
+crank_bench_run_process
 crank_bench_run_get_run_no
 crank_bench_run_is_running
 crank_bench_run_is_processed
@@ -1943,7 +1943,7 @@ crank_bench_result_suite_get_cresult
 crank_bench_result_suite_get_cresults_flat
 crank_bench_result_suite_get_runs
 crank_bench_result_suite_get_runs_flat
-crank_bench_result_suite_postprocess
+crank_bench_result_suite_process
 crank_bench_result_case_new
 crank_bench_result_case_free
 crank_bench_result_case_get_case
@@ -1951,7 +1951,7 @@ crank_bench_result_case_get_parent
 crank_bench_result_case_add_run
 crank_bench_result_case_get_runs
 crank_bench_result_case_get_run_list
-crank_bench_result_case_postprocess
+crank_bench_result_case_process
 CrankBenchResultSuite
 CrankBenchResultCase
 </SECTION>

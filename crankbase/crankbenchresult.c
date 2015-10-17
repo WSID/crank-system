@@ -514,39 +514,39 @@ crank_bench_result_case_add_run (CrankBenchResultCase *result,
 //////// Private functions /////////////////////////////////////////////////////
 
 /**
- * crank_bench_result_suite_postprocess:
+ * crank_bench_result_suite_process:
  * @result: A Benchmark result.
  *
  * Performs postprocesses on @result.
  */
 void
-crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
+crank_bench_result_suite_process (CrankBenchResultSuite *result)
 {
   // For now doing nothing, but propagate throughout to whole result trees.
 
   g_ptr_array_foreach (result->cresults,
-                       (GFunc)crank_bench_result_case_postprocess,
+                       (GFunc)crank_bench_result_case_process,
                        NULL);
 
   g_ptr_array_foreach (result->sresults,
-                       (GFunc)crank_bench_result_suite_postprocess,
+                       (GFunc)crank_bench_result_suite_process,
                        NULL);
 }
 
 /**
- * crank_bench_result_case_postprocess:
+ * crank_bench_result_case_process:
  * @result: A Benchmark result.
  *
  * Performs postprocesses on @result.
  */
 void
-crank_bench_result_case_postprocess (CrankBenchResultCase *result)
+crank_bench_result_case_process (CrankBenchResultCase *result)
 {
   gchar *path = crank_bench_case_get_path (result->bcase);
 
   crank_bench_message ("%s: ", path);
 
-  g_ptr_array_foreach (result->runs, (GFunc)crank_bench_run_postprocess, NULL);
+  g_ptr_array_foreach (result->runs, (GFunc)crank_bench_run_process, NULL);
 
   crank_bench_message ("OK\n");
 }

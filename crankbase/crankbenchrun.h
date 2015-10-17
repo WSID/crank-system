@@ -69,9 +69,9 @@ CrankBenchRun    *crank_bench_run_new                     (CrankBenchCase       
 
 void              crank_bench_run_free                    (CrankBenchRun         *run);
 
-void              crank_bench_run_do                      (CrankBenchRun         *run);
+void              crank_bench_run_run                     (CrankBenchRun         *run);
 
-void              crank_bench_run_postprocess             (CrankBenchRun         *run);
+void              crank_bench_run_process                 (CrankBenchRun         *run);
 
 
 guint             crank_bench_run_get_run_no              (CrankBenchRun         *run);

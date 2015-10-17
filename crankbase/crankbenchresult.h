@@ -67,7 +67,7 @@ GList                  *crank_bench_result_suite_get_runs        (CrankBenchResu
 
 GList                  *crank_bench_result_suite_get_runs_flat   (CrankBenchResultSuite *result);
 
-void                    crank_bench_result_suite_postprocess     (CrankBenchResultSuite *result);
+void                    crank_bench_result_suite_process         (CrankBenchResultSuite *result);
 
 
 
@@ -88,7 +88,7 @@ GList                  *crank_bench_result_case_get_run_list     (CrankBenchResu
 
 
 
-void                    crank_bench_result_case_postprocess      (CrankBenchResultCase *result);
+void                    crank_bench_result_case_process          (CrankBenchResultCase *result);
 
 G_END_DECLS
 

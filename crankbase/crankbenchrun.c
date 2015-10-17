@@ -892,13 +892,13 @@ crank_bench_run_rand_double_array (CrankBenchRun *run,
 
 
 /**
- * crank_bench_run_do:
+ * crank_bench_run_run:
  * @run: A Benchmark run.
  *
  * Performs single run of benchmark.
  */
 void
-crank_bench_run_do (CrankBenchRun *run)
+crank_bench_run_run (CrankBenchRun *run)
 {
   // Check run state.
   switch (run->state)
@@ -929,13 +929,13 @@ crank_bench_run_do (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_run_postprocess:
+ * crank_bench_run_process:
  * @run: A Benchmark run.
  *
- * Performs postprocess of run.
+ * Process this run for result. Results are available after process.
  */
 void
-crank_bench_run_postprocess (CrankBenchRun* run)
+crank_bench_run_process (CrankBenchRun* run)
 {
   // Check for finished run.
   // Check run state.
