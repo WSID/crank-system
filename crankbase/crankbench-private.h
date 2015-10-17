@@ -105,9 +105,9 @@ void                    _crank_bench_case_run1          (CrankBenchCase      *bc
 
 void                    _crank_bench_emit_output        (const gchar *format, ...);
 
-void                    _crank_bench_run_result_emit    (CrankBenchResultSuite *result);
+gint                    _crank_bench_run_result_emit    (CrankBenchResultSuite *result);
 
-void                    _crank_bench_run_result_emit_case(CrankBenchResultCase  *result);
+gint                    _crank_bench_run_result_emit_case(CrankBenchResultCase  *result);
 G_END_DECLS
 
 #endif

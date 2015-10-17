@@ -161,9 +161,7 @@ crank_bench_run (void)
 
 
   crank_bench_message ("\nEmitting\n");
-  _crank_bench_run_result_emit (result);
-
-  return 0;
+  return _crank_bench_run_result_emit (result);
 }
 
 
@@ -1602,17 +1600,27 @@ _crank_bench_emit_output (const gchar *format,
 }
 
 
-void
+gint
 _crank_bench_run_result_emit (CrankBenchResultSuite *result)
 {
   GList *caselist;
   GList *iter;
 
+  gint exitcode = 0;
+
   caselist = crank_bench_result_suite_get_cresults_flat (result);
-  g_list_foreach (caselist, (GFunc) _crank_bench_run_result_emit_case, NULL);
+  for (iter = caselist; iter != NULL; iter = iter->next)
+    {
+      CrankBenchResultCase *caseresult;
+      caseresult = (CrankBenchResultCase*)iter->data;
+
+      exitcode = exitcode ||
+                 _crank_bench_run_result_emit_case (caseresult);
+    }
+  return exitcode;
 }
 
-void
+gint
 _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
 {
   CrankBenchCase *bcase;
@@ -1635,6 +1643,9 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   GString *strbuild;
   gchar *strhold;
 
+  guint nfail = 0;
+  guint nskip = 0;
+
   guint i;
 
 
@@ -1647,7 +1658,7 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   run_list = crank_bench_result_case_get_run_list (result);
 
   if (run_list == NULL)
-    return;
+    return 0;
 
   params = crank_bench_run_list_get_param_names (run_list);
   results = crank_bench_run_list_get_result_names (run_list);
@@ -1671,14 +1682,16 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   while (g_hash_table_iter_next (&hi, &hik, NULL))
     rarray[i++] = (GQuark) GPOINTER_TO_INT (hik);
 
+    strbuild = g_string_new (NULL);
 
   // Print out case result.
 
   // Print out path!
-  strbuild = g_string_new (NULL);
-  strhold = crank_bench_case_get_path (bcase);
-  g_string_append_printf (strbuild, "%s\n", strhold);
-  g_free (strhold);
+  {
+    gchar *path = crank_bench_case_get_path (bcase);
+    g_string_append_printf (strbuild, "%s\n", strhold);
+    g_free (path);
+  }
 
 
   // Print header.
@@ -1715,9 +1728,15 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
       recordp = g_strjoinv (",\t", recordpv);
 
       if (crank_bench_run_is_failed (run))
-        recordr = g_strdup_printf ("FAIL: %s", crank_bench_run_get_message (run));
+        {
+          recordr = g_strdup_printf ("FAIL: %s", crank_bench_run_get_message (run));
+          nfail ++;
+        }
       else if (crank_bench_run_is_skipped (run))
-        recordr = g_strdup_printf ("SKIP: %s", crank_bench_run_get_message (run));
+        {
+          recordr = g_strdup_printf ("SKIP: %s", crank_bench_run_get_message (run));
+          nskip ++;
+        }
       else
         {
           recordrv = crank_bench_run_getq_results_to_strv (run, rarray, nresults);
@@ -1738,6 +1757,10 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
       g_free (recordr);
     }
 
+  // Add aggregation results.
+
+  g_string_append_printf (strbuild, "SKIPS:%u,\tFAILS:%u\n", nskip, nfail);
+
   _crank_bench_emit_output ("%s\n", strbuild->str);
   g_string_free (strbuild, TRUE);
 
@@ -1747,4 +1770,6 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   g_free (rarray);
 
   g_list_free (run_list);
+
+  return (nfail != 0) || (nskip != 0);
 }
