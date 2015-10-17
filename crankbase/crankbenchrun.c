@@ -926,6 +926,8 @@ crank_bench_run_run (CrankBenchRun *run)
   g_timer_start (run->timer_run);
   run->bcase->func (run, run->bcase->userdata);
   g_timer_stop (run->timer_run);
+
+  run->state = CRANK_BENCH_RUN_FINISHED;
 }
 
 /**
