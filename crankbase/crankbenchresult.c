@@ -513,6 +513,12 @@ crank_bench_result_case_add_run (CrankBenchResultCase *result,
 
 //////// Private functions /////////////////////////////////////////////////////
 
+/**
+ * crank_bench_result_suite_postprocess:
+ * @result: A Benchmark result.
+ *
+ * Performs postprocesses on @result.
+ */
 void
 crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
 {
@@ -527,6 +533,12 @@ crank_bench_result_suite_postprocess (CrankBenchResultSuite *result)
                        NULL);
 }
 
+/**
+ * crank_bench_result_case_postprocess:
+ * @result: A Benchmark result.
+ *
+ * Performs postprocesses on @result.
+ */
 void
 crank_bench_result_case_postprocess (CrankBenchResultCase *result)
 {

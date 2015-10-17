@@ -28,6 +28,16 @@
 #include "crankbasemisc.h"
 
 /**
+ * SECTION:crankbasemisc
+ * @title: Miscellnous Utility Functions.
+ * @short_description: Helper utility functions.
+ * @stability: Unstable
+ * @include: crankbase.h
+ *
+ * This section containse various helper functions.
+ */
+
+/**
  * crank_qarray_to_strv: (skip)
  * @qarray: (array length=nqarray): A GQuark array.
  * @nqarray: Length of @qarray.

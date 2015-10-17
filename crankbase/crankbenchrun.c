@@ -169,7 +169,7 @@ crank_bench_run_free (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_get_run_no: (skip)
+ * crank_bench_run_get_run_no: (skip)
  * @run: A Benchmark run.
  *
  * Get run number of this run. This is 0 for first repeat, and so on.
@@ -183,7 +183,7 @@ crank_bench_run_get_run_no (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_is_running: (skip)
+ * crank_bench_run_is_running: (skip)
  * @run: A benchmark run.
  *
  * Gets whether this run is running.
@@ -197,7 +197,7 @@ crank_bench_run_is_running (CrankBenchRun *run)
 }
 
 /**
- * crank_bench_is_processed: (skip)
+ * crank_bench_run_is_processed: (skip)
  * @run: A benchmark run.
  *
  * Gets whether this run is processed, and its result is available.

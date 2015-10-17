@@ -1861,9 +1861,11 @@ crank_bench_run_do
 crank_bench_run_postprocess
 crank_bench_run_get_run_no
 crank_bench_run_is_running
+crank_bench_run_is_processed
 crank_bench_run_is_failed
 crank_bench_run_is_skipped
 crank_bench_run_get_state
+crank_bench_run_get_mark
 crank_bench_run_get_message
 crank_bench_run_skip
 crank_bench_run_fail
@@ -1920,6 +1922,8 @@ crank_bench_run_list_get_result_names
 CrankBenchRunState
 CrankBenchRunMark
 CrankBenchRun
+<SUBSECTION Private>
+CrankBenchResultEntry
 </SECTION>
 
 <SECTION>
