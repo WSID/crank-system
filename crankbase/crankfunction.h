@@ -62,6 +62,21 @@ typedef gboolean (*CrankBoolBoolFunc) (const gboolean value,
                                        gpointer       userdata);
 
 /**
+ * CrankBoolCharFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives #gchar and returns #gboolean.
+ *
+ * This is mainly used for iteration functions and the return value is checked
+ * to determine whether to keep iteration.
+ *
+ * Returns: A boolean value
+ */
+typedef gboolean (*CrankBoolCharFunc) (const gchar value,
+                                       gpointer    userdata);
+
+/**
  * CrankBoolUintFunc:
  * @value: Value for function.
  * @userdata: (closure): A userdata for callback.
@@ -155,6 +170,22 @@ typedef gboolean (*CrankBoolPtrFunc) (gconstpointer value,
  */
 typedef gchar*(*CrankStrPtrFunc) (gpointer value,
                                   gpointer userdata);
+
+/**
+ * CrankPtrPtrFunc:
+ * @value: Value for function.
+ * @userdata: (closure): A userdata for callback.
+ *
+ * This function receives a pointer and returns a pointer. This is generally
+ * used as a mapping functions.
+ *
+ * This function type does not describes ownership of parameter and returned
+ * value. Consumer, holder and producer should describe ownership of them.
+ *
+ * Returns: A pointer.
+ */
+typedef gpointer (*CrankPtrPtrFunc) (gpointer value,
+                                     gpointer userdata);
 
 /**
  * CrankEqualDeltaFunc:

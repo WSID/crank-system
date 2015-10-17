@@ -35,12 +35,16 @@
       <xi:include href="crank-chapter-base-fundamental.xml"/>
 	
       <xi:include href="xml/crankbasemacro.xml"/>
-      <xi:include href="xml/crankvalue.xml"/>
       <xi:include href="xml/crankfunction.xml"/>
+      <xi:include href="xml/crankbasemisc.xml"/>
+      <xi:include href="xml/crankvalue.xml"/>
       <xi:include href="xml/crankbits.xml"/>
       <xi:include href="xml/crank128.xml"/>
       <xi:include href="xml/crankstring.xml"/>
       <xi:include href="xml/crankbasetest.xml"/>
+      <xi:include href="xml/crankbench.xml"/>
+      <xi:include href="xml/crankbenchrun.xml"/>
+      <xi:include href="xml/crankbenchresult.xml"/>
     </chapter>
   
     <chapter>

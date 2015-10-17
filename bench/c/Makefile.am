@@ -37,7 +37,7 @@ mostlyclean-local:
 
 bench: $(bench_programs)
 	for bench in $(bench_programs); \
-	do gtester $$bench -o $$bench.log ; \
+	do ./$$bench > $$bench.log ; \
 	done
 
 cpylog: $(bench_programs)

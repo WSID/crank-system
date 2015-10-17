@@ -182,6 +182,22 @@ static gchar *float_symwords [] =
 
 
 
+static gboolean
+crank_str_g_isalnum (const gchar value,
+                     gpointer    userdata)
+{
+  return g_ascii_isalnum (value);
+  // That function is 'macro', so it cannot used as function.
+}
+
+static gboolean
+crank_str_is_canonical_char (const gchar value,
+                             gpointer    userdata)
+{
+  return g_ascii_isalnum (value) || (value == '-');
+}
+
+
 
 static guint
 crank_str_shift128_to_left (CrankUint128 *subject)
@@ -459,6 +475,44 @@ crank_str_read_plusminus (const gchar *str,
 }
 
 /**
+ * crank_str_read_string:
+ * @str: string to read
+ * @position: (inout): position
+ * @str_ptr: (nullable) (optional) (out): Read string. If it cannot read, %NULL
+ *     will be returned.
+ * @func: (scope call): A function to determine to read or stop.
+ * @userdata: (closure): Userdata of @func.
+ *
+ * Reads @str and moves till @func returns %FALSE.
+ *
+ * Returns: %TRUE if it read a string.
+ */
+gboolean
+crank_str_read_string (const gchar        *str,
+                       guint              *position,
+                       gchar             **str_ptr,
+                       CrankBoolCharFunc   func,
+                       gpointer            userdata)
+{
+  guint start;
+  guint length;
+
+  guint i;
+
+  start = *position;
+  for (i = start; func (str[i], userdata); i++) {}
+
+  length = i - start;
+
+
+  if (str_ptr != NULL)
+    *str_ptr = (length != 0) ? g_strndup (str + start, length) : NULL;
+
+  *position = i;
+  return (i != start);
+}
+
+/**
  * crank_str_read_word:
  * @str: string to read.
  * @position: (inout): position.
@@ -474,21 +528,34 @@ crank_str_read_word (const gchar *str,
                      guint       *position,
                      gchar      **word_ptr)
 {
-  guint i_start;
-  guint i;
+  return crank_str_read_string (str,
+                                position,
+                                word_ptr,
+                                crank_str_g_isalnum,
+                                NULL);
+}
 
-  guint i_len;
-
-  i_start = *position;
-
-  for (i = i_start; g_ascii_isalnum (str[i]); i++) {}
-  i_len = i - i_start;
-
-  if (word_ptr != NULL)
-    *word_ptr = (i_len != 0) ? g_strndup (str + i_start, i_len) : NULL;
-
-  *position = i;
-  return (i != i_start);
+/**
+ * crank_str_read_canonical_word:
+ * @str: string to read.
+ * @position: (inout): position.
+ * @word_ptr: (nullable) (optional) (out): Read word. If it cannot read, %NULL
+ *        will be returned. free with g_free() after use.
+ *
+ * Reads @str and moves position into non-word character.
+ *
+ * Returns: %TRUE if it read a word.
+ */
+gboolean
+crank_str_read_canonical_word (const gchar  *str,
+                               guint        *position,
+                               gchar       **word_ptr)
+{
+  return crank_str_read_string (str,
+                                position,
+                                word_ptr,
+                                crank_str_is_canonical_char,
+                                NULL);
 }
 
 /**
@@ -876,6 +943,68 @@ crank_str_read_double (const gchar        *str,
 
   return success;
 }
+
+/**
+ * crank_str_read_path:
+ * @str: String to read.
+ * @position: (inout): position
+ * @path: (nullable) (optional) (out) (array zero-terminated):
+ *     Path entries.
+ * @func: (scope call): function to read entries. Should not accept '/'.
+ * @userdata: (closure): userdata for @func.
+ *
+ * Reads @path from @str and moves @position into next non-path characters.
+ *
+ * This function does not overwrap @func, so @func should not accept '/', or
+ * @func will read path as single string chunk.
+ *
+ * If path portion of @str ends with '/', @path will have empty string at the
+ * end. If it starts with '/', @path will have empty string at the start.
+ */
+gboolean
+crank_str_read_path (const gchar        *str,
+                     guint              *position,
+                     gchar            ***path,
+                     CrankReadStrFunc    func,
+                     gpointer            userdata)
+{
+  guint start = *position;
+
+  if (path != NULL)
+    {
+      GPtrArray *path_ptrarray = g_ptr_array_new ();
+      while (TRUE)
+        {
+          gchar *entry;
+
+          if (! func (str, position, &entry, userdata))
+            g_ptr_array_add (path_ptrarray, g_strdup (""));
+          else
+            g_ptr_array_add (path_ptrarray, entry);
+
+          if (str[*position] != '/') break;
+          (*position) ++;
+        }
+
+      g_ptr_array_add (path_ptrarray, NULL); // Append NULL to make sure null-terminated
+                                             //
+      *path = (gchar**)g_ptr_array_free (path_ptrarray, start == *position);
+    }
+
+  else
+    {
+      while (TRUE)
+        {
+          func (str, position, NULL, userdata);
+
+          if (str[*position] != '/') break;
+          (*position) ++;
+        }
+    }
+
+  return start != *position;
+}
+
 
 //////// Scanning Function
 

@@ -37,6 +37,9 @@ int main (string[] args) {
 	GLib.Test.add_func (	"/crank/base/string/read/double",
 							test_read_double	);
 	
+	GLib.Test.add_func (	"/crank/base/string/read/path",
+							test_read_path	);
+
 	GLib.Test.add_func (	"/crank/base/string/scan/char",
 							test_scan_char	);
 	
@@ -220,6 +223,57 @@ private void test_read_double () {
 	assert ( Crank.Str.read_double (subject, ref pos, out value, out result));
 	assert (pos == 62);
 	assert (value == 1.999e275);
+}
+
+private void test_read_path () {
+	string subject = "/home/wsid/Downloads/Incoming/";
+	uint pos = 0;
+	string[] pathlist;
+
+	assert (Crank.Str.read_path (
+			subject,
+			ref pos,
+			out pathlist,
+			Crank.Str.read_word));
+
+	assert (pathlist.length == 6);
+	assert (pathlist[0] == "");
+	assert (pathlist[1] == "home");
+	assert (pathlist[2] == "wsid");
+	assert (pathlist[3] == "Downloads");
+	assert (pathlist[4] == "Incoming");
+	assert (pathlist[5] == "");
+	assert (pos == 30);
+
+	subject = "Documents/projects/crank-system/configure-ac";
+	pos = 0;
+
+	assert (Crank.Str.read_path (
+			subject,
+			ref pos,
+			out pathlist,
+			Crank.Str.read_canonical_word));
+
+	assert (pathlist.length == 4);
+	assert (pathlist[0] == "Documents");
+	assert (pathlist[1] == "projects");
+	assert (pathlist[2] == "crank-system");
+	assert (pathlist[3] == "configure-ac");
+	assert (pos == 44);
+
+	subject = "/";
+	pos = 0;
+
+	assert (Crank.Str.read_path (
+			subject,
+			ref pos,
+			out pathlist,
+			Crank.Str.read_canonical_word));
+
+	assert (pathlist.length == 2);
+	assert (pathlist[0] == "");
+	assert (pathlist[1] == "");
+	assert (pos == 1);
 }
 	
 

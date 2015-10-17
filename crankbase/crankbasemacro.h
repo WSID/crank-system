@@ -143,5 +143,6 @@ G_BEGIN_DECLS
       *(_cbmp++) = v;                \
   } G_STMT_END
 
+
 G_END_DECLS
 #endif

@@ -7,6 +7,7 @@ lib_LTLIBRARIES = \
 include_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
+		crankbasemisc.h \
 		crankfunction.h \
 		crankvalue.h \
 		crankbits.h \
@@ -35,7 +36,13 @@ include_HEADERS = \
 		crankdigraph.h \
 		crankadvgraph.h \
 		\
-		crankbasetest.h
+		crankbasetest.h \
+		crankbench.h \
+		crankbenchrun.h \
+		crankbenchresult.h
+
+noinst_HEADERS = \
+		crankbench-private.h
 
 
 
@@ -50,6 +57,7 @@ libcrankbase_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
 
 libcrankbase_la_SOURCES= \
+		crankbasemisc.c \
 		crankfunction.c \
 		crankvalue.c \
 		crankstring.c \
@@ -73,7 +81,10 @@ libcrankbase_la_SOURCES= \
 		crankadvgraph.c \
 		crankadvmat.c\
 		\
-		crankbasetest.c
+		crankbasetest.c \
+		crankbench.c \
+		crankbenchrun.c \
+		crankbenchresult.c
 
 
 

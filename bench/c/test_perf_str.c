@@ -24,29 +24,12 @@
 
 #include "crankbase.h"
 
-//////// Testing Variables /////////////////////////////////////////////////////
-
-static guint N   = 4096;
-static guint R   = 8;
-
-
 //////// Declaration ///////////////////////////////////////////////////////////
 
-typedef void (*BenchFunc) (gpointer userdata);
+static gchar *test_gen_double_strings (CrankBenchRun *run,
+                                       gdouble **array);
 
-struct TestPayloadBench {
-  BenchFunc func;
-  gpointer user_data;
-};
-
-static void   test_add_bench (const gchar *path,
-                              BenchFunc    bench,
-                              gpointer     user_data);
-static void   test_meta_bench (gconstpointer data);
-
-static gchar *test_gen_double_strings (void);
-
-static void   bench_read_double (void);
+static void   bench_read_double (CrankBenchRun *run);
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -54,59 +37,45 @@ gint
 main (gint   argc,
       gchar *argv[])
 {
-  g_test_init (&argc, &argv, NULL);
+  CrankBenchParamNode  *params;
 
-  g_test_message ("N: %u", N);
-  g_test_message ("R: %u", R);
+  crank_bench_init (&argc, &argv);
 
-  test_add_bench ("/crank/base/string/perf/read/double",
-                  (BenchFunc)bench_read_double, NULL);
+  crank_bench_add ("/crank/base/string/read/double",
+                   (CrankBenchFunc)bench_read_double, NULL, NULL);
 
-  g_test_run ();
+  params = crank_bench_param_node_new ();
 
-  return 0;
+  crank_bench_param_node_set_uint (params, "repeat", 8);
+  crank_bench_param_node_set_uint (params, "N", 10240);
+
+  crank_bench_set_param ("/", params);
+
+  crank_bench_param_node_free (params);
+
+  return crank_bench_run ();
 }
 
 
 //////// Definition ////////////////////////////////////////////////////////////
-static void
-test_add_bench (const gchar *test_path,
-                BenchFunc    bench,
-                gpointer     user_data)
-{
-  struct TestPayloadBench *payload = g_new (struct TestPayloadBench, 1);
-
-  payload->func = bench;
-  payload->user_data = user_data;
-
-  g_test_add_data_func_full (test_path, payload, test_meta_bench, g_free);
-}
-
-static void
-test_meta_bench (gconstpointer user_data)
-{
-  guint i;
-
-  struct  TestPayloadBench *payload = (struct TestPayloadBench*)user_data;
-
-  for (i = 0; i < R; i++)
-    payload->func (payload->user_data);
-}
 
 static gchar*
-test_gen_double_string (gdouble **array)
+test_gen_double_string (CrankBenchRun *run, gdouble **array)
 {
+  guint n;
   guint i;
   gdouble *marray;
   gchar *strs;
   GString *str;
 
-  marray = g_new (gdouble, N);
+  n = crank_bench_run_get_param_uint (run, "N", 0);
+
+  marray = g_new (gdouble, n);
   str = g_string_new (NULL);
 
-  for (i = 0; i < N; i++)
+  for (i = 0; i < n; i++)
     {
-      gint value_int = g_test_rand_int_range (-1000000000, 1000000000);
+      gint32 value_int = crank_bench_run_rand_int_range (run, -1000000000, 1000000000);
       gdouble value_double = ((gdouble)value_int) / 10000000000;
       marray[i] = value_double;
 
@@ -123,9 +92,10 @@ test_gen_double_string (gdouble **array)
 
 
 static void
-bench_read_double (void)
+bench_read_double (CrankBenchRun *run)
 {
   guint i;
+  guint n;
   gdouble *actual_value;
   gdouble *crank_value;
   gdouble *std_value;
@@ -135,15 +105,17 @@ bench_read_double (void)
 
   gchar *str;
 
-  str = test_gen_double_string (&actual_value);
-  crank_value = g_new (gdouble, N);
-  std_value = g_new (gdouble, N);
+  n = crank_bench_run_get_param_uint (run, "N", 0);
+
+  str = test_gen_double_string (run, &actual_value);
+  crank_value = g_new (gdouble, n);
+  std_value = g_new (gdouble, n);
 
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
   {
     gchar *ptr = str;
-    for (i = 0; i < N; i++)
+    for (i = 0; i < n; i++)
       {
         std_value[i] = strtod (ptr, &ptr);
         if (std_value[i] == 0)
@@ -153,14 +125,14 @@ bench_read_double (void)
           }
       }
   }
-  g_test_minimized_result (g_test_timer_elapsed (), "std_read_double");
+  crank_bench_run_timer_add_result_elapsed (run, "std-read-double");
 
-  g_test_timer_start ();
+  crank_bench_run_timer_start (run);
   {
     guint pos = 0;
     CrankReadDecResult res;
     gdouble err;
-    for (i = 0; i < N; i++)
+    for (i = 0; i < n; i++)
       {
         if (!crank_str_scan_double (str, &pos, crank_value + i,
                                     &res) || (res != 0))
@@ -171,16 +143,15 @@ bench_read_double (void)
       }
 
   }
+  crank_bench_run_timer_add_result_elapsed (run, "crank-read-double");
 
-  g_test_minimized_result (g_test_timer_elapsed (), "crank_read_double");
-
-  for (i = 0; i < N; i++)
+  for (i = 0; i < n; i++)
     {
       crank_errsum += ABS((actual_value[i] / crank_value[i]) - 1);
       std_errsum += ABS((actual_value[i] / std_value[i]) - 1);
     }
-  g_test_minimized_result (crank_errsum / N, "crank_read_double_err");
-  g_test_minimized_result (std_errsum / N, "std_read_double_err");
+  crank_bench_run_add_result_double (run, "crank-read-double-err", crank_errsum / n);
+  crank_bench_run_add_result_double (run, "std-read-double-err", std_errsum / n);
 
   g_free (str);
   g_free (actual_value);

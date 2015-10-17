@@ -39,6 +39,8 @@ static void test_read_int64 (void);
 
 static void test_read_double (void);
 
+static void test_read_path (void);
+
 static void test_scan_char (void);
 
 static void test_scan_word (void);
@@ -73,6 +75,9 @@ main (gint    argc,
 
   g_test_add_func ("/crank/base/string/read/double",
                    test_read_double);
+
+  g_test_add_func ("/crank/base/string/read/path",
+                   test_read_path);
 
   g_test_add_func ("/crank/base/string/scan/char",
                    test_scan_char);
@@ -291,6 +296,71 @@ test_read_double (void)
   g_assert (crank_str_read_double (subject, &pos, &value, &result));
   g_assert_cmpuint (pos, ==, 69);
   crank_assert_cmpfloat (value, ==, 1.0e2);
+}
+
+static void
+test_read_path (void)
+{
+  gchar *subject = "/home/wsid/Downloads/Incoming/";
+  guint pos = 0;
+  gchar **pathlist;
+
+  g_assert (crank_str_read_path (subject,
+                                 &pos,
+                                 &pathlist,
+                                 (CrankReadStrFunc)crank_str_read_word,
+                                 NULL));
+
+  g_assert_cmpstr (pathlist[0], ==, "");
+  g_assert_cmpstr (pathlist[1], ==, "home");
+  g_assert_cmpstr (pathlist[2], ==, "wsid");
+  g_assert_cmpstr (pathlist[3], ==, "Downloads");
+  g_assert_cmpstr (pathlist[4], ==, "Incoming");
+  g_assert_cmpstr (pathlist[5], ==, "");
+  g_assert_cmpstr (pathlist[6], ==, NULL);
+
+  g_assert_cmpuint (pos, ==, 30);
+
+  g_strfreev (pathlist);
+
+
+  subject = "Documents/projects/crank-system/configure-ac";
+  pos = 0;
+
+  g_assert (crank_str_read_path (subject,
+                                 &pos,
+                                 &pathlist,
+                                 (CrankReadStrFunc)crank_str_read_canonical_word,
+                                 NULL));
+
+  g_assert_cmpstr (pathlist[0], ==, "Documents");
+  g_assert_cmpstr (pathlist[1], ==, "projects");
+  g_assert_cmpstr (pathlist[2], ==, "crank-system");
+  g_assert_cmpstr (pathlist[3], ==, "configure-ac");
+  g_assert_cmpstr (pathlist[4], ==, NULL);
+
+  g_assert_cmpuint (pos, ==, 44);
+
+  g_strfreev (pathlist);
+
+
+  subject = "/";
+  pos = 0;
+
+  g_assert (crank_str_read_path (subject,
+                                 &pos,
+                                 &pathlist,
+                                 (CrankReadStrFunc)crank_str_read_canonical_word,
+                                 NULL));
+
+  g_assert_cmpstr (pathlist[0], ==, "");
+  g_assert_cmpstr (pathlist[1], ==, "");
+  g_assert_cmpstr (pathlist[2], ==, NULL);
+
+  g_assert_cmpuint (pos, ==, 1);
+
+  g_strfreev (pathlist);
+
 }
 
 static void
