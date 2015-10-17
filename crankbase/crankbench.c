@@ -39,7 +39,7 @@
 
 /**
  * SECTION:crankbench
- * @title: Benchmarking
+ * @title: Benchmark.
  * @short_description: Functions for benchmarking.
  * @stability: unstable
  * @include: crankbase.h
@@ -51,21 +51,69 @@
  * System has similarity to GTest Framework. But this has different objective,
  * this has different to GTest Framework.
  *
- * * Similarity
- *   * Suite, Case style hierarchy
+ * # Concepts.
  *
- * * Differece
- *   * Test Input
- *     * Benchmarking system accepts parameters in form of GHashTable
- *     * GTest Framework: Does not accept parameter.
- *   * Testing Result
- *     * Benchmarking System: Each test case adds result.
- *     * GTest Framework: Each test case performs assertions.
- *   * Output Format
- *     * Benchmarking System: Test results are printed as CSV.
- *     * GTest Framework: Pass or Fail, optionally performance (though not used
- *       frequently). Recently, TAP protocol can be used.
+ * Benchmark system has similar concept to Unit tests.
  *
+ * * Benchmark case: A group of measurements for single action.
+ * * Benchmark suite: A group of cases and child suites to aggregate results.
+ *
+ * But it introduces new concepts, for benchmarking.
+ *
+ * * Benchmark parameters: Unlike unit tests, benchmark should be run in various
+ *       situation. For this, benchmark parameters are needed.
+ * * Benchmark runs: As benchmark cases are runned for several repeats,
+ *       measurements are aggregated into each runs.
+ * * Benchmark results: For benchmark, their results are not just pass or fail,
+ *       but more than them. As single case generates multiple set of results,
+ *       they are aggregated by cases and then by suites.
+ *
+ * # Suite and Cases.
+ *
+ * Benchmark system is designed to create suites and cases implicitly with path,
+ * like GTest Framework, so generally you don't have to take care of suites and
+ * cases.
+ *
+ * |[
+ *     crank_bench_add ("/crank/base/mat/float/n/mul", bench_float_n_mul, NULL, NULL, NULL);
+ * ]|
+ *
+ * This will constructs benchmark suites "crank", "base", "mat", "float", "n",
+ * and case "mul" with given function.
+ *
+ * # Parameters
+ *
+ * It is frequnetly to perform benchmark with various situations. for complex
+ * configuration for parameters, Benchmark system uses 2-level parameter
+ * composition.
+ *
+ * Each suites and cases have parameter tree. In each tree, parameters are
+ * stored in each node, in from of #GHashTable of #GQuark and #GValue. (can be
+ * obtained by crank_bench_param_node_get_table())
+ *
+ * Suites and cases will inherit parameter tree from their parents, and for
+ * each parameter node, they will inherit parameters from parent node.
+ *
+ * # Special Parameters.
+ *
+ * Some parameters are used by Benchmark system to accomodate runs.
+ *
+ * <table>
+ *   <title>Special Parameters used by Benchmarking system</title>
+ *   <tgroup cols="3">
+ *     <thead>
+ *       <row><entry>Type</entry>
+ *            <entry>Name</entry>
+ *            <entry>Description</entry></row>
+ *     </thead>
+ *
+ *     <tbody>
+ *       <row><entry>#guint</entry>
+ *            <entry>repeat</entry>
+ *            <entry>Repeat counts: how many runs will run for this parameters</entry></row>
+ *     </tbody>
+ *   </tgroup>
+ * </table>
  */
 
 

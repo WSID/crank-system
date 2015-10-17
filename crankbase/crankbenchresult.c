@@ -71,10 +71,6 @@ struct _CrankBenchResultCase {
   GPtrArray             *runs;
 };
 
-
-void                    _crank_bench_result_case_pp_accum(CrankBenchRun        *run,
-                                                          CrankBenchResultCase *result);
-
 //////// CrankBenchResultSuite /////////////////////////////////////////////////
 
 /**
@@ -145,7 +141,7 @@ crank_bench_result_suite_get_parent (CrankBenchResultSuite *result)
 }
 
 /**
- * crank_bench_result_suite_add_sresult: (skip):
+ * crank_bench_result_suite_add_sresult: (skip)
  * @result: A Benchmark result.
  * @sres: (transfer full): Another result to be added under.
  *
@@ -162,7 +158,7 @@ crank_bench_result_suite_add_sresult (CrankBenchResultSuite *result,
 }
 
 /**
- * crank_bench_result_suite_add_cresult: (skip):
+ * crank_bench_result_suite_add_cresult: (skip)
  * @result: A Benchmark result.
  * @cres: (transfer full): A Benchmakr case result to be added under.
  *
@@ -179,7 +175,7 @@ crank_bench_result_suite_add_cresult (CrankBenchResultSuite *result,
 }
 
 /**
- * crank_bench_result_suite_remove_sresult: (skip):
+ * crank_bench_result_suite_remove_sresult: (skip)
  * @result: A Benchmark result.
  * @sres: (transfer none): A child result.
  *
@@ -199,7 +195,7 @@ crank_bench_result_suite_remove_sresult (CrankBenchResultSuite *result,
 }
 
 /**
- * crank_bench_result_suite_remove_cresult: (skip):
+ * crank_bench_result_suite_remove_cresult: (skip)
  * @result: A Benchmark result.
  * @cres: (transfer none): A child result.
  *

@@ -28,7 +28,7 @@
 #include "crankbasemisc.h"
 
 /**
- * crank_qarray_to_strv: (skip):
+ * crank_qarray_to_strv: (skip)
  * @qarray: (array length=nqarray): A GQuark array.
  * @nqarray: Length of @qarray.
  *
@@ -54,7 +54,7 @@ crank_qarray_to_strv (GQuark      *qarray,
   return strv;
 }
 /**
- * crank_qarray_try_strv: (skip):
+ * crank_qarray_try_strv: (skip)
  * @strv: (array zero-terminated): A string array.
  * @nqarray: (out): Length of returned value.
  *
@@ -84,7 +84,7 @@ crank_qarray_try_strv (const gchar **strv,
 }
 
 /**
- * crank_qarray_from_strv: (skip):
+ * crank_qarray_from_strv: (skip)
  * @strv: (array zero-terminated): A string array.
  * @nqarray: (out): Length of returned value.
  *

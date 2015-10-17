@@ -34,7 +34,28 @@
 #include "crankbench.h"
 #include "crankbench-private.h"
 
-
+/**
+ * SECTION:crankbenchrun
+ * @title: Benchmark Run
+ * @short_description: Run state for benchmarking.
+ * @stability: Unstable
+ * @include: crankbase.h
+ *
+ * This represents state of benchmarking.
+ *
+ * Benchmark parameters can be obtained through crank_bench_run_get_param()
+ * family. Results can be added by crank_bench_run_add_result() family.
+ *
+ * #CrankBenchRun also has utility functions like random generations, timer.
+ *
+ * # Getting results.
+ *
+ * After postprocessing, results can be obtained crank_bench_run_get_result()
+ * family. For convenience, not only string and #GQuark, but array of them are
+ * also avaliable, for getting result and parameters.
+ *
+ * Results are added in queue and won't be available before postprocessing.
+ */
 
 /**
  * CrankBenchRun:
