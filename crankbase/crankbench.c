@@ -77,6 +77,8 @@ static CrankBenchSuite *crank_bench_root = NULL;
 static gboolean         crank_bench_message_stdout = FALSE;
 static gboolean         crank_bench_message_quiet = FALSE;
 
+static CrankBenchListOption crank_bench_list_option = CRANK_BENCH_LIST_NONE;
+
 static GOptionEntry crank_bench_options[] = {
   {"message-stdout", '\0', G_OPTION_FLAG_NONE,
     G_OPTION_ARG_NONE, &crank_bench_message_stdout,
@@ -85,6 +87,10 @@ static GOptionEntry crank_bench_options[] = {
   {"message-quiet", 'q', G_OPTION_FLAG_NONE,
     G_OPTION_ARG_NONE, &crank_bench_message_quiet,
     "Quiet: Do not print message.", NULL},
+
+  {"list", 'l', G_OPTION_FLAG_OPTIONAL_ARG,
+    G_OPTION_ARG_CALLBACK, &_crank_bench_arg_list,
+    "list benchmark cases and parameters.", "none,case,tree,all"},
 
   {NULL}
 };
@@ -151,6 +157,13 @@ gint
 crank_bench_run (void)
 {
   CrankBenchResultSuite *result;
+
+  if (crank_bench_list_option != CRANK_BENCH_LIST_NONE)
+    {
+      _crank_bench_list_case (crank_bench_root);
+      return 0;
+    }
+
 
   crank_bench_message ("\nRunning\n");
   result = crank_bench_suite_run (crank_bench_root, NULL);
@@ -1527,6 +1540,85 @@ _crank_bench_get_suite_common (const gchar  *path,
   return psuite;
 }
 
+gboolean
+_crank_bench_arg_list (const gchar  *option_name,
+                       const gchar  *value,
+                       gpointer      workbench,
+                       GError      **error)
+{
+  if (value == NULL)
+    {
+      crank_bench_list_option = CRANK_BENCH_LIST_CASE;
+    }
+  else
+    {
+      gchar *lvalue = g_ascii_strdown (value, -1);
+
+      crank_bench_list_option =
+          (strcmp (lvalue, "none") == 0) ? CRANK_BENCH_LIST_NONE :
+          (strcmp (lvalue, "case") == 0) ? CRANK_BENCH_LIST_CASE :
+          (strcmp (lvalue, "tree") == 0) ? CRANK_BENCH_LIST_TREE :
+          (strcmp (lvalue, "all") == 0)  ? CRANK_BENCH_LIST_ALL :
+          -1;
+
+      if (crank_bench_list_option == -1)
+        {
+          g_set_error (error,
+                       G_OPTION_ERROR,
+                       G_OPTION_ERROR_BAD_VALUE,
+                       "Bad Value: "
+                       "--%s option only allows "
+                           "\"none\", \"case\", \"tree\", \"all\": "
+                       "received %s",
+                       option_name,
+                       value);
+        }
+      g_free (lvalue);
+    }
+  return (crank_bench_list_option != -1);
+}
+
+
+void
+_crank_bench_list_case (CrankBenchSuite *suite)
+{
+  GString *gstr = g_string_new (NULL);
+
+  _crank_bench_list_case_gstr (suite, gstr);
+
+  g_string_free (gstr, TRUE);
+}
+
+void
+_crank_bench_list_case_gstr (CrankBenchSuite *suite,
+                             GString         *gstr)
+{
+  guint pos;
+  guint i;
+
+  g_string_append_printf (gstr, "%s/", suite->name);
+  pos = gstr->len;
+
+  for (i = 0; i < suite->cases->len; i++)
+    {
+      CrankBenchCase *bcase;
+
+      bcase = (CrankBenchCase*) suite->cases->pdata[i];
+
+      crank_bench_message ("%s%s\n", gstr->str, bcase->name);
+    }
+
+  for (i = 0; i < suite->subsuites->len; i++)
+    {
+      CrankBenchSuite *subsuite;
+
+      subsuite = (CrankBenchSuite*) suite->subsuites->pdata[i];
+
+      g_string_truncate (gstr, pos);
+      _crank_bench_list_case_gstr (subsuite, gstr);
+    }
+}
+
 /*
  * _crank_bench_case_run1:
  * @bcase: A Benchmark case.
@@ -1682,7 +1774,7 @@ _crank_bench_run_result_emit_case (CrankBenchResultCase *result)
   while (g_hash_table_iter_next (&hi, &hik, NULL))
     rarray[i++] = (GQuark) GPOINTER_TO_INT (hik);
 
-    strbuild = g_string_new (NULL);
+  strbuild = g_string_new (NULL);
 
   // Print out case result.
 

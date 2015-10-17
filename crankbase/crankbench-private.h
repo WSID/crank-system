@@ -31,6 +31,13 @@ G_BEGIN_DECLS
 
 //////// Private type declaration //////////////////////////////////////////////
 
+typedef enum {
+  CRANK_BENCH_LIST_NONE,
+  CRANK_BENCH_LIST_CASE,
+  CRANK_BENCH_LIST_TREE,
+  CRANK_BENCH_LIST_ALL
+} CrankBenchListOption;
+
 typedef enum _CrankBenchRunState {
   CRANK_BENCH_RUN_NOT_RUN = 0 << 0,
   CRANK_BENCH_RUN_RUNNING = 1 << 0,
@@ -97,6 +104,16 @@ struct _CrankBenchCase {
 CrankBenchSuite        *_crank_bench_get_suite_common   (const gchar  *path,
                                                          gchar       **case_name,
                                                          gboolean      make_suite);
+
+gboolean                _crank_bench_arg_list           (const gchar  *option_name,
+                                                         const gchar  *value,
+                                                         gpointer      workbench,
+                                                         GError      **error);
+
+void                    _crank_bench_list_case          (CrankBenchSuite     *suite);
+
+void                    _crank_bench_list_case_gstr     (CrankBenchSuite     *suite,
+                                                         GString             *gstr);
 
 void                    _crank_bench_case_run1          (CrankBenchCase      *bcase,
                                                          CrankBenchResultCase *result,
