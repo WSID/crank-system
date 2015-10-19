@@ -1,6 +1,5 @@
-## crank base: Crank System의 기저면 지원을 당담합니다.
+## Crank Base: Base support.
 
-# 대상 목록
 lib_LTLIBRARIES = \
 		libcrankbase.la
 
@@ -88,7 +87,7 @@ libcrankbase_la_SOURCES= \
 
 
 
-# Introspection 파일
+# Introspection
 -include $(INTROSPECTION_MAKEFILE)
 
 if HAVE_INTROSPECTION
@@ -118,7 +117,7 @@ typelib_DATA= $(INTROSPECTION_GIRS:.gir=.typelib)
 
 
 
-# Vapigen 파일
+# Vapigen
 EXTRA_DIST=CrankBase-0.0.metadata crankbase-custom.vala
 
 if ENABLE_VAPIGEN

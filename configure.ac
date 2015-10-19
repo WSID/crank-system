@@ -26,6 +26,7 @@ AC_PROG_CC
 
 ######## Module configure ######################################################
 PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
+PKG_CHECK_MODULES([CRANK_SHAPE], [glib-2.0 gobject-2.0])
 
 
 ######## Build demo ############################################################
@@ -104,6 +105,7 @@ AS_IF([test S"$enable_vala" = S"yes"],
 AC_CONFIG_FILES([
 		Makefile
 		crankbase/Makefile
+		crankshape/Makefile
 		tests/Makefile
 		tests/c/Makefile
 		tests/python/Makefile
@@ -118,5 +120,6 @@ AC_CONFIG_FILES([
 		demo/matrix/Makefile
 		
 		crank-base-0.0.pc
+		crank-shape-0.0.pc
 ])
 AC_OUTPUT

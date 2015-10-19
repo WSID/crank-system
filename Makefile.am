@@ -4,6 +4,7 @@ DISTCHECK_CONFIGURE_FLAGS= --enable-introspection --enable-gtk-doc
 
 SUBDIRS= \
 		crankbase \
+		crankshape \
 		docs \
 		tests \
 		bench \
@@ -15,7 +16,8 @@ endif
 
 pkgconfigdir= $(libdir)/pkgconfig
 pkgconfig_DATA= \
-		crank-base-0.0.pc
+		crank-base-0.0.pc \
+		crank-shape-0.0.pc
 
 
 EXTRA_DIST= \
