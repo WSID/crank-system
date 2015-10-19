@@ -114,6 +114,71 @@
  *     </tbody>
  *   </tgroup>
  * </table>
+ *
+ * # Running benchmarks.
+ *
+ * If benchmarking program using crank_bench_init(), crank_bench_run(), then
+ * program will have command line options.
+ *
+ * * message-stdout: Prints message into stdout
+ *
+ *   Make crank_bench_message() prints to stdout. In this case, message will be
+ *   mixed with emitted output.
+ *
+ * * message-quiet (q): Quite: Do not print message.
+ *
+ *   Make crank_bench_message() do nothing. Still benchmark results will be
+ *   emitted.
+ *
+ * * list (l): list benchmark cases and parameters.
+ *
+ *   Program will print benchmark cases and parameter.
+ *   * case: Prints only benchmark cases
+ *     |[
+ *         /crank/base/digraph/complete-graph
+ *         /crank/base/digraph/depth-first
+ *         /crank/base/digraph/breadth-first
+ *         /crank/base/digraph/dijkstra
+ *     ]|
+ *   * tree: Prints benchmark suites and cases in tree shape.
+ *     |[
+ *         /
+ *           crank/
+ *             base/
+ *               digraph/
+ *                 complete-graph
+ *                 depth-first
+ *                 breadth-first
+ *                 dijkstra
+ *     ]|
+ *   * all: Prints benchmark suites and cases, and even parameters.
+ *     |[
+ *         /
+ *           repeat = 8;
+ *           N = 128;
+ *           {
+ *             N = 256;
+ *           }
+ *           {
+ *             N = 512;
+ *           }
+ *           {
+ *             repeat = 2;
+ *             N = 1024;
+ *             {
+ *               N = 2048;
+ *             }
+ *             {
+ *               N = 4096;
+ *             }
+ *           }
+ *
+ *           crank/
+ *             No Parameter Modification.
+ *
+ *         (more outputs)
+ *      ]|
+ *
  */
 
 
