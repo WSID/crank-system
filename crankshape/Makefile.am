@@ -70,7 +70,7 @@ if ENABLE_VAPIGEN
 
 VAPIGEN_VAPIS= crank-shape-0.0.vapi
 
-crank_shape_0_0_DEPS=crank-base-0.0
+crank_shape_0_0_vapi_DEPS=crank-base-0.0
 crank_shape_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase
 crank_shape_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase
 crank_shape_0_0_vapi_METADATADIRS= $(srcdir)
