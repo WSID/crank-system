@@ -33,7 +33,6 @@
 #include "crankstring.h"
 #include "crankbench.h"
 #include "crankbenchrun.h"
-#include "crankbench-private.h"
 
 /**
  * SECTION:crankbenchrun
@@ -931,7 +930,7 @@ crank_bench_run_run (CrankBenchRun *run)
   run->state = CRANK_BENCH_RUN_RUNNING;
 
   g_timer_start (run->timer_run);
-  run->bcase->func (run, run->bcase->userdata);
+  crank_bench_case_invoke (run->bcase, run);
   g_timer_stop (run->timer_run);
 
   run->state = CRANK_BENCH_RUN_FINISHED;

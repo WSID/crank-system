@@ -242,6 +242,9 @@ CrankBenchSuite      *crank_bench_case_get_parent         (CrankBenchCase       
 CrankBenchResultCase *crank_bench_case_run                (CrankBenchCase        *bcase,
                                                            CrankBenchParamNode   *param);
 
+void                  crank_bench_case_invoke             (CrankBenchCase        *bcase,
+                                                           CrankBenchRun         *run);
+
 
 G_END_DECLS
 

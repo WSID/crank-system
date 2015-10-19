@@ -42,10 +42,6 @@ baseinclude_HEADERS = \
 		crankbenchrun.h \
 		crankbenchresult.h
 
-noinst_HEADERS = \
-		crankbench-private.h
-
-
 
 # crankbase.la
 libcrankbase_la_CFLAGS = \
