@@ -1,9 +1,11 @@
 ## Crank Base: Base support.
 
+baseincludedir= $(includedir)/crank/base
+
 lib_LTLIBRARIES = \
 		libcrankbase.la
 
-include_HEADERS = \
+baseinclude_HEADERS = \
 		crankbase.h \
 		crankbasemacro.h \
 		crankbasemisc.h \
@@ -105,7 +107,7 @@ CrankBase_0_0_gir_SCANNERFLAGS= \
 CrankBase_0_0_gir_INCLUDES= GObject-2.0
 CrankBase_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm
 CrankBase_0_0_gir_LIBS= libcrankbase.la
-CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(include_HEADERS)
+CrankBase_0_0_gir_FILES= $(libcrankbase_la_SOURCES) $(baseinclude_HEADERS)
 
 INTROSPECTION_GIRS+= CrankBase-0.0.gir
 
