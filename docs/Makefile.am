@@ -23,7 +23,8 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 # for inline comments documenting functions and macros.
 # e.g. DOC_SOURCE_DIR=$(top_srcdir)/gtk $(top_srcdir)/gdk
 DOC_SOURCE_DIR= \
-		$(top_srcdir)/crankbase
+		$(top_srcdir)/crankbase \
+		$(top_srcdir)/crankshape
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
 SCANGOBJ_OPTIONS=
@@ -51,9 +52,11 @@ FIXXREF_OPTIONS=
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
 # e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
 HFILE_GLOB= \
-		$(top_srcdir)/crankbase/*.h
+		$(top_srcdir)/crankbase/*.h \
+		$(top_srcdir)/crankshape/*.h
 CFILE_GLOB=$ \
-		$(top_srcdir)/crankbase/*.c
+		$(top_srcdir)/crankbase/*.c \
+		$(top_srcdir)/crankshape/*.c
 		
 
 # Extra header to include when scanning, which are not under DOC_SOURCE_DIR
@@ -95,8 +98,13 @@ expand_content_files=
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS=	-I$(top_srcdir)/crankbase -lm
-GTKDOC_LIBS=	$(top_builddir)/crankbase/libcrankbase.la
+GTKDOC_CFLAGS= \
+	-I$(top_srcdir)/crankbase -lm \
+	-I$(top_srcdir)/crankshape
+
+GTKDOC_LIBS= \
+	$(top_builddir)/crankbase/libcrankbase.la \
+	$(top_builddir)/crankshape/libcrankshape.la
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make

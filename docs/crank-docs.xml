@@ -81,6 +81,15 @@
     </chapter>
   </part>
   
+  <part> <title>Crank Shape</title>
+
+    <chapter>
+      <title>2Dimensional Shape</title>
+      <xi:include href="xml/crankshape2.xml"/>
+      <xi:include href="xml/crankcpolygon.xml"/>
+    </chapter>
+  </part>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>

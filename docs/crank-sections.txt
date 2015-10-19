@@ -1957,3 +1957,17 @@ crank_bench_result_case_process
 CrankBenchResultSuite
 CrankBenchResultCase
 </SECTION>
+
+
+
+<SECTION>
+<FILE>crankshape2</FILE>
+crank_shape2_approximate_polygon
+CrankShape2
+CrankShape2Class
+</SECTION>
+
+<SECTION>
+<FILE>crankcpolygon</FILE>
+CrankCPolygon
+</SECTION>

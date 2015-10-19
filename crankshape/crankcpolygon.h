@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKCPOLYGON_H
+#define CRANKCPOLYGON_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,11 +22,26 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankcpolygon.h cannot be included directly.
+#endif
 
-#include "crankshape2.h"
-#include "crankcpolygon.h"
+#include <glib.h>
+#include <glib-object.h>
 
-#undef _CRANKSHAPE_INSIDE
+G_BEGIN_DECLS
+//////// Type declaration //////////////////////////////////////////////////////
 
-#endif /* CRANKSHAPE_H */
+#define CRANK_TYPE_CPOLYGON crank_cpolygon_get_type ()
+
+G_DECLARE_FINAL_TYPE (CrankCPolygon, crank_cpolygon, CRANK, CPOLYGON, CrankShape2)
+
+
+
+//////// Function prototypes ///////////////////////////////////////////////////
+
+
+
+G_END_DECLS
+
+#endif 

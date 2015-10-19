@@ -29,3 +29,8 @@ crank_mat_float4_get_type
 crank_mat_float_n_get_type
 
 crank_digraph_get_type
+
+
+
+crank_shape2_get_type
+crank_cpolygon_get_type

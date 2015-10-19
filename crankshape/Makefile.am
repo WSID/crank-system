@@ -6,21 +6,25 @@ lib_LTLIBRARIES = \
 		libcrankshape.la
 
 shapeinclude_HEADERS = \
-		crankshape.h
+		crankshape.h \
+		crankshape2.h \
+		crankcpolygon.h
 
 
 
 # crankbase.la
 libcrankshape_la_CFLAGS = \
-		$(CRANK_BASE_CFLAGS) \
+		$(CRANK_SHAPE_CFLAGS) \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
 		-DLOCALEDIR=\"$(localedir)\" \
 		-lm
 
 libcrankshape_la_LIBADD = \
-		$(CRANK_BASE_LIBS)
+		$(CRANK_SHAPE_LIBS)
 
-libcrankshape_la_SOURCES=
+libcrankshape_la_SOURCES= \
+		crankshape2.c \
+		crankcpolygon.c
 
 
 
@@ -42,7 +46,7 @@ CrankShape_0_0_gir_SCANNERFLAGS= \
 CrankShape_0_0_gir_INCLUDES= GObject-2.0
 CrankShape_0_0_gir_CFLAGS= $(CRANK_SHAPE_CFLAGS) -lm
 CrankShape_0_0_gir_LIBS= libcrankshape.la
-CrankShape_0_0_gir_FILES= $(libcrankshape_la_SOURCES) $(include_HEADERS)
+CrankShape_0_0_gir_FILES= $(libcrankshape_la_SOURCES) $(shapeinclude_HEADERS)
 
 INTROSPECTION_GIRS+= CrankShape-0.0.gir
 
