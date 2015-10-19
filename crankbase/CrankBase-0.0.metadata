@@ -103,6 +103,8 @@ Permutation 		struct=true
 .shuffle_sarray		skip=false
 ._vala_shuffle_array_*	skip=false	name="_vala_(.+)"
 
+iter*_init*			skip
+
 permutation_init*	skip
 
 
