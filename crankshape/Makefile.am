@@ -15,12 +15,15 @@ shapeinclude_HEADERS = \
 # crankbase.la
 libcrankshape_la_CFLAGS = \
 		$(CRANK_SHAPE_CFLAGS) \
+		-I$(top_srcdir)/crankbase \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
 		-DLOCALEDIR=\"$(localedir)\" \
 		-lm
 
 libcrankshape_la_LIBADD = \
 		$(CRANK_SHAPE_LIBS)
+		$(CRANK_SHAPE_LIBS) \
+		$(top_srcdir)/crankbase/libcrankbase.la
 
 libcrankshape_la_SOURCES= \
 		crankshape2.c \
@@ -36,6 +39,8 @@ if HAVE_INTROSPECTION
 INTROSPECTION_GIRS=
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --add-include-path=$(top_builddir)/crankbase --warn-all
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=$(top_builddir)/crankbase
 
 CrankShape-0.0.gir: libcrankshape.la
 
@@ -45,6 +50,8 @@ CrankShape_0_0_gir_SCANNERFLAGS= \
 
 CrankShape_0_0_gir_INCLUDES= GObject-2.0
 CrankShape_0_0_gir_CFLAGS= $(CRANK_SHAPE_CFLAGS) -lm
+CrankShape_0_0_gir_INCLUDES= GObject-2.0 CrankBase-0.0
+CrankShape_0_0_gir_CFLAGS= $(CRANK_SHAPE_CFLAGS) -lm -I$(top_srcdir)/crankbase
 CrankShape_0_0_gir_LIBS= libcrankshape.la
 CrankShape_0_0_gir_FILES= $(libcrankshape_la_SOURCES) $(shapeinclude_HEADERS)
 
@@ -66,6 +73,9 @@ if ENABLE_VAPIGEN
 
 VAPIGEN_VAPIS= crank-shape-0.0.vapi
 
+crank_shape_0_0_DEPS=crank-base-0.0
+crank_shape_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase
+crank_shape_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase
 crank_shape_0_0_vapi_METADATADIRS= $(srcdir)
 crank_shape_0_0_vapi_FILES= CrankShape-0.0.gir
 
