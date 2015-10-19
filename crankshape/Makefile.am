@@ -7,6 +7,7 @@ lib_LTLIBRARIES = \
 
 shapeinclude_HEADERS = \
 		crankshape.h \
+		cranktrans.h \
 		crankshape2.h \
 		crankcpolygon.h
 
@@ -21,11 +22,11 @@ libcrankshape_la_CFLAGS = \
 		-lm
 
 libcrankshape_la_LIBADD = \
-		$(CRANK_SHAPE_LIBS)
 		$(CRANK_SHAPE_LIBS) \
 		$(top_srcdir)/crankbase/libcrankbase.la
 
 libcrankshape_la_SOURCES= \
+		cranktrans.c \
 		crankshape2.c \
 		crankcpolygon.c
 
@@ -37,8 +38,6 @@ libcrankshape_la_SOURCES= \
 if HAVE_INTROSPECTION
 
 INTROSPECTION_GIRS=
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
-INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --add-include-path=$(top_builddir)/crankbase --warn-all
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=$(top_builddir)/crankbase
 
@@ -48,8 +47,6 @@ CrankShape_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
 		--identifier-prefix="Crank"
 
-CrankShape_0_0_gir_INCLUDES= GObject-2.0
-CrankShape_0_0_gir_CFLAGS= $(CRANK_SHAPE_CFLAGS) -lm
 CrankShape_0_0_gir_INCLUDES= GObject-2.0 CrankBase-0.0
 CrankShape_0_0_gir_CFLAGS= $(CRANK_SHAPE_CFLAGS) -lm -I$(top_srcdir)/crankbase
 CrankShape_0_0_gir_LIBS= libcrankshape.la
