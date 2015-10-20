@@ -65,7 +65,7 @@ typelib_DATA= $(INTROSPECTION_GIRS:.gir=.typelib)
 
 
 # Vapigen
-#EXTRA_DIST=CrankShape-0.0.metadata crankshape-custom.vala
+EXTRA_DIST=CrankShape-0.0.metadata CrankShape-0.0-custom.vala
 
 if ENABLE_VAPIGEN
 -include $(VAPIGEN_MAKEFILE)
@@ -76,7 +76,7 @@ crank_shape_0_0_vapi_DEPS=crank-base-0.0
 crank_shape_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase
 crank_shape_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase
 crank_shape_0_0_vapi_METADATADIRS= $(srcdir)
-crank_shape_0_0_vapi_FILES= CrankShape-0.0.gir
+crank_shape_0_0_vapi_FILES= CrankShape-0.0.gir CrankShape-0.0-custom.vala
 
 vapidir= $(datadir)/vala/vapi
 vapi_DATA= $(VAPIGEN_VAPIS)

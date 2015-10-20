@@ -1,0 +1,9 @@
+* cheader_filename = "crankshape.h"
+
+Euler           struct=true
+euler_init*     skip=true
+
+Trans*          struct=true
+trans*_init*    skip=true
+
+Shape2.approximate_polygon abstract=true
