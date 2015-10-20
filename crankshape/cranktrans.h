@@ -50,9 +50,9 @@ typedef struct _CrankTrans2 CrankTrans2;
  * Represents translation.
  */
 struct _CrankTrans2 {
-  CrankVecFloat2        translate;
-  gfloat                rotate;
-  gfloat                scale;
+  CrankVecFloat2        mtrans;
+  gfloat                mrot;
+  gfloat                mscl;
 };
 
 //////// Initialization functions. /////////////////////////////////////////////////

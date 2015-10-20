@@ -40,12 +40,33 @@
  * shear in play.
  */
 
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static void     _crank_trans2_rotv2 (CrankVecFloat2  *a,
+                                     const gfloat     b,
+                                     CrankVecFloat2  *r);
+
+static void     _crank_trans2_rotv2cs (CrankVecFloat2  *a,
+                                       const gfloat     s,
+                                       const gfloat     c,
+                                       CrankVecFloat2  *r);
+
+static void     _crank_trans2_rotv2_inplace (CrankVecFloat2  *a,
+                                             const gfloat     b);
+
+static void     _crank_trans2_rotv2cs_inplace (CrankVecFloat2  *a,
+                                               const gfloat     s,
+                                               const gfloat     c);
+
+
+
 //////// Type definition ///////////////////////////////////////////////////////
 
 G_DEFINE_BOXED_TYPE (CrankTrans2, crank_trans2, crank_trans2_dup, g_free);
 
 
-//////// Initialization functions. /////////////////////////////////////////////////
+//////// Initialization functions. /////////////////////////////////////////////
 
 /**
  * crank_trans2_init:
@@ -56,10 +77,10 @@ G_DEFINE_BOXED_TYPE (CrankTrans2, crank_trans2, crank_trans2_dup, g_free);
 void
 crank_trans2_init (CrankTrans2 *trans)
 {
-  crank_vec_float2_init_fill (& trans->translate, 0.0f);
+  crank_vec_float2_init_fill (& trans->mtrans, 0.0f);
 
-  trans->rotate = 0.0f;
-  trans->scale = 1.0f;
+  trans->mrot = 0.0f;
+  trans->mscl = 1.0f;
 }
 
 /**
@@ -73,13 +94,13 @@ void
 crank_trans2_init_from_matrix (CrankTrans2    *trans,
                                CrankMatFloat3 *mat)
 {
-  trans->translate.x = mat->m02;
-  trans->translate.y = mat->m12;
-  trans->rotate = atan2 (mat->m10, mat->m00);
-  trans->scale = sqrtf ((mat->m00 * mat->m00) + (mat->m10 * mat->m10));
+  trans->mtrans.x = mat->m02;
+  trans->mtrans.y = mat->m12;
+  trans->mrot = atan2 (mat->m10, mat->m00);
+  trans->mscl = sqrtf ((mat->m00 * mat->m00) + (mat->m10 * mat->m10));
 
-  if ((trans->scale * mat->m00) < 0.0f)
-    trans->scale = -trans->scale;
+  if ((trans->mscl * mat->m00) < 0.0f)
+    trans->mscl = -trans->mscl;
 }
 
 
@@ -97,11 +118,11 @@ crank_trans2_to_matrix (CrankTrans2    *trans,
   gfloat ss;
   gfloat sc;
 
-  ss = trans->scale * sinf (trans->rotate);
-  sc = trans->scale * cosf (trans->rotate);
+  ss = trans->mscl * sinf (trans->mrot);
+  sc = trans->mscl * cosf (trans->mrot);
 
-  crank_mat_float3_init (mat,   sc, -ss, trans->translate.x,
-                                ss, sc,  trans->translate.y,
+  crank_mat_float3_init (mat,   sc, -ss, trans->mtrans.x,
+                                ss, sc,  trans->mtrans.y,
                                 0.0f, 0.0f, 1.0f);
 }
 
@@ -117,9 +138,9 @@ void
 crank_trans2_copy (CrankTrans2 *trans,
                    CrankTrans2 *other)
 {
-  crank_vec_float2_copy (& trans->translate, & other->translate);
-  trans->rotate = other->rotate;
-  trans->scale  = other->scale;
+  crank_vec_float2_copy (& trans->mtrans, & other->mtrans);
+  trans->mrot = other->mrot;
+  trans->mscl  = other->mscl;
 }
 
 /**
@@ -155,9 +176,9 @@ crank_trans2_translate (CrankTrans2    *a,
                         CrankVecFloat2 *b,
                         CrankTrans2    *r)
 {
-  crank_vec_float2_add (& a->translate, b, & r->translate);
-  r->rotate = a->rotate;
-  r->scale = a->scale;
+  crank_vec_float2_add (& a->mtrans, b, & r->mtrans);
+  r->mrot = a->mrot;
+  r->mscl = a->mscl;
 }
 
 /**
@@ -171,7 +192,7 @@ void
 crank_trans2_translate_self (CrankTrans2    *a,
                              CrankVecFloat2 *b)
 {
-  crank_vec_float2_add_self (& a->translate, b);
+  crank_vec_float2_add_self (& a->mtrans, b);
 }
 
 
@@ -188,24 +209,11 @@ crank_trans2_rotate (CrankTrans2  *a,
                      const gfloat  b,
                      CrankTrans2  *r)
 {
-  gfloat s;
-  gfloat c;
+  _crank_trans2_rotv2 (& a->mtrans, b, & r->mtrans);
 
-  gfloat mx;
-  gfloat my;
+  r->mrot = a->mrot + b;
 
-  s = sinf (b);
-  c = cosf (b);
-
-  mx = a->translate.x;
-  my = a->translate.y;
-
-  r->translate.x = mx * c - my * s;
-  r->translate.y = mx * s + my * c;
-
-  r->rotate = a->rotate + b;
-
-  r->scale = a->scale;
+  r->mscl = a->mscl;
 }
 
 /**
@@ -219,22 +227,8 @@ void
 crank_trans2_rotate_self (CrankTrans2  *a,
                           const gfloat  b)
 {
-  gfloat s;
-  gfloat c;
-
-  gfloat mx;
-  gfloat my;
-
-  s = sinf (b);
-  c = cosf (b);
-
-  mx = a->translate.x;
-  my = a->translate.y;
-
-  a->translate.x = mx * c - my * s;
-  a->translate.y = mx * s + my * c;
-
-  a->rotate += b;
+  _crank_trans2_rotv2_inplace (& a->mtrans, b);
+  a->mrot += b;
 }
 
 /**
@@ -250,9 +244,9 @@ crank_trans2_scale (CrankTrans2  *a,
                     const gfloat  b,
                     CrankTrans2  *r)
 {
-  crank_vec_float2_muls (& a->translate, b, & r->translate);
-  r->rotate = a->rotate;
-  r->scale = a->scale * b;
+  crank_vec_float2_muls (& a->mtrans, b, & r->mtrans);
+  r->mrot = a->mrot;
+  r->mscl = a->mscl * b;
 }
 
 /**
@@ -266,8 +260,8 @@ void
 crank_trans2_scale_self (CrankTrans2  *a,
                          const gfloat  b)
 {
-  crank_vec_float2_muls_self (& a->translate, b);
-  a->scale *= b;
+  crank_vec_float2_muls_self (& a->mtrans, b);
+  a->mscl *= b;
 }
 
 /**
@@ -281,23 +275,11 @@ void
 crank_trans2_inverse (CrankTrans2 *a,
                       CrankTrans2 *r)
 {
-  gfloat s;
-  gfloat c;
+  _crank_trans2_rotv2 (& a->mtrans, - a->mrot, & r->mtrans);
+  crank_vec_float2_divs_self (& r->mtrans, a->mscl);
 
-  gfloat mx;
-  gfloat my;
-
-  s = sinf (a->rotate);
-  c = cosf (a->rotate);
-
-  mx = a->translate.x / a->scale;
-  my = a->translate.y / a->scale;
-
-  r->translate.x = -mx * c - my * s;
-  r->translate.y =  mx * s - my * c;
-
-  r->rotate = - a->rotate;
-  r->scale = 1 / a->scale;
+  r->mrot = - a->mrot;
+  r->mscl = 1 / a->mscl;
 }
 
 /**
@@ -309,23 +291,11 @@ crank_trans2_inverse (CrankTrans2 *a,
 void
 crank_trans2_inverse_self (CrankTrans2 *a)
 {
-  gfloat s;
-  gfloat c;
+  _crank_trans2_rotv2_inplace (& a->mtrans, - a->mrot);
+  crank_vec_float2_divs_self (& a->mtrans, a->mscl);
 
-  gfloat mx;
-  gfloat my;
-
-  s = sinf (a->rotate);
-  c = cosf (a->rotate);
-
-  mx = a->translate.x / a->scale;
-  my = a->translate.y / a->scale;
-
-  a->translate.x = -mx * c - my * s;
-  a->translate.y =  mx * s - my * c;
-
-  a->rotate = - a->rotate;
-  a->scale = 1 / a->scale;
+  a->mrot = - a->mrot;
+  a->mscl = 1 / a->mscl;
 }
 
 
@@ -342,23 +312,12 @@ crank_trans2_compose (CrankTrans2 *a,
                       CrankTrans2 *b,
                       CrankTrans2 *r)
 {
-  gfloat s;
-  gfloat c;
+  _crank_trans2_rotv2 (& b->mtrans, a->mrot, & r->mtrans);
+  crank_vec_float2_muls_self (& r->mtrans, a->mscl);
+  crank_vec_float2_add_self (& r->mtrans, & a->mtrans);
 
-  gfloat mx;
-  gfloat my;
-
-  s = sinf (a->rotate);
-  c = cosf (a->rotate);
-
-  mx = b->translate.x * a->scale;
-  my = b->translate.y * a->scale;
-
-  r->translate.x = a->translate.x + (mx * c - my * s);
-  r->translate.y = a->translate.y + (mx * s + my * c);
-
-  r->rotate = a->rotate + b->rotate;
-  r->scale = a->scale * b->scale;
+  r->mrot = a->mrot + b->mrot;
+  r->mscl = a->mscl * b->mscl;
 }
 
 /**
@@ -372,23 +331,15 @@ void
 crank_trans2_compose_self (CrankTrans2 *a,
                            CrankTrans2 *b)
 {
-  gfloat s;
-  gfloat c;
+  CrankVecFloat2 mtrans;
+  
+  _crank_trans2_rotv2 (& b->mtrans, a->mrot, & mtrans);
+  crank_vec_float2_muls_self (& mtrans, a->mscl);
 
-  gfloat mx;
-  gfloat my;
+  crank_vec_float2_add_self (& a->mtrans, & mtrans);
 
-  s = sinf (a->rotate);
-  c = cosf (a->rotate);
-
-  mx = b->translate.x * a->scale;
-  my = b->translate.y * a->scale;
-
-  a->translate.x += (mx * c - my * s);
-  a->translate.y += (mx * s + my * c);
-
-  a->rotate += b->rotate;
-  a->scale *= b->scale;
+  a->mrot += b->mrot;
+  a->mscl *= b->mscl;
 }
 
 //////// Transformation ////////////////////////////////////////////////////////
@@ -406,15 +357,54 @@ crank_trans2_transv (CrankTrans2    *a,
                      CrankVecFloat2 *b,
                      CrankVecFloat2 *r)
 {
-  gfloat s;
-  gfloat c;
+  _crank_trans2_rotv2 (& a->mtrans, a->mrot, r);
+  
+  crank_vec_float2_muls_self (r, a->mscl);
+  crank_vec_float2_add_self (r, & a->mtrans);
+}
 
-  s = sinf (a->rotate);
-  c = cosf (a->rotate);
 
-  r->x = a->translate.x * c - a->translate.y * s;
-  r->y = a->translate.x * s + a->translate.y * c;
 
-  crank_vec_float2_muls_self (r, a->scale);
-  crank_vec_float2_add_self (r, & a->translate);
+//////// Private functions /////////////////////////////////////////////////////
+static void
+_crank_trans2_rotv2 (CrankVecFloat2  *a,
+                     const gfloat     b,
+                     CrankVecFloat2  *r)
+{
+  gfloat s = sinf (b);
+  gfloat c = cosf (b);
+  
+  _crank_trans2_rotv2cs (a, s, c, r);
+}
+
+static void
+_crank_trans2_rotv2cs (CrankVecFloat2 *a,
+                       const gfloat    s,
+                       const gfloat    c,
+                       CrankVecFloat2 *r)
+{
+  r->x = a->x * c - a->y * s;
+  r->y = a->x * s + a->y * c;
+}
+
+static void
+_crank_trans2_rotv2_inplace (CrankVecFloat2  *a,
+                     		 const gfloat     b)
+{
+  gfloat s = sinf (b);
+  gfloat c = cosf (b);
+  
+  _crank_trans2_rotv2cs_inplace (a, s, c);
+}
+
+static void
+_crank_trans2_rotv2cs_inplace (CrankVecFloat2 *a,
+				               const gfloat    s,
+				               const gfloat    c)
+{
+  gfloat mx = a->x;
+  gfloat my = a->y;
+  
+  a->x = mx * c - my * s;
+  a->y = mx * s + my * c;
 }
