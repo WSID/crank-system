@@ -106,10 +106,15 @@ AC_CONFIG_FILES([
 		Makefile
 		crankbase/Makefile
 		crankshape/Makefile
+
 		tests/Makefile
 		tests/c/Makefile
+		tests/c/base/Makefile
 		tests/python/Makefile
+		tests/python/base/Makefile
 		tests/vala/Makefile
+		tests/vala/base/Makefile
+
 		docs/Makefile
 		bench/Makefile
 		bench/c/Makefile
