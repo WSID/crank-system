@@ -120,13 +120,13 @@ void
 crank_euler_init_from_quaternion (CrankEuler     *euler,
                                   CrankQuatFloat *quat)
 {
-  euler->yaw =   atanf (    2 * (quat->w * quat->x + quat->y * quat->z) /
-                       (1 - 2 * (quat->x * quat->x + quat->y * quat->y)) );
+  euler->yaw =   atan2f (    2 * (quat->w * quat->x + quat->y * quat->z),
+                        (1 - 2 * (quat->x * quat->x + quat->y * quat->y)) );
 
   euler->pitch = asinf (    2 * (quat->w * quat->y - quat->x * quat->z) );
 
-  euler->roll =  atanf (    2 * (quat->w * quat->z + quat->x * quat->y) /
-                       (1 - 2 * (quat->y * quat->y + quat->z * quat->z)) );
+  euler->roll =  atan2f (    2 * (quat->w * quat->z + quat->x * quat->y) ,
+                        (1 - 2 * (quat->y * quat->y + quat->z * quat->z)) );
 }
 
 /**
@@ -140,7 +140,7 @@ void
 crank_euler_init_from_matrix3 (CrankEuler     *euler,
                                CrankMatFloat3 *mat)
 {
-  euler->pitch = asinf (-mat->m02);
+  euler->pitch = asinf (mat->m02);
 
   euler->yaw =   atan2f (-mat->m01, mat->m00);
 
@@ -158,11 +158,11 @@ void
 crank_euler_init_from_matrix4 (CrankEuler     *euler,
                                CrankMatFloat4 *mat)
 {
-  euler->pitch = asinf (-mat->m02);
+  euler->pitch = asinf (mat->m02);
 
   euler->yaw =   atan2f (-mat->m01, mat->m00);
 
-  euler->roll =  atan2f (-mat->m12, mat->m22);
+  euler->roll =  atan2f (-mat->m21, mat->m22);
 }
 
 
@@ -217,19 +217,19 @@ crank_euler_to_quaternion (CrankEuler     *euler,
   gfloat pc, ps;
   gfloat rc, rs;
 
-  yc = cosf (euler->yaw);
-  ys = sinf (euler->yaw);
+  yc = cosf (euler->yaw / 2);
+  ys = sinf (euler->yaw / 2);
 
-  pc = cosf (euler->pitch);
-  ps = sinf (euler->pitch);
+  pc = cosf (euler->pitch / 2);
+  ps = sinf (euler->pitch / 2);
 
-  rc = cosf (euler->roll);
-  rs = sinf (euler->roll);
+  rc = cosf (euler->roll / 2);
+  rs = sinf (euler->roll / 2);
 
-  quat->w = yc * pc * rc - ys * ps * rs;
-  quat->x = yc * pc * rs + ys * ps * rc;
-  quat->y = yc * ps * rc - ys * pc * rs;
-  quat->z = yc * ps * rs + ys * pc * rc;
+  quat->w = yc * pc * rc + ys * ps * rs;
+  quat->x = yc * pc * rs - ys * ps * rc;
+  quat->y = yc * ps * rc + ys * pc * rs;
+  quat->z = - yc * ps * rs + ys * pc * rc;
 }
 
 /**
