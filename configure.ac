@@ -110,10 +110,13 @@ AC_CONFIG_FILES([
 		tests/Makefile
 		tests/c/Makefile
 		tests/c/base/Makefile
+		tests/c/shape/Makefile
 		tests/python/Makefile
 		tests/python/base/Makefile
+		tests/python/shape/Makefile
 		tests/vala/Makefile
 		tests/vala/base/Makefile
+		tests/vala/shape/Makefile
 
 		docs/Makefile
 		bench/Makefile
