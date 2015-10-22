@@ -47,28 +47,28 @@
  *
  * ## Condition to represent rotation.
  * Euler angle represents via 3 rotations, It always represents a rotation.
- *
- * ## Initialize by rotation.
- *
- * TODO add functions.
- *
- *
- * ## Getting rotation attributes.
- *
- * TODO add functions.
- *
- *
- * ## Rotating a #CrankVecFloat3.
- *
- * TODO add functions
- *
- *
- * ## Composited Rotations and inverted rotations.
- *
- * TODO add functions
  */
-
 //////// Type definition ///////////////////////////////////////////////////////
+
+GType
+crank_euler_type_get_type (void)
+{
+  static GType __g_type_define = 0;
+  static const GEnumValue enum_descriptors [] = {
+      {0, "CRANK_EULER_INVALID", "invalid"},
+      {1, "CRANK_EULER_IN_ZYX", "in-zyx"},
+      {0, NULL, NULL}
+  };
+
+  if (__g_type_define == 0)
+    {
+      __g_type_define = g_enum_register_static ("CrankEulerType",
+                                                enum_descriptors);
+    }
+
+  return __g_type_define;
+}
+
 
 G_DEFINE_BOXED_TYPE(CrankEuler, crank_euler, crank_euler_dup, g_free);
 
@@ -84,85 +84,111 @@ G_DEFINE_BOXED_TYPE(CrankEuler, crank_euler, crank_euler_dup, g_free);
 void
 crank_euler_init (CrankEuler *euler)
 {
-  euler->yaw = 0;
-  euler->pitch = 0;
-  euler->roll = 0;
+  euler->angle1 = 0;
+  euler->angle2 = 0;
+  euler->angle3 = 0;
+  euler->etype  = CRANK_EULER_INVALID;
 }
 
 /**
  * crank_euler_init_angle:
  * @euler: (out): An euler angle.
- * @yaw: Yaw angle component.
- * @pitch: Pitch angle component.
- * @roll: Roll angle component.
+ * @angle1: First rotation angle.
+ * @angle2: Second rotation angle.
+ * @angle3: Third rotation angle.
+ * @etype: Type of euler angles.
  *
  * Initialize an euler angle with components.
  */
 void
-crank_euler_init_angle (CrankEuler   *euler,
-                        const gfloat  yaw,
-                        const gfloat  pitch,
-                        const gfloat  roll)
+crank_euler_init_angle (CrankEuler     *euler,
+                        const gfloat    angle1,
+                        const gfloat    angle2,
+                        const gfloat    angle3,
+                        CrankEulerType  etype)
 {
-  euler->yaw = yaw;
-  euler->pitch = pitch;
-  euler->roll = roll;
+  euler->angle1 = angle1;
+  euler->angle2 = angle2;
+  euler->angle3 = angle3;
+  euler->etype = etype;
 }
 
 /**
  * crank_euler_init_from_quaternion:
  * @euler: (out): An euler angle.
  * @quat: A Quaternion represents rotation.
+ * @etype: Type of euler angles.
  *
  * Initialize an euler angle with quaternion.
  */
 void
 crank_euler_init_from_quaternion (CrankEuler     *euler,
-                                  CrankQuatFloat *quat)
+                                  CrankQuatFloat *quat,
+                                  CrankEulerType  etype)
 {
-  euler->yaw =   atan2f (    2 * (quat->w * quat->x + quat->y * quat->z),
-                        (1 - 2 * (quat->x * quat->x + quat->y * quat->y)) );
+  // TODO: support other etype.
+  switch (etype)
+    {
+    case CRANK_EULER_IN_ZYX:
+      euler->angle1 = atan2f (    2 * (quat->w * quat->x + quat->y * quat->z),
+                              (1 - 2 * (quat->x * quat->x + quat->y * quat->y)) );
 
-  euler->pitch = asinf (    2 * (quat->w * quat->y - quat->x * quat->z) );
+      euler->angle2 = asinf (    2 * (quat->w * quat->y - quat->x * quat->z) );
 
-  euler->roll =  atan2f (    2 * (quat->w * quat->z + quat->x * quat->y) ,
-                        (1 - 2 * (quat->y * quat->y + quat->z * quat->z)) );
+      euler->angle3 = atan2f (    2 * (quat->w * quat->z + quat->x * quat->y) ,
+                              (1 - 2 * (quat->y * quat->y + quat->z * quat->z)) );
+      break;
+
+    case CRANK_EULER_INVALID:
+    default:
+      euler->angle1 = 0.0f;
+      euler->angle2 = 0.0f;
+      euler->angle3 = 0.0f;
+      g_warning ("Invalid EulerType: %d", (gint) etype);
+      break;
+    }
+
+  euler->etype = etype;
 }
 
 /**
  * crank_euler_init_from_matrix3:
  * @euler: (out): An euler angle.
  * @mat: A matrix represents a rotation.
+ * @etype: Type of euler angles.
  *
  * Initialize an euler angle with matrix.
  */
 void
 crank_euler_init_from_matrix3 (CrankEuler     *euler,
-                               CrankMatFloat3 *mat)
+                               CrankMatFloat3 *mat,
+                               CrankEulerType  etype)
 {
-  euler->pitch = asinf (mat->m02);
+  euler->angle1 = asinf (mat->m02);
 
-  euler->yaw =   atan2f (-mat->m01, mat->m00);
+  euler->angle2 = atan2f (-mat->m01, mat->m00);
 
-  euler->roll =  atan2f (-mat->m12, mat->m22);
+  euler->angle3 = atan2f (-mat->m12, mat->m22);
 }
 
 /**
  * crank_euler_init_from_matrix4:
  * @euler: (out): An euler angle.
  * @mat: A matrix represents a rotation.
+ * @etype: Type of euler angles.
  *
  * Initialize an euler angle with matrix.
  */
 void
 crank_euler_init_from_matrix4 (CrankEuler     *euler,
-                               CrankMatFloat4 *mat)
+                               CrankMatFloat4 *mat,
+                               CrankEulerType  etype)
 {
-  euler->pitch = asinf (mat->m02);
+  euler->angle1 = asinf (mat->m02);
 
-  euler->yaw =   atan2f (-mat->m01, mat->m00);
+  euler->angle2 = atan2f (-mat->m01, mat->m00);
 
-  euler->roll =  atan2f (-mat->m21, mat->m22);
+  euler->angle3 = atan2f (-mat->m21, mat->m22);
 }
 
 
@@ -178,9 +204,10 @@ void
 crank_euler_copy (CrankEuler *euler,
                   CrankEuler *other)
 {
-  other->pitch = euler->pitch;
-  other->yaw   = euler->yaw;
-  other->roll  = euler->roll;
+  other->angle1 = euler->angle1;
+  other->angle2 = euler->angle2;
+  other->angle3 = euler->angle3;
+  other->etype = euler->etype;
 }
 
 /**
@@ -192,7 +219,7 @@ crank_euler_copy (CrankEuler *euler,
  * Returns: (trnasfer full): A duplicated euler angle.
  */
 CrankEuler*
-crank_euler_dup (CrankEuler     *euler)
+crank_euler_dup (CrankEuler *euler)
 {
   CrankEuler *other = g_new (CrankEuler, 1);
 
@@ -217,14 +244,14 @@ crank_euler_to_quaternion (CrankEuler     *euler,
   gfloat pc, ps;
   gfloat rc, rs;
 
-  yc = cosf (euler->yaw / 2);
-  ys = sinf (euler->yaw / 2);
+  yc = cosf (euler->angle1 / 2);
+  ys = sinf (euler->angle1 / 2);
 
-  pc = cosf (euler->pitch / 2);
-  ps = sinf (euler->pitch / 2);
+  pc = cosf (euler->angle2 / 2);
+  ps = sinf (euler->angle2 / 2);
 
-  rc = cosf (euler->roll / 2);
-  rs = sinf (euler->roll / 2);
+  rc = cosf (euler->angle3 / 2);
+  rs = sinf (euler->angle3 / 2);
 
   quat->w = yc * pc * rc + ys * ps * rs;
   quat->x = yc * pc * rs - ys * ps * rc;
@@ -249,14 +276,14 @@ crank_euler_to_matrix3 (CrankEuler     *euler,
   gfloat pc, ps;
   gfloat rc, rs;
 
-  yc = cosf (euler->yaw);
-  ys = sinf (euler->yaw);
+  yc = cosf (euler->angle1);
+  ys = sinf (euler->angle1);
 
-  pc = cosf (euler->pitch);
-  ps = sinf (euler->pitch);
+  pc = cosf (euler->angle2);
+  ps = sinf (euler->angle2);
 
-  rc = cosf (euler->roll);
-  rs = sinf (euler->roll);
+  rc = cosf (euler->angle3);
+  rs = sinf (euler->angle3);
 
   mat->m00 =   yc * pc;
   mat->m01 = - ys * pc;
@@ -288,14 +315,14 @@ crank_euler_to_matrix4 (CrankEuler     *euler,
   gfloat pc, ps;
   gfloat rc, rs;
 
-  yc = cosf (euler->yaw);
-  ys = sinf (euler->yaw);
+  yc = cosf (euler->angle1);
+  ys = sinf (euler->angle1);
 
-  pc = cosf (euler->pitch);
-  ps = sinf (euler->pitch);
+  pc = cosf (euler->angle2);
+  ps = sinf (euler->angle2);
 
-  rc = cosf (euler->roll);
-  rs = sinf (euler->roll);
+  rc = cosf (euler->angle3);
+  rs = sinf (euler->angle3);
 
   mat->m00 =   yc * pc;
   mat->m01 = - ys * pc;

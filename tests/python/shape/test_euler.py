@@ -50,26 +50,39 @@ class TestEuler(unittest.TestCase):
 
 	def test_from_quat (self):
 		quat = CrankBase.QuatFloat.init(0.84462, 0.19134, 0.46194, 0.19134)
-		euler = CrankShape.Euler.init_from_quaternion (quat)
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat,
+				CrankShape.EulerType.IN_ZYX )
 
-		self.assertFloat (euler.yaw, math.pi / 4)
-		self.assertFloat (euler.pitch, math.pi / 4)
-		self.assertFloat (euler.roll, math.pi / 4)
+		print ("Quat" ,euler.angle1, euler.angle2, euler.angle3)
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 4)
+		self.assertFloat (euler.angle3, math.pi / 4)
 
 	def test_from_from_mat (self):
 		mat = CrankBase.MatFloat3.init(
 				0.5000, -0.5000,  0.7071,
 				0.8536,  0.1464, -0.5000,
 				0.1464,  0.8536,  0.5000)
-		euler = CrankShape.Euler.init_from_matrix3 (mat)
+		euler = CrankShape.Euler.init_from_matrix3 (
+				mat,
+				CrankShape.EulerType.IN_ZYX )
 
-		self.assertFloat (euler.yaw, math.pi / 4)
-		self.assertFloat (euler.pitch, math.pi / 4)
-		self.assertFloat (euler.roll, math.pi / 4)
+		print ("Mat" ,euler.angle1, euler.angle2, euler.angle3)
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 4)
+		self.assertFloat (euler.angle3, math.pi / 4)
 
 	def test_to_quat (self):
-		euler = CrankShape.Euler.init_angle (math.pi / 4, math.pi / 4, math.pi / 4)
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 4,
+				math.pi / 4,
+				CrankShape.EulerType.IN_ZYX )
 		quat = euler.to_quaternion ()
+
 
 		self.assertFloat (quat.w, 0.84462)
 		self.assertFloat (quat.x, 0.19134)
@@ -77,7 +90,11 @@ class TestEuler(unittest.TestCase):
 		self.assertFloat (quat.z, 0.19134)
 
 	def test_to_mat (self):
-		euler = CrankShape.Euler.init_angle (math.pi / 4, math.pi / 4, math.pi / 4)
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 4,
+				math.pi / 4,
+				CrankShape.EulerType.IN_ZYX )
 		mat = euler.to_matrix3 ()
 
 		self.assertFloat (mat.m00,  0.5000)

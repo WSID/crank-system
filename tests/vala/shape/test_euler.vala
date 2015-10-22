@@ -45,11 +45,11 @@ void test_euler_from_quat () {
 	Crank.QuatFloat quat;
 
 	quat = Crank.QuatFloat (0.84462f, 0.19134f, 0.46194f, 0.19134f);
-	euler = Crank.Euler.from_quaternion (quat);
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_ZYX);
 
-	Crank.assert_eqfloat (euler.yaw,   (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.pitch, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.roll,  (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI_4);
 }
 
 void test_euler_from_mat () {
@@ -59,17 +59,18 @@ void test_euler_from_mat () {
 	mat = Crank.MatFloat3 (0.5000f, -0.5000f,  0.7071f,
 						   0.8536f,  0.1464f, -0.5000f,
 						   0.1464f,  0.8536f,  0.5000f);
-	euler = Crank.Euler.from_matrix3 (mat);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_ZYX);
 
-	Crank.assert_eqfloat (euler.yaw,   (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.pitch, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.roll,  (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI_4);
 }
 
 void test_euler_to_quat () {
 	Crank.Euler euler = Crank.Euler.angle ((float)Math.PI_4,
 											(float)Math.PI_4,
-											(float)Math.PI_4);
+											(float)Math.PI_4,
+											Crank.EulerType.IN_ZYX);
 	Crank.QuatFloat quat = euler.to_quaternion ();
 
 	Crank.assert_eqfloat (quat.w, 0.84462f);
@@ -81,7 +82,8 @@ void test_euler_to_quat () {
 void test_euler_to_mat () {
 	Crank.Euler euler = Crank.Euler.angle ((float)Math.PI_4,
 											(float)Math.PI_4,
-											(float)Math.PI_4);
+											(float)Math.PI_4,
+											Crank.EulerType.IN_ZYX);
 	Crank.MatFloat3 mat = euler.to_matrix3 ();
 
 	Crank.assert_eqfloat (mat.m00,  0.5000f);
