@@ -56,9 +56,9 @@ void test_euler_from_mat () {
 	Crank.Euler euler;
 	Crank.MatFloat3 mat;
 
-	mat = Crank.MatFloat3 (0.5000f, -0.5000f,  0.7071f,
-						   0.8536f,  0.1464f, -0.5000f,
-						   0.1464f,  0.8536f,  0.5000f);
+	mat = Crank.MatFloat3 (0.5000f, -0.1464f,  0.8536f,
+						   0.5000f,  0.8536f, -0.1464f,
+						  -0.7071f,  0.5000f,  0.5000f);
 	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_ZYX);
 
 	Crank.assert_eqfloat (euler.angle1, (float)Math.PI_4);
@@ -87,12 +87,12 @@ void test_euler_to_mat () {
 	Crank.MatFloat3 mat = euler.to_matrix3 ();
 
 	Crank.assert_eqfloat (mat.m00,  0.5000f);
-	Crank.assert_eqfloat (mat.m01, -0.5000f);
-	Crank.assert_eqfloat (mat.m02, -0.7071f);
-	Crank.assert_eqfloat (mat.m10,  0.1464f);
+	Crank.assert_eqfloat (mat.m01, -0.1464f);
+	Crank.assert_eqfloat (mat.m02,  0.8536f);
+	Crank.assert_eqfloat (mat.m10,  0.5000f);
 	Crank.assert_eqfloat (mat.m11,  0.8536f);
-	Crank.assert_eqfloat (mat.m12, -0.5000f);
-	Crank.assert_eqfloat (mat.m20,  0.8536f);
-	Crank.assert_eqfloat (mat.m21,  0.1464f);
+	Crank.assert_eqfloat (mat.m12, -0.1464f);
+	Crank.assert_eqfloat (mat.m20, -0.7071f);
+	Crank.assert_eqfloat (mat.m21,  0.5000f);
 	Crank.assert_eqfloat (mat.m22,  0.5000f);
 }

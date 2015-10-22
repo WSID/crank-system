@@ -48,6 +48,11 @@ GType   crank_euler_get_type (void);
  * CrankEulerType:
  * @CRANK_EULER_INVALID: Indicates an invalid type.
  * @CRANK_EULER_IN_ZYX: Tait-Bryan angle type of z y' x''
+ * @CRANK_EULER_IN_YXZ: Tait-Bryan angle type of y x' z''
+ * @CRANK_EULER_IN_XZY: Tait-Bryan angle type of x z' y''
+ * @CRANK_EULER_IN_XYZ: Tait-Bryan angle type of x y' z''
+ * @CRANK_EULER_IN_ZXY: Tait-Bryan angle type of z x' y''
+ * @CRANK_EULER_IN_YZX: Tait-Bryan angle type of y z' x''
  *
  * Indicates type of euler angles, for which axes are rotated.
  *
@@ -58,22 +63,22 @@ GType   crank_euler_get_type (void);
 enum _CrankEulerType {
   // Tait-Bryan Angles in intrinsic rotations.
   CRANK_EULER_INVALID,
-  CRANK_EULER_IN_ZYX,
-  CRANK_EULER_IN_YXZ,
-  CRANK_EULER_IN_XZY,
+  CRANK_EULER_IN_ZYX = 1,
+  CRANK_EULER_IN_YXZ = 2,
+  CRANK_EULER_IN_XZY = 3,
 
-  CRANK_EULER_IN_XYZ,
-  CRANK_EULER_IN_ZXY,
-  CRANK_EULER_IN_YZX,
+  CRANK_EULER_IN_XYZ = 5,
+  CRANK_EULER_IN_ZXY = 6,
+  CRANK_EULER_IN_YZX = 7,
 
   // Proper Euler Angles in intrinsic rotations.
-  CRANK_EULER_IN_XYX,
-  CRANK_EULER_IN_YZY,
-  CRANK_EULER_IN_ZXZ,
+  CRANK_EULER_IN_XYX = 9,
+  CRANK_EULER_IN_YZY = 10,
+  CRANK_EULER_IN_ZXZ = 11,
 
-  CRANK_EULER_IN_YXY,
-  CRANK_EULER_IN_ZYZ,
-  CRANK_EULER_IN_XZX,
+  CRANK_EULER_IN_YXY = 13,
+  CRANK_EULER_IN_ZYZ = 14,
+  CRANK_EULER_IN_XZX = 15,
 
   // Tait-Bryan Angles in extrinsic rotations.
   CRANK_EULER_EX_XYZ = -CRANK_EULER_IN_ZYX,

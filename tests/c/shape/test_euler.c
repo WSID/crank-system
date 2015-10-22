@@ -81,9 +81,9 @@ test_euler_from_mat (void)
   CrankMatFloat3 mat;
 
   crank_mat_float3_init (&mat,
-                         0.5000f, -0.5000f,  0.7071f,
-                         0.8536f,  0.1464f, -0.5000f,
-                         0.1464f,  0.8536f,  0.5000f);
+                         0.5000f, -0.1464f,  0.8536f,
+                         0.5000f,  0.8536f, -0.1464f,
+                        -0.7071f,  0.5000f,  0.5000f);
   crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_ZYX);
 
   crank_assert_cmpfloat (euler.angle1, ==, G_PI_4);
@@ -116,12 +116,12 @@ test_euler_to_mat (void)
   crank_euler_to_matrix3 (&euler, &mat);
 
   crank_assert_cmpfloat (mat.m00, ==,  0.5000f);
-  crank_assert_cmpfloat (mat.m01, ==, -0.5000f);
-  crank_assert_cmpfloat (mat.m02, ==, -0.7071f);
-  crank_assert_cmpfloat (mat.m10, ==,  0.1464f);
+  crank_assert_cmpfloat (mat.m01, ==, -0.1464f);
+  crank_assert_cmpfloat (mat.m02, ==,  0.8536f);
+  crank_assert_cmpfloat (mat.m10, ==,  0.5000f);
   crank_assert_cmpfloat (mat.m11, ==,  0.8536f);
-  crank_assert_cmpfloat (mat.m12, ==, -0.5000f);
-  crank_assert_cmpfloat (mat.m20, ==,  0.8536f);
-  crank_assert_cmpfloat (mat.m21, ==,  0.1464f);
+  crank_assert_cmpfloat (mat.m12, ==, -0.1464f);
+  crank_assert_cmpfloat (mat.m20, ==, -0.7071f);
+  crank_assert_cmpfloat (mat.m21, ==,  0.5000f);
   crank_assert_cmpfloat (mat.m22, ==,  0.5000f);
 }

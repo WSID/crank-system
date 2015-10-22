@@ -62,9 +62,9 @@ class TestEuler(unittest.TestCase):
 
 	def test_from_from_mat (self):
 		mat = CrankBase.MatFloat3.init(
-				0.5000, -0.5000,  0.7071,
-				0.8536,  0.1464, -0.5000,
-				0.1464,  0.8536,  0.5000)
+				0.5000, -0.1464,  0.8536,
+				0.5000,  0.8536, -0.1464,
+				-0.7071,  0.5000,  0.5000)
 		euler = CrankShape.Euler.init_from_matrix3 (
 				mat,
 				CrankShape.EulerType.IN_ZYX )
@@ -98,13 +98,13 @@ class TestEuler(unittest.TestCase):
 		mat = euler.to_matrix3 ()
 
 		self.assertFloat (mat.m00,  0.5000)
-		self.assertFloat (mat.m01, -0.5000)
-		self.assertFloat (mat.m02, -0.7071)
-		self.assertFloat (mat.m10,  0.1464)
+		self.assertFloat (mat.m01, -0.1464)
+		self.assertFloat (mat.m02,  0.8536)
+		self.assertFloat (mat.m10,  0.5000)
 		self.assertFloat (mat.m11,  0.8536)
-		self.assertFloat (mat.m12, -0.5000)
-		self.assertFloat (mat.m20,  0.8536)
-		self.assertFloat (mat.m21,  0.1464)
+		self.assertFloat (mat.m12, -0.1464)
+		self.assertFloat (mat.m20, -0.7071)
+		self.assertFloat (mat.m21,  0.5000)
 		self.assertFloat (mat.m22,  0.5000)
 
 
