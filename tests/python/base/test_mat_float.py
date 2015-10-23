@@ -21,6 +21,7 @@
 # THE SOFTWARE.
 
 import unittest
+import math
 
 
 from gi.repository import GObject
@@ -222,6 +223,31 @@ class TestMatFloat(unittest.TestCase):
 		self.assertFloat (a.m01, 3)
 		self.assertFloat (a.m10, 6)
 		self.assertFloat (a.m11, 12)
+
+	def test_3_init_rot (self):
+		a = CrankBase.MatFloat3.init_urot (math.pi / 4, 0.5774, 0.5774, 0.5774)
+		self.assertFloat (a.m00,  0.8048)
+		self.assertFloat (a.m01, -0.3106)
+		self.assertFloat (a.m02,  0.5058)
+
+		self.assertFloat (a.m10,  0.5058)
+		self.assertFloat (a.m11,  0.8048)
+		self.assertFloat (a.m12, -0.3106)
+
+		self.assertFloat (a.m20, -0.3106)
+		self.assertFloat (a.m21,  0.5058)
+		self.assertFloat (a.m22,  0.8048)
+
+	def test_3_get_rot (self):
+		a = CrankBase.MatFloat3.init ( 0.8048, -0.3106,  0.5058,
+					       0.5058,  0.8048, -0.3106,
+					      -0.3106,  0.5058,  0.8048)
+		axis = a.get_raxis ()
+
+		self.assertFloat (a.get_rangle (), math.pi / 4, 0.0002)
+		self.assertFloat (axis.x, 0.5774)
+		self.assertFloat (axis.y, 0.5774)
+		self.assertFloat (axis.z, 0.5774)
 		
 	def test_n_equal (self):
 		a = CrankBase.MatFloatN.init_arr (2, 3,

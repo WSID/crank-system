@@ -57,6 +57,9 @@ static void test_2_mul (void);
 static void test_2_mixs (void);
 static void test_2_mix (void);
 
+static void test_3_init_rot (void);
+static void test_3_get_rot (void);
+
 
 static void test_n_equal (void);
 static void test_n_to_string (void);
@@ -128,6 +131,9 @@ main (gint    argc,
   g_test_add_func ("/crank/base/mat/float/2/mul",         test_2_mul);
   g_test_add_func ("/crank/base/mat/float/2/mixs",        test_2_mixs);
   g_test_add_func ("/crank/base/mat/float/2/mix",         test_2_mix);
+
+  g_test_add_func ("/crank/base/mat/float/3/rot/init",    test_3_init_rot);
+  g_test_add_func ("/crank/base/mat/float/3/rot/get",     test_3_get_rot);
 
   g_test_add_func ("/crank/base/mat/float/n/equal",       test_n_equal);
   g_test_add_func ("/crank/base/mat/float/n/to_string",   test_n_to_string);
@@ -484,6 +490,45 @@ test_2_mix (void)
   test_assert_float (r.m11, 10.0f);
 }
 
+
+static void
+test_3_init_rot (void)
+{
+  CrankMatFloat3 m;
+
+  crank_mat_float3_init_urot (&m, G_PI_4, 0.5774f, 0.5774f, 0.5774f);
+
+  crank_assert_cmpfloat (m.m00, ==,  0.8048f);
+  crank_assert_cmpfloat (m.m01, ==, -0.3106f);
+  crank_assert_cmpfloat (m.m02, ==,  0.5058f);
+
+  crank_assert_cmpfloat (m.m10, ==,  0.5058f);
+  crank_assert_cmpfloat (m.m11, ==,  0.8048f);
+  crank_assert_cmpfloat (m.m12, ==, -0.3106f);
+
+  crank_assert_cmpfloat (m.m20, ==, -0.3106f);
+  crank_assert_cmpfloat (m.m21, ==,  0.5058f);
+  crank_assert_cmpfloat (m.m22, ==,  0.8048f);
+}
+
+static void
+test_3_get_rot (void)
+{
+  CrankMatFloat3 m;
+  CrankVecFloat3 axis;
+
+  crank_mat_float3_init (&m,
+                          0.8048f, -0.3106f,  0.5058f,
+                          0.5058f,  0.8048f, -0.3106f,
+                         -0.3106f,  0.5058f,  0.8048f);
+
+  crank_assert_cmpfloat_d (crank_mat_float3_get_rangle (&m), ==, G_PI_4, 0.0002);
+
+  crank_mat_float3_get_raxis (&m, &axis);
+  crank_assert_cmpfloat (axis.x, ==,  0.5774f);
+  crank_assert_cmpfloat (axis.y, ==,  0.5774f);
+  crank_assert_cmpfloat (axis.z, ==,  0.5774f);
+}
 
 
 

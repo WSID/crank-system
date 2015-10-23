@@ -1416,6 +1416,63 @@ crank_mat_float3_init_fill (CrankMatFloat3 *mat,
 }
 
 /**
+ * crank_mat_float3_init_rot:
+ * @mat: (out): A Matrix.
+ * @angle: Angle of rotation.
+ * @axis: Axis of rotation.
+ *
+ * Initialize a matrix by rotation.
+ */
+void
+crank_mat_float3_init_rot (CrankMatFloat3 *mat,
+                           const gfloat    angle,
+                           CrankVecFloat3 *axis)
+{
+  CrankVecFloat3 uvec;
+  gfloat s, c, c1;
+
+  crank_vec_float3_unit (axis, &uvec);
+
+  s = sinf (angle);
+  c = cosf (angle);
+  c1 = 1 - c;
+
+  mat->m00 = uvec.x * uvec.x * c1 + c;
+  mat->m01 = uvec.x * uvec.y * c1 - uvec.z * s;
+  mat->m02 = uvec.x * uvec.z * c1 + uvec.y * s;
+
+  mat->m10 = uvec.y * uvec.x * c1 + uvec.z * s;
+  mat->m11 = uvec.y * uvec.y * c1 + c;
+  mat->m12 = uvec.y * uvec.z * c1 - uvec.x * s;
+
+  mat->m20 = uvec.z * uvec.x * c1 - uvec.y * s;
+  mat->m21 = uvec.z * uvec.y * c1 + uvec.x * s;
+  mat->m22 = uvec.z * uvec.z * c1 + c;
+}
+
+/**
+ * crank_mat_float3_init_urot:
+ * @mat: (out): A Matrix.
+ * @angle: Angle of rotation.
+ * @axis_x: X coord of axis.
+ * @axis_y: Y coord of axis.
+ * @axis_z: Z coord of axis.
+ *
+ * Initialize a matrix by rotation.
+ */
+void
+crank_mat_float3_init_urot (CrankMatFloat3 *mat,
+                           const gfloat    angle,
+                           const gfloat    axis_x,
+                           const gfloat    axis_y,
+                           const gfloat    axis_z)
+{
+  CrankVecFloat3 axis = {axis_x, axis_y, axis_z};
+
+  crank_mat_float3_init_rot (mat, angle, &axis);
+}
+
+/**
  * crank_mat_float3_copy:
  * @mat: A Matrix.
  * @other: (out): Another matrix.
@@ -1752,6 +1809,50 @@ crank_mat_float3_get_adj (CrankMatFloat3 *mat,
   crank_mat_float3_get_cof (mat, r);
   crank_mat_float3_transpose_self (r);
 }
+
+
+/**
+ * crank_mat_float3_get_rangle:
+ * @mat: A Matrix.
+ *
+ * Gets rotation angle of rotation that @mat represents.
+ *
+ * Returns: rotation angle, in radian.
+ */
+gfloat
+crank_mat_float3_get_rangle (CrankMatFloat3 *mat)
+{
+  CrankVecFloat3 a;
+  gfloat t;
+
+  a.x = mat->m21 - mat->m12;
+  a.y = mat->m02 - mat->m20;
+  a.z = mat->m10 - mat->m01;
+  t = mat->m00 + mat->m11 + mat->m22 - 1;
+
+  return atan2f (crank_vec_float3_get_magn (&a), t);
+}
+
+/**
+ * crank_mat_float3_get_raxis:
+ * @mat: A Matrix.
+ * @axis: (out): Rotation axis, as unit vector.
+ *
+ * Gets rotation axis of rotation that @mat represents.
+ */
+void
+crank_mat_float3_get_raxis (CrankMatFloat3 *mat,
+                            CrankVecFloat3 *axis)
+{
+  CrankVecFloat3 a;
+
+  a.x = mat->m21 - mat->m12;
+  a.y = mat->m02 - mat->m20;
+  a.z = mat->m10 - mat->m01;
+
+  crank_vec_float3_unit (&a, axis);
+}
+
 
 /**
  * crank_mat_float3_neg:
@@ -2610,6 +2711,72 @@ crank_mat_float4_init_fill (CrankMatFloat4 *mat,
 }
 
 /**
+ * crank_mat_float4_init_rot:
+ * @mat: (out): A Matrix.
+ * @angle: Angle of rotation.
+ * @axis: Axis of rotation.
+ *
+ * Initialize a matrix by rotation.
+ */
+void
+crank_mat_float4_init_rot (CrankMatFloat4 *mat,
+                           const gfloat    angle,
+                           CrankVecFloat3 *axis)
+{
+  CrankVecFloat3 uvec;
+  gfloat s, c, c1;
+
+  crank_vec_float3_unit (axis, &uvec);
+
+  s = sinf (angle);
+  c = cosf (angle);
+  c1 = 1 - c;
+
+  mat->m00 = uvec.x * uvec.x * c1 + c;
+  mat->m01 = uvec.x * uvec.y * c1 - uvec.z * s;
+  mat->m02 = uvec.x * uvec.z * c1 + uvec.y * s;
+  mat->m03 = 0;
+
+  mat->m10 = uvec.y * uvec.x * c1 + uvec.z * s;
+  mat->m11 = uvec.y * uvec.y * c1 + c;
+  mat->m12 = uvec.y * uvec.z * c1 - uvec.x * s;
+  mat->m13 = 0;
+
+  mat->m20 = uvec.z * uvec.x * c1 - uvec.y * s;
+  mat->m21 = uvec.z * uvec.y * c1 + uvec.x * s;
+  mat->m22 = uvec.z * uvec.z * c1 + c;
+  mat->m23 = 0;
+
+  mat->m30 = 0;
+  mat->m31 = 0;
+  mat->m32 = 0;
+  mat->m33 = 1.0f;
+}
+
+/**
+ * crank_mat_float4_init_urot:
+ * @mat: (out): A Matrix.
+ * @angle: Angle of rotation.
+ * @axis_x: X coord of axis.
+ * @axis_y: Y coord of axis.
+ * @axis_z: Z coord of axis.
+ *
+ * Initialize a matrix by rotation.
+ */
+void
+crank_mat_float4_init_urot (CrankMatFloat4 *mat,
+                           const gfloat    angle,
+                           const gfloat    axis_x,
+                           const gfloat    axis_y,
+                           const gfloat    axis_z)
+{
+  CrankVecFloat3 axis = {axis_x, axis_y, axis_z};
+
+  crank_mat_float4_init_rot (mat, angle, &axis);
+}
+
+
+/**
  * crank_mat_float4_copy:
  * @mat: A Matrix.
  * @other: (out): Another matrix.
@@ -3004,6 +3171,48 @@ crank_mat_float4_get_adj (CrankMatFloat4 *mat,
 {
   crank_mat_float4_get_cof (mat, r);
   crank_mat_float4_transpose_self (r);
+}
+
+/**
+ * crank_mat_float4_get_rangle:
+ * @mat: A Matrix.
+ *
+ * Gets rotation angle of rotation that @mat represents.
+ *
+ * Returns: rotation angle, in radian.
+ */
+gfloat
+crank_mat_float4_get_rangle (CrankMatFloat4 *mat)
+{
+  CrankVecFloat3 a;
+  gfloat t;
+
+  a.x = mat->m21 - mat->m12;
+  a.y = mat->m02 - mat->m20;
+  a.z = mat->m10 - mat->m01;
+  t = mat->m00 + mat->m11 + mat->m22 - 1;
+
+  return atan2f (crank_vec_float3_get_magn (&a), t);
+}
+
+/**
+ * crank_mat_float4_get_raxis:
+ * @mat: A Matrix.
+ * @axis: (out): Rotation axis, as unit vector.
+ *
+ * Gets rotation axis of rotation that @mat represents.
+ */
+void
+crank_mat_float4_get_raxis (CrankMatFloat4 *mat,
+                            CrankVecFloat3 *axis)
+{
+  CrankVecFloat3 a;
+
+  a.x = mat->m21 - mat->m12;
+  a.y = mat->m02 - mat->m20;
+  a.z = mat->m10 - mat->m01;
+
+  crank_vec_float3_unit (&a, axis);
 }
 
 /**

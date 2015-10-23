@@ -322,6 +322,16 @@ void            crank_mat_float3_init_diag_vec (CrankMatFloat3 *mat,
 void            crank_mat_float3_init_fill (CrankMatFloat3 *mat,
                                             const gfloat    fill);
 
+void            crank_mat_float3_init_rot (CrankMatFloat3 *mat,
+                                           const gfloat    angle,
+                                           CrankVecFloat3 *axis);
+
+void            crank_mat_float3_init_urot (CrankMatFloat3 *mat,
+                                            const gfloat    angle,
+                                            const gfloat    axis_x,
+                                            const gfloat    axis_y,
+                                            const gfloat    axis_z);
+
 void            crank_mat_float3_copy (CrankMatFloat3 *mat,
                                        CrankMatFloat3 *other);
 
@@ -384,6 +394,11 @@ void     crank_mat_float3_get_cof (CrankMatFloat3 *mat,
 
 void     crank_mat_float3_get_adj (CrankMatFloat3 *mat,
                                    CrankMatFloat3 *r);
+
+gfloat   crank_mat_float3_get_rangle (CrankMatFloat3 *mat);
+
+void     crank_mat_float3_get_raxis (CrankMatFloat3 *mat,
+                                     CrankVecFloat3 *axis);
 
 //////// Unary operations ////////
 
@@ -571,6 +586,16 @@ void            crank_mat_float4_init_diag_vec (CrankMatFloat4 *mat,
 void            crank_mat_float4_init_fill (CrankMatFloat4 *mat,
                                             const gfloat    fill);
 
+void            crank_mat_float4_init_rot (CrankMatFloat4 *mat,
+                                           const gfloat    angle,
+                                           CrankVecFloat3 *axis);
+
+void            crank_mat_float4_init_urot (CrankMatFloat4 *mat,
+                                            const gfloat    angle,
+                                            const gfloat    axis_x,
+                                            const gfloat    axis_y,
+                                            const gfloat    axis_z);
+
 void            crank_mat_float4_copy (CrankMatFloat4 *mat,
                                        CrankMatFloat4 *other);
 
@@ -633,6 +658,11 @@ void     crank_mat_float4_get_cof (CrankMatFloat4 *mat,
 
 void     crank_mat_float4_get_adj (CrankMatFloat4 *mat,
                                    CrankMatFloat4 *r);
+
+gfloat   crank_mat_float4_get_rangle (CrankMatFloat4 *mat);
+
+void     crank_mat_float4_get_raxis (CrankMatFloat4 *mat,
+                                     CrankVecFloat3 *axis);
 
 //////// Unary operations ////////
 

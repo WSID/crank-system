@@ -632,11 +632,15 @@ namespace Crank {
 		public MatFloat3.diag (float m00, float m11, float m22);
 		public MatFloat3.diag_arr (float darr[3]);
 		public MatFloat3.fill (float fill);
+		public MatFloat3.rot (float angle, Crank.VecFloat3 axis);
+		public MatFloat3.urot (float angle, float axis_x, float axis_y, float axis_z);
 
 		public float		tr { get; }
 		public float		det { get; }
 		public MatFloat3	cof { owned get; }
 		public MatFloat3	adj { owned get; }
+		public float		rangle { get; }
+		public VecFloat3    raxis { owned get; }
 	}
 
 	public struct MatFloat4 {
@@ -655,11 +659,15 @@ namespace Crank {
 		public MatFloat4.diag (float m00, float m11, float m22, float m33);
 		public MatFloat4.diag_arr (float darr[4]);
 		public MatFloat4.fill (float fill);
+		public MatFloat4.rot (float angle, Crank.VecFloat3 axis);
+		public MatFloat4.urot (float angle, float axis_x, float axis_y, float axis_z);
 
 		public float		tr { get; }
 		public float		det { get; }
 		public MatFloat4	cof { owned get; }
 		public MatFloat4	adj { owned get; }
+		public float		rangle { get; }
+		public VecFloat3    raxis { owned get; }
 	}
 
 	[CCode (	copy_function="crank_mat_float_n_copy",

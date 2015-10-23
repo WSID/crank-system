@@ -43,6 +43,9 @@ int main (string[] args) {
 	GLib.Test.add_func ("/crank/base/mat/float/2/mixs", test_2_mixs);
 	GLib.Test.add_func ("/crank/base/mat/float/2/mix", test_2_mix);
 	
+	GLib.Test.add_func ("/crank/base/mat/float/3/rot/init", test_3_init_rot);
+	GLib.Test.add_func ("/crank/base/mat/float/3/rot/get", test_3_get_rot);
+
 	GLib.Test.add_func ("/crank/base/mat/float/n/equal", test_n_equal);
 	GLib.Test.add_func ("/crank/base/mat/float/n/to_string", test_n_to_string);
 	GLib.Test.add_func ("/crank/base/mat/float/n/get", test_n_get);
@@ -277,6 +280,37 @@ private void test_2_mix () {
 	float_eq (a.m11, 10.0f);
 }
 
+
+private void test_3_init_rot () {
+	Crank.MatFloat3 a = Crank.MatFloat3.urot ((float) (Math.PI_4),
+						 					  0.5774f,
+						 					  0.5774f,
+						 					  0.5774f);
+
+	Crank.assert_eqfloat (a.m00,  0.8048f);
+	Crank.assert_eqfloat (a.m01, -0.3106f);
+	Crank.assert_eqfloat (a.m02,  0.5058f);
+
+	Crank.assert_eqfloat (a.m10,  0.5058f);
+	Crank.assert_eqfloat (a.m11,  0.8048f);
+	Crank.assert_eqfloat (a.m12, -0.3106f);
+
+	Crank.assert_eqfloat (a.m20, -0.3106f);
+	Crank.assert_eqfloat (a.m21,  0.5058f);
+	Crank.assert_eqfloat (a.m22,  0.8048f);
+}
+
+private void test_3_get_rot () {
+	Crank.MatFloat3 a = Crank.MatFloat3 (
+			 0.8048f, -0.3106f,  0.5058f,
+			 0.5058f,  0.8048f, -0.3106f,
+			-0.3106f,  0.5058f,  0.8048f);
+
+	Crank.VecFloat3 axis = a.raxis;
+
+	Crank.assert_eqfloat (a.rangle, (float) (Math.PI_4), 0.0002f);
+	Crank.assert_eq_vecfloat3_imm (axis, 0.5774f, 0.5774f, 0.5774f);
+}
 
 
 
