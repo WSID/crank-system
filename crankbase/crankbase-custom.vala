@@ -290,7 +290,7 @@ namespace Crank {
 
 		public QuatFloat.rot			(float		angle,
 										 VecFloat3	axis	);
-		public QuatFloat.rotimm			(float		angle,
+		public QuatFloat.urot			(float		angle,
 										 float		x,
 										 float		y,
 										 float		z	);
