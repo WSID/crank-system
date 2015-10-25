@@ -60,17 +60,17 @@ crank_euler_type_get_type (void)
       {CRANK_EULER_IN_YXZ, "CRANK_EULER_IN_YXZ", "in-yxz"},
       {CRANK_EULER_IN_XZY, "CRANK_EULER_IN_XZY", "in-xzy"},
 
-      {CRANK_EULER_IN_XYZ, "CRANK_EULER_IN_ZYX", "in-xyz"},
-      {CRANK_EULER_IN_ZXY, "CRANK_EULER_IN_ZYX", "in-zxy"},
-      {CRANK_EULER_IN_YZX, "CRANK_EULER_IN_ZYX", "in-yzx"},
+      {CRANK_EULER_IN_XYZ, "CRANK_EULER_IN_XYZ", "in-xyz"},
+      {CRANK_EULER_IN_ZXY, "CRANK_EULER_IN_ZXY", "in-zxy"},
+      {CRANK_EULER_IN_YZX, "CRANK_EULER_IN_YZX", "in-yzx"},
 
       {CRANK_EULER_EX_ZYX, "CRANK_EULER_EX_ZYX", "ex-zyx"},
       {CRANK_EULER_EX_YXZ, "CRANK_EULER_EX_YXZ", "ex-yxz"},
       {CRANK_EULER_EX_XZY, "CRANK_EULER_EX_XZY", "ex-xzy"},
 
-      {CRANK_EULER_EX_XYZ, "CRANK_EULER_EX_ZYX", "ex-xyz"},
-      {CRANK_EULER_EX_ZXY, "CRANK_EULER_EX_ZYX", "ex-zxy"},
-      {CRANK_EULER_EX_YZX, "CRANK_EULER_EX_ZYX", "ex-yzx"},
+      {CRANK_EULER_EX_XYZ, "CRANK_EULER_EX_XYZ", "ex-xyz"},
+      {CRANK_EULER_EX_ZXY, "CRANK_EULER_EX_ZXY", "ex-zxy"},
+      {CRANK_EULER_EX_YZX, "CRANK_EULER_EX_YZX", "ex-yzx"},
       {0, NULL, NULL}
   };
 
