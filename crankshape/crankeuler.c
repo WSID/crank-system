@@ -160,21 +160,39 @@ crank_euler_init_from_quaternion (CrankEuler     *euler,
   switch (inetype)
     {
     case CRANK_EULER_IN_ZYX:
-      euler->angle1 = atan2f (2 * (wx + yz), (1 - 2 * (xx + yy)) );
+      euler->angle1 = atan2f (2 * (wz + xy), (1 - 2 * (yy + zz)) );
       euler->angle2 = asinf  (2 * (wy - xz) );
-      euler->angle3 = atan2f (2 * (wz + xy), (1 - 2 * (yy + zz)) );
+      euler->angle3 = atan2f (2 * (wx + yz), (1 - 2 * (xx + yy)) );
       break;
 
     case CRANK_EULER_IN_YXZ:
-      euler->angle1 = atan2f (2 * (xz + wy), (1 - 2 * (yy + zz)) );
-      euler->angle2 = asinf  (2 * (xy - wz) );
-      euler->angle3 = atan2f (2 * (yz + wx), (1 - 2 * (xx + zz)) );
+      euler->angle1 = atan2f (2 * (xz + wy), (1 - 2 * (xx + yy)) );
+      euler->angle2 = asinf  (2 * (wx - yz) );
+      euler->angle3 = atan2f (2 * (xy + wz), (1 - 2 * (xx + zz)) );
       break;
 
     case CRANK_EULER_IN_XZY:
-      euler->angle1 = atan2f (2 * (xy + wz), (1 - 2 * (xx + zz)) );
-      euler->angle2 = asinf  (2 * (xy - wz) );
-      euler->angle3 = atan2f (2 * (xz + wy), (1 - 2 * (xx + yy)) );
+      euler->angle1 = atan2f (2 * (yz + wx), (1 - 2 * (xx + zz)) );
+      euler->angle2 = asinf  (2 * (wz - xy) );
+      euler->angle3 = atan2f (2 * (xz + wy), (1 - 2 * (yy + zz)) );
+      break;
+
+    case CRANK_EULER_IN_XYZ:
+      euler->angle1 = atan2f (2 * (wx - yz), (1 - 2 * (xx + yy)) );
+      euler->angle2 = asinf (2 * (wy + xz));
+      euler->angle3 = atan2f (2 * (wz - xy), (1 - 2 * (yy + zz)) );
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      euler->angle1 = atan2f (2 * (wz - xy), (1 - 2 * (xx + zz)) );
+      euler->angle2 = asinf (2 * (wx + yz));
+      euler->angle3 = atan2f (2 * (wy - xz), (1 - 2 * (xx + yy)) );
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      euler->angle1 = atan2f (2 * (wy - xz), (1 - 2 * (yy + zz)) );
+      euler->angle2 = asinf (2 * (xy + wz));
+      euler->angle3 = atan2f (2 * (wx - yz), (1 - 2 * (xx + zz)) );
       break;
 
     default:
@@ -213,21 +231,39 @@ crank_euler_init_from_matrix3 (CrankEuler     *euler,
   switch (inetype)
     {
     case CRANK_EULER_IN_ZYX:
+      euler->angle1 = atan2f (mat->m10, mat->m00);
       euler->angle2 = asinf (- mat->m20);
-      euler->angle1 = atan2f (mat->m21, mat->m22);
-      euler->angle3 = atan2f (mat->m10, mat->m00);
+      euler->angle3 = atan2f (mat->m21, mat->m22);
       break;
 
     case CRANK_EULER_IN_YXZ:
-      euler->angle2 = asinf (- mat->m01);
-      euler->angle1 = atan2f (mat->m02, mat->m00);
-      euler->angle3 = atan2f (mat->m21, mat->m11);
+      euler->angle1 = atan2f (mat->m02, mat->m22);
+      euler->angle2 = asinf  (- mat->m12);
+      euler->angle3 = atan2f (mat->m10, mat->m11);
       break;
 
     case CRANK_EULER_IN_XZY:
-      euler->angle2 = asinf (- mat->m12);
-      euler->angle1 = atan2f (mat->m10, mat->m11);
-      euler->angle3 = atan2f (mat->m02, mat->m22);
+      euler->angle1 = atan2f (mat->m21, mat->m11);
+      euler->angle2 = asinf (- mat->m01);
+      euler->angle3 = atan2f (mat->m02, mat->m00);
+      break;
+
+    case CRANK_EULER_IN_XYZ:
+      euler->angle1 = atan2f (-mat->m12, mat->m22);
+      euler->angle2 = asinf (mat->m02);
+      euler->angle3 = atan2f (-mat->m01, mat->m00);
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      euler->angle1 = atan2f (-mat->m01, mat->m11);
+      euler->angle2 = asinf (mat->m21);
+      euler->angle3 = atan2f (-mat->m20, mat->m22);
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      euler->angle1 = atan2f (-mat->m20, mat->m00);
+      euler->angle2 = asinf (mat->m10);
+      euler->angle3 = atan2f (-mat->m12, mat->m11);
       break;
 
     default:
@@ -265,21 +301,39 @@ crank_euler_init_from_matrix4 (CrankEuler     *euler,
   switch (inetype)
     {
     case CRANK_EULER_IN_ZYX:
+      euler->angle1 = atan2f (mat->m10, mat->m00);
       euler->angle2 = asinf (- mat->m20);
-      euler->angle1 = atan2f (mat->m21, mat->m22);
-      euler->angle3 = atan2f (mat->m10, mat->m00);
+      euler->angle3 = atan2f (mat->m21, mat->m22);
       break;
 
     case CRANK_EULER_IN_YXZ:
-      euler->angle2 = asinf (- mat->m01);
-      euler->angle1 = atan2f (mat->m02, mat->m00);
-      euler->angle3 = atan2f (mat->m21, mat->m11);
+      euler->angle1 = atan2f (mat->m02, mat->m22);
+      euler->angle2 = asinf  (- mat->m12);
+      euler->angle3 = atan2f (mat->m10, mat->m11);
       break;
 
     case CRANK_EULER_IN_XZY:
-      euler->angle2 = asinf (- mat->m12);
-      euler->angle1 = atan2f (mat->m10, mat->m11);
-      euler->angle3 = atan2f (mat->m02, mat->m22);
+      euler->angle1 = atan2f (mat->m21, mat->m11);
+      euler->angle2 = asinf (- mat->m01);
+      euler->angle3 = atan2f (mat->m02, mat->m00);
+      break;
+
+    case CRANK_EULER_IN_XYZ:
+      euler->angle1 = atan2f (-mat->m12, mat->m22);
+      euler->angle2 = asinf (mat->m02);
+      euler->angle3 = atan2f (-mat->m01, mat->m00);
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      euler->angle1 = atan2f (-mat->m01, mat->m11);
+      euler->angle2 = asinf (mat->m21);
+      euler->angle3 = atan2f (-mat->m20, mat->m22);
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      euler->angle1 = atan2f (-mat->m20, mat->m00);
+      euler->angle2 = asinf (mat->m10);
+      euler->angle3 = atan2f (-mat->m12, mat->m11);
       break;
 
     default:
@@ -289,7 +343,6 @@ crank_euler_init_from_matrix4 (CrankEuler     *euler,
       g_warning ("Invalid EulerType: %d", (gint) etype);
       break;
     }
-
   if (etype < 0) {
     gfloat temp = euler->angle1;
     euler->angle1 = euler->angle3;
@@ -403,6 +456,27 @@ crank_euler_to_quaternion (CrankEuler     *euler,
       quat->z = c1 * s2 * c3 + s1 * c2 * s3;
       break;
 
+    case CRANK_EULER_IN_XYZ:
+      quat->w = c1 * c2 * c3 - s1 * s2 * s3;
+      quat->x = c1 * s2 * s3 + s1 * c2 * c3;
+      quat->y = c1 * s2 * c3 - s1 * c2 * s3;
+      quat->z = c1 * c2 * s3 + s1 * s2 * c3;
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      quat->w = c1 * c2 * c3 - s1 * s2 * s3;
+      quat->x = c1 * s2 * c3 - s1 * c2 * s3;
+      quat->y = c1 * c2 * s3 + s1 * s2 * c3;
+      quat->z = c1 * s2 * s3 + s1 * c2 * c3;
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      quat->w = c1 * c2 * c3 - s1 * s2 * s3;
+      quat->x = c1 * c2 * s3 + s1 * s2 * c3;
+      quat->y = c1 * s2 * s3 + s1 * c2 * c3;
+      quat->z = c1 * s2 * c3 - s1 * c2 * s3;
+      break;
+
     default:
       g_warning ("Trying to convert invalid value to quaternion.");
       break;
@@ -444,57 +518,98 @@ crank_euler_to_matrix3 (CrankEuler     *euler,
 
   inetype = ABS (euler->etype);
 
-  c1 = cosf (ina1 / 2);
-  s1 = sinf (ina1 / 2);
+  c1 = cosf (ina1);
+  s1 = sinf (ina1);
 
-  c2 = cosf (euler->angle2 / 2);
-  s2 = sinf (euler->angle2 / 2);
+  c2 = cosf (euler->angle2);
+  s2 = sinf (euler->angle2);
 
-  c3 = cosf (ina3 / 2);
-  s3 = sinf (ina3 / 2);
-
+  c3 = cosf (ina3);
+  s3 = sinf (ina3);
 
   switch (inetype)
     {
     case CRANK_EULER_IN_ZYX:
-      mat->m00 =   c2 * c3;
-      mat->m01 =   s1 * s2 * c3 - c1 * s3;
+      mat->m00 =   c1 * c2;
+      mat->m01 =   c1 * s2 * s3 - s1 * c3;
       mat->m02 =   c1 * s2 * c3 + s1 * s3;
 
-      mat->m10 =   c2 * s3;
+      mat->m10 =   s1 * c2;
       mat->m11 =   s1 * s2 * s3 + c1 * c3;
-      mat->m12 =   c1 * s2 * s3 - s1 * c3;
+      mat->m12 =   s1 * s2 * c3 - c1 * s3;
 
       mat->m20 = - s2;
-      mat->m21 =   s1 * c2;
-      mat->m22 =   c1 * c2;
+      mat->m21 =   c2 * s3;
+      mat->m22 =   c2 * c3;
       break;
 
     case CRANK_EULER_IN_YXZ:
-      mat->m00 =   c1 * c2;
-      mat->m01 = - s2;
+      mat->m00 =   s1 * s2 * s3 + c1 * c3;
+      mat->m01 =   s1 * s2 * c3 - c1 * s3;
       mat->m02 =   s1 * c2;
 
-      mat->m10 =   c1 * s2 * c3 + s1 * s3;
+      mat->m10 =   c2 * s3;
       mat->m11 =   c2 * c3;
-      mat->m12 =   s1 * s2 * c3 - c1 * s3;
+      mat->m12 = - s2;
 
       mat->m20 =   c1 * s2 * s3 - s1 * c3;
-      mat->m21 =   c2 * s3;
-      mat->m22 =   s1 * s2 * s3 + c1 * c3;
+      mat->m21 =   c1 * s2 * c3 + s1 * s3;
+      mat->m22 =   c1 * c2;
       break;
 
     case CRANK_EULER_IN_XZY:
-      mat->m00 =   s1 * s2 * s3 + c1 * c3;
-      mat->m01 =   c1 * s2 * s3 - s1 * c3;
+      mat->m00 =   c2 * c3;
+      mat->m01 = - s2;
       mat->m02 =   c2 * s3;
 
-      mat->m10 =   s1 * c2;
+      mat->m10 =   c1 * s2 * c3 + s1 * s3;
       mat->m11 =   c1 * c2;
-      mat->m12 = - s2;
+      mat->m12 =   c1 * s2 * s3 - s1 * c3;
 
       mat->m20 =   s1 * s2 * c3 - c1 * s3;
-      mat->m21 =   c1 * s2 * c3 + s1 * s3;
+      mat->m21 =   s1 * c2;
+      mat->m22 =   s1 * s2 * s3 + c1 * c3;
+      break;
+
+    case CRANK_EULER_IN_XYZ:
+      mat->m00 =   c3 * c2;
+      mat->m01 = - s3 * c2;
+      mat->m02 =   s2;
+
+      mat->m10 =   c3 * s2 * s1 + s3 * c1;
+      mat->m11 = - s3 * s2 * s1 + c3 * c1;
+      mat->m12 = - c2 * s1;
+
+      mat->m20 = - c3 * s2 * c1 + s3 * s1;
+      mat->m21 =   s3 * s2 * c1 + c3 * s1;
+      mat->m22 =   c2 * c1;
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      mat->m00 =   c1 * c2;
+      mat->m01 = - c1 * s2 * c3 + s1 * s3;
+      mat->m02 =   c1 * s2 * s3 + s1 * c3;
+
+      mat->m10 =   s2;
+      mat->m11 =   c2 * c3;
+      mat->m12 = - c2 * s3;
+
+      mat->m20 = - s1 * c2;
+      mat->m21 =   s1 * s2 * c3 + c1 * s3;
+      mat->m22 = - s1 * s2 * s3 + c1 * c3;
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      mat->m00 = - s1 * s2 * s3 + c1 * c3;
+      mat->m01 = - s1 * c2;
+      mat->m02 =   s1 * s2 * c3 + c1 * s3;
+
+      mat->m10 =   c1 * s2 * s3 + s1 * c3;
+      mat->m11 =   c1 * c2;
+      mat->m12 = - c1 * s2 * c3 + s1 * s3;
+
+      mat->m20 = - c2 * s3;
+      mat->m21 =   s2;
       mat->m22 =   c2 * c3;
       break;
 
@@ -552,44 +667,86 @@ crank_euler_to_matrix4 (CrankEuler     *euler,
   switch (inetype)
     {
     case CRANK_EULER_IN_ZYX:
-      mat->m00 =   c2 * c3;
-      mat->m01 =   s1 * s2 * c3 - c1 * s3;
+      mat->m00 =   c1 * c2;
+      mat->m01 =   c1 * s2 * s3 - s1 * c3;
       mat->m02 =   c1 * s2 * c3 + s1 * s3;
 
-      mat->m10 =   c2 * s3;
+      mat->m10 =   s1 * c2;
       mat->m11 =   s1 * s2 * s3 + c1 * c3;
-      mat->m12 =   c1 * s2 * s3 - s1 * c3;
+      mat->m12 =   s1 * s2 * c3 - c1 * s3;
 
       mat->m20 = - s2;
-      mat->m21 =   s1 * c2;
-      mat->m22 =   c1 * c2;
+      mat->m21 =   c2 * s3;
+      mat->m22 =   c2 * c3;
       break;
 
     case CRANK_EULER_IN_YXZ:
-      mat->m00 =   c1 * c2;
-      mat->m01 = - s2;
+      mat->m00 =   s1 * s2 * s3 + c1 * c3;
+      mat->m01 =   s1 * s2 * c3 - c1 * s3;
       mat->m02 =   s1 * c2;
 
-      mat->m10 =   c1 * s2 * c3 + s1 * s3;
+      mat->m10 =   c2 * s3;
       mat->m11 =   c2 * c3;
-      mat->m12 =   s1 * s2 * c3 - c1 * s3;
+      mat->m12 = - s2;
 
       mat->m20 =   c1 * s2 * s3 - s1 * c3;
-      mat->m21 =   c2 * s3;
-      mat->m22 =   s1 * s2 * s3 + c1 * c3;
+      mat->m21 =   c1 * s2 * c3 + s1 * s3;
+      mat->m22 =   c1 * c2;
       break;
 
     case CRANK_EULER_IN_XZY:
-      mat->m00 =   s1 * s2 * s3 + c1 * c3;
-      mat->m01 =   c1 * s2 * s3 - s1 * c3;
+      mat->m00 =   c2 * c3;
+      mat->m01 = - s2;
       mat->m02 =   c2 * s3;
 
-      mat->m10 =   s1 * c2;
+      mat->m10 =   c1 * s2 * c3 + s1 * s3;
       mat->m11 =   c1 * c2;
-      mat->m12 = - s2;
+      mat->m12 =   c1 * s2 * s3 - s1 * c3;
 
       mat->m20 =   s1 * s2 * c3 - c1 * s3;
-      mat->m21 =   c1 * s2 * c3 + s1 * s3;
+      mat->m21 =   s1 * c2;
+      mat->m22 =   s1 * s2 * s3 + c1 * c3;
+      break;
+
+    case CRANK_EULER_IN_XYZ:
+      mat->m00 =   c3 * c2;
+      mat->m01 = - s3 * c2;
+      mat->m02 =   s2;
+
+      mat->m10 =   c3 * s2 * s1 + s3 * c1;
+      mat->m11 = - s3 * s2 * s1 + c3 * c1;
+      mat->m12 = - c2 * s1;
+
+      mat->m20 = - c3 * s2 * c1 + s3 * s1;
+      mat->m21 =   s3 * s2 * c1 + c3 * s1;
+      mat->m22 =   c2 * c1;
+      break;
+
+    case CRANK_EULER_IN_YZX:
+      mat->m00 =   c1 * c2;
+      mat->m01 = - c1 * s2 * c3 + s1 * s3;
+      mat->m02 =   c1 * s2 * s3 + s1 * c3;
+
+      mat->m10 =   s2;
+      mat->m11 =   c2 * c3;
+      mat->m12 = - c2 * s3;
+
+      mat->m20 = - s1 * c2;
+      mat->m21 =   s1 * s2 * c3 + c1 * s3;
+      mat->m22 = - s1 * s2 * s3 + c1 * c3;
+      break;
+
+    case CRANK_EULER_IN_ZXY:
+      mat->m00 = - s1 * s2 * s3 + c1 * c3;
+      mat->m01 = - s1 * c2;
+      mat->m02 =   s1 * s2 * c3 + c1 * s3;
+
+      mat->m10 =   c1 * s2 * s3 + s1 * c3;
+      mat->m11 =   c1 * c2;
+      mat->m12 = - c1 * s2 * c3 + s1 * s3;
+
+      mat->m20 = - c2 * s3;
+      mat->m21 =   s2;
       mat->m22 =   c2 * c3;
       break;
 

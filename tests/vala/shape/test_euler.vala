@@ -25,6 +25,8 @@ using Crank;
 int main (string[] args) {
 	GLib.Test.init (ref args);
 
+	GLib.Test.set_nonfatal_assertions ();
+
 	GLib.Test.add_func ("/crank/shape/euler/from/quat",
 				        test_euler_from_quat);
 
@@ -44,55 +46,434 @@ void test_euler_from_quat () {
 	Crank.Euler euler;
 	Crank.QuatFloat quat;
 
-	quat = Crank.QuatFloat (0.84462f, 0.19134f, 0.46194f, 0.19134f);
+	Crank.QuatFloat quat_rot[3];
+
+	GLib.Test.message ("ZYX");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 0, 1);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 1, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
 	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_ZYX);
 
-	Crank.assert_eqfloat (euler.angle1, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.angle2, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.angle3, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("YXZ");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 1, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 1, 0, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_YXZ);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("XZY");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 1, 0, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 0, 1);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_XZY);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("XYZ");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 1, 0, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 1, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_XYZ);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("ZXY");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 0, 1);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 1, 0, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_ZXY);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+	GLib.Test.message ("YZX");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 1, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 0, 1);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	quat = quat_rot[0].mul (quat_rot[1]);
+	quat.mul_self (quat_rot[2]);
+
+	euler = Crank.Euler.from_quaternion (quat, Crank.EulerType.IN_YZX);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
 }
 
 void test_euler_from_mat () {
 	Crank.Euler euler;
 	Crank.MatFloat3 mat;
 
-	mat = Crank.MatFloat3 (0.5000f, -0.1464f,  0.8536f,
-						   0.5000f,  0.8536f, -0.1464f,
-						  -0.7071f,  0.5000f,  0.5000f);
+	Crank.MatFloat3 mat_rot[3];
+
+	GLib.Test.message ("ZYX");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 0, 1);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 1, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
 	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_ZYX);
 
-	Crank.assert_eqfloat (euler.angle1, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.angle2, (float)Math.PI_4);
-	Crank.assert_eqfloat (euler.angle3, (float)Math.PI_4);
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("YXZ");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 1, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 1, 0, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_YXZ);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("XZY");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 1, 0, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 0, 1);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_XZY);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("XYZ");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 1, 0, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 1, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_XYZ);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("ZXY");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 0, 1);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 1, 0, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_ZXY);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
+
+
+	GLib.Test.message ("YZX");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 1, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 0, 1);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	mat = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.from_matrix3 (mat, Crank.EulerType.IN_YZX);
+
+	Crank.assert_eqfloat (euler.angle1, (float)Math.PI / 4);
+	Crank.assert_eqfloat (euler.angle2, (float)Math.PI / 3);
+	Crank.assert_eqfloat (euler.angle3, (float)Math.PI / 2);
 }
 
 void test_euler_to_quat () {
-	Crank.Euler euler = Crank.Euler.angle ((float)Math.PI_4,
-											(float)Math.PI_4,
-											(float)Math.PI_4,
-											Crank.EulerType.IN_ZYX);
-	Crank.QuatFloat quat = euler.to_quaternion ();
+	Crank.Euler euler;
+	Crank.QuatFloat quat;
 
-	Crank.assert_eqfloat (quat.w, 0.84462f);
-	Crank.assert_eqfloat (quat.x, 0.19134f);
-	Crank.assert_eqfloat (quat.y, 0.46194f);
-	Crank.assert_eqfloat (quat.z, 0.19134f);
+	Crank.QuatFloat quat_rot[3];
+	Crank.QuatFloat quat_res;
+
+
+	GLib.Test.message ("ZYX");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 0, 1);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 1, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 1, 0, 0);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_ZYX);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
+
+
+	GLib.Test.message ("YXZ");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 1, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 1, 0, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 0, 1);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_YXZ);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
+
+
+	GLib.Test.message ("XZY");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 1, 0, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 0, 1);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 1, 0);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_XZY);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
+
+
+	GLib.Test.message ("XYZ");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 1, 0, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 1, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 0, 1);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_XYZ);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
+
+
+	GLib.Test.message ("ZXY");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 0, 1);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 1, 0, 0);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 0, 1, 0);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_ZXY);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
+
+
+	GLib.Test.message ("YZX");
+	quat_rot[0] = Crank.QuatFloat.urot ((float)Math.PI / 4, 0, 1, 0);
+	quat_rot[1] = Crank.QuatFloat.urot ((float)Math.PI / 3, 0, 0, 1);
+	quat_rot[2] = Crank.QuatFloat.urot ((float)Math.PI / 2, 1, 0, 0);
+	quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2]);
+
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_YZX);
+	quat = euler.to_quaternion ();
+
+	Crank.assert_eqfloat (quat.w, quat_res.w);
+	Crank.assert_eqfloat (quat.x, quat_res.x);
+	Crank.assert_eqfloat (quat.y, quat_res.y);
+	Crank.assert_eqfloat (quat.z, quat_res.z);
 }
 
 void test_euler_to_mat () {
-	Crank.Euler euler = Crank.Euler.angle ((float)Math.PI_4,
-											(float)Math.PI_4,
-											(float)Math.PI_4,
-											Crank.EulerType.IN_ZYX);
-	Crank.MatFloat3 mat = euler.to_matrix3 ();
+	Crank.Euler euler;
+	Crank.MatFloat3 mat;
 
-	Crank.assert_eqfloat (mat.m00,  0.5000f);
-	Crank.assert_eqfloat (mat.m01, -0.1464f);
-	Crank.assert_eqfloat (mat.m02,  0.8536f);
-	Crank.assert_eqfloat (mat.m10,  0.5000f);
-	Crank.assert_eqfloat (mat.m11,  0.8536f);
-	Crank.assert_eqfloat (mat.m12, -0.1464f);
-	Crank.assert_eqfloat (mat.m20, -0.7071f);
-	Crank.assert_eqfloat (mat.m21,  0.5000f);
-	Crank.assert_eqfloat (mat.m22,  0.5000f);
+	Crank.MatFloat3 mat_res;
+	Crank.MatFloat3 mat_rot[3];
+
+
+	GLib.Test.message ("ZYX");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 0, 1);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 1, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_ZYX);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
+
+	GLib.Test.message ("YXZ");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 1, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 1, 0, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_YXZ);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
+
+	GLib.Test.message ("XZY");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 1, 0, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 0, 1);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_XZY);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
+
+	GLib.Test.message ("XYZ");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 1, 0, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 1, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 0, 1);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_XYZ);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
+
+	GLib.Test.message ("ZXY");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 0, 1);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 1, 0, 0);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 0, 1, 0);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_ZXY);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
+
+	GLib.Test.message ("YZX");
+	mat_rot[0] = Crank.MatFloat3.urot ((float)Math.PI / 4, 0, 1, 0);
+	mat_rot[1] = Crank.MatFloat3.urot ((float)Math.PI / 3, 0, 0, 1);
+	mat_rot[2] = Crank.MatFloat3.urot ((float)Math.PI / 2, 1, 0, 0);
+
+	mat_res = mat_rot[0].mul (mat_rot[1]). mul (mat_rot[2]);
+	euler = Crank.Euler.angle ((float)Math.PI / 4,
+							   (float)Math.PI / 3,
+							   (float)Math.PI / 2,
+							   Crank.EulerType.IN_YZX);
+	mat = euler.to_matrix3 ();
+
+	Crank.assert_eqfloat (mat.m00, mat_res.m00);
+	Crank.assert_eqfloat (mat.m01, mat_res.m01);
+	Crank.assert_eqfloat (mat.m02, mat_res.m02);
+	Crank.assert_eqfloat (mat.m10, mat_res.m10);
+	Crank.assert_eqfloat (mat.m11, mat_res.m11);
+	Crank.assert_eqfloat (mat.m12, mat_res.m12);
+	Crank.assert_eqfloat (mat.m20, mat_res.m20);
+	Crank.assert_eqfloat (mat.m21, mat_res.m21);
+	Crank.assert_eqfloat (mat.m22, mat_res.m22);
 }
