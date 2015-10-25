@@ -47,12 +47,30 @@ GType   crank_euler_get_type (void);
 /**
  * CrankEulerType:
  * @CRANK_EULER_INVALID: Indicates an invalid type.
- * @CRANK_EULER_IN_ZYX: Tait-Bryan angle type of z y' x''
- * @CRANK_EULER_IN_YXZ: Tait-Bryan angle type of y x' z''
- * @CRANK_EULER_IN_XZY: Tait-Bryan angle type of x z' y''
- * @CRANK_EULER_IN_XYZ: Tait-Bryan angle type of x y' z''
- * @CRANK_EULER_IN_ZXY: Tait-Bryan angle type of z x' y''
- * @CRANK_EULER_IN_YZX: Tait-Bryan angle type of y z' x''
+ * @CRANK_EULER_IN_ZYX: Tait-Bryan angle type of z y' x"
+ * @CRANK_EULER_IN_YXZ: Tait-Bryan angle type of y x' z"
+ * @CRANK_EULER_IN_XZY: Tait-Bryan angle type of x z' y"
+ * @CRANK_EULER_IN_XYZ: Tait-Bryan angle type of x y' z"
+ * @CRANK_EULER_IN_ZXY: Tait-Bryan angle type of z x' y"
+ * @CRANK_EULER_IN_YZX: Tait-Bryan angle type of y z' x"
+ * @CRANK_EULER_IN_XYX: Proper Euler angle type of x y' x"
+ * @CRANK_EULER_IN_YZY: Proper Euler angle type of y z' y"
+ * @CRANK_EULER_IN_ZXZ: Proper Euler angle type of z x' z"
+ * @CRANK_EULER_IN_YXY: Proper Euler angle type of y x' y"
+ * @CRANK_EULER_IN_ZYZ: Proper Euler angle type of z y' z"
+ * @CRANK_EULER_IN_XZX: Proper Euler angle type of x z' x"
+ * @CRANK_EULER_EX_ZYX: Tait-Bryan angle type of z y x
+ * @CRANK_EULER_EX_YXZ: Tait-Bryan angle type of y x z
+ * @CRANK_EULER_EX_XZY: Tait-Bryan angle type of x z y
+ * @CRANK_EULER_EX_XYZ: Tait-Bryan angle type of x y z
+ * @CRANK_EULER_EX_ZXY: Tait-Bryan angle type of z x y
+ * @CRANK_EULER_EX_YZX: Tait-Bryan angle type of y z x
+ * @CRANK_EULER_EX_XYX: Proper Euler angle type of x y x
+ * @CRANK_EULER_EX_YZY: Proper Euler angle type of y z y
+ * @CRANK_EULER_EX_ZXZ: Proper Euler angle type of z x z
+ * @CRANK_EULER_EX_YXY: Proper Euler angle type of y x y
+ * @CRANK_EULER_EX_ZYZ: Proper Euler angle type of z y z
+ * @CRANK_EULER_EX_XZX: Proper Euler angle type of x z x
  *
  * Indicates type of euler angles, for which axes are rotated.
  *

@@ -147,6 +147,84 @@ test_euler_from_quat (void)
   crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
   crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
   crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For XYX
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_XYX);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For YZY
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_YZY);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For ZXZ
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_ZXZ);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For YXY
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_YXY);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For ZYZ
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_ZYZ);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For XZX
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+  crank_euler_init_from_quaternion (&euler, &quat_euler, CRANK_EULER_IN_XZX);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
 }
 
 static void
@@ -237,6 +315,90 @@ test_euler_from_mat (void)
   crank_mat_float3_mul_self (&mat, mat_rot + 2);
 
   crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_YZX);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For XYX
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_XYX);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For YZY
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_YZY);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For ZXZ
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_ZXZ);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For YXY
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_YXY);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For ZYZ
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_ZYZ);
+
+  crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
+  crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
+  crank_assert_cmpfloat (euler.angle3, ==, G_PI / 2);
+
+  // For XZX
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat);
+  crank_mat_float3_mul_self (&mat, mat_rot + 2);
+
+  crank_euler_init_from_matrix3 (&euler, &mat, CRANK_EULER_IN_XZX);
 
   crank_assert_cmpfloat (euler.angle1, ==, G_PI / 4);
   crank_assert_cmpfloat (euler.angle2, ==, G_PI / 3);
@@ -339,6 +501,102 @@ test_euler_to_quat (void)
   crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 0, 1);
   crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 1, 0, 0);
   crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for XYX
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_XYX);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for YZY
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_YZY);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for ZXZ
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_ZXZ);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for YXY
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_YXY);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for ZYZ
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_ZYZ);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
+  crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
+
+  crank_assert_cmpfloat (quat.w, ==, quat_euler.w);
+  crank_assert_cmpfloat (quat.x, ==, quat_euler.x);
+  crank_assert_cmpfloat (quat.y, ==, quat_euler.y);
+  crank_assert_cmpfloat (quat.z, ==, quat_euler.z);
+
+  // Test for XZX
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_XZX);
+  crank_euler_to_quaternion (&euler, &quat);
+
+  crank_quat_float_init_urot (quat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_quat_float_init_urot (quat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_quat_float_init_urot (quat_rot + 2, G_PI / 2, 1, 0, 0);
 
   crank_quat_float_mul (quat_rot + 0, quat_rot + 1, &quat_euler);
   crank_quat_float_mul_self (&quat_euler, quat_rot + 2);
@@ -470,6 +728,133 @@ test_euler_to_mat (void)
   crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 0, 1);
   crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 1, 0, 0);
   crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+  // Test for XYX
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_XYX);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 1, 0, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+  // Test for YZY
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_YZY);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+
+  // Test for ZXZ
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_ZXZ);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+  // Test for YXY
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_YXY);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 1, 0);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+  // Test for ZYZ
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_ZYZ);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 1, 0);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 0, 0, 1);
+
+  crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
+  crank_mat_float3_mul_self (&mat_res, mat_rot + 2);
+
+  crank_assert_cmpfloat (mat.m00, ==, mat_res.m00);
+  crank_assert_cmpfloat (mat.m01, ==, mat_res.m01);
+  crank_assert_cmpfloat (mat.m02, ==, mat_res.m02);
+  crank_assert_cmpfloat (mat.m10, ==, mat_res.m10);
+  crank_assert_cmpfloat (mat.m11, ==, mat_res.m11);
+  crank_assert_cmpfloat (mat.m12, ==, mat_res.m12);
+  crank_assert_cmpfloat (mat.m20, ==, mat_res.m20);
+  crank_assert_cmpfloat (mat.m21, ==, mat_res.m21);
+  crank_assert_cmpfloat (mat.m22, ==, mat_res.m22);
+
+  // Test for XZX
+  crank_euler_init_angle (&euler, G_PI / 4, G_PI / 3, G_PI / 2, CRANK_EULER_IN_XZX);
+  crank_euler_to_matrix3 (&euler, &mat);
+
+  crank_mat_float3_init_urot (mat_rot + 0, G_PI / 4, 1, 0, 0);
+  crank_mat_float3_init_urot (mat_rot + 1, G_PI / 3, 0, 0, 1);
+  crank_mat_float3_init_urot (mat_rot + 2, G_PI / 2, 1, 0, 0);
 
   crank_mat_float3_mul (mat_rot + 0, mat_rot + 1, &mat_res);
   crank_mat_float3_mul_self (&mat_res, mat_rot + 2);

@@ -131,6 +131,91 @@ class TestEuler(unittest.TestCase):
 		self.assertFloat (euler.angle2, math.pi / 3)
 		self.assertFloat (euler.angle3, math.pi / 2)
 
+		# Test for XYX
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 1, 0, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_XYX )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for YZY
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 1, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_YZY )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for ZXZ
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 0, 1)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_ZXZ )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for YXY
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 1, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_YXY )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for ZYZ
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 0, 1)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_ZYZ )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for XZX
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 1, 0, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		euler = CrankShape.Euler.init_from_quaternion (
+				quat_res,
+				CrankShape.EulerType.IN_XZX )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+
 	def test_from_from_mat (self):
 		# Test for ZYX
 		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 0, 1),
@@ -215,6 +300,91 @@ class TestEuler(unittest.TestCase):
 		self.assertFloat (euler.angle1, math.pi / 4)
 		self.assertFloat (euler.angle2, math.pi / 3)
 		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for XYX
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 1, 0, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_XYX )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for YZY
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 1, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_YZY )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for ZXZ
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 0, 1)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_ZXZ )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for YXY
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 1, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_YXY )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for ZYZ
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 0, 1)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_ZYZ )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
+		# Test for XZX
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 1, 0, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+  		euler = CrankShape.Euler.init_from_matrix3 (
+				mat_res,
+				CrankShape.EulerType.IN_XZX )
+
+		self.assertFloat (euler.angle1, math.pi / 4)
+		self.assertFloat (euler.angle2, math.pi / 3)
+		self.assertFloat (euler.angle3, math.pi / 2)
+
 
 	def test_to_quat (self):
 		# Test for ZYX
@@ -312,6 +482,103 @@ class TestEuler(unittest.TestCase):
 		self.assertFloat (quat.x, quat_res.x)
 		self.assertFloat (quat.y, quat_res.y)
 		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for XYX
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_XYX )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 1, 0, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for YZY
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_YZY )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 1, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for ZXZ
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_ZXZ )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 0, 1)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for YXY
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_YXY )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 1, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for ZYZ
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_ZYZ )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 1, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 0, 0, 1)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
+		# Test for XZX
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4, math.pi / 3, math.pi / 2,
+				CrankShape.EulerType.IN_XZX )
+		quat = euler.to_quaternion ()
+
+		quat_rot = [	CrankBase.QuatFloat.init_urot(math.pi / 4, 1, 0, 0),
+				CrankBase.QuatFloat.init_urot(math.pi / 3, 0, 0, 1),
+				CrankBase.QuatFloat.init_urot(math.pi / 2, 1, 0, 0)	]
+		quat_res = quat_rot[0].mul (quat_rot[1]).mul (quat_rot[2])
+
+		self.assertFloat (quat.w, quat_res.w)
+		self.assertFloat (quat.x, quat_res.x)
+		self.assertFloat (quat.y, quat_res.y)
+		self.assertFloat (quat.z, quat_res.z)
+
 
 	def test_to_mat (self):
 		# Test for ZYX
@@ -440,6 +707,144 @@ class TestEuler(unittest.TestCase):
 		mat = euler.to_matrix3 ()
 
 		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 1, 0, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for XYX
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_XYX )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 1, 0, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for YZY
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_YZY )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 1, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for ZXZ
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_ZXZ )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 0, 1)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for YXY
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_YXY )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 1, 0, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 1, 0)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for ZYZ
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_ZYZ )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 0, 0, 1),
+				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 1, 0),
+				CrankBase.MatFloat3.init_urot (math.pi / 2, 0, 0, 1)	]
+		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
+
+		self.assertFloat (mat.m00, mat_res.m00)
+		self.assertFloat (mat.m01, mat_res.m01)
+		self.assertFloat (mat.m02, mat_res.m02)
+		self.assertFloat (mat.m10, mat_res.m10)
+		self.assertFloat (mat.m11, mat_res.m11)
+		self.assertFloat (mat.m12, mat_res.m12)
+		self.assertFloat (mat.m20, mat_res.m20)
+		self.assertFloat (mat.m21, mat_res.m21)
+		self.assertFloat (mat.m22, mat_res.m22)
+
+		# Test for XZX
+		euler = CrankShape.Euler.init_angle (
+				math.pi / 4,
+				math.pi / 3,
+				math.pi / 2,
+				CrankShape.EulerType.IN_XZX )
+		mat = euler.to_matrix3 ()
+
+		mat_rot = [	CrankBase.MatFloat3.init_urot (math.pi / 4, 1, 0, 0),
 				CrankBase.MatFloat3.init_urot (math.pi / 3, 0, 0, 1),
 				CrankBase.MatFloat3.init_urot (math.pi / 2, 1, 0, 0)	]
 		mat_res = mat_rot[0].mul (mat_rot[1]).mul (mat_rot[2])
