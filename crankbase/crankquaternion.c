@@ -1393,9 +1393,9 @@ crank_quat_float_init_rot (CrankQuatFloat *quat,
                            CrankVecFloat3 *axis)
 {
   gfloat hangle = angle * 0.5f;
-  gfloat factor = cosf (hangle) / crank_vec_float3_get_magn (axis);
+  gfloat factor = sinf (hangle) / crank_vec_float3_get_magn (axis);
 
-  quat->w = sinf (hangle);
+  quat->w = cosf (hangle);
   crank_vec_float3_muls (axis, factor, (CrankVecFloat3*) &(quat->x));
 }
 
