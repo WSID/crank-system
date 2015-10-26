@@ -7,6 +7,7 @@ lib_LTLIBRARIES = \
 
 shapeinclude_HEADERS = \
 		crankshape.h \
+		crankbox.h \
 		crankeuler.h \
 		crankrotation.h \
 		cranktrans.h \
@@ -29,6 +30,7 @@ libcrankshape_la_LIBADD = \
 		$(top_srcdir)/crankbase/libcrankbase.la
 
 libcrankshape_la_SOURCES= \
+		crankbox.c \
 		crankeuler.c \
 		crankrotation.c \
 		cranktrans.c \

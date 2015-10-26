@@ -1,5 +1,9 @@
 * cheader_filename = "crankshape.h"
 
+Box*            struct=true
+box*_init*      skip
+
+
 Euler           struct=true
 euler_init*     skip=true
 

@@ -1,4 +1,20 @@
 namespace Crank {
+
+  struct Box2 {
+    public Box2 (  Crank.VecFloat2 start,
+                   Crank.VecFloat2 end );
+    public Box2.uvec ( float start_x,
+                       float start_y,
+                       float end_x,
+                       float end_y);
+
+    public Box2.range (Crank.RanFloat x,
+                       Crank.RanFloat y);
+
+    public Box2.unit ();
+  }
+
+
   struct Euler {
     public Euler ();
     public Euler.angle (    float           angle1,
