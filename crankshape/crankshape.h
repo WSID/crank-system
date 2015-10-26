@@ -24,6 +24,10 @@
 
 #define _CRANKSHAPE_INSIDE
 
+#include "crankeuler.h"
+#include "crankrotation.h"
+#include "cranktrans.h"
+
 #include "crankshape2.h"
 #include "crankcpolygon.h"
 
