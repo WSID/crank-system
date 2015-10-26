@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
+#include "crankbox.h"
 #include "crankshape2.h"
 
 
@@ -43,6 +44,7 @@ G_DECLARE_INTERFACE (CrankShape2IFinite,
 
 /**
  * CrankShape2IFiniteInterface:
+ * @get_bradius: Slot for crank_shape2_ifinite_get_bradius()
  * @get_aabb: Slot for crank_shape2_ifinite_get_aabb()
  * @get_obb: Slot for crank_shape2_ifinite_get_obb()
  *
@@ -51,22 +53,26 @@ G_DECLARE_INTERFACE (CrankShape2IFinite,
 struct _CrankShape2IFiniteInterface {
   GTypeInterface        _interface;
 
+  gfloat      (*get_bradius)    (CrankShape2IFinite  *shape);
+
   void        (*get_aabb)      (CrankShape2IFinite  *shape,
                                 const gfloat         rot,
-                                gpointer             aabb);
+                                CrankBox2           *aabb);
 
   void        (*get_obb)       (CrankShape2IFinite  *shape,
-                                gpointer             obb);
+                                CrankBox2           *obb);
 };
 
 
 //////// Function prototypes ///////////////////////////////////////////////////
 
+gfloat          crank_shape2_ifinite_get_bradius(CrankShape2IFinite     *shape);
+
 void            crank_shape2_ifinite_get_aabb  (CrankShape2IFinite     *shape,
                                                 const gfloat            rot,
-                                                gpointer                aabb);
+                                                CrankBox2              *aabb);
 
 void            crank_shape2_ifinite_get_obb   (CrankShape2IFinite     *shape,
-                                                gpointer                obb);
+                                                CrankBox2              *obb);
 
 #endif

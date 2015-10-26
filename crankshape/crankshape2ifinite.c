@@ -35,6 +35,13 @@
  * @include: crankshape.h
  *
  * This interface defines methods for finite shapes.
+ *
+ * Finite shape will have limited range of placement of points. Thus, it will
+ * have limited bounding boxes.
+ *
+ * <note> <para>
+ *   This interface requires implementor to implement properties by themselves.
+ * </para> </note>
  */
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -54,30 +61,57 @@ crank_shape2_ifinite_default_init (CrankShape2IFiniteInterface *iface)
 
   // Install property
   /**
-   * CrankShape2IFinite:obb:
+   * CrankShape2IFinite:bradius:
    *
-   * OBB (Oriented bounding box) as CrankBox2.
+   * Radius of bounding circle.
    */
   g_object_interface_install_property (iface,
-      g_param_spec_pointer ("obb", "obb", "obb",
-                            G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
+      g_param_spec_float ("bradius", "bradius", "bradius",
+                          0, G_MAXFLOAT, 0,
+                          G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
+  /**
+   * CrankShape2IFinite:obb:
+   *
+   * OBB (Oriented bounding box) as #CrankBox2.
+   */
+  g_object_interface_install_property (iface,
+      g_param_spec_boxed ("obb", "obb", "obb",
+                          CRANK_TYPE_BOX2,
+                          G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
 
 
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
+ * crank_shape2_ifinite_get_bradius:
+ * @shape: A Shape.
+ *
+ * Get a radius of bounding circle.
+ *
+ * Returns: A Radius.
+ */
+gfloat
+crank_shape2_ifinite_get_bradius (CrankShape2IFinite *shape)
+{
+  CrankShape2IFiniteInterface *iface;
+  iface = CRANK_SHAPE2_IFINITE_GET_IFACE (shape);
+
+  return iface->get_bradius (shape);
+}
+
+/**
  * crank_shape2_ifinite_get_aabb
  * @shape: A Shape.
  * @rot: Rotation of @shape.
- * @box: (out): AABB
+ * @aabb: (out): AABB
  *
  * Gets AABB (Axis aligned bounding box) of @shape rotated by @rot.
  */
 void
 crank_shape2_ifinite_get_aabb (CrankShape2IFinite *shape,
                                const gfloat        rot,
-                               gpointer            aabb)
+                               CrankBox2          *aabb)
 {
   CrankShape2IFiniteInterface *iface;
   iface = CRANK_SHAPE2_IFINITE_GET_IFACE (shape);
@@ -88,12 +122,13 @@ crank_shape2_ifinite_get_aabb (CrankShape2IFinite *shape,
 /**
  * crank_shape2_ifinite_get_obb:
  * @shape: A Shape.
+ * @obb: (out): OBB
  *
  * Gets OBB of @shape.
  */
 void
 crank_shape2_ifinite_get_obb (CrankShape2IFinite *shape,
-                              gpointer            obb)
+                              CrankBox2          *obb)
 {
   CrankShape2IFiniteInterface *iface;
   iface = CRANK_SHAPE2_IFINITE_GET_IFACE (shape);
