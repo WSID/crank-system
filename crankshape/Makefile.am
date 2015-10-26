@@ -11,6 +11,7 @@ shapeinclude_HEADERS = \
 		crankrotation.h \
 		cranktrans.h \
 		crankshape2.h \
+		crankshape2ifinite.h \
 		crankcpolygon.h
 
 
@@ -32,6 +33,7 @@ libcrankshape_la_SOURCES= \
 		crankrotation.c \
 		cranktrans.c \
 		crankshape2.c \
+		crankshape2ifinite.c \
 		crankcpolygon.c
 
 

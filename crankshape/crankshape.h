@@ -29,7 +29,9 @@
 #include "cranktrans.h"
 
 #include "crankshape2.h"
+#include "crankshape2ifinite.h"
 #include "crankcpolygon.h"
+
 
 #undef _CRANKSHAPE_INSIDE
 
