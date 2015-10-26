@@ -180,15 +180,6 @@ void            crank_euler_to_matrix4                 (CrankEuler     *euler,
 
 
 
-/* TODO: Add declared functions in comment block.
-
-void            crank_euler_transform                  (CrankEuler     *euler,
-                                                        CrankEuler     *other);
-
- */
-
-
-
 G_END_DECLS
 
 #endif
