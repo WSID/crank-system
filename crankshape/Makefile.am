@@ -8,6 +8,7 @@ lib_LTLIBRARIES = \
 shapeinclude_HEADERS = \
 		crankshape.h \
 		crankeuler.h \
+		crankrotation.h \
 		cranktrans.h \
 		crankshape2.h \
 		crankcpolygon.h
@@ -28,6 +29,7 @@ libcrankshape_la_LIBADD = \
 
 libcrankshape_la_SOURCES= \
 		crankeuler.c \
+		crankrotation.c \
 		cranktrans.c \
 		crankshape2.c \
 		crankcpolygon.c
@@ -83,5 +85,8 @@ vapi_DATA= $(VAPIGEN_VAPIS)
 endif
 
 CLEANFILES = $(gir_DATA) $(typelib_DATA) $(vapi_DATA)
+
+# Extra dependency to regenerate crank-shape-0.0.vapi
+crank_shape_0_0.vapi: CrankShape-0.0.gir CrankShape-0.0-custom.vala
 
 endif
