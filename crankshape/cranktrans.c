@@ -26,6 +26,7 @@
 
 #include "crankbase.h"
 #include "cranktrans.h"
+#include "crankrotation.h"
 
 /**
  * SECTION: cranktrans
@@ -64,6 +65,7 @@ static void     _crank_trans2_rotv2cs_inplace (CrankVecFloat2  *a,
 //////// Type definition ///////////////////////////////////////////////////////
 
 G_DEFINE_BOXED_TYPE (CrankTrans2, crank_trans2, crank_trans2_dup, g_free);
+G_DEFINE_BOXED_TYPE (CrankTrans3, crank_trans3, crank_trans3_dup, g_free);
 
 
 //////// Initialization functions. /////////////////////////////////////////////
@@ -361,6 +363,333 @@ crank_trans2_transv (CrankTrans2    *a,
   
   crank_vec_float2_muls_self (r, a->mscl);
   crank_vec_float2_add_self (r, & a->mtrans);
+}
+
+
+
+
+
+//////// Initialization functions. /////////////////////////////////////////////
+
+/**
+ * crank_trans3_init:
+ * @trans: (out): A Transformation.
+ *
+ * Initialize a identity transformation.
+ */
+void
+crank_trans3_init (CrankTrans3 *trans)
+{
+  crank_vec_float3_init_fill (& trans->mtrans, 0.0f);
+  crank_quat_float_init (& trans->mrot, 1.0f, 0.0f, 0.0f, 0.0f);
+
+  trans->mscl = 1.0f;
+}
+
+/**
+ * crank_trans3_init_from_matrix:
+ * @trans: (out): A Transformation.
+ * @mat: A Matrix.
+ *
+ * Initialize a transformation from matrix.
+ */
+void
+crank_trans3_init_from_matrix (CrankTrans3    *trans,
+                               CrankMatFloat4 *mat)
+{
+  CrankMatFloat3 rm = {
+    mat->m00, mat->m01, mat->m02,
+    mat->m10, mat->m11, mat->m12,
+    mat->m20, mat->m21, mat->m22
+  };
+
+  trans->mtrans.x = mat->m02;
+  trans->mtrans.y = mat->m12;
+  trans->mtrans.z = mat->m13;
+
+  trans->mscl = crank_mat_float3_get_det (&rm);
+  trans->mscl = sqrtf ((0 < trans->mscl) ? trans->mscl : - trans->mscl);
+
+  crank_mat_float3_divs_self (&rm, trans->mscl);
+  crank_rot_mat_float3_to_quat_float (&rm, &trans->mrot);
+}
+
+
+/**
+ * crank_trans3_to_matrix:
+ * @trans: A Transformation.
+ * @mat: (out): A Matrix.
+ *
+ * Converts transformation into matrix form.
+ */
+void
+crank_trans3_to_matrix (CrankTrans3    *trans,
+                        CrankMatFloat4 *mat)
+{
+  crank_rot_quat_float_to_mat_float4 (&trans->mrot, mat);
+
+  // Scaling..
+  mat->m00 *= trans->mscl;
+  mat->m01 *= trans->mscl;
+  mat->m02 *= trans->mscl;
+  mat->m10 *= trans->mscl;
+  mat->m11 *= trans->mscl;
+  mat->m12 *= trans->mscl;
+  mat->m20 *= trans->mscl;
+  mat->m21 *= trans->mscl;
+  mat->m22 *= trans->mscl;
+
+  // Translating.
+  mat->m30 = trans->mtrans.x;
+  mat->m31 = trans->mtrans.y;
+  mat->m32 = trans->mtrans.z;
+}
+
+
+/**
+ * crank_trans3_copy:
+ * @trans: A Transformation.
+ * @other: (out): A Transformation.
+ *
+ * Copies a transformation to other.
+ */
+void
+crank_trans3_copy (CrankTrans3 *trans,
+                   CrankTrans3 *other)
+{
+  crank_vec_float3_copy (& trans->mtrans, & other->mtrans);
+  crank_quat_float_copy (& trans->mrot, & other->mrot);
+  trans->mscl  = other->mscl;
+}
+
+/**
+ * crank_trans3_dup:
+ * @trans: A Transformation.
+ *
+ * Duplicates a transformation to other.
+ *
+ * Returns: (transfer full): A Transformation.
+ */
+CrankTrans3*
+crank_trans3_dup (CrankTrans3 *trans)
+{
+  CrankTrans3 *other = g_new (CrankTrans3, 1);
+
+  crank_trans3_copy (trans, other);
+  return other;
+}
+
+
+//////// Operations ////////////////////////////////////////////////////////////
+
+/**
+ * crank_trans3_translate:
+ * @a: A Transformation.
+ * @b: Translation amount.
+ * @r: (out): A result.
+ *
+ * Apply translation to a transformation.
+ */
+void
+crank_trans3_translate (CrankTrans3    *a,
+                        CrankVecFloat3 *b,
+                        CrankTrans3    *r)
+{
+  crank_vec_float3_add (& a->mtrans, b, & r->mtrans);
+  r->mrot = a->mrot;
+  r->mscl = a->mscl;
+}
+
+/**
+ * crank_trans3_translate_self:
+ * @a: A transformation.
+ * @b: Translation amount.
+ *
+ * Apply translation to a transformation.
+ */
+void
+crank_trans3_translate_self (CrankTrans3    *a,
+                             CrankVecFloat3 *b)
+{
+  crank_vec_float3_add_self (& a->mtrans, b);
+}
+
+
+/**
+ * crank_trans3_rotate:
+ * @a: A Transformation.
+ * @b: Rotation amount.
+ * @r: (out): A result.
+ *
+ * Apply rotation to a transformation.
+ */
+void
+crank_trans3_rotate (CrankTrans3    *a,
+                     CrankQuatFloat *b,
+                     CrankTrans3    *r)
+{
+  crank_quat_float_rotatev (b, & a->mtrans, & r->mtrans);
+
+  crank_quat_float_mul (b, & a->mrot, & r->mrot);
+
+  r->mscl = a->mscl;
+}
+
+/**
+ * crank_trans3_rotate_self:
+ * @a: A Transformation.
+ * @b: Rotation amount.
+ *
+ * Apply rotation to a transformation.
+ */
+void
+crank_trans3_rotate_self (CrankTrans3    *a,
+                          CrankQuatFloat *b)
+{
+  CrankVecFloat3 atrans;
+  CrankQuatFloat arot;
+
+  crank_vec_float3_copy (& a->mtrans, & atrans);
+  crank_quat_float_copy (& a->mrot, & arot);
+
+  crank_quat_float_rotatev (b, & atrans, & a->mtrans);
+  crank_quat_float_mul (b, & arot, & a->mrot);
+}
+
+/**
+ * crank_trans3_scale:
+ * @a: A Transformation.
+ * @b: Scale amount.
+ * @r: (out): A result.
+ *
+ * Apply scaling to a transformation.
+ */
+void
+crank_trans3_scale (CrankTrans3  *a,
+                    const gfloat  b,
+                    CrankTrans3  *r)
+{
+  crank_vec_float3_muls (& a->mtrans, b, & r->mtrans);
+  r->mrot = a->mrot;
+  r->mscl = a->mscl * b;
+}
+
+/**
+ * crank_trans3_scale_self:
+ * @a: A Transformation.
+ * @b: Scale amount.
+ *
+ * Apply scaling to a transformation.
+ */
+void
+crank_trans3_scale_self (CrankTrans3  *a,
+                         const gfloat  b)
+{
+  crank_vec_float3_muls_self (& a->mtrans, b);
+  a->mscl *= b;
+}
+
+/**
+ * crank_trans3_inverse:
+ * @a: A Transformation.
+ * @r: (out): A result.
+ *
+ * Inverses a transformation.
+ */
+void
+crank_trans3_inverse (CrankTrans3 *a,
+                      CrankTrans3 *r)
+{
+  r->mscl = 1 / a->mscl;
+  crank_quat_float_conjugate (&a->mrot, &r->mrot);
+
+  crank_quat_float_rotatev (&r->mrot, &a->mtrans, &r->mtrans);
+  crank_vec_float3_divs_self (& r->mtrans, a->mscl);
+
+}
+
+/**
+ * crank_trans3_inverse_self:
+ * @a: A Transformation.
+ *
+ * Inverses a transformation.
+ */
+void
+crank_trans3_inverse_self (CrankTrans3 *a)
+{
+  CrankVecFloat3 atrans;
+  crank_vec_float3_copy (& a->mtrans, &atrans);
+
+  a->mscl = 1 / a->mscl;
+  crank_quat_float_conjugate_self (& a->mrot);
+
+  crank_quat_float_rotatev (&a->mrot, & atrans, &a->mtrans);
+  crank_vec_float3_muls_self (& a->mtrans, a->mscl);
+
+}
+
+
+/**
+ * crank_trans3_compose:
+ * @a: A Transformation.
+ * @b: Another transformation.
+ * @r: (out): A result.
+ *
+ * Applies @a to @b.
+ */
+void
+crank_trans3_compose (CrankTrans3 *a,
+                      CrankTrans3 *b,
+                      CrankTrans3 *r)
+{
+  crank_quat_float_rotatev (& a->mrot, & b->mtrans, & r->mtrans);
+  crank_vec_float3_muls_self (& r->mtrans, a->mscl);
+  crank_vec_float3_add_self (& r->mtrans, & a->mtrans);
+
+  crank_quat_float_mul (&a->mrot, &b->mrot, &r->mrot);
+  r->mscl = a->mscl * b->mscl;
+}
+
+/**
+ * crank_trans3_compose_self:
+ * @a: A Transformation.
+ * @b: Another transformation.
+ *
+ * Applies @a to @b.
+ */
+void
+crank_trans3_compose_self (CrankTrans3 *a,
+                           CrankTrans3 *b)
+{
+  CrankVecFloat3 mtrans;
+
+  crank_quat_float_rotatev (&a->mrot, & b->mtrans, & mtrans);
+  crank_vec_float3_muls_self (& mtrans, a->mscl);
+  crank_vec_float3_add_self (& a->mtrans, & mtrans);
+
+  crank_quat_float_mul_self (& a->mrot, & b->mrot);
+  a->mscl *= b->mscl;
+}
+
+//////// Transformation ////////////////////////////////////////////////////////
+
+/**
+ * crank_trans3_transv:
+ * @a: A transformation.
+ * @b: A vector.
+ * @r: (out): A result.
+ *
+ * Transform a vector.
+ */
+void
+crank_trans3_transv (CrankTrans3    *a,
+                     CrankVecFloat3 *b,
+                     CrankVecFloat3 *r)
+{
+  crank_quat_float_rotatev (&a->mrot, & a->mtrans, r);
+
+  crank_vec_float3_muls_self (r, a->mscl);
+  crank_vec_float3_add_self (r, & a->mtrans);
 }
 
 

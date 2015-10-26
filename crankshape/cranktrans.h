@@ -43,15 +43,34 @@ typedef struct _CrankTrans2 CrankTrans2;
 
 /**
  * CrankTrans2:
- * @translate: Translation from origin.
- * @rotate: Rotation.
- * @scale: Scale
+ * @matrans: Translation from origin.
+ * @mrot: Rotation.
+ * @mscl: Scale
  *
  * Represents translation.
  */
 struct _CrankTrans2 {
   CrankVecFloat2        mtrans;
   gfloat                mrot;
+  gfloat                mscl;
+};
+
+#define CRANK_TYPE_TRANS3 crank_trans3_get_type ()
+GType           crank_trans3_get_type (void);
+
+typedef struct _CrankTrans3 CrankTrans3;
+
+/**
+ * CrankTrans3:
+ * @mtrans: Translation from origin.
+ * @mrot: Rotation
+ * @mscl: Scale
+ *
+ * Represents transformation.
+ */
+struct _CrankTrans3 {
+  CrankVecFloat3        mtrans;
+  CrankQuatFloat        mrot;
   gfloat                mscl;
 };
 
@@ -114,6 +133,68 @@ void            crank_trans2_compose_self      (CrankTrans2    *a,
 void            crank_trans2_transv            (CrankTrans2    *a,
                                                 CrankVecFloat2 *b,
                                                 CrankVecFloat2 *r);
+
+
+
+//////// Initialization functions. /////////////////////////////////////////////////
+
+void            crank_trans3_init              (CrankTrans3    *trans);
+
+void            crank_trans3_init_from_matrix  (CrankTrans3    *trans,
+                                                CrankMatFloat4 *mat);
+
+void            crank_trans3_to_matrix         (CrankTrans3    *trans,
+                                                CrankMatFloat4 *mat);
+
+
+void            crank_trans3_copy              (CrankTrans3    *trans,
+                                                CrankTrans3    *other);
+
+CrankTrans3    *crank_trans3_dup               (CrankTrans3    *trans);
+
+
+//////// Operations ////////////////////////////////////////////////////////////
+
+void            crank_trans3_translate         (CrankTrans3    *a,
+                                                CrankVecFloat3 *b,
+                                                CrankTrans3    *r);
+
+void            crank_trans3_translate_self    (CrankTrans3    *a,
+                                                CrankVecFloat3 *b);
+
+void            crank_trans3_rotate            (CrankTrans3    *a,
+                                                CrankQuatFloat *b,
+                                                CrankTrans3    *r);
+
+void            crank_trans3_rotate_self       (CrankTrans3    *a,
+                                                CrankQuatFloat *b);
+
+void            crank_trans3_scale             (CrankTrans3    *a,
+                                                const gfloat    b,
+                                                CrankTrans3    *r);
+
+void            crank_trans3_scale_self        (CrankTrans3    *a,
+                                                const gfloat    b);
+
+
+void            crank_trans3_inverse           (CrankTrans3    *a,
+                                                CrankTrans3    *r);
+
+void            crank_trans3_inverse_self      (CrankTrans3    *a);
+
+
+void            crank_trans3_compose           (CrankTrans3    *a,
+                                                CrankTrans3    *b,
+                                                CrankTrans3    *r);
+
+void            crank_trans3_compose_self      (CrankTrans3    *a,
+                                                CrankTrans3    *b);
+
+//////// Transformation ////////////////////////////////////////////////////////
+
+void            crank_trans3_transv            (CrankTrans3    *a,
+                                                CrankVecFloat3 *b,
+                                                CrankVecFloat3 *r);
 
 G_END_DECLS
 
