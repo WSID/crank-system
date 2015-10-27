@@ -29,12 +29,17 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankshape2.h"
+
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
 
-#define CRANK_TYPE_CPOLYGON crank_cpolygon_get_type ()
+#define CRANK_TYPE_SHAPE2_CPOLYGON crank_shape2_cpolygon_get_type ()
 
-G_DECLARE_FINAL_TYPE (CrankCPolygon, crank_cpolygon, CRANK, CPOLYGON, CrankShape2)
+G_DECLARE_FINAL_TYPE (CrankShape2CPolygon,
+                      crank_shape2_cpolygon,
+                      CRANK, SHAPE2_CPOLYGON,
+                      CrankShape2)
 
 
 

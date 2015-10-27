@@ -33,7 +33,7 @@ G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
 
 
-typedef struct _CrankCPolygon CrankCPolygon;
+typedef struct _CrankShape2CPolygon CrankShape2CPolygon;
 
 
 
@@ -52,8 +52,8 @@ struct _CrankShape2Class {
   GObjectClass          _parent_class;
 
   /* <public> */
-  CrankCPolygon        *(*approximate_polygon) (CrankShape2  *shape,
-                                                const gfloat  vdistance);
+  CrankShape2CPolygon*(*approximate_polygon) (CrankShape2  *shape,
+                                              const gfloat  vdistance);
 
   /* <private> */
   gpointer _PADDING1;
@@ -68,7 +68,7 @@ struct _CrankShape2Class {
 
 //////// Function prototypes ///////////////////////////////////////////////////
 
-CrankCPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
+CrankShape2CPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
 
 

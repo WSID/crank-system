@@ -31,7 +31,7 @@
 
 #include "crankshape2.h"
 #include "crankshape2ifinite.h"
-#include "crankcpolygon.h"
+#include "crankshape2cpolygon.h"
 
 
 #undef _CRANKSHAPE_INSIDE

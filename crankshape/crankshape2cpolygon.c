@@ -25,11 +25,11 @@
 #include <glib-object.h>
 
 #include "crankshape2.h"
-#include "crankcpolygon.h"
+#include "crankshape2cpolygon.h"
 
 /**
- * SECTION: crankcpolygon
- * @title: CrankCPolygon
+ * SECTION: crankshape2cpolygon
+ * @title: CrankShape2CPolygon
  * @short_description: Concrete polygon representation.
  * @stability: Unstable
  * @include: crankshape.h
@@ -39,31 +39,31 @@
 
 //////// Type definition ///////////////////////////////////////////////////////
 
-struct _CrankCPolygon {
+struct _CrankShape2CPolygon {
   CrankShape2   _parent_instance;
-
-  // TODO: Fill this things.
 };
 
-G_DEFINE_TYPE(CrankCPolygon, crank_cpolygon, CRANK_TYPE_SHAPE2)
+G_DEFINE_TYPE(CrankShape2CPolygon,
+              crank_shape2_cpolygon,
+              CRANK_TYPE_SHAPE2)
 
 
 
 //////// List of virtual functions /////////////////////////////////////////////
 
-static CrankCPolygon   *_shape2_approximate_polygon (CrankShape2  *self,
-                                                     const gfloat  vdistance);
+static CrankShape2CPolygon     *_shape2_approximate_polygon    (CrankShape2  *self,
+                                                                const gfloat  vdistance);
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
 static void
-crank_cpolygon_init (CrankCPolygon *self)
+crank_shape2_cpolygon_init (CrankShape2CPolygon *self)
 {
 }
 
 static void
-crank_cpolygon_class_init (CrankCPolygonClass *c)
+crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 {
   CrankShape2Class*     c_shape2;
 
@@ -74,12 +74,12 @@ crank_cpolygon_class_init (CrankCPolygonClass *c)
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
 
-static CrankCPolygon*
+static CrankShape2CPolygon*
 _shape2_approximate_polygon (CrankShape2  *self,
                              const gfloat  vdistance)
 {
   // For now, we just return reference to self.
-  return (CrankCPolygon*)g_object_ref (self);
+  return (CrankShape2CPolygon*)g_object_ref (self);
 }
 
 //////// Public functions //////////////////////////////////////////////////////

@@ -66,7 +66,7 @@ crank_shape2_class_init (CrankShape2Class *c)
  *
  * Returns: (transfer full): Approximated polygon.
  */
-CrankCPolygon*
+CrankShape2CPolygon*
 crank_shape2_approximate_polygon (CrankShape2  *shape,
                                   const gfloat  vdistance)
 {
