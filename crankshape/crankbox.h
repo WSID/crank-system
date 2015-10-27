@@ -74,6 +74,47 @@ void            crank_box2_copy        (CrankBox2      *box,
 
 CrankBox2      *crank_box2_dup         (CrankBox2      *box);
 
+
+gboolean        crank_box2_has_inf     (CrankBox2      *box);
+
+gboolean        crank_box2_has_nan     (CrankBox2      *box);
+
+
+
+void            crank_box2_get_x       (CrankBox2      *box,
+                                        CrankRanFloat  *x);
+
+void            crank_box2_get_y       (CrankBox2      *box,
+                                        CrankRanFloat  *y);
+
+void            crank_box2_get_dimen   (CrankBox2      *box,
+                                        CrankVecFloat2 *dimen);
+
+gfloat          crank_box2_get_diaglen (CrankBox2      *box);
+
+
+
+
+
+gboolean        crank_box2_contains    (CrankBox2      *box,
+                                        CrankVecFloat2 *value);
+
+void            crank_box2_get         (CrankBox2      *box,
+                                        CrankVecFloat2 *index,
+                                        CrankVecFloat2 *res);
+
+void            crank_box2_index_of    (CrankBox2      *box,
+                                        CrankVecFloat2 *value,
+                                        CrankVecFloat2 *index);
+
+void            crank_box2_clamp       (CrankBox2      *box,
+                                        CrankVecFloat2 *value,
+                                        CrankVecFloat2 *res);
+
+gboolean        crank_box2_get_intersection (CrankBox2 *box,
+                                             CrankBox2 *other,
+                                             CrankBox2 *intersect);
+
 G_END_DECLS
 
 #endif
