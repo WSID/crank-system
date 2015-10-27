@@ -334,6 +334,12 @@ gfloat         crank_ran_float_clamp (CrankRanFloat *ran,
                                       const gfloat   value);
 
 
+//////// Range - Range operations //////////////////////////////////////////////
+
+gboolean        crank_ran_float_intersection (CrankRanFloat *a,
+                                              CrankRanFloat *b,
+                                              CrankRanFloat *r);
+
 
 
 //////// Pointer Ranges ////////////////////////////////////////////////////////
