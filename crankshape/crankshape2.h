@@ -47,6 +47,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2, crank_shape2, CRANK, SHAPE2, GObject)
 /**
  * CrankShape2Class:
  * @approximate_polygon: Slot for crank_shape2_approximate_polygon().
+ * @clip: Slot for crank_shape2_clip().
  *
  * Virtual Function table and signal handler table for shape class.
  */

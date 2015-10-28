@@ -32,12 +32,35 @@
  * @title: CrankSahpe2IPolygon
  * @short_description: Interface for polygon shape.
  * @stability: Unstable
- * @include crankshape.h
+ * @include: crankshape.h
  *
  * This interface describes operations that can be done on polygons.
  *
- * Default implementation assumes the shape will have vertices in order of
- * counter-clockwise, and edges also in counter-clockwise.
+ * # Default implementations
+ *
+ * #CrankShape2IPolygon has default implementation with several assumption.
+ *
+ * * The polygon has same number of edges, to the number of vertices (As ordinary
+ *   polygons have same number of both.)
+ * * The edges are winding polygons in counter-clockwise.
+ *
+ * This assumption applies to
+ * * #CrankShape2IPolygonInterface.get_nedges
+ * * #CrankShape2IPolygonInterface.get_edge
+ * * #CrankShape2IPolygonInterface.get_edge_vertices
+ * * #CrankShape2IPolygonInterface.get_edge_normal
+ *
+ * If implementing class does not follows assumption from above, it should
+ * provide its own implementation. It may override these for more efficient
+ * implementation.
+ *
+ * For #CrankShape2IPolygonInterface.get_farthest_vertex, default implementation
+ * iterates all over vertices.
+ *
+ * #CrankShape2IPolygon does not provide default implementation for these.
+ *
+ * * #CrankShape2IPolygonInterface.get_nvertices
+ * * #CrankShape2IPolygonInterface.get_vertex
  */
 
 //////// Default implementation prototype //////////////////////////////////////

@@ -75,8 +75,8 @@ GType   crank_euler_get_type (void);
  * Indicates type of euler angles, for which axes are rotated.
  *
  * Prefix indicates intrinsic and extrinsic types.
- *  * IN: Intrinsic
- *  * EX: Extrinsic
+ *  * IN: Intrinsic - rotating axes are rotate.
+ *  * EX: Extrinsic - rotating axes are not rotate.
  */
 enum _CrankEulerType {
   // Tait-Bryan Angles in intrinsic rotations.

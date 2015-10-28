@@ -99,6 +99,7 @@
       <xi:include href="xml/crankshape2ipolygon.xml"/>
     </chapter>
     <chapter>
+      <title>2D Shape Classes</title>
       <xi:include href="xml/crankshape2cpolygon.xml"/>
     </chapter>
   </part>

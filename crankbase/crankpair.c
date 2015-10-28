@@ -28,11 +28,11 @@
 /**
  * SECTION: crankpair
  * @title: Pairs
- * @short_description: Structure represents a pair.
+ * @short_description: Pair types.
  * @stability: Unstable
  * @include: crankbase.h
  *
- * Represents a pair.
+ * Type described here is pair structure types.
  */
 
 //////// Type definition /////////////////////////////////////
@@ -126,9 +126,8 @@ crank_pair_uint_swap (CrankPairUint *a,
 }
 
 /**
- * crank_pair_uint_swap:
+ * crank_pair_uint_swap_self:
  * @a: A Pair.
- * @r: (out): A Pair with swapped members.
  *
  * Swap elements in a pair.
  */

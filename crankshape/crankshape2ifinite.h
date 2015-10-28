@@ -51,8 +51,10 @@ G_DECLARE_INTERFACE (CrankShape2IFinite,
  * A Virtual function table for the interface.
  */
 struct _CrankShape2IFiniteInterface {
+  /*< private >*/
   GTypeInterface        _interface;
 
+  /*< public >*/
   gfloat      (*get_bradius)    (CrankShape2IFinite  *shape);
 
   void        (*get_aabb)      (CrankShape2IFinite  *shape,

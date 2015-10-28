@@ -33,12 +33,13 @@
  * SECTION: crankeuler
  * @title: CrankEuler.
  * @short_description: Euler angle as rotation representation.
- * @stability: Unstable.
+ * @stability: Unstable
  * @include: crankshape.h
  *
  * Euler angle represents 3 rotations along specific coordination axes.
  *
- * In Crank system, this uses z-y-x Tait-Bryan Angle system.
+ * As this angle system has variety convention to represent an rotation, crank
+ * system provides an enum type #CrankEulerType.
  *
  * # #CrankEuler as Rotation representation.
  *
@@ -46,7 +47,8 @@
  * perform rotation than other representations.
  *
  * ## Condition to represent rotation.
- * Euler angle represents via 3 rotations, It always represents a rotation.
+ * Euler angle represents via 3 rotations along axes. Therefore it always
+ * represents a rotation.
  */
 //////// Type definition ///////////////////////////////////////////////////////
 GType

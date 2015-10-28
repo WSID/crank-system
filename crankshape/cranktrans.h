@@ -43,7 +43,7 @@ typedef struct _CrankTrans2 CrankTrans2;
 
 /**
  * CrankTrans2:
- * @matrans: Translation from origin.
+ * @mtrans: Translation from origin.
  * @mrot: Rotation.
  * @mscl: Scale
  *

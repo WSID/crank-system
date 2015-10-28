@@ -45,12 +45,20 @@ G_DECLARE_INTERFACE (CrankShape2IPolygon,
 
 /**
  * CrankShape2IPolygonInterface:
+ * @get_nvertices: Slot for crank_shape2_ipolygon_get_nvertices()
+ * @get_vertex: Slot for crank_shape2_ipolygon_get_vertex()
+ * @get_nedges: Slot for crank_shape2_ipolygon_get_nedges()
+ * @get_edge: Slot for crank_shape2_ipolygon_get_edge()
+ * @get_edge_vertices: Slot for crank_shape2_ipolygon_get_edge_vertices()
+ * @get_farthest_vertex: Slot for crank_shape2_ipolygon_get_farthest_vertex()
  *
  * A Virtual function table for the interface.
  */
 struct _CrankShape2IPolygonInterface {
+  /*< private >*/
   GTypeInterface        _interface;
 
+  /*< public >*/
   guint               (*get_nvertices)         (CrankShape2IPolygon    *shape);
 
   void                (*get_vertex)            (CrankShape2IPolygon    *shape,

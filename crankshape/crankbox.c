@@ -26,6 +26,18 @@
 #include "crankbase.h"
 #include "crankbox.h"
 
+/**
+ * SECTION: crankbox
+ * @title: Box Types.
+ * @short_descroption: Box shaped vector range representations.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * Represents box shaped range for #CrankVecFloat2.
+ *
+ * As it represents range, this has similarities to [ranges][crank-Range-of-primitives]
+ */
+
 //////// Type Definitions //////////////////////////////////////////////////////
 
 G_DEFINE_BOXED_TYPE (CrankBox2, crank_box2, crank_box2_dup, g_free)
@@ -319,12 +331,13 @@ crank_box2_clamp (CrankBox2      *box,
 }
 
 /**
- * crank_box2_get_intersect:
+ * crank_box2_get_intersection:
  * @box: A Box.
  * @other: A other box.
  * @intersect: (out): Intersection.
  *
- * Get intersecion of two items.
+ * Get intersecion of two items. If two does not intersect, %FALSE will be
+ * returned, and @intersect will be set to [0, 0] x [0, 0]
  *
  * Returns: Whether two boxes has intersection, and @intersect has been set.
  */
