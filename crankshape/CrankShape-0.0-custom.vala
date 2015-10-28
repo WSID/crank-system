@@ -12,6 +12,12 @@ namespace Crank {
                        Crank.RanFloat y);
 
     public Box2.unit ();
+    
+    public Crank.RanFloat	x {get; }
+    public Crank.RanFloat	y {get; }
+    
+    public Crank.VecFloat2	dimen {get; }
+    public float			diaglen {get; }
   }
 
 
