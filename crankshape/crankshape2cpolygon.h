@@ -43,8 +43,28 @@ G_DECLARE_FINAL_TYPE (CrankShape2CPolygon,
 
 
 
-//////// Function prototypes ///////////////////////////////////////////////////
+//////// Constructors //////////////////////////////////////////////////////////
 
+CrankShape2CPolygon *crank_shape2_cpolygon_new (void);
+
+CrankShape2CPolygon *crank_shape2_cpolygon_new_from_vertices (CrankVecFloat2 *vertices,
+                                                              guint           nvertices);
+
+//////// Vertices //////////////////////////////////////////////////////////////
+
+void            crank_shape2_cpolygon_set_vertex (CrankShape2CPolygon *polygon,
+                                                  guint                index,
+                                                  CrankVecFloat2      *vertex);
+
+void            crank_shape2_cpolygon_insert_vertex (CrankShape2CPolygon *polygon,
+                                                     guint                index,
+                                                     CrankVecFloat2      *vertex);
+
+void            crank_shape2_cpolygon_append_vertex (CrankShape2CPolygon *polygon,
+                                                     CrankVecFloat2      *vertex);
+
+void            crank_shape2_cpolygon_remove_vertex (CrankShape2CPolygon *polygon,
+                                                     guint                index);
 
 
 G_END_DECLS
