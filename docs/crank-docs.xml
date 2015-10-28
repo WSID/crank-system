@@ -39,6 +39,7 @@
       <xi:include href="xml/crankbasemisc.xml"/>
       <xi:include href="xml/crankvalue.xml"/>
       <xi:include href="xml/crankbits.xml"/>
+      <xi:include href="xml/crankpair.xml"/>
       <xi:include href="xml/crank128.xml"/>
       <xi:include href="xml/crankstring.xml"/>
       <xi:include href="xml/crankbasetest.xml"/>
@@ -84,9 +85,21 @@
   <part> <title>Crank Shape</title>
 
     <chapter>
-      <title>2Dimensional Shape</title>
+      <title>Basic structures</title>
+      <xi:include href="xml/crankbox.xml"/>
+      <xi:include href="xml/crankeuler.xml"/>
+      <xi:include href="xml/crankrotation.xml"/>
+      <xi:include href="xml/cranktrans.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>2D Shape Characteristics</title>
       <xi:include href="xml/crankshape2.xml"/>
-      <xi:include href="xml/crankcpolygon.xml"/>
+      <xi:include href="xml/crankshape2ifinite.xml"/>
+      <xi:include href="xml/crankshape2ipolygon.xml"/>
+    </chapter>
+    <chapter>
+      <xi:include href="xml/crankshape2cpolygon.xml"/>
     </chapter>
   </part>
 
