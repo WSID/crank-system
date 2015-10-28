@@ -501,7 +501,7 @@ crank_euler_copy (CrankEuler *euler,
  *
  * Duplicates an euler angle.
  *
- * Returns: (trnasfer full): A duplicated euler angle.
+ * Returns: (transfer full): A duplicated euler angle.
  */
 CrankEuler*
 crank_euler_dup (CrankEuler *euler)
