@@ -29,11 +29,15 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbase.h"
+#include "crankbox.h"
+
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
 
 
 typedef struct _CrankShape2IPolygon CrankShape2IPolygon;
+typedef struct _CrankShape2IFinite CrankShape2IFinite;
 
 
 #define CRANK_TYPE_SHAPE2 crank_shape2_get_type ()
@@ -54,8 +58,9 @@ struct _CrankShape2Class {
   CrankShape2IPolygon*(*approximate_polygon) (CrankShape2  *shape,
                                               const gfloat  vdistance);
 
+  CrankShape2IFinite *(*clip)                (CrankShape2  *shape,
+                                              CrankBox2    *box);
   /* <private> */
-  gpointer _PADDING1;
   gpointer _PADDING2;
   gpointer _PADDING3;
 
@@ -70,6 +75,8 @@ struct _CrankShape2Class {
 CrankShape2IPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
 
+CrankShape2IFinite   *crank_shape2_clip (CrankShape2 *shape,
+                                         CrankBox2   *box);
 
 
 G_END_DECLS

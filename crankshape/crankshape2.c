@@ -76,3 +76,24 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
 
   return c->approximate_polygon (shape, vdistance);
 }
+
+
+/**
+ * crank_shape2_clip:
+ * @shape: A Shape.
+ * @box: A Finite box
+ *
+ * Clip a shape by the @box. The returned shape should fit in @box.
+ *
+ * Returns: (transfer full): Clipped finite shape.
+ */
+CrankShape2IFinite*
+crank_shape2_clip (CrankShape2 *shape,
+                   CrankBox2   *box)
+{
+  CrankShape2Class *c;
+
+  c = CRANK_SHAPE2_GET_CLASS (shape);
+
+  return c->clip (shape, box);
+}
