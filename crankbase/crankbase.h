@@ -33,6 +33,7 @@
 
 #include "crankrange.h"
 #include "crankiter.h"
+#include "crankpair.h"
 
 #include "crankpermutation.h"
 #include "crankcomplex.h"

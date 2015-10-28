@@ -57,6 +57,11 @@ pointer_to_string	skip
 str_*		parent="Crank.Str"	name="str_(.+)"
 
 
+//////// Pairs /////////////////////////////////////////////////////////////////
+
+Pair*           struct=true
+pair_*_init*    skip=true
+
 //////// Benchmark /////////////////////////////////////////////////////////////
 
 bench_*         skip=false  parent="Crank.Bench" name="bench_(.+)"

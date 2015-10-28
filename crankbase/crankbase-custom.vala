@@ -263,6 +263,14 @@ namespace Crank {
 	}
 	
 	
+	public struct PairUint {
+		public PairUint (uint a = 0,
+		                 uint b = 0);
+		public PairUint.array ([CCode (array_length=false)]
+		                       uint array[2]);
+	}
+	
+	
 	public struct CplxFloat {
 	
 		public CplxFloat		(float	real=0.0f,	float	imag=0.0f);
