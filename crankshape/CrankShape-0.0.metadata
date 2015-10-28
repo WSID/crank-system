@@ -11,3 +11,10 @@ Trans*          struct=true
 trans*_init*    skip=true
 
 Shape2.approximate_polygon abstract=true
+
+Shape2IPolygon
+    .get_nedges                 virtual=true
+    .get_edge                   virtual=true
+    .get_edge_vertices          virtual=true
+    .get_edge_normal            virtual=true
+    .get_farthest_vertex        virtual=true
