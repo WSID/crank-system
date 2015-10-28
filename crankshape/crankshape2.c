@@ -85,7 +85,7 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
  *
  * Clip a shape by the @box. The returned shape should fit in @box.
  *
- * Returns: (transfer full): Clipped finite shape.
+ * Returns: (transfer full) (nullable): Clipped finite shape.
  */
 CrankShape2IFinite*
 crank_shape2_clip (CrankShape2 *shape,
