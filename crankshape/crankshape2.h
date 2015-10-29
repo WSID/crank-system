@@ -31,6 +31,7 @@
 
 #include "crankbase.h"
 #include "crankbox.h"
+#include "cranktrans.h"
 
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
@@ -56,14 +57,25 @@ struct _CrankShape2Class {
   GObjectClass          _parent_class;
 
   /* <public> */
+  gboolean            (*contains) (CrankShape2    *shape,
+                                   CrankVecFloat2 *point);
+
+
+  /* <private> */
+  gpointer _PADDING1;
+  gpointer _PADDING2;
+  gpointer _PADDING3;
+
+
+  /* <public> */
   CrankShape2IPolygon*(*approximate_polygon) (CrankShape2  *shape,
                                               const gfloat  vdistance);
 
-  CrankShape2IFinite *(*clip)                (CrankShape2  *shape,
+  CrankShape2IFinite *(*crop)                (CrankShape2  *shape,
                                               CrankBox2    *box);
   /* <private> */
-  gpointer _PADDING2;
-  gpointer _PADDING3;
+  gpointer _PADDING6;
+  gpointer _PADDING7;
 
 };
 
@@ -73,10 +85,14 @@ struct _CrankShape2Class {
 
 //////// Function prototypes ///////////////////////////////////////////////////
 
+gboolean                crank_shape2_contains (CrankShape2    *shape,
+                                               CrankVecFloat2 *point);
+
+
 CrankShape2IPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
 
-CrankShape2IFinite   *crank_shape2_clip (CrankShape2 *shape,
+CrankShape2IFinite   *crank_shape2_crop (CrankShape2 *shape,
                                          CrankBox2   *box);
 
 

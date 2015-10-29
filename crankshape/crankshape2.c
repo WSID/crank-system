@@ -34,6 +34,17 @@
  * @include: crankshape.h
  *
  * This class is base class for 2 dimensional shapes.
+ *
+ * # Reducing to #CrankShape2CPolygon.
+ *
+ * For infinite shape (like infinite plane), Reduced by clipping out by
+ * crank_shape2_clip(), for area where it is used.
+ *
+ * For curved shape (like circles), approximated into polygon by
+ * crank_shape2_approximate_polygon(), for required distance of vertices.
+ *
+ * Crank System will not treat self-intersecting shapes. (Unless it is
+ * implemented from external)
  */
 
 //////// Type definition ///////////////////////////////////////////////////////
@@ -54,6 +65,26 @@ crank_shape2_class_init (CrankShape2Class *c)
 }
 
 //////// Public functions //////////////////////////////////////////////////////
+
+/**
+ * crank_shape2_contains:
+ * @shape: A Shape.
+ * @point: A Point.
+ *
+ * Checks @shape is containing @point.
+ *
+ * Returns: whether the @point contains @shape.
+ */
+gboolean
+crank_shape2_contains (CrankShape2    *shape,
+                       CrankVecFloat2 *point)
+{
+  CrankShape2Class *c;
+
+  c = CRANK_SHAPE2_GET_CLASS (shape);
+
+  return c->contains (shape, point);
+}
 
 /**
  * crank_shape2_approximate_polygon:
@@ -79,21 +110,21 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
 
 
 /**
- * crank_shape2_clip:
+ * crank_shape2_crop:
  * @shape: A Shape.
  * @box: A Finite box
  *
- * Clip a shape by the @box. The returned shape should fit in @box.
+ * Crop a shape by the @box. The returned shape should fit in @box.
  *
- * Returns: (transfer full) (nullable): Clipped finite shape.
+ * Returns: (transfer full) (nullable): Cropped finite shape.
  */
 CrankShape2IFinite*
-crank_shape2_clip (CrankShape2 *shape,
+crank_shape2_crop (CrankShape2 *shape,
                    CrankBox2   *box)
 {
   CrankShape2Class *c;
 
   c = CRANK_SHAPE2_GET_CLASS (shape);
 
-  return c->clip (shape, box);
+  return c->crop (shape, box);
 }
