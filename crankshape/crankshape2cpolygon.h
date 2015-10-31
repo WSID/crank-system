@@ -39,7 +39,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (CrankShape2CPolygon,
                       crank_shape2_cpolygon,
                       CRANK, SHAPE2_CPOLYGON,
-                      CrankShape2)
+                      CrankShape2Finite)
 
 
 

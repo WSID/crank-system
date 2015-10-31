@@ -23,7 +23,7 @@
  */
 
 #ifndef _CRANKSHAPE_INSIDE
-#error crankshape2ifinite.h cannot be included directly.
+#error crankshape2finite.h cannot be included directly.
 #endif
 
 #include <glib.h>
@@ -35,46 +35,32 @@
 
 //////// Type declaration //////////////////////////////////////////////////////
 //
-#define CRANK_TYPE_SHAPE2_IFINITE crank_shape2_ifinite_get_type ()
+#define CRANK_TYPE_SHAPE2_FINITE crank_shape2_finite_get_type ()
 
-G_DECLARE_INTERFACE (CrankShape2IFinite,
-                     crank_shape2_ifinite,
-                     CRANK, SHAPE2_IFINITE,
-                     CrankShape2)
+G_DECLARE_DERIVABLE_TYPE (CrankShape2Finite,
+                          crank_shape2_finite,
+                          CRANK, SHAPE2_FINITE,
+                          CrankShape2)
 
 /**
- * CrankShape2IFiniteInterface:
- * @get_bradius: Slot for crank_shape2_ifinite_get_bradius()
- * @get_aabb: Slot for crank_shape2_ifinite_get_aabb()
- * @get_obb: Slot for crank_shape2_ifinite_get_obb()
+ * CrankShape2FiniteClass:
+ * @get_bound_radius: Slot for crank_shape2_finite_get_bound_radius()
  *
  * A Virtual function table for the interface.
  */
-struct _CrankShape2IFiniteInterface {
+struct _CrankShape2FiniteClass {
   /*< private >*/
-  GTypeInterface        _interface;
+  CrankShape2Class        _parent;
 
   /*< public >*/
-  gfloat      (*get_bradius)    (CrankShape2IFinite  *shape);
+  gfloat      (*get_bound_radius)    (CrankShape2Finite  *shape);
 
-  void        (*get_aabb)      (CrankShape2IFinite  *shape,
-                                const gfloat         rot,
-                                CrankBox2           *aabb);
 
-  void        (*get_obb)       (CrankShape2IFinite  *shape,
-                                CrankBox2           *obb);
 };
 
 
 //////// Function prototypes ///////////////////////////////////////////////////
 
-gfloat          crank_shape2_ifinite_get_bradius(CrankShape2IFinite     *shape);
-
-void            crank_shape2_ifinite_get_aabb  (CrankShape2IFinite     *shape,
-                                                const gfloat            rot,
-                                                CrankBox2              *aabb);
-
-void            crank_shape2_ifinite_get_obb   (CrankShape2IFinite     *shape,
-                                                CrankBox2              *obb);
+gfloat          crank_shape2_finite_get_bound_radius(CrankShape2Finite     *shape);
 
 #endif

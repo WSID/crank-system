@@ -28,7 +28,7 @@
 
 #include "crankbase.h"
 #include "crankshape2.h"
-#include "crankshape2ifinite.h"
+#include "crankshape2finite.h"
 #include "crankshape2ipolygon.h"
 #include "crankshape2cpolygon.h"
 
@@ -42,27 +42,9 @@
  * This represents non-abstract polygon descriptions, with vertices and segments.
  */
 
-//////// Properties and signals enums //////////////////////////////////////////
-
-enum {
-  PROP_ZERO,
-  PROP_BRADIUS,
-  PROP_OBB
-};
-
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void _shape2_ipolygon_init (CrankShape2IPolygonInterface *iface);
-
-static void _shape2_ifinite_init (CrankShape2IFiniteInterface *iface);
-
-
-
-static void                     _object_get_property (GObject    *object,
-                                                      guint       param_id,
-                                                      GValue     *value,
-                                                      GParamSpec *spec);
-
 
 
 static gboolean                 _shape2_contains (CrankShape2    *shape,
@@ -71,7 +53,7 @@ static gboolean                 _shape2_contains (CrankShape2    *shape,
 static CrankShape2IPolygon     *_shape2_approximate_polygon    (CrankShape2  *shape,
                                                                 const gfloat  vdistance);
 
-static CrankShape2IFinite      *_shape2_finitize (CrankShape2 *shape,
+static CrankShape2Finite       *_shape2_finitize (CrankShape2 *shape,
                                                   CrankBox2   *box,
                                                   CrankTrans2 *position);
 
@@ -83,14 +65,7 @@ static void _shape2_ipolygon_get_vertex (CrankShape2IPolygon *shape,
                                          CrankVecFloat2      *vertex);
 
 
-static gfloat _shape2_ifinite_get_bradius (CrankShape2IFinite *shape);
-
-static void _shape2_ifinite_get_obb (CrankShape2IFinite *shape,
-                                     CrankBox2          *box);
-
-static void _shape2_ifinite_get_aabb (CrankShape2IFinite *shape,
-                                      gfloat              rot,
-                                      CrankBox2          *box);
+static gfloat crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape);
 
 
 //////// Type definition ///////////////////////////////////////////////////////
@@ -108,13 +83,10 @@ struct _CrankShape2CPolygon {
 
 G_DEFINE_TYPE_WITH_CODE(CrankShape2CPolygon,
                         crank_shape2_cpolygon,
-                        CRANK_TYPE_SHAPE2,
+                        CRANK_TYPE_SHAPE2_FINITE,
                         {
                           G_IMPLEMENT_INTERFACE (CRANK_TYPE_SHAPE2_IPOLYGON,
                                                  _shape2_ipolygon_init);
-
-                          G_IMPLEMENT_INTERFACE (CRANK_TYPE_SHAPE2_IFINITE,
-                                                 _shape2_ifinite_init);
                         })
 
 
@@ -131,28 +103,18 @@ crank_shape2_cpolygon_init (CrankShape2CPolygon *self)
 static void
 crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 {
-  GObjectClass*         c_gobject;
-  CrankShape2Class*     c_shape2;
-
-
-  c_gobject = G_OBJECT_CLASS (c);
-  c_gobject->get_property = _object_get_property;
-
-  g_object_class_install_property (c_gobject, PROP_BRADIUS,
-      g_param_spec_float ("bradius", "bradius", "bradius",
-                          0, G_MAXFLOAT, 0,
-                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-  g_object_class_install_property (c_gobject, PROP_OBB,
-      g_param_spec_boxed ("obb", "obb", "obb",
-                          CRANK_TYPE_BOX2,
-                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+  CrankShape2Class       *c_shape2;
+  CrankShape2FiniteClass *c_shape2_finite;
 
   c_shape2 = CRANK_SHAPE2_CLASS(c);
 
   c_shape2->approximate_polygon = _shape2_approximate_polygon;
   c_shape2->finitize = _shape2_finitize;
 
+
+  c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
+
+  c_shape2_finite->get_bound_radius = crank_shape2_cpolygon_get_bound_radius;
 }
 
 static void
@@ -161,44 +123,6 @@ _shape2_ipolygon_init (CrankShape2IPolygonInterface *iface)
   iface->get_nvertices = _shape2_ipolygon_get_nvertices;
   iface->get_vertex = _shape2_ipolygon_get_vertex;
 }
-
-static void
-_shape2_ifinite_init (CrankShape2IFiniteInterface *iface)
-{
-  iface->get_bradius = _shape2_ifinite_get_bradius;
-  iface->get_aabb = _shape2_ifinite_get_aabb;
-  iface->get_obb = _shape2_ifinite_get_obb;
-}
-
-
-//////// GObject ///////////////////////////////////////////////////////////////
-
-static void
-_object_get_property (GObject    *object,
-                      guint       param_id,
-                      GValue     *value,
-                      GParamSpec *pspec)
-{
-  switch (param_id)
-    {
-    case PROP_BRADIUS:
-      g_value_set_float (value,
-                         _shape2_ifinite_get_bradius ((CrankShape2IFinite*)object));
-      break;
-
-    case PROP_OBB:
-        {
-          CrankBox2 box;
-          _shape2_ifinite_get_obb ((CrankShape2IFinite*)object, &box);
-          g_value_set_boxed (value, &box);
-        }
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-    }
-}
-
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
 
@@ -240,7 +164,7 @@ _shape2_approximate_polygon (CrankShape2  *shape,
 
 
 
-static CrankShape2IFinite*
+static CrankShape2Finite*
 _shape2_finitize (CrankShape2 *shape,
                   CrankBox2   *box,
                   CrankTrans2 *position)
@@ -275,7 +199,7 @@ _shape2_ipolygon_get_vertex (CrankShape2IPolygon *shape,
 //////// CrankShape2IFinite ////////////////////////////////////////////////////
 
 static gfloat
-_shape2_ifinite_get_bradius (CrankShape2IFinite *shape)
+crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
   guint i;
@@ -290,65 +214,6 @@ _shape2_ifinite_get_bradius (CrankShape2IFinite *shape)
       radius = MAX (radius, radius_current);
     }
   return radius;
-}
-
-
-static void
-_shape2_ifinite_get_aabb (CrankShape2IFinite *shape,
-                          gfloat              rot,
-                          CrankBox2          *box)
-{
-  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
-  gfloat c = cosf (rot);
-  gfloat s = sinf (rot);
-  guint i;
-
-  box->start.x = G_MAXFLOAT;
-  box->start.y = G_MAXFLOAT;
-
-  box->end.x = - G_MAXFLOAT;
-  box->end.y = - G_MAXFLOAT;
-
-  for (i = 0; i < self->vertices->len; i++)
-    {
-      CrankVecFloat2 *v = &g_array_index (self->vertices, CrankVecFloat2, i);
-
-      CrankVecFloat2 vr;
-
-      vr.x = v->x * c - v->y * s;
-      vr.y = v->x * s + v->y * c;
-
-      box->start.x = MIN (box->start.x, vr.x);
-      box->start.y = MIN (box->start.y, vr.y);
-
-      box->end.x = MAX (box->end.x, vr.x);
-      box->end.y = MAX (box->end.y, vr.y);
-    }
-}
-
-static void
-_shape2_ifinite_get_obb (CrankShape2IFinite *shape,
-                         CrankBox2          *obb)
-{
-  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
-  guint i;
-
-  obb->start.x = G_MAXFLOAT;
-  obb->start.y = G_MAXFLOAT;
-
-  obb->end.x = - G_MAXFLOAT;
-  obb->end.y = - G_MAXFLOAT;
-
-  for (i = 0; i < self->vertices->len; i++)
-    {
-      CrankVecFloat2 *v = &g_array_index (self->vertices, CrankVecFloat2, i);
-
-      obb->start.x = MIN (obb->start.x, v->x);
-      obb->start.y = MIN (obb->start.y, v->y);
-
-      obb->end.x = MAX (obb->end.x, v->x);
-      obb->end.y = MAX (obb->end.y, v->y);
-    }
 }
 
 //////// Constructors //////////////////////////////////////////////////////////

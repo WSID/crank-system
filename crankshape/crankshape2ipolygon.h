@@ -29,8 +29,9 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
-#include "crankshape2.h"
 #include "cranktrans.h"
+#include "crankshape2.h"
+#include "crankshape2finite.h"
 
 G_BEGIN_DECLS
 
@@ -41,7 +42,7 @@ G_BEGIN_DECLS
 G_DECLARE_INTERFACE (CrankShape2IPolygon,
                      crank_shape2_ipolygon,
                      CRANK, SHAPE2_IPOLYGON,
-                     CrankShape2)
+                     CrankShape2Finite)
 
 /**
  * CrankShape2IPolygonInterface:
@@ -123,5 +124,9 @@ void            crank_shape2_ipolygon_get_edge_normal  (CrankShape2IPolygon *sha
 guint           crank_shape2_ipolygon_get_farthest_vertex (CrankShape2IPolygon *shape,
                                                            CrankVecFloat2      *direction,
                                                            CrankVecFloat2      *vertex);
+
+
+//////// Functions /////////////////////////////////////////////////////////////
+
 
 #endif

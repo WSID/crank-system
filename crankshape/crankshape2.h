@@ -40,7 +40,7 @@ G_BEGIN_DECLS
 
 
 typedef struct _CrankShape2IPolygon CrankShape2IPolygon;
-typedef struct _CrankShape2IFinite CrankShape2IFinite;
+typedef struct _CrankShape2Finite CrankShape2Finite;
 
 
 #define CRANK_TYPE_SHAPE2 crank_shape2_get_type ()
@@ -73,7 +73,7 @@ struct _CrankShape2Class {
   CrankShape2IPolygon*(*approximate_polygon) (CrankShape2  *shape,
                                               const gfloat  vdistance);
 
-  CrankShape2IFinite *(*finitize)            (CrankShape2  *shape,
+  CrankShape2Finite *(*finitize)            (CrankShape2  *shape,
                                               CrankBox2    *box,
                                               CrankTrans2  *position);
   /* <private> */
@@ -122,7 +122,7 @@ gboolean                crank_shape2_contains (CrankShape2    *shape,
 CrankShape2IPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
 
-CrankShape2IFinite   *crank_shape2_finitize (CrankShape2 *shape,
+CrankShape2Finite    *crank_shape2_finitize (CrankShape2 *shape,
                                              CrankBox2   *box,
                                              CrankTrans2 *position);
 

@@ -25,6 +25,7 @@
 #include <glib-object.h>
 #include "crankbase.h"
 #include "crankshape2.h"
+#include "crankshape2finite.h"
 #include "crankshape2ipolygon.h"
 
 /**
@@ -88,7 +89,7 @@ static guint           crank_shape2_ipolygon_get_farthest_vertex_def (CrankShape
 
 G_DEFINE_INTERFACE (CrankShape2IPolygon,
                     crank_shape2_ipolygon,
-                    CRANK_TYPE_SHAPE2)
+                    CRANK_TYPE_SHAPE2_FINITE)
 
 //////// GTypeInterface ////////////////////////////////////////////////////////
 

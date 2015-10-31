@@ -238,7 +238,7 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
  *
  * Returns: (transfer full) (nullable): Finite part of the shape.
  */
-CrankShape2IFinite*
+CrankShape2Finite*
 crank_shape2_finitize (CrankShape2 *shape,
                        CrankBox2   *box,
                        CrankTrans2 *position)

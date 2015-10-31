@@ -30,7 +30,7 @@
 #include "cranktrans.h"
 
 #include "crankshape2.h"
-#include "crankshape2ifinite.h"
+#include "crankshape2finite.h"
 #include "crankshape2ipolygon.h"
 #include "crankshape2cpolygon.h"
 
