@@ -45,6 +45,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Finite,
 /**
  * CrankShape2FiniteClass:
  * @get_bound_radius: Slot for crank_shape2_finite_get_bound_radius()
+ * @approximate_polygon: Slot for crank_shape2_finite_approximate_polygon()
  *
  * A Virtual function table for the interface.
  */
@@ -53,8 +54,20 @@ struct _CrankShape2FiniteClass {
   CrankShape2Class        _parent;
 
   /*< public >*/
+  // Boundings
   gfloat      (*get_bound_radius)    (CrankShape2Finite  *shape);
 
+  gpointer      _PADDING1;
+  gpointer      _PADDING2;
+  gpointer      _PADDING3;
+
+  // Reduce to Polygonal shape.
+
+  CrankShape2Polygon *(*approximate_polygon)   (CrankShape2Finite      *shape);
+
+  gpointer      _PADDING5;
+  gpointer      _PADDING6;
+  gpointer      _PADDING7;
 
 };
 
@@ -62,5 +75,8 @@ struct _CrankShape2FiniteClass {
 //////// Function prototypes ///////////////////////////////////////////////////
 
 gfloat          crank_shape2_finite_get_bound_radius(CrankShape2Finite     *shape);
+
+
+CrankShape2Polygon     *crank_shape2_finite_approximate_polygon(CrankShape2Finite *shape);
 
 #endif

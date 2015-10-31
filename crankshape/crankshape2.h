@@ -49,8 +49,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2, crank_shape2, CRANK, SHAPE2, GObject)
 
 /**
  * CrankShape2Class:
- * @approximate_polygon: Slot for crank_shape2_approximate_polygon().
- * @clip: Slot for crank_shape2_clip().
  *
  * Virtual Function table and signal handler table for shape class.
  */
@@ -59,6 +57,8 @@ struct _CrankShape2Class {
   GObjectClass          _parent_class;
 
   /* <public> */
+  //Geometric property
+
   gboolean            (*contains) (CrankShape2    *shape,
                                    CrankVecFloat2 *point);
 
@@ -70,13 +70,13 @@ struct _CrankShape2Class {
 
 
   /* <public> */
-  CrankShape2Polygon*(*approximate_polygon) (CrankShape2  *shape,
-                                              const gfloat  vdistance);
+  // Reduce to finite shapes.
 
   GList              *(*finitize)            (CrankShape2  *shape,
                                               CrankBox2    *box,
                                               CrankTrans2  *position);
   /* <private> */
+  gpointer _PADDING5;
   gpointer _PADDING6;
   gpointer _PADDING7;
 
@@ -115,12 +115,12 @@ void                    crank_shape2_set_pos_scl       (CrankShape2    *shape,
 
 
 
-gboolean                crank_shape2_contains (CrankShape2    *shape,
-                                               CrankVecFloat2 *point);
+//////// Geometric stuff ///////////////////////////////////////////////////////
+
+gboolean                crank_shape2_contains          (CrankShape2    *shape,
+                                                        CrankVecFloat2 *point);
 
 
-CrankShape2Polygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
-                                                  const gfloat  vdistance);
 //////// Reduce to finite shapes ///////////////////////////////////////////////
 
 GList                  *crank_shape2_finitize          (CrankShape2 *shape,

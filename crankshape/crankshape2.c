@@ -205,28 +205,6 @@ crank_shape2_contains (CrankShape2    *shape,
   return c->contains (shape, point);
 }
 
-/**
- * crank_shape2_approximate_polygon:
- * @shape: A Shape.
- * @vdistance: Desired distance of vertices.
- *
- * Approximate polygon from shape.
- *
- * Note that implementations may ignore @vdistance.
- *
- * Returns: (transfer full): Approximated polygon shape.
- */
-CrankShape2Polygon*
-crank_shape2_approximate_polygon (CrankShape2  *shape,
-                                  const gfloat  vdistance)
-{
-  CrankShape2Class *c;
-
-  c = CRANK_SHAPE2_GET_CLASS (shape);
-
-  return c->approximate_polygon (shape, vdistance);
-}
-
 
 /**
  * crank_shape2_finitize:

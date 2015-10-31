@@ -130,3 +130,20 @@ crank_shape2_finite_get_bound_radius (CrankShape2Finite *shape)
 
   return c_shape->get_bound_radius (shape);
 }
+
+/**
+ * crank_shape2_finite_approximate_polygon:
+ * @shape: A Shape.
+ *
+ * Gets a polygonal approximation of shape.
+ *
+ * Returns: (transfer full): An approximation of shape.
+ */
+CrankShape2Polygon*
+crank_shape2_finite_approximate_polygon (CrankShape2Finite *shape)
+{
+  CrankShape2FiniteClass *c_shape;
+  c_shape = CRANK_SHAPE2_FINITE_GET_CLASS (shape);
+
+  return c_shape->approximate_polygon (shape);
+}
