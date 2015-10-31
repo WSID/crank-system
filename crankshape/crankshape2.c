@@ -216,7 +216,7 @@ crank_shape2_contains (CrankShape2    *shape,
  *
  * Returns: (transfer full): Approximated polygon shape.
  */
-CrankShape2IPolygon*
+CrankShape2Polygon*
 crank_shape2_approximate_polygon (CrankShape2  *shape,
                                   const gfloat  vdistance)
 {

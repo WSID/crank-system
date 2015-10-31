@@ -29,7 +29,7 @@
 #include "crankbase.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
-#include "crankshape2ipolygon.h"
+#include "crankshape2polygon.h"
 #include "crankshape2cpolygon.h"
 
 /**
@@ -44,13 +44,10 @@
 
 //////// List of virtual functions /////////////////////////////////////////////
 
-static void _shape2_ipolygon_init (CrankShape2IPolygonInterface *iface);
-
-
 static gboolean                 _shape2_contains (CrankShape2    *shape,
                                                   CrankVecFloat2 *point);
 
-static CrankShape2IPolygon     *_shape2_approximate_polygon    (CrankShape2  *shape,
+static CrankShape2Polygon     *_shape2_approximate_polygon    (CrankShape2  *shape,
                                                                 const gfloat  vdistance);
 
 static CrankShape2Finite       *_shape2_finitize (CrankShape2 *shape,
@@ -58,9 +55,9 @@ static CrankShape2Finite       *_shape2_finitize (CrankShape2 *shape,
                                                   CrankTrans2 *position);
 
 
-static guint _shape2_ipolygon_get_nvertices (CrankShape2IPolygon *shape);
+static guint _shape2_polygon_get_nvertices (CrankShape2Polygon *shape);
 
-static void _shape2_ipolygon_get_vertex (CrankShape2IPolygon *shape,
+static void _shape2_polygon_get_vertex (CrankShape2Polygon *shape,
                                          guint                index,
                                          CrankVecFloat2      *vertex);
 
@@ -81,13 +78,9 @@ struct _CrankShape2CPolygon {
   GArray *vertices;
 };
 
-G_DEFINE_TYPE_WITH_CODE(CrankShape2CPolygon,
+G_DEFINE_TYPE(CrankShape2CPolygon,
                         crank_shape2_cpolygon,
-                        CRANK_TYPE_SHAPE2_FINITE,
-                        {
-                          G_IMPLEMENT_INTERFACE (CRANK_TYPE_SHAPE2_IPOLYGON,
-                                                 _shape2_ipolygon_init);
-                        })
+                        CRANK_TYPE_SHAPE2_POLYGON)
 
 
 
@@ -105,6 +98,7 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 {
   CrankShape2Class       *c_shape2;
   CrankShape2FiniteClass *c_shape2_finite;
+  CrankShape2PolygonClass *c_shape2_polygon;
 
   c_shape2 = CRANK_SHAPE2_CLASS(c);
 
@@ -115,13 +109,12 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
   c_shape2_finite->get_bound_radius = crank_shape2_cpolygon_get_bound_radius;
-}
 
-static void
-_shape2_ipolygon_init (CrankShape2IPolygonInterface *iface)
-{
-  iface->get_nvertices = _shape2_ipolygon_get_nvertices;
-  iface->get_vertex = _shape2_ipolygon_get_vertex;
+
+  c_shape2_polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
+
+  c_shape2_polygon->get_nvertices = _shape2_polygon_get_nvertices;
+  c_shape2_polygon->get_vertex = _shape2_polygon_get_vertex;
 }
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
@@ -154,12 +147,12 @@ _shape2_contains (CrankShape2    *shape,
 
 
 
-static CrankShape2IPolygon*
+static CrankShape2Polygon*
 _shape2_approximate_polygon (CrankShape2  *shape,
                              const gfloat  vdistance)
 {
   // For now, we just return reference to self.
-  return (CrankShape2IPolygon*)g_object_ref (shape);
+  return (CrankShape2Polygon*)g_object_ref (shape);
 }
 
 
@@ -173,30 +166,7 @@ _shape2_finitize (CrankShape2 *shape,
 }
 
 
-
-//////// CrankShape2IPolygon ///////////////////////////////////////////////////
-
-static guint
-_shape2_ipolygon_get_nvertices (CrankShape2IPolygon *shape)
-{
-  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
-
-  return self->vertices->len;
-}
-
-
-static void
-_shape2_ipolygon_get_vertex (CrankShape2IPolygon *shape,
-                             guint                index,
-                             CrankVecFloat2      *vertex)
-{
-  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
-
-  crank_vec_float2_copy (&g_array_index (self->vertices, CrankVecFloat2, index),
-                         vertex);
-}
-
-//////// CrankShape2IFinite ////////////////////////////////////////////////////
+//////// CrankShape2Finite ////////////////////////////////////////////////////
 
 static gfloat
 crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
@@ -214,6 +184,29 @@ crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
       radius = MAX (radius, radius_current);
     }
   return radius;
+}
+
+
+//////// CrankShape2Polygon ///////////////////////////////////////////////////
+
+static guint
+_shape2_polygon_get_nvertices (CrankShape2Polygon *shape)
+{
+  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
+
+  return self->vertices->len;
+}
+
+
+static void
+_shape2_polygon_get_vertex (CrankShape2Polygon *shape,
+                             guint                index,
+                             CrankVecFloat2      *vertex)
+{
+  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
+
+  crank_vec_float2_copy (&g_array_index (self->vertices, CrankVecFloat2, index),
+                         vertex);
 }
 
 //////// Constructors //////////////////////////////////////////////////////////

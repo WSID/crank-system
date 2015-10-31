@@ -13,7 +13,7 @@ shapeinclude_HEADERS = \
 		cranktrans.h \
 		crankshape2.h \
 		crankshape2finite.h \
-		crankshape2ipolygon.h \
+		crankshape2polygon.h \
 		crankshape2cpolygon.h
 
 
@@ -37,7 +37,7 @@ libcrankshape_la_SOURCES= \
 		cranktrans.c \
 		crankshape2.c \
 		crankshape2finite.c \
-		crankshape2ipolygon.c \
+		crankshape2polygon.c \
 		crankshape2cpolygon.c
 
 

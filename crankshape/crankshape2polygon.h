@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE2IPOLYGON_H
-#define CRANKSHAPE2IPOLYGON_H
+#ifndef CRANKSHAPE2POLYGON_H
+#define CRANKSHAPE2POLYGON_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -23,7 +23,7 @@
  */
 
 #ifndef _CRANKSHAPE_INSIDE
-#error crankshape2ipolygon.h cannot be included directly.
+#error crankshape2polygon.h cannot be included directly.
 #endif
 
 #include <glib.h>
@@ -37,56 +37,56 @@ G_BEGIN_DECLS
 
 //////// Type declaration //////////////////////////////////////////////////////
 
-#define CRANK_TYPE_SHAPE2_IPOLYGON crank_shape2_ipolygon_get_type ()
+#define CRANK_TYPE_SHAPE2_POLYGON crank_shape2_polygon_get_type ()
 
-G_DECLARE_INTERFACE (CrankShape2IPolygon,
-                     crank_shape2_ipolygon,
-                     CRANK, SHAPE2_IPOLYGON,
+G_DECLARE_DERIVABLE_TYPE (CrankShape2Polygon,
+                     crank_shape2_polygon,
+                     CRANK, SHAPE2_POLYGON,
                      CrankShape2Finite)
 
 /**
- * CrankShape2IPolygonInterface:
- * @get_nvertices: Slot for crank_shape2_ipolygon_get_nvertices()
- * @get_vertex: Slot for crank_shape2_ipolygon_get_vertex()
- * @get_nedges: Slot for crank_shape2_ipolygon_get_nedges()
- * @get_edge: Slot for crank_shape2_ipolygon_get_edge()
- * @get_edge_vertices: Slot for crank_shape2_ipolygon_get_edge_vertices()
- * @get_farthest_vertex: Slot for crank_shape2_ipolygon_get_farthest_vertex()
+ * CrankShape2PolygonClass:
+ * @get_nvertices: Slot for crank_shape2_polygon_get_nvertices()
+ * @get_vertex: Slot for crank_shape2_polygon_get_vertex()
+ * @get_nedges: Slot for crank_shape2_polygon_get_nedges()
+ * @get_edge: Slot for crank_shape2_polygon_get_edge()
+ * @get_edge_vertices: Slot for crank_shape2_polygon_get_edge_vertices()
+ * @get_farthest_vertex: Slot for crank_shape2_polygon_get_farthest_vertex()
  *
  * A Virtual function table for the interface.
  */
-struct _CrankShape2IPolygonInterface {
+struct _CrankShape2PolygonClass {
   /*< private >*/
-  GTypeInterface        _interface;
+  CrankShape2FiniteClass  _parent;
 
   /*< public >*/
-  guint               (*get_nvertices)         (CrankShape2IPolygon    *shape);
+  guint               (*get_nvertices)         (CrankShape2Polygon    *shape);
 
-  void                (*get_vertex)            (CrankShape2IPolygon    *shape,
+  void                (*get_vertex)            (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankVecFloat2         *vertex);
 
 
 
-  guint               (*get_nedges)            (CrankShape2IPolygon    *shape);
+  guint               (*get_nedges)            (CrankShape2Polygon    *shape);
 
-  void                (*get_edge)              (CrankShape2IPolygon    *shape,
+  void                (*get_edge)              (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankRanFloat          *edge,
                                                 CrankTrans2            *position);
 
-  void                (*get_edge_vertices)     (CrankShape2IPolygon    *shape,
+  void                (*get_edge_vertices)     (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankPairUint          *vertices);
 
-  void                (*get_edge_normal)       (CrankShape2IPolygon    *shape,
+  void                (*get_edge_normal)       (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankVecFloat2         *normal);
 
 
 
 
-  guint               (*get_farthest_vertex)   (CrankShape2IPolygon    *shape,
+  guint               (*get_farthest_vertex)   (CrankShape2Polygon    *shape,
                                                 CrankVecFloat2         *direction,
                                                 CrankVecFloat2         *vertex);
 };
@@ -95,33 +95,33 @@ struct _CrankShape2IPolygonInterface {
 
 //////// Function prototypes ///////////////////////////////////////////////////
 
-guint           crank_shape2_ipolygon_get_nvertices    (CrankShape2IPolygon *shape);
+guint           crank_shape2_polygon_get_nvertices    (CrankShape2Polygon *shape);
 
-void            crank_shape2_ipolygon_get_vertex       (CrankShape2IPolygon *shape,
+void            crank_shape2_polygon_get_vertex       (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *vertex);
 
 
-guint           crank_shape2_ipolygon_get_nedges       (CrankShape2IPolygon *shape);
+guint           crank_shape2_polygon_get_nedges       (CrankShape2Polygon *shape);
 
-void            crank_shape2_ipolygon_get_edge         (CrankShape2IPolygon *shape,
+void            crank_shape2_polygon_get_edge         (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankRanFloat       *edge,
                                                         CrankTrans2         *position);
 
 
 
-void            crank_shape2_ipolygon_get_edge_vertices(CrankShape2IPolygon *shape,
+void            crank_shape2_polygon_get_edge_vertices(CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankPairUint       *vertices);
 
-void            crank_shape2_ipolygon_get_edge_normal  (CrankShape2IPolygon *shape,
+void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *normal);
 
 
 
-guint           crank_shape2_ipolygon_get_farthest_vertex (CrankShape2IPolygon *shape,
+guint           crank_shape2_polygon_get_farthest_vertex (CrankShape2Polygon *shape,
                                                            CrankVecFloat2      *direction,
                                                            CrankVecFloat2      *vertex);
 
