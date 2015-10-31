@@ -64,6 +64,10 @@
  * * #CrankShape2PolygonInterface.get_vertex
  */
 
+//////// Virtual function implementations //////////////////////////////////////
+
+static CrankShape2Polygon      *crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape);
+
 //////// Default implementation prototype //////////////////////////////////////
 
 static guint           crank_shape2_polygon_get_nedges_def (CrankShape2Polygon *shape);
@@ -102,11 +106,25 @@ crank_shape2_polygon_init (CrankShape2Polygon *shape)
 void
 crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
 {
+  CrankShape2FiniteClass *c_shape2_finite;
+
+  c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
+
+  c_shape2_finite->approximate_polygon = crank_shape2_polygon_approximate_polygon;
+
   c->get_nedges = crank_shape2_polygon_get_nedges_def;
   c->get_edge = crank_shape2_polygon_get_edge_def;
   c->get_edge_vertices = crank_shape2_polygon_get_edge_vertices_def;
   c->get_edge_normal = crank_shape2_polygon_get_edge_normal_def;
   c->get_farthest_vertex = crank_shape2_polygon_get_farthest_vertex_def;
+}
+
+//////// CrankShape2Finite /////////////////////////////////////////////////////
+
+CrankShape2Polygon*
+crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape)
+{
+  return (CrankShape2Polygon*) g_object_ref (shape);
 }
 
 //////// Default implementations ///////////////////////////////////////////////
