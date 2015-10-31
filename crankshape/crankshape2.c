@@ -219,12 +219,11 @@ crank_shape2_contains (CrankShape2    *shape,
  */
 GList*
 crank_shape2_finitize (CrankShape2 *shape,
-                       CrankBox2   *box,
-                       CrankTrans2 *position)
+                       CrankBox2   *box)
 {
   CrankShape2Class *c;
 
   c = CRANK_SHAPE2_GET_CLASS (shape);
 
-  return c->finitize (shape, box, position);
+  return c->finitize (shape, box);
 }

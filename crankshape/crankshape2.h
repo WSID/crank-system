@@ -73,8 +73,7 @@ struct _CrankShape2Class {
   // Reduce to finite shapes.
 
   GList              *(*finitize)            (CrankShape2  *shape,
-                                              CrankBox2    *box,
-                                              CrankTrans2  *position);
+                                              CrankBox2    *box);
   /* <private> */
   gpointer _PADDING5;
   gpointer _PADDING6;
@@ -124,8 +123,7 @@ gboolean                crank_shape2_contains          (CrankShape2    *shape,
 //////// Reduce to finite shapes ///////////////////////////////////////////////
 
 GList                  *crank_shape2_finitize          (CrankShape2 *shape,
-                                                        CrankBox2   *box,
-                                                        CrankTrans2 *position);
+                                                        CrankBox2   *box);
 
 
 G_END_DECLS
