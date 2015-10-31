@@ -35,21 +35,17 @@
  *
  * This class is base class for 2 dimensional shapes.
  *
- * # Reducing to #CrankShape2CPolygon.
- *
- * For infinite shape (like infinite plane), Reduced by clipping out by
- * crank_shape2_clip(), for area where it is used.
- *
- * For curved shape (like circles), approximated into polygon by
- * crank_shape2_approximate_polygon(), for required distance of vertices.
- *
- * Crank System will not treat self-intersecting shapes. (Unless it is
- * implemented from external)
+ * Basically this represents single chunk of shape.
  */
 
 //////// Type definition ///////////////////////////////////////////////////////
 
-G_DEFINE_ABSTRACT_TYPE(CrankShape2, crank_shape2, G_TYPE_OBJECT)
+typedef struct _CrankShape2Private {
+  CrankTrans2   position;
+} CrankShape2Private;
+
+
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(CrankShape2, crank_shape2, G_TYPE_OBJECT)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -65,6 +61,129 @@ crank_shape2_class_init (CrankShape2Class *c)
 }
 
 //////// Public functions //////////////////////////////////////////////////////
+
+/**
+ * crank_shape2_get_position:
+ * @shape: A Shape.
+ * @position: (out): Position of a shape.
+ *
+ * Gets position of shape.
+ */
+void
+crank_shape2_get_position (CrankShape2 *shape,
+                           CrankTrans2 *position)
+{
+  crank_trans2_copy (& G_PRIVATE_FIELD (CrankShape2, shape, CrankTrans2, position) ,
+                     position);
+}
+
+/**
+ * crank_shape2_set_position:
+ * @shape: A Shape
+ * @position: Position of a shape.
+ *
+ * Sets position of shape.
+ */
+void
+crank_shape2_set_position (CrankShape2 *shape,
+                           CrankTrans2 *position)
+{
+  crank_trans2_copy (position,
+                     & G_PRIVATE_FIELD (CrankShape2, shape, CrankTrans2, position));
+}
+
+/**
+ * crank_shape2_get_pos_trans:
+ * @shape: A Shape
+ * @position: (out): Translation (linear position) of a shape.
+ *
+ * Gets translation of shape
+ */
+void
+crank_shape2_get_pos_trans (CrankShape2    *shape,
+                            CrankVecFloat2 *trans)
+{
+  crank_vec_float2_copy (& G_PRIVATE_FIELD (CrankShape2, shape,
+                                            CrankVecFloat2, position.mtrans),
+                         trans);
+}
+
+/**
+ * crank_shape2_set_pos_trans:
+ * @shape: A Shape
+ * @trans: Translation (linear position) of a shape.
+ *
+ * Sets translation of shape
+ */
+void
+crank_shape2_set_pos_trans (CrankShape2    *shape,
+                            CrankVecFloat2 *trans)
+{
+  crank_vec_float2_copy (trans,
+                         & G_PRIVATE_FIELD (CrankShape2, shape,
+                                            CrankVecFloat2, position.mtrans));
+}
+
+/**
+ * crank_shape2_get_pos_rot:
+ * @shape: A Shape
+ *
+ * Gets rotation of shape.
+ *
+ * Returns: rotation of shape.
+ */
+gfloat
+crank_shape2_get_pos_rot (CrankShape2 *shape)
+{
+  return G_PRIVATE_FIELD (CrankShape2, shape, gfloat, position.mrot);
+}
+
+/**
+ * crank_shape2_set_pos_rot:
+ * @shape: A Shape
+ * @rot: rotation
+ *
+ * Gets rotation of shape.
+ *
+ * Returns: rotation of shape.
+ */
+void
+crank_shape2_set_pos_rot (CrankShape2 *shape,
+                          gfloat rot)
+{
+  G_PRIVATE_FIELD (CrankShape2, shape, gfloat, position.mrot) = rot;
+}
+
+/**
+ * crank_shape2_get_pos_scl:
+ * @shape: A Shape.
+ *
+ * Gets scale of shape.
+ *
+ * Returns: scale of shape.
+ */
+gfloat
+crank_shape2_get_pos_scl (CrankShape2 *shape)
+{
+  return G_PRIVATE_FIELD (CrankShape2, shape, gfloat, position.mscl);
+}
+
+/**
+ * crank_shape2_set_pos_scl:
+ * @shape: A Shape
+ * @scl: Scale of shape.
+ *
+ * Returns: Scale of shape.
+ */
+void
+crank_shape2_set_pos_scl (CrankShape2 *shape,
+                          gfloat scl)
+{
+  G_PRIVATE_FIELD (CrankShape2, shape, gfloat, position.mscl) = scl;
+}
+
+
+
 
 /**
  * crank_shape2_contains:
