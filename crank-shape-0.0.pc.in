@@ -8,4 +8,4 @@ Description: Crank System Shape
 Version: @VERSION@
 Requires: glib-2.0
 Libs: -L${libdir} -lcrankbase
-Cflags: -I${includedir}/crank/shape
+Cflags: -I${includedir}
