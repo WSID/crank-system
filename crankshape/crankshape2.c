@@ -236,9 +236,10 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
  *
  * Gets a finite part of shape that works in @box.
  *
- * Returns: (transfer full) (nullable): Finite part of the shape.
+ * Returns: (transfer full) (element-type CrankShape2Finite):
+ *      Finite parts of shape.
  */
-CrankShape2Finite*
+GList*
 crank_shape2_finitize (CrankShape2 *shape,
                        CrankBox2   *box,
                        CrankTrans2 *position)

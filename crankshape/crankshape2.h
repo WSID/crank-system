@@ -73,7 +73,7 @@ struct _CrankShape2Class {
   CrankShape2Polygon*(*approximate_polygon) (CrankShape2  *shape,
                                               const gfloat  vdistance);
 
-  CrankShape2Finite *(*finitize)            (CrankShape2  *shape,
+  GList              *(*finitize)            (CrankShape2  *shape,
                                               CrankBox2    *box,
                                               CrankTrans2  *position);
   /* <private> */
@@ -121,10 +121,11 @@ gboolean                crank_shape2_contains (CrankShape2    *shape,
 
 CrankShape2Polygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
+//////// Reduce to finite shapes ///////////////////////////////////////////////
 
-CrankShape2Finite    *crank_shape2_finitize (CrankShape2 *shape,
-                                             CrankBox2   *box,
-                                             CrankTrans2 *position);
+GList                  *crank_shape2_finitize          (CrankShape2 *shape,
+                                                        CrankBox2   *box,
+                                                        CrankTrans2 *position);
 
 
 G_END_DECLS
