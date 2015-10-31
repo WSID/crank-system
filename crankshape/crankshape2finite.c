@@ -54,6 +54,9 @@ static void     crank_shape2_finite_get_property       (GObject        *object,
                                                         GValue         *value,
                                                         GParamSpec     *pspec);
 
+static GList   *crank_shape2_finite_finitize           (CrankShape2    *shape,
+                                                        CrankBox2      *box);
+
 //////// Signals and properties ////////////////////////////////////////////////
 
 enum {
@@ -76,7 +79,10 @@ crank_shape2_finite_init (CrankShape2Finite *shape)
 static void
 crank_shape2_finite_class_init (CrankShape2FiniteClass *c)
 {
-  GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  GObjectClass *c_gobject;
+  CrankShape2Class *c_shape2;
+
+  c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->get_property = crank_shape2_finite_get_property;
 
@@ -86,6 +92,11 @@ crank_shape2_finite_class_init (CrankShape2FiniteClass *c)
         G_PARAM_STATIC_STRINGS | G_PARAM_READABLE);
 
   g_object_class_install_properties (c_gobject, PROP_COUNT, pspecs);
+
+
+  c_shape2 = CRANK_SHAPE2_CLASS (c);
+
+  c_shape2->finitize = crank_shape2_finite_finitize;
 }
 
 
@@ -110,6 +121,15 @@ crank_shape2_finite_get_property (GObject    *object,
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
+}
+
+//////// CrankShape2 ///////////////////////////////////////////////////////////
+
+static GList*
+crank_shape2_finite_finitize (CrankShape2 *shape,
+                              CrankBox2   *box)
+{
+  return g_list_append (NULL, g_object_ref (shape));
 }
 
 //////// Public functions //////////////////////////////////////////////////////
