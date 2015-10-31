@@ -110,21 +110,23 @@ crank_shape2_approximate_polygon (CrankShape2  *shape,
 
 
 /**
- * crank_shape2_crop:
+ * crank_shape2_finitize:
  * @shape: A Shape.
  * @box: A Finite box
+ * @position: (out): position of finite part.
  *
- * Crop a shape by the @box. The returned shape should fit in @box.
+ * Gets a finite part of shape that works in @box.
  *
- * Returns: (transfer full) (nullable): Cropped finite shape.
+ * Returns: (transfer full) (nullable): Finite part of the shape.
  */
 CrankShape2IFinite*
-crank_shape2_crop (CrankShape2 *shape,
-                   CrankBox2   *box)
+crank_shape2_finitize (CrankShape2 *shape,
+                       CrankBox2   *box,
+                       CrankTrans2 *position)
 {
   CrankShape2Class *c;
 
   c = CRANK_SHAPE2_GET_CLASS (shape);
 
-  return c->crop (shape, box);
+  return c->finitize (shape, box, position);
 }

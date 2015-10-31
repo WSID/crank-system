@@ -71,8 +71,9 @@ struct _CrankShape2Class {
   CrankShape2IPolygon*(*approximate_polygon) (CrankShape2  *shape,
                                               const gfloat  vdistance);
 
-  CrankShape2IFinite *(*crop)                (CrankShape2  *shape,
-                                              CrankBox2    *box);
+  CrankShape2IFinite *(*finitize)            (CrankShape2  *shape,
+                                              CrankBox2    *box,
+                                              CrankTrans2  *position);
   /* <private> */
   gpointer _PADDING6;
   gpointer _PADDING7;
@@ -92,8 +93,9 @@ gboolean                crank_shape2_contains (CrankShape2    *shape,
 CrankShape2IPolygon  *crank_shape2_approximate_polygon (CrankShape2  *shape,
                                                   const gfloat  vdistance);
 
-CrankShape2IFinite   *crank_shape2_crop (CrankShape2 *shape,
-                                         CrankBox2   *box);
+CrankShape2IFinite   *crank_shape2_finitize (CrankShape2 *shape,
+                                             CrankBox2   *box,
+                                             CrankTrans2 *position);
 
 
 G_END_DECLS

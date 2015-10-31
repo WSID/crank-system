@@ -71,8 +71,9 @@ static gboolean                 _shape2_contains (CrankShape2    *shape,
 static CrankShape2IPolygon     *_shape2_approximate_polygon    (CrankShape2  *shape,
                                                                 const gfloat  vdistance);
 
-static CrankShape2IFinite      *_shape2_crop (CrankShape2 *shape,
-                                              CrankBox2   *box);
+static CrankShape2IFinite      *_shape2_finitize (CrankShape2 *shape,
+                                                  CrankBox2   *box,
+                                                  CrankTrans2 *position);
 
 
 static guint _shape2_ipolygon_get_nvertices (CrankShape2IPolygon *shape);
@@ -150,7 +151,7 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
   c_shape2 = CRANK_SHAPE2_CLASS(c);
 
   c_shape2->approximate_polygon = _shape2_approximate_polygon;
-  c_shape2->crop = _shape2_crop;
+  c_shape2->finitize = _shape2_finitize;
 
 }
 
@@ -240,8 +241,9 @@ _shape2_approximate_polygon (CrankShape2  *shape,
 
 
 static CrankShape2IFinite*
-_shape2_crop (CrankShape2 *shape,
-              CrankBox2   *box)
+_shape2_finitize (CrankShape2 *shape,
+                  CrankBox2   *box,
+                  CrankTrans2 *position)
 {
   return NULL;
 }
