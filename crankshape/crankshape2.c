@@ -38,6 +38,18 @@
  * Basically this represents single chunk of shape.
  */
 
+//////// List of virtual functions /////////////////////////////////////////////
+
+static void     crank_shape2_get_property (GObject    *object,
+                                           guint       prop_id,
+                                           GValue     *value,
+                                           GParamSpec *pspec);
+
+static void     crank_shape2_set_property (GObject      *object,
+                                           guint         prop_id,
+                                           const GValue *value,
+                                           GParamSpec   *pspec);
+
 //////// Type definition ///////////////////////////////////////////////////////
 
 typedef struct _CrankShape2Private {
@@ -48,16 +60,139 @@ typedef struct _CrankShape2Private {
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(CrankShape2, crank_shape2, G_TYPE_OBJECT)
 
 
+//////// Properties and Signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_POSITION,
+  PROP_POS_TRANS,
+  PROP_POS_ROT,
+  PROP_POS_SCL,
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+
+
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
 static void
 crank_shape2_init (CrankShape2 *self)
 {
+  crank_trans2_init(& G_PRIVATE_FIELD (CrankShape2, self, CrankTrans2, position));
 }
 
 static void
 crank_shape2_class_init (CrankShape2Class *c)
 {
+  GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+
+  /**
+   * CrankShape2:position:
+   *
+   * A Position of shape.
+   */
+  pspecs[PROP_POSITION] = g_param_spec_boxed ("position", "position", "position",
+                                              CRANK_TYPE_TRANS2,
+                                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+
+  /**
+   * CrankShape2:pos-trans:
+   *
+   * Translational position of a shape.
+   */
+  pspecs[PROP_POS_TRANS] = g_param_spec_boxed ("pos-trans", "pos-trans", "translational position",
+                                               CRANK_TYPE_VEC_FLOAT2,
+                                               G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+
+  /**
+   * CrankShape2:pos-rot:
+   *
+   * Rotational position of a shape.
+   */
+  pspecs[PROP_POS_ROT] = g_param_spec_float ("pos-rot", "pos-rot", "rotational position",
+                                             - G_MAXFLOAT, G_MAXFLOAT, 0,
+                                             G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+
+  /**
+   * CrankShape2:pos-trans:
+   *
+   * Translational position of a shape.
+   */
+  pspecs[PROP_POS_SCL] = g_param_spec_float ("pos-scl", "pos-scl", "scale",
+                                             0, G_MAXFLOAT, 0,
+                                             G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+  c_gobject->get_property = crank_shape2_get_property;
+  c_gobject->set_property = crank_shape2_set_property;
+}
+
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_shape2_get_property (GObject *object,
+                           guint prop_id,
+                           GValue *value,
+                           GParamSpec *pspec)
+{
+  switch (prop_id)
+    {
+    case PROP_POSITION:
+      g_value_set_boxed (value,
+                         & G_PRIVATE_FIELD (CrankShape2, object, CrankTrans2, position));
+      break;
+
+    case PROP_POS_TRANS:
+      g_value_set_boxed (value,
+                         & G_PRIVATE_FIELD (CrankShape2, object, CrankVecFloat2, position.mtrans));
+      break;
+
+    case PROP_POS_ROT:
+      g_value_set_float (value,
+                         G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mrot));
+      break;
+
+    case PROP_POS_SCL:
+      g_value_set_float (value,
+                         G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mscl));
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+crank_shape2_set_property (GObject *object,
+                           guint prop_id,
+                           const GValue *value,
+                           GParamSpec *pspec)
+{
+  switch (prop_id)
+    {
+    case PROP_POSITION:
+      crank_trans2_copy ((CrankTrans2*) g_value_get_boxed (value),
+                         & G_PRIVATE_FIELD (CrankShape2, object, CrankTrans2, position));
+      break;
+
+    case PROP_POS_TRANS:
+      crank_vec_float2_copy ((CrankVecFloat2*) g_value_get_boxed (value),
+                             & G_PRIVATE_FIELD (CrankShape2, object, CrankVecFloat2, position.mtrans));
+      break;
+
+    case PROP_POS_ROT:
+      G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mrot) =
+        g_value_get_float (value);
+      break;
+
+    case PROP_POS_SCL:
+      G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mscl) =
+        g_value_get_float (value);
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 //////// Public functions //////////////////////////////////////////////////////
