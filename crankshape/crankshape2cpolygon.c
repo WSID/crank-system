@@ -102,14 +102,9 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 
   c_shape2 = CRANK_SHAPE2_CLASS(c);
 
-  c_shape2->approximate_polygon = _shape2_approximate_polygon;
-  c_shape2->finitize = _shape2_finitize;
-
-
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
   c_shape2_finite->get_bound_radius = crank_shape2_cpolygon_get_bound_radius;
-
 
   c_shape2_polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
 
@@ -144,27 +139,6 @@ _shape2_contains (CrankShape2    *shape,
 
   return pass_count % 2 != 0;
 }
-
-
-
-static CrankShape2Polygon*
-_shape2_approximate_polygon (CrankShape2  *shape,
-                             const gfloat  vdistance)
-{
-  // For now, we just return reference to self.
-  return (CrankShape2Polygon*)g_object_ref (shape);
-}
-
-
-
-static CrankShape2Finite*
-_shape2_finitize (CrankShape2 *shape,
-                  CrankBox2   *box,
-                  CrankTrans2 *position)
-{
-  return NULL;
-}
-
 
 //////// CrankShape2Finite ////////////////////////////////////////////////////
 
