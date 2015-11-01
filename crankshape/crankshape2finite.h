@@ -54,8 +54,11 @@ struct _CrankShape2FiniteClass {
   CrankShape2Class        _parent;
 
   /*< public >*/
+  // Geometry property
+  gboolean    (*is_convex)             (CrankShape2Finite      *shape);
+
   // Boundings
-  gfloat      (*get_bound_radius)    (CrankShape2Finite  *shape);
+  gfloat      (*get_bound_radius)      (CrankShape2Finite      *shape);
 
   gpointer      _PADDING1;
   gpointer      _PADDING2;
@@ -73,6 +76,8 @@ struct _CrankShape2FiniteClass {
 
 
 //////// Function prototypes ///////////////////////////////////////////////////
+gboolean        crank_shape2_finite_is_convex (CrankShape2Finite *shape);
+
 
 gfloat          crank_shape2_finite_get_bound_radius(CrankShape2Finite     *shape);
 

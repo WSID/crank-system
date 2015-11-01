@@ -135,6 +135,25 @@ crank_shape2_finite_finitize (CrankShape2 *shape,
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
+ * crank_shape2_finite_is_convex:
+ * @shape: A Shape.
+ *
+ * Check whether the shape is convex.
+ *
+ * Some operation may require shapes to be convex. (Such like, GJK,...)
+ *
+ * Returns: A Radius.
+ */
+gboolean
+crank_shape2_finite_is_convex (CrankShape2Finite *shape)
+{
+  CrankShape2FiniteClass *c_shape;
+  c_shape = CRANK_SHAPE2_FINITE_GET_CLASS (shape);
+
+  return c_shape->is_convex (shape);
+}
+
+/**
  * crank_shape2_finite_get_bound_radius:
  * @shape: A Shape.
  *

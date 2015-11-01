@@ -66,7 +66,10 @@
 
 //////// Virtual function implementations //////////////////////////////////////
 
+static gboolean                 crank_shape2_polygon_is_convex (CrankShape2Finite *shape);
+
 static CrankShape2Polygon      *crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape);
+
 
 //////// Default implementation prototype //////////////////////////////////////
 
@@ -110,6 +113,7 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
 
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
+  c_shape2_finite->is_convex = crank_shape2_polygon_is_convex;
   c_shape2_finite->approximate_polygon = crank_shape2_polygon_approximate_polygon;
 
   c->get_nedges = crank_shape2_polygon_get_nedges_def;
@@ -120,6 +124,43 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
 }
 
 //////// CrankShape2Finite /////////////////////////////////////////////////////
+
+static gboolean
+crank_shape2_polygon_is_convex (CrankShape2Finite *shape)
+{
+  CrankShape2Polygon *self = (CrankShape2Polygon*) shape;
+  guint i, n;
+
+  CrankVecFloat2 cvert[3];
+  CrankVecFloat2 seg[2];
+  gfloat crs;
+
+  n = crank_shape2_polygon_get_nvertices (self);
+
+  if (n < 4) return TRUE; // Triangle is always convex.
+
+  crank_shape2_polygon_get_vertex (self, 0, cvert + 0);
+  crank_shape2_polygon_get_vertex (self, 1, cvert + 1);
+  crank_shape2_polygon_get_vertex (self, 2, cvert + 2);
+
+  crank_vec_float2_sub (cvert + 1, cvert + 0, seg + 0);
+  crank_vec_float2_sub (cvert + 2, cvert + 1, seg + 1);
+
+  crs = seg[0].x * seg[1].y - seg[1].x * seg[0].y;
+
+  for (i = 3; i < n; i++)
+    {
+      gfloat vcrs;
+      crank_shape2_polygon_get_vertex (self, i, cvert + (i % 3));
+      crank_vec_float2_sub (cvert + 1, cvert + 0, seg + 0);
+      crank_vec_float2_sub (cvert + 2, cvert + 1, seg + 1);
+      vcrs = seg[0].x * seg[1].y - seg[1].x * seg[0].y;
+
+      if (crs * vcrs < 0) return FALSE;
+    }
+
+  return TRUE;
+}
 
 CrankShape2Polygon*
 crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape)
