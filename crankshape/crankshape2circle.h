@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPE2CIRCLE_H
+#define CRANKSHAPE2CIRCLE_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,23 +22,41 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshape2circle.h cannot be included directly.
+#endif
 
+#include <glib.h>
+#include <glib-object.h>
+#include "crankbase.h"
 #include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
-
 #include "crankshape2.h"
 #include "crankshape2finite.h"
-#include "crankshape2polygon.h"
-#include "crankshape2cpolygon.h"
 
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2circle.h"
+G_BEGIN_DECLS
+//////// Type declaration //////////////////////////////////////////////////////
+
+#define CRANK_TYPE_SHAPE2_CIRCLE crank_shape2_circle_get_type ()
+
+G_DECLARE_FINAL_TYPE (CrankShape2Circle,
+                      crank_shape2_circle,
+                      CRANK, SHAPE2_CIRCLE,
+                      CrankShape2Finite)
 
 
-#undef _CRANKSHAPE_INSIDE
+//////// Constructors //////////////////////////////////////////////////////////
 
-#endif /* CRANKSHAPE_H */
+CrankShape2Circle      *crank_shape2_circle_new (const gfloat radius);
+
+
+//////// Property getter/setters ///////////////////////////////////////////////
+
+gfloat                  crank_shape2_circle_get_radius (CrankShape2Circle *circle);
+
+void                    crank_shape2_circle_set_radius (CrankShape2Circle *circle,
+                                                        const gfloat       radius);
+
+
+G_END_DECLS
+
+#endif
