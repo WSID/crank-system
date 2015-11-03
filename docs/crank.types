@@ -37,6 +37,6 @@ crank_box2_get_type
 crank_euler_get_type
 
 crank_shape2_get_type
-crank_shape2_ifinite_get_type
-crank_shape2_ipolygon_get_type
+crank_shape2_finite_get_type
+crank_shape2_polygon_get_type
 crank_shape2_cpolygon_get_type
