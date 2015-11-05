@@ -42,26 +42,6 @@
  */
 
 
-//////// Private functions /////////////////////////////////////////////////////
-
-static void     _crank_trans2_rotv2 (CrankVecFloat2  *a,
-                                     const gfloat     b,
-                                     CrankVecFloat2  *r);
-
-static void     _crank_trans2_rotv2cs (CrankVecFloat2  *a,
-                                       const gfloat     s,
-                                       const gfloat     c,
-                                       CrankVecFloat2  *r);
-
-static void     _crank_trans2_rotv2_inplace (CrankVecFloat2  *a,
-                                             const gfloat     b);
-
-static void     _crank_trans2_rotv2cs_inplace (CrankVecFloat2  *a,
-                                               const gfloat     s,
-                                               const gfloat     c);
-
-
-
 //////// Type definition ///////////////////////////////////////////////////////
 
 G_DEFINE_BOXED_TYPE (CrankTrans2, crank_trans2, crank_trans2_dup, g_free);
@@ -211,7 +191,7 @@ crank_trans2_rotate (CrankTrans2  *a,
                      const gfloat  b,
                      CrankTrans2  *r)
 {
-  _crank_trans2_rotv2 (& a->mtrans, b, & r->mtrans);
+  crank_rot_vec2_rot (& a->mtrans, b, & r->mtrans);
 
   r->mrot = a->mrot + b;
 
@@ -229,7 +209,7 @@ void
 crank_trans2_rotate_self (CrankTrans2  *a,
                           const gfloat  b)
 {
-  _crank_trans2_rotv2_inplace (& a->mtrans, b);
+  crank_rot_vec2_rot_inplace (& a->mtrans, b);
   a->mrot += b;
 }
 
@@ -277,7 +257,7 @@ void
 crank_trans2_inverse (CrankTrans2 *a,
                       CrankTrans2 *r)
 {
-  _crank_trans2_rotv2 (& a->mtrans, - a->mrot, & r->mtrans);
+  crank_rot_vec2_rot (& a->mtrans, - a->mrot, & r->mtrans);
   crank_vec_float2_divs_self (& r->mtrans, a->mscl);
 
   r->mrot = - a->mrot;
@@ -293,7 +273,7 @@ crank_trans2_inverse (CrankTrans2 *a,
 void
 crank_trans2_inverse_self (CrankTrans2 *a)
 {
-  _crank_trans2_rotv2_inplace (& a->mtrans, - a->mrot);
+  crank_rot_vec2_rot_inplace (& a->mtrans, - a->mrot);
   crank_vec_float2_divs_self (& a->mtrans, a->mscl);
 
   a->mrot = - a->mrot;
@@ -314,7 +294,7 @@ crank_trans2_compose (CrankTrans2 *a,
                       CrankTrans2 *b,
                       CrankTrans2 *r)
 {
-  _crank_trans2_rotv2 (& b->mtrans, a->mrot, & r->mtrans);
+  crank_rot_vec2_rot (& b->mtrans, a->mrot, & r->mtrans);
   crank_vec_float2_muls_self (& r->mtrans, a->mscl);
   crank_vec_float2_add_self (& r->mtrans, & a->mtrans);
 
@@ -335,7 +315,7 @@ crank_trans2_compose_self (CrankTrans2 *a,
 {
   CrankVecFloat2 mtrans;
   
-  _crank_trans2_rotv2 (& b->mtrans, a->mrot, & mtrans);
+  crank_rot_vec2_rot (& b->mtrans, a->mrot, & mtrans);
   crank_vec_float2_muls_self (& mtrans, a->mscl);
 
   crank_vec_float2_add_self (& a->mtrans, & mtrans);
@@ -359,7 +339,7 @@ crank_trans2_transv (CrankTrans2    *a,
                      CrankVecFloat2 *b,
                      CrankVecFloat2 *r)
 {
-  _crank_trans2_rotv2 (& a->mtrans, a->mrot, r);
+  crank_rot_vec2_rot (& a->mtrans, a->mrot, r);
   
   crank_vec_float2_muls_self (r, a->mscl);
   crank_vec_float2_add_self (r, & a->mtrans);
@@ -690,50 +670,4 @@ crank_trans3_transv (CrankTrans3    *a,
 
   crank_vec_float3_muls_self (r, a->mscl);
   crank_vec_float3_add_self (r, & a->mtrans);
-}
-
-
-
-//////// Private functions /////////////////////////////////////////////////////
-static void
-_crank_trans2_rotv2 (CrankVecFloat2  *a,
-                     const gfloat     b,
-                     CrankVecFloat2  *r)
-{
-  gfloat s = sinf (b);
-  gfloat c = cosf (b);
-  
-  _crank_trans2_rotv2cs (a, s, c, r);
-}
-
-static void
-_crank_trans2_rotv2cs (CrankVecFloat2 *a,
-                       const gfloat    s,
-                       const gfloat    c,
-                       CrankVecFloat2 *r)
-{
-  r->x = a->x * c - a->y * s;
-  r->y = a->x * s + a->y * c;
-}
-
-static void
-_crank_trans2_rotv2_inplace (CrankVecFloat2  *a,
-                     		 const gfloat     b)
-{
-  gfloat s = sinf (b);
-  gfloat c = cosf (b);
-  
-  _crank_trans2_rotv2cs_inplace (a, s, c);
-}
-
-static void
-_crank_trans2_rotv2cs_inplace (CrankVecFloat2 *a,
-				               const gfloat    s,
-				               const gfloat    c)
-{
-  gfloat mx = a->x;
-  gfloat my = a->y;
-  
-  a->x = mx * c - my * s;
-  a->y = mx * s + my * c;
 }
