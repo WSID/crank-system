@@ -33,6 +33,21 @@
 
 G_BEGIN_DECLS
 
+//////// Rotation in 2D ////////////////////////////////////////////////////////
+
+void            crank_rot_vec2_rot     (CrankVecFloat2 *vec,
+                                        const gfloat    angle,
+                                        CrankVecFloat2 *result);
+
+void            crank_rot_vec2_rot_inplace (CrankVecFloat2 *vec,
+                                            const gfloat    angle);
+
+void            crank_rot_vec2_left    (CrankVecFloat2 *vec,
+                                        CrankVecFloat2 *left);
+
+void            crank_rot_vec2_right   (CrankVecFloat2 *vec,
+                                        CrankVecFloat2 *right);
+
 //////// Coversions between rotation representations ///////////////////////////
 
 void            crank_rot_quat_float_to_mat_float3       (CrankQuatFloat *quat,

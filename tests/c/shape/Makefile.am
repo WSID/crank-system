@@ -14,7 +14,11 @@ TEST_SHAPE_LDADD= \
 
 # 대상 목록
 test_programs= \
-		test_euler
+		test_euler \
+		test_rot
 
 test_euler_SOURCES= test_euler.c
 test_euler_LDADD= $(TEST_SHAPE_LDADD)
+
+test_rot_SOURCES= test_rot.c
+test_rot_LDADD= $(TEST_SHAPE_LDADD)

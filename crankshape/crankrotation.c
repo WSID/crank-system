@@ -54,6 +54,67 @@
  * In this section, conversion are provided between quaternions and matrices.
  */
 
+/**
+ * crank_rot_vec2_rot:
+ * @vec: A Vector to rotate.
+ * @rot: Rotation.
+ * @result: (out): Result vector.
+ *
+ * Rotate a vector with @rot.
+ */
+void
+crank_rot_vec2_rot (CrankVecFloat2 *vec,
+                    const gfloat    rot,
+                    CrankVecFloat2 *result)
+{
+  gfloat s = sinf (rot);
+  gfloat c = cosf (rot);
+
+  result->x = c * vec->x - s * vec->y;
+  result->y = s * vec->x + c * vec->y;
+}
+
+/**
+ * crank_rot_vec2_rot_inplace:
+ * @vec: (inout): A Vector to rotate.
+ * @rot: Rotation.
+ *
+ * Rotate a vector with @rot.
+ */
+void
+crank_rot_vec2_rot_inplace (CrankVecFloat2 *vec,
+                            const gfloat    rot)
+{
+  CrankVecFloat2 result;
+  crank_rot_vec2_rot (vec, rot, &result);
+  crank_vec_float2_copy (&result, vec);
+}
+
+/**
+ * crank_rot_vec2_left:
+ * @vec: A Vector to rotate.
+ * @left: (out): Result
+ */
+void
+crank_rot_vec2_left (CrankVecFloat2 *vec,
+                     CrankVecFloat2 *left)
+{
+  left->x = -vec->y;
+  left->y = vec->x;
+}
+
+/**
+ * crank_rot_vec2_right:
+ * @vec: A Vector to rotate.
+ * @right: (out): Result
+ */
+void
+crank_rot_vec2_right (CrankVecFloat2 *vec,
+                      CrankVecFloat2 *right)
+{
+  right->x = vec->y;
+  right->y = -vec->x;
+}
 
 /**
  * crank_rot_quat_float_to_mat_float3:

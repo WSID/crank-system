@@ -16,7 +16,8 @@ AM_CFLAGS= \
 
 # 대상 목록
 test_programs= \
-		test_euler
+		test_euler \
+		test_rot
 
 
 
@@ -30,3 +31,12 @@ test_euler_LDADD= \
 test_euler_SOURCES= \
 		test_euler.vala
 
+
+test_rot_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(CRANK_SHAPE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la \
+		$(top_builddir)/crankshape/libcrankshape.la
+
+test_rot_SOURCES= \
+		test_rot.vala

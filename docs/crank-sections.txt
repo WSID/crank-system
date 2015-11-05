@@ -2013,6 +2013,9 @@ crank_box2_get_type
 
 <SECTION>
 <FILE>crankrotation</FILE>
+crank_rot_vec2_rot
+crank_rot_vec2_left
+crank_rot_vec2_right
 crank_rot_quat_float_to_mat_float3
 crank_rot_quat_float_to_mat_float4
 crank_rot_mat_float3_to_quat_float
