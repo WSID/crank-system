@@ -34,10 +34,18 @@
  * @stability: Unstable
  * @include: crankshape.h
  *
- * This interface defines methods for finite shapes.
+ * Represents a finite shape.
  *
- * Finite shape will have limited range of placement of points. Thus, it will
- * have limited bounding boxes.
+ * # Abstract Functions
+ *
+ * * #CrankShape2FiniteClass.is_convex()
+ * * #CrankShape2FiniteClass.get_bound_radius()
+ * * #CrankShape2FiniteClass.approximate_polygon()
+ *
+ * # Virtual Functions
+ *
+ * * #CrankShape2Class.finitize(): As this is already finite shape, default
+ *   implementaion will return a list that contains self.
  */
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -53,6 +61,12 @@ static void     crank_shape2_finite_get_property       (GObject        *object,
                                                         guint           prop_id,
                                                         GValue         *value,
                                                         GParamSpec     *pspec);
+
+static void     crank_shape2_finite_set_property       (GObject      *object,
+                                                        guint         prop_id,
+                                                        const GValue *value,
+                                                        GParamSpec   *pspec);
+
 
 static GList   *crank_shape2_finite_finitize           (CrankShape2    *shape,
                                                         CrankBox2      *box);
@@ -85,6 +99,7 @@ crank_shape2_finite_class_init (CrankShape2FiniteClass *c)
   c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->get_property = crank_shape2_finite_get_property;
+  c_gobject->set_property = crank_shape2_finite_set_property;
 
   pspecs[PROP_BOUND_RADIUS] = g_param_spec_float (
         "bound-radius", "bound radius", "A bound radius for shape.",
@@ -121,6 +136,15 @@ crank_shape2_finite_get_property (GObject    *object,
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
+}
+
+static void
+crank_shape2_finite_set_property (GObject *object,
+                                  guint prop_id,
+                                  const GValue *value,
+                                  GParamSpec *pspec)
+{
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////

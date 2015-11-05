@@ -29,7 +29,7 @@
 /**
  * SECTION: crankbox
  * @title: Box Types.
- * @short_descroption: Box shaped vector range representations.
+ * @short_description: Box shaped vector range representations.
  * @stability: Unstable
  * @include: crankshape.h
  *

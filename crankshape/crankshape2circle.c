@@ -38,6 +38,15 @@
 
 #include "crankshape2circle.h"
 
+/**
+ * SECTION:crankshape2circle
+ * @title: CrankShape2Circle
+ * @short_description: Circle shape.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * This represents a circle.
+ */
 
 //////// Properties and signal enums ///////////////////////////////////////////
 
@@ -76,6 +85,11 @@ static CrankShape2Polygon *crank_shape2_circle_approximate_polygon (CrankShape2F
 
 //////// Type definition ///////////////////////////////////////////////////////
 
+/**
+ * CrankShape2Circle:
+ *
+ * Structure represents a circle shape.
+ */
 struct _CrankShape2Circle {
   CrankShape2Finite _parent;
 
@@ -102,14 +116,15 @@ crank_shape2_circle_class_init (CrankShape2CircleClass *c)
   CrankShape2Class *c_shape2 = CRANK_SHAPE2_CLASS (c);
   CrankShape2FiniteClass *c_shape2finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
-  pspecs[PROP_RADIUS] = g_param_spec_float ("radius", "radius", "radius",
-                                            0, G_MAXFLOAT, 1,
-                                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-
-  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
-
   c_gobject->get_property = _object_get_property;
   c_gobject->set_property = _object_set_property;
+
+  pspecs[PROP_RADIUS] = g_param_spec_float (
+      "radius", "radius", "A Bound radius",
+      0, G_MAXFLOAT, 1,
+      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
 
   c_shape2->contains = crank_shape2_circle_contains;

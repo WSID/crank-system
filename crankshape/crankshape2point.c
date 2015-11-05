@@ -60,6 +60,11 @@ static void     crank_shape2_point_get_vertex (CrankShape2Polygon *shape,
 
 //////// Type definition ///////////////////////////////////////////////////////
 
+/**
+ * CrankShape2Point:
+ *
+ * Structure represents a point shape.
+ */
 struct _CrankShape2Point {
   CrankShape2Polygon _parent;
 };

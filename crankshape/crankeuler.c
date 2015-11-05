@@ -111,7 +111,7 @@ G_DEFINE_BOXED_TYPE(CrankEuler, crank_euler, crank_euler_dup, g_free);
  * crank_euler_init:
  * @euler: (out): An euler angle.
  *
- * Initialize an identity euler angle.
+ * Initialize an invalid euler angle.
  */
 void
 crank_euler_init (CrankEuler *euler)
@@ -120,6 +120,23 @@ crank_euler_init (CrankEuler *euler)
   euler->angle2 = 0;
   euler->angle3 = 0;
   euler->etype  = CRANK_EULER_INVALID;
+}
+
+/**
+ * crank_euler_init_identity:
+ * @euler: (out): An euler angle.
+ * @etype: Type of euler angles.
+ *
+ * Initialize an identity euler angle.
+ */
+void
+crank_euler_init_identity (CrankEuler     *euler,
+                           CrankEulerType  etype)
+{
+  euler->angle1 = 0;
+  euler->angle2 = 0;
+  euler->angle3 = 0;
+  euler->etype  = etype;
 }
 
 /**

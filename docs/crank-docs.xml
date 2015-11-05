@@ -93,13 +93,16 @@
     </chapter>
 
     <chapter>
-      <title>2D Shape Characteristics</title>
+      <title>Base Class for 2D Shape</title>
       <xi:include href="xml/crankshape2.xml"/>
-      <xi:include href="xml/crankshape2ifinite.xml"/>
-      <xi:include href="xml/crankshape2ipolygon.xml"/>
+      <xi:include href="xml/crankshape2finite.xml"/>
+      <xi:include href="xml/crankshape2polygon.xml"/>
     </chapter>
     <chapter>
       <title>2D Shape Classes</title>
+      <xi:include href="xml/crankshape2point.xml"/>
+      <xi:include href="xml/crankshape2segment.xml"/>
+      <xi:include href="xml/crankshape2circle.xml"/>
       <xi:include href="xml/crankshape2cpolygon.xml"/>
     </chapter>
   </part>

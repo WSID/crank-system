@@ -41,9 +41,15 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Finite,
                           crank_shape2_finite,
                           CRANK, SHAPE2_FINITE,
                           CrankShape2)
+/**
+ * CrankShape2Finite:
+ *
+ * Structure represents a finite shape.
+ */
 
 /**
  * CrankShape2FiniteClass:
+ * @is_convex: Slot for crank_shape2_finite_is_convex()
  * @get_bound_radius: Slot for crank_shape2_finite_get_bound_radius()
  * @approximate_polygon: Slot for crank_shape2_finite_approximate_polygon()
  *
@@ -60,14 +66,19 @@ struct _CrankShape2FiniteClass {
   // Boundings
   gfloat      (*get_bound_radius)      (CrankShape2Finite      *shape);
 
+
+  /*< private >*/
   gpointer      _PADDING1;
   gpointer      _PADDING2;
   gpointer      _PADDING3;
 
+
+  /*< public >*/
   // Reduce to Polygonal shape.
 
   CrankShape2Polygon *(*approximate_polygon)   (CrankShape2Finite      *shape);
 
+  /*< private >*/
   gpointer      _PADDING5;
   gpointer      _PADDING6;
   gpointer      _PADDING7;

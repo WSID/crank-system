@@ -2089,8 +2089,16 @@ crank_trans3_get_type
 
 <SECTION>
 <FILE>crankshape2</FILE>
-crank_shape2_approximate_polygon
-crank_shape2_clip
+crank_shape2_get_position
+crank_shape2_set_position
+crank_shape2_get_pos_trans
+crank_shape2_set_pos_trans
+crank_shape2_get_pos_rot
+crank_shape2_set_pos_rot
+crank_shape2_get_pos_scl
+crank_shape2_set_pos_scl
+crank_shape2_finitize
+crank_shape2_contains
 CrankShape2
 CrankShape2Class
 <SUBSECTION Standard>
@@ -2098,6 +2106,69 @@ CRANK_TYPE_SHAPE2
 crank_shape2_get_type
 </SECTION>
 
+<SECTION>
+<FILE>crankshape2finite</FILE>
+<TITLE>CrankShape2Finite</TITLE>
+crank_shape2_finite_is_convex
+crank_shape2_finite_get_bound_radius
+crank_shape2_finite_approximate_polygon
+CrankShape2Finite
+CrankShape2FiniteClass
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_FINITE
+crank_shape2_finite_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape2polygon</FILE>
+<TITLE>CrankShape2Polygon</TITLE>
+crank_shape2_polygon_get_nvertices
+crank_shape2_polygon_get_vertex
+crank_shape2_polygon_get_nedges
+crank_shape2_polygon_get_edge
+crank_shape2_polygon_get_edge_vertices
+crank_shape2_polygon_get_edge_normal
+crank_shape2_polygon_get_farthest_vertex
+CrankShape2Polygon
+CrankShape2PolygonClass
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_POLYGON
+crank_shape2_polygon_get_type
+</SECTION>
+
+
+<SECTION>
+<FILE>crankshape2point</FILE>
+CrankShape2Point
+crank_shape2_point_new
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_POINT
+crank_shape2_point_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape2segment</FILE>
+CrankShape2Segment
+crank_shape2_segment_new
+crank_shape2_segment_new_with_position
+crank_shape2_segment_new_with_points
+crank_shape2_segment_get_length
+crank_shape2_segment_set_length
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_SEGMENT
+crank_shape2_segment_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape2circle</FILE>
+CrankShape2Circle
+crank_shape2_circle_new
+crank_shape2_circle_get_radius
+crank_shape2_circle_set_radius
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_CIRCLE
+crank_shape2_circle_get_type
+</SECTION>
 
 <SECTION>
 <FILE>crankshape2cpolygon</FILE>
@@ -2112,34 +2183,3 @@ CrankShape2CPolygon
 CRANK_TYPE_SHAPE2_CPOLYGON
 crank_shape2_cpolygon_get_type
 </SECTION>
-
-<SECTION>
-<FILE>crankshape2ifinite</FILE>
-<TITLE>CrankShape2IFinite</TITLE>
-CrankShape2IFiniteInterface
-crank_shape2_ifinite_get_bradius
-crank_shape2_ifinite_get_aabb
-crank_shape2_ifinite_get_obb
-CrankShape2IFinite
-<SUBSECTION Standard>
-CRANK_TYPE_SHAPE2_IFINITE
-crank_shape2_ifinite_get_type
-</SECTION>
-
-<SECTION>
-<FILE>crankshape2ipolygon</FILE>
-<TITLE>CrankShape2IPolygon</TITLE>
-CrankShape2IPolygonInterface
-crank_shape2_ipolygon_get_nvertices
-crank_shape2_ipolygon_get_vertex
-crank_shape2_ipolygon_get_nedges
-crank_shape2_ipolygon_get_edge
-crank_shape2_ipolygon_get_edge_vertices
-crank_shape2_ipolygon_get_edge_normal
-crank_shape2_ipolygon_get_farthest_vertex
-CrankShape2IPolygon
-<SUBSECTION Standard>
-CRANK_TYPE_SHAPE2_IPOLYGON
-crank_shape2_ipolygon_get_type
-</SECTION>
-

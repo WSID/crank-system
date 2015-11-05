@@ -48,7 +48,7 @@ G_DECLARE_FINAL_TYPE (CrankShape2Segment,
 
 CrankShape2Segment *crank_shape2_segment_new (const gfloat length);
 
-CrankShape2Segment *crank_shape2_segment_new_with_positoin (const gfloat  length,
+CrankShape2Segment *crank_shape2_segment_new_with_position (const gfloat  length,
                                                             CrankTrans2  *position);
 
 CrankShape2Segment *crank_shape2_segment_new_with_points (CrankVecFloat2 *a,

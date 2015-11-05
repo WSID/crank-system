@@ -35,33 +35,24 @@
  * @stability: Unstable
  * @include: crankshape.h
  *
- * This interface describes operations that can be done on polygons.
+ * This represents a polygonal shape.
  *
- * # Default implementations
+ * # Abstract functions.
  *
- * #CrankShape2Polygon has default implementation with several assumption.
+ * * #CrankShape2PolygonClass.get_nvertices
+ * * #CrankShape2PolygonClass.get_vertex
  *
- * * The polygon has same number of edges, to the number of vertices (As ordinary
- *   polygons have same number of both.)
- * * The edges are winding polygons in counter-clockwise.
+ * # Virtual functions.
  *
- * This assumption applies to
- * * #CrankShape2PolygonInterface.get_nedges
- * * #CrankShape2PolygonInterface.get_edge
- * * #CrankShape2PolygonInterface.get_edge_vertices
- * * #CrankShape2PolygonInterface.get_edge_normal
+ * * #CrankShape2FiniteClass.approximate_polygon(): As this is already polygonal,
+ *   default implementation will return self.
  *
- * If implementing class does not follows assumption from above, it should
- * provide its own implementation. It may override these for more efficient
- * implementation.
+ * * #CrankShape2PolygonClass.get_nedges()
+ * * #CrankShape2PolygonClass.get_edge()
+ * * #CrankShape2PolygonClass.get_edge_vertices()
+ * * #CrankShape2PolygonClass.get_edge_normal()
  *
- * For #CrankShape2PolygonInterface.get_farthest_vertex, default implementation
- * iterates all over vertices.
- *
- * #CrankShape2Polygon does not provide default implementation for these.
- *
- * * #CrankShape2PolygonInterface.get_nvertices
- * * #CrankShape2PolygonInterface.get_vertex
+ * * #CrankShape2PolygonClass.get_farthest_vertex()
  */
 
 //////// Virtual function implementations //////////////////////////////////////

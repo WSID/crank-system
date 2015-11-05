@@ -48,7 +48,15 @@ typedef struct _CrankShape2Finite CrankShape2Finite;
 G_DECLARE_DERIVABLE_TYPE (CrankShape2, crank_shape2, CRANK, SHAPE2, GObject)
 
 /**
+ * CrankShape2:
+ *
+ * Structure for 2D shape representations.
+ */
+
+/**
  * CrankShape2Class:
+ * @contains: Slot for crank_shape2_contains()
+ * @finitize: Slot for crank_shape2_finitize()
  *
  * Virtual Function table and signal handler table for shape class.
  */

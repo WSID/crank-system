@@ -33,9 +33,12 @@
  * @stability: Unstable
  * @include: crankshape.h
  *
- * This class is base class for 2 dimensional shapes.
+ * This class is base class for 2 dimensional shapes without separated parts.
  *
- * Basically this represents single chunk of shape.
+ * # Abstract functions
+ *
+ * * #CrankShape2Class.contains()
+ * * #CrankShape2Class.finitize()
  */
 
 //////// List of virtual functions /////////////////////////////////////////////
@@ -87,45 +90,26 @@ crank_shape2_class_init (CrankShape2Class *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
 
-  /**
-   * CrankShape2:position:
-   *
-   * A Position of shape.
-   */
+  c_gobject->get_property = crank_shape2_get_property;
+  c_gobject->set_property = crank_shape2_set_property;
+
   pspecs[PROP_POSITION] = g_param_spec_boxed ("position", "position", "position",
                                               CRANK_TYPE_TRANS2,
                                               G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
 
-  /**
-   * CrankShape2:pos-trans:
-   *
-   * Translational position of a shape.
-   */
   pspecs[PROP_POS_TRANS] = g_param_spec_boxed ("pos-trans", "pos-trans", "translational position",
                                                CRANK_TYPE_VEC_FLOAT2,
                                                G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
 
-  /**
-   * CrankShape2:pos-rot:
-   *
-   * Rotational position of a shape.
-   */
   pspecs[PROP_POS_ROT] = g_param_spec_float ("pos-rot", "pos-rot", "rotational position",
                                              - G_MAXFLOAT, G_MAXFLOAT, 0,
                                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
 
-  /**
-   * CrankShape2:pos-trans:
-   *
-   * Translational position of a shape.
-   */
   pspecs[PROP_POS_SCL] = g_param_spec_float ("pos-scl", "pos-scl", "scale",
                                              0, G_MAXFLOAT, 0,
                                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
-  c_gobject->get_property = crank_shape2_get_property;
-  c_gobject->set_property = crank_shape2_set_property;
 }
 
 
@@ -230,7 +214,7 @@ crank_shape2_set_position (CrankShape2 *shape,
 /**
  * crank_shape2_get_pos_trans:
  * @shape: A Shape
- * @position: (out): Translation (linear position) of a shape.
+ * @trans: (out): Translation (linear position) of a shape.
  *
  * Gets translation of shape
  */
@@ -308,7 +292,7 @@ crank_shape2_get_pos_scl (CrankShape2 *shape)
  * @shape: A Shape
  * @scl: Scale of shape.
  *
- * Returns: Scale of shape.
+ * Sets scale of shape.
  */
 void
 crank_shape2_set_pos_scl (CrankShape2 *shape,
@@ -327,7 +311,7 @@ crank_shape2_set_pos_scl (CrankShape2 *shape,
  *
  * Checks @shape is containing @point.
  *
- * Returns: whether the @point contains @shape.
+ * Returns: Whether the @point contains @shape.
  */
 gboolean
 crank_shape2_contains (CrankShape2    *shape,
@@ -345,9 +329,8 @@ crank_shape2_contains (CrankShape2    *shape,
  * crank_shape2_finitize:
  * @shape: A Shape.
  * @box: A Finite box
- * @position: (out): position of finite part.
  *
- * Gets a finite part of shape that works in @box.
+ * Gets a finite part of shape that usable with @box.
  *
  * Returns: (transfer full) (element-type CrankShape2Finite):
  *      Finite parts of shape.

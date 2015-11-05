@@ -92,6 +92,11 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
+/**
+ * CrankShape2Segment:
+ *
+ * Structure represents a segment shape.
+ */
 struct _CrankShape2Segment {
   CrankShape2Polygon _parent;
 
