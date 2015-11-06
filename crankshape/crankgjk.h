@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKGJK_H
+#define CRANKGJK_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,25 +22,32 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankgjk.h cannot be included directly.
+#endif
+
+#include <glib.h>
+#include <glib-object.h>
+
+#include "crankbase.h"
 
 #include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
-
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
-#include "crankshape2cpolygon.h"
 
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2circle.h"
+G_BEGIN_DECLS
 
-#include "crankgjk.h"
+gboolean        crank_gjk2     (CrankShape2Polygon *a,
+                                CrankShape2Polygon *b,
+                                CrankTrans2        *bpos);
+
+gboolean        crank_gjk2_full (CrankShape2Polygon *a,
+                                 CrankShape2Polygon *b,
+                                 CrankTrans2        *bpos,
+                                 CrankVecFloat2     *triangle);
 
 
-#undef _CRANKSHAPE_INSIDE
+G_END_DECLS
 
-#endif /* CRANKSHAPE_H */
+#endif

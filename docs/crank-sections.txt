@@ -2187,3 +2187,10 @@ CrankShape2CPolygon
 CRANK_TYPE_SHAPE2_CPOLYGON
 crank_shape2_cpolygon_get_type
 </SECTION>
+
+
+<SECTION>
+<FILE>crankgjk</FILE>
+crank_gjk2
+crank_gjk2_full
+</SECTION>
