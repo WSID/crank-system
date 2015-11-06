@@ -160,6 +160,9 @@ void            crank_vec_float2_sub_self       (CrankVecFloat2 *a,
 gfloat          crank_vec_float2_dot            (CrankVecFloat2 *a,
                                                  CrankVecFloat2 *b);
 
+gfloat          crank_vec_float2_crs            (CrankVecFloat2 *a,
+                                                 CrankVecFloat2 *b);
+
 //////// Component vector operations ////////
 
 void            crank_vec_float2_cmpmul     (CrankVecFloat2 *a,

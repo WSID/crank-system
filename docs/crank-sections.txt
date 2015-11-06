@@ -980,6 +980,7 @@ crank_vec_float2_add_self
 crank_vec_float2_sub
 crank_vec_float2_sub_self
 crank_vec_float2_dot
+crank_vec_float2_crs
 crank_vec_float2_cmpmul
 crank_vec_float2_cmpmul_self
 crank_vec_float2_cmpdiv

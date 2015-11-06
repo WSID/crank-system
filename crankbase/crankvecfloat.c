@@ -748,6 +748,22 @@ crank_vec_float2_dot (CrankVecFloat2 *a,
   return (a->x) * (b->x) + (a->y) * (b->y);
 }
 
+/**
+ * crank_vec_float2_crs:
+ * @a: A vector
+ * @b: A vector
+ *
+ * Gets Z component of cross product of two vectors.
+ *
+ * Returns: Cross product of two vectors, as scalar.
+ */
+gfloat
+crank_vec_float2_crs (CrankVecFloat2 *a,
+                      CrankVecFloat2 *b)
+{
+  return (a->x) * (b->y) - (a->y) * (b->x);
+}
+
 //////// Component vector operations ////////
 
 /**
