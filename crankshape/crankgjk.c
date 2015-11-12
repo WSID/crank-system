@@ -118,6 +118,11 @@ crank_gjk2_full (CrankShape2Polygon *a,
   CrankVecFloat2 seg;
   gfloat crs;
 
+  CrankTrans2   aobjp;
+  CrankTrans2   bobjp;
+
+  CrankTrans2   brpos;
+
   // Check convex
   if (! (crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(a)) &&
          crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
@@ -128,6 +133,12 @@ crank_gjk2_full (CrankShape2Polygon *a,
     triangle = g_alloca ( sizeof (CrankVecFloat2) * 3 );
 
   // TODO: Gets position.
+  crank_shape2_get_position ((CrankShape2*)a, &aobjp);
+  crank_shape2_get_position ((CrankShape2*)b, &bobjp);
+
+  crank_trans2_inverse (&aobjp, &brpos);
+  crank_trans2_compose_self (&brpos, bpos);
+  crank_trans2_compose_self (&brpos, &bobjp);
 
   //////// Build initial starting segments.
   crank_vec_float2_neg (&bpos->mtrans, &dir);
