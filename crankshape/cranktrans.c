@@ -121,8 +121,8 @@ crank_trans2_copy (CrankTrans2 *trans,
                    CrankTrans2 *other)
 {
   crank_vec_float2_copy (& trans->mtrans, & other->mtrans);
-  trans->mrot = other->mrot;
-  trans->mscl  = other->mscl;
+  other->mrot = trans->mrot;
+  other->mscl  = trans->mscl;
 }
 
 /**
@@ -439,7 +439,7 @@ crank_trans3_copy (CrankTrans3 *trans,
 {
   crank_vec_float3_copy (& trans->mtrans, & other->mtrans);
   crank_quat_float_copy (& trans->mrot, & other->mrot);
-  trans->mscl  = other->mscl;
+  other->mscl  = trans->mscl;
 }
 
 /**
