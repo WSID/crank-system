@@ -18,7 +18,8 @@ AM_CFLAGS= \
 test_programs= \
 		test_euler \
 		test_rot \
-		test_trans
+		test_trans \
+		test_gjk
 
 
 
@@ -51,3 +52,13 @@ test_trans_LDADD= \
 
 test_trans_SOURCES= \
 		test_trans.vala
+
+
+test_gjk_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(CRANK_SHAPE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la \
+		$(top_builddir)/crankshape/libcrankshape.la
+
+test_gjk_SOURCES= \
+		test_gjk.vala

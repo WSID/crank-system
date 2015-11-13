@@ -3,7 +3,8 @@
 TESTS= \
 	test_euler.py \
 	test_rot.py \
-	test_trans.py
+	test_trans.py \
+	test_gjk.py
 
 AM_TESTS_ENVIRONMENT= \
 	LD_LIBRARY_PATH=$(top_builddir)/crankbase/.libs/:$(top_builddir)/crankshape/.libs/ \
