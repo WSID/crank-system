@@ -255,7 +255,7 @@ crank_shape2_cpolygon_insert_vertex (CrankShape2CPolygon *polygon,
                                      guint index,
                                      CrankVecFloat2 *vertex)
 {
-  g_array_insert_val (polygon->vertices, index, vertex);
+  g_array_insert_val (polygon->vertices, index, *vertex);
 }
 
 /**
@@ -269,7 +269,7 @@ void
 crank_shape2_cpolygon_append_vertex (CrankShape2CPolygon *polygon,
                                      CrankVecFloat2      *vertex)
 {
-  g_array_append_val (polygon->vertices, vertex);
+  g_array_append_val (polygon->vertices, *vertex);
 }
 
 /**
