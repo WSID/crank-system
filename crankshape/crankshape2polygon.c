@@ -240,7 +240,6 @@ crank_shape2_polygon_get_farthest_vertex_def (CrankShape2Polygon *shape,
 
   gfloat dot;
 
-
   crank_shape2_polygon_get_vertex (shape, 0, vertex);
   j = 0;
   dot = crank_vec_float2_dot (direction, vertex);
@@ -251,7 +250,7 @@ crank_shape2_polygon_get_farthest_vertex_def (CrankShape2Polygon *shape,
       gfloat ndot;
 
       crank_shape2_polygon_get_vertex (shape, i, &nvertex);
-      ndot = crank_vec_float2_dot (vertex, &nvertex);
+      ndot = crank_vec_float2_dot (direction, &nvertex);
 
       if (dot < ndot)
         {
