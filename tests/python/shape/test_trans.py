@@ -52,7 +52,7 @@ class TestTrans (unittest.TestCase):
 
         a.mtrans = CrankBase.VecFloat2.init (3, 4)
         a.mrot = math.pi * 0.25
-        a.mscl = 2;
+        a.mscl = 2
 
         trans = CrankBase.VecFloat2.init (6, 1)
 
@@ -69,7 +69,7 @@ class TestTrans (unittest.TestCase):
 
         a.mtrans = CrankBase.VecFloat2.init (3, 4)
         a.mrot = math.pi * 0.25
-        a.mscl = 2;
+        a.mscl = 2
 
         b = a.rotate (math.pi * 0.25)
 
@@ -84,7 +84,7 @@ class TestTrans (unittest.TestCase):
 
         a.mtrans = CrankBase.VecFloat2.init (3, 4)
         a.mrot = math.pi * 0.25
-        a.mscl = 2;
+        a.mscl = 2
 
         b = a.scale (2)
 
@@ -98,7 +98,7 @@ class TestTrans (unittest.TestCase):
 
         a.mtrans = CrankBase.VecFloat2.init (3, 4)
         a.mrot = math.pi * 0.25
-        a.mscl = 2;
+        a.mscl = 2
 
         b = a.inverse ()
 
@@ -112,13 +112,13 @@ class TestTrans (unittest.TestCase):
 
         a.mtrans = CrankBase.VecFloat2.init (3, 4)
         a.mrot = math.pi * 0.25
-        a.mscl = 2;
+        a.mscl = 2
 
         b = CrankShape.Trans2 ()
 
         b.mtrans = CrankBase.VecFloat2.init (1, 2)
         b.mrot = math.pi * 0.5
-        b.mscl = 1.5;
+        b.mscl = 1.5
 
         c = a.compose (b)
 
