@@ -130,8 +130,8 @@ test_2_inverse (void)
 
   crank_trans2_inverse (&a, &b);
 
-  crank_assert_cmpfloat (b.mtrans.x, ==, 2.4749f);
-  crank_assert_cmpfloat (b.mtrans.y, ==, 0.3536f);
+  crank_assert_cmpfloat (b.mtrans.x, ==, -2.4749f);
+  crank_assert_cmpfloat (b.mtrans.y, ==, -0.3536f);
 
   crank_assert_cmpfloat (b.mrot, ==, -G_PI_4);
   crank_assert_cmpfloat (b.mscl, ==, 0.5f);

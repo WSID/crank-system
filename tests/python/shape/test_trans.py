@@ -102,8 +102,8 @@ class TestTrans (unittest.TestCase):
 
         b = a.inverse ()
 
-        self.assertFloat (b.mtrans.x, 2.4749)
-        self.assertFloat (b.mtrans.y, 0.3536)
+        self.assertFloat (b.mtrans.x, -2.4749)
+        self.assertFloat (b.mtrans.y, -0.3536)
         self.assertFloat (b.mrot, -math.pi * 0.25)
         self.assertFloat (b.mscl, 0.5)
 

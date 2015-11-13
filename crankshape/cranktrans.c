@@ -259,6 +259,7 @@ crank_trans2_inverse (CrankTrans2 *a,
 {
   crank_rot_vec2_rot (& a->mtrans, - a->mrot, & r->mtrans);
   crank_vec_float2_divs_self (& r->mtrans, a->mscl);
+  crank_vec_float2_neg_self (& r->mtrans);
 
   r->mrot = - a->mrot;
   r->mscl = 1 / a->mscl;

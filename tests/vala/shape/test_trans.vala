@@ -97,8 +97,8 @@ void test_2_inverse () {
 
     Crank.Trans2 b = a.inverse ();
 
-    Crank.assert_eqfloat (b.mtrans.x, 2.4749f);
-    Crank.assert_eqfloat (b.mtrans.y, 0.3536f);
+    Crank.assert_eqfloat (b.mtrans.x, -2.4749f);
+    Crank.assert_eqfloat (b.mtrans.y, -0.3536f);
 
     Crank.assert_eqfloat (b.mrot, (float)(-GLib.Math.PI_4));
     Crank.assert_eqfloat (b.mscl, 0.5f);
