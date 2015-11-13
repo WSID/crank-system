@@ -33,6 +33,8 @@ void    test_2_inverse (void);
 
 void    test_2_compose (void);
 
+void    test_2_transv (void);
+
 
 int main (int    argc,
           char **argv)
@@ -53,6 +55,9 @@ int main (int    argc,
 
   g_test_add_func ("/crank/shape/trans/2/compose",
                    test_2_compose);
+
+  g_test_add_func ("/crank/shape/trans/2/transv",
+                   test_2_transv);
 
   return g_test_run ();
 }
@@ -159,4 +164,23 @@ test_2_compose (void)
   crank_assert_cmpfloat (c.mtrans.y, ==, 8.2426f);
   crank_assert_cmpfloat (c.mrot, ==, G_PI_2 + G_PI_4);
   crank_assert_cmpfloat (c.mscl, ==, 3.0f);
+}
+
+void
+test_2_transv (void)
+{
+  CrankTrans2 a;
+  CrankVecFloat2 b;
+  CrankVecFloat2 c;
+
+  crank_vec_float2_init (& a.mtrans, 3, 4);
+  a.mrot = G_PI_4;
+  a.mscl = 2;
+
+  crank_vec_float2_init (&b, 5, 12);
+
+  crank_trans2_transv (&a, &b, &c);
+
+  crank_assert_cmpfloat (c.x, ==, -6.8995f);
+  crank_assert_cmpfloat (c.y, ==, 28.0416f);
 }

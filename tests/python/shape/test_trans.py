@@ -126,3 +126,19 @@ class TestTrans (unittest.TestCase):
         self.assertFloat (c.mtrans.y, 8.2426)
         self.assertFloat (c.mrot, math.pi * 0.75)
         self.assertFloat (c.mscl, 3.0)
+
+    def test_2_transv (self):
+        a = CrnakShape.Trans2 ()
+
+        a.mtrans = CrankBase.VecFloat2.init (3, 4)
+        a.mrot = math.pi * 0.25
+        a.mscl = 2
+
+        b = CrankBase.VecFloat2.init (5, 12)
+
+        c = a.transv (b)
+
+        self.assertFloat (c.x, -6.8995)
+        self.assertFloat (c.y, 28.0416)
+
+        

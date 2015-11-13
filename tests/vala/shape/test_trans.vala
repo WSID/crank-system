@@ -37,6 +37,9 @@ int main (string[] args) {
     GLib.Test.add_func ("/crank/shape/trans/2/compose",
         test_2_compose);
 
+    GLib.Test.add_func ("/crank/shape/trans/2/transv",
+        test_2_transv);
+
     return GLib.Test.run ();
 }
 
@@ -125,4 +128,17 @@ void test_2_compose () {
 
     Crank.assert_eqfloat (c.mrot, (float)(GLib.Math.PI_4 + GLib.Math.PI_2));
     Crank.assert_eqfloat (c.mscl, 3.0f);
+}
+
+void test_2_transv () {
+    Crank.Trans2 a = Crank.Trans2 ();
+
+    a.mtrans = {3, 4};
+    a.mrot = (float)GLib.Math.PI_4;
+    a.mscl = 2;
+
+    Crank.VecFloat2 c = a.transv ({5, 12});
+
+    Crank.assert_eqfloat (c.x, -6.8995f);
+    Crank.assert_eqfloat (c.y, 28.0416f);
 }
