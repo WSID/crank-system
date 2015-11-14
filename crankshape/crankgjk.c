@@ -73,7 +73,7 @@ void    crank_gjk2_support (CrankShape2Polygon *a,
  * crank_gjk2:
  * @a: A Polygonal shape.
  * @b: A Polygonal shape.
- * @bpos: Relative position of @a and @b.
+ * @bpos: (nullable): Relative position of @a and @b.
  *
  * Checks whether two shapes have intersection.
  *
@@ -94,7 +94,7 @@ crank_gjk2 (CrankShape2Polygon *a,
  * crank_gjk2_full:
  * @a: A Polygonal shape.
  * @b: A Polygonal shape.
- * @bpos: Relative position of @a and @b.
+ * @bpos: (nullable): Relative position of @a and @b.
  * @triangle: (out caller-allocate) (array fixed-size=3) (optional): A Triangle.
  *
  * Checks whether two shapes have intersection, with resulting @triangle within
@@ -137,13 +137,14 @@ crank_gjk2_full (CrankShape2Polygon *a,
   crank_shape2_get_position ((CrankShape2*)b, &bobjp);
 
   crank_trans2_inverse (&aobjp, &brpos);
-  crank_trans2_compose_self (&brpos, bpos);
+  if (bpos != NULL)
+    crank_trans2_compose_self (&brpos, bpos);
   crank_trans2_compose_self (&brpos, &bobjp);
 
   //////// Build initial starting segments.
-  crank_vec_float2_neg (&bpos->mtrans, &dir);
-  crank_gjk2_support (a, b, bpos, & bpos->mtrans, triangle + 0);
-  crank_gjk2_support (a, b, bpos, &dir, triangle + 1);
+  crank_vec_float2_neg (&brpos.mtrans, &dir);
+  crank_gjk2_support (a, b, &brpos, & brpos.mtrans, triangle + 0);
+  crank_gjk2_support (a, b, &brpos, &dir, triangle + 1);
 
   crank_vec_float2_sub (triangle + 1, triangle + 0, &seg);
 
@@ -171,7 +172,8 @@ crank_gjk2_full (CrankShape2Polygon *a,
       else
         crank_rot_vec2_right (&seg, &ldir);
 
-      crank_gjk2_support (a, b, bpos, &ldir, triangle + 2);
+      crank_gjk2_support (a, b, &brpos, &ldir, triangle + 2);
+
 
       if (crank_vec_float2_dot (triangle + 0, &ldir) *
           crank_vec_float2_dot (triangle + 2, &ldir) > 0)
@@ -205,14 +207,13 @@ crank_gjk2_support (CrankShape2Polygon *a,
   CrankVecFloat2 bvert;
   CrankVecFloat2 abvert;
 
-  crank_rot_vec2_rot (dir, bpos->mrot, &bdir);
+  crank_rot_vec2_rot (dir, -bpos->mrot, &bdir);
   crank_vec_float2_neg_self (&bdir);
 
   crank_shape2_polygon_get_farthest_vertex (a, dir, &avert);
   crank_shape2_polygon_get_farthest_vertex (b, &bdir, &bvert);
 
   crank_trans2_transv (bpos, &bvert, &abvert);
-
   crank_vec_float2_sub (&avert, &abvert, vertex);
 }
 
