@@ -38,6 +38,9 @@
 #include "crankshape2segment.h"
 #include "crankshape2circle.h"
 
+
+#include "crankshape3.h"
+
 #include "crankgjk.h"
 
 
