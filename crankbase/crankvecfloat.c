@@ -444,6 +444,36 @@ crank_vec_float2_equal (gconstpointer a,
 }
 
 /**
+ * crank_vec_float2_equal_delta:
+ * @a: (type CrankVecFloat2): Vector to compare.
+ * @b: (type CrankVecFloat2): Vector to compare.
+ * @d: Allowed difference to be considered equal.
+ *
+ * Compares two vector for equality.
+ *
+ * Returns: whether that the two vectors are same.
+ */
+gboolean
+crank_vec_float2_equal_delta (gconstpointer a,
+                              gconstpointer b,
+                              const gfloat  d)
+{
+  CrankVecFloat2 *veca = (CrankVecFloat2*)a;
+  CrankVecFloat2 *vecb = (CrankVecFloat2*)b;
+
+  CrankVecFloat2 vecd;
+  gfloat         dm;
+  gfloat         dd;
+
+  crank_vec_float2_sub (vecb, veca, &vecd);
+
+  dm = crank_vec_float2_get_magn_sq (&vecd);
+  dd = d * d;
+
+  return (dm < dd);
+}
+
+/**
  * crank_vec_float2_to_string:
  * @vec: Vector to string.
  *
@@ -1361,6 +1391,36 @@ crank_vec_float3_equal (gconstpointer a,
   return ((veca->x == vecb->x) &&
           (veca->y == vecb->y) &&
           (veca->z == vecb->z));
+}
+
+/**
+ * crank_vec_float3_equal_delta:
+ * @a: (type CrankVecFloat3): Vector to compare.
+ * @b: (type CrankVecFloat3): Vector to compare.
+ * @d: Allowed difference to be considered equal.
+ *
+ * Compares two vector for equality.
+ *
+ * Returns: whether that the two vectors are same.
+ */
+gboolean
+crank_vec_float3_equal_delta (gconstpointer a,
+                              gconstpointer b,
+                              const gfloat  d)
+{
+  CrankVecFloat3 *veca = (CrankVecFloat3*)a;
+  CrankVecFloat3 *vecb = (CrankVecFloat3*)b;
+
+  CrankVecFloat3 vecd;
+  gfloat         dm;
+  gfloat         dd;
+
+  crank_vec_float3_sub (vecb, veca, &vecd);
+
+  dm = crank_vec_float3_get_magn_sq (&vecd);
+  dd = d * d;
+
+  return (dm < dd);
 }
 
 /**
@@ -2357,6 +2417,36 @@ crank_vec_float4_equal (gconstpointer a,
           (veca->y == vecb->y) &&
           (veca->z == vecb->z) &&
           (veca->w == vecb->w));
+}
+
+/**
+ * crank_vec_float4_equal_delta:
+ * @a: (type CrankVecFloat4): Vector to compare.
+ * @b: (type CrankVecFloat4): Vector to compare.
+ * @d: Allowed difference to be considered equal.
+ *
+ * Compares two vector for equality.
+ *
+ * Returns: whether that the two vectors are same.
+ */
+gboolean
+crank_vec_float4_equal_delta (gconstpointer a,
+                              gconstpointer b,
+                              const gfloat  d)
+{
+  CrankVecFloat4 *veca = (CrankVecFloat4*)a;
+  CrankVecFloat4 *vecb = (CrankVecFloat4*)b;
+
+  CrankVecFloat4 vecd;
+  gfloat         dm;
+  gfloat         dd;
+
+  crank_vec_float4_sub (vecb, veca, &vecd);
+
+  dm = crank_vec_float4_get_magn_sq (&vecd);
+  dd = d * d;
+
+  return (dm < dd);
 }
 
 /**
@@ -3519,6 +3609,39 @@ crank_vec_float_n_equal (gconstpointer a,
     }
 
   return TRUE;
+}
+
+/**
+ * crank_vec_float_n_equal_delta:
+ * @a: (type CrankVecFloatN): Vector to compare.
+ * @b: (type CrankVecFloatN): Vector to compare.
+ * @d: Allowed difference to be considered equal.
+ *
+ * Compares two vector for equality.
+ *
+ * Returns: whether that the two vectors are same.
+ */
+gboolean
+crank_vec_float_n_equal_delta (gconstpointer a,
+                               gconstpointer b,
+                               const gfloat  d)
+{
+  CrankVecFloatN *veca = (CrankVecFloatN*)a;
+  CrankVecFloatN *vecb = (CrankVecFloatN*)b;
+
+  CrankVecFloatN vecd;
+  gfloat         dm;
+  gfloat         dd;
+
+  if (veca->n != vecb->n)
+    return FALSE;
+
+  crank_vec_float_n_sub (vecb, veca, &vecd);
+
+  dm = crank_vec_float_n_get_magn_sq (&vecd);
+  dd = d * d;
+
+  return (dm < dd);
 }
 
 /**

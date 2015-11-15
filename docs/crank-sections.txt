@@ -963,6 +963,7 @@ crank_vec_float2_foreach
 crank_vec_float2_iterator
 crank_vec_float2_hash
 crank_vec_float2_equal
+crank_vec_float2_equal_delta
 crank_vec_float2_to_string
 crank_vec_float2_to_string_full
 crank_vec_float2_get_magn
@@ -1010,6 +1011,7 @@ crank_vec_float3_foreach
 crank_vec_float3_iterator
 crank_vec_float3_hash
 crank_vec_float3_equal
+crank_vec_float3_equal_delta
 crank_vec_float3_to_string
 crank_vec_float3_to_string_full
 crank_vec_float3_get_magn_sq
@@ -1058,6 +1060,7 @@ crank_vec_float4_foreach
 crank_vec_float4_iterator
 crank_vec_float4_hash
 crank_vec_float4_equal
+crank_vec_float4_equal_delta
 crank_vec_float4_to_string
 crank_vec_float4_to_string_full
 crank_vec_float4_get_magn_sq
@@ -1112,6 +1115,7 @@ crank_vec_float_n_foreach
 crank_vec_float_n_iterator
 crank_vec_float_n_hash
 crank_vec_float_n_equal
+crank_vec_float_n_equal_delta
 crank_vec_float_n_to_string
 crank_vec_float_n_to_string_full
 crank_vec_float_n_is_zero

@@ -96,6 +96,10 @@ guint           crank_vec_float2_hash       (gconstpointer a);
 gboolean        crank_vec_float2_equal      (gconstpointer a,
                                              gconstpointer b);
 
+gboolean        crank_vec_float2_equal_delta(gconstpointer a,
+                                             gconstpointer b,
+                                             const gfloat  d);
+
 gchar          *crank_vec_float2_to_string  (CrankVecFloat2 *vec);
 
 gchar          *crank_vec_float2_to_string_full (CrankVecFloat2 *vec,
@@ -293,6 +297,10 @@ guint           crank_vec_float3_hash       (gconstpointer a);
 
 gboolean        crank_vec_float3_equal      (gconstpointer a,
                                              gconstpointer b);
+
+gboolean        crank_vec_float3_equal_delta(gconstpointer a,
+                                             gconstpointer b,
+                                             const gfloat  d);
 
 gchar          *crank_vec_float3_to_string  (CrankVecFloat3 *vec);
 
@@ -500,6 +508,10 @@ guint           crank_vec_float4_hash       (gconstpointer a);
 
 gboolean        crank_vec_float4_equal      (gconstpointer a,
                                              gconstpointer b);
+
+gboolean        crank_vec_float4_equal_delta(gconstpointer a,
+                                             gconstpointer b,
+                                             const gfloat  d);
 
 gchar          *crank_vec_float4_to_string  (CrankVecFloat4 *vec);
 
@@ -717,6 +729,10 @@ guint           crank_vec_float_n_hash      (gconstpointer a);
 
 gboolean        crank_vec_float_n_equal     (gconstpointer a,
                                              gconstpointer b);
+
+gboolean        crank_vec_float_n_equal_delta(gconstpointer a,
+                                              gconstpointer b,
+                                              const gfloat  d);
 
 gchar          *crank_vec_float_n_to_string (CrankVecFloatN *vec);
 
