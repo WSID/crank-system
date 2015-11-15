@@ -2230,6 +2230,17 @@ crank_shape3_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankshape3finite</FILE>
+CrankShape3Finite
+CrankShape3FiniteClass
+crank_shape3_finite_is_convex
+crank_shape3_finite_get_bound_radius
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_FINITE
+crank_shape3_finite_get_type
+</SECTION>
+
+<SECTION>
 <FILE>crankgjk</FILE>
 crank_gjk2
 crank_gjk2_full

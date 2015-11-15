@@ -40,6 +40,7 @@
 
 
 #include "crankshape3.h"
+#include "crankshape3finite.h"
 
 #include "crankgjk.h"
 
