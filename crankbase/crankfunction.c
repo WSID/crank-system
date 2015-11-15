@@ -161,7 +161,7 @@ gboolean
 crank_float_equal (gconstpointer a,
                    gconstpointer b)
 {
-  crank_float_equal_delta(a, b, 0.0001f);
+  return crank_float_equal_delta(a, b, 0.0001f);
 }
 
 
