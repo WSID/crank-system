@@ -1720,6 +1720,7 @@ crank_bench_case_run (CrankBenchCase      *bcase,
 
 /**
  * crank_bench_case_invoke: (skip)
+ * @bcase: A Benchmark case to invoke.
  * @run: A Benchmark run to invoke with.
  *
  * Invokes a benchmark run.

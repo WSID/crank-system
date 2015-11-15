@@ -57,18 +57,18 @@
 /**
  * crank_rot_vec2_rot:
  * @vec: A Vector to rotate.
- * @rot: Rotation.
+ * @angle: Rotation angle.
  * @result: (out): Result vector.
  *
  * Rotate a vector with @rot.
  */
 void
 crank_rot_vec2_rot (CrankVecFloat2 *vec,
-                    const gfloat    rot,
+                    const gfloat    angle,
                     CrankVecFloat2 *result)
 {
-  gfloat s = sinf (rot);
-  gfloat c = cosf (rot);
+  gfloat s = sinf (angle);
+  gfloat c = cosf (angle);
 
   result->x = c * vec->x - s * vec->y;
   result->y = s * vec->x + c * vec->y;
@@ -77,16 +77,16 @@ crank_rot_vec2_rot (CrankVecFloat2 *vec,
 /**
  * crank_rot_vec2_rot_inplace:
  * @vec: (inout): A Vector to rotate.
- * @rot: Rotation.
+ * @angle: Rotation angle.
  *
  * Rotate a vector with @rot.
  */
 void
 crank_rot_vec2_rot_inplace (CrankVecFloat2 *vec,
-                            const gfloat    rot)
+                            const gfloat    angle)
 {
   CrankVecFloat2 result;
-  crank_rot_vec2_rot (vec, rot, &result);
+  crank_rot_vec2_rot (vec, angle, &result);
   crank_vec_float2_copy (&result, vec);
 }
 

@@ -95,7 +95,7 @@ crank_gjk2 (CrankShape2Polygon *a,
  * @a: A Polygonal shape.
  * @b: A Polygonal shape.
  * @bpos: (nullable): Relative position of @a and @b.
- * @triangle: (out caller-allocate) (array fixed-size=3) (optional): A Triangle.
+ * @triangle: (out caller-allocates) (array fixed-size=3) (optional): A Triangle.
  *
  * Checks whether two shapes have intersection, with resulting @triangle within
  * minkowski different.

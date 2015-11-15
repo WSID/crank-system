@@ -1989,6 +1989,7 @@ CrankBenchResultCase
 <SECTION>
 <FILE>crankbox</FILE>
 CrankBox2
+CrankBox3
 crank_box2_init
 crank_box2_init_uvec
 crank_box2_init_range
@@ -2006,15 +2007,36 @@ crank_box2_get
 crank_box2_index_of
 crank_box2_clamp
 crank_box2_get_intersection
+crank_box3_init
+crank_box3_init_uvec
+crank_box3_init_range
+crank_box3_init_unit
+crank_box3_copy
+crank_box3_dup
+crank_box3_has_inf
+crank_box3_has_nan
+crank_box3_get_x
+crank_box3_get_y
+crank_box3_get_z
+crank_box3_get_dimen
+crank_box3_get_diaglen
+crank_box3_contains
+crank_box3_get
+crank_box3_index_of
+crank_box3_clamp
+crank_box3_get_intersection
 <SUBSECTION Standard>
 CRANK_TYPE_BOX2
+CRANK_TYPE_BOX3
 crank_box2_get_type
+crank_box3_get_type
 </SECTION>
 
 
 <SECTION>
 <FILE>crankrotation</FILE>
 crank_rot_vec2_rot
+crank_rot_vec2_rot_inplace
 crank_rot_vec2_left
 crank_rot_vec2_right
 crank_rot_quat_float_to_mat_float3
@@ -2188,6 +2210,24 @@ CRANK_TYPE_SHAPE2_CPOLYGON
 crank_shape2_cpolygon_get_type
 </SECTION>
 
+<SECTION>
+<FILE>crankshape3</FILE>
+CrankShape3
+CrankShape3Class
+crank_shape3_get_position
+crank_shape3_set_position
+crank_shape3_get_pos_trans
+crank_shape3_set_pos_trans
+crank_shape3_get_pos_rot
+crank_shape3_set_pos_rot
+crank_shape3_get_pos_scl
+crank_shape3_set_pos_scl
+crank_shape3_contains
+crank_shape3_finitize
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3
+crank_shape3_get_type
+</SECTION>
 
 <SECTION>
 <FILE>crankgjk</FILE>
