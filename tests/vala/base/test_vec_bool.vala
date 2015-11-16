@@ -77,39 +77,27 @@ private void test_2_and () {
 	Crank.VecBool2 a = {true, true};
 	Crank.VecBool2 b = {false, true};
 	
-	Crank.VecBool2 c = a.and (b);
-	
-	assert (c.x == false);
-	assert (c.y == true);
+	Crank.assert_eq_vecbool2_imm (a.and (b), false, true);
 }
 
 private void test_2_or () {
 	Crank.VecBool2 a = {false, false};
 	Crank.VecBool2 b = {false, true};
 	
-	Crank.VecBool2 c = a.or (b);
-	
-	assert (c.x == false);
-	assert (c.y == true);
+	Crank.assert_eq_vecbool2_imm (a.or (b), false, true);
 }
 
 private void test_2_xor () {
 	Crank.VecBool2 a = {true, false};
 	Crank.VecBool2 b = {true, true};
 	
-	Crank.VecBool2 c = a.xor (b);
-	
-	assert (c.x == false);
-	assert (c.y == true);
+	Crank.assert_eq_vecbool2_imm (a.xor (b), false, true);
 }
 
 private void test_2_not () {
 	Crank.VecBool2 a = {true, false};
 	
-	Crank.VecBool2 c = a.not ();
-	
-	assert (c.x == false);
-	assert (c.y == true);
+	Crank.assert_eq_vecbool2_imm (a.not (), false, true);
 }
 
 private void test_2_any () {
@@ -176,22 +164,16 @@ private void test_n_insert () {
 	Crank.VecBoolN a = Crank.VecBoolN(4, true, false, false, true);
 
 	a.insert (2, true);
-
-	assert (a[0] == true);
-	assert (a[1] == false);
-	assert (a[2] == true);
-	assert (a[3] == false);
-	assert (a[4] == true);
+	
+	Crank.assert_eq_vecbool_n_imm (a, true, false, true, false, true);
 }
 
 private void test_n_remove () {
 	Crank.VecBoolN a = Crank.VecBoolN(4, true, false, false, true);
 
 	a.remove (2);
-
-	assert (a[0] == true);
-	assert (a[1] == false);
-	assert (a[2] == true);
+	
+	Crank.assert_eq_vecbool_n_imm (a, true, false, true);
 }
 
 private void test_n_foreach () {
@@ -210,47 +192,27 @@ private void test_n_and () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, false);
 	Crank.VecBoolN b = Crank.VecBoolN (2, true, true);
 	
-	Crank.VecBoolN c = a.and (b);
-	
-	assert (c.size == 2);
-	assert (c[0] == true);
-	assert (c[1] == false);
+	Crank.assert_eq_vecbool_n_imm (a.and (b), true, false);
 }
 
 private void test_n_or () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
 	Crank.VecBoolN b = Crank.VecBoolN (4, true, true, false, true);
 	
-	Crank.VecBoolN c = a.or (b);
-	
-	assert (c.size == 4);
-	assert (c[0] == true);
-	assert (c[1] == true);
-	assert (c[2] == false);
-	assert (c[3] == true);
+	Crank.assert_eq_vecbool_n_imm (a.or (b), true, true, false, true);
 }
 
 private void test_n_xor () {
 	Crank.VecBoolN a = Crank.VecBoolN (4, true, false, false, true);
 	Crank.VecBoolN b = Crank.VecBoolN (4, true, true, false, false);
 	
-	Crank.VecBoolN c = a.xor (b);
-	
-	assert (c.size == 4);
-	assert (c[0] == false);
-	assert (c[1] == true);
-	assert (c[2] == false);
-	assert (c[3] == true);
+	Crank.assert_eq_vecbool_n_imm (a.xor (b), false, true, false, true);
 }
 
 private void test_n_not () {
 	Crank.VecBoolN a = Crank.VecBoolN (2, true, false);
 	
-	Crank.VecBoolN c = a.not ();
-	
-	assert (c.size == 2);
-	assert (c[0] == false);
-	assert (c[1] == true);
+	Crank.assert_eq_vecbool_n_imm (a.not (), false, true);
 }
 
 private void test_n_any () {

@@ -494,7 +494,6 @@ private void test_assert_eqcplxfloat_cimm () {
 
 private void test_assert_eqcplxfloat_cimm_fail () {
 	Crank.CplxFloat	a = {3.0f, 2.0f};
-	Crank.CplxFloat	b = {4.2f, 2.1f};
 	
 	Crank.assert_eqcplxfloat_uc (a, 4.2f, 2.1f, 1.0f);
 }

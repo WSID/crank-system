@@ -131,8 +131,6 @@ private void test_digraph_disconnect_edge () {
 private void test_digraph_node_get_data () {
 	TestDigraphFixture fixture = TestDigraphFixture ();
 	
-	GLib.Value node_v = GLib.Value (typeof (int));
-	
 	for (int i = 0; i < 9; i++) {
 		assert (fixture.nodes[i].get_data ().get_int () == i);
 	}
@@ -280,24 +278,29 @@ private void test_digraph_node_foreach_breadth () {
 	
 	
 	fixture.nodes[0].foreach_breadth (accum);	
-	assert (node_list.length () == 1);
-	assert (node_list.nth_data (0) == fixture.nodes[0]);	
+	
+	Crank.assert_eq_glist_imm (node_list,
+	    fixture.nodes[0]);
 	
 	node_list = new GLib.List <unowned Crank.DigraphNode> ();
-	fixture.nodes[1].foreach_breadth (accum);	
-	assert (node_list.length () == 3);
-	assert (node_list.nth_data (0) == fixture.nodes[1]);
-	assert (node_list.nth_data (1) == fixture.nodes[2]);
-	assert (node_list.nth_data (2) == fixture.nodes[3]);
+	fixture.nodes[1].foreach_breadth (accum);
+	
+	Crank.assert_eq_glist_imm (node_list,
+	    fixture.nodes[1],
+	    fixture.nodes[2],
+	    fixture.nodes[3]);
+	
+	
 	
 	node_list = new GLib.List <unowned Crank.DigraphNode> ();
 	fixture.nodes[4].foreach_breadth (accum);	
-	assert (node_list.length () == 5);
-	assert (node_list.nth_data (0) == fixture.nodes[4]);
-	assert (node_list.nth_data (1) == fixture.nodes[5]);
-	assert (node_list.nth_data (2) == fixture.nodes[6]);
-	assert (node_list.nth_data (3) == fixture.nodes[7]);
-	assert (node_list.nth_data (4) == fixture.nodes[8]);
+	
+	Crank.assert_eq_glist_imm (node_list,
+	    fixture.nodes[4],
+	    fixture.nodes[5],
+	    fixture.nodes[6],
+	    fixture.nodes[7],
+	    fixture.nodes[8]);
 
 }
 

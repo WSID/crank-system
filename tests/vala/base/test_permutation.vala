@@ -150,9 +150,7 @@ private void test_slice () {
 	
 	uint[]	slice = p[1:4];
 	
-	assert (slice[0] == 1);
-	assert (slice[1] == 2);
-	assert (slice[2] == 4);
+	Crank.assert_eqarray_uint_imm (slice, 1, 2, 4);
 }
 
 private void test_iterator () {
