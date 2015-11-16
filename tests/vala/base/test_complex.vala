@@ -59,20 +59,11 @@ int main (string[] args) {
 }
 
 
-private bool float_eq (float a, float b, float delta = 0.0001f) {
-	bool result = ((b-delta < a) && (a < b+delta));
-
-	if (! result) printerr ("%g != %g (diff=%g)", a, b, b - a);
-
-	return result;
-}
-
-
 private void test_equal () {
 	Crank.CplxFloat	a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {3.0f, 4.0f};
 	Crank.CplxFloat c = {4.0f, 3.0f};
-	
+
 	assert (a.equal (b));
 	assert (! a.equal (c));
 }
@@ -81,7 +72,7 @@ private void test_equal_delta () {
 	Crank.CplxFloat	a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {3.2f, 4.1f};
 	Crank.CplxFloat c = {4.0f, 3.0f};
-	
+
 	assert (a.equal_delta (b, 1.0f));
 	assert (! a.equal_delta (c, 1.0f));
 }
@@ -89,209 +80,156 @@ private void test_equal_delta () {
 private void test_get_norm () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	
-	assert (float_eq (a.norm, 5.0f));
+	Crank.assert_eqfloat (a.norm, 5.0f);
 }
 
 private void test_neg () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	
-	a = a.neg ();
-	
-	assert (float_eq (a.real, -3.0f));
-	assert (float_eq (a.imag, -4.0f));
+	Crank.assert_eqcplxfloat_uc (a.neg (), -3.0f, -4.0f);
 }
 
 private void test_inverse () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	
-	a = a.inverse ();
-	
-	assert (float_eq (a.real, 0.12f));
-	assert (float_eq (a.imag, -0.16f));
+	Crank.assert_eqcplxfloat_uc (a.inverse (), 0.12f, -0.16f);
 }
 
 private void test_conjugate () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.conjugate ();
-	
-	assert (float_eq (a.real, 3.0f));
-	assert (float_eq (a.imag, -4.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.conjugate (), 3.0f, -4.0f);
 }
 
 private void test_unit () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.unit ();
-	
-	assert (float_eq (a.real, 0.6f));
-	assert (float_eq (a.imag, 0.8f));
+
+	Crank.assert_eqcplxfloat_uc (a.unit (), 0.6f, 0.8f);
 }
 
 private void test_sqrt () {
 	Crank.CplxFloat a = {7.0f, 8.0f};
 	
-	a = a.sqrt ();
-	
-	assert (float_eq (a.real, 2.9690f));
-	assert (float_eq (a.imag, 1.3472f));
+	Crank.assert_eqcplxfloat_uc (a.sqrt (), 2.9690f, 1.3472f);
 }
 
 
 private void test_addr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.addr (2);
-	
-	assert (float_eq (a.real, 5.0f));
-	assert (float_eq (a.imag, 4.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.addr (2), 5.0f, 4.0f);
 }
 
 private void test_subr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.subr (2);
-	
-	assert (float_eq (a.real, 1.0f));
-	assert (float_eq (a.imag, 4.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.subr (2), 1.0f, 4.0f);
 }
 
 private void test_mulr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	
-	a = a.mulr (2);
-	
-	assert (float_eq (a.real, 6.0f));
-	assert (float_eq (a.imag, 8.0f));
+	Crank.assert_eqcplxfloat_uc (a.mulr (2), 6.0f, 8.0f);
 }
 
 private void test_divr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.divr (2);
-	
-	assert (float_eq (a.real, 1.5f));
-	assert (float_eq (a.imag, 2.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.divr (2), 1.5f, 2.0f);
 }
 
 private void test_rsubr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.rsubr (2);
-	
-	assert (float_eq (a.real, -1.0f));
-	assert (float_eq (a.imag, -4.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.rsubr (2), -1.0f, -4.0f);
 }
 
 private void test_rdivr () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
-	a = a.rdivr (2);
-	
-	assert (float_eq (a.real, 0.24f));
-	assert (float_eq (a.imag, -0.32f));
+
+	Crank.assert_eqcplxfloat_uc (a.rdivr (2), 0.24f, -0.32f);
 }
 
 private void test_add () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.add (b);
-	
-	assert (float_eq (a.real, 8.0f));
-	assert (float_eq (a.imag, 16.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.add (b), 8.0f, 16.0f);
 }
 
 private void test_sub () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.sub (b);
-	
-	assert (float_eq (a.real, -2.0f));
-	assert (float_eq (a.imag, -8.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.sub (b), -2.0f, -8.0f);
 }
 
 private void test_mul () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.mul (b);
-	
-	assert (float_eq (a.real, -33.0f));
-	assert (float_eq (a.imag, 56.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.mul (b), -33.0f, 56.0f);
 }
 
 private void test_div () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.div (b);
-	
-	assert (float_eq (a.real, 63.0f / 169.0f));
-	assert (float_eq (a.imag, -16.0f / 169.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.div (b), 63.0f/169.0f, -16.0f/169.0f);
 }
 
 private void test_mul_conj () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.mul_conj (b);
-	
-	assert (float_eq (a.real, 63.0f));
-	assert (float_eq (a.imag, -16.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.mul_conj (b), 63.0f, -16.0f);
 }
 
 private void test_mix () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {5.0f, 12.0f};
-	
-	a = a.mix (b, 0.25f);
-	
-	assert (float_eq (a.real, 3.5f));
-	assert (float_eq (a.imag, 6.0f));
+
+	Crank.assert_eqcplxfloat_uc (a.mix (b, 0.25f), 3.5f, 6.0f);
 }
 
 private void test_ln () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	a = a.ln ();
-	
-	assert (float_eq (a.real, 1.6094f));
-	assert (float_eq (a.imag, 0.9273f));
+
+	Crank.assert_eqcplxfloat_uc (a, 1.6094f, 0.9273f);
 }
 
 private void test_exp () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	a = a.exp ();
-	
-	assert (float_eq (a.real, -13.1287f));
-	assert (float_eq (a.imag, -15.2008f));
+
+	Crank.assert_eqcplxfloat_uc (a, -13.1287f, -15.2008f);
 }
 
 private void test_pow () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
 	Crank.CplxFloat b = {1.0f, 2.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.pow (b), -0.4198f, -0.6605f);
 }
 
 private void test_sinh () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.sinh (), -6.5481f, -7.6192f);
 }
 
 private void test_cosh () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.cosh (), -6.5807f, -7.5816f);
 }
 
 private void test_tanh () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.tanh (), 1.0007f, 0.0049f);
 }
 
@@ -303,12 +241,12 @@ private void test_sin () {
 
 private void test_cos () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.cos (), -27.0349f, -3.8512f);
 }
 
 private void test_tan () {
 	Crank.CplxFloat a = {3.0f, 4.0f};
-	
+
 	Crank.assert_eqcplxfloat_uc (a.tan (), -0.0001f, 0.9994f);
 }
