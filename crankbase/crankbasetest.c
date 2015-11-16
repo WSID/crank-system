@@ -206,6 +206,90 @@ crank_equal_parray (const gpointer *arr_a,
 }
 
 /**
+ * crank_equal_delta_sarray: (skip):
+ * @element_size: Size of a element.
+ * @arr_a: Structure array.
+ * @arr_length_a: Length of array.
+ * @arr_b: Structure array.
+ * @arr_length_b: Length of array.
+ * @equal_func: (scope call): Equal function.
+ * @delta: Delta, or allowed difference.
+ *
+ * Compare two structure array and checks that twos are equal.
+ *
+ * Returns: Whether two are same array.
+ */
+gboolean
+crank_equal_delta_sarray (const gsize          element_size,
+                          const void          *arr_a,
+                          const guint          arr_length_a,
+                          const void          *arr_b,
+                          const guint          arr_length_b,
+                          CrankEqualDeltaFunc  equal_func,
+                          const gfloat         delta)
+{
+  if (arr_length_a == arr_length_b)
+    {
+      guint i;
+      gpointer ptr_a = (gpointer)arr_a;
+      gpointer ptr_b = (gpointer)arr_b;
+
+      for (i = 0; i < arr_length_a; i++)
+        {
+          if (! equal_func (ptr_a, ptr_b, delta))
+            return FALSE;
+
+          ptr_a += element_size;
+          ptr_b += element_size;
+        }
+
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/**
+ * crank_equal_delta_parray: (skip):
+ * @arr_a: Pointer array.
+ * @arr_length_a: Length of array.
+ * @arr_b: Pointer array.
+ * @arr_length_b: Length of array.
+ * @equal_func: (scope call): Equal function.
+ * @delta: Delta, or allowed difference.
+ *
+ * Compare two pointer array and checks that twos are equal.
+ *
+ * Returns: Whether two are same array.
+ */
+gboolean
+crank_equal_delta_parray (const gpointer      *arr_a,
+                          const guint          arr_length_a,
+                          const gpointer      *arr_b,
+                          const guint          arr_length_b,
+                          CrankEqualDeltaFunc  equal_func,
+                          const gfloat         delta)
+{
+  if (arr_length_a == arr_length_b)
+    {
+      guint i;
+      gpointer* ptr_a = (gpointer*)arr_a;
+      gpointer* ptr_b = (gpointer*)arr_b;
+
+      for (i = 0; i < arr_length_a; i++)
+        {
+          if (! equal_func (*ptr_a, *ptr_b, delta))
+            return FALSE;
+
+          ptr_a ++;
+          ptr_b ++;
+        }
+
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/**
  * crank_equal_glist_arr: (skip):
  * @list: (element-type gpointer): A Pointer list.
  * @arr: Poitner array.

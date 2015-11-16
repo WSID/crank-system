@@ -81,6 +81,21 @@ gboolean crank_equal_parray (const gpointer *arr_a,
                              const guint     arr_length_b,
                              GEqualFunc      equal_func);
 
+gboolean crank_equal_delta_sarray (const gsize          element_size,
+                                   const void          *arr_a,
+                                   const guint          arr_length_a,
+                                   const void          *arr_b,
+                                   const guint          arr_length_b,
+                                   CrankEqualDeltaFunc  equal_func,
+                                   const gfloat         delta);
+
+gboolean crank_equal_delta_parray (const gpointer      *arr_a,
+                                   const guint          arr_length_a,
+                                   const gpointer      *arr_b,
+                                   const guint          arr_length_b,
+                                   CrankEqualDeltaFunc  equal_func,
+                                   const gfloat         delta);
+
 gboolean crank_equal_glist_arr (GList          *list,
                                 const gpointer *arr,
                                 const guint     arr_length,
