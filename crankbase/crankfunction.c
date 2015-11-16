@@ -21,6 +21,7 @@
 
 #define _CRANKBASE_INSIDE
 
+#include <math.h>
 #include <glib.h>
 
 #include "crankcomplex.h"
@@ -165,8 +166,6 @@ crank_float_equal (gconstpointer a,
 }
 
 
-
-
 /**
  * crank_float_equal_delta:
  * @a: A Pointer pointing a float value.
@@ -186,6 +185,46 @@ crank_float_equal_delta (gconstpointer a,
   gfloat av = *(gfloat*)a;
   gfloat bv = *(gfloat*)b;
   return (bv - d < av) && (av < bv + d);
+}
+
+
+
+/**
+ * crank_float_nan_equal:
+ * @a: A Pointer pointing a float value.
+ * @b: A Pointer pointing a float value.
+ *
+ * Check equality of float values, with 0.0001f of error range.
+ *
+ * Returns: whether (*@a) and (*@b) are equal.
+ */
+gboolean
+crank_float_nan_equal (gconstpointer a,
+                       gconstpointer b)
+{
+  return crank_float_nan_equal_delta (a, b, 0.0001f);
+}
+
+
+/**
+ * crank_float_nan_equal_delta:
+ * @a: A Pointer pointing a float value.
+ * @b: A Pointer pointing a float value.
+ * @d: A delta value.
+ *
+ * Checks *@a and *@b are sufficiently equal:
+ * This means (*@b - @d < *@a) && (*@a < *@b + @d).
+ *
+ * Returns: Whether @a and @b are sufficiently equal.
+ */
+gboolean
+crank_float_nan_equal_delta (gconstpointer a,
+                             gconstpointer b,
+                             const gfloat  d)
+{
+  gfloat av = *(gfloat*)a;
+  gfloat bv = *(gfloat*)b;
+  return isnanf (av) ? isnanf (bv) : ((bv - d < av) && (av < bv + d));
 }
 
 

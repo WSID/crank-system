@@ -219,11 +219,17 @@ gboolean crank_uint_equal          (gconstpointer a,
 gboolean crank_float_equal         (gconstpointer a,
                                     gconstpointer b);
 
-
-
 gboolean crank_float_equal_delta   (gconstpointer a,
                                     gconstpointer b,
                                     const gfloat  d);
+
+gboolean crank_float_nan_equal     (gconstpointer a,
+                                    gconstpointer b);
+
+gboolean crank_float_nan_equal_delta(gconstpointer a,
+                                    gconstpointer b,
+                                    const gfloat  d);
+
 
 
 gint     crank_uint_compare        (gconstpointer a,
@@ -250,7 +256,6 @@ gchar   *crank_float_to_string     (gpointer value,
 
 gchar   *crank_pointer_to_string   (gpointer value,
                                     gpointer userdata);
-
 
 G_END_DECLS
 
