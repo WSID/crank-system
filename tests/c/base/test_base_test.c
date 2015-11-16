@@ -740,8 +740,8 @@ test_assert_eqcplxfloat_cimm (void)
   CrankCplxFloat a = {3.0f, 2.0f};
 
   // Tests whether assertion actually allows errors within given errors.
-  crank_assert_eqcplxfloat_d_cimm (&a, 3.5f, 2.1f, 1.0f);
-  crank_assert_eqcplxfloat_d_cimm (&a, 2.9f, 1.4f, 1.0f);
+  crank_assert_eqcplxfloat_d_uc (&a, 3.5f, 2.1f, 1.0f);
+  crank_assert_eqcplxfloat_d_uc (&a, 2.9f, 1.4f, 1.0f);
 }
 
 static void
@@ -750,7 +750,7 @@ test_assert_eqcplxfloat_cimm_fail (void)
   // Tests whether assertion can actually fails.
   CrankCplxFloat a = {3.0f, 2.0f};
 
-  crank_assert_eqcplxfloat_d_cimm (&a, 4.2f, 2.0f, 1.0f);
+  crank_assert_eqcplxfloat_d_uc (&a, 4.2f, 2.0f, 1.0f);
 }
 
 

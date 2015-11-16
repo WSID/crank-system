@@ -488,15 +488,15 @@ private void test_assert_eqcplxfloat_fail () {
 private void test_assert_eqcplxfloat_cimm () {
 	Crank.CplxFloat	a = {3.0f, 2.0f};
 	
-	Crank.assert_eqcplxfloat_cimm (a, 3.5f, 2.1f, 1.0f);
-	Crank.assert_eqcplxfloat_cimm (a, 2.9f, 1.4f, 1.0f);
+	Crank.assert_eqcplxfloat_uc (a, 3.5f, 2.1f, 1.0f);
+	Crank.assert_eqcplxfloat_uc (a, 2.9f, 1.4f, 1.0f);
 }
 
 private void test_assert_eqcplxfloat_cimm_fail () {
 	Crank.CplxFloat	a = {3.0f, 2.0f};
 	Crank.CplxFloat	b = {4.2f, 2.1f};
 	
-	Crank.assert_eqcplxfloat_cimm (a, 4.2f, 2.1f, 1.0f);
+	Crank.assert_eqcplxfloat_uc (a, 4.2f, 2.1f, 1.0f);
 }
 
 

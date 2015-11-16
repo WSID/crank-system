@@ -475,22 +475,22 @@ test_lu_cplx (void)
   g_assert (crank_lu_mat_cplx_float_n (&a, &l, &u));
 
   crank_mat_cplx_float_n_get (&l, 1, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6, 2);
+  crank_assert_eqcplxfloat_uc (&v, 6, 2);
 
   crank_mat_cplx_float_n_get (&l, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 2, 5);
+  crank_assert_eqcplxfloat_uc (&v, 2, 5);
 
   crank_mat_cplx_float_n_get (&l, 2, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6, 0);
+  crank_assert_eqcplxfloat_uc (&v, 6, 0);
 
   crank_mat_cplx_float_n_get (&u, 0, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5, 5);
+  crank_assert_eqcplxfloat_uc (&v, 5, 5);
 
   crank_mat_cplx_float_n_get (&u, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1, 0);
+  crank_assert_eqcplxfloat_uc (&v, 1, 0);
 
   crank_mat_cplx_float_n_get (&u, 1, 2, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 2, 5);
+  crank_assert_eqcplxfloat_uc (&v, 2, 5);
 
   crank_mat_cplx_float_n_fini (&a);
   crank_mat_cplx_float_n_fini (&l);
@@ -515,22 +515,22 @@ test_gram_schmidt_cplx (void)
   g_assert (crank_gram_schmidt_mat_cplx_float_n (&a, &q, &r));
 
   crank_mat_cplx_float_n_get (&q, 1, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.8402f, 0.2801f);
+  crank_assert_eqcplxfloat_uc (&v, 0.8402f, 0.2801f);
 
   crank_mat_cplx_float_n_get (&q, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.0284f, 0.2584f);
+  crank_assert_eqcplxfloat_uc (&v, 0.0284f, 0.2584f);
 
   crank_mat_cplx_float_n_get (&q, 2, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.9258f, -0.0625f);
+  crank_assert_eqcplxfloat_uc (&v, 0.9258f, -0.0625f);
 
   crank_mat_cplx_float_n_get (&r, 0, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+  crank_assert_eqcplxfloat_uc (&v, 38.7878f, 38.5077f);
 
   crank_mat_cplx_float_n_get (&r, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+  crank_assert_eqcplxfloat_uc (&v, 6.9041f, 0.0000f);
 
   crank_mat_cplx_float_n_get (&r, 1, 2, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+  crank_assert_eqcplxfloat_uc (&v, 20.2891f, 34.9579f);
 
   crank_mat_cplx_float_n_fini (&a);
   crank_mat_cplx_float_n_fini (&q);
@@ -554,13 +554,13 @@ test_qr_householder_cplx (void)
   g_assert (crank_qr_householder_mat_cplx_float_n (&a, &r));
 
   crank_mat_cplx_float_n_get (&r, 0, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+  crank_assert_eqcplxfloat_uc (&v, 38.7878f, 38.5077f);
 
   crank_mat_cplx_float_n_get (&r, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+  crank_assert_eqcplxfloat_uc (&v, 6.9041f, 0.0000f);
 
   crank_mat_cplx_float_n_get (&r, 1, 2, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+  crank_assert_eqcplxfloat_uc (&v, 20.2891f, 34.9579f);
 
   crank_mat_cplx_float_n_fini (&a);
   crank_mat_cplx_float_n_fini (&r);
@@ -583,13 +583,13 @@ test_qr_givens_cplx (void)
   g_assert (crank_qr_givens_mat_cplx_float_n (&a, &r));
 
   crank_mat_cplx_float_n_get (&r, 0, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 38.7878f, 38.5077f);
+  crank_assert_eqcplxfloat_uc (&v, 38.7878f, 38.5077f);
 
   crank_mat_cplx_float_n_get (&r, 1, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6.9041f, 0.0000f);
+  crank_assert_eqcplxfloat_uc (&v, 6.9041f, 0.0000f);
 
   crank_mat_cplx_float_n_get (&r, 1, 2, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 20.2891f, 34.9579f);
+  crank_assert_eqcplxfloat_uc (&v, 20.2891f, 34.9579f);
 
   crank_mat_cplx_float_n_fini (&a);
   crank_mat_cplx_float_n_fini (&r);

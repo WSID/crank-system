@@ -119,10 +119,10 @@ test_n_get (void)
   crank_vec_cplx_float_n_init_uc (&a, 2, 3.0f, 4.0f, 5.0f, 12.0f);
 
   crank_vec_cplx_float_n_get (&a, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 3.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (&v, 3.0f, 4.0f);
 
   crank_vec_cplx_float_n_get (&a, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 12.0f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 12.0f);
 }
 
 
@@ -137,13 +137,13 @@ test_n_insert (void)
 
 
   crank_vec_cplx_float_n_get (&a, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 3.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (&v, 3.0f, 4.0f);
 
   crank_vec_cplx_float_n_get (&a, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 10.0f, 15.0f);
+  crank_assert_eqcplxfloat_uc (&v, 10.0f, 15.0f);
 
   crank_vec_cplx_float_n_get (&a, 2, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 12.0f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 12.0f);
 }
 
 
@@ -158,7 +158,7 @@ test_n_remove (void)
 
   g_assert_cmpuint (crank_vec_cplx_float_n_get_size (&a), ==, 1);
   crank_vec_cplx_float_n_get (&a, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 12.0f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 12.0f);
 }
 
 
@@ -172,7 +172,7 @@ test_n_foreach (void)
 
   g_assert (crank_vec_cplx_float_n_foreach (&a, test_accumulation, &sum));
 
-  crank_assert_eqcplxfloat_cimm (&sum, 8.0f, 16.0f);
+  crank_assert_eqcplxfloat_uc (&sum, 8.0f, 16.0f);
 }
 
 
@@ -223,10 +223,10 @@ test_n_unit (void)
   crank_vec_cplx_float_n_unit (&a, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.2154f, 0.2872f);
+  crank_assert_eqcplxfloat_uc (&v, 0.2154f, 0.2872f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.3590f, 0.8615f);
+  crank_assert_eqcplxfloat_uc (&v, 0.3590f, 0.8615f);
 }
 
 
@@ -242,10 +242,10 @@ test_n_muls (void)
   crank_vec_cplx_float_n_muls (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, -6.0f, 17.0f);
+  crank_assert_eqcplxfloat_uc (&v, -6.0f, 17.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, -26.0f, 39.0f);
+  crank_assert_eqcplxfloat_uc (&v, -26.0f, 39.0f);
 }
 
 
@@ -261,10 +261,10 @@ test_n_divs (void)
   crank_vec_cplx_float_n_divs (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1.3846f, -0.0769f);
+  crank_assert_eqcplxfloat_uc (&v, 1.3846f, -0.0769f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 3.5385f, 0.6923f);
+  crank_assert_eqcplxfloat_uc (&v, 3.5385f, 0.6923f);
 }
 
 
@@ -279,10 +279,10 @@ test_n_mulrs (void)
   crank_vec_cplx_float_n_mulrs (&a, 2.0f, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 6.0f, 8.0f);
+  crank_assert_eqcplxfloat_uc (&v, 6.0f, 8.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 10.0f, 24.0f);
+  crank_assert_eqcplxfloat_uc (&v, 10.0f, 24.0f);
 }
 
 
@@ -297,10 +297,10 @@ test_n_divrs (void)
   crank_vec_cplx_float_n_divrs (&a, 2.0f, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1.5f, 2.0f);
+  crank_assert_eqcplxfloat_uc (&v, 1.5f, 2.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 2.5f, 6.0f);
+  crank_assert_eqcplxfloat_uc (&v, 2.5f, 6.0f);
 }
 
 
@@ -317,10 +317,10 @@ test_n_add (void)
   crank_vec_cplx_float_n_add (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 7.0f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 7.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 10.0f, 22.0f);
+  crank_assert_eqcplxfloat_uc (&v, 10.0f, 22.0f);
 }
 
 
@@ -337,10 +337,10 @@ test_n_sub (void)
   crank_vec_cplx_float_n_sub (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1.0f, 1.0f);
+  crank_assert_eqcplxfloat_uc (&v, 1.0f, 1.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 0.0f, 2.0f);
+  crank_assert_eqcplxfloat_uc (&v, 0.0f, 2.0f);
 }
 
 
@@ -354,7 +354,7 @@ test_n_dot (void)
   crank_vec_cplx_float_n_init_uc (&b, 2, 2.0f, 3.0f, 5.0f, 10.0f);
 
   crank_vec_cplx_float_n_dot (&a, &b, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 163.0f, 9.0f);
+  crank_assert_eqcplxfloat_uc (&v, 163.0f, 9.0f);
 
 }
 
@@ -372,10 +372,10 @@ test_n_cmpmul (void)
   crank_vec_cplx_float_n_cmpmul (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, -6.0f, 17.0f);
+  crank_assert_eqcplxfloat_uc (&v, -6.0f, 17.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, -95.0f, 110.0f);
+  crank_assert_eqcplxfloat_uc (&v, -95.0f, 110.0f);
 }
 
 
@@ -392,10 +392,10 @@ test_n_cmpdiv (void)
   crank_vec_cplx_float_n_cmpdiv (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1.3846f, -0.0769f);
+  crank_assert_eqcplxfloat_uc (&v, 1.3846f, -0.0769f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 1.16f, 0.08f);
+  crank_assert_eqcplxfloat_uc (&v, 1.16f, 0.08f);
 }
 
 
@@ -430,10 +430,10 @@ test_n_mixs (void)
 
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 2.8f, 3.8f);
+  crank_assert_eqcplxfloat_uc (&v, 2.8f, 3.8f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 11.6f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 11.6f);
 }
 
 
@@ -453,10 +453,10 @@ test_n_mulrm (void)
   crank_vec_cplx_float_n_mulrm (&a, &b, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 28.0f, 55.0f);
+  crank_assert_eqcplxfloat_uc (&v, 28.0f, 55.0f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 38.0f, 74.0f);
+  crank_assert_eqcplxfloat_uc (&v, 38.0f, 74.0f);
 
   crank_vec_cplx_float_n_fini (&a);
   crank_mat_float_n_fini (&b);
@@ -479,10 +479,10 @@ test_n_mix (void)
   crank_vec_cplx_float_n_mix (&a, &b, &c, &r);
 
   crank_vec_cplx_float_n_get (&r, 0, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 2.4f, 3.4f);
+  crank_assert_eqcplxfloat_uc (&v, 2.4f, 3.4f);
 
   crank_vec_cplx_float_n_get (&r, 1, &v);
-  crank_assert_eqcplxfloat_cimm (&v, 5.0f, 11.0f);
+  crank_assert_eqcplxfloat_uc (&v, 5.0f, 11.0f);
 }
 
 static void
@@ -493,9 +493,9 @@ test_n_init_arruc (void)
 
   crank_vec_cplx_float_n_init_arruc (&a, 3, e);
 
-  crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 0, 2.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 1, 1.0f, 3.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 2, 6.0f, 4.0f);
 
   crank_vec_cplx_float_n_fini (&a);
 }
@@ -509,9 +509,9 @@ test_n_init_ucarr (void)
 
   crank_vec_cplx_float_n_init_ucarr (&a, 3, r, i);
 
-  crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 0, 2.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 1, 1.0f, 3.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 2, 6.0f, 4.0f);
 
   crank_vec_cplx_float_n_fini (&a);
 }
@@ -528,9 +528,9 @@ test_n_init_ucv (void)
 
   crank_vec_cplx_float_n_init_ucv (&a, &r, &i);
 
-  crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 4.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 1, 1.0f, 3.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 2, 6.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 0, 2.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 1, 1.0f, 3.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 2, 6.0f, 4.0f);
 
   crank_vec_cplx_float_n_fini (&a);
   crank_vec_float_n_fini (&r);
@@ -544,9 +544,9 @@ test_n_init_fill_uc (void)
 
   crank_vec_cplx_float_n_init_fill_uc (&a, 3, 2.0f, 5.0f);
 
-  crank_assert_eqcplxfloat_cimm (a.data + 0, 2.0f, 5.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 1, 2.0f, 5.0f);
-  crank_assert_eqcplxfloat_cimm (a.data + 2, 2.0f, 5.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 0, 2.0f, 5.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 1, 2.0f, 5.0f);
+  crank_assert_eqcplxfloat_uc (a.data + 2, 2.0f, 5.0f);
 
   crank_vec_cplx_float_n_fini (&a);
 }

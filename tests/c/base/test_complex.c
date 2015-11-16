@@ -167,7 +167,7 @@ test_neg (void)
 
   crank_cplx_float_neg (&cplx, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, -3.0f, -4.0f);
+  crank_assert_eqcplxfloat_uc(&r, -3.0f, -4.0f);
 }
 
 static void
@@ -182,7 +182,7 @@ test_inverse (void)
 
   crank_cplx_float_inverse (&cplx, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 0.12f, -0.16f);
+  crank_assert_eqcplxfloat_uc(&r, 0.12f, -0.16f);
 }
 
 static void
@@ -193,7 +193,7 @@ test_conjugate (void)
 
   crank_cplx_float_conjugate (&cplx, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 3.0f, -4.0f);
+  crank_assert_eqcplxfloat_uc(&r, 3.0f, -4.0f);
 }
 
 static void
@@ -204,7 +204,7 @@ test_unit (void)
 
   crank_cplx_float_unit (&cplx, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 0.6f, 0.8f);
+  crank_assert_eqcplxfloat_uc(&r, 0.6f, 0.8f);
 }
 
 static void
@@ -214,7 +214,7 @@ test_sqrt (void)
   CrankCplxFloat r;
 
   crank_cplx_float_sqrt (&cplx, &r);
-  crank_assert_eqcplxfloat_cimm (&r, 2.9690f, 1.3472f);
+  crank_assert_eqcplxfloat_uc (&r, 2.9690f, 1.3472f);
 }
 
 static void
@@ -225,7 +225,7 @@ test_addr (void)
 
   crank_cplx_float_addr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 5.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc(&r, 5.0f, 4.0f);
 }
 
 static void
@@ -236,7 +236,7 @@ test_subr (void)
 
   crank_cplx_float_subr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 1.0f, 4.0f);
+  crank_assert_eqcplxfloat_uc(&r, 1.0f, 4.0f);
 }
 
 static void
@@ -247,7 +247,7 @@ test_mulr (void)
 
   crank_cplx_float_mulr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 6.0f, 8.0f);
+  crank_assert_eqcplxfloat_uc(&r, 6.0f, 8.0f);
 }
 
 static void
@@ -258,7 +258,7 @@ test_divr (void)
 
   crank_cplx_float_divr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 1.5f, 2.0f);
+  crank_assert_eqcplxfloat_uc(&r, 1.5f, 2.0f);
 }
 
 static void
@@ -269,7 +269,7 @@ test_rsubr (void)
 
   crank_cplx_float_rsubr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, -1.0f, -4.0f);
+  crank_assert_eqcplxfloat_uc(&r, -1.0f, -4.0f);
 }
 
 static void
@@ -280,7 +280,7 @@ test_rdivr (void)
 
   crank_cplx_float_rdivr (&cplx, 2.0f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 0.24f, -0.32f);
+  crank_assert_eqcplxfloat_uc(&r, 0.24f, -0.32f);
 }
 
 static void
@@ -292,7 +292,7 @@ test_add (void)
 
   crank_cplx_float_add (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 8.0f, 16.0f);
+  crank_assert_eqcplxfloat_uc(&r, 8.0f, 16.0f);
 }
 
 static void
@@ -304,7 +304,7 @@ test_sub (void)
 
   crank_cplx_float_sub (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, -2.0f, -8.0f);
+  crank_assert_eqcplxfloat_uc(&r, -2.0f, -8.0f);
 }
 
 static void
@@ -320,7 +320,7 @@ test_mul (void)
 
   crank_cplx_float_mul (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, -33.0f, 56.0f);
+  crank_assert_eqcplxfloat_uc(&r, -33.0f, 56.0f);
 }
 
 static void
@@ -346,7 +346,7 @@ test_div (void)
 
   crank_cplx_float_div (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 63.0f / 169.0f, -16.0f / 169.0f);
+  crank_assert_eqcplxfloat_uc(&r, 63.0f / 169.0f, -16.0f / 169.0f);
 }
 
 static void
@@ -362,7 +362,7 @@ test_mul_conj (void)
 
   crank_cplx_float_mul_conj (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 63.0f, -16.0f);
+  crank_assert_eqcplxfloat_uc(&r, 63.0f, -16.0f);
 }
 
 static void
@@ -374,7 +374,7 @@ test_mix (void)
 
   crank_cplx_float_mix (&a, &b, 0.25f, &r);
 
-  crank_assert_eqcplxfloat_cimm(&r, 3.5f, 6.0f);
+  crank_assert_eqcplxfloat_uc(&r, 3.5f, 6.0f);
 }
 
 static void
@@ -385,7 +385,7 @@ test_ln (void)
 
   crank_cplx_float_ln (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm(&b, 1.6094f, 0.9273f);
+  crank_assert_eqcplxfloat_uc(&b, 1.6094f, 0.9273f);
 }
 
 static void
@@ -396,7 +396,7 @@ test_exp (void)
 
   crank_cplx_float_exp (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm(&b, -13.1287f, -15.2008f);
+  crank_assert_eqcplxfloat_uc(&b, -13.1287f, -15.2008f);
 }
 
 static void
@@ -408,7 +408,7 @@ test_pow (void)
 
   crank_cplx_float_pow (&a, &b, &r);
 
-  crank_assert_eqcplxfloat_cimm (&r, -0.4198f, -0.6605f);
+  crank_assert_eqcplxfloat_uc (&r, -0.4198f, -0.6605f);
 }
 
 static void
@@ -419,7 +419,7 @@ test_sinh (void)
 
   crank_cplx_float_sinh (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, -6.5481f, -7.6192f);
+  crank_assert_eqcplxfloat_uc (&b, -6.5481f, -7.6192f);
 }
 
 static void
@@ -430,7 +430,7 @@ test_cosh (void)
 
   crank_cplx_float_cosh (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, -6.5807f, -7.5816f);
+  crank_assert_eqcplxfloat_uc (&b, -6.5807f, -7.5816f);
 }
 
 static void
@@ -441,7 +441,7 @@ test_tanh (void)
 
   crank_cplx_float_tanh (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, 1.0007f, 0.0049f);
+  crank_assert_eqcplxfloat_uc (&b, 1.0007f, 0.0049f);
 }
 
 
@@ -453,7 +453,7 @@ test_sin (void)
 
   crank_cplx_float_sin (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, 3.8537f, -27.0168f);
+  crank_assert_eqcplxfloat_uc (&b, 3.8537f, -27.0168f);
 }
 
 static void
@@ -464,7 +464,7 @@ test_cos (void)
 
   crank_cplx_float_cos (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, -27.0349f, -3.8512f);
+  crank_assert_eqcplxfloat_uc (&b, -27.0349f, -3.8512f);
 }
 
 static void
@@ -475,5 +475,5 @@ test_tan (void)
 
   crank_cplx_float_tan (&a, &b);
 
-  crank_assert_eqcplxfloat_cimm (&b, -0.0001f, 0.9994f);
+  crank_assert_eqcplxfloat_uc (&b, -0.0001f, 0.9994f);
 }
