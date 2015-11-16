@@ -80,6 +80,160 @@ gchar  *crank_assert_stringify_parray (const gpointer  *arr,
                                        gpointer         userdata);
 
 
+//////// Float equal assertions ////////////////////////////////////////////////
+
+/**
+ * crank_assert_cmpfloat: (skip)
+ * @a: (type gfloat): A #gfloat
+ * @cmp: A comparsion operator.
+ * @b: (type gfloat): A #gfloat
+ *
+ * Asserts comparsion of two #gfloat with tolerance of 0.0001f of error.
+ */
+#define crank_assert_cmpfloat(a,cmp,b)  crank_assert_cmpfloat_d (a,cmp,b, \
+                                                                 0.0001f)
+
+/**
+ * crank_assert_cmpfloat_d: (skip)
+ * @a: (type gfloat): A #gfloat
+ * @cmp: A comparsion operator.
+ * @b: (type gfloat): A #gfloat
+ * @d: (type gfloat): Delta
+ *
+ * Asserts comparsion of two #gfloat with tolerance of given delta of error.
+ */
+#define crank_assert_cmpfloat_d(a,cmp,b,d)  \
+  G_STMT_START { \
+    gfloat _crank_macro_cf_a = (a); \
+    gfloat _crank_macro_cf_b = (b); \
+    gfloat _crank_macro_cf_diff = (_crank_macro_cf_b - _crank_macro_cf_a); \
+    gfloat _crank_macro_cf_d = (d); \
+    gint _crank_macro_cf_cres = \
+      (_crank_macro_cf_diff < -_crank_macro_cf_d) - \
+      (_crank_macro_cf_d < _crank_macro_cf_diff); \
+    if (G_UNLIKELY(!(_crank_macro_cf_cres cmp 0))) \
+      { \
+        g_assertion_message_cmpnum (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+                                    #a " " #cmp " " #b, \
+                                    _crank_macro_cf_a, #cmp, _crank_macro_cf_b, 'f'); \
+      } \
+  } G_STMT_END
+
+/**
+ * crank_assert_lefloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is less than b. (a < b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_lefloat(a,b,d) crank_assert_cmpfloat_d(a, <, b, d)
+
+/**
+ * crank_assert_eqfloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is equal to b. (a == b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_eqfloat(a,b,d) crank_assert_cmpfloat_d(a, ==, b, d)
+
+/**
+ * crank_assert_gefloat:
+ * @a: (type gfloat): A float value.
+ * @b: (type gfloat): A float value.
+ * @d: (type gfloat): A acceptable error size.
+ *
+ * Asserts a is greater than b. (a > b)
+ *
+ * This is used for Vala, which does not support operation as argument.
+ */
+#define crank_assert_gefloat(a,b,d) crank_assert_cmpfloat_d(a, >, b, d)
+
+//////// Struct equal assertions ///////////////////////////////////////////////
+
+
+/**
+ * crank_assert_eqcplxfloat: (skip)
+ * @a: (type CrankCplxFloat): A complex
+ * @b: (type CrankCplxFloat): A complex
+ *
+ * Asserts comparsion of two #CrankCplxFloat with tolerance of 0.0001f of
+ * error.
+ *
+ * The difference is calculated from distance on complex plane.
+ */
+#define crank_assert_eqcplxfloat(a,b) crank_assert_eqcplxfloat_d(a,b,0.0001f)
+
+/**
+ * crank_assert_eqcplxfloat_cimm: (skip)
+ * @a: (type CrankCplxFloat): A complex
+ * @r: (type gfloat): A real part.
+ * @i: (type gfloat): A imaginary part.
+ *
+ * Asserts a given #CrankCplxFloat has same data with tolerance of 0.0001f of
+ * error.
+ *
+ * The difference is calculated from distance on complex plane.
+ */
+#define crank_assert_eqcplxfloat_uc(a,r,i) crank_assert_eqcplxfloat_d_uc(a, \
+                                                                         r, \
+                                                                         i, \
+                                                                         0.0001f)
+
+/**
+ * crank_assert_eqcplxfloat_d: (skip)
+ * @a: (type CrankCplxFloat): A complex
+ * @b: (type CrankCplxFloat): A complex
+ * @d: (type gfloat): Delta
+ *
+ * Asserts comparsion of two #CrankCplxFloat with tolerance of given delta of
+ * error.
+ *
+ * The difference is calculated from distance on complex plane.
+ */
+#define crank_assert_eqcplxfloat_d(a,b,d) \
+  G_STMT_START { \
+    if (! crank_cplx_float_equal_delta (a, b, d)) \
+      { \
+        gchar *str_a = crank_cplx_float_to_string (a); \
+        gchar *str_b = crank_cplx_float_to_string (b); \
+        \
+        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+                                 #a, #b, str_a, str_b); \
+        g_free (str_a); \
+        g_free (str_b); \
+      } \
+  } G_STMT_END
+
+/**
+ * crank_assert_eqcplxfloat_d_uc: (skip)
+ * @a: (type CrankCplxFloat): A complex
+ * @r: (type gfloat): A real part.
+ * @i: (type gfloat): A imaginary part.
+ * @d: (type gfloat): Delta
+ *
+ * Asserts a given #CrankCplxFloat has same data with tolerance of given delta of
+ * error.
+ *
+ * The difference is calculated from distance on complex plane.
+ */
+#define crank_assert_eqcplxfloat_d_uc(a,r,i,d) \
+  G_STMT_START { \
+    CrankCplxFloat _crank_aecfd_b = {r,i}; \
+    crank_assert_eqcplxfloat_d (a, &_crank_aecfd_b, d); \
+  } G_STMT_END
+
+
+
+
+
+
 //////// Array equal assertions ////////////////////////////////////////////////
 
 /**
@@ -463,196 +617,6 @@ gchar  *crank_assert_stringify_parray (const gpointer  *arr,
  */
 #define crank_assert_eq_vecfloat_n_imm(a,...) \
   crank_assert_eqarray_float_imm((a)->data, (a)->n, __VA_ARGS__)
-
-
-
-
-
-
-/**
- * crank_assert_cmpfloat: (skip)
- * @a: (type gfloat): A #gfloat
- * @cmp: A comparsion operator.
- * @b: (type gfloat): A #gfloat
- *
- * Asserts comparsion of two #gfloat with tolerance of 0.0001f of error.
- */
-#define crank_assert_cmpfloat(a,cmp,b)  crank_assert_cmpfloat_d (a,cmp,b, \
-                                                                 0.0001f)
-
-/**
- * crank_assert_cmpfloat_d: (skip)
- * @a: (type gfloat): A #gfloat
- * @cmp: A comparsion operator.
- * @b: (type gfloat): A #gfloat
- * @d: (type gfloat): Delta
- *
- * Asserts comparsion of two #gfloat with tolerance of given delta of error.
- */
-#define crank_assert_cmpfloat_d(a,cmp,b,d)  \
-  G_STMT_START { \
-    gfloat _crank_macro_cf_a = (a); \
-    gfloat _crank_macro_cf_b = (b); \
-    gfloat _crank_macro_cf_diff = (_crank_macro_cf_b - _crank_macro_cf_a); \
-    gfloat _crank_macro_cf_d = (d); \
-    gint _crank_macro_cf_cres = \
-      (_crank_macro_cf_diff < -_crank_macro_cf_d) - \
-      (_crank_macro_cf_d < _crank_macro_cf_diff); \
-    if (G_UNLIKELY(!(_crank_macro_cf_cres cmp 0))) { \
-        gchar *_crank_macro_cf_message = g_strdup_printf ( \
-          "%s %s %s" \
-          "\n\tActual: %g %s %g (with diff = %g)", \
-          G_STRINGIFY(a), \
-          G_STRINGIFY(cmp), \
-          G_STRINGIFY(b), \
-          _crank_macro_cf_a, \
-          G_STRINGIFY(cmp), \
-          _crank_macro_cf_b, \
-          _crank_macro_cf_diff); \
-        g_assertion_message ( \
-          G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-          _crank_macro_cf_message); \
-        g_free (_crank_macro_cf_message); \
-      } \
-  } G_STMT_END
-
-/**
- * crank_assert_lefloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is less than b. (a < b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_lefloat(a,b,d) crank_assert_cmpfloat_d(a, <, b, d)
-
-/**
- * crank_assert_eqfloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is equal to b. (a == b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_eqfloat(a,b,d) crank_assert_cmpfloat_d(a, ==, b, d)
-
-/**
- * crank_assert_gefloat:
- * @a: (type gfloat): A float value.
- * @b: (type gfloat): A float value.
- * @d: (type gfloat): A acceptable error size.
- *
- * Asserts a is greater than b. (a > b)
- *
- * This is used for Vala, which does not support operation as argument.
- */
-#define crank_assert_gefloat(a,b,d) crank_assert_cmpfloat_d(a, >, b, d)
-
-/**
- * crank_assert_eqcplxfloat: (skip)
- * @a: (type CrankCplxFloat): A complex
- * @b: (type CrankCplxFloat): A complex
- *
- * Asserts comparsion of two #CrankCplxFloat with tolerance of 0.0001f of
- * error.
- *
- * The difference is calculated from distance on complex plane.
- */
-#define crank_assert_eqcplxfloat(a,b) crank_assert_eqcplxfloat_d(a,b,0.0001f)
-
-/**
- * crank_assert_eqcplxfloat_cimm: (skip)
- * @a: (type CrankCplxFloat): A complex
- * @r: (type gfloat): A real part.
- * @i: (type gfloat): A imaginary part.
- *
- * Asserts a given #CrankCplxFloat has same data with tolerance of 0.0001f of
- * error.
- *
- * The difference is calculated from distance on complex plane.
- */
-#define crank_assert_eqcplxfloat_cimm(a,r,i) crank_assert_eqcplxfloat_d_cimm(a, \
-                                                                             r, \
-                                                                             i, \
-                                                                             0.0001f)
-
-/**
- * crank_assert_eqcplxfloat_d: (skip)
- * @a: (type CrankCplxFloat): A complex
- * @b: (type CrankCplxFloat): A complex
- * @d: (type gfloat): Delta
- *
- * Asserts comparsion of two #CrankCplxFloat with tolerance of given delta of
- * error.
- *
- * The difference is calculated from distance on complex plane.
- */
-#define crank_assert_eqcplxfloat_d(a,b,d) \
-  G_STMT_START { \
-    CrankCplxFloat *_crank_macro_ecfd_a = (a); \
-    CrankCplxFloat *_crank_macro_ecfd_b = (b); \
-    gfloat _crank_macro_ecfd_d = (d); \
-            \
-    if (!G_LIKELY(crank_cplx_float_equal_delta( \
-                    _crank_macro_ecfd_a, \
-                    _crank_macro_ecfd_b, \
-                    _crank_macro_ecfd_d))) { \
-        CrankCplxFloat _crank_macro_ecfd_diff; \
-                \
-        crank_cplx_float_sub ( \
-          _crank_macro_ecfd_b, \
-          _crank_macro_ecfd_a, \
-          &_crank_macro_ecfd_diff); \
-                \
-        gchar *_crank_macro_ecfd_astr = \
-          crank_cplx_float_to_string (_crank_macro_ecfd_a); \
-                \
-        gchar *_crank_macro_ecfd_bstr = \
-          crank_cplx_float_to_string (_crank_macro_ecfd_b); \
-                \
-        gchar *_crank_macro_ecfd_diffstr = \
-          crank_cplx_float_to_string (&_crank_macro_ecfd_diff); \
-                \
-        gchar *_crank_macro_ecfd_message = g_strdup_printf ( \
-          "%s == %s" \
-          "\n\tActual: %s == %s (with diff = %s, norm = %g)", \
-          G_STRINGIFY(a), \
-          G_STRINGIFY(b), \
-          _crank_macro_ecfd_astr, \
-          _crank_macro_ecfd_bstr, \
-          _crank_macro_ecfd_diffstr, \
-          crank_cplx_float_get_norm (&_crank_macro_ecfd_diff) ); \
-        g_assertion_message ( \
-          G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-          _crank_macro_ecfd_message); \
-        g_free (_crank_macro_ecfd_message); \
-        g_free (_crank_macro_ecfd_astr); \
-        g_free (_crank_macro_ecfd_bstr); \
-        g_free (_crank_macro_ecfd_diffstr); \
-      } \
-  } G_STMT_END
-
-/**
- * crank_assert_eqcplxfloat_d_cimm: (skip)
- * @a: (type CrankCplxFloat): A complex
- * @r: (type gfloat): A real part.
- * @i: (type gfloat): A imaginary part.
- * @d: (type gfloat): Delta
- *
- * Asserts a given #CrankCplxFloat has same data with tolerance of given delta of
- * error.
- *
- * The difference is calculated from distance on complex plane.
- */
-#define crank_assert_eqcplxfloat_d_cimm(a,r,i,d) \
-  G_STMT_START { \
-    CrankCplxFloat _crank_aecfd_b = {r,i}; \
-    crank_assert_eqcplxfloat_d (a, &_crank_aecfd_b, d); \
-  } G_STMT_END
 
 
 

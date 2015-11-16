@@ -869,6 +869,6 @@ namespace Crank {
 	[CCode (cname="crank_assert_eqcplxfloat_d")]
 	public void	assert_eqcplxfloat (CplxFloat a, CplxFloat b, float d = 0.0001f);
 
-	[CCode (cname="crank_assert_eqcplxfloat_d_cimm")]
-	public void assert_eqcplxfloat_cimm (CplxFloat a, float r, float i, float d = 0.0001f);
+	[CCode (cname="crank_assert_eqcplxfloat_d_uc")]
+	public void assert_eqcplxfloat_uc (CplxFloat a, float r, float i, float d = 0.0001f);
 }
