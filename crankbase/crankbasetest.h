@@ -68,6 +68,15 @@ void    crank_assert_message_eq (const gchar *domain,
                                  const gchar *str_a,
                                  const gchar *str_b);
 
+void    crank_assert_message_eq_free (const gchar *domain,
+                                      const gchar *file,
+                                      const gint   line,
+                                      const gchar *func,
+                                      const gchar *name_a,
+                                      const gchar *name_b,
+                                      gchar       *str_a,
+                                      gchar       *str_b);
+
 gboolean crank_equal_sarray (const gsize  element_size,
                              const void  *arr_a,
                              const guint  arr_length_a,

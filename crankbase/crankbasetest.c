@@ -126,6 +126,39 @@ crank_assert_message_eq (const gchar *domain,
 }
 
 /**
+ * crank_assert_message_eq_free: (skip)
+ * @domain: A logging domain.
+ * @file: File name of source file.
+ * @line: Line number of source file.
+ * @func: Function name of source file.
+ * @name_a: Name of argument 'a'
+ * @name_b: Name of argument 'b'
+ * @str_a: (transfer full): Stringification of argument 'a'
+ * @str_b: (transfer full): Stringification of argument 'b'
+ *
+ * Report that argument 'a' and 'b' are not equal.
+ *
+ * This function will free @str_a and @str_b which might be allocated strings.
+ *
+ * This function might not return, but abort test instead.
+ */
+void
+crank_assert_message_eq_free (const gchar *domain,
+                              const gchar *file,
+                              const gint   line,
+                              const gchar *func,
+                              const gchar *name_a,
+                              const gchar *name_b,
+                              gchar       *str_a,
+                              gchar       *str_b)
+{
+  crank_assert_message_eq (domain, file, line, func, name_a, name_b, str_a, str_b);
+
+  g_free (str_a);
+  g_free (str_b);
+}
+
+/**
  * crank_equal_sarray: (skip):
  * @element_size: Size of a element.
  * @arr_a: Structure array.
