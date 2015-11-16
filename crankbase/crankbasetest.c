@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
 #include "crankbasetest.h"
 
 //////// Private structures ////////////////////////////////////////////////////
@@ -84,6 +85,96 @@ crank_test_add_func_timeout (const gchar  *path,
 
   g_test_add_data_func_full (path, meta, crank_test_meta_timeout, g_free);
 }
+
+
+//////// Assertion helper functions ////////////////////////////////////////////
+
+void
+crank_assert_message_eq (const gchar *domain,
+                         const gchar *file,
+                         const gint   line,
+                         const gchar *func,
+                         const gchar *name_a,
+                         const gchar *name_b,
+                         const gchar *str_a,
+                         const gchar *str_b)
+{
+  GString *msg = g_string_new (NULL);
+
+  g_string_printf (msg, "%s and %s are not equal.\n", name_a, name_b);
+  g_string_append_printf (msg, "    %s\t: %s\n", name_a, str_a);
+  g_string_append_printf (msg, "    %s\t: %s", name_b, str_b);
+
+  g_assertion_message (domain, file, line, func, msg->str);
+
+  g_string_free (msg, TRUE);
+}
+
+gchar*
+crank_assert_stringify_sarray (const void* arr,
+                               const guint arr_length,
+                               const gsize element_size,
+                               CrankStrPtrFunc stringify_func,
+                               gpointer userdata)
+{
+  if (arr_length == 0)
+    return NULL;
+
+  GString *str;
+
+  void *ptr;
+  gchar *element_str;
+  guint i;
+
+  ptr = (void*)arr;
+  element_str = stringify_func (ptr, userdata);
+
+  str = g_string_new (element_str);
+  g_free (element_str);
+
+  for (i = 1; i < arr_length; i++)
+    {
+      ptr += element_size;
+      element_str = stringify_func (ptr, userdata);
+      g_string_append_printf (str, ",\n    %s", element_str);
+      g_free (element_str);
+    }
+
+  return g_string_free (str, FALSE);
+}
+
+gchar*
+crank_assert_stringify_parray (const gpointer  *arr,
+                               const guint      arr_length,
+                               CrankStrPtrFunc  stringify_func,
+                               gpointer         userdata)
+{
+  if (arr_length == 0)
+    return NULL;
+
+  GString *str;
+
+  gpointer *ptr;
+  gchar *element_str;
+  guint i;
+
+  ptr = (void*)arr;
+  element_str = stringify_func (*ptr, userdata);
+
+  str = g_string_new (element_str);
+  g_free (element_str);
+
+  for (i = 1; i < arr_length; i++)
+    {
+      ptr ++;
+      element_str = stringify_func (*ptr, userdata);
+      g_string_append_printf (str, ",\n    %s", element_str);
+      g_free (element_str);
+    }
+
+  return g_string_free (str, FALSE);
+}
+
 
 //////// Meta testcases ////////////////////////////////////////////////////////
 static void

@@ -30,6 +30,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankfunction.h"
+
 G_BEGIN_DECLS
 
 /**
@@ -52,6 +54,30 @@ void crank_test_add_func_expected_fail (const gchar *path,
 void crank_test_add_func_timeout     (const gchar  *path,
                                       GTestFunc     func,
                                       const guint64 time);
+
+
+
+//////// Assertion helpers /////////////////////////////////////////////////////
+
+void    crank_assert_message_eq (const gchar *domain,
+                                 const gchar *file,
+                                 const gint   line,
+                                 const gchar *func,
+                                 const gchar *name_a,
+                                 const gchar *name_b,
+                                 const gchar *str_a,
+                                 const gchar *str_b);
+
+gchar  *crank_assert_stringify_sarray (const void      *arr,
+                                       const guint      arr_length,
+                                       const gsize      element_size,
+                                       CrankStrPtrFunc  element_stringify,
+                                       gpointer         userdata);
+
+gchar  *crank_assert_stringify_parray (const gpointer  *arr,
+                                       const guint      arr_length,
+                                       CrankStrPtrFunc  element_stringify,
+                                       gpointer         userdata);
 
 
 //////// Array equal assertions ////////////////////////////////////////////////
