@@ -294,15 +294,10 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqarray_bool(a,an,b,bn)    \
   _crank_assert_eqarray(gboolean, \
-                        a, \
-                        an, \
-                        G_STRINGIFY(a), \
-                        b, \
-                        bn, \
-                        G_STRINGIFY(b), \
+                        a, an, G_STRINGIFY(a), \
+                        b, bn, G_STRINGIFY(b), \
                         crank_bool_equal, \
-                        crank_bool_to_string, \
-                        NULL)
+                        crank_bool_to_string, NULL)
 /**
  * crank_assert_eqarray_bool_imm: (skip)
  * @a: (element-type gboolean) (array length=an): A array
@@ -313,12 +308,9 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqarray_bool_imm(a,an,...) \
   _crank_assert_eqarray_imm(gboolean, \
-                            a, \
-                            an, \
-                            G_STRINGIFY (a), \
+                            a, an, G_STRINGIFY (a), \
                             crank_bool_equal, \
-                            crank_bool_to_string, \
-                            NULL, \
+                            crank_bool_to_string, NULL, \
                             __VA_ARGS__)
 
 /**
@@ -331,7 +323,11 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  * Asserts two gint arrays are equals.
  */
 #define crank_assert_eqarray_int(a,an,b,bn) \
-  _crank_assert_eqarray(gint,a,an,#a,b,bn,#b,g_int_equal,crank_int_to_string,NULL)
+  _crank_assert_eqarray(gint, \
+                        a, an, G_STRINGIFY (a), \
+                        b, bn, G_STRINGIFY (b), \
+                        g_int_equal, \
+                        crank_int_to_string, NULL)
 /**
  * crank_assert_eqarray_int_imm: (skip)
  * @a: (element-type gint) (array length=an): A array
@@ -342,12 +338,9 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqarray_int_imm(a,an,...)  \
   _crank_assert_eqarray_imm(gint, \
-                            a, \
-                            an, \
-                            G_STRINGIFY (a), \
+                            a, an, G_STRINGIFY (a), \
                             g_int_equal, \
-                            crank_int_to_string, \
-                            NULL, \
+                            crank_int_to_string, NULL, \
                             __VA_ARGS__)
 
 /**
@@ -361,15 +354,10 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqarray_uint(a,an,b,bn)    \
   _crank_assert_eqarray(guint, \
-                        a, \
-                        an, \
-                        G_STRINGIFY (a), \
-                        b, \
-                        bn, \
-                        G_STRINGIFY (b), \
+                        a, an, G_STRINGIFY (a), \
+                        b, bn, G_STRINGIFY (b), \
                         crank_uint_equal, \
-                        crank_uint_to_string, \
-                        NULL)
+                        crank_uint_to_string, NULL)
 /**
  * crank_assert_eqarray_uint_imm: (skip)
  * @a: (element-type guint) (array length=an): A array
@@ -380,12 +368,9 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqarray_uint_imm(a,an,...) \
   _crank_assert_eqarray_imm(guint, \
-                            a, \
-                            an, \
-                            G_STRINGIFY (a), \
+                            a, an, G_STRINGIFY (a), \
                             crank_uint_equal, \
-                            crank_uint_to_string, \
-                            NULL, \
+                            crank_uint_to_string, NULL, \
                             __VA_ARGS__)
 
 
@@ -398,11 +383,8 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  *
  * Asserts two float arrays are equals.
  */
-#define crank_assert_eqarray_float(a,an,b,bn)   crank_assert_eqarray_float_d(a, \
-                                                                             an, \
-                                                                             b, \
-                                                                             bn, \
-                                                                             0.0001f)
+#define crank_assert_eqarray_float(a,an,b,bn) \
+  crank_assert_eqarray_float_d(a, an, b, bn, 0.0001f)
 /**
  * crank_assert_eqarray_float_imm: (skip)
  * @a: (element-type gfloat) (array length=an): A array
@@ -411,12 +393,8 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  *
  * Asserts a given boolean array has same element with given list
  */
-#define crank_assert_eqarray_float_imm(a,an, \
-                                       ...)    crank_assert_eqarray_float_d_imm( \
-    a, \
-    an, \
-    0.0001f, \
-    __VA_ARGS__)
+#define crank_assert_eqarray_float_imm(a, an, ...) \
+  crank_assert_eqarray_float_d_imm(a, an, 0.0001f, __VA_ARGS__)
 
 /**
  * crank_assert_eqarray_float_d: (skip)
@@ -429,13 +407,11 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  * Asserts two float arrays are equals.
  */
 #define crank_assert_eqarray_float_d(a,an,b,bn,d)   \
-  G_STMT_START { \
-    _crank_assert_eqarray_d(gfloat, \
+  _crank_assert_eqarray_d(gfloat, \
                           a, an, G_STRINGIFY (a), \
                           b, bn, G_STRINGIFY (b), \
                           crank_float_nan_equal_delta, (d), \
-                          crank_float_to_string, NULL); \
-  } G_STMT_END
+                          crank_float_to_string, NULL)
 
 /**
  * crank_assert_eqarray_float_d_imm: (skip)
@@ -447,13 +423,11 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  * Asserts a given boolean array has same element with given list
  */
 #define crank_assert_eqarray_float_d_imm(a,an,d,...)    \
-  G_STMT_START { \
-    _crank_assert_eqarray_d_imm (gfloat, \
+  _crank_assert_eqarray_d_imm (gfloat, \
                                a, an, G_STRINGIFY (a), \
                                crank_float_nan_equal_delta, (d), \
                                crank_float_to_string, NULL, \
-                               __VA_ARGS__); \
-  } G_STMT_END
+                               __VA_ARGS__)
 
 
 /**
@@ -466,7 +440,10 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  * Asserts two pointer arrays are equals.
  */
 #define crank_assert_eqarray_pointer(a,an,b,bn) \
-  _crank_assert_eqparray(a,an,#a,b,bn,#b,g_direct_equal,crank_pointer_to_string,NULL)
+  _crank_assert_eqparray(a, an, G_STRINGIFY (a), \
+                         b, bn, G_STRINGIFY (b), \
+                         g_direct_equal, \
+                         crank_pointer_to_string, NULL)
 
 /**
  * crank_assert_eqarray_pointer_imm: (skip)
@@ -477,12 +454,9 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  * Asserts a given boolean array has same element with given list
  */
 #define crank_assert_eqarray_pointer_imm(a,an,...) \
-  _crank_assert_eqparray_imm(a, \
-                             an, \
-                             G_STRINGIFY(a), \
+  _crank_assert_eqparray_imm(a, an, G_STRINGIFY(a), \
                              g_direct_equal, \
-                             crank_pointer_to_string, \
-                             NULL, \
+                             crank_pointer_to_string, NULL, \
                              __VA_ARGS__)
 
 
