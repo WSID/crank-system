@@ -89,6 +89,21 @@ crank_test_add_func_timeout (const gchar  *path,
 
 //////// Assertion helper functions ////////////////////////////////////////////
 
+/**
+ * crank_assert_message_eq: (skip)
+ * @domain: A logging domain.
+ * @file: File name of source file.
+ * @line: Line number of source file.
+ * @func: Function name of source file.
+ * @name_a: Name of argument 'a'
+ * @name_b: Name of argument 'b'
+ * @str_a: Stringification of argument 'a'
+ * @str_b: Stringification of argument 'b'
+ *
+ * Report that argument 'a' and 'b' are not equal.
+ *
+ * This function might not return, but abort test instead.
+ */
 void
 crank_assert_message_eq (const gchar *domain,
                          const gchar *file,
@@ -110,6 +125,161 @@ crank_assert_message_eq (const gchar *domain,
   g_string_free (msg, TRUE);
 }
 
+/**
+ * crank_equal_sarray: (skip):
+ * @element_size: Size of a element.
+ * @arr_a: Structure array.
+ * @arr_length_a: Length of array.
+ * @arr_b: Structure array.
+ * @arr_length_b: Length of array.
+ * @equal_func: (scope call): Equal function.
+ *
+ * Compare two structure array and checks that twos are equal.
+ *
+ * Returns: Whether two are same array.
+ */
+gboolean
+crank_equal_sarray (const gsize  element_size,
+                    const void  *arr_a,
+                    const guint  arr_length_a,
+                    const void  *arr_b,
+                    const guint  arr_length_b,
+                    GEqualFunc   equal_func)
+{
+  if (arr_length_a == arr_length_b)
+    {
+      guint i;
+      gpointer ptr_a = (gpointer)arr_a;
+      gpointer ptr_b = (gpointer)arr_b;
+
+      for (i = 0; i < arr_length_a; i++)
+        {
+          if (! equal_func (ptr_a, ptr_b))
+            return FALSE;
+
+          ptr_a += element_size;
+          ptr_b += element_size;
+        }
+
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/**
+ * crank_equal_parray: (skip):
+ * @arr_a: Pointer array.
+ * @arr_length_a: Length of array.
+ * @arr_b: Pointer array.
+ * @arr_length_b: Length of array.
+ * @equal_func: (scope call): Equal function.
+ *
+ * Compare two pointer array and checks that twos are equal.
+ *
+ * Returns: Whether two are same array.
+ */
+gboolean
+crank_equal_parray (const gpointer *arr_a,
+                    const guint     arr_length_a,
+                    const gpointer *arr_b,
+                    const guint     arr_length_b,
+                    GEqualFunc      equal_func)
+{
+  if (arr_length_a == arr_length_b)
+    {
+      guint i;
+      gpointer* ptr_a = (gpointer*)arr_a;
+      gpointer* ptr_b = (gpointer*)arr_b;
+
+      for (i = 0; i < arr_length_a; i++)
+        {
+          if (! equal_func (*ptr_a, *ptr_b))
+            return FALSE;
+
+          ptr_a ++;
+          ptr_b ++;
+        }
+
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/**
+ * crank_equal_glist_arr: (skip):
+ * @list: (element-type gpointer): A Pointer list.
+ * @arr: Poitner array.
+ * @arr_length: Length of array.
+ * @equal_func: (scope call): Equal function.
+ *
+ * Compare a #GList and pointer array and checks that twos are equal.
+ *
+ * Returns: Whether two has same element in same order.
+ */
+gboolean
+crank_equal_glist_arr (GList          *list,
+                       const gpointer *arr,
+                       const guint     arr_length,
+                       GEqualFunc      equal_func)
+{
+  GList *iter;
+  gpointer *ptr;
+  guint i;
+
+  iter = list;
+  ptr = (gpointer*) arr;
+  for (i = 0; i < arr_length; i++)
+    {
+      if (iter == NULL)
+        return FALSE;
+
+      if (! equal_func (iter->data, *ptr))
+        return FALSE;
+
+      ptr ++;
+      iter = iter->next;
+    }
+
+  return (iter == NULL);
+}
+
+/**
+ * crank_equal_gptrarray_arr: (skip):
+ * @ptrarray: (element-type gpointer): A Pointer list.
+ * @arr: Poitner array.
+ * @arr_length: Length of array.
+ * @equal_func: (scope call): Equal function.
+ *
+ * Compare a #GList and pointer array and checks that twos are equal.
+ *
+ * Returns: Whether two has same element in same order.
+ */
+gboolean
+crank_equal_gptrarray_arr (GPtrArray      *ptrarray,
+                           const gpointer *arr,
+                           const guint     arr_length,
+                           GEqualFunc      equal_func)
+{
+  if (ptrarray == NULL)
+    return arr == NULL || arr_length == 0;
+
+  return crank_equal_parray (ptrarray->pdata, ptrarray->len, arr, arr_length, equal_func);
+}
+
+
+/**
+ * crank_assert_stringify_sarray: (skip)
+ * @arr: Structure array.
+ * @arr_length: Length of array.
+ * @element_size: Size of elements.
+ * @stringify_func: (scope call): Stringifying function.
+ * @userdata: (closure): Userdata for @stringify_func.
+ *
+ * Stringify a structure array with given stringify function. Elements are
+ * seaparated by ",\n        " (8 space indentation).
+ *
+ * Returns: (transfer full): Stringification.
+ */
 gchar*
 crank_assert_stringify_sarray (const void* arr,
                                const guint arr_length,
@@ -122,27 +292,42 @@ crank_assert_stringify_sarray (const void* arr,
 
   GString *str;
 
-  void *ptr;
   gchar *element_str;
+  void *ptr;
   guint i;
+
+  str = g_string_new (NULL);
 
   ptr = (void*)arr;
   element_str = stringify_func (ptr, userdata);
-
-  str = g_string_new (element_str);
+  g_string_printf (str, "\n        %s", element_str);
   g_free (element_str);
 
   for (i = 1; i < arr_length; i++)
     {
       ptr += element_size;
+
       element_str = stringify_func (ptr, userdata);
-      g_string_append_printf (str, ",\n    %s", element_str);
+      g_string_append_printf (str, ",\n        %s", element_str);
       g_free (element_str);
+
     }
 
   return g_string_free (str, FALSE);
 }
 
+/**
+ * crank_assert_stringify_parray: (skip)
+ * @arr: (array length=arr_length): Pointer array.
+ * @arr_length: Length of array.
+ * @stringify_func: (scope call): Stringifying function.
+ * @userdata: (closure): Userdata for @stringify_func.
+ *
+ * Stringify a pointer array with given stringify function. Elements are
+ * seaparated by ",\n        " (8 space indentation).
+ *
+ * Returns: (transfer full): Stringification.
+ */
 gchar*
 crank_assert_stringify_parray (const gpointer  *arr,
                                const guint      arr_length,
@@ -154,27 +339,91 @@ crank_assert_stringify_parray (const gpointer  *arr,
 
   GString *str;
 
-  gpointer *ptr;
   gchar *element_str;
+  gpointer *ptr;
   guint i;
+
+  str = g_string_new (NULL);
 
   ptr = (void*)arr;
   element_str = stringify_func (*ptr, userdata);
-
-  str = g_string_new (element_str);
+  g_string_printf (str, "\n        %s", element_str);
   g_free (element_str);
 
-  for (i = 1; i < arr_length; i++)
+  for (i = 0; i < arr_length; i++)
     {
       ptr ++;
+
       element_str = stringify_func (*ptr, userdata);
-      g_string_append_printf (str, ",\n    %s", element_str);
+      g_string_append_printf (str, ",\n        %s", element_str);
       g_free (element_str);
     }
 
   return g_string_free (str, FALSE);
 }
 
+/**
+ * crank_assert_stringify_glist: (skip)
+ * @list: (element-type gpointer): GList to strinigify.
+ * @stringify_func: (scope call): Stringifying function.
+ * @userdata: (closure): Userdata for @stringify_func.
+ *
+ * Stringify a #GList with given stringify function. Elements are seaparated by
+ * ",\n        " (8 space indentation).
+ *
+ * Returns: (transfer full): Stringification.
+ */
+gchar*
+crank_assert_stringify_glist (GList           *list,
+                              CrankStrPtrFunc  stringify_func,
+                              gpointer         userdata)
+{
+  if (list == NULL)
+    return NULL;
+
+  GString *str;
+
+  gchar *element_str;
+  GList *iter;
+
+  str = g_string_new (NULL);
+
+  iter = list;
+  element_str = stringify_func (iter->data, userdata);
+  g_string_printf (str, "\n        %s", element_str);
+  g_free (element_str);
+
+  for (iter = iter->next; iter != NULL; iter = iter->next)
+    {
+      element_str = stringify_func (iter->data, userdata);
+      g_string_append_printf (str, ",\n        %s", element_str);
+      g_free (element_str);
+    }
+
+  return g_string_free (str, FALSE);
+}
+
+/**
+ * crank_assert_stringify_gptrarray: (skip)
+ * @ptrarray: (element-type gpointer): GList to strinigify.
+ * @element_stringify: (scope call): Stringifying function.
+ * @userdata: (closure): Userdata for @stringify_func.
+ *
+ * Stringify a #GList with given stringify function. Elements are seaparated by
+ * ",\n        " (8 space indentation).
+ *
+ * Returns: (transfer full): Stringification.
+ */
+gchar*
+crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
+                                  CrankStrPtrFunc  element_stringify,
+                                  gpointer         userdata)
+{
+  if (ptrarray == NULL)
+    return NULL;
+
+  return crank_assert_stringify_parray (ptrarray->pdata, ptrarray->len, element_stringify, userdata);
+}
 
 //////// Meta testcases ////////////////////////////////////////////////////////
 static void
