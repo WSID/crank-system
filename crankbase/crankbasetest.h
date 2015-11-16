@@ -160,18 +160,18 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_cmpfloat_d(a,cmp,b,d)  \
   G_STMT_START { \
-    gfloat _crank_macro_cf_a = (a); \
-    gfloat _crank_macro_cf_b = (b); \
-    gfloat _crank_macro_cf_diff = (_crank_macro_cf_b - _crank_macro_cf_a); \
-    gfloat _crank_macro_cf_d = (d); \
-    gint _crank_macro_cf_cres = \
-      (_crank_macro_cf_diff < -_crank_macro_cf_d) - \
-      (_crank_macro_cf_d < _crank_macro_cf_diff); \
-    if (G_UNLIKELY(!(_crank_macro_cf_cres cmp 0))) \
+    gfloat _crank_macro_a = (a); \
+    gfloat _crank_macro_b = (b); \
+    gfloat _crank_macro_diff = (_crank_macro_b - _crank_macro_a); \
+    gfloat _crank_macro_d = (d); \
+    gint _crank_macro_cres = \
+      (_crank_macro_diff < -_crank_macro_d) - \
+      (_crank_macro_d < _crank_macro_diff); \
+    if (G_UNLIKELY(!(_crank_macro_cres cmp 0))) \
       { \
         g_assertion_message_cmpnum (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
                                     #a " " #cmp " " #b, \
-                                    _crank_macro_cf_a, #cmp, _crank_macro_cf_b, 'f'); \
+                                    _crank_macro_a, #cmp, _crank_macro_b, 'f'); \
       } \
   } G_STMT_END
 
@@ -237,10 +237,8 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  *
  * The difference is calculated from distance on complex plane.
  */
-#define crank_assert_eqcplxfloat_uc(a,r,i) crank_assert_eqcplxfloat_d_uc(a, \
-                                                                         r, \
-                                                                         i, \
-                                                                         0.0001f)
+#define crank_assert_eqcplxfloat_uc(a,r,i) \
+  crank_assert_eqcplxfloat_d_uc(a, r, i, 0.0001f)
 
 /**
  * crank_assert_eqcplxfloat_d: (skip)
@@ -256,15 +254,10 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
 #define crank_assert_eqcplxfloat_d(a,b,d) \
   G_STMT_START { \
     if (! crank_cplx_float_equal_delta (a, b, d)) \
-      { \
-        gchar *str_a = crank_cplx_float_to_string (a); \
-        gchar *str_b = crank_cplx_float_to_string (b); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 #a, #b, str_a, str_b); \
-        g_free (str_a); \
-        g_free (str_b); \
-      } \
+      crank_assert_message_eq_free (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+                                    G_STRINGIFY(a), G_STRINGIFY(b), \
+                                    crank_cplx_float_to_string (a), \
+                                    crank_cplx_float_to_string (b)); \
   } G_STMT_END
 
 /**
@@ -281,8 +274,8 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eqcplxfloat_d_uc(a,r,i,d) \
   G_STMT_START { \
-    CrankCplxFloat _crank_aecfd_b = {r,i}; \
-    crank_assert_eqcplxfloat_d (a, &_crank_aecfd_b, d); \
+    CrankCplxFloat _crank_macro_b = {r,i}; \
+    crank_assert_eqcplxfloat_d (a, &_crank_macro_b, d); \
   } G_STMT_END
 
 
@@ -480,19 +473,17 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eq_glist_imm(a,...) \
   G_STMT_START { \
-    gpointer _crank_macro_caegi_list[] = {__VA_ARGS__}; \
+    gpointer _crank_macro_list[] = {__VA_ARGS__}; \
+    guint    _crank_macro_nlist = G_N_ELEMENTS (_crank_macro_list); \
     \
-    if (! crank_equal_glist_arr (a, _crank_macro_caegi_list, G_N_ELEMENTS (_crank_macro_caegi_list), g_direct_equal)) \
+    if (! crank_equal_glist_arr (a, _crank_macro_list, _crank_macro_nlist, g_direct_equal)) \
       { \
-        gchar *_crank_macro_caegi_a = crank_assert_stringify_glist (a, crank_pointer_to_string, NULL); \
-        gchar *_crank_macro_caegi_b = crank_assert_stringify_parray (_crank_macro_caegi_list, G_N_ELEMENTS (_crank_macro_caegi_list), crank_pointer_to_string, NULL); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 #a, "list", \
-                                 _crank_macro_caegi_a, _crank_macro_caegi_b); \
-        \
-        g_free (_crank_macro_caegi_a); \
-        g_free (_crank_macro_caegi_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            G_STRINGIFY (a), "list", \
+            crank_assert_stringify_glist (a, crank_pointer_to_string, NULL), \
+            crank_assert_stringify_parray (_crank_macro_list, _crank_macro_nlist, \
+                                           crank_pointer_to_string, NULL)); \
       } \
   } G_STMT_END
 
@@ -506,19 +497,17 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
  */
 #define crank_assert_eq_gptrarray_imm(a,...) \
   G_STMT_START { \
-    gpointer _crank_macro_caegi_list[] = {__VA_ARGS__}; \
+    gpointer _crank_macro_list[] = {__VA_ARGS__}; \
+    guint    _crank_macro_nlist = G_N_ELEMENTS (_crank_macro_list); \
     \
-    if (! crank_equal_gptrarray_arr (a, _crank_macro_caegi_list, G_N_ELEMENTS (_crank_macro_caegi_list), g_direct_equal)) \
+    if (! crank_equal_gptrarray_arr (a, _crank_macro_list, _crank_macro_nlist, g_direct_equal)) \
       { \
-        gchar *_crank_macro_caegi_a = crank_assert_stringify_gptrarray (a, crank_pointer_to_string, NULL); \
-        gchar *_crank_macro_caegi_b = crank_assert_stringify_parray (_crank_macro_caegi_list, G_N_ELEMENTS (_crank_macro_caegi_list), crank_pointer_to_string, NULL); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 #a, "list", \
-                                 _crank_macro_caegi_a, _crank_macro_caegi_b); \
-        \
-        g_free (_crank_macro_caegi_a); \
-        g_free (_crank_macro_caegi_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            G_STRINGIFY (a), "list", \
+            crank_assert_stringify_gptrarray (a, crank_pointer_to_string, NULL), \
+            crank_assert_stringify_parray (_crank_macro_list, _crank_macro_nlist, \
+                                           crank_pointer_to_string, NULL)); \
       } \
   } G_STMT_END
 
@@ -682,24 +671,21 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
   G_STMT_START { \
     if (! crank_equal_sarray (sizeof(G), a, an, b, bn, eqf)) \
       { \
-        gchar *_crank_macro_caea_a = crank_assert_stringify_sarray (a, an, sizeof(G), strf, strfu); \
-        gchar *_crank_macro_caea_b = crank_assert_stringify_sarray (b, bn, sizeof(G), strf, strfu); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 aname, bname, \
-                                 _crank_macro_caea_a, _crank_macro_caea_b); \
-        \
-        g_free (_crank_macro_caea_a); \
-        g_free (_crank_macro_caea_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            aname, bname, \
+            crank_assert_stringify_sarray (a, an, sizeof(G), strf, strfu), \
+            crank_assert_stringify_sarray (b, bn, sizeof(G), strf, strfu)); \
       } \
   } G_STMT_END
 
 #define _crank_assert_eqarray_imm(G,a,an,aname,eqf,strf,strfu,...) \
   G_STMT_START { \
-    G _crank_macro_caeai_arr[] = {__VA_ARGS__}; \
+    G _crank_macro_arr[] = {__VA_ARGS__}; \
+    guint _crank_macro_narr = G_N_ELEMENTS (_crank_macro_arr); \
     \
     _crank_assert_eqarray (G, a, an, aname, \
-                           _crank_macro_caeai_arr, G_N_ELEMENTS (_crank_macro_caeai_arr), "list", \
+                           _crank_macro_arr, _crank_macro_narr, "list", \
                            eqf, strf, strfu); \
   } G_STMT_END
 
@@ -709,24 +695,21 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
   G_STMT_START { \
     if (! crank_equal_delta_sarray (sizeof(G), a, an, b, bn, eqf, d)) \
       { \
-        gchar *_crank_macro_caea_a = crank_assert_stringify_sarray (a, an, sizeof(G), strf, strfu); \
-        gchar *_crank_macro_caea_b = crank_assert_stringify_sarray (b, bn, sizeof(G), strf, strfu); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 aname, bname, \
-                                 _crank_macro_caea_a, _crank_macro_caea_b); \
-        \
-        g_free (_crank_macro_caea_a); \
-        g_free (_crank_macro_caea_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            aname, bname, \
+            crank_assert_stringify_sarray (a, an, sizeof(G), strf, strfu), \
+            crank_assert_stringify_sarray (b, bn, sizeof(G), strf, strfu)); \
       } \
   } G_STMT_END
 
 #define _crank_assert_eqarray_d_imm(G,a,an,aname,eqf,d,strf,strfu,...) \
   G_STMT_START { \
-    G _crank_macro_caeai_arr[] = {__VA_ARGS__}; \
+    G _crank_macro_arr[] = {__VA_ARGS__}; \
+    guint _crank_macro_narr = G_N_ELEMENTS (_crank_macro_arr); \
     \
     _crank_assert_eqarray_d (G, a, an, aname, \
-                             _crank_macro_caeai_arr, G_N_ELEMENTS (_crank_macro_caeai_arr), "list", \
+                           _crank_macro_arr, _crank_macro_narr, "list", \
                              eqf, d, strf, strfu); \
   } G_STMT_END
 
@@ -735,24 +718,21 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
   G_STMT_START { \
     if (! crank_equal_parray ((gpointer*)a, an, (gpointer*)b, bn, eqf)) \
       { \
-        gchar *_crank_macro_caep_a = crank_assert_stringify_parray ((gpointer*)a, an, strf, strfu); \
-        gchar *_crank_macro_caep_b = crank_assert_stringify_parray ((gpointer*)b, bn, strf, strfu); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 aname, bname, \
-                                 _crank_macro_caep_a, _crank_macro_caep_b); \
-        \
-        g_free (_crank_macro_caep_a); \
-        g_free (_crank_macro_caep_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            aname, bname, \
+            crank_assert_stringify_parray ((gpointer*)a, an, strf, strfu), \
+            crank_assert_stringify_parray ((gpointer*)b, bn, strf, strfu)); \
       } \
   } G_STMT_END
 
 #define _crank_assert_eqparray_imm(a,an,aname,eqf,strf,strfu,...) \
   G_STMT_START { \
-    gpointer _crank_macro_caepi_arr[] = {__VA_ARGS__}; \
+    gpointer _crank_macro_arr[] = {__VA_ARGS__}; \
+    guint _crank_macro_narr = G_N_ELEMENTS (_crank_macro_arr); \
     \
     _crank_assert_eqparray (a, an, aname, \
-                            _crank_macro_caepi_arr, G_N_ELEMENTS (_crank_macro_caepi_arr), "list", \
+                            _crank_macro_arr, _crank_macro_narr, "list", \
                             eqf, strf, strfu); \
   } G_STMT_END
 
@@ -761,24 +741,21 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
   G_STMT_START { \
     if (! crank_equal_delta_parray ((gpointer*)a, an, (gpointer*)b, bn, eqf, d)) \
       { \
-        gchar *_crank_macro_caep_a = crank_assert_stringify_parray ((gpointer*)a, an, strf, strfu); \
-        gchar *_crank_macro_caep_b = crank_assert_stringify_parray ((gpointer*)b, bn, strf, strfu); \
-        \
-        crank_assert_message_eq (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
-                                 aname, bname, \
-                                 _crank_macro_caep_a, _crank_macro_caep_b); \
-        \
-        g_free (_crank_macro_caep_a); \
-        g_free (_crank_macro_caep_b); \
+        crank_assert_message_eq_free ( \
+            G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, \
+            aname, bname, \
+            crank_assert_stringify_parray ((gpointer*)a, an, strf, strfu), \
+            crank_assert_stringify_parray ((gpointer*)b, bn, strf, strfu)); \
       } \
   } G_STMT_END
 
 #define _crank_assert_eqparray_d_imm(a,an,aname,eqf,d,strf,strfu,...) \
   G_STMT_START { \
-    gpointer _crank_macro_caepi_arr[] = {__VA_ARGS__}; \
+    gpointer _crank_macro_arr[] = {__VA_ARGS__}; \
+    guint    _crank_macro_narr = G_N_ELEMENTS (_crank_macro_arr); \
     \
     _crank_assert_eqparray_d (a, an, aname, \
-                             _crank_macro_caepi_arr, G_N_ELEMENTS (_crank_macro_caepi_arr), "list", \
+                             _crank_macro_arr, _crank_macro_narr, "list", \
                              eqf, d, strf, strfu); \
   } G_STMT_END
 
