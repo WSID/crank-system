@@ -19,7 +19,6 @@ test_programs= \
 		test_euler \
 		test_rot \
 		test_trans \
-		test_basics \
 		test_gjk
 
 
@@ -53,16 +52,6 @@ test_trans_LDADD= \
 
 test_trans_SOURCES= \
 		test_trans.vala
-
-
-test_basics_LDADD= \
-		$(CRANK_BASE_LIBS) \
-		$(CRANK_SHAPE_LIBS) \
-		$(top_builddir)/crankbase/libcrankbase.la \
-		$(top_builddir)/crankshape/libcrankshape.la
-
-test_basics_SOURCES= \
-		test_basics.vala
 
 
 test_gjk_LDADD= \

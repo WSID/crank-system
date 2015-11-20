@@ -39,22 +39,4 @@ namespace Crank {
     public Trans2 ();
     public Trans2.from_matrix (Crank.MatFloat3 mat);
   }
-
-  struct Segment2 {
-    public Segment2 (Crank.VecFloat2 p0,
-                     Crank.VecFloat2 p1);
-
-    public Segment2.uv (float p0x,
-                        float p0y,
-                        float p1x,
-                        float p1y);
-           
-
-    public Crank.VecFloat2   displacement { get; }
-    public float             length { get; }
-
-    public Crank.VecFloat2   direction { get; }
-    public Crank.VecFloat2   left { get; }
-    public Crank.VecFloat2   right { get; }
-  }
 }

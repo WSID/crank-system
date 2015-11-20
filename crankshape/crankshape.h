@@ -28,7 +28,6 @@
 #include "crankeuler.h"
 #include "crankrotation.h"
 #include "cranktrans.h"
-#include "crankshapebasics.h"
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
