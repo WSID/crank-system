@@ -47,6 +47,13 @@ gboolean        crank_gjk2_full (CrankShape2Polygon *a,
                                  CrankTrans2        *bpos,
                                  CrankVecFloat2     *triangle);
 
+gfloat          crank_epa2      (CrankShape2Polygon *a,
+                                 CrankShape2Polygon *b,
+                                 CrankTrans2        *bpos,
+                                 CrankVecFloat2     *init_polys,
+                                 const guint        ninit_polys,
+                                 CrankVecFloat2     *segment,
+                                 CrankVecFloat2     *normal);
 
 G_END_DECLS
 
