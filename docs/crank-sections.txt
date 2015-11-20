@@ -29,8 +29,10 @@ crank_float_hash1
 crank_bool_equal
 crank_uint_equal
 crank_float_equal
+crank_float_nan_equal
 
 crank_float_equal_delta
+crank_float_nan_equal_delta
 
 crank_int_compare
 crank_uint_compare
