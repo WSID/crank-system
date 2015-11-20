@@ -2130,6 +2130,27 @@ crank_trans2_get_type
 crank_trans3_get_type
 </SECTION>
 
+<SECTION>
+<FILE>crankshapebasics</FILE>
+CrankSegment2
+CrankTriangle2
+CrankSegment3
+CrankTriangle3
+CrankTetrahedreon3
+CrankVoronoiSegment
+CrankVoronoiTriangle
+crank_segment2_init
+crank_segment2_init_uv
+crank_segment2_get_displacement
+crank_segment2_get_direction
+crank_segment2_get_left
+crank_segment2_get_right
+crank_segment2_get_length
+crank_segment2_get_distance_from
+crank_segment2_get_nearest_point
+crank_segment2_get_voronoi_region
+</SECTION>
+
 
 <SECTION>
 <FILE>crankshape2</FILE>
