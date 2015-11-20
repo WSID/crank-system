@@ -389,7 +389,7 @@ crank_equal_gptrarray_arr (GPtrArray      *ptrarray,
  * @arr: Structure array.
  * @arr_length: Length of array.
  * @element_size: Size of elements.
- * @stringify_func: (scope call): Stringifying function.
+ * @element_stringify: (scope call): Stringifying function.
  * @userdata: (closure): Userdata for @stringify_func.
  *
  * Stringify a structure array with given stringify function. Elements are
@@ -401,7 +401,7 @@ gchar*
 crank_assert_stringify_sarray (const void* arr,
                                const guint arr_length,
                                const gsize element_size,
-                               CrankStrPtrFunc stringify_func,
+                               CrankStrPtrFunc element_stringify,
                                gpointer userdata)
 {
   if (arr_length == 0)
@@ -416,7 +416,7 @@ crank_assert_stringify_sarray (const void* arr,
   str = g_string_new (NULL);
 
   ptr = (void*)arr;
-  element_str = stringify_func (ptr, userdata);
+  element_str = element_stringify (ptr, userdata);
   g_string_printf (str, "\n        %s", element_str);
   g_free (element_str);
 
@@ -424,7 +424,7 @@ crank_assert_stringify_sarray (const void* arr,
     {
       ptr += element_size;
 
-      element_str = stringify_func (ptr, userdata);
+      element_str = element_stringify (ptr, userdata);
       g_string_append_printf (str, ",\n        %s", element_str);
       g_free (element_str);
 
@@ -437,7 +437,7 @@ crank_assert_stringify_sarray (const void* arr,
  * crank_assert_stringify_parray: (skip)
  * @arr: (array length=arr_length): Pointer array.
  * @arr_length: Length of array.
- * @stringify_func: (scope call): Stringifying function.
+ * @element_stringify: (scope call): Stringifying function.
  * @userdata: (closure): Userdata for @stringify_func.
  *
  * Stringify a pointer array with given stringify function. Elements are
@@ -448,7 +448,7 @@ crank_assert_stringify_sarray (const void* arr,
 gchar*
 crank_assert_stringify_parray (const gpointer  *arr,
                                const guint      arr_length,
-                               CrankStrPtrFunc  stringify_func,
+                               CrankStrPtrFunc  element_stringify,
                                gpointer         userdata)
 {
   if (arr_length == 0)
@@ -463,7 +463,7 @@ crank_assert_stringify_parray (const gpointer  *arr,
   str = g_string_new (NULL);
 
   ptr = (void*)arr;
-  element_str = stringify_func (*ptr, userdata);
+  element_str = element_stringify (*ptr, userdata);
   g_string_printf (str, "\n        %s", element_str);
   g_free (element_str);
 
@@ -471,7 +471,7 @@ crank_assert_stringify_parray (const gpointer  *arr,
     {
       ptr ++;
 
-      element_str = stringify_func (*ptr, userdata);
+      element_str = element_stringify (*ptr, userdata);
       g_string_append_printf (str, ",\n        %s", element_str);
       g_free (element_str);
     }
@@ -482,7 +482,7 @@ crank_assert_stringify_parray (const gpointer  *arr,
 /**
  * crank_assert_stringify_glist: (skip)
  * @list: (element-type gpointer): GList to strinigify.
- * @stringify_func: (scope call): Stringifying function.
+ * @element_stringify: (scope call): Stringifying function.
  * @userdata: (closure): Userdata for @stringify_func.
  *
  * Stringify a #GList with given stringify function. Elements are seaparated by
@@ -492,7 +492,7 @@ crank_assert_stringify_parray (const gpointer  *arr,
  */
 gchar*
 crank_assert_stringify_glist (GList           *list,
-                              CrankStrPtrFunc  stringify_func,
+                              CrankStrPtrFunc  element_stringify,
                               gpointer         userdata)
 {
   if (list == NULL)
@@ -506,13 +506,13 @@ crank_assert_stringify_glist (GList           *list,
   str = g_string_new (NULL);
 
   iter = list;
-  element_str = stringify_func (iter->data, userdata);
+  element_str = element_stringify (iter->data, userdata);
   g_string_printf (str, "\n        %s", element_str);
   g_free (element_str);
 
   for (iter = iter->next; iter != NULL; iter = iter->next)
     {
-      element_str = stringify_func (iter->data, userdata);
+      element_str = element_stringify (iter->data, userdata);
       g_string_append_printf (str, ",\n        %s", element_str);
       g_free (element_str);
     }

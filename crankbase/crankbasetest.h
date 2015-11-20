@@ -227,7 +227,7 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
 #define crank_assert_eqcplxfloat(a,b) crank_assert_eqcplxfloat_d(a,b,0.0001f)
 
 /**
- * crank_assert_eqcplxfloat_cimm: (skip)
+ * crank_assert_eqcplxfloat_uc: (skip)
  * @a: (type CrankCplxFloat): A complex
  * @r: (type gfloat): A real part.
  * @i: (type gfloat): A imaginary part.
