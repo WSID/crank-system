@@ -121,6 +121,12 @@ void                    crank_shape2_set_pos_scl       (CrankShape2    *shape,
                                                         gfloat          scl);
 
 
+void                    crank_shape2_get_rel_position  (CrankShape2    *shape,
+                                                        CrankTrans2    *origin_rel_pos,
+                                                        CrankShape2    *other,
+                                                        CrankTrans2    *res);
+
+
 
 //////// Geometric stuff ///////////////////////////////////////////////////////
 

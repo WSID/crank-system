@@ -302,6 +302,31 @@ crank_shape2_set_pos_scl (CrankShape2 *shape,
 }
 
 
+/**
+ * crank_shape2_get_rel_position:
+ * @shape : A Shape
+ * @origin_rel_pos: (nullable): Relative position between each origin of each
+ *     shape, or %NULL to use identity transform.
+ * @other: Other shape.
+ * @res: (out): Relative position.
+ *
+ * Calculate relative position between shape with @origin_rel_pos.
+ */
+void
+crank_shape2_get_rel_position (CrankShape2 *shape,
+                               CrankTrans2 *origin_rel_pos,
+                               CrankShape2 *other,
+                               CrankTrans2 *res)
+{
+  crank_trans2_inverse (& G_PRIVATE_FIELD (CrankShape2, shape, CrankTrans2, position),
+                        res);
+
+  if (origin_rel_pos != NULL)
+    crank_trans2_compose_self (res, origin_rel_pos);
+
+  crank_trans2_compose_self (res,
+                             &G_PRIVATE_FIELD (CrankShape2, other, CrankTrans2, position));
+}
 
 
 /**

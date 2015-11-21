@@ -2143,6 +2143,7 @@ crank_shape2_get_pos_rot
 crank_shape2_set_pos_rot
 crank_shape2_get_pos_scl
 crank_shape2_set_pos_scl
+crank_shape2_get_rel_position
 crank_shape2_finitize
 crank_shape2_contains
 CrankShape2
