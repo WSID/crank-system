@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPE2IROUND_H
+#define CRANKSHAPE2IROUND_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,31 +22,48 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshape2iround.h cannot be included directly.
+#endif
 
-#include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
+#include <glib.h>
+#include <glib-object.h>
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
-#include "crankshape2cpolygon.h"
-#include "crankshape2iround.h"
 
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2circle.h"
+G_BEGIN_DECLS
+//////// Type Declaration //////////////////////////////////////////////////////
+
+#define CRANK_TYPE_SHAPE2_IROUND crank_shape2_iround_get_type()
+
+G_DECLARE_INTERFACE(CrankShape2IRound,
+                    crank_shape2_iround,
+                    CRANK, SHAPE2_IROUND,
+                    CrankShape2Finite)
+
+struct _CrankShape2IRoundInterface
+{
+  GTypeInterface _parent;
+
+  CrankShape2Polygon* (*get_inner_shape) (CrankShape2IRound *iround);
+
+  gfloat              (*get_round_radius) (CrankShape2IRound *iround);
+
+};
 
 
-#include "crankshape3.h"
-#include "crankshape3finite.h"
-#include "crankshape3polyhedreon.h"
 
-#include "crankgjk.h"
+//////// Public functions //////////////////////////////////////////////////////
+
+CrankShape2Polygon* crank_shape2_iround_get_inner_shape (CrankShape2IRound *iround);
+
+gfloat              crank_shape2_iround_get_round_radius (CrankShape2IRound *iround);
 
 
-#undef _CRANKSHAPE_INSIDE
 
-#endif /* CRANKSHAPE_H */
+G_END_DECLS
+
+
+#endif
