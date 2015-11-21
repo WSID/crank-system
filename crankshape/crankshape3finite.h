@@ -37,6 +37,7 @@
 G_BEGIN_DECLS
 //////// Type Definition ///////////////////////////////////////////////////////
 
+#define CRANK_TYPE_SHAPE3_FINITE crank_shape3_finite_get_type()
 G_DECLARE_DERIVABLE_TYPE (CrankShape3Finite,
                           crank_shape3_finite,
                           CRANK, SHAPE3_FINITE,
