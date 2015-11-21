@@ -258,51 +258,6 @@ crank_shape2_segment_new (const gfloat length)
                                              NULL);
 }
 
-/**
- * crank_shape2_segment_new_with_position:
- * @length: Length of segment.
- * @position: A Position.
- *
- * Constructes new segment shape with position.
- *
- * Returns: (transfer full): New shape.
- */
-CrankShape2Segment*
-crank_shape2_segment_new_with_position (const gfloat  length,
-                                        CrankTrans2  *position)
-{
-  return (CrankShape2Segment*) g_object_new (CRANK_TYPE_SHAPE2_SEGMENT,
-                                             "length", length,
-                                             "position", position,
-                                             NULL);
-}
-
-/**
- * crank_shape2_segment_new_with_points:
- * @a: A end point.
- * @b: A end point.
- *
- * Constructes new segment shape with points as end points.
- *
- * Returns: (transfer full): New shape.
- */
-CrankShape2Segment*
-crank_shape2_segment_new_with_points (CrankVecFloat2 *a,
-                                      CrankVecFloat2 *b)
-{
-  CrankVecFloat2 seg;
-  CrankTrans2 pos;
-
-  crank_vec_float2_mixs (a, b, 0.5, & pos.mtrans);
-
-  crank_vec_float2_sub (b, a, &seg);
-  pos.mrot = atan2f (seg.y, seg.x);
-  pos.mscl = 1.0f;
-
-  return crank_shape2_segment_new_with_position (crank_vec_float2_get_magn (&seg),
-                                                 &pos);
-}
-
 //////// Property getter / setters /////////////////////////////////////////////
 
 /**
