@@ -46,6 +46,12 @@ gfloat          crank_gjk2_distance (CrankShape2Polygon *a,
                                      CrankShape2Polygon *b,
                                      CrankTrans2        *bpos);
 
+gfloat          crank_gjk2_closest_points (CrankShape2Polygon *a,
+                                           CrankShape2Polygon *b,
+                                           CrankTrans2        *bpos,
+                                           CrankVecFloat2     *ptra,
+                                           CrankVecFloat2     *ptrb);
+
 gboolean        crank_gjk2_full (CrankShape2Polygon *a,
                                  CrankShape2Polygon *b,
                                  CrankTrans2        *bpos,
@@ -54,8 +60,7 @@ gboolean        crank_gjk2_full (CrankShape2Polygon *a,
 gfloat          crank_epa2      (CrankShape2Polygon *a,
                                  CrankShape2Polygon *b,
                                  CrankTrans2        *bpos,
-                                 CrankVecFloat2     *init_polys,
-                                 const guint        ninit_polys,
+                                 CrankVecFloat2     *triangle,
                                  CrankVecFloat2     *segment,
                                  CrankVecFloat2     *normal);
 

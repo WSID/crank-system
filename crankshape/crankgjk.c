@@ -76,6 +76,28 @@ void    crank_gjk2_support (CrankShape2Polygon *a,
                             CrankTrans2        *bpos,
                             CrankVecFloat2     *dir,
                             CrankVecFloat2     *vertex);
+/*
+ * crank_gjk2_support_point: (private)
+ * @a: A Polygonal shape.
+ * @b: A Polygonal shape.
+ * @bpos: A Relative position of a and b, which contains positions of @a and @b.
+ * @dir: Direction to look for.
+ * @vertex: (out): A Vertex of minkowski different.
+ * @ptra: (out): Farthest point in @a.
+ * @ptrb: (out): Farthest point in @b.
+ *
+ * Gets a farthest vertex of minkowski different of @a and @b.
+ *
+ * This carrys additional information of which vertices are corresponds to this
+ * vertex on minkowski difference.
+ */
+void    crank_gjk2_support_point (CrankShape2Polygon *a,
+                                  CrankShape2Polygon *b,
+                                  CrankTrans2        *bpos,
+                                  CrankVecFloat2     *dir,
+                                  CrankVecFloat2     *vertex,
+                                  CrankVecFloat2     *ptra,
+                                  CrankVecFloat2     *ptrb);
 
 
 
@@ -191,6 +213,131 @@ crank_gjk2_distance (CrankShape2Polygon *a,
     }
 }
 
+/**
+ * crank_gjk2_closest_points:
+ * @a: A Polygonal shape.
+ * @b: A Polygonal shape.
+ * @bpos: (nullable): Relative position of @a and @b.
+ * @ptra: (out): Point on @a that closest to @b.
+ * @ptrb: (out): Point on @b that closest to @a.
+ *
+ * Gets minimum distance between @a and @b. This is minimum possible distance
+ * of points from each @a and @b.
+ *
+ * Returns: Minimum distance between @a and @b, or 0 if intersects, or #NAN if
+ *     GJK cannot be performed.
+ */
+gfloat
+crank_gjk2_closest_points (CrankShape2Polygon *a,
+                           CrankShape2Polygon *b,
+                           CrankTrans2        *bpos,
+                           CrankVecFloat2     *ptra,
+                           CrankVecFloat2     *ptrb)
+{
+  CrankVecFloat2 dir;
+  CrankVecFloat2 dir1;
+
+  CrankVecFloat2 seg;
+  CrankTrans2   brpos;
+
+  CrankVecFloat2 ptr0;
+  CrankVecFloat2 ptr1;
+
+  CrankVecFloat2 ptra0;
+  CrankVecFloat2 ptrb0;
+  CrankVecFloat2 ptra1;
+  CrankVecFloat2 ptrb1;
+
+  // Check convex
+  if (! (crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(a)) &&
+         crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
+    return NAN;
+
+  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
+
+  //////// Build initial starting segments.
+  crank_vec_float2_neg (&brpos.mtrans, &dir);
+  crank_gjk2_support_point (a, b, &brpos, & brpos.mtrans, &ptr0, &ptra0, &ptrb0);
+  crank_gjk2_support_point (a, b, &brpos, &dir, &ptr1, &ptra1, &ptrb1);
+
+  crank_vec_float2_sub (&ptr1, &ptr0, &seg);
+
+  if (crank_vec_float2_crs (&ptr0, &ptr1) < 0)
+    {
+      CrankVecFloat2 temp;
+      crank_vec_float2_copy (&ptr0, &temp);
+      crank_vec_float2_copy (&ptr1, &ptr0);
+      crank_vec_float2_copy (&temp, &ptr1);
+    }
+
+  // Loop through triangles
+
+  while (TRUE)
+    {
+      CrankVecFloat2 ldir;
+      CrankVecFloat2 ptr2;
+      CrankVecFloat2 ptra2;
+      CrankVecFloat2 ptrb2;
+
+      gfloat dotc;
+      gfloat dota;
+      gfloat crs_02;
+      gfloat crs_21;
+
+      crank_vec_float2_sub (&ptr1, &ptr0, &seg);
+      crank_rot_vec2_left (&seg, &ldir);
+      crank_gjk2_support_point (a, b, &brpos, &ldir, &ptr2, &ptra2, &ptrb2);
+
+      // Checks that we are closer to origin.
+      dotc = crank_vec_float2_dot (&ldir, &ptr2);
+      dota = crank_vec_float2_dot (&ldir, &ptr0);
+      if ((dotc - dota) < 0.0001f)
+        {
+          gfloat qa = crank_vec_float2_dot (&seg, &ptr0);
+          gfloat qb = crank_vec_float2_dot (&seg, &ptr1);
+          gfloat q;
+          if (0 < qa)
+            {
+              crank_vec_float2_copy (&ptra0, ptra);
+              crank_vec_float2_copy (&ptrb0, ptrb);
+              return crank_vec_float2_get_magn (&ptr0);
+            }
+          else if (qb < 0)
+            {
+              crank_vec_float2_copy (&ptra1, ptra);
+              crank_vec_float2_copy (&ptrb1, ptrb);
+              return crank_vec_float2_get_magn (&ptr1);
+            }
+
+          crank_vec_float2_mixs (&ptra0, &ptra1, q, ptra);
+          crank_vec_float2_mixs (&ptrb0, &ptrb1, q, ptrb);
+
+          return crank_vec_float2_crs (&ptr0, &ptr1) /
+                 crank_vec_float2_get_magn (&seg);
+        }
+
+      crs_02 = crank_vec_float2_crs (&ptr0, &ptr2);
+      crs_21 = crank_vec_float2_crs (&ptr2, &ptr1);
+
+      if ((crs_02 < 0) && (crs_21 < 0))
+        {
+          return -1;
+        }
+      else if (crank_vec_float2_dot (&seg, &ptr2) < 0)
+        {
+          crank_vec_float2_copy (&ptr2, &ptr0);
+          crank_vec_float2_copy (&ptra2, &ptra0);
+          crank_vec_float2_copy (&ptrb2, &ptrb0);
+        }
+      else
+        {
+          crank_vec_float2_copy (&ptr2, &ptr1);
+          crank_vec_float2_copy (&ptra2, &ptra1);
+          crank_vec_float2_copy (&ptrb2, &ptrb1);
+        }
+    }
+}
+
 
 /**
  * crank_gjk2_full:
@@ -289,19 +436,18 @@ crank_gjk2_full (CrankShape2Polygon *a,
  * @a: A Polygonal shape.
  * @b: A Polygonal shape.
  * @bpos: Relative position of @b from @a.
- * @init_polys: (array length=ninit_polys): Initial Polygon as array.
- * @ninit_polys: Length of @init_polys
+ * @triangle: (array fixed-size=3): Resulting triangle from crank_gjk2_full()
  * @segment: (out) (optional) (array fixed-size=2): Segment of minkowski difference.
  * @normal: (out) (optional): Normal of segment.
  *
- * Performs EPA on shapes, and gets a segment as result.
+ * Performs EPA on shapes, and gets a segment as result. Triangle should wind in
+ * CCW.
  */
 gfloat
 crank_epa2      (CrankShape2Polygon *a,
                  CrankShape2Polygon *b,
                  CrankTrans2        *bpos,
-                 CrankVecFloat2     *init_polys,
-                 const guint         ninit_polys,
+                 CrankVecFloat2     *triangle,
                  CrankVecFloat2     *segment,
                  CrankVecFloat2     *normal)
 {
@@ -326,177 +472,81 @@ crank_epa2      (CrankShape2Polygon *a,
 
 
   // Prepare simplex polygon.
-  poly_array = g_array_sized_new (FALSE, FALSE, sizeof (CrankVecFloat2), ninit_polys);
-  g_array_append_vals (poly_array, init_polys, ninit_polys);
-
-  // Get winding of through cross
-    {
-      CrankVecFloat2 sega;
-      CrankVecFloat2 segb;
-
-      crank_vec_float2_sub (& g_array_index (poly_array, CrankVecFloat2, 0),
-                            & g_array_index (poly_array, CrankVecFloat2, 1),
-                            & sega);
-
-      crank_vec_float2_sub (& g_array_index (poly_array, CrankVecFloat2, 1),
-                            & g_array_index (poly_array, CrankVecFloat2, 2),
-                            & segb);
-
-      crs = crank_vec_float2_crs (&sega, &segb);
-    }
+  poly_array = g_array_sized_new (FALSE, FALSE, sizeof (CrankVecFloat2), 3);
+  g_array_append_vals (poly_array, triangle, 3);
 
   // Iterate and expand polygon.
-  if (crs < 0)
+  while (TRUE)
     {
-      while (TRUE)
+      // Iterate and figure out which segment is closest to origin.
+      guint i;
+      guint ei;
+      gfloat pene;
+
+      CrankVecFloat2 right;
+
+      CrankVecFloat2 seg;
+
+      CrankVecFloat2 *ptra;
+      CrankVecFloat2 *ptrb;
+
+      ptra = & g_array_index (poly_array, CrankVecFloat2, poly_array->len - 1);
+      ptrb = & g_array_index (poly_array, CrankVecFloat2, 0);
+
+      crank_vec_float2_sub (ptra, ptrb, & seg);
+
+      crank_rot_vec2_right (& seg, & right);
+      crank_vec_float2_unit_self (& right);
+
+      ei = poly_array->len - 1;
+      pene = crank_vec_float2_dot (ptra, &right);
+
+      for (i = 0; i < poly_array->len - 1; i++)
         {
-          // Iterate and figure out which segment is closest to origin.
-          guint i;
-          guint ei;
-          gfloat pene;
+          gfloat pene_c;
+          CrankVecFloat2 right_c;
 
-          CrankVecFloat2 left;
-
-          CrankVecFloat2 seg;
-
-          CrankVecFloat2 *ptra;
-          CrankVecFloat2 *ptrb;
-
-          ptra = & g_array_index (poly_array, CrankVecFloat2, poly_array->len - 1);
-          ptrb = & g_array_index (poly_array, CrankVecFloat2, 0);
+          ptra = & g_array_index (poly_array, CrankVecFloat2, i);
+          ptrb = & g_array_index (poly_array, CrankVecFloat2, i +1);
 
           crank_vec_float2_sub (ptra, ptrb, & seg);
 
-          crank_rot_vec2_left (& seg, & left);
-          crank_vec_float2_unit_self (& left);
+          crank_rot_vec2_right (& seg, & right_c);
+          crank_vec_float2_unit_self (& right_c);
 
-          ei = poly_array->len - 1;
-          pene = crank_vec_float2_dot (ptra, &left);
+          pene_c = crank_vec_float2_dot (ptra, &right_c);
 
-          for (i = 0; i < poly_array->len - 1; i++)
+          if (pene_c < pene)
             {
-              gfloat pene_c;
-              CrankVecFloat2 left_c;
-
-              ptra = & g_array_index (poly_array, CrankVecFloat2, i);
-              ptrb = & g_array_index (poly_array, CrankVecFloat2, i +1);
-
-              crank_vec_float2_sub (ptra, ptrb, & seg);
-
-              crank_rot_vec2_left (& seg, & left_c);
-              crank_vec_float2_unit_self (& left_c);
-
-              pene_c = crank_vec_float2_dot (ptra, &left_c);
-
-              if (pene_c < pene)
-                {
-                  ei = i;
-                  crank_vec_float2_copy (&left_c, &left);
-                }
-            }
-
-          // Expand polygon
-          CrankVecFloat2 sup;
-
-          crank_gjk2_support (a, b, &brpos, &left, &sup);
-
-          if (ABS (crank_vec_float2_dot (&left, &sup) - pene) < 0.0001)
-            {
-              if (segment != NULL)
-                {
-                  crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, (i < poly_array->len - 1) ? i + 1 : 0),
-                                         segment + 0);
-
-                  crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, i),
-                                         segment + 1);
-                }
-              if (normal != NULL)
-                {
-                  crank_vec_float2_copy (&left, normal);
-                }
-              g_array_free (poly_array, TRUE);
-              return pene;
-            }
-          else
-            {
-              g_array_insert_val (poly_array, ei, sup);
+              ei = i;
+              crank_vec_float2_copy (&right_c, &right);
             }
         }
-    }
-  else
-    {
-      while (TRUE)
+
+      // Expand polygon
+      CrankVecFloat2 sup;
+
+      crank_gjk2_support (a, b, &brpos, &right, &sup);
+
+      if (ABS (crank_vec_float2_dot (&right, &sup) - pene) < 0.0001)
         {
-          // Iterate and figure out which segment is closest to origin.
-          guint i;
-          guint ei;
-          gfloat pene;
-
-          CrankVecFloat2 right;
-
-          CrankVecFloat2 seg;
-
-          CrankVecFloat2 *ptra;
-          CrankVecFloat2 *ptrb;
-
-          ptra = & g_array_index (poly_array, CrankVecFloat2, poly_array->len - 1);
-          ptrb = & g_array_index (poly_array, CrankVecFloat2, 0);
-
-          crank_vec_float2_sub (ptra, ptrb, & seg);
-
-          crank_rot_vec2_right (& seg, & right);
-          crank_vec_float2_unit_self (& right);
-
-          ei = poly_array->len - 1;
-          pene = crank_vec_float2_dot (ptra, &right);
-
-          for (i = 0; i < poly_array->len - 1; i++)
+          if (segment != NULL)
             {
-              gfloat pene_c;
-              CrankVecFloat2 right_c;
-
-              ptra = & g_array_index (poly_array, CrankVecFloat2, i);
-              ptrb = & g_array_index (poly_array, CrankVecFloat2, i +1);
-
-              crank_vec_float2_sub (ptra, ptrb, & seg);
-
-              crank_rot_vec2_right (& seg, & right_c);
-              crank_vec_float2_unit_self (& right_c);
-
-              pene_c = crank_vec_float2_dot (ptra, &right_c);
-
-              if (pene_c < pene)
-                {
-                  ei = i;
-                  crank_vec_float2_copy (&right_c, &right);
-                }
+              crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, i),
+                                     segment + 0);
+              crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, (i < poly_array->len - 1) ? i + 1 : 0),
+                                     segment + 1);
             }
-
-          // Expand polygon
-          CrankVecFloat2 sup;
-
-          crank_gjk2_support (a, b, &brpos, &right, &sup);
-
-          if (ABS (crank_vec_float2_dot (&right, &sup) - pene) < 0.0001)
+          if (normal != NULL)
             {
-              if (segment != NULL)
-                {
-                  crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, i),
-                                         segment + 0);
-                  crank_vec_float2_copy (& g_array_index (poly_array, CrankVecFloat2, (i < poly_array->len - 1) ? i + 1 : 0),
-                                         segment + 1);
-                }
-              if (normal != NULL)
-                {
-                  crank_vec_float2_copy (&right, normal);
-                }
-              g_array_free (poly_array, TRUE);
-              return pene;
+              crank_vec_float2_copy (&right, normal);
             }
-          else
-            {
-              g_array_insert_val (poly_array, ei, sup);
-            }
+          g_array_free (poly_array, TRUE);
+          return pene;
+        }
+      else
+        {
+          g_array_insert_val (poly_array, ei, sup);
         }
     }
   g_assert_not_reached ();
@@ -527,5 +577,31 @@ crank_gjk2_support (CrankShape2Polygon *a,
 
   crank_trans2_transv (bpos, &bvert, &abvert);
   crank_vec_float2_sub (&avert, &abvert, vertex);
+}
+
+
+void
+crank_gjk2_support_point (CrankShape2Polygon *a,
+                          CrankShape2Polygon *b,
+                          CrankTrans2        *bpos,
+                          CrankVecFloat2     *dir,
+                          CrankVecFloat2     *vertex,
+                          CrankVecFloat2     *ptra,
+                          CrankVecFloat2     *ptrb)
+{
+  CrankVecFloat2 bdir;
+
+  CrankVecFloat2 avert;
+  CrankVecFloat2 bvert;
+  CrankVecFloat2 abvert;
+
+  crank_rot_vec2_rot (dir, -bpos->mrot, &bdir);
+  crank_vec_float2_neg_self (&bdir);
+
+  crank_shape2_polygon_get_farthest_vertex (a, dir, ptra);
+  crank_shape2_polygon_get_farthest_vertex (b, &bdir, ptrb);
+
+  crank_trans2_transv (bpos, ptrb, &abvert);
+  crank_vec_float2_sub (ptra, &abvert, vertex);
 }
 
