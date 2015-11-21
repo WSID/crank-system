@@ -141,6 +141,7 @@ crank_shape2_get_property (GObject *object,
     case PROP_POS_SCL:
       g_value_set_float (value,
                          G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mscl));
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -173,6 +174,7 @@ crank_shape2_set_property (GObject *object,
     case PROP_POS_SCL:
       G_PRIVATE_FIELD (CrankShape2, object, gfloat, position.mscl) =
         g_value_get_float (value);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
