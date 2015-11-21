@@ -128,7 +128,6 @@ crank_gjk2_full (CrankShape2Polygon *a,
   CrankVecFloat2 dir1;
 
   CrankVecFloat2 seg;
-  gfloat crs;
   CrankTrans2   brpos;
 
   // Check convex
@@ -156,7 +155,13 @@ crank_gjk2_full (CrankShape2Polygon *a,
       return FALSE;
     }
 
-  crs = crank_vec_float2_crs (triangle + 0, triangle + 1);
+  if (crank_vec_float2_crs (triangle + 0, triangle + 1) < 0)
+    {
+      CrankVecFloat2 temp;
+      crank_vec_float2_copy (triangle + 0, &temp);
+      crank_vec_float2_copy (triangle + 1, triangle + 0);
+      crank_vec_float2_copy (&temp, triangle + 1);
+    }
 
   // Loop through triangles
 
@@ -168,10 +173,7 @@ crank_gjk2_full (CrankShape2Polygon *a,
 
       crank_vec_float2_sub (triangle + 1, triangle + 0, &seg);
 
-      if (0 < crs)
-        crank_rot_vec2_left (&seg, &ldir);
-      else
-        crank_rot_vec2_right (&seg, &ldir);
+      crank_rot_vec2_left (&seg, &ldir);
 
       crank_gjk2_support (a, b, &brpos, &ldir, triangle + 2);
 
@@ -183,9 +185,9 @@ crank_gjk2_full (CrankShape2Polygon *a,
       crs_ca = crank_vec_float2_crs (triangle + 2, triangle + 0);
       crs_bc = crank_vec_float2_crs (triangle + 1, triangle + 2);
 
-      if (crs * crs_ca < 0)
+      if (crs_ca < 0)
         crank_vec_float2_copy (triangle + 2, triangle + 1);
-      else if (crs * crs_bc < 0)
+      else if (crs_bc < 0)
         crank_vec_float2_copy (triangle + 2, triangle + 0);
       else
         return TRUE;
