@@ -42,6 +42,10 @@ gboolean        crank_gjk2     (CrankShape2Polygon *a,
                                 CrankShape2Polygon *b,
                                 CrankTrans2        *bpos);
 
+gfloat          crank_gjk2_distance (CrankShape2Polygon *a,
+                                     CrankShape2Polygon *b,
+                                     CrankTrans2        *bpos);
+
 gboolean        crank_gjk2_full (CrankShape2Polygon *a,
                                  CrankShape2Polygon *b,
                                  CrankTrans2        *bpos,

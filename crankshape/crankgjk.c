@@ -101,6 +101,96 @@ crank_gjk2 (CrankShape2Polygon *a,
   return crank_gjk2_full (a, b, bpos, NULL);
 }
 
+/**
+ * crank_gjk2_distance:
+ * @a: A Polygonal shape.
+ * @b: A Polygonal shape.
+ * @bpos: (nullable): Relative position of @a and @b.
+ *
+ * Gets minimum distance between @a and @b. This is minimum possible distance
+ * of points from each @a and @b.
+ *
+ * Returns: Minimum distance between @a and @b, or 0 if intersects, or #NAN if
+ *     GJK cannot be performed.
+ */
+gfloat
+crank_gjk2_distance (CrankShape2Polygon *a,
+                     CrankShape2Polygon *b,
+                     CrankTrans2        *bpos)
+{
+  CrankVecFloat2 dir;
+  CrankVecFloat2 dir1;
+
+  CrankVecFloat2 seg;
+  CrankTrans2   brpos;
+
+  CrankVecFloat2 ptr0;
+  CrankVecFloat2 ptr1;
+
+  // Check convex
+  if (! (crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(a)) &&
+         crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
+    return NAN;
+
+  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
+
+  //////// Build initial starting segments.
+  crank_vec_float2_neg (&brpos.mtrans, &dir);
+  crank_gjk2_support (a, b, &brpos, & brpos.mtrans, &ptr0);
+  crank_gjk2_support (a, b, &brpos, &dir, &ptr1);
+
+  crank_vec_float2_sub (&ptr1, &ptr0, &seg);
+
+  if (crank_vec_float2_crs (&ptr0, &ptr1) < 0)
+    {
+      CrankVecFloat2 temp;
+      crank_vec_float2_copy (&ptr0, &temp);
+      crank_vec_float2_copy (&ptr1, &ptr0);
+      crank_vec_float2_copy (&temp, &ptr1);
+    }
+
+  // Loop through triangles
+
+  while (TRUE)
+    {
+      CrankVecFloat2 ldir;
+      CrankVecFloat2 ptr2;
+
+      gfloat dotc;
+      gfloat dota;
+      gfloat crs_02;
+      gfloat crs_21;
+
+      crank_vec_float2_sub (&ptr1, &ptr0, &seg);
+      crank_rot_vec2_left (&seg, &ldir);
+      crank_gjk2_support (a, b, &brpos, &ldir, &ptr2);
+
+      // Checks that we are closer to origin.
+      dotc = crank_vec_float2_dot (&ldir, &ptr2);
+      dota = crank_vec_float2_dot (&ldir, &ptr0);
+      if ((dotc - dota) < 0.0001f)
+        {
+          if (0 < crank_vec_float2_dot (&seg, &ptr0))
+            return crank_vec_float2_get_magn (&ptr0);
+          else if (crank_vec_float2_dot (&seg, &ptr1) < 0)
+            return crank_vec_float2_get_magn (&ptr1);
+
+          return crank_vec_float2_crs (&ptr0, &ptr1) /
+                 crank_vec_float2_get_magn (&seg);
+        }
+
+      crs_02 = crank_vec_float2_crs (&ptr0, &ptr2);
+      crs_21 = crank_vec_float2_crs (&ptr2, &ptr1);
+
+      if ((crs_02 < 0) && (crs_21 < 0))
+        return -1;
+      else if (crank_vec_float2_dot (&seg, &ptr2) < 0)
+        crank_vec_float2_copy (&ptr2, &ptr0);
+      else
+        crank_vec_float2_copy (&ptr2, &ptr1);
+    }
+}
+
 
 /**
  * crank_gjk2_full:
