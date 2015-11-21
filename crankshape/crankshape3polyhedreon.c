@@ -49,6 +49,8 @@ static void  crank_shape3_polyhedreon_get_property (GObject    *object,
                                                     GValue     *value,
                                                     GParamSpec *pspec);
 
+static CrankShape3Polyhedreon *crank_shape3_polyhedreon_approximate_polyhedreon (CrankShape3Finite *shape);
+
 
 static void crank_shape3_polyhedreon_def_get_face_normal (CrankShape3Polyhedreon *shape,
                                                           const guint             fid,
@@ -100,6 +102,7 @@ void
 crank_shape3_polyhedreon_class_init (CrankShape3PolyhedreonClass *c)
 {
   GObjectClass *c_gobject;
+  CrankShape3FiniteClass *c_shape3finite;
 
   c_gobject = G_OBJECT_CLASS (c);
 
@@ -121,6 +124,13 @@ crank_shape3_polyhedreon_class_init (CrankShape3PolyhedreonClass *c)
                                            G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+
+  c_shape3finite = CRANK_SHAPE3_FINITE_CLASS (c);
+
+  c_shape3finite->approximate_polyhedreon = crank_shape3_polyhedreon_approximate_polyhedreon;
+
 
   c->get_face_normal = crank_shape3_polyhedreon_def_get_face_normal;
   c->get_face_as_shape = crank_shape3_polyhedreon_def_get_face_as_shape;
@@ -153,6 +163,15 @@ crank_shape3_polyhedreon_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
+//////// CrankShape3Finite /////////////////////////////////////////////////////
+
+static CrankShape3Polyhedreon*
+crank_shape3_polyhedreon_approximate_polyhedreon (CrankShape3Finite *shape)
+{
+  return CRANK_SHAPE3_POLYHEDREON (g_object_ref (shape));
+}
+
 
 //////// Default Implementations ///////////////////////////////////////////////
 

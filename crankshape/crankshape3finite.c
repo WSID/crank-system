@@ -176,3 +176,19 @@ crank_shape3_finite_get_bound_radius (CrankShape3Finite *shape)
 
   return c->get_bound_radius (shape);
 }
+
+/**
+ * crank_shape3_finite_approximate_polyhedreon:
+ * @shape: A Shape
+ *
+ * Approximate a shape into polyhedreon.
+ *
+ * Returns: (transfer full): Approximated polyhedreon.
+ */
+CrankShape3Polyhedreon*
+crank_shape3_finite_approximate_polyhedreon (CrankShape3Finite *shape)
+{
+  CrankShape3FiniteClass *c = CRANK_SHAPE3_FINITE_GET_CLASS (shape);
+
+  return c->approximate_polyhedreon (shape);
+}
