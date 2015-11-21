@@ -62,11 +62,6 @@ static void     crank_shape2_finite_get_property       (GObject        *object,
                                                         GValue         *value,
                                                         GParamSpec     *pspec);
 
-static void     crank_shape2_finite_set_property       (GObject      *object,
-                                                        guint         prop_id,
-                                                        const GValue *value,
-                                                        GParamSpec   *pspec);
-
 
 static GList   *crank_shape2_finite_finitize           (CrankShape2    *shape,
                                                         CrankBox2      *box);
@@ -75,6 +70,7 @@ static GList   *crank_shape2_finite_finitize           (CrankShape2    *shape,
 
 enum {
   PROP_0,
+  PROP_CONVEX,
   PROP_BOUND_RADIUS,
   PROP_COUNT
 };
@@ -99,7 +95,11 @@ crank_shape2_finite_class_init (CrankShape2FiniteClass *c)
   c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->get_property = crank_shape2_finite_get_property;
-  c_gobject->set_property = crank_shape2_finite_set_property;
+
+  pspecs[PROP_CONVEX] = g_param_spec_boolean (
+        "convex", "convex", "Convexity of shape.",
+        TRUE,
+        G_PARAM_STATIC_STRINGS | G_PARAM_READABLE);
 
   pspecs[PROP_BOUND_RADIUS] = g_param_spec_float (
         "bound-radius", "bound radius", "A bound radius for shape.",
@@ -125,28 +125,22 @@ crank_shape2_finite_get_property (GObject    *object,
 {
   switch (prop_id)
     {
+    case PROP_CONVEX:
+      g_value_set_boolean (value,
+                           crank_shape2_finite_is_convex (
+                           (CrankShape2Finite*)object));
+      break;
+
     case PROP_BOUND_RADIUS:
       g_value_set_float (value,
                          crank_shape2_finite_get_bound_radius (
                          (CrankShape2Finite*)object));
       break;
 
-    case PROP_0:
-    case PROP_COUNT:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
-
-static void
-crank_shape2_finite_set_property (GObject *object,
-                                  guint prop_id,
-                                  const GValue *value,
-                                  GParamSpec *pspec)
-{
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-}
-
 //////// CrankShape2 ///////////////////////////////////////////////////////////
 
 static GList*
