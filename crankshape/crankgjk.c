@@ -132,14 +132,7 @@ crank_gjk2_full (CrankShape2Polygon *a,
   if (triangle == NULL)
     triangle = g_alloca ( sizeof (CrankVecFloat2) * 3 );
 
-  // TODO: Gets position.
-  crank_shape2_get_position ((CrankShape2*)a, &aobjp);
-  crank_shape2_get_position ((CrankShape2*)b, &bobjp);
-
-  crank_trans2_inverse (&aobjp, &brpos);
-  if (bpos != NULL)
-    crank_trans2_compose_self (&brpos, bpos);
-  crank_trans2_compose_self (&brpos, &bobjp);
+  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
 
   //////// Build initial starting segments.
   crank_vec_float2_neg (&brpos.mtrans, &dir);
@@ -231,14 +224,8 @@ crank_epa2      (CrankShape2Polygon *a,
     return NAN;
 
 
-  // TODO: Gets position.
-  crank_shape2_get_position ((CrankShape2*)a, &aobjp);
-  crank_shape2_get_position ((CrankShape2*)b, &bobjp);
-
-  crank_trans2_inverse (&aobjp, &brpos);
-  if (bpos != NULL)
-    crank_trans2_compose_self (&brpos, bpos);
-  crank_trans2_compose_self (&brpos, &bobjp);
+  // Gets position.
+  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
 
 
   // Prepare simplex polygon.
