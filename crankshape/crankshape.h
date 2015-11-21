@@ -41,6 +41,7 @@
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
+#include "crankshape3polyhedreon.h"
 
 #include "crankgjk.h"
 
