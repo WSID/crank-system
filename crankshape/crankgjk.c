@@ -129,10 +129,6 @@ crank_gjk2_full (CrankShape2Polygon *a,
 
   CrankVecFloat2 seg;
   gfloat crs;
-
-  CrankTrans2   aobjp;
-  CrankTrans2   bobjp;
-
   CrankTrans2   brpos;
 
   // Check convex
@@ -222,9 +218,6 @@ crank_epa2      (CrankShape2Polygon *a,
 
   CrankVecFloat2 seg;
   gfloat crs;
-
-  CrankTrans2   aobjp;
-  CrankTrans2   bobjp;
 
   CrankTrans2   brpos;
 
