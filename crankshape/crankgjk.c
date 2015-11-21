@@ -50,6 +50,18 @@
 //////// Private functions /////////////////////////////////////////////////////
 
 /*
+ * crank_gjk_contains_zero: (private)
+ * @a: (type number): A value.
+ * @b: (type number): Other value
+ *
+ * Checks whetehr 0 is in a and b.
+ *
+ * Returns: Whether 0 is in between a and b.
+ */
+#define crank_gjk_contains_zero(a,b) (((a) * (b)) < 0)
+
+
+/*
  * crank_gjk2_support: (private)
  * @a: A Polygonal shape.
  * @b: A Polygonal shape.
@@ -141,8 +153,8 @@ crank_gjk2_full (CrankShape2Polygon *a,
 
   crank_vec_float2_sub (triangle + 1, triangle + 0, &seg);
 
-  if (crank_vec_float2_dot (triangle + 1, &seg) *
-      crank_vec_float2_dot (triangle + 0, &seg) > 0)
+  if (! crank_gjk_contains_zero (crank_vec_float2_dot (triangle + 0, &seg),
+                                 crank_vec_float2_dot (triangle + 1, &seg)))
     {
       crank_vec_float2_copy (triangle + 0, triangle + 2);
       return FALSE;
@@ -168,8 +180,8 @@ crank_gjk2_full (CrankShape2Polygon *a,
       crank_gjk2_support (a, b, &brpos, &ldir, triangle + 2);
 
 
-      if (crank_vec_float2_dot (triangle + 0, &ldir) *
-          crank_vec_float2_dot (triangle + 2, &ldir) > 0)
+      if (! crank_gjk_contains_zero (crank_vec_float2_dot (triangle + 0, &ldir),
+                                     crank_vec_float2_dot (triangle + 2, &ldir)))
         return FALSE;
 
       crs_ca = crank_vec_float2_crs (triangle + 2, triangle + 0);
