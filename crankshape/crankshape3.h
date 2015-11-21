@@ -39,7 +39,6 @@ G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
 
 
-typedef struct _CrankShape3Polygon CrankShape3Polygon;
 typedef struct _CrankShape3Finite CrankShape3Finite;
 
 
