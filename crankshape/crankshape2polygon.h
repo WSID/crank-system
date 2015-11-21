@@ -40,9 +40,9 @@ G_BEGIN_DECLS
 #define CRANK_TYPE_SHAPE2_POLYGON crank_shape2_polygon_get_type ()
 
 G_DECLARE_DERIVABLE_TYPE (CrankShape2Polygon,
-                     crank_shape2_polygon,
-                     CRANK, SHAPE2_POLYGON,
-                     CrankShape2Finite)
+                          crank_shape2_polygon,
+                          CRANK, SHAPE2_POLYGON,
+                          CrankShape2Finite)
 /**
  * CrankShape2Polygon:
  *
@@ -73,19 +73,6 @@ struct _CrankShape2PolygonClass {
                                                 guint                   index,
                                                 CrankVecFloat2         *vertex);
 
-
-
-  guint               (*get_nedges)            (CrankShape2Polygon    *shape);
-
-  void                (*get_edge)              (CrankShape2Polygon    *shape,
-                                                guint                   index,
-                                                CrankRanFloat          *edge,
-                                                CrankTrans2            *position);
-
-  void                (*get_edge_vertices)     (CrankShape2Polygon    *shape,
-                                                guint                   index,
-                                                CrankPairUint          *vertices);
-
   void                (*get_edge_normal)       (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankVecFloat2         *normal);
@@ -94,34 +81,26 @@ struct _CrankShape2PolygonClass {
 
 
   guint               (*get_farthest_vertex)   (CrankShape2Polygon    *shape,
-                                                CrankVecFloat2         *direction,
-                                                CrankVecFloat2         *vertex);
+                                                CrankVecFloat2         *direction);
 };
 
 
 
-//////// Function prototypes ///////////////////////////////////////////////////
+//////// Shape Properties //////////////////////////////////////////////////////
 
 guint           crank_shape2_polygon_get_nvertices    (CrankShape2Polygon *shape);
+
+
+//////// Vertex Properties /////////////////////////////////////////////////////
 
 void            crank_shape2_polygon_get_vertex       (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *vertex);
 
 
-guint           crank_shape2_polygon_get_nedges       (CrankShape2Polygon *shape);
 
-void            crank_shape2_polygon_get_edge         (CrankShape2Polygon *shape,
-                                                        guint                index,
-                                                        CrankRanFloat       *edge,
-                                                        CrankTrans2         *position);
-
-
-
-void            crank_shape2_polygon_get_edge_vertices(CrankShape2Polygon *shape,
-                                                        guint                index,
-                                                        CrankPairUint       *vertices);
-
+//////// Edge Properties ///////////////////////////////////////////////////////
+//
 void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *normal);
@@ -129,8 +108,7 @@ void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape
 
 
 guint           crank_shape2_polygon_get_farthest_vertex (CrankShape2Polygon *shape,
-                                                           CrankVecFloat2      *direction,
-                                                           CrankVecFloat2      *vertex);
+                                                           CrankVecFloat2      *direction);
 
 
 //////// Functions /////////////////////////////////////////////////////////////

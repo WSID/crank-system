@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
+#include "crankrotation.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
@@ -64,24 +65,12 @@ static CrankShape2Polygon      *crank_shape2_polygon_approximate_polygon (CrankS
 
 //////// Default implementation prototype //////////////////////////////////////
 
-static guint           crank_shape2_polygon_get_nedges_def (CrankShape2Polygon *shape);
-
-static void            crank_shape2_polygon_get_edge_def (CrankShape2Polygon *shape,
-                                                           guint                index,
-                                                           CrankRanFloat       *edge,
-                                                           CrankTrans2         *position);
-
-static void            crank_shape2_polygon_get_edge_vertices_def (CrankShape2Polygon *shape,
-                                                                    guint                index,
-                                                                    CrankPairUint       *vertices);
-
 static void            crank_shape2_polygon_get_edge_normal_def (CrankShape2Polygon *shape,
                                                                   guint                index,
                                                                   CrankVecFloat2      *normal);
 
 static guint           crank_shape2_polygon_get_farthest_vertex_def (CrankShape2Polygon *shape,
-                                                                      CrankVecFloat2      *direction,
-                                                                      CrankVecFloat2      *vertex);
+                                                                     CrankVecFloat2     *direction);
 
 //////// Type definition ///////////////////////////////////////////////////////
 
@@ -107,9 +96,6 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
   c_shape2_finite->is_convex = crank_shape2_polygon_is_convex;
   c_shape2_finite->approximate_polygon = crank_shape2_polygon_approximate_polygon;
 
-  c->get_nedges = crank_shape2_polygon_get_nedges_def;
-  c->get_edge = crank_shape2_polygon_get_edge_def;
-  c->get_edge_vertices = crank_shape2_polygon_get_edge_vertices_def;
   c->get_edge_normal = crank_shape2_polygon_get_edge_normal_def;
   c->get_farthest_vertex = crank_shape2_polygon_get_farthest_vertex_def;
 }
@@ -161,102 +147,53 @@ crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape)
 
 //////// Default implementations ///////////////////////////////////////////////
 
-
-static guint
-crank_shape2_polygon_get_nedges_def (CrankShape2Polygon *shape)
-{
-  return crank_shape2_polygon_get_nvertices (shape);
-}
-
-static void
-crank_shape2_polygon_get_edge_def (CrankShape2Polygon *shape,
-                                    guint                index,
-                                    CrankRanFloat       *edge,
-                                    CrankTrans2         *position)
-{
-  CrankPairUint vindices;
-  CrankVecFloat2 vertex[2];
-  CrankVecFloat2 seg;
-
-  crank_shape2_polygon_get_edge_vertices (shape, index, &vindices);
-  crank_shape2_polygon_get_vertex (shape, vindices.a, vertex + 0);
-  crank_shape2_polygon_get_vertex (shape, vindices.b, vertex + 1);
-  crank_vec_float2_sub (vertex + 1, vertex + 0, &seg);
-
-  if (edge != NULL)
-    crank_ran_float_init (edge, 0, crank_vec_float2_get_magn (&seg));
-
-  if (position != NULL)
-    {
-      crank_vec_float2_copy (vertex + 0, & position->mtrans);
-      position->mrot = atan2f (seg.y, seg.x);
-      position->mscl = 1;
-    }
-}
-
-
-static void
-crank_shape2_polygon_get_edge_vertices_def (CrankShape2Polygon *shape,
-                                             guint                index,
-                                             CrankPairUint       *vertices)
-{
-  guint nvertices = crank_shape2_polygon_get_nvertices (shape);
-
-  vertices->a = index;
-  vertices->b = (index + 1 == nvertices) ? 0 : index + 1;
-}
-
-
 static void
 crank_shape2_polygon_get_edge_normal_def (CrankShape2Polygon *shape,
                                            guint                index,
                                            CrankVecFloat2*      normal)
 {
-  CrankPairUint vindices;
+  guint index_next;
   CrankVecFloat2 vertex[2];
   CrankVecFloat2 seg;
 
-  crank_shape2_polygon_get_edge_vertices (shape, index, &vindices);
-  crank_shape2_polygon_get_vertex (shape, vindices.a, vertex + 0);
-  crank_shape2_polygon_get_vertex (shape, vindices.b, vertex + 1);
+  index_next = (index + 1) % crank_shape2_polygon_get_nvertices (shape);
+
+  crank_shape2_polygon_get_vertex (shape, index, vertex + 0);
+  crank_shape2_polygon_get_vertex (shape, index_next, vertex + 1);
 
   crank_vec_float2_sub (vertex + 1, vertex + 0, &seg);
 
-  normal->x =   seg.y;
-  normal->y = - seg.x;
-
+  crank_rot_vec2_right (&seg, normal);
   crank_vec_float2_unit_self (normal);
 }
 
 
 static guint
 crank_shape2_polygon_get_farthest_vertex_def (CrankShape2Polygon *shape,
-                                               CrankVecFloat2      *direction,
-                                               CrankVecFloat2      *vertex)
+                                              CrankVecFloat2     *direction)
 {
   guint n = crank_shape2_polygon_get_nvertices (shape);
   guint i;
   guint j;
 
+  CrankVecFloat2 vertex;
   gfloat dot;
 
-  crank_shape2_polygon_get_vertex (shape, 0, vertex);
+  crank_shape2_polygon_get_vertex (shape, 0, &vertex);
   j = 0;
-  dot = crank_vec_float2_dot (direction, vertex);
+  dot = crank_vec_float2_dot (direction, &vertex);
 
   for (i = 1; i < n; i++)
     {
-      CrankVecFloat2 nvertex;
       gfloat ndot;
 
-      crank_shape2_polygon_get_vertex (shape, i, &nvertex);
-      ndot = crank_vec_float2_dot (direction, &nvertex);
+      crank_shape2_polygon_get_vertex (shape, i, &vertex);
+      ndot = crank_vec_float2_dot (direction, &vertex);
 
       if (dot < ndot)
         {
           dot = ndot;
           j = i;
-          crank_vec_float2_copy (&nvertex, vertex);
         }
     }
 
@@ -305,80 +242,6 @@ crank_shape2_polygon_get_vertex (CrankShape2Polygon *shape,
 
 
 /**
- * crank_shape2_ipolygon_get_nedges:
- * @shape: A Shape.
- *
- * Gets number of edges of this shape.
- *
- * Default implementation: Returns number of vertices, as ordinary polygon will
- *   have same number of edges to vertices.
- *
- * Returns: Number of edges.
- */
-guint
-crank_shape2_polygon_get_nedges (CrankShape2Polygon *shape)
-{
-  CrankShape2PolygonClass *c;
-  c = CRANK_SHAPE2_POLYGON_GET_CLASS (shape);
-
-  return c->get_nedges (shape);
-}
-
-
-
-/**
- * crank_shape2_polygon_get_edge:
- * @shape: A Shape
- * @index: A Index of edge.
- * @edge: (out): Edge as range.
- * @position: (out): Position of @edge.
- *
- * Get edge of polygon.
- *
- * Default implementation: Guess edge from
- *   crank_shape2_ipolygon_get_edge_vertices() and fill @edge and @position.
- * * @edge will be [0, (length of edge)).
- * * @position will have mtrans = (vert0), mrot = (atan2 of (vert1 - vert0)).
- */
-void
-crank_shape2_polygon_get_edge (CrankShape2Polygon *shape,
-                                guint                index,
-                                CrankRanFloat       *edge,
-                                CrankTrans2         *position)
-{
-  CrankShape2PolygonClass *c;
-  c = CRANK_SHAPE2_POLYGON_GET_CLASS (shape);
-
-  c->get_edge (shape, index, edge, position);
-}
-
-
-
-/**
- * crank_shape2_polygon_get_edge_vertices:
- * @shape: A Shape
- * @index: A index of edge.
- * @vertices: (out): A Pair of indices of vertices.
- *
- * Gets indices of vertices belongs to the given index.
- *
- * Default implementation: return {@index, @index + 1} or {@index, 0} if index
- *   is last index of vertices.
- */
-void
-crank_shape2_polygon_get_edge_vertices (CrankShape2Polygon *shape,
-                                         guint                index,
-                                         CrankPairUint       *position)
-{
-  CrankShape2PolygonClass *c;
-  c = CRANK_SHAPE2_POLYGON_GET_CLASS (shape);
-
-  return c->get_edge_vertices (shape, index, position);
-}
-
-
-
-/**
  * crank_shape2_polygon_get_edge_normal:
  * @shape: A shape.
  * @index: index of edge.
@@ -419,12 +282,11 @@ crank_shape2_polygon_get_edge_normal (CrankShape2Polygon *shape,
  */
 guint
 crank_shape2_polygon_get_farthest_vertex (CrankShape2Polygon *shape,
-                                           CrankVecFloat2      *direction,
-                                           CrankVecFloat2      *vertex)
+                                           CrankVecFloat2      *direction)
 {
   CrankShape2PolygonClass *c;
   c = CRANK_SHAPE2_POLYGON_GET_CLASS (shape);
 
-  return c->get_farthest_vertex (shape, direction, vertex);
+  return c->get_farthest_vertex (shape, direction);
 }
 
