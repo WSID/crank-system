@@ -78,6 +78,16 @@ static void     crank_shape2_segment_get_vertex (CrankShape2Polygon *shape,
                                                  guint               index,
                                                  CrankVecFloat2     *vertex);
 
+static void     crank_shape2_segment_get_edge_normal (CrankShape2Polygon *shape,
+                                                      guint               index,
+                                                      CrankVecFloat2     *vertex);
+
+static guint    crank_shape2_segment_get_farthest_vertex (CrankShape2Polygon *shape,
+                                                        CrankVecFloat2     *dir);
+
+static guint    crank_shape2_segment_get_normal_edge (CrankShape2Polygon *shape,
+                                                      CrankVecFloat2     *nor);
+
 
 //////// Properties and Signals ////////////////////////////////////////////////
 
@@ -148,6 +158,9 @@ crank_shape2_segment_class_init (CrankShape2SegmentClass *c)
 
   c_shape2polygon->get_nvertices = crank_shape2_segment_get_nvertices;
   c_shape2polygon->get_vertex = crank_shape2_segment_get_vertex;
+  c_shape2polygon->get_edge_normal = crank_shape2_segment_get_edge_normal;
+  c_shape2polygon->get_farthest_vertex = crank_shape2_segment_get_farthest_vertex;
+  c_shape2polygon->get_normal_edge = crank_shape2_segment_get_normal_edge;
 }
 
 
@@ -188,6 +201,9 @@ crank_shape2_segment_set_property (GObject      *object,
     }
 }
 
+
+
+
 //////// CrankShape2 ///////////////////////////////////////////////////////////
 
 static gboolean
@@ -201,6 +217,9 @@ crank_shape2_segment_contains (CrankShape2    *shape,
          (point->x <= hlength);
 }
 
+
+
+
 //////// CrankShape2Finite /////////////////////////////////////////////////////
 
 static gfloat
@@ -208,6 +227,9 @@ crank_shape2_segment_get_bound_radius (CrankShape2Finite *shape)
 {
   return ((CrankShape2Segment*)shape)->hlength;
 }
+
+
+
 
 //////// CrankShape2Polygon ////////////////////////////////////////////////////
 
@@ -227,17 +249,54 @@ crank_shape2_segment_get_vertex (CrankShape2Polygon *shape,
   switch (index)
     {
     case 0:
-      crank_vec_float2_init (vertex, - self->hlength, 0.0f);
+      crank_vec_float2_init (vertex, self->hlength, 0.0f);
       break;
 
     case 1:
-      crank_vec_float2_init (vertex, self->hlength, 0.0f);
+      crank_vec_float2_init (vertex, -self->hlength, 0.0f);
       break;
 
     default:
       crank_vec_float2_init (vertex, NAN, NAN);
     }
 }
+
+static void
+crank_shape2_segment_get_edge_normal (CrankShape2Polygon *shape,
+                                      guint               index,
+                                      CrankVecFloat2     *vertex)
+{
+  switch (index)
+    {
+    case 0:
+      crank_vec_float2_init (vertex, 0, 1);
+      break;
+
+    case 1:
+      crank_vec_float2_init (vertex, 0, -1);
+      break;
+
+    default:
+      g_warning ("Index out of range: %u / 1", index);
+      crank_vec_float2_init (vertex, NAN, NAN);
+    }
+}
+
+static guint
+crank_shape2_segment_get_farthest_vertex (CrankShape2Polygon *shape,
+                                          CrankVecFloat2     *dir)
+{
+  return (dir->x < 0) ? 1 : 0;
+}
+
+static guint
+crank_shape2_segment_get_normal_edge (CrankShape2Polygon *shape,
+                                      CrankVecFloat2     *nor)
+{
+  return (nor->y < 0) ? 1 : 0;
+}
+
+
 
 
 
