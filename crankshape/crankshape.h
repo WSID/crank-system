@@ -32,13 +32,14 @@
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
-#include "crankshape2cpolygon.h"
 #include "crankshape2iround.h"
 
 #include "crankshape2point.h"
 #include "crankshape2segment.h"
 #include "crankshape2circle.h"
+#include "crankshape2rect.h"
 
+#include "crankshape2cpolygon.h"
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
