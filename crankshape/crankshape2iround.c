@@ -29,6 +29,20 @@
 #include "crankshape2polygon.h"
 #include "crankshape2iround.h"
 
+/**
+ * SECTION:crankshape2iround
+ * @title: CrnakShape2IRound
+ * @short_description: Interface for rounded shapes.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * #CrankShape2IRound defines interfaces to expose properties of rounded shapes,
+ * like inner shape, or round radius.
+ *
+ * Some algorithms can avoid approximating polygon, but instead apply margin for
+ * more efficient processing.
+ */
+
 //////// Type definition ///////////////////////////////////////////////////////
 
 G_DEFINE_INTERFACE (CrankShape2IRound,

@@ -36,6 +36,15 @@
 G_BEGIN_DECLS
 //////// Type Declaration //////////////////////////////////////////////////////
 
+/**
+ * CrankShape2RectVertex:
+ * @CRANK_SHAPE2_RECT_VERTEX_LEFTUP: Left upper vertex.
+ * @CRANK_SHAPE2_RECT_VERTEX_RIGHTUP: Right upper vertex.
+ * @CRANK_SHAPE2_RECT_VERTEX_RIGHTDOWN: Right lower vertex.
+ * @CRANK_SHAPE2_RECT_VERTEX_LEFTDOWN: Left lower vertex.
+ *
+ * Vertex ID for #CrankShape2Rect.
+ */
 typedef enum {
   CRANK_SHAPE2_RECT_VERTEX_LEFTUP,
   CRANK_SHAPE2_RECT_VERTEX_RIGHTUP,

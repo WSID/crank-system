@@ -54,11 +54,9 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Polygon,
  * CrankShape2PolygonClass:
  * @get_nvertices: Slot for crank_shape2_polygon_get_nvertices()
  * @get_vertex: Slot for crank_shape2_polygon_get_vertex()
- * @get_nedges: Slot for crank_shape2_polygon_get_nedges()
- * @get_edge: Slot for crank_shape2_polygon_get_edge()
  * @get_edge_normal: Slot for crank_shape2_polygon_get_edge_normal()
- * @get_edge_vertices: Slot for crank_shape2_polygon_get_edge_vertices()
  * @get_farthest_vertex: Slot for crank_shape2_polygon_get_farthest_vertex()
+ * @get_normal_edge: Slot for crank_shape2_polygon_get_normal_edge()
  *
  * A Virtual function table for the interface.
  */

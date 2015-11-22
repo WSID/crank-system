@@ -29,6 +29,16 @@
 #include "crankshape2polygon.h"
 #include "crankshape2rect.h"
 
+/**
+ * SECTION: crankshape2rect
+ * @title: CrankShape2Rect
+ * @short_description: Rectangular shape.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * Rectangular shape.
+ */
+
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void crank_shape2_rect_get_property (GObject    *object,

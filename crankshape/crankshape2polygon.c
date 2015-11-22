@@ -48,11 +48,7 @@
  * * #CrankShape2FiniteClass.approximate_polygon(): As this is already polygonal,
  *   default implementation will return self.
  *
- * * #CrankShape2PolygonClass.get_nedges()
- * * #CrankShape2PolygonClass.get_edge()
- * * #CrankShape2PolygonClass.get_edge_vertices()
  * * #CrankShape2PolygonClass.get_edge_normal()
- *
  * * #CrankShape2PolygonClass.get_farthest_vertex()
  * * #CrankShape2PolygonClass.get_normal_edge()
  */
@@ -316,7 +312,6 @@ crank_shape2_polygon_get_edge_normal (CrankShape2Polygon *shape,
  * crank_shape2_polygon_get_farthest_vertex:
  * @shape: A Shape.
  * @direction: A Direction.
- * @vertex: (out): A Vertex.
  *
  * Gets the farthest vertex towards to direction.
  *

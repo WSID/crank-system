@@ -42,11 +42,26 @@ G_DECLARE_INTERFACE(CrankShape2IRound,
                     crank_shape2_iround,
                     CRANK, SHAPE2_IROUND,
                     CrankShape2Finite)
+/**
+ * CrankShape2IRound:
+ *
+ * A Interface Instance Structure.
+ */
+
+/**
+ * CrankShape2IRoundInterface:
+ * @get_inner_shape: slot for crank_shape2_iround_get_inner_shape()
+ * @get_round_radius: slot for crank_shape2_iround_get_round_radius()
+ *
+ * Virtual function table for #CrankShape2IRound.
+ */
 
 struct _CrankShape2IRoundInterface
 {
+  /*< private >*/
   GTypeInterface _parent;
 
+  /*< public >*/
   CrankShape2Polygon* (*get_inner_shape) (CrankShape2IRound *iround);
 
   gfloat              (*get_round_radius) (CrankShape2IRound *iround);
