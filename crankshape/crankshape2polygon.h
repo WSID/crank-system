@@ -82,6 +82,9 @@ struct _CrankShape2PolygonClass {
 
   guint               (*get_farthest_vertex)   (CrankShape2Polygon    *shape,
                                                 CrankVecFloat2         *direction);
+
+  guint               (*get_normal_edge)     (CrankShape2Polygon *shape,
+                                              CrankVecFloat2     *normal);
 };
 
 
@@ -108,7 +111,10 @@ void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape
 
 
 guint           crank_shape2_polygon_get_farthest_vertex (CrankShape2Polygon *shape,
-                                                           CrankVecFloat2      *direction);
+                                                          CrankVecFloat2      *direction);
+
+guint           crank_shape2_polygon_get_normal_edge     (CrankShape2Polygon *shape,
+                                                          CrankVecFloat2      *normal);
 
 
 //////// Functions /////////////////////////////////////////////////////////////
