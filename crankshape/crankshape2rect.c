@@ -75,7 +75,7 @@ enum {
   PROP_COUNTS
 };
 
-GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 
 //////// Type Declaration //////////////////////////////////////////////////////
