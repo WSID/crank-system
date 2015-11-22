@@ -179,7 +179,8 @@ crank_shape2_segment_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_LENGTH:
-      ((CrankShape2Segment*)object)->hlength = g_value_get_float (value) / 2;
+      crank_shape2_segment_set_length ((CrankShape2Segment*)object,
+                                       g_value_get_float (value));
       break;
 
     default:
@@ -286,4 +287,7 @@ crank_shape2_segment_set_length (CrankShape2Segment *shape,
                                  const gfloat        length)
 {
   shape->hlength = length / 2;
+
+  g_object_notify_by_pspec ((GObject*)shape, pspecs[PROP_LENGTH]);
+  g_object_notify ((GObject*)shape, "bound-radius");
 }
