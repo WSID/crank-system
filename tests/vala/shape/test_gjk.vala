@@ -47,8 +47,8 @@ public void test_gjk2 () {
         Crank.VecFloat2 (2.0f, 0.0f)
     };
     
-    Crank.Shape2CPolygon a = new Crank.Shape2CPolygon.from_vertices (avert);
-    Crank.Shape2CPolygon b = new Crank.Shape2CPolygon.from_vertices (bvert);
+    Crank.Shape2CPolygon a = new Crank.Shape2CPolygon (avert);
+    Crank.Shape2CPolygon b = new Crank.Shape2CPolygon (bvert);
     
     a.pos_trans = {-2.0f, 1.0f};
     b.pos_trans = {3.0f, 2.0f};
@@ -91,8 +91,8 @@ public void test_gjk2_distance () {
         Crank.VecFloat2 (2.0f, 0.0f)
     };
 
-    Crank.Shape2CPolygon a = new Crank.Shape2CPolygon.from_vertices (avert);
-    Crank.Shape2CPolygon b = new Crank.Shape2CPolygon.from_vertices (bvert);
+    Crank.Shape2CPolygon a = new Crank.Shape2CPolygon (avert);
+    Crank.Shape2CPolygon b = new Crank.Shape2CPolygon (bvert);
 
     a.pos_trans = {-2.0f, 1.0f};
     b.pos_trans = {3.0f, 2.0f};

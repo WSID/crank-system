@@ -76,9 +76,9 @@ test_gjk2 (void)
   CrankVecFloat2 apos = {-2.0f, 1.0f};
   CrankVecFloat2 bpos = {3.0f, 2.0f};
 
-  a = crank_shape2_cpolygon_new_from_vertices (avert, 6);
+  a = crank_shape2_cpolygon_new (avert, 6);
 
-  b = crank_shape2_cpolygon_new_from_vertices (bvert, 7);
+  b = crank_shape2_cpolygon_new (bvert, 7);
 
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
@@ -141,9 +141,9 @@ test_gjk2_distance (void)
   CrankVecFloat2 apos = {-2.0f, 1.0f};
   CrankVecFloat2 bpos = {3.0f, 2.0f};
 
-  a = crank_shape2_cpolygon_new_from_vertices (avert, 6);
+  a = crank_shape2_cpolygon_new (avert, 6);
 
-  b = crank_shape2_cpolygon_new_from_vertices (bvert, 7);
+  b = crank_shape2_cpolygon_new (bvert, 7);
 
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);

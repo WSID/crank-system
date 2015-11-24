@@ -49,7 +49,7 @@ class TestGJK (unittest.TestCase):
 
 
     def test_gjk (self):
-        a = CrankShape.Shape2CPolygon.new_from_vertices( [
+        a = CrankShape.Shape2CPolygon.new( [
             CrankBase.VecFloat2.init (2, 1),
             CrankBase.VecFloat2.init (-2, 1),
             CrankBase.VecFloat2.init (-3, 0),
@@ -57,7 +57,7 @@ class TestGJK (unittest.TestCase):
             CrankBase.VecFloat2.init (-1, -2),
             CrankBase.VecFloat2.init (2, -1)
         ] )
-        b = CrankShape.Shape2CPolygon.new_from_vertices( [
+        b = CrankShape.Shape2CPolygon.new( [
             CrankBase.VecFloat2.init (2, 3),
             CrankBase.VecFloat2.init (1, 3),
             CrankBase.VecFloat2.init (-2, 1),
@@ -97,7 +97,7 @@ class TestGJK (unittest.TestCase):
 
 
     def test_gjk_distance (self):
-        a = CrankShape.Shape2CPolygon.new_from_vertices( [
+        a = CrankShape.Shape2CPolygon.new( [
             CrankBase.VecFloat2.init (2, 1),
             CrankBase.VecFloat2.init (-2, 1),
             CrankBase.VecFloat2.init (-3, 0),
@@ -105,7 +105,7 @@ class TestGJK (unittest.TestCase):
             CrankBase.VecFloat2.init (-1, -2),
             CrankBase.VecFloat2.init (2, -1)
         ] )
-        b = CrankShape.Shape2CPolygon.new_from_vertices( [
+        b = CrankShape.Shape2CPolygon.new( [
             CrankBase.VecFloat2.init (2, 3),
             CrankBase.VecFloat2.init (1, 3),
             CrankBase.VecFloat2.init (-2, 1),
