@@ -258,7 +258,7 @@ crank_shape2_circle_approximate_polygon (CrankShape2Finite *shape)
       vertices[i].y = sinf (angle);
     }
 
-  return (CrankShape2Polygon*)crank_shape2_cpolygon_new_from_vertices (vertices, n);
+  return (CrankShape2Polygon*)crank_shape2_cpolygon_new (vertices, n);
 }
 
 //////// CrankShape2IRound /////////////////////////////////////////////////////

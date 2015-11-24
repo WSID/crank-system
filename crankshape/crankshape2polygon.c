@@ -38,6 +38,19 @@
  *
  * This represents a polygonal shape.
  *
+ * # Index of vertices and edges.
+ *
+ * In ordinary polygon shape, there are same number of edges as vertices. So
+ * a vertex and edge shares same index. The edge has same index of starting
+ * vertex.
+ *
+ * # Default implementation.
+ *
+ * This class has default implementations. They are implemented with following
+ * assumptions.
+ *
+ * * Vertices are
+ *
  * # Abstract functions.
  *
  * * #CrankShape2PolygonClass.get_nvertices
@@ -45,8 +58,9 @@
  *
  * # Virtual functions.
  *
- * * #CrankShape2FiniteClass.approximate_polygon(): As this is already polygonal,
- *   default implementation will return self.
+ * * #CrankShape2FiniteClass.approximate_polygon()
+ *
+ *   Default Implementation: As it is already polygon, it returns itself
  *
  * * #CrankShape2PolygonClass.get_edge_normal()
  * * #CrankShape2PolygonClass.get_farthest_vertex()

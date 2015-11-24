@@ -27,6 +27,8 @@
 #include <glib-object.h>
 
 #include "crankbase.h"
+#include "crankshapemisc.h"
+#include "crankrotation.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
@@ -40,30 +42,41 @@
  * @include: crankshape.h
  *
  * This represents non-abstract polygon descriptions, with vertices and segments.
+ *
+ * The shape is immutable.
  */
 
 //////// List of virtual functions /////////////////////////////////////////////
 
-static gboolean                 _shape2_contains (CrankShape2    *shape,
-                                                  CrankVecFloat2 *point);
-
-static CrankShape2Polygon     *_shape2_approximate_polygon    (CrankShape2  *shape,
-                                                                const gfloat  vdistance);
-
-static CrankShape2Finite       *_shape2_finitize (CrankShape2 *shape,
-                                                  CrankBox2   *box,
-                                                  CrankTrans2 *position);
-
-
-static guint _shape2_polygon_get_nvertices (CrankShape2Polygon *shape);
-
-static void _shape2_polygon_get_vertex (CrankShape2Polygon *shape,
-                                         guint                index,
-                                         CrankVecFloat2      *vertex);
+static gboolean crank_shape2_cpolygon_contains (CrankShape2    *shape,
+                                                CrankVecFloat2 *point);
 
 
 static gfloat crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape);
 
+
+static guint crank_shape2_cpolygon_get_nvertices (CrankShape2Polygon *shape);
+
+static void crank_shape2_cpolygon_get_vertex (CrankShape2Polygon *shape,
+                                              guint               index,
+                                              CrankVecFloat2     *vertex);
+
+static void crank_shape2_cpolygon_get_edge_normal (CrankShape2Polygon *shape,
+                                                   guint               index,
+                                                   CrankVecFloat2     *normal);
+
+
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static gfloat crank_shape2_cpolygon_get_seg_angle (CrankVecFloat2 *seg_a,
+                                                   CrankVecFloat2 *seg_b);
+
+static void crank_shape2_cpolygon_build_cache (CrankShape2CPolygon *cpolygon);
+
+static void crank_shape2_cpolygon_build_cache_bound (CrankShape2CPolygon *cpolygon);
+
+static void crank_shape2_cpolygon_build_cache_wind  (CrankShape2CPolygon *cpolygon);
 
 //////// Type definition ///////////////////////////////////////////////////////
 
@@ -75,7 +88,20 @@ static gfloat crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape);
 struct _CrankShape2CPolygon {
   CrankShape2   _parent_instance;
 
-  GArray *vertices;
+  guint nvertices;
+  CrankVecFloat2 *vertices;
+  CrankVecFloat2 *normals;
+
+
+  //////// Cached space
+  // Bound cache
+  gfloat          bound_radius;
+  CrankBox2       bound_box;
+  CrankVecFloat2  center;
+
+  // Winding cache
+  gboolean        convex;
+  gint            winding;
 };
 
 G_DEFINE_TYPE(CrankShape2CPolygon,
@@ -90,7 +116,8 @@ G_DEFINE_TYPE(CrankShape2CPolygon,
 static void
 crank_shape2_cpolygon_init (CrankShape2CPolygon *self)
 {
-  self->vertices = g_array_new (FALSE, FALSE, sizeof (CrankVecFloat2));
+  self->vertices = NULL;
+  self->normals = NULL;
 }
 
 static void
@@ -102,20 +129,24 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 
   c_shape2 = CRANK_SHAPE2_CLASS(c);
 
+  c_shape2->contains = crank_shape2_cpolygon_contains;
+
+
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
   c_shape2_finite->get_bound_radius = crank_shape2_cpolygon_get_bound_radius;
 
+
   c_shape2_polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
 
-  c_shape2_polygon->get_nvertices = _shape2_polygon_get_nvertices;
-  c_shape2_polygon->get_vertex = _shape2_polygon_get_vertex;
+  c_shape2_polygon->get_nvertices = crank_shape2_cpolygon_get_nvertices;
+  c_shape2_polygon->get_vertex = crank_shape2_cpolygon_get_vertex;
 }
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
 
 static gboolean
-_shape2_contains (CrankShape2    *shape,
+crank_shape2_cpolygon_contains (CrankShape2    *shape,
                   CrankVecFloat2 *point)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*) shape;
@@ -123,11 +154,11 @@ _shape2_contains (CrankShape2    *shape,
 
   guint pass_count = 0;
 
-  for (i = 0; i < self->vertices->len; i++)
+  for (i = 0; i < self->nvertices; i++)
     {
-      guint in = (i + 1) % self->vertices->len;
-      CrankVecFloat2* v = &g_array_index (self->vertices, CrankVecFloat2, i);
-      CrankVecFloat2* vn = &g_array_index (self->vertices, CrankVecFloat2, in);
+      guint in = (i + 1) % self->nvertices;
+      CrankVecFloat2* v = self->vertices + i;
+      CrankVecFloat2* vn = self->vertices + in;
       gboolean edge_pass;
 
       edge_pass = (v->x != vn->x) &&                    // Not parrael to x axis.
@@ -150,10 +181,10 @@ crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
 
   gfloat radius = 0;
 
-  for (i = 0; i < self->vertices->len; i++)
+  for (i = 0; i < self->nvertices; i++)
     {
       gfloat radius_current =
-        crank_vec_float2_get_magn (& g_array_index (self->vertices, CrankVecFloat2, i));
+        crank_vec_float2_get_magn (self->vertices + i);
 
       radius = MAX (radius, radius_current);
     }
@@ -164,45 +195,159 @@ crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
 //////// CrankShape2Polygon ///////////////////////////////////////////////////
 
 static guint
-_shape2_polygon_get_nvertices (CrankShape2Polygon *shape)
+crank_shape2_cpolygon_get_nvertices (CrankShape2Polygon *shape)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
 
-  return self->vertices->len;
+  return self->nvertices;
 }
 
 
 static void
-_shape2_polygon_get_vertex (CrankShape2Polygon *shape,
+crank_shape2_cpolygon_get_vertex (CrankShape2Polygon *shape,
                              guint                index,
                              CrankVecFloat2      *vertex)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
 
-  crank_vec_float2_copy (&g_array_index (self->vertices, CrankVecFloat2, index),
+  crank_vec_float2_copy (self->vertices + index,
                          vertex);
 }
 
-//////// Constructors //////////////////////////////////////////////////////////
-
-/**
- * crank_shape2_cpolygon_new:
- *
- * Constructs an empty polygon.
- *
- * After constructing, vertices can be added by
- * crank_shape2_cpolygon_insert_vertex() or crank_shape2_cpolygon_append_vertex().
- *
- * Returns: (transfer full): An empty #CrankShape2CPolygon.
- */
-CrankShape2CPolygon*
-crank_shape2_cpolygon_new (void)
+static void
+crank_shape2_cpolygon_get_edge_normal (CrankShape2Polygon *shape,
+                                       guint               index,
+                                       CrankVecFloat2     *nor)
 {
-  return (CrankShape2CPolygon*) g_object_new (CRANK_TYPE_SHAPE2_CPOLYGON, NULL);
+  CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
+
+  crank_vec_float2_copy (self->normals + index,
+                         nor);
 }
 
+
+//////// Private Functions /////////////////////////////////////////////////////
+static gfloat
+crank_shape2_cpolygon_get_seg_angle (CrankVecFloat2 *seg_a,
+                                     CrankVecFloat2 *seg_b)
+{
+  return atan2f (crank_vec_float2_crs (seg_a, seg_b),
+                 crank_vec_float2_dot (seg_a, seg_b));
+}
+
+static void
+crank_shape2_cpolygon_build_cache (CrankShape2CPolygon *shape)
+{
+  crank_shape2_cpolygon_build_cache_bound (shape);
+  crank_shape2_cpolygon_build_cache_wind (shape);
+}
+
+static void
+crank_shape2_cpolygon_build_cache_bound (CrankShape2CPolygon *shape)
+{
+  guint i;
+  guint n;
+
+  gfloat bradius_sq;
+  gfloat distance_sq;
+
+  CrankVecFloat2 *vertex = shape->vertices + 0;
+
+  // Process for initial vertex.
+  bradius_sq = crank_vec_float2_get_magn_sq (vertex);
+
+  crank_vec_float2_copy (vertex, & shape->bound_box.start);
+  crank_vec_float2_copy (vertex, & shape->bound_box.end);
+
+  for (i = 1; i < n; i++)
+    {
+      vertex = shape->vertices + i;
+
+      // Bound radius
+      distance_sq = crank_vec_float2_get_magn_sq (vertex);
+
+      if (bradius_sq < distance_sq)
+        bradius_sq = distance_sq;
+
+      // Bounding box
+      shape->bound_box.end.x = MAX (shape->bound_box.end.x, vertex->x);
+      shape->bound_box.end.y = MAX (shape->bound_box.end.y, vertex->y);
+      shape->bound_box.start.x = MIN (shape->bound_box.start.x, vertex->x);
+      shape->bound_box.start.y = MIN (shape->bound_box.start.y, vertex->y);
+    }
+
+  shape->bound_radius = sqrtf (bradius_sq);
+  crank_vec_float2_mixs (& shape->bound_box.start,
+                         & shape->bound_box.end,
+                         0.5f,
+                         & shape->center);
+}
+
+static void
+crank_shape2_cpolygon_build_cache_wind (CrankShape2CPolygon *shape)
+{
+  guint i;
+  guint j;
+  guint n;
+  guint n1;
+
+  gfloat angle_sum;
+
+  CrankVecFloat2 *v;
+  CrankVecFloat2 seg_p;
+  CrankVecFloat2 seg;
+
+
+  n = shape->nvertices;
+  n1 = n - 1;
+
+  // Initial setting.
+  shape->convex = TRUE;
+
+  // Process last point.
+  crank_vec_float2_sub (shape->vertices + n1, shape->vertices + (n1 - 1), &seg_p);
+  crank_vec_float2_sub (shape->vertices + 0, shape->vertices + n1, &seg);
+  angle_sum = crank_shape2_cpolygon_get_seg_angle (&seg_p, &seg);
+
+  crank_rot_vec2_right (&seg, shape->normals + 0);
+  crank_vec_float2_unit_self (shape->normals + 0);
+
+  // Iterate on segments.
+  for (i = 0; i < n1; i++)
+    {
+      gfloat angle;
+      crank_vec_float2_copy (&seg, &seg_p);
+      crank_vec_float2_sub (shape->vertices + (i + 1), shape->vertices + i, &seg);
+
+      angle = crank_shape2_cpolygon_get_seg_angle (&seg_p, &seg);
+
+      if (angle * angle_sum < 0)
+        shape->convex = FALSE;
+
+      angle_sum += angle;
+
+      crank_rot_vec2_right (&seg, shape->normals + i);
+      crank_vec_float2_unit_self (shape->normals + i);
+    }
+
+  // Checking winding.
+  if (0 < angle_sum)
+    {
+      shape->winding = 1;
+    }
+  else
+    {
+      shape->winding = -1;
+
+      for (i = 0; i < shape->nvertices; i++)
+        crank_vec_float2_neg_self (shape->normals + i);
+    }
+}
+
+
+//////// Constructors //////////////////////////////////////////////////////////
 /**
- * crank_shape2_cpolygon_new_from_vertices:
+ * crank_shape2_cpolygon_new:
  * @vertices: (array length=nvertices): Vertices
  * @nvertices: length of @vertices.
  *
@@ -211,78 +356,24 @@ crank_shape2_cpolygon_new (void)
  * Returns: (transfer full): An polygon.
  */
 CrankShape2CPolygon*
-crank_shape2_cpolygon_new_from_vertices (CrankVecFloat2 *vertices,
-                                         guint           nvertices)
+crank_shape2_cpolygon_new (CrankVecFloat2 *vertices,
+                           guint           nvertices)
 {
-  CrankShape2CPolygon *self = crank_shape2_cpolygon_new ();
+  CrankShape2CPolygon *self;
   guint i;
 
-  for (i = 0; i < nvertices; i++ )
-    crank_shape2_cpolygon_append_vertex (self, vertices + i);
+  if (nvertices < 2)
+    {
+      g_warning ("Not sufficient vertices!");
+      return NULL;
+    }
+
+  self = (CrankShape2CPolygon*) g_object_new (CRANK_TYPE_SHAPE2_CPOLYGON, NULL);
+
+  self->nvertices = nvertices;
+  self->vertices = g_memdup (vertices, sizeof (CrankVecFloat2) * nvertices);
+  self->normals = g_new (CrankVecFloat2, nvertices);
+  crank_shape2_cpolygon_build_cache (self);
 
   return self;
 }
-
-//////// Vertices //////////////////////////////////////////////////////////////
-
-/**
- * crank_shape2_cpolygon_set_vertex:
- * @polygon: A Polygon.
- * @index: A Index.
- * @vertex: A Vertex.
- *
- * Sets a vertex of polygon.
- */
-void
-crank_shape2_cpolygon_set_vertex (CrankShape2CPolygon *polygon,
-                                  guint                index,
-                                  CrankVecFloat2      *vertex)
-{
-  crank_vec_float2_copy (vertex,
-                         &g_array_index(polygon->vertices, CrankVecFloat2, index));
-}
-
-/**
- * crank_shape2_cpolygon_insert_vertex:
- * @polygon: A Polygon.
- * @index: A Index.
- * @vertex: A Vertex.
- *
- * Inserts a vertex in given position.
- */
-void
-crank_shape2_cpolygon_insert_vertex (CrankShape2CPolygon *polygon,
-                                     guint index,
-                                     CrankVecFloat2 *vertex)
-{
-  g_array_insert_val (polygon->vertices, index, *vertex);
-}
-
-/**
- * crank_shape2_cpolygon_append_vertex:
- * @polygon: A Polygon.
- * @vertex: A Vertex.
- *
- * Appends a vertex to last position.
- */
-void
-crank_shape2_cpolygon_append_vertex (CrankShape2CPolygon *polygon,
-                                     CrankVecFloat2      *vertex)
-{
-  g_array_append_val (polygon->vertices, *vertex);
-}
-
-/**
- * crank_shape2_cpolygon_remove_vertex:
- * @polygon: A Polygon.
- * @index: A Index.
- *
- * Removes a vertex on given index.
- */
-void
-crank_shape2_cpolygon_remove_vertex (CrankShape2CPolygon *polygon,
-                                     guint                index)
-{
-  g_array_remove_index (polygon->vertices, index);
-}
-
