@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPEMISC_H
+#define CRANKSHAPEMISC_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,33 +22,22 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#include <glib.h>
+#include "crankbase.h"
 
-#include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
-#include "crankshapemisc.h"
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshapemisc.h cannot be included directly.
+#endif
 
-#include "crankshape2.h"
-#include "crankshape2finite.h"
-#include "crankshape2polygon.h"
-#include "crankshape2iround.h"
+G_BEGIN_DECLS
 
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2circle.h"
-#include "crankshape2rect.h"
-
-#include "crankshape2cpolygon.h"
-
-#include "crankshape3.h"
-#include "crankshape3finite.h"
-#include "crankshape3polyhedreon.h"
-
-#include "crankgjk.h"
+gboolean  crank_seg_intersect (CrankVecFloat2 *aa,
+                               CrankVecFloat2 *ab,
+                               CrankVecFloat2 *ba,
+                               CrankVecFloat2 *bb,
+                               CrankVecFloat2 *i);
 
 
-#undef _CRANKSHAPE_INSIDE
+G_END_DECLS
 
-#endif /* CRANKSHAPE_H */
+#endif

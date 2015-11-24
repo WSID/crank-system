@@ -4,6 +4,7 @@ TESTS= \
 	test_euler.py \
 	test_rot.py \
 	test_trans.py \
+	test_misc.py \
 	test_gjk.py
 
 AM_TESTS_ENVIRONMENT= \

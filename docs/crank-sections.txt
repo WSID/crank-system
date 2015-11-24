@@ -2132,6 +2132,11 @@ crank_trans2_get_type
 crank_trans3_get_type
 </SECTION>
 
+<SECTION>
+<FILE>crankshapemisc</FILE>
+crank_seg_intersect
+</SECTION>
+
 
 <SECTION>
 <FILE>crankshape2</FILE>

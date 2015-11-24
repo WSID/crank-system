@@ -17,6 +17,7 @@ test_programs= \
 		test_euler \
 		test_rot \
 		test_trans \
+		test_misc \
 		test_gjk
 
 test_euler_SOURCES= test_euler.c
@@ -27,6 +28,9 @@ test_rot_LDADD= $(TEST_SHAPE_LDADD)
 
 test_trans_SOURCES= test_trans.c
 test_trans_LDADD= $(TEST_SHAPE_LDADD)
+
+test_misc_SOURCES= test_misc.c
+test_misc_LDADD= $(TEST_SHAPE_LDADD)
 
 test_gjk_SOURCES= test_gjk.c
 test_gjk_LDADD= $(TEST_SHAPE_LDADD)
