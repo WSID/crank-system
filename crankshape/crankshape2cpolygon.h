@@ -50,6 +50,8 @@ G_DECLARE_FINAL_TYPE (CrankShape2CPolygon,
 CrankShape2CPolygon *crank_shape2_cpolygon_new (CrankVecFloat2 *vertices,
                                                 guint           nvertices);
 
+CrankShape2CPolygon *crank_shape2_cpolygon_new_from_polygon (CrankShape2Polygon *poly);
+
 
 G_END_DECLS
 

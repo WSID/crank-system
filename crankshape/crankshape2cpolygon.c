@@ -377,3 +377,31 @@ crank_shape2_cpolygon_new (CrankVecFloat2 *vertices,
 
   return self;
 }
+
+/**
+ * crank_shape2_cpolygon_new_from_polygon:
+ * @poly: A Polygon representation.
+ *
+ * Construct a polygon with other polygon representation.
+ *
+ * Returns: (transfer full): An polygon.
+ */
+CrankShape2CPolygon*
+crank_shape2_cpolygon_new_from_polygon (CrankShape2Polygon *poly)
+{
+  CrankShape2CPolygon *result;
+  CrankVecFloat2 *vertices;
+  guint n;
+  guint i;
+
+  n = crank_shape2_polygon_get_nvertices (poly);
+  vertices = g_new (CrankVecFloat2, n);
+
+  for (i = 0; i < n; i++)
+    crank_shape2_polygon_get_vertex (poly, i, vertices + i);
+
+  result = crank_shape2_cpolygon_new (vertices, n);
+
+  g_free (vertices);
+  return result;
+}
