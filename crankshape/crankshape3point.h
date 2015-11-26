@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPE3POINT_H
+#define CRANKSHAPE3POINT_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,36 +22,33 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshape3point.h cannot be included directly.
+#endif
 
+#include <glib.h>
+#include <glib-object.h>
+#include "crankbase.h"
 #include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
-#include "crankshapemisc.h"
-
-#include "crankshape2.h"
-#include "crankshape2finite.h"
-#include "crankshape2polygon.h"
-#include "crankshape2iround.h"
-
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2circle.h"
-#include "crankshape2rect.h"
-
-#include "crankshape2cpolygon.h"
-
 #include "crankshape3.h"
 #include "crankshape3finite.h"
 #include "crankshape3polyhedron.h"
-#include "crankshape3iround.h"
 
-#include "crankshape3point.h"
+G_BEGIN_DECLS
+//////// Type declaration //////////////////////////////////////////////////////
 
-#include "crankgjk.h"
+#define CRANK_TYPE_SHAPE3_POINT crank_shape3_point_get_type ()
+G_DECLARE_FINAL_TYPE (CrankShape3Point,
+                      crank_shape3_point,
+                      CRANK, SHAPE3_POINT,
+                      CrankShape3Polyhedron)
 
 
-#undef _CRANKSHAPE_INSIDE
+//////// Constructors //////////////////////////////////////////////////////////
 
-#endif /* CRANKSHAPE_H */
+CrankShape3Point      *crank_shape3_point_new (void);
+
+
+G_END_DECLS
+
+#endif

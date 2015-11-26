@@ -25,6 +25,7 @@ shapeinclude_HEADERS = \
 		crankshape3finite.h \
 		crankshape3polyhedron.h \
 		crankshape3iround.h \
+		crankshape3point.h \
 		crankgjk.h
 
 
@@ -60,6 +61,7 @@ libcrankshape_la_SOURCES= \
 		crankshape3finite.c \
 		crankshape3polyhedron.c \
 		crankshape3iround.c \
+		crankshape3point.c \
 		crankgjk.c
 
 
