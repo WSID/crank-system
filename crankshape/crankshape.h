@@ -47,7 +47,6 @@
 #include "crankshape3polyhedron.h"
 #include "crankshape3iround.h"
 
-#include "crankshape3cpolyhedron.h"
 
 #include "crankgjk.h"
 
