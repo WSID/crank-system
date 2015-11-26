@@ -51,4 +51,4 @@ crank_shape2_cpolygon_get_type
 
 crank_shape3_get_type
 crank_shape3_finite_get_type
-crank_shape3_polyhedreon_get_type
+crank_shape3_polyhedron_get_type
