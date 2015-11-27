@@ -63,7 +63,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Polygon,
  */
 struct _CrankShape2PolygonClass {
   /*< private >*/
-  CrankShape2FiniteClass  _parent;
+  CrankShape2VertexedClass  _parent;
 
   /*< public >*/
 
