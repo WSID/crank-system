@@ -86,9 +86,6 @@ static void           crank_shape2_polygon_get_edge_vertices (CrankShape2Vertexe
                                                               guint                eid,
                                                               guint               *vids);
 
-static guint           crank_shape2_polygon_get_farthest_vertex (CrankShape2Vertexed *shape,
-                                                                 CrankVecFloat2      *direction);
-
 
 //////// Default implementation prototype //////////////////////////////////////
 
@@ -129,7 +126,6 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
   c_shape2_vertexed->get_nedges = crank_shape2_polygon_get_nedges;
   c_shape2_vertexed->get_vertex_edges = crank_shape2_polygon_get_vertex_edges;
   c_shape2_vertexed->get_edge_vertices = crank_shape2_polygon_get_edge_vertices;
-  c_shape2_vertexed->get_farthest_vertex = crank_shape2_polygon_get_farthest_vertex;
 
 
   c->get_edge_normal = crank_shape2_polygon_get_edge_normal_def;
@@ -214,38 +210,6 @@ crank_shape2_polygon_get_edge_vertices (CrankShape2Vertexed *vertexed,
 
   vids[0] = eid;
   vids[1] = (eid == n - 1) ? 0 : (eid + 1);
-}
-
-static guint
-crank_shape2_polygon_get_farthest_vertex (CrankShape2Vertexed *shape,
-                                          CrankVecFloat2      *direction)
-{
-  guint n = crank_shape2_vertexed_get_nvertices (shape);
-  guint i;
-  guint j;
-
-  CrankVecFloat2 vertex;
-  gfloat dot;
-
-  crank_shape2_vertexed_get_vertex_pos (shape, 0, &vertex);
-  j = 0;
-  dot = crank_vec_float2_dot (direction, &vertex);
-
-  for (i = 1; i < n; i++)
-    {
-      gfloat ndot;
-
-      crank_shape2_vertexed_get_vertex_pos (shape, i, &vertex);
-      ndot = crank_vec_float2_dot (direction, &vertex);
-
-      if (dot < ndot)
-        {
-          dot = ndot;
-          j = i;
-        }
-    }
-
-  return j;
 }
 
 //////// Default implementations ///////////////////////////////////////////////

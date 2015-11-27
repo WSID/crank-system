@@ -40,6 +40,11 @@ static void crank_shape2_vertexed_get_property (GObject    *object,
 
 static CrankShape2Vertexed *crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape);
 
+//////// Default Implementation ////////////////////////////////////////////////
+
+static guint crank_shape2_vertexed_def_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                                            CrankVecFloat2      *direction);
+
 
 //////// Properties and Signals ////////////////////////////////////////////////
 
@@ -97,6 +102,9 @@ crank_shape2_vertexed_class_init (CrankShape2VertexedClass *c)
 
   c_shape2finite->approximate_vertexed = crank_shape2_vertexed_approximate_vertexed;
 
+
+  c->get_farthest_vertex = crank_shape2_vertexed_def_get_farthest_vertex;
+
 }
 
 //////// GObject ///////////////////////////////////////////////////////////////
@@ -137,6 +145,41 @@ static CrankShape2Vertexed*
 crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape)
 {
   return (CrankShape2Vertexed*) g_object_ref (shape);
+}
+
+
+//////// Default Implementation ////////////////////////////////////////////////
+
+static guint
+crank_shape2_vertexed_def_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                               CrankVecFloat2      *direction)
+{
+  guint n = crank_shape2_vertexed_get_nvertices (shape);
+  guint i;
+  guint j;
+
+  CrankVecFloat2 vertex;
+  gfloat dot;
+
+  crank_shape2_vertexed_get_vertex_pos (shape, 0, &vertex);
+  j = 0;
+  dot = crank_vec_float2_dot (direction, &vertex);
+
+  for (i = 1; i < n; i++)
+    {
+      gfloat ndot;
+
+      crank_shape2_vertexed_get_vertex_pos (shape, i, &vertex);
+      ndot = crank_vec_float2_dot (direction, &vertex);
+
+      if (dot < ndot)
+        {
+          dot = ndot;
+          j = i;
+        }
+    }
+
+  return j;
 }
 
 
