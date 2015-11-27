@@ -73,11 +73,11 @@ crank_shape2_iround_default_init (CrankShape2IRoundInterface *i)
  * crank_shape2_iround_get_inner_shape:
  * @iround: A Rounded shape.
  *
- * Gets inner polygonal shape of round shape.
+ * Gets inner vertexed shape of round shape.
  *
  * Returns: (transfer full): A Inner polygonal shape.
  */
-CrankShape2Polygon*
+CrankShape2Vertexed*
 crank_shape2_iround_get_inner_shape (CrankShape2IRound *iround)
 {
   CrankShape2IRoundInterface *i = CRANK_SHAPE2_IROUND_GET_IFACE (iround);

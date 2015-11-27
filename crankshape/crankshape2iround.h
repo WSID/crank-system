@@ -62,7 +62,7 @@ struct _CrankShape2IRoundInterface
   GTypeInterface _parent;
 
   /*< public >*/
-  CrankShape2Polygon* (*get_inner_shape) (CrankShape2IRound *iround);
+  CrankShape2Vertexed* (*get_inner_shape) (CrankShape2IRound *iround);
 
   gfloat              (*get_round_radius) (CrankShape2IRound *iround);
 
@@ -72,9 +72,9 @@ struct _CrankShape2IRoundInterface
 
 //////// Public functions //////////////////////////////////////////////////////
 
-CrankShape2Polygon* crank_shape2_iround_get_inner_shape (CrankShape2IRound *iround);
+CrankShape2Vertexed* crank_shape2_iround_get_inner_shape (CrankShape2IRound *iround);
 
-gfloat              crank_shape2_iround_get_round_radius (CrankShape2IRound *iround);
+gfloat               crank_shape2_iround_get_round_radius (CrankShape2IRound *iround);
 
 
 

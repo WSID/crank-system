@@ -32,6 +32,7 @@
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
+#include "crankshape2vertexed.h"
 #include "crankshape2polygon.h"
 #include "crankshape2iround.h"
 
@@ -94,7 +95,7 @@ static CrankShape2Vertexed *crank_shape2_circle_approximate_vertexed (CrankShape
 
 
 // CrankShape2IRound
-static CrankShape2Polygon *crank_shape2_circle_get_inner_shape (CrankShape2IRound *iround);
+static CrankShape2Vertexed *crank_shape2_circle_get_inner_shape (CrankShape2IRound *iround);
 
 static gfloat crank_shape2_circle_get_round_radius (CrankShape2IRound *iround);
 
@@ -263,11 +264,11 @@ crank_shape2_circle_approximate_vertexed (CrankShape2Finite *shape)
 
 //////// CrankShape2IRound /////////////////////////////////////////////////////
 
-static CrankShape2Polygon*
+static CrankShape2Vertexed*
 crank_shape2_circle_get_inner_shape (CrankShape2IRound *iround)
 {
   CrankShape2Point *result = crank_shape2_point_new();
-  return CRANK_SHAPE2_POLYGON (result);
+  return (CrankShape2Vertexed*)result;
 }
 
 
