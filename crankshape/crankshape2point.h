@@ -42,7 +42,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (CrankShape2Point,
                       crank_shape2_point,
                       CRANK, SHAPE2_POINT,
-                      CrankShape2Polygon)
+                      CrankShape2Vertexed)
 
 
 //////// Constructors //////////////////////////////////////////////////////////

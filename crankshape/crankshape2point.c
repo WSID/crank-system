@@ -50,13 +50,30 @@ static gboolean crank_shape2_point_contains (CrankShape2    *shape,
 
 static gfloat crank_shape2_point_get_bound_radius (CrankShape2Finite *shape);
 
-// CrankShape2Polygon
-static guint    crank_shape2_point_get_nvertices (CrankShape2Polygon *shape);
+// CrankShape2Vertexed
+static guint    crank_shape2_point_get_dimension (CrankShape2Vertexed *shape);
 
-static void     crank_shape2_point_get_vertex (CrankShape2Polygon *shape,
-                                               guint               index,
-                                               CrankVecFloat2     *vertex);
+static guint    crank_shape2_point_get_nvertices (CrankShape2Vertexed *shape);
 
+static guint    crank_shape2_point_get_nedges (CrankShape2Vertexed *shape);
+
+
+
+static void     crank_shape2_point_get_vertex_pos (CrankShape2Vertexed *shape,
+                                                   guint               index,
+                                                   CrankVecFloat2     *vertex);
+
+static void     crank_shape2_point_get_vertex_edges (CrankShape2Vertexed  *shape,
+                                                     guint                 vid,
+                                                     guint               **eids,
+                                                     guint                *neids);
+
+static void     crank_shape2_point_get_edge_vertices (CrankShape2Vertexed *shape,
+                                                      guint                eid,
+                                                      guint               *vids);
+
+static guint    crank_shape2_point_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                                        CrankVecFloat2      *direction);
 
 //////// Type definition ///////////////////////////////////////////////////////
 
@@ -71,7 +88,7 @@ struct _CrankShape2Point {
 
 G_DEFINE_TYPE (CrankShape2Point,
                crank_shape2_point,
-               CRANK_TYPE_SHAPE2_POLYGON)
+               CRANK_TYPE_SHAPE2_VERTEXED)
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
@@ -85,11 +102,12 @@ crank_shape2_point_class_init (CrankShape2PointClass *c)
 {
   CrankShape2Class *c_shape2;
   CrankShape2FiniteClass *c_shape2finite;
-  CrankShape2PolygonClass *c_shape2polygon;
+  CrankShape2VertexedClass *c_shape2vertexed;
 
   c_shape2 = CRANK_SHAPE2_CLASS (c);
 
   c_shape2->contains = crank_shape2_point_contains;
+
 
 
   c_shape2finite  = CRANK_SHAPE2_FINITE_CLASS (c);
@@ -98,10 +116,16 @@ crank_shape2_point_class_init (CrankShape2PointClass *c)
 
 
 
-  c_shape2polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
+  c_shape2vertexed = CRANK_SHAPE2_VERTEXED_CLASS (c);
 
-  c_shape2polygon->get_nvertices = crank_shape2_point_get_nvertices;
-  c_shape2polygon->get_vertex = crank_shape2_point_get_vertex;
+  c_shape2vertexed->get_dimension = crank_shape2_point_get_dimension;
+  c_shape2vertexed->get_nvertices = crank_shape2_point_get_nvertices;
+  c_shape2vertexed->get_nedges = crank_shape2_point_get_nedges;
+
+  c_shape2vertexed->get_vertex_pos = crank_shape2_point_get_vertex_pos;
+  c_shape2vertexed->get_vertex_edges = crank_shape2_point_get_vertex_edges;
+  c_shape2vertexed->get_edge_vertices = crank_shape2_point_get_edge_vertices;
+  c_shape2vertexed->get_farthest_vertex = crank_shape2_point_get_farthest_vertex;
 }
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
@@ -124,19 +148,58 @@ crank_shape2_point_get_bound_radius (CrankShape2Finite *shape)
 //////// CrankShape2Polygon ////////////////////////////////////////////////////
 
 static guint
-crank_shape2_point_get_nvertices (CrankShape2Polygon *shape)
+crank_shape2_point_get_dimension (CrankShape2Vertexed *shape)
+{
+  return 0;
+}
+
+static guint
+crank_shape2_point_get_nvertices (CrankShape2Vertexed *shape)
 {
   return 1;
 }
 
-static void
-crank_shape2_point_get_vertex (CrankShape2Polygon *shape,
-                               guint index,
-                               CrankVecFloat2 *vertex)
+static guint
+crank_shape2_point_get_nedges (CrankShape2Vertexed *shape)
 {
-  crank_vec_float2_init (vertex, 0.0f, 0.0f);
+  return 0;
 }
 
+static void
+crank_shape2_point_get_vertex_pos (CrankShape2Vertexed *shape,
+                                   guint                vid,
+                                   CrankVecFloat2      *pos)
+{
+  crank_vec_float2_init (pos, 0.0f, 0.0f);
+}
+
+static void
+crank_shape2_point_get_vertex_edges (CrankShape2Vertexed  *shape,
+                                     guint                 vid,
+                                     guint               **eids,
+                                     guint                *neids)
+{
+  *eids = NULL;
+  *neids = 0;
+}
+
+
+static void
+crank_shape2_point_get_edge_vertices (CrankShape2Vertexed *shape,
+                                      guint                eid,
+                                      guint               *vids)
+{
+  g_warning ("Invalid edge id: Point does not have edge: %u", eid);
+  vids[0] = 0;
+  vids[1] = 0;
+}
+
+static guint
+crank_shape2_point_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                        CrankVecFloat2      *direction)
+{
+  return 0;
+}
 
 
 //////// Constructors //////////////////////////////////////////////////////////
