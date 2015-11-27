@@ -32,6 +32,7 @@
 #include "crankbox.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
+#include "crankshape2vertexed.h"
 
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
@@ -41,7 +42,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (CrankShape2Segment,
                       crank_shape2_segment,
                       CRANK, SHAPE2_SEGMENT,
-                      CrankShape2Polygon)
+                      CrankShape2Vertexed)
 
 
 //////// Constructors //////////////////////////////////////////////////////////
