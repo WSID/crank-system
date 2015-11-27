@@ -31,6 +31,7 @@
 #include "crankrotation.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
+#include "crankshape2vertexed.h"
 #include "crankshape2polygon.h"
 #include "crankshape2cpolygon.h"
 
@@ -55,11 +56,11 @@ static gboolean crank_shape2_cpolygon_contains (CrankShape2    *shape,
 static gfloat crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape);
 
 
-static guint crank_shape2_cpolygon_get_nvertices (CrankShape2Polygon *shape);
+static guint crank_shape2_cpolygon_get_nvertices (CrankShape2Vertexed *shape);
 
-static void crank_shape2_cpolygon_get_vertex (CrankShape2Polygon *shape,
-                                              guint               index,
-                                              CrankVecFloat2     *vertex);
+static void crank_shape2_cpolygon_get_vertex_pos (CrankShape2Vertexed *shape,
+                                                  guint                index,
+                                                  CrankVecFloat2      *vertex);
 
 static void crank_shape2_cpolygon_get_edge_normal (CrankShape2Polygon *shape,
                                                    guint               index,
@@ -125,6 +126,7 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 {
   CrankShape2Class       *c_shape2;
   CrankShape2FiniteClass *c_shape2_finite;
+  CrankShape2VertexedClass *c_shape2_vertexed;
   CrankShape2PolygonClass *c_shape2_polygon;
 
   c_shape2 = CRANK_SHAPE2_CLASS(c);
@@ -137,10 +139,14 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
   c_shape2_finite->get_bound_radius = crank_shape2_cpolygon_get_bound_radius;
 
 
+  c_shape2_vertexed = CRANK_SHAPE2_VERTEXED_CLASS (c);
+
+  c_shape2_vertexed->get_nvertices = crank_shape2_cpolygon_get_nvertices;
+  c_shape2_vertexed->get_vertex_pos = crank_shape2_cpolygon_get_vertex_pos;
+
   c_shape2_polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
 
-  c_shape2_polygon->get_nvertices = crank_shape2_cpolygon_get_nvertices;
-  c_shape2_polygon->get_vertex = crank_shape2_cpolygon_get_vertex;
+  c_shape2_polygon->get_edge_normal = crank_shape2_cpolygon_get_edge_normal;
 }
 
 //////// CrankShape2 ///////////////////////////////////////////////////////////
@@ -195,7 +201,7 @@ crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
 //////// CrankShape2Polygon ///////////////////////////////////////////////////
 
 static guint
-crank_shape2_cpolygon_get_nvertices (CrankShape2Polygon *shape)
+crank_shape2_cpolygon_get_nvertices (CrankShape2Vertexed *shape)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
 
@@ -204,14 +210,14 @@ crank_shape2_cpolygon_get_nvertices (CrankShape2Polygon *shape)
 
 
 static void
-crank_shape2_cpolygon_get_vertex (CrankShape2Polygon *shape,
-                             guint                index,
-                             CrankVecFloat2      *vertex)
+crank_shape2_cpolygon_get_vertex_pos (CrankShape2Vertexed *shape,
+                                      guint                vid,
+                                      CrankVecFloat2      *pos)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
 
-  crank_vec_float2_copy (self->vertices + index,
-                         vertex);
+  crank_vec_float2_copy (self->vertices + vid,
+                         pos);
 }
 
 static void
@@ -389,16 +395,19 @@ crank_shape2_cpolygon_new (CrankVecFloat2 *vertices,
 CrankShape2CPolygon*
 crank_shape2_cpolygon_new_from_polygon (CrankShape2Polygon *poly)
 {
+  CrankShape2Vertexed *poly_vertexed;
   CrankShape2CPolygon *result;
   CrankVecFloat2 *vertices;
   guint n;
   guint i;
 
-  n = crank_shape2_polygon_get_nvertices (poly);
+  poly_vertexed = (CrankShape2Vertexed*)poly;
+
+  n = crank_shape2_vertexed_get_nvertices (poly_vertexed);
   vertices = g_new (CrankVecFloat2, n);
 
   for (i = 0; i < n; i++)
-    crank_shape2_polygon_get_vertex (poly, i, vertices + i);
+    crank_shape2_vertexed_get_vertex_pos (poly_vertexed, i, vertices + i);
 
   result = crank_shape2_cpolygon_new (vertices, n);
 

@@ -27,6 +27,7 @@
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2polygon.h"
+#include "crankshape2vertexed.h"
 #include "crankshape2rect.h"
 
 /**
@@ -61,18 +62,20 @@ static gfloat crank_shape2_rect_get_bound_radius (CrankShape2Finite *shape);
 
 
 
-static guint crank_shape2_rect_get_nvertices (CrankShape2Polygon *shape);
+static guint crank_shape2_rect_get_nvertices (CrankShape2Vertexed *shape);
 
-static void crank_shape2_rect_get_vertex (CrankShape2Polygon *shape,
-                                          guint               index,
-                                          CrankVecFloat2     *vertex);
+static void crank_shape2_rect_get_vertex_pos (CrankShape2Vertexed *shape,
+                                              guint               vid,
+                                              CrankVecFloat2     *pos);
+
+static guint crank_shape2_rect_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                                    CrankVecFloat2      *direction);
+
+
 
 static void crank_shape2_rect_get_edge_normal (CrankShape2Polygon *shape,
                                                guint               index,
                                                CrankVecFloat2     *nor);
-
-static guint crank_shape2_rect_get_farthest_vertex (CrankShape2Polygon *shape,
-                                                    CrankVecFloat2     *direction);
 
 
 //////// Properties and Signals ////////////////////////////////////////////////
@@ -116,6 +119,7 @@ crank_shape2_rect_class_init (CrankShape2RectClass *c)
   GObjectClass *c_gobject;
   CrankShape2Class *c_shape2;
   CrankShape2FiniteClass *c_shape2finite;
+  CrankShape2VertexedClass *c_shape2vertexed;
   CrankShape2PolygonClass *c_shape2polygon;
 
   c_gobject = G_OBJECT_CLASS (c);
@@ -149,13 +153,15 @@ crank_shape2_rect_class_init (CrankShape2RectClass *c)
   c_shape2finite->get_bound_radius = crank_shape2_rect_get_bound_radius;
 
 
+  c_shape2vertexed = CRANK_SHAPE2_VERTEXED_CLASS (c);
+
+  c_shape2vertexed->get_nvertices = crank_shape2_rect_get_nvertices;
+  c_shape2vertexed->get_vertex_pos = crank_shape2_rect_get_vertex_pos;
+  c_shape2vertexed->get_farthest_vertex = crank_shape2_rect_get_farthest_vertex;
+
   c_shape2polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
 
-  c_shape2polygon->get_nvertices = crank_shape2_rect_get_nvertices;
-  c_shape2polygon->get_vertex = crank_shape2_rect_get_vertex;
-
   c_shape2polygon->get_edge_normal = crank_shape2_rect_get_edge_normal;
-  c_shape2polygon->get_farthest_vertex = crank_shape2_rect_get_farthest_vertex;
 }
 
 //////// GObject ///////////////////////////////////////////////////////////////
@@ -247,37 +253,57 @@ crank_shape2_rect_get_bound_radius (CrankShape2Finite* shape)
 //////// CrankShape2Polygon ////////////////////////////////////////////////////
 
 static guint
-crank_shape2_rect_get_nvertices (CrankShape2Polygon *shape)
+crank_shape2_rect_get_nvertices (CrankShape2Vertexed *shape)
 {
   return 4;
 }
 
 static void
-crank_shape2_rect_get_vertex (CrankShape2Polygon *shape,
-                              guint index,
-                              CrankVecFloat2 *vertex)
+crank_shape2_rect_get_vertex_pos (CrankShape2Vertexed *shape,
+                                  guint                vid,
+                                  CrankVecFloat2      *pos)
 {
   CrankShape2Rect *self = CRANK_SHAPE2_RECT (shape);
-  switch (index)
+  switch (vid)
     {
     case CRANK_SHAPE2_RECT_VERTEX_LEFTUP:
-      crank_vec_float2_init (vertex, self->hsize.x, self->hsize.y);
+      crank_vec_float2_init (pos, self->hsize.x, self->hsize.y);
       break;
 
     case CRANK_SHAPE2_RECT_VERTEX_RIGHTUP:
-      crank_vec_float2_init (vertex, -self->hsize.x, self->hsize.y);
+      crank_vec_float2_init (pos, -self->hsize.x, self->hsize.y);
       break;
 
     case CRANK_SHAPE2_RECT_VERTEX_RIGHTDOWN:
-      crank_vec_float2_init (vertex, -self->hsize.x, -self->hsize.y);
+      crank_vec_float2_init (pos, -self->hsize.x, -self->hsize.y);
       break;
 
     case CRANK_SHAPE2_RECT_VERTEX_LEFTDOWN:
-      crank_vec_float2_init (vertex, self->hsize.x, -self->hsize.y);
+      crank_vec_float2_init (pos, self->hsize.x, -self->hsize.y);
       break;
 
     default:
-      g_warning ("Invalid index: %u", index);
+      g_warning ("Invalid vertex id: %u", vid);
+    }
+}
+
+static guint
+crank_shape2_rect_get_farthest_vertex (CrankShape2Vertexed *shape,
+                                       CrankVecFloat2     *direction)
+{
+  if (0 < direction->x)
+    {
+      if (0 < direction->y)
+        return CRANK_SHAPE2_RECT_VERTEX_LEFTUP;
+      else
+        return CRANK_SHAPE2_RECT_VERTEX_LEFTDOWN;
+    }
+  else
+    {
+      if (0 < direction->y)
+        return CRANK_SHAPE2_RECT_VERTEX_RIGHTUP;
+      else
+        return CRANK_SHAPE2_RECT_VERTEX_RIGHTDOWN;
     }
 }
 
@@ -309,26 +335,6 @@ crank_shape2_rect_get_edge_normal (CrankShape2Polygon *shape,
     }
 }
 
-
-static guint
-crank_shape2_rect_get_farthest_vertex (CrankShape2Polygon *shape,
-                                       CrankVecFloat2     *direction)
-{
-  if (0 < direction->x)
-    {
-      if (0 < direction->y)
-        return CRANK_SHAPE2_RECT_VERTEX_LEFTUP;
-      else
-        return CRANK_SHAPE2_RECT_VERTEX_LEFTDOWN;
-    }
-  else
-    {
-      if (0 < direction->y)
-        return CRANK_SHAPE2_RECT_VERTEX_RIGHTUP;
-      else
-        return CRANK_SHAPE2_RECT_VERTEX_RIGHTDOWN;
-    }
-}
 
 
 
