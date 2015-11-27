@@ -121,7 +121,7 @@ struct _CrankShape2Segment {
 
 G_DEFINE_TYPE (CrankShape2Segment,
                crank_shape2_segment,
-               CRANK_TYPE_SHAPE2_POLYGON)
+               CRANK_TYPE_SHAPE2_VERTEXED)
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
