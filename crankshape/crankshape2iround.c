@@ -41,6 +41,11 @@
  *
  * Some algorithms can avoid approximating polygon, but instead apply margin for
  * more efficient processing.
+ *
+ * # Abstract Functions.
+ *
+ * * #CrankShape2IRoundInterface.get_inner_shape()
+ * * #CrankShape2IRoundInterface.get_round_radius()
  */
 
 //////// Type definition ///////////////////////////////////////////////////////

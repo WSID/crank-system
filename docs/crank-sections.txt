@@ -2160,10 +2160,9 @@ crank_shape2_get_type
 
 <SECTION>
 <FILE>crankshape2finite</FILE>
-<TITLE>CrankShape2Finite</TITLE>
 crank_shape2_finite_is_convex
 crank_shape2_finite_get_bound_radius
-crank_shape2_finite_approximate_polygon
+crank_shape2_finite_approximate_vertexed
 CrankShape2Finite
 CrankShape2FiniteClass
 <SUBSECTION Standard>
@@ -2172,11 +2171,23 @@ crank_shape2_finite_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankshape2vertexed</FILE>
+CrankShape2Vertexed
+CrankShape2VertexedClass
+crank_shape2_vertexed_get_dimension
+crank_shape2_vertexed_get_nvertices
+crank_shape2_vertexed_get_nedges
+crank_shape2_vertexed_get_vertex_pos
+crank_shape2_vertexed_get_vertex_edges
+crank_shape2_vertexed_get_edge_vertices
+crank_shape2_vertexed_get_farthest_vertex
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_VERTEXED
+</SECTION>
+
+<SECTION>
 <FILE>crankshape2polygon</FILE>
-crank_shape2_polygon_get_nvertices
-crank_shape2_polygon_get_vertex
 crank_shape2_polygon_get_edge_normal
-crank_shape2_polygon_get_farthest_vertex
 crank_shape2_polygon_get_normal_edge
 CrankShape2Polygon
 CrankShape2PolygonClass
@@ -2218,6 +2229,15 @@ crank_shape2_segment_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankshape2triangle</FILE>
+crank_shape2_triangle_new
+crank_shape2_triangle_new_regular
+CrankShape2Triangle
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE2_TRIANGLE
+</SECTION>
+
+<SECTION>
 <FILE>crankshape2circle</FILE>
 CrankShape2Circle
 crank_shape2_circle_new
@@ -2253,11 +2273,7 @@ crank_shape2_rect_get_type
 <SECTION>
 <FILE>crankshape2cpolygon</FILE>
 crank_shape2_cpolygon_new
-crank_shape2_cpolygon_new_from_vertices
-crank_shape2_cpolygon_set_vertex
-crank_shape2_cpolygon_insert_vertex
-crank_shape2_cpolygon_append_vertex
-crank_shape2_cpolygon_remove_vertex
+crank_shape2_cpolygon_new_from_polygon
 CrankShape2CPolygon
 <SUBSECTION Standard>
 CRANK_TYPE_SHAPE2_CPOLYGON

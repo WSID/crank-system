@@ -53,7 +53,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Finite,
  * CrankShape2FiniteClass:
  * @is_convex: Slot for crank_shape2_finite_is_convex()
  * @get_bound_radius: Slot for crank_shape2_finite_get_bound_radius()
- * @approximate_polygon: Slot for crank_shape2_finite_approximate_polygon()
+ * @approximate_vertexed: Slot for crank_shape2_finite_approximate_vertexed()
  *
  * A Virtual function table for the interface.
  */

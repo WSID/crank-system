@@ -34,13 +34,17 @@
  * @stability: Unstable
  * @include: crankshape.h
  *
- * Represents a finite shape.
+ * Represents a finite shape that has limited boundary.
  *
  * # Abstract Functions
  *
  * * #CrankShape2FiniteClass.is_convex()
  * * #CrankShape2FiniteClass.get_bound_radius()
  * * #CrankShape2FiniteClass.approximate_vertexed()
+ *
+ * # Abstract Functions left
+ *
+ * * #CrankShape2Class.contains()
  *
  * # Virtual Functions
  *

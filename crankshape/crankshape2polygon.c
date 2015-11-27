@@ -39,32 +39,24 @@
  *
  * This represents a polygonal shape.
  *
- * # Index of vertices and edges.
+ * # Abstract Functions
  *
- * In ordinary polygon shape, there are same number of edges as vertices. So
- * a vertex and edge shares same index. The edge has same index of starting
- * vertex.
+ * * #CrankShape2VertexedClass.get_nvertices()
+ * * #CrankShape2VertexedClass.get_vertex_pos()
  *
- * # Default implementation.
+ * # Abstract Functions left
  *
- * This class has default implementations. They are implemented with following
- * assumptions.
- *
- * * Vertices are
- *
- * # Abstract functions.
- *
- * * #CrankShape2PolygonClass.get_nvertices
- * * #CrankShape2PolygonClass.get_vertex
+ * * #CrankShape2Class.contains()
+ * * #CrankShape2FiniteClass.get_bound_radius()
  *
  * # Virtual functions.
  *
- * * #CrankShape2FiniteClass.approximate_polygon()
- *
- *   Default Implementation: As it is already polygon, it returns itself
- *
+ * * #CrankShape2FiniteClass.is_convex()
+ * * #CrankShape2VertexedClass.get_dimension()
+ * * #CrankShape2VertexedClass.get_nedges()
+ * * #CrankShape2VertexedClass.get_vertex_edges()
+ * * #CrankShape2VertexedClass.get_edge_vertices()
  * * #CrankShape2PolygonClass.get_edge_normal()
- * * #CrankShape2PolygonClass.get_farthest_vertex()
  * * #CrankShape2PolygonClass.get_normal_edge()
  */
 

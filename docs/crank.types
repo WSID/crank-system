@@ -39,11 +39,13 @@ crank_euler_type_get_type
 
 crank_shape2_get_type
 crank_shape2_finite_get_type
+crank_shape2_vertexed_get_type
 crank_shape2_polygon_get_type
 crank_shape2_iround_get_type
 
 crank_shape2_point_get_type
 crank_shape2_segment_get_type
+crank_shape2_triangle_get_type
 crank_shape2_circle_get_type
 crank_shape2_rect_get_type
 

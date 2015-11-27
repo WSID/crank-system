@@ -29,7 +29,40 @@
 
 #include "crankshape2vertexed.h"
 
-
+/**
+ * SECTION: crankshape2vertexed
+ * @title: CrankShape2Vertexed
+ * @short_description: Vertex based shapes.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * This represents shapes with vertices, and possibly edges.
+ *
+ * # Abstract Functions
+ *
+ * * #CrankShape2VertexedClass.get_dimension()
+ * * #CrankShape2VertexedClass.get_nvertices()
+ * * #CrankShape2VertexedClass.get_nedges()
+ * * #CrankShape2VertexedClass.get_vertex_pos()
+ * * #CrankShape2VertexedClass.get_vertex_edges()
+ * * #CrankShape2VertexedClass.get_edge_vertices()
+ *
+ * # Abstract Functions left
+ *
+ * * #CrankShape2Class.contains()
+ * * #CrankShape2FiniteClass.is_convex()
+ * * #CrankShape2FiniteClass.get_bound_radius()
+ *
+ * # Virtual Functions
+ *
+ * * #CrankShape2FiniteClass.approximate_vertexed(): As this is already
+ *   vertex based shape, default implementation will return itself as
+ *   approximation.
+ *
+ * * #CrankShape2VertexedClass.get_farthest_vertex(): Default implementation
+ *   will iterates over all vertices and pick the farthest one.
+ *
+ */
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void crank_shape2_vertexed_get_property (GObject    *object,
