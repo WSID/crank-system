@@ -19,6 +19,7 @@ shapeinclude_HEADERS = \
 		crankshape2iround.h \
 		crankshape2point.h \
 		crankshape2segment.h \
+		crankshape2triangle.h \
 		crankshape2circle.h \
 		crankshape2rect.h \
 		crankshape2cpolygon.h \
@@ -57,6 +58,7 @@ libcrankshape_la_SOURCES= \
 		crankshape2iround.c \
 		crankshape2point.c \
 		crankshape2segment.c \
+		crankshape2triangle.c \
 		crankshape2circle.c \
 		crankshape2rect.c \
 		crankshape2cpolygon.c \
