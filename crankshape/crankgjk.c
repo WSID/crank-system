@@ -71,8 +71,8 @@
  *
  * Gets a farthest vertex of minkowski different of @a and @b.
  */
-void    crank_gjk2_support (CrankShape2Polygon *a,
-                            CrankShape2Polygon *b,
+void    crank_gjk2_support (CrankShape2Vertexed *a,
+                            CrankShape2Vertexed *b,
                             CrankTrans2        *bpos,
                             CrankVecFloat2     *dir,
                             CrankVecFloat2     *vertex);
@@ -91,8 +91,8 @@ void    crank_gjk2_support (CrankShape2Polygon *a,
  * This carrys additional information of which vertices are corresponds to this
  * vertex on minkowski difference.
  */
-void    crank_gjk2_support_point (CrankShape2Polygon *a,
-                                  CrankShape2Polygon *b,
+void    crank_gjk2_support_point (CrankShape2Vertexed *a,
+                                  CrankShape2Vertexed *b,
                                   CrankTrans2        *bpos,
                                   CrankVecFloat2     *dir,
                                   CrankVecFloat2     *vertex,
@@ -116,8 +116,8 @@ void    crank_gjk2_support_point (CrankShape2Polygon *a,
  * Returns: Whether @a and @b has intersection.
  */
 gboolean
-crank_gjk2 (CrankShape2Polygon *a,
-            CrankShape2Polygon *b,
+crank_gjk2 (CrankShape2Vertexed *a,
+            CrankShape2Vertexed *b,
             CrankTrans2 *bpos)
 {
   return crank_gjk2_full (a, b, bpos, NULL);
@@ -136,8 +136,8 @@ crank_gjk2 (CrankShape2Polygon *a,
  *     GJK cannot be performed.
  */
 gfloat
-crank_gjk2_distance (CrankShape2Polygon *a,
-                     CrankShape2Polygon *b,
+crank_gjk2_distance (CrankShape2Vertexed *a,
+                     CrankShape2Vertexed *b,
                      CrankTrans2        *bpos)
 {
   CrankVecFloat2 dir;
@@ -228,8 +228,8 @@ crank_gjk2_distance (CrankShape2Polygon *a,
  *     GJK cannot be performed.
  */
 gfloat
-crank_gjk2_closest_points (CrankShape2Polygon *a,
-                           CrankShape2Polygon *b,
+crank_gjk2_closest_points (CrankShape2Vertexed *a,
+                           CrankShape2Vertexed *b,
                            CrankTrans2        *bpos,
                            CrankVecFloat2     *ptra,
                            CrankVecFloat2     *ptrb)
@@ -301,14 +301,14 @@ crank_gjk2_closest_points (CrankShape2Polygon *a,
 
           if (0 < qa)
             {
-              crank_shape2_polygon_get_vertex (a, vida0, ptra);
-              crank_shape2_polygon_get_vertex (b, vidb0, ptrb);
+              crank_shape2_vertexed_get_vertex_pos (a, vida0, ptra);
+              crank_shape2_vertexed_get_vertex_pos (b, vidb0, ptrb);
               return crank_vec_float2_get_magn (&ptr0);
             }
           else if (qb < 0)
             {
-              crank_shape2_polygon_get_vertex (a, vida1, ptra);
-              crank_shape2_polygon_get_vertex (b, vidb1, ptrb);
+              crank_shape2_vertexed_get_vertex_pos (a, vida1, ptra);
+              crank_shape2_vertexed_get_vertex_pos (b, vidb1, ptrb);
               return crank_vec_float2_get_magn (&ptr1);
             }
           else
@@ -317,10 +317,10 @@ crank_gjk2_closest_points (CrankShape2Polygon *a,
               CrankVecFloat2 ptrb0;
               CrankVecFloat2 ptra1;
               CrankVecFloat2 ptrb1;
-              crank_shape2_polygon_get_vertex (a, vida0, &ptra0);
-              crank_shape2_polygon_get_vertex (a, vida1, &ptra1);
-              crank_shape2_polygon_get_vertex (a, vidb0, &ptrb0);
-              crank_shape2_polygon_get_vertex (a, vidb1, &ptrb1);
+              crank_shape2_vertexed_get_vertex_pos (a, vida0, &ptra0);
+              crank_shape2_vertexed_get_vertex_pos (a, vida1, &ptra1);
+              crank_shape2_vertexed_get_vertex_pos (a, vidb0, &ptrb0);
+              crank_shape2_vertexed_get_vertex_pos (a, vidb1, &ptrb1);
 
               crank_vec_float2_mixs (&ptra0, &ptra1, q, ptra);
               crank_vec_float2_mixs (&ptrb0, &ptrb1, q, ptrb);
@@ -370,8 +370,8 @@ crank_gjk2_closest_points (CrankShape2Polygon *a,
  * Returns: Whether @a and @b has intersections.
  */
 gboolean
-crank_gjk2_full (CrankShape2Polygon *a,
-                 CrankShape2Polygon *b,
+crank_gjk2_full (CrankShape2Vertexed *a,
+                 CrankShape2Vertexed *b,
                  CrankTrans2        *bpos,
                  CrankVecFloat2     *triangle)
 {
@@ -458,8 +458,8 @@ crank_gjk2_full (CrankShape2Polygon *a,
  * CCW.
  */
 gfloat
-crank_epa2      (CrankShape2Polygon *a,
-                 CrankShape2Polygon *b,
+crank_epa2      (CrankShape2Vertexed *a,
+                 CrankShape2Vertexed *b,
                  CrankTrans2        *bpos,
                  CrankVecFloat2     *triangle,
                  CrankVecFloat2     *segment,
@@ -571,8 +571,8 @@ crank_epa2      (CrankShape2Polygon *a,
 //////// Private functions /////////////////////////////////////////////////////
 
 void
-crank_gjk2_support (CrankShape2Polygon *a,
-                    CrankShape2Polygon *b,
+crank_gjk2_support (CrankShape2Vertexed *a,
+                    CrankShape2Vertexed *b,
                     CrankTrans2        *bpos,
                     CrankVecFloat2     *dir,
                     CrankVecFloat2     *vertex)
@@ -589,11 +589,11 @@ crank_gjk2_support (CrankShape2Polygon *a,
   crank_rot_vec2_rot (dir, -bpos->mrot, &bdir);
   crank_vec_float2_neg_self (&bdir);
 
-  vida = crank_shape2_polygon_get_farthest_vertex (a, dir);
-  vidb = crank_shape2_polygon_get_farthest_vertex (b, &bdir);
+  vida = crank_shape2_vertexed_get_farthest_vertex (a, dir);
+  vidb = crank_shape2_vertexed_get_farthest_vertex (b, &bdir);
 
-  crank_shape2_polygon_get_vertex (a, vida, &avert);
-  crank_shape2_polygon_get_vertex (b, vidb, &bvert);
+  crank_shape2_vertexed_get_vertex_pos (a, vida, &avert);
+  crank_shape2_vertexed_get_vertex_pos (b, vidb, &bvert);
 
   crank_trans2_transv (bpos, &bvert, &abvert);
   crank_vec_float2_sub (&avert, &abvert, vertex);
@@ -601,8 +601,8 @@ crank_gjk2_support (CrankShape2Polygon *a,
 
 
 void
-crank_gjk2_support_point (CrankShape2Polygon *a,
-                          CrankShape2Polygon *b,
+crank_gjk2_support_point (CrankShape2Vertexed *a,
+                          CrankShape2Vertexed *b,
                           CrankTrans2        *bpos,
                           CrankVecFloat2     *dir,
                           CrankVecFloat2     *vertex,
@@ -618,11 +618,11 @@ crank_gjk2_support_point (CrankShape2Polygon *a,
   crank_rot_vec2_rot (dir, -bpos->mrot, &bdir);
   crank_vec_float2_neg_self (&bdir);
 
-  *vida = crank_shape2_polygon_get_farthest_vertex (a, dir);
-  *vidb = crank_shape2_polygon_get_farthest_vertex (b, &bdir);
+  *vida = crank_shape2_vertexed_get_farthest_vertex (a, dir);
+  *vidb = crank_shape2_vertexed_get_farthest_vertex (b, &bdir);
 
-  crank_shape2_polygon_get_vertex (a, *vida, &avert);
-  crank_shape2_polygon_get_vertex (b, *vidb, &bvert);
+  crank_shape2_vertexed_get_vertex_pos (a, *vida, &avert);
+  crank_shape2_vertexed_get_vertex_pos (b, *vidb, &bvert);
 
   crank_trans2_transv (bpos, &bvert, &abvert);
   crank_vec_float2_sub (&avert, &abvert, vertex);

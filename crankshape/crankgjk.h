@@ -38,27 +38,27 @@
 
 G_BEGIN_DECLS
 
-gboolean        crank_gjk2     (CrankShape2Polygon *a,
-                                CrankShape2Polygon *b,
+gboolean        crank_gjk2     (CrankShape2Vertexed *a,
+                                CrankShape2Vertexed *b,
                                 CrankTrans2        *bpos);
 
-gfloat          crank_gjk2_distance (CrankShape2Polygon *a,
-                                     CrankShape2Polygon *b,
+gfloat          crank_gjk2_distance (CrankShape2Vertexed *a,
+                                     CrankShape2Vertexed *b,
                                      CrankTrans2        *bpos);
 
-gfloat          crank_gjk2_closest_points (CrankShape2Polygon *a,
-                                           CrankShape2Polygon *b,
+gfloat          crank_gjk2_closest_points (CrankShape2Vertexed *a,
+                                           CrankShape2Vertexed *b,
                                            CrankTrans2        *bpos,
                                            CrankVecFloat2     *ptra,
                                            CrankVecFloat2     *ptrb);
 
-gboolean        crank_gjk2_full (CrankShape2Polygon *a,
-                                 CrankShape2Polygon *b,
+gboolean        crank_gjk2_full (CrankShape2Vertexed *a,
+                                 CrankShape2Vertexed *b,
                                  CrankTrans2        *bpos,
                                  CrankVecFloat2     *triangle);
 
-gfloat          crank_epa2      (CrankShape2Polygon *a,
-                                 CrankShape2Polygon *b,
+gfloat          crank_epa2      (CrankShape2Vertexed *a,
+                                 CrankShape2Vertexed *b,
                                  CrankTrans2        *bpos,
                                  CrankVecFloat2     *triangle,
                                  CrankVecFloat2     *segment,
