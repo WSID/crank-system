@@ -32,6 +32,7 @@
 #include "cranktrans.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
+#include "crankshape2vertexed.h"
 
 G_BEGIN_DECLS
 
@@ -42,7 +43,7 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE (CrankShape2Polygon,
                           crank_shape2_polygon,
                           CRANK, SHAPE2_POLYGON,
-                          CrankShape2Finite)
+                          CrankShape2Vertexed)
 /**
  * CrankShape2Polygon:
  *
@@ -65,38 +66,14 @@ struct _CrankShape2PolygonClass {
   CrankShape2FiniteClass  _parent;
 
   /*< public >*/
-  guint               (*get_nvertices)         (CrankShape2Polygon    *shape);
-
-  void                (*get_vertex)            (CrankShape2Polygon    *shape,
-                                                guint                   index,
-                                                CrankVecFloat2         *vertex);
 
   void                (*get_edge_normal)       (CrankShape2Polygon    *shape,
                                                 guint                   index,
                                                 CrankVecFloat2         *normal);
 
-
-
-
-  guint               (*get_farthest_vertex)   (CrankShape2Polygon    *shape,
-                                                CrankVecFloat2         *direction);
-
   guint               (*get_normal_edge)     (CrankShape2Polygon *shape,
                                               CrankVecFloat2     *normal);
 };
-
-
-
-//////// Shape Properties //////////////////////////////////////////////////////
-
-guint           crank_shape2_polygon_get_nvertices    (CrankShape2Polygon *shape);
-
-
-//////// Vertex Properties /////////////////////////////////////////////////////
-
-void            crank_shape2_polygon_get_vertex       (CrankShape2Polygon *shape,
-                                                        guint                index,
-                                                        CrankVecFloat2      *vertex);
 
 
 
@@ -105,11 +82,6 @@ void            crank_shape2_polygon_get_vertex       (CrankShape2Polygon *shape
 void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *normal);
-
-
-
-guint           crank_shape2_polygon_get_farthest_vertex (CrankShape2Polygon *shape,
-                                                          CrankVecFloat2      *direction);
 
 guint           crank_shape2_polygon_get_normal_edge     (CrankShape2Polygon *shape,
                                                           CrankVecFloat2      *normal);
