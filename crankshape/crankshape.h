@@ -32,6 +32,7 @@
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
+#include "crankshape2vertexed.h"
 #include "crankshape2polygon.h"
 #include "crankshape2iround.h"
 

@@ -14,6 +14,7 @@ shapeinclude_HEADERS = \
 		cranktrans.h \
 		crankshape2.h \
 		crankshape2finite.h \
+		crankshape2vertexed.h \
 		crankshape2polygon.h \
 		crankshape2iround.h \
 		crankshape2point.h \
@@ -51,6 +52,7 @@ libcrankshape_la_SOURCES= \
 		cranktrans.c \
 		crankshape2.c \
 		crankshape2finite.c \
+		crankshape2vertexed.c \
 		crankshape2polygon.c \
 		crankshape2iround.c \
 		crankshape2point.c \
