@@ -83,15 +83,15 @@ test_gjk2 (void)
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
   crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
 
-  g_assert (! crank_gjk2 (CRANK_SHAPE2_POLYGON(a),
-                          CRANK_SHAPE2_POLYGON(b),
+  g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
+                        CRANK_SHAPE2_VERTEXED(b),
                           NULL));
 
 
   crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), G_PI * 7 / 6);
 
-  g_assert (! crank_gjk2 (CRANK_SHAPE2_POLYGON(a),
-                          CRANK_SHAPE2_POLYGON(b),
+  g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
+                        CRANK_SHAPE2_VERTEXED(b),
                           NULL));
 
 
@@ -108,8 +108,8 @@ test_gjk2 (void)
   crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), 0);
   crank_shape2_set_pos_scl (CRANK_SHAPE2 (b), 2.0f);
 
-  g_assert (crank_gjk2 (CRANK_SHAPE2_POLYGON(a),
-                        CRANK_SHAPE2_POLYGON(b),
+  g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
+                        CRANK_SHAPE2_VERTEXED(b),
                         NULL));
 }
 
