@@ -70,9 +70,7 @@
 
 //////// Virtual function implementations //////////////////////////////////////
 
-static gboolean                 crank_shape2_polygon_is_convex (CrankShape2Finite *shape);
-
-static CrankShape2Polygon      *crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape);
+static gboolean       crank_shape2_polygon_is_convex (CrankShape2Finite *shape);
 
 
 static guint          crank_shape2_polygon_get_dimension (CrankShape2Vertexed *vertexed);
@@ -123,7 +121,6 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
   c_shape2_finite->is_convex = crank_shape2_polygon_is_convex;
-  c_shape2_finite->approximate_polygon = crank_shape2_polygon_approximate_polygon;
 
 
   c_shape2_vertexed = CRANK_SHAPE2_VERTEXED_CLASS (c);
@@ -177,12 +174,6 @@ crank_shape2_polygon_is_convex (CrankShape2Finite *shape)
     }
 
   return TRUE;
-}
-
-CrankShape2Polygon*
-crank_shape2_polygon_approximate_polygon (CrankShape2Finite *shape)
-{
-  return (CrankShape2Polygon*) g_object_ref (shape);
 }
 
 //////// CrankShape2Vertexed ///////////////////////////////////////////////////

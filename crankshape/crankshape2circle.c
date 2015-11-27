@@ -90,7 +90,7 @@ static gboolean crank_shape2_circle_is_convex (CrankShape2Finite *shape);
 
 static gfloat crank_shape2_circle_get_bound_radius (CrankShape2Finite *shape);
 
-static CrankShape2Polygon *crank_shape2_circle_approximate_polygon (CrankShape2Finite *shape);
+static CrankShape2Vertexed *crank_shape2_circle_approximate_vertexed (CrankShape2Finite *shape);
 
 
 // CrankShape2IRound
@@ -162,7 +162,7 @@ crank_shape2_circle_class_init (CrankShape2CircleClass *c)
 
   c_shape2finite->is_convex = crank_shape2_circle_is_convex;
   c_shape2finite->get_bound_radius = crank_shape2_circle_get_bound_radius;
-  c_shape2finite->approximate_polygon = crank_shape2_circle_approximate_polygon;
+  c_shape2finite->approximate_vertexed = crank_shape2_circle_approximate_vertexed;
 }
 
 static void
@@ -242,8 +242,8 @@ crank_shape2_circle_get_bound_radius (CrankShape2Finite *shape)
   return ((CrankShape2Circle*)shape)->radius;
 }
 
-static CrankShape2Polygon*
-crank_shape2_circle_approximate_polygon (CrankShape2Finite *shape)
+static CrankShape2Vertexed*
+crank_shape2_circle_approximate_vertexed (CrankShape2Finite *shape)
 {
   guint i, n;
   CrankVecFloat2 vertices[64];
@@ -258,7 +258,7 @@ crank_shape2_circle_approximate_polygon (CrankShape2Finite *shape)
       vertices[i].y = sinf (angle);
     }
 
-  return (CrankShape2Polygon*)crank_shape2_cpolygon_new (vertices, n);
+  return (CrankShape2Vertexed*)crank_shape2_cpolygon_new (vertices, n);
 }
 
 //////// CrankShape2IRound /////////////////////////////////////////////////////

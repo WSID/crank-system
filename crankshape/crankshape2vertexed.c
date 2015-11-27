@@ -38,6 +38,9 @@ static void crank_shape2_vertexed_get_property (GObject    *object,
                                                 GParamSpec *pspec);
 
 
+static CrankShape2Vertexed *crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape);
+
+
 //////// Properties and Signals ////////////////////////////////////////////////
 
 enum {
@@ -67,6 +70,7 @@ static void
 crank_shape2_vertexed_class_init (CrankShape2VertexedClass *c)
 {
   GObjectClass *c_gobject;
+  CrankShape2FiniteClass *c_shape2finite;
 
   c_gobject = G_OBJECT_CLASS (c);
   c_gobject->get_property = crank_shape2_vertexed_get_property;
@@ -87,6 +91,12 @@ crank_shape2_vertexed_class_init (CrankShape2VertexedClass *c)
       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  c_shape2finite = CRANK_SHAPE2_FINITE_CLASS (c);
+
+  c_shape2finite->approximate_vertexed = crank_shape2_vertexed_approximate_vertexed;
+
 }
 
 //////// GObject ///////////////////////////////////////////////////////////////
@@ -120,6 +130,15 @@ crank_shape2_vertexed_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
+//////// CrankShape2Finite /////////////////////////////////////////////////////
+
+static CrankShape2Vertexed*
+crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape)
+{
+  return (CrankShape2Vertexed*) g_object_ref (shape);
+}
+
 
 //////// Shape Properties //////////////////////////////////////////////////////
 

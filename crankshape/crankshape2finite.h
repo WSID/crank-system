@@ -32,11 +32,13 @@
 #include "crankbox.h"
 #include "crankshape2.h"
 
+//////// Forward declaration ///////////////////////////////////////////////////
+typedef struct _CrankShape2Vertexed CrankShape2Vertexed;
+
 
 //////// Type declaration //////////////////////////////////////////////////////
-//
-#define CRANK_TYPE_SHAPE2_FINITE crank_shape2_finite_get_type ()
 
+#define CRANK_TYPE_SHAPE2_FINITE crank_shape2_finite_get_type ()
 G_DECLARE_DERIVABLE_TYPE (CrankShape2Finite,
                           crank_shape2_finite,
                           CRANK, SHAPE2_FINITE,
@@ -76,7 +78,7 @@ struct _CrankShape2FiniteClass {
   /*< public >*/
   // Reduce to Polygonal shape.
 
-  CrankShape2Polygon *(*approximate_polygon)   (CrankShape2Finite      *shape);
+  CrankShape2Vertexed *(*approximate_vertexed)   (CrankShape2Finite      *shape);
 
   /*< private >*/
   gpointer      _PADDING5;
@@ -93,6 +95,6 @@ gboolean        crank_shape2_finite_is_convex (CrankShape2Finite *shape);
 gfloat          crank_shape2_finite_get_bound_radius(CrankShape2Finite     *shape);
 
 
-CrankShape2Polygon     *crank_shape2_finite_approximate_polygon(CrankShape2Finite *shape);
+CrankShape2Vertexed    *crank_shape2_finite_approximate_vertexed (CrankShape2Finite *shape);
 
 #endif
