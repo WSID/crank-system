@@ -67,33 +67,31 @@ class TestGJK (unittest.TestCase):
             CrankBase.VecFloat2.init (2, 0)
         ])
 
-        apos = CrankBase.VecFloat2.init (-2, 1)
-        bpos = CrankBase.VecFloat2.init (3, 2)
+        apos = CrankShape.Trans2.init ();
+        bpos = CrankShape.Trans2.init ();
 
-        a.props.pos_trans = apos;
-        b.props.pos_trans = bpos;
+        apos.mtrans = CrankBase.VecFloat2.init (-2, 1)
+        bpos.mtrans = CrankBase.VecFloat2.init (3, 2)
 
-        assert (not CrankShape.gjk2 (a, b, None))
+        abpos = apos.inverse().compose (bpos)
 
+        assert (not CrankShape.gjk2 (a, b, abpos))
 
-        b.props.pos_rot = math.pi * 7 / 6
+        bpos.mrot = math.pi * 7 / 6
 
-        assert (not CrankShape.gjk2 (a, b, None))
+        abpos = apos.inverse().compose (bpos);
 
+        assert (not CrankShape.gjk2 (a, b, abpos))
 
-        apos.x = -1
-        apos.y = 3
-        bpos.x = 0
-        bpos.y = -2
+        apos.mtrans = CrankBase.VecFloat2.init (-1, 3)
+        bpos.mtrans = CrankBase.VecFloat2.init (0, -2)
+        apos.mrot = math.pi * 2 / 3
+        bpos.mrot = 0
+        apos.mscl = 0.5
+        bpos.mscl = 2
 
-        a.props.pos_trans = apos
-        b.props.pos_trans = bpos
-        a.props.pos_rot = math.pi * 2 / 3
-        b.props.pos_rot = 0
-        a.props.pos_scl = 0.5
-        b.props.pos_scl = 2
-
-        assert (CrankShape.gjk2 (a, b, None))
+        abpos = apos.inverse().compose (bpos);
+        assert (CrankShape.gjk2 (a, b, abpos))
 
 
     def test_gjk_distance (self):
@@ -115,33 +113,34 @@ class TestGJK (unittest.TestCase):
             CrankBase.VecFloat2.init (2, 0)
         ])
 
-        apos = CrankBase.VecFloat2.init (-2, 1)
-        bpos = CrankBase.VecFloat2.init (3, 2)
+        apos = CrankShape.Trans2.init ();
+        bpos = CrankShape.Trans2.init ();
 
-        a.props.pos_trans = apos;
-        b.props.pos_trans = bpos;
+        apos.mtrans = CrankBase.VecFloat2.init (-2, 1)
+        bpos.mtrans = CrankBase.VecFloat2.init (3, 2)
 
-        self.assertFloat (CrankShape.gjk2_distance (a, b, None), 1.0)
+        abpos = apos.inverse().compose (bpos)
 
-
-        b.props.pos_rot = math.pi * 7 / 12
-
-        self.assertFloat (CrankShape.gjk2_distance (a, b, None), 0.0389)
+        self.assertFloat (CrankShape.gjk2_distance (a, b, abpos), 1.0)
 
 
-        apos.x = -5
-        apos.y = 3
-        bpos.x = 0
-        bpos.y = -2
+        bpos.mrot = math.pi * 7 / 12
 
-        a.props.pos_trans = apos
-        b.props.pos_trans = bpos
-        a.props.pos_rot = math.pi * 2 / 3
-        b.props.pos_rot = math.pi * 7 / 12
-        a.props.pos_scl = 0.5
-        b.props.pos_scl = 2
+        abpos = apos.inverse().compose (bpos);
 
-        self.assertFloat (CrankShape.gjk2_distance (a, b, None), 1.3496)
+        self.assertFloat (CrankShape.gjk2_distance (a, b, abpos), 0.0389)
+
+
+        apos.mtrans = CrankBase.VecFloat2.init (-5, 3)
+        bpos.mtrans = CrankBase.VecFloat2.init (0, -2)
+        apos.mrot = math.pi * 2 / 3
+        bpos.mrot = math.pi * 7 / 12
+        apos.mscl = 0.5
+        bpos.mscl = 2
+
+        abpos = apos.inverse().compose (bpos);
+
+        self.assertFloat (CrankShape.gjk2_distance (a, b, abpos), 1.3496)
 
 
 if __name__ == '__main__':

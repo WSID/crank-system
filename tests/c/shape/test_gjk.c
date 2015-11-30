@@ -54,6 +54,10 @@ test_gjk2 (void)
   CrankShape2CPolygon *a;
   CrankShape2CPolygon *b;
 
+  CrankTrans2 apos;
+  CrankTrans2 bpos;
+  CrankTrans2 abpos;
+
   static CrankVecFloat2 avert[] = {
       {2.0f, 1.0f},
       {-2.0f, 1.0f},
@@ -73,44 +77,47 @@ test_gjk2 (void)
       {2.0f, 0.0f}
   };
 
-  CrankVecFloat2 apos = {-2.0f, 1.0f};
-  CrankVecFloat2 bpos = {3.0f, 2.0f};
+  crank_trans2_init (&apos);
+  crank_trans2_init (&bpos);
+
+  crank_vec_float2_init (&apos.mtrans, -2.0f, 1.0f);
+  crank_vec_float2_init (&bpos.mtrans, 3.0f, 2.0f);
 
   a = crank_shape2_cpolygon_new (avert, 6);
-
   b = crank_shape2_cpolygon_new (bvert, 7);
 
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
+
+  g_assert (! crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
+                        CRANK_SHAPE2_VERTEXED(b),
+                        &abpos));
+
+
+  bpos.mrot = G_PI * 7 / 6;
+
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
+
+  g_assert (! crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
+                        CRANK_SHAPE2_VERTEXED(b),
+                        &abpos));
+
+
+  crank_vec_float2_init (&apos.mtrans, -1.0f, 3.0f);
+  apos.mrot = G_PI * 2 / 3;
+  apos.mscl = 0.5f;
+
+  crank_vec_float2_init (&bpos.mtrans, 0.0f, -2.0f);
+  bpos.mrot = 0;
+  bpos.mscl = 2.0f;
+
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
 
   g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
                         CRANK_SHAPE2_VERTEXED(b),
-                          NULL));
-
-
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), G_PI * 7 / 6);
-
-  g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
-                        CRANK_SHAPE2_VERTEXED(b),
-                          NULL));
-
-
-  apos.x = -1;
-  apos.y = 3;
-  bpos.x = 0;
-  bpos.y = -2;
-
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (a), G_PI * 2 / 3);
-  crank_shape2_set_pos_scl (CRANK_SHAPE2 (a), 0.5f);
-
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), 0);
-  crank_shape2_set_pos_scl (CRANK_SHAPE2 (b), 2.0f);
-
-  g_assert (crank_gjk2 (CRANK_SHAPE2_VERTEXED(a),
-                        CRANK_SHAPE2_VERTEXED(b),
-                        NULL));
+                        &abpos));
 }
 
 static void
@@ -119,6 +126,10 @@ test_gjk2_distance (void)
   CrankShape2CPolygon *a;
   CrankShape2CPolygon *b;
 
+  CrankTrans2 apos;
+  CrankTrans2 bpos;
+  CrankTrans2 abpos;
+
   static CrankVecFloat2 avert[] = {
       {2.0f, 1.0f},
       {-2.0f, 1.0f},
@@ -138,48 +149,50 @@ test_gjk2_distance (void)
       {2.0f, 0.0f}
   };
 
-  CrankVecFloat2 apos = {-2.0f, 1.0f};
-  CrankVecFloat2 bpos = {3.0f, 2.0f};
+  crank_trans2_init (&apos);
+  crank_trans2_init (&bpos);
+
+  crank_vec_float2_init (&apos.mtrans, -2.0f, 1.0f);
+  crank_vec_float2_init (&bpos.mtrans, 3.0f, 2.0f);
 
   a = crank_shape2_cpolygon_new (avert, 6);
-
   b = crank_shape2_cpolygon_new (bvert, 7);
 
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
 
-  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_POLYGON(a),
-                                              CRANK_SHAPE2_POLYGON(b),
-                                              NULL),
+  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_VERTEXED(a),
+                                              CRANK_SHAPE2_VERTEXED(b),
+                                              &abpos),
                          ==,
                          1.0f);
 
 
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), G_PI * 7 / 12);
+  bpos.mrot = G_PI * 7 / 12;
 
-  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_POLYGON(a),
-                                              CRANK_SHAPE2_POLYGON(b),
-                                              NULL),
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
+
+  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_VERTEXED(a),
+                                              CRANK_SHAPE2_VERTEXED(b),
+                                              &abpos),
                          ==,
                          0.0389f);
 
+  crank_vec_float2_init (& apos.mtrans, -5, 3);
+  apos.mrot = G_PI * 2 / 3;
+  apos.mscl = 0.5f;
 
-  apos.x = -5;
-  apos.y = 3;
-  bpos.x = 0;
-  bpos.y = -2;
+  crank_vec_float2_init (& bpos.mtrans, 0, -2);
+  bpos.mrot = G_PI * 7 / 12;
+  bpos.mscl = 2.0f;
 
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (a), &apos);
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (a), G_PI * 2 / 3);
-  crank_shape2_set_pos_scl (CRANK_SHAPE2 (a), 0.5f);
+  crank_trans2_inverse (&apos, &abpos);
+  crank_trans2_compose_self (&abpos, &bpos);
 
-  crank_shape2_set_pos_trans (CRANK_SHAPE2 (b), &bpos);
-  crank_shape2_set_pos_rot (CRANK_SHAPE2 (b), G_PI * 7 / 12);
-  crank_shape2_set_pos_scl (CRANK_SHAPE2 (b), 2.0f);
-
-  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_POLYGON(a),
-                                              CRANK_SHAPE2_POLYGON(b),
-                                              NULL),
+  crank_assert_cmpfloat (crank_gjk2_distance (CRANK_SHAPE2_VERTEXED(a),
+                                              CRANK_SHAPE2_VERTEXED(b),
+                                              &abpos),
                          ==,
                          1.3496f);
 }
