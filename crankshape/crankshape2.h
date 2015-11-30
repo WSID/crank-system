@@ -92,42 +92,6 @@ struct _CrankShape2Class {
 
 
 
-
-//////// Property getter / setters /////////////////////////////////////////////
-
-void                    crank_shape2_get_position      (CrankShape2    *shape,
-                                                        CrankTrans2    *position);
-
-void                    crank_shape2_set_position      (CrankShape2    *shape,
-                                                        CrankTrans2    *position);
-
-
-void                    crank_shape2_get_pos_trans     (CrankShape2    *shape,
-                                                        CrankVecFloat2 *trans);
-
-void                    crank_shape2_set_pos_trans     (CrankShape2    *shape,
-                                                        CrankVecFloat2 *trans);
-
-
-gfloat                  crank_shape2_get_pos_rot       (CrankShape2    *shape);
-
-void                    crank_shape2_set_pos_rot       (CrankShape2    *shape,
-                                                        gfloat          rot);
-
-
-gfloat                  crank_shape2_get_pos_scl       (CrankShape2    *shape);
-
-void                    crank_shape2_set_pos_scl       (CrankShape2    *shape,
-                                                        gfloat          scl);
-
-
-void                    crank_shape2_get_rel_position  (CrankShape2    *shape,
-                                                        CrankTrans2    *origin_rel_pos,
-                                                        CrankShape2    *other,
-                                                        CrankTrans2    *res);
-
-
-
 //////// Geometric stuff ///////////////////////////////////////////////////////
 
 gboolean                crank_shape2_contains          (CrankShape2    *shape,

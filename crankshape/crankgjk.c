@@ -144,7 +144,6 @@ crank_gjk2_distance (CrankShape2Vertexed *a,
   CrankVecFloat2 dir1;
 
   CrankVecFloat2 seg;
-  CrankTrans2   brpos;
 
   CrankVecFloat2 ptr0;
   CrankVecFloat2 ptr1;
@@ -154,12 +153,10 @@ crank_gjk2_distance (CrankShape2Vertexed *a,
          crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
     return NAN;
 
-  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
-
   //////// Build initial starting segments.
-  crank_vec_float2_neg (&brpos.mtrans, &dir);
-  crank_gjk2_support (a, b, &brpos, & brpos.mtrans, &ptr0);
-  crank_gjk2_support (a, b, &brpos, &dir, &ptr1);
+  crank_vec_float2_neg (& bpos->mtrans, &dir);
+  crank_gjk2_support (a, b, bpos, & bpos->mtrans, &ptr0);
+  crank_gjk2_support (a, b, bpos, &dir, &ptr1);
 
   crank_vec_float2_sub (&ptr1, &ptr0, &seg);
 
@@ -185,7 +182,7 @@ crank_gjk2_distance (CrankShape2Vertexed *a,
 
       crank_vec_float2_sub (&ptr1, &ptr0, &seg);
       crank_rot_vec2_left (&seg, &ldir);
-      crank_gjk2_support (a, b, &brpos, &ldir, &ptr2);
+      crank_gjk2_support (a, b, bpos, &ldir, &ptr2);
 
       // Checks that we are closer to origin.
       dotc = crank_vec_float2_dot (&ldir, &ptr2);
@@ -238,8 +235,6 @@ crank_gjk2_closest_points (CrankShape2Vertexed *a,
   CrankVecFloat2 dir1;
 
   CrankVecFloat2 seg;
-  CrankTrans2   brpos;
-
   CrankVecFloat2 ptr0;
   CrankVecFloat2 ptr1;
 
@@ -254,12 +249,10 @@ crank_gjk2_closest_points (CrankShape2Vertexed *a,
          crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
     return NAN;
 
-  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
-
   //////// Build initial starting segments.
-  crank_vec_float2_neg (&brpos.mtrans, &dir);
-  crank_gjk2_support_point (a, b, &brpos, & brpos.mtrans, &ptr0, &vida0, &vidb0);
-  crank_gjk2_support_point (a, b, &brpos, &dir, &ptr1, &vida1, &vidb1);
+  crank_vec_float2_neg (& bpos->mtrans, &dir);
+  crank_gjk2_support_point (a, b, bpos, & bpos->mtrans, &ptr0, &vida0, &vidb0);
+  crank_gjk2_support_point (a, b, bpos, &dir, &ptr1, &vida1, &vidb1);
 
   crank_vec_float2_sub (&ptr1, &ptr0, &seg);
 
@@ -288,7 +281,7 @@ crank_gjk2_closest_points (CrankShape2Vertexed *a,
 
       crank_vec_float2_sub (&ptr1, &ptr0, &seg);
       crank_rot_vec2_left (&seg, &ldir);
-      crank_gjk2_support_point (a, b, &brpos, &ldir, &ptr2, &vida2, &vidb2);
+      crank_gjk2_support_point (a, b, bpos, &ldir, &ptr2, &vida2, &vidb2);
 
       // Checks that we are closer to origin.
       dotc = crank_vec_float2_dot (&ldir, &ptr2);
@@ -379,7 +372,6 @@ crank_gjk2_full (CrankShape2Vertexed *a,
   CrankVecFloat2 dir1;
 
   CrankVecFloat2 seg;
-  CrankTrans2   brpos;
 
   // Check convex
   if (! (crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(a)) &&
@@ -390,12 +382,10 @@ crank_gjk2_full (CrankShape2Vertexed *a,
   if (triangle == NULL)
     triangle = g_alloca ( sizeof (CrankVecFloat2) * 3 );
 
-  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
-
   //////// Build initial starting segments.
-  crank_vec_float2_neg (&brpos.mtrans, &dir);
-  crank_gjk2_support (a, b, &brpos, & brpos.mtrans, triangle + 0);
-  crank_gjk2_support (a, b, &brpos, &dir, triangle + 1);
+  crank_vec_float2_neg (& bpos->mtrans, &dir);
+  crank_gjk2_support (a, b, bpos, & bpos->mtrans, triangle + 0);
+  crank_gjk2_support (a, b, bpos, &dir, triangle + 1);
 
   crank_vec_float2_sub (triangle + 1, triangle + 0, &seg);
 
@@ -426,7 +416,7 @@ crank_gjk2_full (CrankShape2Vertexed *a,
 
       crank_rot_vec2_left (&seg, &ldir);
 
-      crank_gjk2_support (a, b, &brpos, &ldir, triangle + 2);
+      crank_gjk2_support (a, b, bpos, &ldir, triangle + 2);
 
 
       if (! crank_gjk_contains_zero (crank_vec_float2_dot (triangle + 0, &ldir),
@@ -471,18 +461,12 @@ crank_epa2      (CrankShape2Vertexed *a,
   CrankVecFloat2 seg;
   gfloat crs;
 
-  CrankTrans2   brpos;
-
   GArray *poly_array;
 
   // Check convex
   if (! (crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(a)) &&
          crank_shape2_finite_is_convex (CRANK_SHAPE2_FINITE(b))))
     return NAN;
-
-
-  // Gets position.
-  crank_shape2_get_rel_position ((CrankShape2*)a, bpos, (CrankShape2*)b, &brpos);
 
 
   // Prepare simplex polygon.
@@ -540,7 +524,7 @@ crank_epa2      (CrankShape2Vertexed *a,
       // Expand polygon
       CrankVecFloat2 sup;
 
-      crank_gjk2_support (a, b, &brpos, &right, &sup);
+      crank_gjk2_support (a, b, bpos, &right, &sup);
 
       if (ABS (crank_vec_float2_dot (&right, &sup) - pene) < 0.0001)
         {
