@@ -2275,14 +2275,6 @@ crank_shape2_cpolygon_get_type
 <FILE>crankshape3</FILE>
 CrankShape3
 CrankShape3Class
-crank_shape3_get_position
-crank_shape3_set_position
-crank_shape3_get_pos_trans
-crank_shape3_set_pos_trans
-crank_shape3_get_pos_rot
-crank_shape3_set_pos_rot
-crank_shape3_get_pos_scl
-crank_shape3_set_pos_scl
 crank_shape3_contains
 crank_shape3_finitize
 <SUBSECTION Standard>

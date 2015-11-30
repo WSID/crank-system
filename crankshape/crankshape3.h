@@ -90,38 +90,6 @@ struct _CrankShape3Class {
 
 
 
-
-
-//////// Property getter / setters /////////////////////////////////////////////
-
-void                    crank_shape3_get_position      (CrankShape3    *shape,
-                                                        CrankTrans3    *position);
-
-void                    crank_shape3_set_position      (CrankShape3    *shape,
-                                                        CrankTrans3    *position);
-
-
-void                    crank_shape3_get_pos_trans     (CrankShape3    *shape,
-                                                        CrankVecFloat3 *trans);
-
-void                    crank_shape3_set_pos_trans     (CrankShape3    *shape,
-                                                        CrankVecFloat3 *trans);
-
-
-void                    crank_shape3_get_pos_rot       (CrankShape3    *shape,
-                                                        CrankQuatFloat *rot);
-
-void                    crank_shape3_set_pos_rot       (CrankShape3    *shape,
-                                                        CrankQuatFloat *rot);
-
-
-gfloat                  crank_shape3_get_pos_scl       (CrankShape3    *shape);
-
-void                    crank_shape3_set_pos_scl       (CrankShape3    *shape,
-                                                        gfloat          scl);
-
-
-
 //////// Geometric stuff ///////////////////////////////////////////////////////
 
 gboolean                crank_shape3_contains          (CrankShape3    *shape,
