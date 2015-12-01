@@ -31,7 +31,7 @@
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
-#include "crankshape3polyhedron.h"
+#include "crankshape3vertexed.h"
 
 G_BEGIN_DECLS
 //////// Type Declaration //////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ struct _CrankShape3IRoundInterface
   GTypeInterface _parent;
 
   /*< public >*/
-  CrankShape3Polyhedron* (*get_inner_shape) (CrankShape3IRound *iround);
+  CrankShape3Vertexed* (*get_inner_shape) (CrankShape3IRound *iround);
 
   gfloat              (*get_round_radius) (CrankShape3IRound *iround);
 
@@ -72,7 +72,7 @@ struct _CrankShape3IRoundInterface
 
 //////// Public functions //////////////////////////////////////////////////////
 
-CrankShape3Polyhedron* crank_shape3_iround_get_inner_shape (CrankShape3IRound *iround);
+CrankShape3Vertexed* crank_shape3_iround_get_inner_shape (CrankShape3IRound *iround);
 
 gfloat              crank_shape3_iround_get_round_radius (CrankShape3IRound *iround);
 

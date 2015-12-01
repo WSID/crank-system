@@ -26,7 +26,7 @@
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
-#include "crankshape3polyhedron.h"
+#include "crankshape3vertexed.h"
 #include "crankshape3iround.h"
 
 /**
@@ -58,7 +58,7 @@ crank_shape3_iround_default_init (CrankShape3IRoundInterface *i)
   g_object_interface_install_property (i,
                                        g_param_spec_object ("inner-shape", "inner-shape",
                                                             "Inner shape",
-                                                            CRANK_TYPE_SHAPE3_POLYHEDRON,
+                                                            CRANK_TYPE_SHAPE3_VERTEXED,
                                                             G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
   g_object_interface_install_property (i,
                                        g_param_spec_float  ("round-radius", "round-radius",
@@ -73,11 +73,11 @@ crank_shape3_iround_default_init (CrankShape3IRoundInterface *i)
  * crank_shape3_iround_get_inner_shape:
  * @iround: A Rounded shape.
  *
- * Gets inner polygonal shape of round shape.
+ * Gets inner shape of round shape.
  *
  * Returns: (transfer full): A Inner polygonal shape.
  */
-CrankShape3Polyhedron*
+CrankShape3Vertexed*
 crank_shape3_iround_get_inner_shape (CrankShape3IRound *iround)
 {
   CrankShape3IRoundInterface *i = CRANK_SHAPE3_IROUND_GET_IFACE (iround);
