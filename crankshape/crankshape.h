@@ -46,6 +46,7 @@
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
+#include "crankshape3vertexed.h"
 #include "crankshape3polyhedron.h"
 #include "crankshape3iround.h"
 
