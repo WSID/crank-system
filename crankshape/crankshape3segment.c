@@ -65,50 +65,50 @@ static gboolean crank_shape3_segment_is_convex (CrankShape3Finite *shape);
 static gfloat crank_shape3_segment_get_bound_radius (CrankShape3Finite *shape);
 
 
-static guint crank_shape3_segment_get_nvertices (CrankShape3Polyhedron *shape);
+static guint crank_shape3_segment_get_nvertices (CrankShape3Vertexed *shape);
 
-static guint crank_shape3_segment_get_nedges (CrankShape3Polyhedron *shape);
+static guint crank_shape3_segment_get_nedges (CrankShape3Vertexed *shape);
 
-static guint crank_shape3_segment_get_nfaces (CrankShape3Polyhedron *shape);
+static guint crank_shape3_segment_get_nfaces (CrankShape3Vertexed *shape);
 
 
-static void crank_shape3_segment_get_vertex_pos (CrankShape3Polyhedron *shape,
+static void crank_shape3_segment_get_vertex_pos (CrankShape3Vertexed *shape,
                                                 const guint            vid,
                                                 CrankVecFloat3        *pos);
 
-static guint *crank_shape3_segment_get_vertex_edges (CrankShape3Polyhedron *shape,
+static guint *crank_shape3_segment_get_vertex_edges (CrankShape3Vertexed *shape,
                                                    const guint            vid,
                                                    guint                 *neids);
 
-static guint *crank_shape3_segment_get_vertex_faces (CrankShape3Polyhedron *shape,
+static guint *crank_shape3_segment_get_vertex_faces (CrankShape3Vertexed *shape,
                                                    const guint            vid,
                                                    guint                 *nfids);
 
 
-static void crank_shape3_segment_get_edge_vertices (CrankShape3Polyhedron *shape,
+static void crank_shape3_segment_get_edge_vertices (CrankShape3Vertexed *shape,
                                                   const guint            eid,
                                                   guint                 *vids);
 
-static void crank_shape3_segment_get_edge_faces (CrankShape3Polyhedron *shape,
+static void crank_shape3_segment_get_edge_faces (CrankShape3Vertexed *shape,
                                                const guint            eid,
                                                guint                 *fids);
 
-static guint *crank_shape3_segment_get_face_vertices (CrankShape3Polyhedron *shape,
+static guint *crank_shape3_segment_get_face_vertices (CrankShape3Vertexed *shape,
                                                     const guint            fid,
                                                     guint                 *nvids);
 
-static guint *crank_shape3_segment_get_face_edges (CrankShape3Polyhedron *shape,
+static guint *crank_shape3_segment_get_face_edges (CrankShape3Vertexed *shape,
                                                  const guint            fid,
                                                  guint                 *neids);
 
-static void crank_shape3_segment_get_face_normal (CrankShape3Polyhedron *shape,
+static void crank_shape3_segment_get_face_normal (CrankShape3Vertexed *shape,
                                                 const guint            fid,
                                                 CrankVecFloat3        *nor);;
 
-static guint crank_shape3_segment_get_farthest_vertex (CrankShape3Polyhedron *shape,
+static guint crank_shape3_segment_get_farthest_vertex (CrankShape3Vertexed *shape,
                                                     CrankVecFloat3        *dir);
 
-static guint crank_shape3_segment_get_normal_face (CrankShape3Polyhedron *shape,
+static guint crank_shape3_segment_get_normal_face (CrankShape3Vertexed *shape,
                                                 CrankVecFloat3        *nor);
 
 
@@ -125,14 +125,14 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 //////// Type Definition ///////////////////////////////////////////////////////
 
 struct _CrankShape3Segment {
-  CrankShape3Polyhedron _parent;
+  CrankShape3Vertexed _parent;
 
   gfloat  hlength;
 };
 
 G_DEFINE_TYPE (CrankShape3Segment,
                crank_shape3_segment,
-               CRANK_TYPE_SHAPE3_POLYHEDRON)
+               CRANK_TYPE_SHAPE3_VERTEXED)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ static void crank_shape3_segment_class_init (CrankShape3SegmentClass *c)
   GObjectClass *c_gobject;
   CrankShape3Class *c_shape3;
   CrankShape3FiniteClass *c_shape3finite;
-  CrankShape3PolyhedronClass *c_shape3polyhedron;
+  CrankShape3VertexedClass *c_shape3vertexed;
 
   c_gobject = G_OBJECT_CLASS (c);
 
@@ -168,19 +168,17 @@ static void crank_shape3_segment_class_init (CrankShape3SegmentClass *c)
   c_shape3finite->is_convex = crank_shape3_segment_is_convex;
   c_shape3finite->get_bound_radius = crank_shape3_segment_get_bound_radius;
 
-  c_shape3polyhedron = CRANK_SHAPE3_POLYHEDRON_CLASS (c);
+  c_shape3vertexed = CRANK_SHAPE3_VERTEXED_CLASS (c);
 
-  c_shape3polyhedron->get_nvertices = crank_shape3_segment_get_nvertices;
-  c_shape3polyhedron->get_nedges = crank_shape3_segment_get_nedges;
-  c_shape3polyhedron->get_nfaces = crank_shape3_segment_get_nfaces;
-  c_shape3polyhedron->get_vertex_pos = crank_shape3_segment_get_vertex_pos;
-  c_shape3polyhedron->get_vertex_edges = crank_shape3_segment_get_vertex_edges;
-  c_shape3polyhedron->get_vertex_faces = crank_shape3_segment_get_vertex_faces;
-  c_shape3polyhedron->get_face_vertices = crank_shape3_segment_get_face_vertices;
-  c_shape3polyhedron->get_face_edges = crank_shape3_segment_get_face_edges;
-  c_shape3polyhedron->get_face_normal = crank_shape3_segment_get_face_normal;
-  c_shape3polyhedron->get_farthest_vertex = crank_shape3_segment_get_farthest_vertex;
-  c_shape3polyhedron->get_face_normal = crank_shape3_segment_get_face_normal;
+  c_shape3vertexed->get_nvertices = crank_shape3_segment_get_nvertices;
+  c_shape3vertexed->get_nedges = crank_shape3_segment_get_nedges;
+  c_shape3vertexed->get_nfaces = crank_shape3_segment_get_nfaces;
+  c_shape3vertexed->get_vertex_pos = crank_shape3_segment_get_vertex_pos;
+  c_shape3vertexed->get_vertex_edges = crank_shape3_segment_get_vertex_edges;
+  c_shape3vertexed->get_vertex_faces = crank_shape3_segment_get_vertex_faces;
+  c_shape3vertexed->get_face_vertices = crank_shape3_segment_get_face_vertices;
+  c_shape3vertexed->get_face_edges = crank_shape3_segment_get_face_edges;
+  c_shape3vertexed->get_farthest_vertex = crank_shape3_segment_get_farthest_vertex;
 }
 
 //////// GObject ///////////////////////////////////////////////////////////////
@@ -254,28 +252,28 @@ crank_shape3_segment_get_bound_radius (CrankShape3Finite *shape)
 }
 
 
-//////// CrankShape3Polyhedron /////////////////////////////////////////////////
+//////// CrankShape3Vertexed /////////////////////////////////////////////////
 
 static guint
-crank_shape3_segment_get_nvertices (CrankShape3Polyhedron *shape)
+crank_shape3_segment_get_nvertices (CrankShape3Vertexed *shape)
 {
   return 2;
 }
 
 static guint
-crank_shape3_segment_get_nedges (CrankShape3Polyhedron *shape)
+crank_shape3_segment_get_nedges (CrankShape3Vertexed *shape)
 {
   return 1;
 }
 
 static guint
-crank_shape3_segment_get_nfaces (CrankShape3Polyhedron *shape)
+crank_shape3_segment_get_nfaces (CrankShape3Vertexed *shape)
 {
   return 0;
 }
 
 static void
-crank_shape3_segment_get_vertex_pos (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_vertex_pos (CrankShape3Vertexed *shape,
                                    const guint            vid,
                                    CrankVecFloat3        *pos)
 {
@@ -296,7 +294,7 @@ crank_shape3_segment_get_vertex_pos (CrankShape3Polyhedron *shape,
 }
 
 static guint*
-crank_shape3_segment_get_vertex_edges (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_vertex_edges (CrankShape3Vertexed *shape,
                                      const guint            vid,
                                      guint                 *neids)
 {
@@ -314,7 +312,7 @@ crank_shape3_segment_get_vertex_edges (CrankShape3Polyhedron *shape,
 }
 
 static guint*
-crank_shape3_segment_get_vertex_faces (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_vertex_faces (CrankShape3Vertexed *shape,
                                      const guint            vid,
                                      guint                 *nfids)
 {
@@ -324,7 +322,7 @@ crank_shape3_segment_get_vertex_faces (CrankShape3Polyhedron *shape,
 
 
 static void
-crank_shape3_segment_get_edge_vertices (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_edge_vertices (CrankShape3Vertexed *shape,
                                       const guint            eid,
                                       guint                 *vids)
 {
@@ -340,7 +338,7 @@ crank_shape3_segment_get_edge_vertices (CrankShape3Polyhedron *shape,
 }
 
 static void
-crank_shape3_segment_get_edge_faces (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_edge_faces (CrankShape3Vertexed *shape,
                                    const guint            eid,
                                    guint                 *fids)
 {
@@ -348,7 +346,7 @@ crank_shape3_segment_get_edge_faces (CrankShape3Polyhedron *shape,
 }
 
 static guint*
-crank_shape3_segment_get_face_vertices (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_face_vertices (CrankShape3Vertexed *shape,
                                       const guint            fid,
                                       guint                 *nvids)
 {
@@ -358,7 +356,7 @@ crank_shape3_segment_get_face_vertices (CrankShape3Polyhedron *shape,
 }
 
 static guint*
-crank_shape3_segment_get_face_edges (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_face_edges (CrankShape3Vertexed *shape,
                                    const guint            fid,
                                    guint                 *neids)
 {
@@ -367,29 +365,12 @@ crank_shape3_segment_get_face_edges (CrankShape3Polyhedron *shape,
   return NULL;
 }
 
-static void
-crank_shape3_segment_get_face_normal (CrankShape3Polyhedron *shape,
-                                    const guint            fid,
-                                    CrankVecFloat3        *nor)
-{
-  g_warning ("This shape has no face.");
-}
-
 static guint
-crank_shape3_segment_get_farthest_vertex (CrankShape3Polyhedron *shape,
+crank_shape3_segment_get_farthest_vertex (CrankShape3Vertexed *shape,
                                         CrankVecFloat3        *dir)
 {
   return (dir->x < 0) ? 1 : 0;
 }
-
-static guint
-crank_shape3_segment_get_normal_face (CrankShape3Polyhedron *shape,
-                                    CrankVecFloat3        *nor)
-{
-  g_warning ("This shape has no face.");
-  return 0;
-}
-
 
 
 //////// Constructor ///////////////////////////////////////////////////////////
