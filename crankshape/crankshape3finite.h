@@ -37,7 +37,7 @@
 G_BEGIN_DECLS
 
 //////// Forward declarations //////////////////////////////////////////////////
-typedef struct _CrankShape3Polyhedron CrankShape3Polyhedron;
+typedef struct _CrankShape3Vertexed CrankShape3Vertexed;
 
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ struct _CrankShape3FiniteClass {
 
 
   /*< public >*/
-  CrankShape3Polyhedron *(*approximate_polyhedron)      (CrankShape3Finite      *shape);
+  CrankShape3Vertexed *(*approximate_vertexed)      (CrankShape3Finite      *shape);
 
   /*< private >*/
   gpointer      _PADDING5;
@@ -96,7 +96,7 @@ gboolean        crank_shape3_finite_is_convex  (CrankShape3Finite              *
 
 gfloat          crank_shape3_finite_get_bound_radius (CrankShape3Finite        *shape);
 
-CrankShape3Polyhedron *crank_shape3_finite_approximate_polyhedron (CrankShape3Finite *shape);
+CrankShape3Vertexed *crank_shape3_finite_approximate_vertexed (CrankShape3Finite *shape);
 
 
 G_END_DECLS

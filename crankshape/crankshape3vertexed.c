@@ -49,6 +49,8 @@ static void  crank_shape3_vertexed_get_property (GObject    *object,
                                                     GValue     *value,
                                                     GParamSpec *pspec);
 
+static CrankShape3Vertexed* crank_shape3_vertexed_approximate_vertexed (CrankShape3Finite *shape);
+
 static CrankShape2Polygon* crank_shape3_vertexed_def_get_face_as_shape (CrankShape3Vertexed *shape,
                                                                         const guint          fid,
                                                                         CrankTrans3         *pos);
@@ -122,6 +124,11 @@ crank_shape3_vertexed_class_init (CrankShape3VertexedClass *c)
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
 
+  c_shape3finite = CRANK_SHAPE3_FINITE_CLASS (c);
+
+  c_shape3finite->approximate_vertexed = crank_shape3_vertexed_approximate_vertexed;
+
+
   c->get_face_as_shape = crank_shape3_vertexed_def_get_face_as_shape;
   c->get_farthest_vertex = crank_shape3_vertexed_def_get_farthest_vertex;
 }
@@ -156,8 +163,17 @@ crank_shape3_vertexed_get_property (GObject    *object,
 }
 
 
+//////// CrankShape3Finite /////////////////////////////////////////////////////
+
+static CrankShape3Vertexed*
+crank_shape3_vertexed_approximate_vertexed (CrankShape3Finite *shape)
+{
+  return (CrankShape3Vertexed*) g_object_ref (shape);
+}
+
+
 //////// Default Implementations ///////////////////////////////////////////////
-//
+
 static CrankShape2Polygon*
 crank_shape3_vertexed_def_get_face_as_shape (CrankShape3Vertexed *shape,
                                                 const guint             fid,
