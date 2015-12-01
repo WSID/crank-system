@@ -32,7 +32,7 @@
 #include "crankbox.h"
 #include "crankshape3.h"
 #include "crankshape3finite.h"
-#include "crankshape3polyhedron.h"
+#include "crankshape3vertexed.h"
 
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (CrankShape3Point,
                       crank_shape3_point,
                       CRANK, SHAPE3_POINT,
-                      CrankShape3Polyhedron)
+                      CrankShape3Vertexed)
 
 
 //////// Constructors //////////////////////////////////////////////////////////
