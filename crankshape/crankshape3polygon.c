@@ -86,6 +86,9 @@ static void crank_shape3_polygon_get_edge_faces (CrankShape3Vertexed *shape,
                                                  const guint          eid,
                                                  guint               *fids);
 
+static CrankWinding crank_shape3_polygon_get_face_winding (CrankShape3Vertexed *shape,
+                                                           const guint          fid);
+
 static guint *crank_shape3_polygon_get_face_vertices (CrankShape3Vertexed *shape,
                                                       const guint          fid,
                                                       guint               *nvids);
@@ -168,6 +171,7 @@ crank_shape3_polygon_class_init (CrankShape3PolygonClass *c)
   c_shape3vertexed->get_vertex_faces = crank_shape3_polygon_get_vertex_faces;
   c_shape3vertexed->get_edge_vertices = crank_shape3_polygon_get_edge_vertices;
   c_shape3vertexed->get_edge_faces = crank_shape3_polygon_get_edge_faces;
+  c_shape3vertexed->get_face_winding = crank_shape3_polygon_get_face_winding;
   c_shape3vertexed->get_face_vertices = crank_shape3_polygon_get_face_vertices;
   c_shape3vertexed->get_face_edges = crank_shape3_polygon_get_face_edges;
   c_shape3vertexed->get_face_as_shape = crank_shape3_polygon_get_face_as_shape;
@@ -336,6 +340,21 @@ crank_shape3_polygon_get_face_vertices (CrankShape3Vertexed *shape,
 
   *nvids = n;
   return res;
+}
+
+static CrankWinding
+crank_shape3_polygon_get_face_winding (CrankShape3Vertexed *shape,
+                                       const guint          fid)
+{
+  CrankShape3Polygon *self = (CrankShape3Polygon*) shape;
+
+  if (fid != 0)
+    {
+      g_warning ("Invalid Face ID: %u", fid);
+      return CRANK_WINDING_NONE;
+    }
+
+  return crank_shape3_polygon_get_winding (self);
 }
 
 static guint*

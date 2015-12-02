@@ -32,6 +32,7 @@
 #include "crankbase.h"
 
 #include "crankbox.h"
+#include "crankshapemisc.h"
 #include "crankshape2.h"
 #include "crankshape3.h"
 #include "crankshape3finite.h"
@@ -55,6 +56,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape3Vertexed,
  * @get_vertex_faces: Slot for crank_shape3_vertexed_get_vertex_faces()
  * @get_edge_vertices: Slot for crank_shape3_vertexed_get_edge_vertices()
  * @get_edge_faces: Slot for crank_shape3_vertexed_get_edge_faces()
+ * @get_face_winding: Slot for crank_shape3_vertexed_get_face_winding()
  * @get_face_vertices: Slot for crank_shape3_vertexed_get_face_vertices()
  * @get_face_edges: Slot for crank_shape3_vertexed_get_face_edges()
  * @get_face_as_shape: Slot for crank_shape3_vertexed_get_face_as_shape()
@@ -105,6 +107,9 @@ struct _CrankShape3VertexedClass {
 
 
   /*< public >*/
+  CrankWinding (*get_face_winding) (CrankShape3Vertexed *shape,
+                                    const guint          fid);
+
   guint*(*get_face_vertices)(CrankShape3Vertexed *shape,
                              const guint             fid,
                              guint                  *nvids);
@@ -116,10 +121,6 @@ struct _CrankShape3VertexedClass {
   CrankShape2Polygon* (*get_face_as_shape) (CrankShape3Vertexed *shape,
                                             const guint             fid,
                                             CrankTrans3            *pos);
-
-  /*< private >*/
-  gpointer _PADDING15;
-
 
   /*< public >*/
   guint (*get_farthest_vertex)(CrankShape3Vertexed *shape,
@@ -168,6 +169,9 @@ void crank_shape3_vertexed_get_edge_faces                      (CrankShape3Verte
                                                                 guint               *fids);
 
 //////// Face Property /////////////////////////////////////////////////////////
+
+CrankWinding crank_shape3_vertexed_get_face_winding            (CrankShape3Vertexed *shape,
+                                                                const guint          fid);
 
 guint *crank_shape3_vertexed_get_face_vertices                 (CrankShape3Vertexed *shape,
                                                                 const guint          fid,

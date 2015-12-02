@@ -27,6 +27,7 @@
 #include "crankbase.h"
 
 #include "crankbox.h"
+#include "crankshapemisc.h"
 #include "crankshape3.h"
 #include "crankshape3finite.h"
 #include "crankshape3vertexed.h"
@@ -198,8 +199,8 @@ crank_shape3_vertexed_approximate_vertexed (CrankShape3Finite *shape)
 
 static CrankShape2Polygon*
 crank_shape3_vertexed_def_get_face_as_shape (CrankShape3Vertexed *shape,
-                                                const guint             fid,
-                                                CrankTrans3            *pos)
+                                             const guint          fid,
+                                             CrankTrans3         *pos)
 {
   return NULL;
 }
@@ -401,6 +402,24 @@ crank_shape3_vertexed_get_edge_faces (CrankShape3Vertexed *shape,
   CrankShape3VertexedClass *c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
 
   return c->get_edge_faces (shape, eid, fids);
+}
+
+/**
+ * crank_shape3_vertexed_get_face_winding:
+ * @shape: A Shape.
+ * @fid: Face ID.
+ *
+ * Gets winding of face.
+ *
+ * Returns: winding of face.
+ */
+CrankWinding
+crank_shape3_vertexed_get_face_winding (CrankShape3Vertexed *shape,
+                                        const guint          fid)
+{
+  CrankShape3VertexedClass *c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+
+  return c->get_face_winding (shape, fid);
 }
 
 /**
