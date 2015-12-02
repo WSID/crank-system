@@ -52,6 +52,11 @@
 
 //////// List of virtual functions /////////////////////////////////////////////
 
+static void crank_shape3_polygon_get_property (GObject    *object,
+                                               guint       prop_id,
+                                               GValue     *value,
+                                               GParamSpec *pspec);
+
 static gboolean crank_shape3_polygon_is_convex (CrankShape3Finite *shape);
 
 
@@ -105,6 +110,17 @@ static void crank_shape3_polygon_def_get_edge_normal (CrankShape3Polygon *shape,
 static guint crank_shape3_polygon_def_get_normal_edge (CrankShape3Polygon *shape,
                                                        CrankVecFloat2     *normal);
 
+
+//////// Properties and Signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_WINDING,
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 G_DEFINE_ABSTRACT_TYPE (CrankShape3Polygon,
@@ -121,8 +137,21 @@ crank_shape3_polygon_init (CrankShape3Polygon *self)
 static void
 crank_shape3_polygon_class_init (CrankShape3PolygonClass *c)
 {
+  GObjectClass *c_gobject;
   CrankShape3FiniteClass *c_shape3finite;
   CrankShape3VertexedClass *c_shape3vertexed;
+
+  c_gobject = G_OBJECT_CLASS (c);
+
+  c_gobject->get_property = crank_shape3_polygon_get_property;
+
+  pspecs[PROP_WINDING] = g_param_spec_enum (
+      "winding", "winding", "winding of vertices list",
+      CRANK_TYPE_WINDING, CRANK_WINDING_NONE,
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
 
   c_shape3finite = CRANK_SHAPE3_FINITE_CLASS (c);
 
@@ -148,6 +177,28 @@ crank_shape3_polygon_class_init (CrankShape3PolygonClass *c)
   c->get_edge_normal = crank_shape3_polygon_def_get_edge_normal;
   c->get_normal_edge = crank_shape3_polygon_def_get_normal_edge;
 }
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_shape3_polygon_get_property (GObject    *object,
+                                   guint       prop_id,
+                                   GValue     *value,
+                                   GParamSpec *pspec)
+{
+  CrankShape3Polygon *self = (CrankShape3Polygon*)object;
+
+  switch (prop_id)
+    {
+    case PROP_WINDING:
+      g_value_set_enum (value, crank_shape3_polygon_get_winding (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
 
 //////// CrankShape3Finite /////////////////////////////////////////////////////
 
@@ -430,6 +481,16 @@ crank_shape3_polygon_def_get_normal_edge (CrankShape3Polygon *shape,
   dot_b = crank_vec_float2_dot (&seg_b, &vp_p) / crank_vec_float2_get_magn (&seg_b);
 
   return (dot_a < dot_b) ? vert_p : vert;
+}
+
+//////// Shape Properties //////////////////////////////////////////////////////
+
+CrankWinding
+crank_shape3_polygon_get_winding (CrankShape3Polygon *shape)
+{
+  CrankShape3PolygonClass *c = CRANK_SHAPE3_POLYGON_GET_CLASS (shape);
+
+  return c->get_winding (shape);
 }
 
 

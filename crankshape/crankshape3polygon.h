@@ -51,6 +51,8 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape3Polygon,
 struct _CrankShape3PolygonClass {
   CrankShape3VertexedClass _parent;
 
+  CrankWinding (*get_winding)    (CrankShape3Polygon *shape);
+
   void    (*get_vertex_pos2)     (CrankShape3Polygon *shape,
                                   guint               vid,
                                   CrankVecFloat2     *pos);
@@ -62,6 +64,12 @@ struct _CrankShape3PolygonClass {
   guint   (*get_normal_edge)     (CrankShape3Polygon *shape,
                                   CrankVecFloat2     *normal);
 };
+
+
+//////// Shape Properties //////////////////////////////////////////////////////
+
+CrankWinding crank_shape3_polygon_get_winding (CrankShape3Polygon *shape);
+
 
 //////// VFunc Wrappers ////////////////////////////////////////////////////////
 
