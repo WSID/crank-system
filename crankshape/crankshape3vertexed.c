@@ -39,7 +39,29 @@
  * @stability: Unstable
  * @include: crankshape.h
  *
- * Represents vertex based shapes..
+ * Represents vertex based shapes.
+ *
+ * # Abstract Functions
+ *
+ * * #CrankShape3VertexedClass.get_dimension()
+ * * #CrankShape3VertexedClass.get_nvertices()
+ * * #CrankShape3VertexedClass.get_nedges()
+ * * #CrankShape3VertexedClass.get_nfaces()
+ * * #CrankShape3VertexedClass.get_edge_vertices()
+ * * #CrankShape3VertexedClass.get_edge_faces()
+ * * #CrankShape3VertexedClass.get_face_vertices()
+ * * #CrankShape3VertexedClass.get_face_edges()
+ *
+ * # Abstract Functions left
+ *
+ * * #CrankShape3FiniteClass.is_convex()
+ * * #CrankShape3FiniteClass.get_bound_radius()
+ * * #CrankShape3Class.contains()
+ *
+ * # Virtual Functions
+ *
+ * * #CrankShape3VertexedClass.get_face_as_shape()
+ * * CrankShape3VertexedClass.get_farthest_vertex()
  */
 
 //////// List of virtual functions /////////////////////////////////////////////

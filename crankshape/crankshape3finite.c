@@ -41,6 +41,10 @@
  * * #CrankShape3FiniteClass.is_convex()
  * * #CrankShape3FiniteClass.get_bound_radius()
  *
+ * # Abstract Functions left
+ *
+ * * #CrankShape3Class.contains()
+ *
  * # Default implementation from parent classes.
  *
  * * #CrankShape3Class.finitize()
