@@ -30,6 +30,7 @@
 #include "crankbox.h"
 #include "cranktrans.h"
 #include "crankrotation.h"
+#include "crankshapemisc.h"
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
@@ -83,8 +84,7 @@ static void     crank_shape2_triangle_get_edge_normal (CrankShape2Polygon *shape
 struct _CrankShape2Triangle {
   CrankShape2Polygon _parent;
 
-  gint          wind;
-
+  CrankWinding   wind;
   CrankVecFloat2 vertices[3];
 };
 
@@ -138,15 +138,7 @@ crank_shape2_triangle_contains (CrankShape2    *shape,
 {
   CrankShape2Triangle *tri = CRANK_SHAPE2_TRIANGLE (shape);
 
-  CrankVecFloat2 sub[3];
-
-  crank_vec_float2_sub (tri->vertices + 0, point, sub + 0);
-  crank_vec_float2_sub (tri->vertices + 1, point, sub + 1);
-  crank_vec_float2_sub (tri->vertices + 2, point, sub + 2);
-
-  return (crank_vec_float2_crs (tri->vertices + 0, tri->vertices + 1) * tri->wind > 0) &&
-         (crank_vec_float2_crs (tri->vertices + 1, tri->vertices + 2) * tri->wind > 0) &&
-         (crank_vec_float2_crs (tri->vertices + 2, tri->vertices + 0) * tri->wind > 0);
+  return crank_tri_contains (tri->vertices, point);
 }
 
 
@@ -249,8 +241,6 @@ CrankShape2Triangle*
 crank_shape2_triangle_new (CrankVecFloat2 *vertices)
 {
   CrankShape2Triangle *self;
-  CrankVecFloat2 seg01;
-  CrankVecFloat2 seg12;
   gfloat crs;
 
   self = (CrankShape2Triangle*) g_object_new (CRANK_TYPE_SHAPE2_TRIANGLE,
@@ -260,13 +250,7 @@ crank_shape2_triangle_new (CrankVecFloat2 *vertices)
   crank_vec_float2_copy (vertices + 1, self->vertices + 1);
   crank_vec_float2_copy (vertices + 2, self->vertices + 2);
 
-
-  crank_vec_float2_sub (vertices + 1, vertices + 0, &seg01);
-  crank_vec_float2_sub (vertices + 2, vertices + 1, &seg12);
-
-  crs = crank_vec_float2_crs (&seg01, &seg12);
-  self->wind = (gint) (0 < crs) - (gint) (crs < 0);
-
+  self->wind = crank_winding_from_point_arr (self->vertices);
   return self;
 }
 
@@ -291,6 +275,6 @@ crank_shape2_triangle_new_regular (const gfloat radius)
   crank_vec_float2_init (self->vertices + 1, -0.866025404f * radius, 0.5f * radius);
   crank_vec_float2_init (self->vertices + 2,  0.866025404f * radius, 0.5f * radius);
 
-  self->wind = 1;
+  self->wind = CRANK_WINDING_CCW;
   return self;
 }
