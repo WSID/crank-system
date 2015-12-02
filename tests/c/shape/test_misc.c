@@ -30,6 +30,8 @@ static void     test_winding (void);
 
 static void     test_seg_intersect (void);
 
+static void     test_tri_bcoord (void);
+
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -40,6 +42,8 @@ gint main (gint argc, gchar **argv)
   g_test_add_func ("/crank/shape/misc/winding", test_winding);
 
   g_test_add_func ("/crank/shape/misc/seg/intersect", test_seg_intersect);
+
+  g_test_add_func ("/crank/shape/misc/tri/bcoord", test_tri_bcoord);
 
   return g_test_run ();
 }
@@ -94,4 +98,24 @@ test_seg_intersect (void)
   g_assert (crank_seg_intersect (&aa, &ab, &ba, &bb, &i));
 
   crank_assert_eq_vecfloat2_imm (&i, 3, (11.0f / 3.0f));
+}
+
+static void
+test_tri_bcoord (void)
+{
+  CrankVecFloat2 tri[3];
+  CrankVecFloat2 pt;
+  CrankVecFloat3 bcoord;
+
+  crank_vec_float2_init (tri + 0, 5, 4);
+  crank_vec_float2_init (tri + 1, 1, 2);
+  crank_vec_float2_init (tri + 2, 3, 6);
+
+  crank_vec_float2_init (&pt, 3, 4);
+  crank_tri_bcoord (tri, &pt, &bcoord);
+  crank_assert_eq_vecfloat3_imm (&bcoord, 0.3333f, 0.3333f, 0.3333f);
+
+  crank_vec_float2_init (&pt, 5, 12);
+  crank_tri_bcoord (tri, &pt, &bcoord);
+  crank_assert_eq_vecfloat3_imm (&bcoord, -0.3333f, -1.3333f, 2.6667f);
 }

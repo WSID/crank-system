@@ -174,3 +174,55 @@ crank_seg_intersect (CrankVecFloat2 *aa,
              ((ba->x - i->x) * (bb->x - i->x) < 0);
     }
 }
+
+/**
+ * crank_tri_bcoord:
+ * @tri: (array fixed-size=3): A Triangle points.
+ * @pt: A Point.
+ * @bcoord: (out): A Barycentric coordination of @pt.
+ *
+ * Gets barycentric coordination of @pt in @tri.
+ */
+void
+crank_tri_bcoord (CrankVecFloat2 *tri,
+                  CrankVecFloat2 *pt,
+                  CrankVecFloat3 *bcoord)
+{
+  CrankVecFloat2 v2;
+  CrankVecFloat2 v3;
+  CrankVecFloat2 vp;
+  gfloat crs_v2v3;
+
+  crank_vec_float2_sub (tri + 1, tri + 0, &v2);
+  crank_vec_float2_sub (tri + 2, tri + 0, &v3);
+  crank_vec_float2_sub (pt, tri + 0, &vp);
+  crs_v2v3 = crank_vec_float2_crs (&v2, &v3);
+
+  bcoord->y = crank_vec_float2_crs (&vp, &v3) / crs_v2v3;
+  bcoord->z = crank_vec_float2_crs (&v2, &vp) / crs_v2v3;
+  bcoord->x = 1 - bcoord->y - bcoord->z;
+
+  g_message ("v2: %f, %f", v2.x, v2.y);
+  g_message ("v3: %f, %f", v3.x, v3.y);
+  g_message ("vp: %f, %f", vp.x, vp.y);
+  g_message ("crs: %f", crs_v2v3);
+}
+
+/**
+ * crank_tri_contains:
+ * @tri: (array fixed-size=3): A Triangle points.
+ * @pt: A Point to check.
+ *
+ * Checks @pt is in a triangle defined by @tri.
+ *
+ * Returns: Whether @pt is in @tri.
+ */
+gboolean
+crank_tri_contains (CrankVecFloat2 *tri,
+                    CrankVecFloat2 *pt)
+{
+  CrankVecFloat3 bcoord;
+  crank_tri_bcoord (tri, pt, &bcoord);
+
+  return (0 < bcoord.x) && (0 < bcoord.y) && (0 < bcoord.z);
+}

@@ -85,6 +85,24 @@ class TestMisc (unittest.TestCase):
         self.assertFloat (i.x, 3)
         self.assertFloat (i.y, (11.0 / 3.0))
 
+    def test_tri_bcoord (self):
+        tri = [ CrankBase.VecFloat2.init (5, 4),
+                CrankBase.VecFloat2.init (1, 2),
+                CrankBase.VecFloat2.init (3, 6) ]
+
+        pt = CrankBase.VecFloat2.init (3, 4)
+        bcoord = CrankShape.tri_bcoord (tri, pt);
+
+        self.assertFloat (bcoord.x, 0.3333);
+        self.assertFloat (bcoord.y, 0.3333);
+        self.assertFloat (bcoord.z, 0.3333);
+
+        pt = CrankBase.VecFloat2.init (5, 12)
+        bcoord = CrankShape.tri_bcoord (tri, pt);
+
+        self.assertFloat (bcoord.x, -0.3333);
+        self.assertFloat (bcoord.y, -1.3333);
+        self.assertFloat (bcoord.z, 2.6667);
 
 if __name__ == '__main__':
     unittest.main ()

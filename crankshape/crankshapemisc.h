@@ -64,6 +64,13 @@ gboolean  crank_seg_intersect (CrankVecFloat2 *aa,
                                CrankVecFloat2 *bb,
                                CrankVecFloat2 *i);
 
+void      crank_tri_bcoord   (CrankVecFloat2 *tri,
+                              CrankVecFloat2 *pt,
+                              CrankVecFloat3 *bcoord);
+
+gboolean  crank_tri_contains (CrankVecFloat2 *tri,
+                              CrankVecFloat2 *pt);
+
 
 G_END_DECLS
 

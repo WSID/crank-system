@@ -26,6 +26,8 @@ public int main (string[] args) {
 
 	GLib.Test.add_func ("/crank/shape/misc/seg/intersect", test_seg_intersect);
 
+	GLib.Test.add_func ("/crank/shape/misc/tri/bcoord", test_tri_bcoord);
+
 	return GLib.Test.run ();
 }
 
@@ -65,4 +67,19 @@ private void test_seg_intersect () {
 
     assert (Crank.seg_intersect (aa, ab, ba, bb, out i));
     Crank.assert_eq_vecfloat2_imm (i, 3, (11.0f / 3.0f));
+}
+
+private void test_tri_bcoord () {
+  Crank.VecFloat2 tri[3] = {
+      Crank.VecFloat2 (5, 4),
+      Crank.VecFloat2 (1, 2),
+      Crank.VecFloat2 (3, 6)
+  };
+
+  Crank.VecFloat3 bcoord;
+  bcoord = Crank.tri_bcoord (tri, {3, 4});
+  Crank.assert_eq_vecfloat3_imm (bcoord, 0.3333f, 0.3333f, 0.3333f);
+
+  bcoord = Crank.tri_bcoord (tri, {5, 12});
+  Crank.assert_eq_vecfloat3_imm (bcoord, -0.3333f, -1.3333f, 2.6667f);
 }
