@@ -69,6 +69,8 @@ static void     crank_shape2_triangle_get_vertex_pos (CrankShape2Vertexed *shape
                                                      CrankVecFloat2      *pos);
 
 // CrankShape2Polygon
+static CrankWinding crank_shape2_triangle_get_winding (CrankShape2Polygon *shape);
+
 static void     crank_shape2_triangle_get_edge_normal (CrankShape2Polygon *shape,
                                                        guint               eid,
                                                        CrankVecFloat2     *nor);
@@ -225,7 +227,13 @@ crank_shape2_triangle_get_edge_normal (CrankShape2Polygon *shape,
     }
 }
 
+static CrankWinding
+crank_shape2_triangle_get_winding (CrankShape2Polygon *shape)
+{
+  CrankShape2Triangle *tri = (CrankShape2Triangle*) shape;
 
+  return tri->wind;
+}
 
 //////// Constructor ///////////////////////////////////////////////////////////
 

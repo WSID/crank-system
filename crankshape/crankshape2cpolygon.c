@@ -66,6 +66,7 @@ static void crank_shape2_cpolygon_get_edge_normal (CrankShape2Polygon *shape,
                                                    guint               index,
                                                    CrankVecFloat2     *normal);
 
+static CrankWinding crank_shape2_cpolygon_get_winding (CrankShape2Polygon *shape);
 
 
 //////// Private functions /////////////////////////////////////////////////////
@@ -102,7 +103,7 @@ struct _CrankShape2CPolygon {
 
   // Winding cache
   gboolean        convex;
-  gint            winding;
+  CrankWinding    winding;
 };
 
 G_DEFINE_TYPE(CrankShape2CPolygon,
@@ -146,6 +147,7 @@ crank_shape2_cpolygon_class_init (CrankShape2CPolygonClass *c)
 
   c_shape2_polygon = CRANK_SHAPE2_POLYGON_CLASS (c);
 
+  c_shape2_polygon->get_winding = crank_shape2_cpolygon_get_winding;
   c_shape2_polygon->get_edge_normal = crank_shape2_cpolygon_get_edge_normal;
 }
 
@@ -229,6 +231,14 @@ crank_shape2_cpolygon_get_edge_normal (CrankShape2Polygon *shape,
 
   crank_vec_float2_copy (self->normals + index,
                          nor);
+}
+
+static CrankWinding
+crank_shape2_cpolygon_get_winding (CrankShape2Polygon *shape)
+{
+  CrankShape2CPolygon *self = (CrankShape2CPolygon*) shape;
+
+  return self->winding;
 }
 
 

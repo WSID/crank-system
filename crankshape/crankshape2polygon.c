@@ -41,13 +41,14 @@
  *
  * # Abstract Functions
  *
- * * #CrankShape2VertexedClass.get_nvertices()
- * * #CrankShape2VertexedClass.get_vertex_pos()
+ * #CrankShape2PolygonClass.get_winding()
  *
  * # Abstract Functions left
  *
  * * #CrankShape2Class.contains()
  * * #CrankShape2FiniteClass.get_bound_radius()
+ * * #CrankShape2VertexedClass.get_nvertices()
+ * * #CrankShape2VertexedClass.get_vertex_pos()
  *
  * # Virtual functions.
  *
@@ -61,6 +62,11 @@
  */
 
 //////// Virtual function implementations //////////////////////////////////////
+
+static void           crank_shape2_polygon_get_property (GObject    *shape,
+                                                         guint       prop_id,
+                                                         GValue     *value,
+                                                         GParamSpec *pspec);
 
 static gboolean       crank_shape2_polygon_is_convex (CrankShape2Finite *shape);
 
@@ -87,6 +93,17 @@ static void            crank_shape2_polygon_get_edge_normal_def (CrankShape2Poly
 static guint           crank_shape2_polygon_get_normal_edge_def   (CrankShape2Polygon *shape,
                                                                    CrankVecFloat2     *normal);
 
+//////// Properties and Signals ////////////////////////////////////////////////
+enum {
+  PROP_0,
+  PROP_WINDING,
+  PROP_COUNTS
+};
+
+static GParamSpec  *pspecs[PROP_COUNTS] = {NULL};
+
+
+
 //////// Type definition ///////////////////////////////////////////////////////
 
 G_DEFINE_ABSTRACT_TYPE (CrankShape2Polygon,
@@ -104,8 +121,21 @@ crank_shape2_polygon_init (CrankShape2Polygon *shape)
 void
 crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
 {
+  GObjectClass *c_gobject;
   CrankShape2FiniteClass *c_shape2_finite;
   CrankShape2VertexedClass *c_shape2_vertexed;
+
+  c_gobject = G_OBJECT_CLASS (c);
+
+  c_gobject->get_property = crank_shape2_polygon_get_property;
+
+  pspecs[PROP_WINDING] = g_param_spec_enum (
+      "winding", "winding", "Winding of wertices list",
+      CRANK_TYPE_WINDING, CRANK_WINDING_NONE,
+      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
 
   c_shape2_finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
@@ -123,6 +153,28 @@ crank_shape2_polygon_class_init (CrankShape2PolygonClass *c)
   c->get_edge_normal = crank_shape2_polygon_get_edge_normal_def;
   c->get_normal_edge = crank_shape2_polygon_get_normal_edge_def;
 }
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_shape2_polygon_get_property (GObject    *object,
+                                   guint       prop_id,
+                                   GValue     *value,
+                                   GParamSpec *pspec)
+{
+  CrankShape2Polygon *self = (CrankShape2Polygon*)object;
+
+  switch (prop_id)
+    {
+    case PROP_WINDING:
+      g_value_set_enum (value, crank_shape2_polygon_get_winding (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
 
 //////// CrankShape2Finite /////////////////////////////////////////////////////
 
@@ -212,9 +264,12 @@ crank_shape2_polygon_get_edge_normal_def (CrankShape2Polygon *shape,
                                            CrankVecFloat2*      normal)
 {
   CrankShape2Vertexed *shape_vertexed = (CrankShape2Vertexed*) shape;
+
   guint index_next;
   CrankVecFloat2 vertex[2];
   CrankVecFloat2 seg;
+
+  CrankWinding winding = crank_shape2_polygon_get_winding (shape);
 
   index_next = (index + 1) % crank_shape2_vertexed_get_nvertices (shape_vertexed);
 
@@ -223,7 +278,10 @@ crank_shape2_polygon_get_edge_normal_def (CrankShape2Polygon *shape,
 
   crank_vec_float2_sub (vertex + 1, vertex + 0, &seg);
 
-  crank_rot_vec2_right (&seg, normal);
+  if (0 < winding)
+    crank_rot_vec2_right (&seg, normal);
+  else
+    crank_rot_vec2_left (&seg, normal);
   crank_vec_float2_unit_self (normal);
 }
 
@@ -270,6 +328,23 @@ crank_shape2_polygon_get_normal_edge_def (CrankShape2Polygon *shape,
 }
 
 //////// Public functions //////////////////////////////////////////////////////
+/**
+ * crank_shape2_polygon_get_winding:
+ * @shape: A Shape.
+ *
+ * Get winding of a polygon, along with vertices list of it.
+ *
+ * Returns: Winding of shape, or CRANK_WINDING_NONE if all vertices are on a line.
+ */
+CrankWinding
+crank_shape2_polygon_get_winding (CrankShape2Polygon *shape)
+{
+  CrankShape2PolygonClass *c;
+  c = CRANK_SHAPE2_POLYGON_GET_CLASS (shape);
+
+  return c->get_winding (shape);
+}
+
 /**
  * crank_shape2_polygon_get_edge_normal:
  * @shape: A shape.

@@ -30,6 +30,7 @@
 #include <glib-object.h>
 #include "crankbase.h"
 #include "cranktrans.h"
+#include "crankshapemisc.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2vertexed.h"
@@ -66,6 +67,8 @@ struct _CrankShape2PolygonClass {
   CrankShape2VertexedClass  _parent;
 
   /*< public >*/
+  CrankWinding        (*get_winding)           (CrankShape2Polygon    *shape);
+
 
   void                (*get_edge_normal)       (CrankShape2Polygon    *shape,
                                                 guint                   index,
@@ -76,18 +79,18 @@ struct _CrankShape2PolygonClass {
 };
 
 
+//////// Polygon Properties ////////////////////////////////////////////////////
+
+CrankWinding    crank_shape2_polygon_get_winding (CrankShape2Polygon *shape);
+
 
 //////// Edge Properties ///////////////////////////////////////////////////////
-//
+
 void            crank_shape2_polygon_get_edge_normal  (CrankShape2Polygon *shape,
                                                         guint                index,
                                                         CrankVecFloat2      *normal);
 
 guint           crank_shape2_polygon_get_normal_edge     (CrankShape2Polygon *shape,
                                                           CrankVecFloat2      *normal);
-
-
-//////// Functions /////////////////////////////////////////////////////////////
-
 
 #endif
