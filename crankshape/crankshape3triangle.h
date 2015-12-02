@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPE3TRIANGLE_H
+#define CRANKSHAPE3TRIANGLE_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,42 +22,43 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshape3triangle.h cannot be included directly.
+#endif
 
+#include <glib.h>
+#include <glib-object.h>
+#include "crankbase.h"
 #include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
-#include "crankshapemisc.h"
-
 #include "crankshape2.h"
 #include "crankshape2finite.h"
 #include "crankshape2vertexed.h"
 #include "crankshape2polygon.h"
-#include "crankshape2iround.h"
-
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
 #include "crankshape2triangle.h"
-#include "crankshape2circle.h"
-#include "crankshape2rect.h"
-
-#include "crankshape2cpolygon.h"
 
 #include "crankshape3.h"
 #include "crankshape3finite.h"
 #include "crankshape3vertexed.h"
 #include "crankshape3polygon.h"
-#include "crankshape3polyhedron.h"
-#include "crankshape3iround.h"
-
-#include "crankshape3point.h"
-#include "crankshape3segment.h"
-#include "crankshape3triangle.h"
-
-#include "crankgjk.h"
 
 
-#undef _CRANKSHAPE_INSIDE
+G_BEGIN_DECLS
+//////// Type declaration //////////////////////////////////////////////////////
 
-#endif /* CRANKSHAPE_H */
+#define CRANK_TYPE_SHAPE3_TRIANGLE crank_shape3_triangle_get_type ()
+
+G_DECLARE_FINAL_TYPE (CrankShape3Triangle,
+                      crank_shape3_triangle,
+                      CRANK, SHAPE3_TRIANGLE,
+                      CrankShape3Polygon)
+
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankShape3Triangle *crank_shape3_triangle_new (CrankVecFloat2 *vertices);
+
+CrankShape3Triangle *crank_shape3_triangle_new_regular (const gfloat radius);
+
+G_END_DECLS
+
+#endif
