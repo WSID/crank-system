@@ -35,6 +35,78 @@
  * This section has utility functions that helps shape processing.
  */
 
+//////// Type Definition ///////////////////////////////////////////////////////
+GType
+crank_winding_get_type (void)
+{
+  static const GEnumValue evalue[] =
+    {
+        {CRANK_WINDING_CW, "CRANK_WINDING_CW", "cw"},
+        {CRANK_WINDING_NONE, "CRANK_WINDING_NONE", "none"},
+        {CRANK_WINDING_CCW, "CRANK_WINDING_CCW", "ccw"},
+        {0, NULL, NULL}
+    };
+
+  static GType type_id = 0;
+
+  if (type_id == 0)
+    type_id = g_enum_register_static ("CrankWinding", evalue);
+
+  return type_id;
+}
+
+
+/**
+ * crank_winding_from_points
+ * @p1: A point.
+ * @p2: A point.
+ * @p3: A point.
+ *
+ * Check winding of iteration.
+ *
+ * Returns: Winding of iteration @p1 - @p2 - @p3
+ */
+CrankWinding
+crank_winding_from_points (CrankVecFloat2 *p1,
+                           CrankVecFloat2 *p2,
+                           CrankVecFloat2 *p3)
+{
+  CrankVecFloat2 v2;
+  CrankVecFloat2 v3;
+
+  gfloat crs;
+
+  crank_vec_float2_sub (p2, p1, &v2);
+  crank_vec_float2_sub (p3, p1, &v3);
+
+  crs = crank_vec_float2_crs (&v2, &v3);
+  return (gint)(0 < crs) - (gint)(crs < 0);
+}
+
+/**
+ * crank_winding_from_point_arr
+ * @pts: (array fixed-size=3): A point.
+ *
+ * Check winding of iteration.
+ *
+ * Returns: Winding of iteration @pts[0] - @pts[1] - @pts[2]
+ */
+CrankWinding
+crank_winding_from_point_arr (CrankVecFloat2 *pts)
+{
+  CrankVecFloat2 v2;
+  CrankVecFloat2 v3;
+
+  gfloat crs;
+
+  crank_vec_float2_sub (pts + 1, pts + 0, &v2);
+  crank_vec_float2_sub (pts + 2, pts + 0, &v3);
+
+  crs = crank_vec_float2_crs (&v2, &v3);
+  return (gint)(0 < crs) - (gint)(crs < 0);
+}
+
+
 /**
  * crank_seg_intersect:
  * @aa: A End point of segment a.

@@ -31,6 +31,33 @@
 
 G_BEGIN_DECLS
 
+//////// Type definitions //////////////////////////////////////////////////////
+
+/**
+ * CrankWinding:
+ * @CRANK_WINDING_CW: Points are winding clock-wise.
+ * @CRANK_WINDING_NONE: Points are on a line.
+ * @CRANK_WINDING_CCW: Points are winding counter-clock-wise.
+ *
+ * Windinig of points.
+ */
+typedef enum {
+  CRANK_WINDING_CW = -1,
+  CRANK_WINDING_NONE = 0,
+  CRANK_WINDING_CCW = 1
+} CrankWinding;
+
+#define CRANK_TYPE_WINDING crank_winding_get_type()
+GType crank_winding_get_type (void);
+
+//////// Functions /////////////////////////////////////////////////////////////
+
+CrankWinding crank_winding_from_points (CrankVecFloat2 *p1,
+                                        CrankVecFloat2 *p2,
+                                        CrankVecFloat2 *p3);
+
+CrankWinding crank_winding_from_point_arr (CrankVecFloat2 *pts);
+
 gboolean  crank_seg_intersect (CrankVecFloat2 *aa,
                                CrankVecFloat2 *ab,
                                CrankVecFloat2 *ba,
