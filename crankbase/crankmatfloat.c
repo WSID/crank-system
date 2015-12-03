@@ -3137,25 +3137,25 @@ crank_mat_float4_get_cof (CrankMatFloat4 *mat,
   gfloat m23_13 = DET4(mat->m21, mat->m23, mat->m31, mat->m33);
   gfloat m23_23 = DET4(mat->m22, mat->m23, mat->m32, mat->m33);
 
-  r->m00 =    mat->m11 * m23_23 - mat->m12 * m23_13 + mat->m13 * m23_12;
+  r->m00 =  mat->m11 * m23_23 - mat->m12 * m23_13 + mat->m13 * m23_12;
   r->m01 = -mat->m10 * m23_23 + mat->m12 * m23_03 - mat->m13 * m23_02;
-  r->m02 =    mat->m10 * m23_13 - mat->m11 * m23_03 + mat->m13 * m23_01;
+  r->m02 =  mat->m10 * m23_13 - mat->m11 * m23_03 + mat->m13 * m23_01;
   r->m03 = -mat->m10 * m23_12 + mat->m11 * m23_02 - mat->m12 * m23_01;
 
   r->m10 = -mat->m01 * m23_23 + mat->m02 * m23_13 - mat->m03 * m23_12;
-  r->m11 =    mat->m00 * m23_23 - mat->m02 * m23_03 + mat->m03 * m23_02;
+  r->m11 =  mat->m00 * m23_23 - mat->m02 * m23_03 + mat->m03 * m23_02;
   r->m12 = -mat->m00 * m23_13 + mat->m01 * m23_03 - mat->m03 * m23_01;
-  r->m13 =    mat->m00 * m23_12 - mat->m01 * m23_02 + mat->m02 * m23_01;
+  r->m13 =  mat->m00 * m23_12 - mat->m01 * m23_02 + mat->m02 * m23_01;
 
-  r->m20 =    m01_12 * mat->m33 - m01_13 * mat->m32 - m01_23 * mat->m31;
-  r->m21 = -m01_02 * mat->m33 + m01_03 * mat->m32 + m01_23 * mat->m30;
-  r->m22 =    m01_01 * mat->m33 - m01_03 * mat->m31 - m01_13 * mat->m30;
-  r->m23 = -m01_01 * mat->m32 + m01_02 * mat->m31 + m01_12 * mat->m30;
+  r->m20 =  m01_12 * mat->m33 - m01_13 * mat->m32 + m01_23 * mat->m31;
+  r->m21 = -m01_02 * mat->m33 + m01_03 * mat->m32 - m01_23 * mat->m30;
+  r->m22 =  m01_01 * mat->m33 - m01_03 * mat->m31 + m01_13 * mat->m30;
+  r->m23 = -m01_01 * mat->m32 + m01_02 * mat->m31 - m01_12 * mat->m30;
 
-  r->m30 =    m01_12 * mat->m23 + m01_13 * mat->m22 - m01_23 * mat->m21;
-  r->m31 = -m01_02 * mat->m23 - m01_03 * mat->m22 + m01_23 * mat->m20;
-  r->m32 =    m01_01 * mat->m23 + m01_03 * mat->m21 - m01_13 * mat->m20;
-  r->m33 = -m01_01 * mat->m22 - m01_02 * mat->m21 + m01_12 * mat->m20;
+  r->m30 = -m01_12 * mat->m23 + m01_13 * mat->m22 - m01_23 * mat->m21;
+  r->m31 =  m01_02 * mat->m23 - m01_03 * mat->m22 + m01_23 * mat->m20;
+  r->m32 = -m01_01 * mat->m23 + m01_03 * mat->m21 - m01_13 * mat->m20;
+  r->m33 =  m01_01 * mat->m22 - m01_02 * mat->m21 + m01_12 * mat->m20;
 }
 
 /**
