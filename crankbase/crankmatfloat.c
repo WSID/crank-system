@@ -3531,19 +3531,10 @@ crank_mat_float4_mulv (CrankMatFloat4 *a,
                        CrankVecFloat4 *b,
                        CrankVecFloat4 *r)
 {
-  gfloat nx =
-    (a->m00 * b->x) + (a->m01 * b->y) + (a->m02 * b->z) * (a->m03 * b->w);
-  gfloat ny =
-    (a->m10 * b->x) + (a->m11 * b->y) + (a->m12 * b->z) * (a->m13 * b->w);
-  gfloat nz =
-    (a->m20 * b->x) + (a->m21 * b->y) + (a->m22 * b->z) * (a->m23 * b->w);
-  gfloat nw =
-    (a->m30 * b->x) + (a->m31 * b->y) + (a->m32 * b->z) * (a->m33 * b->w);
-
-  r->x = nx;
-  r->y = ny;
-  r->z = nz;
-  r->w = nw;
+  r->x = (a->m00 * b->x) + (a->m01 * b->y) + (a->m02 * b->z) + (a->m03 * b->w);
+  r->y = (a->m10 * b->x) + (a->m11 * b->y) + (a->m12 * b->z) + (a->m13 * b->w);
+  r->z = (a->m20 * b->x) + (a->m21 * b->y) + (a->m22 * b->z) + (a->m23 * b->w);
+  r->w = (a->m30 * b->x) + (a->m31 * b->y) + (a->m32 * b->z) + (a->m33 * b->w);
 }
 
 /**
