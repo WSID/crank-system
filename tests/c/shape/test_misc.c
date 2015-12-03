@@ -32,6 +32,8 @@ static void     test_seg_intersect (void);
 
 static void     test_tri_bcoord (void);
 
+static void     test_tetra_bcoord (void);
+
 
 //////// Main //////////////////////////////////////////////////////////////////
 
@@ -44,6 +46,8 @@ gint main (gint argc, gchar **argv)
   g_test_add_func ("/crank/shape/misc/seg/intersect", test_seg_intersect);
 
   g_test_add_func ("/crank/shape/misc/tri/bcoord", test_tri_bcoord);
+
+  g_test_add_func ("/crank/shape/misc/tetra/bcoord", test_tetra_bcoord);
 
   return g_test_run ();
 }
@@ -118,4 +122,25 @@ test_tri_bcoord (void)
   crank_vec_float2_init (&pt, 5, 12);
   crank_tri_bcoord (tri, &pt, &bcoord);
   crank_assert_eq_vecfloat3_imm (&bcoord, -0.3333f, -1.3333f, 2.6667f);
+}
+
+static void
+test_tetra_bcoord (void)
+{
+  CrankVecFloat3 tetra[4];
+  CrankVecFloat3 pt;
+  CrankVecFloat4 bcoord;
+
+  crank_vec_float3_init (tetra + 0, 2, 3, 0);
+  crank_vec_float3_init (tetra + 1, 0, 1, 1);
+  crank_vec_float3_init (tetra + 2, 3, 1, 2);
+  crank_vec_float3_init (tetra + 3, 1, 2, 3);
+
+  crank_vec_float3_init (&pt, 2, 2, 2);
+  crank_tetra_bcoord (tetra, &pt, &bcoord);
+  crank_assert_eq_vecfloat4_imm (&bcoord, 0.2667f, -0.0667f, 0.3333f, 0.4667f);
+
+  crank_vec_float3_init (&pt, 1, 1, 3);
+  crank_tetra_bcoord (tetra, &pt, &bcoord);
+  crank_assert_eq_vecfloat4_imm (&bcoord, -0.3333f, 0.3333f, 0.3333f, 0.6667f);
 }

@@ -104,5 +104,26 @@ class TestMisc (unittest.TestCase):
         self.assertFloat (bcoord.y, -1.3333);
         self.assertFloat (bcoord.z, 2.6667);
 
+    def test_tetra_bcoord (self):
+        tetra = [   CrankBase.VecFloat3.init (2, 3, 0),
+                    CrankBase.VecFloat3.init (0, 1, 1),
+                    CrankBase.VecFloat3.init (3, 1, 2),
+                    CrankBase.VecFloat3.init (1, 2, 3)  ]
+
+        pt = CrankBase.VecFloat3.init (2, 2, 2)
+        bcoord = CrankShape.tetra_bcoord (tetra, pt)
+        self.assertFloat (bcoord.x,  0.2667)
+        self.assertFloat (bcoord.y, -0.0667)
+        self.assertFloat (bcoord.z,  0.3333)
+        self.assertFloat (bcoord.w,  0.4667)
+
+        pt = CrankBase.VecFloat3.init (1, 1, 3)
+        bcoord = CrankShape.tetra_bcoord (tetra, pt)
+        self.assertFloat (bcoord.x, -0.3333)
+        self.assertFloat (bcoord.y,  0.3333)
+        self.assertFloat (bcoord.z,  0.3333)
+        self.assertFloat (bcoord.w,  0.6667)
+
+
 if __name__ == '__main__':
     unittest.main ()

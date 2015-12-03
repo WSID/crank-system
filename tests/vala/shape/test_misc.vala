@@ -28,6 +28,9 @@ public int main (string[] args) {
 
 	GLib.Test.add_func ("/crank/shape/misc/tri/bcoord", test_tri_bcoord);
 
+	GLib.Test.add_func ("/crank/shape/misc/tetra/bcoord", test_tetra_bcoord);
+
+
 	return GLib.Test.run ();
 }
 
@@ -82,4 +85,21 @@ private void test_tri_bcoord () {
 
   bcoord = Crank.tri_bcoord (tri, {5, 12});
   Crank.assert_eq_vecfloat3_imm (bcoord, -0.3333f, -1.3333f, 2.6667f);
+}
+
+private void test_tetra_bcoord () {
+    Crank.VecFloat3 tetra[4] = {
+        Crank.VecFloat3 (2, 3, 0),
+        Crank.VecFloat3 (0, 1, 1),
+        Crank.VecFloat3 (3, 1, 2),
+        Crank.VecFloat3 (1, 2, 3)
+    };
+
+    Crank.VecFloat4 bcoord;
+
+    bcoord = Crank.tetra_bcoord (tetra, {2, 2, 2});
+    Crank.assert_eq_vecfloat4_imm (bcoord, 0.2667f, -0.0667f, 0.3333f, 0.4667f);
+
+    bcoord = Crank.tetra_bcoord (tetra, {1, 1, 3});
+    Crank.assert_eq_vecfloat4_imm (bcoord, -0.3333f, 0.3333f, 0.3333f, 0.6667f);
 }

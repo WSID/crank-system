@@ -201,11 +201,6 @@ crank_tri_bcoord (CrankVecFloat2 *tri,
   bcoord->y = crank_vec_float2_crs (&vp, &v3) / crs_v2v3;
   bcoord->z = crank_vec_float2_crs (&v2, &vp) / crs_v2v3;
   bcoord->x = 1 - bcoord->y - bcoord->z;
-
-  g_message ("v2: %f, %f", v2.x, v2.y);
-  g_message ("v3: %f, %f", v3.x, v3.y);
-  g_message ("vp: %f, %f", vp.x, vp.y);
-  g_message ("crs: %f", crs_v2v3);
 }
 
 /**
@@ -226,3 +221,66 @@ crank_tri_contains (CrankVecFloat2 *tri,
 
   return (0 < bcoord.x) && (0 < bcoord.y) && (0 < bcoord.z);
 }
+
+
+/**
+ * crank_tetra_bcoord:
+ * @tetra: (array fixed-size=4): Vertices for a tetrahedron.
+ * @pt: A Point.
+ * @bcoord: (out): A Barycentric coordination of @pt.
+ *
+ * Gets barycentric coordination of @pt in @tetra.
+ */
+void
+crank_tetra_bcoord (CrankVecFloat3 *tetra,
+                    CrankVecFloat3 *pt,
+                    CrankVecFloat4 *bcoord)
+{
+  CrankVecFloat3 v[3];
+  CrankMatFloat3 cof;
+  gfloat det;
+
+  CrankVecFloat3 vp;
+
+  crank_vec_float3_sub (tetra + 1, tetra + 0, v + 0);
+  crank_vec_float3_sub (tetra + 2, tetra + 0, v + 1);
+  crank_vec_float3_sub (tetra + 3, tetra + 0, v + 2);
+
+  crank_vec_float3_sub (pt, tetra + 0, &vp);
+
+  crank_mat_float3_get_cof ((CrankMatFloat3*)v, &cof);
+  det = crank_mat_float3_get_det ((CrankMatFloat3*)v);
+
+  if (det == 0)
+    {
+      crank_vec_float4_init_fill (bcoord, NAN);
+      return;
+    }
+  else
+    {
+      crank_mat_float3_mulv (&cof, &vp, (CrankVecFloat3*)(& bcoord->y));
+      crank_vec_float3_divs_self ((CrankVecFloat3*)(& bcoord->y), det);
+      bcoord->x = 1 - bcoord->y - bcoord->z - bcoord->w;
+    }
+}
+
+
+/**
+ * crank_tetra_contains:
+ * @tetra: (array fixed-size=4): Vertices for a tetrahedron
+ * @pt: A Point to check.
+ *
+ * Checks @pt is in a tetrahedron defined by @tetra.
+ *
+ * Returns: Whether @pt is in @tetra.
+ */
+gboolean
+crank_tetra_contains (CrankVecFloat3 *tetra,
+                      CrankVecFloat3 *pt)
+{
+  CrankVecFloat4 bcoord;
+  crank_tetra_bcoord (tetra, pt, &bcoord);
+
+  return (0 < bcoord.x) && (0 < bcoord.y) && (0 < bcoord.z) && (0 < bcoord.w);
+}
+

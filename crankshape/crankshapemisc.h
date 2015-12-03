@@ -71,6 +71,13 @@ void      crank_tri_bcoord   (CrankVecFloat2 *tri,
 gboolean  crank_tri_contains (CrankVecFloat2 *tri,
                               CrankVecFloat2 *pt);
 
+void      crank_tetra_bcoord (CrankVecFloat3 *tetra,
+                              CrankVecFloat3 *pt,
+                              CrankVecFloat4 *bcoord);
+
+gboolean  crank_tetra_contains (CrankVecFloat3 *tetra,
+                                CrankVecFloat3 *pt);
+
 
 G_END_DECLS
 
