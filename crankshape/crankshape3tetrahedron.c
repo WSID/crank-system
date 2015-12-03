@@ -273,3 +273,44 @@ crank_shape3_tetrahedron_get_face_edges (CrankShape3Vertexed *shape,
 }
 
 
+//////// Constructor ///////////////////////////////////////////////////////////
+
+/**
+ * crank_shape3_tetrahedron_new:
+ * @vertices: (array fixed-size=4): Vertices.
+ *
+ * Constructs a tetrahedron shape.
+ *
+ * Returns: (transfer full): Newly constructed shape.
+ */
+CrankShape3Tetrahedron*
+crank_shape3_tetrahedron_new (CrankVecFloat3 *vertices)
+{
+  CrankShape3Tetrahedron *self;
+
+  self = (CrankShape3Tetrahedron*) g_object_new (CRANK_TYPE_SHAPE3_TETRAHEDRON,
+                                                 NULL);
+
+  memcpy (self->vertices, vertices, sizeof (CrankVecFloat3) * 4);
+  self->winding[0] = crank_winding_from_points_against (vertices + 0,
+                                                        vertices + 2,
+                                                        vertices + 1,
+                                                        vertices + 3);
+
+  self->winding[1] = crank_winding_from_points_against (vertices + 0,
+                                                        vertices + 1,
+                                                        vertices + 3,
+                                                        vertices + 2);
+
+  self->winding[2] = crank_winding_from_points_against (vertices + 1,
+                                                        vertices + 2,
+                                                        vertices + 3,
+                                                        vertices + 0);
+
+  self->winding[3] = crank_winding_from_points_against (vertices + 2,
+                                                        vertices + 0,
+                                                        vertices + 3,
+                                                        vertices + 1);
+
+  return self;
+}

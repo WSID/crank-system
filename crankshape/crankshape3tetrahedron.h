@@ -37,6 +37,7 @@
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
+#define CRANK_TYPE_SHAPE3_TETRAHEDRON crank_shape3_tetrahedron_get_type()
 G_DECLARE_FINAL_TYPE (CrankShape3Tetrahedron,
                       crank_shape3_tetrahedron,
                       CRANK, SHAPE3_TETRAHEDRON,
