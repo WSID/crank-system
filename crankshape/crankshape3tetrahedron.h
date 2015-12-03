@@ -1,5 +1,5 @@
-#ifndef CRANKSHAPE_H
-#define CRANKSHAPE_H
+#ifndef CRANKSHAPE3TETRAHEDRON_H
+#define CRANKSHAPE3TETRAHEDRON_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,43 +22,31 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKSHAPE_INSIDE
+#ifndef _CRANKSHAPE_INSIDE
+#error crankshape3triangle.h cannot be included directly.
+#endif
 
-#include "crankbox.h"
-#include "crankeuler.h"
-#include "crankrotation.h"
-#include "cranktrans.h"
+#include <glib.h>
+#include <glib-object.h>
+#include "crankbase.h"
 #include "crankshapemisc.h"
-
-#include "crankshape2.h"
-#include "crankshape2finite.h"
-#include "crankshape2vertexed.h"
-#include "crankshape2polygon.h"
-#include "crankshape2iround.h"
-
-#include "crankshape2point.h"
-#include "crankshape2segment.h"
-#include "crankshape2triangle.h"
-#include "crankshape2circle.h"
-#include "crankshape2rect.h"
-
-#include "crankshape2cpolygon.h"
-
 #include "crankshape3.h"
 #include "crankshape3finite.h"
 #include "crankshape3vertexed.h"
-#include "crankshape3polygon.h"
 #include "crankshape3polyhedron.h"
-#include "crankshape3iround.h"
 
-#include "crankshape3point.h"
-#include "crankshape3segment.h"
-#include "crankshape3triangle.h"
-#include "crankshape3tetrahedron.h"
+//////// Type Definition ///////////////////////////////////////////////////////
 
-#include "crankgjk.h"
+G_DECLARE_FINAL_TYPE (CrankShape3Tetrahedron,
+                      crank_shape3_tetrahedron,
+                      CRANK, SHAPE3_TETRAHEDRON,
+                      CrankShape3Polyhedron)
 
 
-#undef _CRANKSHAPE_INSIDE
+//////// Constructor ///////////////////////////////////////////////////////////
 
-#endif /* CRANKSHAPE_H */
+CrankShape3Tetrahedron*
+crank_shape3_tetrahedron_new (CrankVecFloat3 *vertices);
+
+
+#endif
