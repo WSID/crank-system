@@ -106,6 +106,32 @@ crank_winding_from_point_arr (CrankVecFloat2 *pts)
   return (gint)(0 < crs) - (gint)(crs < 0);
 }
 
+/**
+ * crank_winding_from_points_against:
+ * @p1: A point.
+ * @p2: A point.
+ * @p3: A point.
+ * @v: A point that against to.
+ *
+ * Check winding against @v.
+ */
+CrankWinding
+crank_winding_from_points_against (CrankVecFloat3 *p1,
+                                   CrankVecFloat3 *p2,
+                                   CrankVecFloat3 *p3,
+                                   CrankVecFloat3 *v)
+{
+  CrankVecFloat3 m[3];
+  gfloat det;
+
+  crank_vec_float3_sub (p2, p1, m + 0);
+  crank_vec_float3_sub (p3, p1, m + 1);
+  crank_vec_float3_sub (p1, v, m + 2);
+
+  det = crank_mat_float3_get_det ((CrankMatFloat3*)m);
+  return (gint)(0 < det) - (gint)(det < 0);
+}
+
 
 /**
  * crank_seg_intersect:

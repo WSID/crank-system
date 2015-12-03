@@ -58,6 +58,11 @@ CrankWinding crank_winding_from_points (CrankVecFloat2 *p1,
 
 CrankWinding crank_winding_from_point_arr (CrankVecFloat2 *pts);
 
+CrankWinding crank_winding_from_points_against(CrankVecFloat3 *p1,
+                                               CrankVecFloat3 *p2,
+                                               CrankVecFloat3 *p3,
+                                               CrankVecFloat3 *v);
+
 gboolean  crank_seg_intersect (CrankVecFloat2 *aa,
                                CrankVecFloat2 *ab,
                                CrankVecFloat2 *ba,
