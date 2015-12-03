@@ -1782,17 +1782,17 @@ void
 crank_mat_float3_get_cof (CrankMatFloat3 *mat,
                           CrankMatFloat3 *r)
 {
-  r->m00 =    DET4(mat->m11, mat->m12, mat->m21, mat->m22);
+  r->m00 =  DET4(mat->m11, mat->m12, mat->m21, mat->m22);
   r->m01 = -DET4(mat->m10, mat->m12, mat->m20, mat->m22);
-  r->m02 =    DET4(mat->m10, mat->m11, mat->m20, mat->m21);
+  r->m02 =  DET4(mat->m10, mat->m11, mat->m20, mat->m21);
 
   r->m10 = -DET4(mat->m01, mat->m02, mat->m21, mat->m22);
-  r->m11 =    DET4(mat->m00, mat->m02, mat->m20, mat->m22);
+  r->m11 =  DET4(mat->m00, mat->m02, mat->m20, mat->m22);
   r->m12 = -DET4(mat->m00, mat->m01, mat->m20, mat->m21);
 
-  r->m20 =    DET4(mat->m01, mat->m02, mat->m11, mat->m12);
+  r->m20 =  DET4(mat->m01, mat->m02, mat->m11, mat->m12);
   r->m21 = -DET4(mat->m00, mat->m02, mat->m10, mat->m12);
-  r->m22 =    DET4(mat->m00, mat->m01, mat->m10, mat->m11);
+  r->m22 =  DET4(mat->m00, mat->m01, mat->m10, mat->m11);
 }
 
 /**
