@@ -62,7 +62,7 @@
  * # Virtual Functions
  *
  * * #CrankShape3VertexedClass.get_face_as_shape()
- * * CrankShape3VertexedClass.get_farthest_vertex()
+ * * #CrankShape3VertexedClass.get_farthest_vertex()
  */
 
 //////// List of virtual functions /////////////////////////////////////////////
@@ -71,6 +71,8 @@ static void  crank_shape3_vertexed_get_property (GObject    *object,
                                                     guint       prop_id,
                                                     GValue     *value,
                                                     GParamSpec *pspec);
+
+static gfloat crank_shape3_vertexed_get_bound_radius (CrankShape3Finite *shape);
 
 static CrankShape3Vertexed* crank_shape3_vertexed_approximate_vertexed (CrankShape3Finite *shape);
 
@@ -149,6 +151,7 @@ crank_shape3_vertexed_class_init (CrankShape3VertexedClass *c)
 
   c_shape3finite = CRANK_SHAPE3_FINITE_CLASS (c);
 
+  c_shape3finite->get_bound_radius = crank_shape3_vertexed_get_bound_radius;
   c_shape3finite->approximate_vertexed = crank_shape3_vertexed_approximate_vertexed;
 
 
@@ -187,6 +190,36 @@ crank_shape3_vertexed_get_property (GObject    *object,
 
 
 //////// CrankShape3Finite /////////////////////////////////////////////////////
+
+static gfloat
+crank_shape3_vertexed_get_bound_radius (CrankShape3Finite *shape)
+{
+  CrankShape3Vertexed *self = (CrankShape3Vertexed*)shape;
+
+  CrankVecFloat3 vpos;
+  gfloat magn_sq;
+
+  guint i, n;
+
+  n = crank_shape3_vertexed_get_nvertices (self);
+
+  if (n == 0) return 0;
+
+  crank_shape3_vertexed_get_vertex_pos (self, 0, &vpos);
+  magn_sq = crank_vec_float3_get_magn_sq (&vpos);
+
+  for (i = 1; i < n; i++)
+    {
+      gfloat magn_sq_c;
+
+      crank_shape3_vertexed_get_vertex_pos (self, i, &vpos);
+      magn_sq_c = crank_vec_float3_get_magn_sq (&vpos);
+
+      magn_sq = MAX (magn_sq, magn_sq_c);
+    }
+
+  return sqrtf (magn_sq);
+}
 
 static CrankShape3Vertexed*
 crank_shape3_vertexed_approximate_vertexed (CrankShape3Finite *shape)
