@@ -39,6 +39,52 @@
 
 G_BEGIN_DECLS
 
+/**
+ * CrankShape3VertexedVData
+ * @nedges: Number of edges.
+ * @edges: (array length=nedges): Edge ids.
+ * @nfaces: Number of faces.
+ * @faces: (array length=nfaces): Face ids.
+ *
+ * Association data for a vertex.
+ */
+typedef struct _CrankShape3VertexedVData {
+  guint nedges;
+  guint *edges;
+  guint nfaces;
+  guint *faces;
+} CrankShape3VertexedVData;
+
+/**
+ * CrankShape3VertexedEData
+ * @vertices: Vertex ids.
+ * @nfaces: Number of faces.
+ * @faces: (array length=nfaces): Face ids.
+ *
+ * Association data for an edge.
+ */
+typedef struct _CrankShape3VertexedEData {
+  guint vertices[2];
+  guint nfaces;
+  guint *faces;
+} CrankShape3VertexedEData;
+
+/**
+ * CrankShape3VertexedVData
+ * @nvertices: Number of vertices.
+ * @vertices: (array length=nvertices): Vertex ids.
+ * @nedges: Number of edges.
+ * @edges: (array length=nedges): Edge ids.
+ *
+ * Association data for a face.
+ */
+typedef struct _CrankShape3VertexedFData {
+  guint nvertices;
+  guint *vertices;
+  guint nedges;
+  guint *edges;
+} CrankShape3VertexedFData;
+
 #define CRANK_TYPE_SHAPE3_VERTEXED crank_shape3_vertexed_get_type()
 G_DECLARE_DERIVABLE_TYPE (CrankShape3Vertexed,
                           crank_shape3_vertexed,

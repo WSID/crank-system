@@ -46,40 +46,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape3Polyhedron,
                           CrankShape3Vertexed)
 
 /**
- * CrankShape3PolyhedronVInfo:
- * @nedges: Number of edges.
- * @edges: (array length=nedges): Edge ids.
- * @faces: (array length=nedges): Face ids.
- */
-typedef struct _CrankShape3PolyhedronVData {
-  guint nedges;
-  guint *edges;
-  guint *faces;
-} CrankShape3PolyhedronVData;
-
-/**
- * CrankShape3PolyhedronEInfo:
- * @verts: Vertices ids.
- * @faces: Face ids.
- */
-typedef struct _CrankShape3PolyhedronEData {
-  guint verts[2];
-  guint faces[2];
-} CrankShape3PolyhedronEData;
-
-/**
- * CrankShape3PolyhedronFInfo:
- * @nverts: Number of edges.
- * @verts: (array length=nverts): Vertices ids.
- * @edges: (array length=nverts): Face ids.
- */
-typedef struct _CrankShape3PolyhedronFData {
-  guint nverts;
-  guint *verts;
-  guint *edges;
-} CrankShape3PolyhedronFData;
-
-/**
  * CrankShape3PolyhedronClass:
  * @get_face_normal: Slot for crank_shape3_polyhedron_get_face_normal()
  * @get_normal_face: Slot for crank_shape3_polyhedron_get_normal_face()
