@@ -70,6 +70,7 @@ static void crank_shape2_vertexed_get_property (GObject    *object,
                                                 GValue     *value,
                                                 GParamSpec *pspec);
 
+static gfloat               crank_shape2_vertexed_get_bound_radius (CrankShape2Finite *shape);
 
 static CrankShape2Vertexed *crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape);
 
@@ -133,6 +134,7 @@ crank_shape2_vertexed_class_init (CrankShape2VertexedClass *c)
 
   c_shape2finite = CRANK_SHAPE2_FINITE_CLASS (c);
 
+  c_shape2finite->get_bound_radius = crank_shape2_vertexed_get_bound_radius;
   c_shape2finite->approximate_vertexed = crank_shape2_vertexed_approximate_vertexed;
 
 
@@ -173,6 +175,36 @@ crank_shape2_vertexed_get_property (GObject    *object,
 }
 
 //////// CrankShape2Finite /////////////////////////////////////////////////////
+
+static gfloat
+crank_shape2_vertexed_get_bound_radius (CrankShape2Finite *shape)
+{
+  CrankShape2Vertexed *self = (CrankShape2Vertexed*)shape;
+
+  CrankVecFloat2 vpos;
+  gfloat magn_sq;
+
+  guint i, n;
+  n = crank_shape2_vertexed_get_nvertices (self);
+
+  if (n == 0) return 0;
+
+  crank_shape2_vertexed_get_vertex_pos (self, 0, &vpos);
+  magn_sq = crank_vec_float2_get_magn_sq (&vpos);
+
+  for (i = 1; i < n; i++)
+    {
+      gfloat magn_sq_c;
+
+      crank_shape2_vertexed_get_vertex_pos (self, i, &vpos);
+      magn_sq_c = crank_vec_float2_get_magn_sq (&vpos);
+
+      magn_sq = MAX (magn_sq, magn_sq_c);
+    }
+
+  return sqrtf (magn_sq);
+}
+
 
 static CrankShape2Vertexed*
 crank_shape2_vertexed_approximate_vertexed (CrankShape2Finite *shape)
