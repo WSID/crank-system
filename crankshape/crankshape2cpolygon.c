@@ -185,18 +185,7 @@ static gfloat
 crank_shape2_cpolygon_get_bound_radius (CrankShape2Finite *shape)
 {
   CrankShape2CPolygon *self = (CrankShape2CPolygon*)shape;
-  guint i;
-
-  gfloat radius = 0;
-
-  for (i = 0; i < self->nvertices; i++)
-    {
-      gfloat radius_current =
-        crank_vec_float2_get_magn (self->vertices + i);
-
-      radius = MAX (radius, radius_current);
-    }
-  return radius;
+  return self->bound_radius;
 }
 
 
