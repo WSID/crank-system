@@ -1,5 +1,4 @@
-SUBDIRS=c newc
-
+SUBDIRS=c
 # if TEST_PYTHON
 # SUBDIRS+= python
 # endif
