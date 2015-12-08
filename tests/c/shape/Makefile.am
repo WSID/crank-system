@@ -18,7 +18,9 @@ test_programs= \
 		test_rot \
 		test_trans \
 		test_misc \
-		test_gjk
+		test_gjk \
+		test_vertex \
+		test_poly_struct
 
 test_euler_SOURCES= test_euler.c
 test_euler_LDADD= $(TEST_SHAPE_LDADD)
@@ -34,3 +36,9 @@ test_misc_LDADD= $(TEST_SHAPE_LDADD)
 
 test_gjk_SOURCES= test_gjk.c
 test_gjk_LDADD= $(TEST_SHAPE_LDADD)
+
+test_vertex_SOURCES= test_vertex.c
+test_vertex_LDADD= $(TEST_SHAPE_LDADD)
+
+test_poly_struct_SOURCES= test_poly_struct.c
+test_poly_struct_LDADD= $(TEST_SHAPE_LDADD)

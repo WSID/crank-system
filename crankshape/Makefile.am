@@ -55,6 +55,7 @@ libcrankshape_la_SOURCES= \
 		crankeuler.c \
 		crankrotation.c \
 		cranktrans.c \
+		crankpolystruct3.c \
 		crankshape2.c \
 		crankshape2finite.c \
 		crankshape2vertexed.c \

@@ -10,6 +10,18 @@ euler_init*     skip=true
 Trans*          struct=true
 trans*_init*    skip=true
 
+PolyStruct3VData
+    .edges      array_length_field="nedges"
+    .faces      array_length_field="nfaces"
+
+PolyStruct3EData
+    .faces      array_length_field="nfaces"
+
+
+PolyStruct3FData
+    .vertices   array_length_field="nvertices"
+    .edges      array_length_field="nvertices"
+
 Shape2.approximate_polygon abstract=true
 
 Shape2IPolygon

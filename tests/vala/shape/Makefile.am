@@ -20,7 +20,8 @@ test_programs= \
 		test_rot \
 		test_trans \
 		test_misc \
-		test_gjk
+		test_gjk \
+		test_poly_struct
 
 
 
@@ -74,3 +75,14 @@ test_gjk_LDADD= \
 
 test_gjk_SOURCES= \
 		test_gjk.vala
+
+
+
+test_poly_struct_LDADD= \
+		$(CRANK_BASE_LIBS) \
+		$(CRANK_SHAPE_LIBS) \
+		$(top_builddir)/crankbase/libcrankbase.la \
+		$(top_builddir)/crankshape/libcrankshape.la
+
+test_poly_struct_SOURCES= \
+		test_poly_struct.vala

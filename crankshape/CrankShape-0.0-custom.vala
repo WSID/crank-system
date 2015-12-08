@@ -39,4 +39,11 @@ namespace Crank {
     public Trans2 ();
     public Trans2.from_matrix (Crank.MatFloat3 mat);
   }
+
+  [Compact]
+  public class PolyStruct3 {
+    public uint nvertices { get; set; }
+    public uint nedges { get; }
+    public uint nfaces { get; }
+  }
 }

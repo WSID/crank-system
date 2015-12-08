@@ -29,6 +29,7 @@
 #include "crankrotation.h"
 #include "cranktrans.h"
 #include "crankshapemisc.h"
+#include "crankpolystruct3.h"
 
 #include "crankshape2.h"
 #include "crankshape2finite.h"
