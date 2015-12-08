@@ -12,6 +12,8 @@ shapeinclude_HEADERS = \
 		crankeuler.h \
 		crankrotation.h \
 		cranktrans.h \
+		crankpolystruct3.h \
+		\
 		crankshape2.h \
 		crankshape2finite.h \
 		crankshape2vertexed.h \
