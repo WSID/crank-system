@@ -423,18 +423,20 @@ crank_shape3_vertexed_get_edge_vertices (CrankShape3Vertexed *shape,
  * crank_shape3_vertexed_get_edge_faces:
  * @shape: A Shape.
  * @eid: Edge ID
- * @fids: (out caller-allocates) (array fixed-size=2): Face IDs.
+ * @nfids: (out): Number of faces.
  *
  * Gets faces that share an edge.
+ *
+ * Returns: (transfer full) (array length=nfids):
  */
-void
+guint*
 crank_shape3_vertexed_get_edge_faces (CrankShape3Vertexed *shape,
-                                            const guint             eid,
-                                            guint                  *fids)
+                                      const guint          eid,
+                                      guint               *nfids)
 {
   CrankShape3VertexedClass *c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
 
-  return c->get_edge_faces (shape, eid, fids);
+  return c->get_edge_faces (shape, eid, nfids);
 }
 
 /**

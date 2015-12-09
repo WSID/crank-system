@@ -82,9 +82,9 @@ static void crank_shape3_polygon_get_edge_vertices (CrankShape3Vertexed *shape,
                                                     const guint          eid,
                                                     guint               *vids);
 
-static void crank_shape3_polygon_get_edge_faces (CrankShape3Vertexed *shape,
+static guint* crank_shape3_polygon_get_edge_faces (CrankShape3Vertexed *shape,
                                                  const guint          eid,
-                                                 guint               *fids);
+                                                 guint               *nfids);
 
 static CrankWinding crank_shape3_polygon_get_face_winding (CrankShape3Vertexed *shape,
                                                            const guint          fid);
@@ -316,13 +316,28 @@ crank_shape3_polygon_get_edge_vertices (CrankShape3Vertexed *shape,
   vids[1] = (eid == (n - 1)) ? 0 : (eid + 1);
 }
 
-static void
+static guint*
 crank_shape3_polygon_get_edge_faces (CrankShape3Vertexed *shape,
                                      const guint          eid,
-                                     guint               *fids)
+                                     guint               *nfids)
 {
-  fids[0] = 0;
-  fids[1] = 0;
+  guint n = crank_shape3_vertexed_get_nedges (shape);
+
+  if (eid < n)
+    {
+      guint *fids = g_new (guint, 1);
+
+      fids[0] = 0;
+
+      *nfids = 1;
+      return fids;
+    }
+  else
+    {
+      g_message ("Invalid edge id: %u", eid);
+      *nfids = 0;
+      return NULL;
+    }
 }
 
 static guint*

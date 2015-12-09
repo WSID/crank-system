@@ -89,9 +89,9 @@ static void crank_shape3_segment_get_edge_vertices (CrankShape3Vertexed *shape,
                                                   const guint            eid,
                                                   guint                 *vids);
 
-static void crank_shape3_segment_get_edge_faces (CrankShape3Vertexed *shape,
-                                               const guint            eid,
-                                               guint                 *fids);
+static guint *crank_shape3_segment_get_edge_faces (CrankShape3Vertexed *shape,
+                                                   const guint          eid,
+                                                   guint               *nfids);
 
 static guint *crank_shape3_segment_get_face_vertices (CrankShape3Vertexed *shape,
                                                     const guint            fid,
@@ -337,12 +337,22 @@ crank_shape3_segment_get_edge_vertices (CrankShape3Vertexed *shape,
     }
 }
 
-static void
+static guint*
 crank_shape3_segment_get_edge_faces (CrankShape3Vertexed *shape,
                                    const guint            eid,
-                                   guint                 *fids)
+                                   guint                 *nfids)
 {
-  g_warning ("This shape has no face.");
+  if (eid == 0)
+    {
+      *nfids = 0;
+      return NULL;
+    }
+  else
+    {
+      g_warning ("Invaild edge id: %u", eid);
+      *nfids = 0;
+      return NULL;
+    }
 }
 
 static guint*

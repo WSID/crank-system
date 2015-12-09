@@ -78,9 +78,9 @@ static void crank_shape3_point_get_edge_vertices (CrankShape3Vertexed *shape,
                                                   const guint            eid,
                                                   guint                 *vids);
 
-static void crank_shape3_point_get_edge_faces (CrankShape3Vertexed *shape,
+static guint *crank_shape3_point_get_edge_faces (CrankShape3Vertexed *shape,
                                                const guint            eid,
-                                               guint                 *fids);
+                                               guint                 *nfids);
 
 static guint *crank_shape3_point_get_face_vertices (CrankShape3Vertexed *shape,
                                                     const guint            fid,
@@ -229,12 +229,14 @@ crank_shape3_point_get_edge_vertices (CrankShape3Vertexed *shape,
   g_warning ("This shape has no edge.");
 }
 
-static void
+static guint*
 crank_shape3_point_get_edge_faces (CrankShape3Vertexed *shape,
                                    const guint            eid,
-                                   guint                 *fids)
+                                   guint                 *nfids)
 {
-  g_warning ("This shape has no face.");
+  g_warning ("This shape has no edges.");
+  *nfids = 0;
+  return NULL;
 }
 
 static guint*

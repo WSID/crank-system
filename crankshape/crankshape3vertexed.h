@@ -97,9 +97,9 @@ struct _CrankShape3VertexedClass {
                              const guint             eid,
                              guint                  *vids);
 
-  void  (*get_edge_faces)   (CrankShape3Vertexed *shape,
+  guint*(*get_edge_faces)   (CrankShape3Vertexed *shape,
                              const guint             eid,
-                             guint                  *fids);
+                             guint                  *nfids);
 
   /*< private >*/
   gpointer _PADDING10;
@@ -164,9 +164,9 @@ void crank_shape3_vertexed_get_edge_vertices                   (CrankShape3Verte
                                                                 const guint          eid,
                                                                 guint               *vids);
 
-void crank_shape3_vertexed_get_edge_faces                      (CrankShape3Vertexed *shape,
+guint *crank_shape3_vertexed_get_edge_faces                    (CrankShape3Vertexed *shape,
                                                                 const guint          eid,
-                                                                guint               *fids);
+                                                                guint               *nfids);
 
 //////// Face Property /////////////////////////////////////////////////////////
 

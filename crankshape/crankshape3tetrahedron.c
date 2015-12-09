@@ -103,9 +103,9 @@ static void     crank_shape3_tetrahedron_get_edge_vertices (CrankShape3Vertexed 
                                                             const guint          eid,
                                                             guint               *vids);
 
-static void     crank_shape3_tetrahedron_get_edge_faces (CrankShape3Vertexed *shape,
+static guint   *crank_shape3_tetrahedron_get_edge_faces (CrankShape3Vertexed *shape,
                                                          const guint          eid,
-                                                         guint               *eids);
+                                                         guint               *nfids);
 
 static CrankWinding crank_shape3_tetrahedron_get_face_winding (CrankShape3Vertexed *shape,
                                                                const guint          fid);
@@ -249,13 +249,13 @@ crank_shape3_tetrahedron_get_edge_vertices (CrankShape3Vertexed *shape,
   vids[1] = assoc_ev[eid][1];
 }
 
-static void
+static guint*
 crank_shape3_tetrahedron_get_edge_faces (CrankShape3Vertexed *shape,
                                          const guint          eid,
-                                         guint               *fids)
+                                         guint               *nfids)
 {
-  fids[0] = assoc_fv[eid][0];
-  fids[1] = assoc_fv[eid][1];
+  *nfids = 2;
+  return g_memdup (assoc_ef[eid], sizeof(guint) * 2);
 }
 
 static CrankWinding
