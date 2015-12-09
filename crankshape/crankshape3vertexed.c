@@ -28,6 +28,8 @@
 
 #include "crankbox.h"
 #include "crankshapemisc.h"
+#include "crankpolystruct3.h"
+
 #include "crankshape3.h"
 #include "crankshape3finite.h"
 #include "crankshape3vertexed.h"
@@ -103,9 +105,17 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type definition ///////////////////////////////////////////////////////
 
-G_DEFINE_ABSTRACT_TYPE (CrankShape3Vertexed,
-                        crank_shape3_vertexed,
-                        CRANK_TYPE_SHAPE3_FINITE)
+typedef struct _CrankShape3VertexedClassPrivate {
+  CrankPolyStruct3 *base_struct;
+} CrankShape3VertexedClassPrivate;
+
+G_DEFINE_ABSTRACT_TYPE_WITH_CODE (CrankShape3Vertexed,
+                                  crank_shape3_vertexed,
+                                  CRANK_TYPE_SHAPE3_FINITE,
+                                  {
+                                    g_type_add_class_private (g_define_type_id,
+                                                              sizeof (CrankShape3VertexedClassPrivate));
+                                  } )
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -121,6 +131,7 @@ crank_shape3_vertexed_class_init (CrankShape3VertexedClass *c)
 {
   GObjectClass *c_gobject;
   CrankShape3FiniteClass *c_shape3finite;
+  CrankShape3VertexedClassPrivate *cp;
 
   c_gobject = G_OBJECT_CLASS (c);
 
@@ -157,6 +168,12 @@ crank_shape3_vertexed_class_init (CrankShape3VertexedClass *c)
 
   c->get_face_as_shape = crank_shape3_vertexed_def_get_face_as_shape;
   c->get_farthest_vertex = crank_shape3_vertexed_def_get_farthest_vertex;
+
+  cp = G_TYPE_CLASS_GET_PRIVATE (c,
+                                 CRANK_TYPE_SHAPE3_VERTEXED,
+                                 CrankShape3VertexedClassPrivate);
+
+  cp->base_struct = NULL;
 }
 
 //////// GObject ///////////////////////////////////////////////////////////////
@@ -534,4 +551,258 @@ crank_shape3_vertexed_get_farthest_vertex (CrankShape3Vertexed *shape,
   CrankShape3VertexedClass *c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
 
   return c->get_farthest_vertex (shape, dir);
+}
+
+
+
+///////// Class Properties /////////////////////////////////////////////////////
+
+/**
+ * crank_shape3_vertexed_class_get_base_struct:
+ * @c: Class structure.
+ *
+ * Retrieves base structure of vertex based shape.
+ *
+ * Returns: (nullable): Base Structure for this class.
+ */
+CrankPolyStruct3*
+crank_shape3_vertexed_class_get_base_struct (CrankShape3VertexedClass *c)
+{
+  CrankShape3VertexedClassPrivate *cp;
+
+  cp = G_TYPE_CLASS_GET_PRIVATE (c, CRANK_TYPE_SHAPE3_VERTEXED,
+                                 CrankShape3VertexedClassPrivate);
+
+  return cp->base_struct;
+}
+
+/**
+ * crank_shape3_vertexed_class_set_base_struct:
+ * @c: Class structure.
+ * @pstruct: Base structure for shapes that represented by @c.
+ *
+ * Sets base structure for this class. Base structure provides common
+ * relationship between vertices, edges and faces.
+ */
+void
+crank_shape3_vertexed_class_set_base_struct (CrankShape3VertexedClass *c,
+                                             CrankPolyStruct3         *pstruct)
+{
+  CrankShape3VertexedClassPrivate *cp;
+
+  cp = G_TYPE_CLASS_GET_PRIVATE (c,
+                                 CRANK_TYPE_SHAPE3_VERTEXED,
+                                 CrankShape3VertexedClassPrivate);
+
+  cp->base_struct = crank_poly_struct3_ref (pstruct);
+}
+
+
+
+
+
+
+//////// Element properties based on base structure ////////////////////////////
+
+/**
+ * crank_shape3_vertexed_get_nvertices_by_bstruct:
+ * @shape: A Shape.
+ *
+ * Gets number of vertices, according to base structure.
+ *
+ * Returns: Number of vertices in @shape.
+ */
+guint
+crank_shape3_vertexed_get_nvertices_by_bstruct (CrankShape3Vertexed *shape)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_nvertices (pstruct);
+}
+
+/**
+ * crank_shape3_vertexed_get_nedges_by_bstruct:
+ * @shape: A Shape.
+ *
+ * Gets number of edges, according to base structure.
+ *
+ * Returns: Number of edges in @shape.
+ */
+guint
+crank_shape3_vertexed_get_nedges_by_bstruct (CrankShape3Vertexed *shape)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_nedges (pstruct);
+}
+
+/**
+ * crank_shape3_vertexed_get_nfaces_by_bstruct:
+ * @shape: A Shape.
+ *
+ * Gets number of faces, according to base structure.
+ *
+ * Returns: Number of faces in @shape.
+ */
+guint
+crank_shape3_vertexed_get_nfaces_by_bstruct (CrankShape3Vertexed *shape)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_nfaces (pstruct);
+}
+
+
+/**
+ * crank_shape3_vertexed_get_vertex_edges_by_bstruct:
+ * @shape: A Shape.
+ * @vid: Vertex id.
+ * @neids: (out): Number of edges.
+ *
+ * Gets edges associated to vertex, based on base structure.
+ *
+ * Returns: (array length=neids): Number of edges associated to @vid.
+ */
+guint*
+crank_shape3_vertexed_get_vertex_edges_by_bstruct (CrankShape3Vertexed *shape,
+                                                   const guint          vid,
+                                                   guint               *neids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_vertex_edges (pstruct, vid, neids);
+}
+
+/**
+ * crank_shape3_vertexed_get_vertex_faces_by_bstruct:
+ * @shape: A Shape.
+ * @vid: Vertex id.
+ * @nfids: (out): Number of edges.
+ *
+ * Gets faces associated to vertex, based on base structure.
+ *
+ * Returns: (array length=nfids): Number of faces associated to @vid.
+ */
+guint*
+crank_shape3_vertexed_get_vertex_faces_by_bstruct (CrankShape3Vertexed *shape,
+                                                   const guint          vid,
+                                                   guint               *nfids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_vertex_faces (pstruct, vid, nfids);
+}
+
+/**
+ * crank_shape3_vertexed_get_edge_vertices_by_bstruct:
+ * @shape: A Shape.
+ * @eid: Edge id.
+ * @vids: (out) (array fixed-size=2): Vertex ids.
+ *
+ * Gets vertices associated to edges, based on base structure.
+ */
+void
+crank_shape3_vertexed_get_edge_vertices_by_bstruct (CrankShape3Vertexed *shape,
+                                                    const guint          eid,
+                                                    guint               *vids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  crank_poly_struct3_get_edge_vertices (pstruct, eid, vids);
+}
+
+/**
+ * crank_shape3_vertexed_get_edge_faces_by_bstruct:
+ * @shape: A Shape.
+ * @eid: Edge id.
+ * @nfids: (out): Number of edges.
+ *
+ * Gets faces associated to an edge, based on base structure.
+ *
+ * Returns: (array length=nfids): Number of faces associated to @eid.
+ */
+guint*
+crank_shape3_vertexed_get_edge_faces_by_bstruct (CrankShape3Vertexed *shape,
+                                                 const guint          eid,
+                                                 guint               *nfids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_edge_faces (pstruct, eid, nfids);
+}
+
+/**
+ * crank_shape3_vertexed_get_face_vertices_by_bstruct:
+ * @shape: A Shape.
+ * @fid: Edge id.
+ * @nvids: (out): Number of vertices.
+ *
+ * Gets vertices associated to a face, based on base structure.
+ *
+ * Returns: (array length=nvids): Number of vertices associated to @fid.
+ */
+guint*
+crank_shape3_vertexed_get_face_vertices_by_bstruct (CrankShape3Vertexed *shape,
+                                                    const guint          fid,
+                                                    guint               *nvids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_face_vertices (pstruct, fid, nvids);
+}
+
+/**
+ * crank_shape3_vertexed_get_face_edges_by_bstruct:
+ * @shape: A Shape.
+ * @fid: Edge id.
+ * @neids: (out): Number of edges.
+ *
+ * Gets edges associated to a face, based on base structure.
+ *
+ * Returns: (array length=neids): Number of vertices associated to @fid.
+ */
+guint*
+crank_shape3_vertexed_get_face_edges_by_bstruct (CrankShape3Vertexed *shape,
+                                                 const guint          fid,
+                                                 guint               *neids)
+{
+  CrankShape3VertexedClass *c;
+  CrankPolyStruct3 *pstruct;
+
+  c = CRANK_SHAPE3_VERTEXED_GET_CLASS (shape);
+  pstruct = crank_shape3_vertexed_class_get_base_struct (c);
+
+  return crank_poly_struct3_get_face_edges (pstruct, fid, neids);
 }
