@@ -39,6 +39,12 @@
  */
 
 //////// Private Functions /////////////////////////////////////////////////////
+static void                   crank_poly_struct3_vdata_fini (CrankPolyStruct3VData *data);
+
+static void                   crank_poly_struct3_edata_fini (CrankPolyStruct3EData *data);
+
+static void                   crank_poly_struct3_fdata_fini (CrankPolyStruct3FData *data);
+
 
 static CrankPolyStruct3VData *crank_poly_struct3_get_vdata (CrankPolyStruct3 *self,
                                                             const guint       vid);
@@ -79,6 +85,27 @@ struct _CrankPolyStruct3 {
 };
 
 //////// Private functions /////////////////////////////////////////////////////
+
+static void
+crank_poly_struct3_vdata_fini (CrankPolyStruct3VData *data)
+{
+  g_free (data->edges);
+  g_free (data->faces);
+}
+
+static void
+crank_poly_struct3_edata_fini (CrankPolyStruct3EData *data)
+{
+  g_free (data->faces);
+}
+
+static void
+crank_poly_struct3_fdata_fini (CrankPolyStruct3FData *data)
+{
+  g_free (data->vertices);
+  g_free (data->edges);
+}
+
 
 static CrankPolyStruct3VData*
 crank_poly_struct3_get_vdata (CrankPolyStruct3 *self,
@@ -225,6 +252,10 @@ crank_poly_struct3_array_contains (const guint  len,
   return FALSE;
 }
 
+
+
+
+
 //////// Constructors //////////////////////////////////////////////////////////
 
 /**
@@ -243,6 +274,13 @@ crank_poly_struct3_new (void)
   self->vertices = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3VData));
   self->edges = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3EData));
   self->faces = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3FData));
+
+  g_array_set_clear_func (self->vertices,
+                          (GDestroyNotify)crank_poly_struct3_vdata_fini);
+  g_array_set_clear_func (self->edges,
+                          (GDestroyNotify)crank_poly_struct3_edata_fini);
+  g_array_set_clear_func (self->faces,
+                          (GDestroyNotify)crank_poly_struct3_fdata_fini);
 
   return self;
 }
