@@ -35,6 +35,7 @@ shapeinclude_HEADERS = \
 		crankshape3segment.h \
 		crankshape3triangle.h \
 		crankshape3tetrahedron.h \
+		crankshape3cpolyhedron.h \
 		crankgjk.h
 
 
@@ -79,6 +80,7 @@ libcrankshape_la_SOURCES= \
 		crankshape3segment.c \
 		crankshape3triangle.c \
 		crankshape3tetrahedron.c \
+		crankshape3cpolyhedron.c \
 		crankgjk.c
 
 
