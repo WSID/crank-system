@@ -50,4 +50,6 @@ CrankShape3CPolyhedron *crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices
                                                       const guint       nvertices,
                                                       CrankPolyStruct3 *pstruct);
 
+CrankShape3CPolyhedron *crank_shape3_cpolyhedron_new_from_polyhedron (CrankShape3Polyhedron *polyhedron);
+
 #endif //CRANKSHAPE3CPOLYHEDRON_H

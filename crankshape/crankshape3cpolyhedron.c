@@ -106,6 +106,16 @@ static gfloat     crank_shape3_cpolyhedron_get_face_z       (CrankShape3CPolyhed
                                                              const guint             fid,
                                                              CrankVecFloat2         *xy);
 
+
+static void       crank_shape3_cpolyhedron_build_cache (CrankShape3CPolyhedron *shape);
+
+
+static void       crank_shape3_cpolyhedron_build_bound_radius (CrankShape3CPolyhedron *shape);
+
+static void       crank_shape3_cpolyhedron_build_face_normal (CrankShape3CPolyhedron *shape);
+
+static void       crank_shape3_cpolyhedron_build_convex (CrankShape3CPolyhedron *shape);
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 struct _CrankShape3CPolyhedron {
@@ -418,42 +428,50 @@ crank_shape3_cpolyhedron_get_face_z (CrankShape3CPolyhedron *shape,
 }
 
 
-
-//////// Constructors //////////////////////////////////////////////////////////
-
-CrankShape3CPolyhedron*
-crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
-                              const guint       nvertices,
-                              CrankPolyStruct3 *pstruct)
+void
+crank_shape3_cpolyhedron_build_cache (CrankShape3CPolyhedron *shape)
 {
-  CrankShape3CPolyhedron *self;
+  crank_shape3_cpolyhedron_build_bound_radius (shape);
+  crank_shape3_cpolyhedron_build_face_normal (shape);
+  crank_shape3_cpolyhedron_build_convex (shape);
+}
 
+
+
+void
+crank_shape3_cpolyhedron_build_bound_radius (CrankShape3CPolyhedron *shape)
+{
   gfloat bradius_sq;
 
-  guint nfaces;
-  guint i, j;
+  CrankVecFloat3 *vert;
+  guint i;
 
-  self = (CrankShape3CPolyhedron*) g_object_new (CRANK_TYPE_SHAPE3_CPOLYHEDRON,
-                                                 NULL);
+  vert = & g_array_index (shape->vert_pos, CrankVecFloat3, 0);
+  bradius_sq = crank_vec_float3_get_magn_sq (vert);
 
-  g_array_append_vals (self->vert_pos, vertices, nvertices);
-
-  // Getting bounding radius.
-
-  bradius_sq = crank_vec_float3_get_magn_sq (vertices + 0);
-  for (i = 1; i < nvertices; i++)
+  for (i = 1; i < shape->vert_pos->len; i++)
     {
-      gfloat bradius_sq_c = crank_vec_float3_get_magn_sq (vertices + i);
+      gfloat bradius_sq_c;
+
+      vert = & g_array_index (shape->vert_pos, CrankVecFloat3, i);
+
+      bradius_sq_c = crank_vec_float3_get_magn_sq (vert);
 
       bradius_sq = MAX (bradius_sq, bradius_sq_c);
     }
-  self->bound_radius = sqrtf (bradius_sq);
+
+  shape->bound_radius = sqrtf (bradius_sq);
+}
 
 
-  // Face normals.
+void
+crank_shape3_cpolyhedron_build_face_normal (CrankShape3CPolyhedron *shape)
+{
+  guint nfaces;
+  guint i;
 
-  nfaces = crank_poly_struct3_get_nfaces (pstruct);
-  g_array_set_size (self->face_norm, nfaces);
+  nfaces = crank_poly_struct3_get_nfaces (shape->pstruct);
+  g_array_set_size (shape->face_norm, nfaces);
   for (i = 0; i < nfaces; i++)
     {
       CrankVecFloat3 disp_ab;
@@ -463,29 +481,35 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
       guint *fvertices;
       guint nfvertices;
 
-      fvertices = crank_poly_struct3_get_face_vertices (pstruct, i, &nfvertices);
+      fvertices = crank_poly_struct3_get_face_vertices (shape->pstruct, i, &nfvertices);
 
-      crank_vec_float3_sub (vertices + fvertices[1],
-                            vertices + fvertices[0],
+      crank_vec_float3_sub (& g_array_index (shape->vert_pos, CrankVecFloat3, 1),
+                            & g_array_index (shape->vert_pos, CrankVecFloat3, 0),
                             & disp_ab);
 
-      crank_vec_float3_sub (vertices + fvertices[2],
-                            vertices + fvertices[1],
+      crank_vec_float3_sub (& g_array_index (shape->vert_pos, CrankVecFloat3, 2),
+                            & g_array_index (shape->vert_pos, CrankVecFloat3, 1),
                             & disp_bc);
 
-      norm = & g_array_index (self->face_norm, CrankVecFloat3, i);
+      norm = & g_array_index (shape->face_norm, CrankVecFloat3, i);
 
       crank_vec_float3_crs (& disp_ab, & disp_bc, norm);
       crank_vec_float3_unit_self (norm);
 
       g_free (fvertices);
     }
+}
 
+void
+crank_shape3_cpolyhedron_build_convex (CrankShape3CPolyhedron *shape)
+{
+  guint i, j;
 
-  // Vertex convexity
-  self->convex = TRUE;
-  for (i = 0; i < nvertices; i++)
+  shape->convex = TRUE;
+  for (i = 0; i < shape->vert_pos->len; i++)
     {
+      CrankVecFloat3 *vi;
+
       guint *edges;
       guint nedges;
 
@@ -494,8 +518,9 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
 
       guint *vert_vert;
 
-      edges = crank_poly_struct3_get_vertex_edges (pstruct, i, &nedges);
-      faces = crank_poly_struct3_get_vertex_faces (pstruct, i, &nfaces);
+      vi = & g_array_index (shape->vert_pos, CrankVecFloat3, i);
+      edges = crank_poly_struct3_get_vertex_edges (shape->pstruct, i, &nedges);
+      faces = crank_poly_struct3_get_vertex_faces (shape->pstruct, i, &nfaces);
       vert_vert = g_new (guint, nedges);
 
       // Build vert - vert association.
@@ -503,7 +528,7 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
         {
           guint everts[2];
 
-          crank_poly_struct3_get_edge_vertices (pstruct, edges[j], everts);
+          crank_poly_struct3_get_edge_vertices (shape->pstruct, edges[j], everts);
 
           vert_vert[j] = (everts[0] == i) ? everts[1] : everts[0];
         }
@@ -515,22 +540,25 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
 
           guint k;
 
-          norm = & g_array_index (self->face_norm, CrankVecFloat3, j);
+          norm = & g_array_index (shape->face_norm, CrankVecFloat3, j);
 
           for (k = 0; k < nedges; k++)
             {
+              CrankVecFloat3 *vk;
               CrankVecFloat3 disp;
               gfloat dot;
 
-              crank_vec_float3_sub (vertices + i, vertices + vert_vert[k], &disp);
+              vk = & g_array_index (shape->vert_pos, CrankVecFloat3, vert_vert[k]);
+
+              crank_vec_float3_sub (vi, vk, &disp);
               dot = crank_vec_float3_dot (norm, &disp);
 
               if (0.0001f < dot)
                 {
-                  self->convex = FALSE;
+                  shape->convex = FALSE;
                 }
             }
-          if (! self->convex)
+          if (! shape->convex)
             break;
         }
 
@@ -538,9 +566,91 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
       g_free (edges);
       g_free (faces);
 
-      if (! self->convex)
+      if (! shape->convex)
         break;
     }
+}
+
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankShape3CPolyhedron*
+crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
+                              const guint       nvertices,
+                              CrankPolyStruct3 *pstruct)
+{
+  CrankShape3CPolyhedron *self;
+
+  self = (CrankShape3CPolyhedron*) g_object_new (CRANK_TYPE_SHAPE3_CPOLYHEDRON,
+                                                 NULL);
+
+  g_array_append_vals (self->vert_pos, vertices, nvertices);
+
+  crank_shape3_cpolyhedron_build_cache (self);
+
+  return self;
+}
+
+
+
+CrankShape3CPolyhedron*
+crank_shape3_cpolyhedron_new_from_polyhedron (CrankShape3Polyhedron *polyhedron)
+{
+  CrankShape3CPolyhedron *self;
+
+  CrankShape3Vertexed *polyhedron_vertexed;
+  CrankPolyStruct3 *pstruct;
+
+  guint i, j, n;
+
+
+  self = (CrankShape3CPolyhedron*) g_object_new (CRANK_TYPE_SHAPE3_CPOLYHEDRON,
+                                                 NULL);
+
+  polyhedron_vertexed = CRANK_SHAPE3_VERTEXED (polyhedron);
+  pstruct = crank_poly_struct3_new ();
+
+
+
+  n = crank_shape3_vertexed_get_nvertices (polyhedron_vertexed);
+
+  g_array_set_size (self->vert_pos, n);
+  crank_poly_struct3_set_nvertices (pstruct, n);
+
+  for (i = 0; i < n; i++)
+    {
+      CrankVecFloat3 *v = & g_array_index (self->vert_pos, CrankVecFloat3, i);
+
+      crank_shape3_vertexed_get_vertex_pos (polyhedron_vertexed, i, v);
+    }
+
+
+
+  n = crank_shape3_vertexed_get_nedges (polyhedron_vertexed);
+  for (i = 0; i < n; i++)
+    {
+      guint vertices[2];
+
+      crank_shape3_vertexed_get_edge_vertices (polyhedron_vertexed, i, vertices);
+      crank_poly_struct3_add_edge (pstruct, vertices[0], vertices[1]);
+    }
+
+
+  n = crank_shape3_vertexed_get_nfaces (polyhedron_vertexed);
+  for (i = 0; i < n; i++)
+    {
+      guint *vertices;
+      guint nvertices;
+
+      vertices = crank_shape3_vertexed_get_face_vertices (polyhedron_vertexed, i, &nvertices);
+      crank_poly_struct3_add_face_vertices (pstruct, vertices, nvertices);
+
+      g_free (vertices);
+    }
+
+  self->pstruct = pstruct;
+
+  crank_shape3_cpolyhedron_build_cache (self);
 
   return self;
 }
