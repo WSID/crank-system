@@ -273,7 +273,7 @@ crank_poly_struct3_new (void)
   CrankPolyStruct3 *self = g_slice_new (CrankPolyStruct3);
 
   self->_ref = 1;
-  self->vertices = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3VData));
+  self->vertices = g_array_new (TRUE, FALSE, sizeof (CrankPolyStruct3VData));
   self->edges = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3EData));
   self->faces = g_array_new (FALSE, FALSE, sizeof (CrankPolyStruct3FData));
 
