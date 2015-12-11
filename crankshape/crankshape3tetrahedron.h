@@ -34,6 +34,7 @@
 #include "crankshape3finite.h"
 #include "crankshape3vertexed.h"
 #include "crankshape3polyhedron.h"
+#include "crankshape3tpolyhedron.h"
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -41,7 +42,7 @@
 G_DECLARE_FINAL_TYPE (CrankShape3Tetrahedron,
                       crank_shape3_tetrahedron,
                       CRANK, SHAPE3_TETRAHEDRON,
-                      CrankShape3Polyhedron)
+                      CrankShape3TPolyhedron)
 
 
 //////// Constructor ///////////////////////////////////////////////////////////
