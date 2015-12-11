@@ -99,6 +99,8 @@ crank_shape3_tetrahedron_class_init (CrankShape3TetrahedronClass *c)
   crank_poly_struct3_add_face_vertices (pstruct, 3, 3, 2, 1);
 
   crank_shape3_tpolyhedron_class_set_template (c_shape3tpolyhedron, pstruct);
+
+  crank_poly_struct3_unref (pstruct);
 }
 
 //////// CrankShape3 ///////////////////////////////////////////////////////////
