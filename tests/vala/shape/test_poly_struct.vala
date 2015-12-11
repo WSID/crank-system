@@ -36,10 +36,10 @@ private void test_tetrahedron () {
 
     pstruct.nvertices = 4;
 
-    pstruct.add_face_vertices ({0, 2, 1});
-    pstruct.add_face_vertices ({3, 0, 1});
-    pstruct.add_face_vertices ({3, 1, 2});
-    pstruct.add_face_vertices ({3, 2, 0});
+    pstruct.add_face_vertices (3, 0, 2, 1);
+    pstruct.add_face_vertices (3, 3, 0, 1);
+    pstruct.add_face_vertices (3, 3, 1, 2);
+    pstruct.add_face_vertices (3, 3, 2, 0);
 
     assert (pstruct.nvertices == 4);
     assert (pstruct.nedges == 6);
@@ -53,12 +53,12 @@ private void test_cube () {
 
     pstruct.nvertices = 8;
 
-    pstruct.add_face_vertices ({0, 1, 2, 3});
-    pstruct.add_face_vertices ({0, 4, 5, 1});
-    pstruct.add_face_vertices ({1, 5, 6, 2});
-    pstruct.add_face_vertices ({2, 6, 7, 3});
-    pstruct.add_face_vertices ({3, 7, 4, 0});
-    pstruct.add_face_vertices ({7, 6, 5, 4});
+    pstruct.add_face_vertices (4, 0, 1, 2, 3);
+    pstruct.add_face_vertices (4, 0, 4, 5, 1);
+    pstruct.add_face_vertices (4, 1, 5, 6, 2);
+    pstruct.add_face_vertices (4, 2, 6, 7, 3);
+    pstruct.add_face_vertices (4, 3, 7, 4, 0);
+    pstruct.add_face_vertices (4, 7, 6, 5, 4);
 
     assert (pstruct.nvertices == 8);
     assert (pstruct.nedges == 12);

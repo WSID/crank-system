@@ -26,10 +26,10 @@ class TestPolyStruct (unittest.TestCase):
 
         pstruct.set_nvertices (4)
 
-        pstruct.add_face_vertices ([0, 2, 1])
-        pstruct.add_face_vertices ([3, 0, 1])
-        pstruct.add_face_vertices ([3, 1, 2])
-        pstruct.add_face_vertices ([3, 2, 0])
+        pstruct.add_face_vertex_array ([0, 2, 1])
+        pstruct.add_face_vertex_array ([3, 0, 1])
+        pstruct.add_face_vertex_array ([3, 1, 2])
+        pstruct.add_face_vertex_array ([3, 2, 0])
 
         self.assertEqual (pstruct.get_nvertices (), 4)
         self.assertEqual (pstruct.get_nedges (), 6)
@@ -42,12 +42,12 @@ class TestPolyStruct (unittest.TestCase):
 
         pstruct.set_nvertices (8)
 
-        pstruct.add_face_vertices ([0, 1, 2, 3])
-        pstruct.add_face_vertices ([0, 4, 5, 1])
-        pstruct.add_face_vertices ([1, 5, 6, 2])
-        pstruct.add_face_vertices ([2, 6, 7, 3])
-        pstruct.add_face_vertices ([3, 7, 4, 0])
-        pstruct.add_face_vertices ([7, 6, 5, 4])
+        pstruct.add_face_vertex_array ([0, 1, 2, 3])
+        pstruct.add_face_vertex_array ([0, 4, 5, 1])
+        pstruct.add_face_vertex_array ([1, 5, 6, 2])
+        pstruct.add_face_vertex_array ([2, 6, 7, 3])
+        pstruct.add_face_vertex_array ([3, 7, 4, 0])
+        pstruct.add_face_vertex_array ([7, 6, 5, 4])
 
         self.assertEqual (pstruct.get_nvertices (), 8)
         self.assertEqual (pstruct.get_nedges (), 12)

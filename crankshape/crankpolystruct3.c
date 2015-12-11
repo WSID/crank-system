@@ -21,6 +21,8 @@
 
 #define _CRANKSHAPE_INSIDE
 
+#include <stdarg.h>
+
 #include <glib.h>
 #include <glib-object.h>
 
@@ -746,6 +748,74 @@ crank_poly_struct3_add_edge (CrankPolyStruct3 *pstruct,
 /**
  * crank_poly_struct3_add_face_vertices:
  * @pstruct: A Poly struct.
+ * @nvertices: Number of vertices.
+ * @...: Vertices to associate to a face.
+ *
+ * Adds a face or returns existing one.
+ *
+ * Note: This might return -1 for when this operation is invalid.
+ *
+ * Returns: Face id of newly created face or existing one.
+ */
+gint
+crank_poly_struct3_add_face_vertices (CrankPolyStruct3 *pstruct,
+                                      const guint       nvertices,
+                                      ...)
+{
+  guint *vert_arr;
+
+  va_list vararg;
+  guint i;
+
+  vert_arr = g_newa (guint, nvertices);
+
+  va_start (vararg, nvertices);
+
+  for (i = 0; i < nvertices; i++)
+    vert_arr[i] = va_arg (vararg, guint);
+
+  va_end (vararg);
+
+  return crank_poly_struct3_add_face_vertex_array (pstruct, vert_arr, nvertices);
+}
+
+/**
+ * crank_poly_struct3_add_face_edges:
+ * @pstruct: A Poly struct.
+ * @nedges: Number of edges.
+ * @...: Edges to associate to a face.
+ *
+ * Adds a face or returns existing one.
+ *
+ * Note: This might return -1 for when this operation is invalid.
+ *
+ * Returns: Face id of newly created face or existing one.
+ */
+gint
+crank_poly_struct3_add_face_edges (CrankPolyStruct3 *pstruct,
+                                   const guint       nedges,
+                                   ...)
+{
+  guint *edge_arr;
+
+  va_list vararg;
+  guint i;
+
+  edge_arr = g_newa (guint, nedges);
+
+  va_start (vararg, nedges);
+
+  for (i = 0; i < nedges; i++)
+    edge_arr[i] = va_arg (vararg, guint);
+
+  va_end (vararg);
+
+  return crank_poly_struct3_add_face_edge_array (pstruct, edge_arr, nedges);
+}
+
+/**
+ * crank_poly_struct3_add_face_vertex_array:
+ * @pstruct: A Poly struct.
  * @vertices: (array length=nvertices): Vertices to associate to a face.
  * @nvertices: Number of vertices.
  *
@@ -756,9 +826,9 @@ crank_poly_struct3_add_edge (CrankPolyStruct3 *pstruct,
  * Returns: Face id of newly created face or existing one.
  */
 gint
-crank_poly_struct3_add_face_vertices (CrankPolyStruct3 *pstruct,
-                                      const guint      *vertices,
-                                      guint             nvertices)
+crank_poly_struct3_add_face_vertex_array (CrankPolyStruct3 *pstruct,
+                                          const guint      *vertices,
+                                          guint             nvertices)
 {
   gint fid;
 
@@ -819,7 +889,7 @@ crank_poly_struct3_add_face_vertices (CrankPolyStruct3 *pstruct,
 }
 
 /**
- * crank_poly_struct3_add_face_edges:
+ * crank_poly_struct3_add_face_edge_array:
  * @pstruct: A Poly struct.
  * @edges: (array length=nedges): Edges to associate to a face.
  * @nedges: Number of edges.
@@ -831,9 +901,9 @@ crank_poly_struct3_add_face_vertices (CrankPolyStruct3 *pstruct,
  * Returns: Face id of newly created face or existing one.
  */
 gint
-crank_poly_struct3_add_face_edges (CrankPolyStruct3 *pstruct,
-                                   const guint      *edges,
-                                   const guint       nedges)
+crank_poly_struct3_add_face_edge_array (CrankPolyStruct3 *pstruct,
+                                        const guint      *edges,
+                                        const guint       nedges)
 {
   gint fid;
 

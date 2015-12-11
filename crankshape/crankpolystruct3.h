@@ -160,12 +160,20 @@ gint                crank_poly_struct3_add_edge (CrankPolyStruct3 *pstruct,
                                                  const guint       b);
 
 gint                crank_poly_struct3_add_face_vertices (CrankPolyStruct3 *pstruct,
-                                                          const guint      *vertices,
-                                                          guint            nvertices);
+                                                          const guint       nvertices,
+                                                          ...);
 
 gint                crank_poly_struct3_add_face_edges (CrankPolyStruct3 *pstruct,
-                                                       const guint      *edges,
-                                                       guint            nedges);
+                                                       guint            nedges,
+                                                       ...);
+
+gint                crank_poly_struct3_add_face_vertex_array (CrankPolyStruct3 *pstruct,
+                                                              const guint      *vertices,
+                                                              const guint       nvertices);
+
+gint                crank_poly_struct3_add_face_edge_array (CrankPolyStruct3 *pstruct,
+                                                            const guint      *edges,
+                                                            const guint       nedges);
 
 
 //////// Validation ////////////////////////////////////////////////////////////

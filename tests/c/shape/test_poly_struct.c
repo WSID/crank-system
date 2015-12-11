@@ -55,25 +55,10 @@ test_tetrahedron (void)
 
   crank_poly_struct3_set_nvertices (pstruct, 4);
 
-  fverts[0] = 0;
-  fverts[1] = 2;
-  fverts[2] = 1;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 3);
-
-  fverts[0] = 3;
-  fverts[1] = 0;
-  fverts[2] = 1;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 3);
-
-  fverts[0] = 3;
-  fverts[1] = 1;
-  fverts[2] = 2;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 3);
-
-  fverts[0] = 3;
-  fverts[1] = 2;
-  fverts[2] = 0;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 3);
+  crank_poly_struct3_add_face_vertices (pstruct, 3, 0, 2, 1);
+  crank_poly_struct3_add_face_vertices (pstruct, 3, 3, 0 ,1);
+  crank_poly_struct3_add_face_vertices (pstruct, 3, 3, 1, 2);
+  crank_poly_struct3_add_face_vertices (pstruct, 3, 3, 2, 0);
 
   g_assert_cmpuint (crank_poly_struct3_get_nvertices (pstruct), ==, 4);
   g_assert_cmpuint (crank_poly_struct3_get_nedges (pstruct), ==, 6);
@@ -92,41 +77,12 @@ test_cube (void)
 
   crank_poly_struct3_set_nvertices (pstruct, 8);
 
-  fverts[0] = 0;
-  fverts[1] = 1;
-  fverts[2] = 2;
-  fverts[3] = 3;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
-
-  fverts[0] = 0;
-  fverts[1] = 4;
-  fverts[2] = 5;
-  fverts[3] = 1;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
-
-  fverts[0] = 1;
-  fverts[1] = 5;
-  fverts[2] = 6;
-  fverts[3] = 2;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
-
-  fverts[0] = 2;
-  fverts[1] = 6;
-  fverts[2] = 7;
-  fverts[3] = 3;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
-
-  fverts[0] = 3;
-  fverts[1] = 7;
-  fverts[2] = 4;
-  fverts[3] = 0;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
-
-  fverts[0] = 7;
-  fverts[1] = 6;
-  fverts[2] = 5;
-  fverts[3] = 4;
-  crank_poly_struct3_add_face_vertices (pstruct, fverts, 4);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 0, 1, 2, 3);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 0, 4, 5, 1);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 1, 5, 6, 2);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 2, 6, 7, 3);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 3, 7, 4, 0);
+  crank_poly_struct3_add_face_vertices (pstruct, 4, 7, 6, 5, 4);
 
   g_assert_cmpuint (crank_poly_struct3_get_nvertices (pstruct), ==, 8);
   g_assert_cmpuint (crank_poly_struct3_get_nedges (pstruct), ==, 12);
