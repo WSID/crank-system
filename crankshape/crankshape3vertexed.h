@@ -195,50 +195,6 @@ guint crank_shape3_vertexed_get_farthest_vertex                (CrankShape3Verte
 
 
 
-
-//////// Class Properties //////////////////////////////////////////////////////
-
-CrankPolyStruct3* crank_shape3_vertexed_class_get_base_struct  (CrankShape3VertexedClass *c);
-
-void              crank_shape3_vertexed_class_set_base_struct  (CrankShape3VertexedClass *c,
-                                                                CrankPolyStruct3         *pstruct);
-
-//////// Default implementation based element properties ///////////////////////
-
-guint crank_shape3_vertexed_get_nvertices_by_bstruct (CrankShape3Vertexed *shape);
-
-guint crank_shape3_vertexed_get_nedges_by_bstruct (CrankShape3Vertexed *shape);
-
-guint crank_shape3_vertexed_get_nfaces_by_bstruct (CrankShape3Vertexed *shape);
-
-
-guint *crank_shape3_vertexed_get_vertex_edges_by_bstruct       (CrankShape3Vertexed *shape,
-                                                                const guint          vid,
-                                                                guint               *neids);
-
-guint *crank_shape3_vertexed_get_vertex_faces_by_bstruct       (CrankShape3Vertexed *shape,
-                                                                const guint          vid,
-                                                                guint               *nfids);
-
-void   crank_shape3_vertexed_get_edge_vertices_by_bstruct      (CrankShape3Vertexed *shape,
-                                                                const guint          eid,
-                                                                guint               *vids);
-
-guint *crank_shape3_vertexed_get_edge_faces_by_bstruct         (CrankShape3Vertexed *shape,
-                                                                const guint          eid,
-                                                                guint               *nfids);
-
-guint *crank_shape3_vertexed_get_face_vertices_by_bstruct      (CrankShape3Vertexed *shape,
-                                                                const guint          fid,
-                                                                guint               *nvids);
-
-guint *crank_shape3_vertexed_get_face_edges_by_bstruct         (CrankShape3Vertexed *shape,
-                                                                const guint          fid,
-                                                                guint               *neids);
-
-
-
-
 //////// Possible functions ////////////////////////////////////////////////////
 // CrankDigraph *crank_shape3_vertexed_get_ve_digraph (CrankShape3Vertexed *shape);
 //
