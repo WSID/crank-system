@@ -643,7 +643,7 @@ crank_shape3_cpolyhedron_new_from_polyhedron (CrankShape3Polyhedron *polyhedron)
       guint nvertices;
 
       vertices = crank_shape3_vertexed_get_face_vertices (polyhedron_vertexed, i, &nvertices);
-      crank_poly_struct3_add_face_vertices (pstruct, vertices, nvertices);
+      crank_poly_struct3_add_face_vertex_array (pstruct, vertices, nvertices);
 
       g_free (vertices);
     }
