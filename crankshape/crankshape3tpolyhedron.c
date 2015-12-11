@@ -84,7 +84,7 @@ typedef struct _CrankShape3TPolyhedronClassPrivate
 
 G_DEFINE_ABSTRACT_TYPE_WITH_CODE (CrankShape3TPolyhedron,
                                   crank_shape3_tpolyhedron,
-                                  CRANK_TYPE_SHAPE3_TPOLYHEDRON,
+                                  CRANK_TYPE_SHAPE3_POLYHEDRON,
                                   {
                                     g_type_add_class_private (g_define_type_id,
                                                               sizeof (CrankShape3TPolyhedronClassPrivate));
