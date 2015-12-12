@@ -57,6 +57,7 @@
 #include "crankshape3segment.h"
 #include "crankshape3triangle.h"
 #include "crankshape3tetrahedron.h"
+#include "crankshape3cuboid.h"
 #include "crankshape3cpolyhedron.h"
 
 #include "crankgjk.h"
