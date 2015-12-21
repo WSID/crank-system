@@ -32,7 +32,11 @@
 #include "cranktrans.h"
 #include "crankshape2.h"
 #include "crankshape2finite.h"
-#include "crankshape2polygon.h"
+#include "crankshape2vertexed.h"
+
+#include "crankshape3.h"
+#include "crankshape3finite.h"
+#include "crankshape3vertexed.h"
 
 #include "crankgjk.h"
 
@@ -98,6 +102,15 @@ void    crank_gjk2_support_point (CrankShape2Vertexed *a,
                                   CrankVecFloat2     *vertex,
                                   guint              *vida,
                                   guint              *vidb);
+
+
+void    crank_gjk3_support (CrankShape3Vertexed *a,
+                            CrankShape3Vertexed *b,
+                            CrankTrans3         *bpos,
+                            CrankVecFloat3      *dir,
+                            CrankVecFloat3      *vertex,
+                            guint               *vida,
+                            guint               *vidb);
 
 
 
@@ -551,7 +564,6 @@ crank_epa2      (CrankShape2Vertexed *a,
   return NAN;
 }
 
-
 //////// Private functions /////////////////////////////////////////////////////
 
 void
@@ -610,5 +622,38 @@ crank_gjk2_support_point (CrankShape2Vertexed *a,
 
   crank_trans2_transv (bpos, &bvert, &abvert);
   crank_vec_float2_sub (&avert, &abvert, vertex);
+}
+
+
+void
+crank_gjk3_support (CrankShape3Vertexed *a,
+                    CrankShape3Vertexed *b,
+                    CrankTrans3         *bpos,
+                    CrankVecFloat3      *dir,
+                    CrankVecFloat3      *vertex,
+                    guint               *vida,
+                    guint               *vidb)
+{
+  CrankVecFloat3 bdir;
+
+  CrankVecFloat3 avert;
+  CrankVecFloat3 bvert;
+  CrankVecFloat3 abvert;
+
+  CrankQuatFloat invrot;
+
+  crank_quat_float_conjugate (& bpos->mrot, &invrot);
+
+  crank_quat_float_rotatev (&invrot, dir, &bdir);
+  crank_vec_float3_neg_self (&bdir);
+
+  *vida = crank_shape3_vertexed_get_farthest_vertex (a, dir);
+  *vidb = crank_shape3_vertexed_get_farthest_vertex (b, &bdir);
+
+  crank_shape3_vertexed_get_vertex_pos (a, *vida, &avert);
+  crank_shape3_vertexed_get_vertex_pos (b, *vidb, &bvert);
+
+  crank_trans3_transv (bpos, &bvert, &abvert);
+  crank_vec_float3_sub (&avert, &abvert, vertex);
 }
 
