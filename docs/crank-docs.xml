@@ -95,6 +95,7 @@
       <xi:include href="xml/crankrotation.xml"/>
       <xi:include href="xml/cranktrans.xml"/>
       <xi:include href="xml/crankshapemisc.xml"/>
+      <xi:include href="xml/crankpolystruct3.xml"/>
     </chapter>
 
     <chapter>
@@ -119,7 +120,22 @@
       <title>Base Class for 3D Shape</title>
       <xi:include href="xml/crankshape3.xml"/>
       <xi:include href="xml/crankshape3finite.xml"/>
-      <xi:include href="xml/crankshape3polyhedreon.xml"/>
+      <xi:include href="xml/crankshape3vertexed.xml"/>
+      <xi:include href="xml/crankshape3polygon.xml"/>
+      <xi:include href="xml/crankshape3polyhedron.xml"/>
+      <xi:include href="xml/crankshape3tpolyhedron.xml"/>
+      <xi:include href="xml/crankshape3iround.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>3D Shape Classes</title>
+      <xi:include href="xml/crankshape3point.xml"/>
+      <xi:include href="xml/crankshape3segment.xml"/>
+      <xi:include href="xml/crankshape3triangle.xml"/>
+      <xi:include href="xml/crankshape3tetrahedron.xml"/>
+      <xi:include href="xml/crankshape3cuboid.xml"/>
+      <xi:include href="xml/crankshape3cpolyhedron.xml"/>
+      <xi:include href="xml/crankshape3sphere.xml"/>
     </chapter>
 
     <chapter>

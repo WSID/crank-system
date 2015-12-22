@@ -78,7 +78,7 @@ libcrankbase_la_SOURCES= \
 		crankmatcplxfloat.c \
 		\
 		crankadvgraph.c \
-		crankadvmat.c\
+		crankadvmat.c \
 		\
 		crankbasetest.c \
 		crankbench.c \

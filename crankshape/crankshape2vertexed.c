@@ -51,7 +51,6 @@
  *
  * * #CrankShape2Class.contains()
  * * #CrankShape2FiniteClass.is_convex()
- * * #CrankShape2FiniteClass.get_bound_radius()
  *
  * # Virtual Functions
  *

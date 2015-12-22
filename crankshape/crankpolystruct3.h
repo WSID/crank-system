@@ -44,6 +44,14 @@ typedef struct _CrankPolyStruct3EData CrankPolyStruct3EData;
 typedef struct _CrankPolyStruct3FData CrankPolyStruct3FData;
 
 /**
+ * CrankPolyStruct3:
+ *
+ * A Struct represents structure of polyhedral shape. In other words, it stores
+ * relationship of vertices, edges, and faces.
+ */
+
+
+/**
  * CrankPolyStruct3VData:
  * @nedges: Number of edges.
  * @edges: (transfer full) (array length=nedges): Edges.

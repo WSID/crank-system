@@ -19,12 +19,14 @@ shapeinclude_HEADERS = \
 		crankshape2vertexed.h \
 		crankshape2polygon.h \
 		crankshape2iround.h \
+		\
 		crankshape2point.h \
 		crankshape2segment.h \
 		crankshape2triangle.h \
 		crankshape2circle.h \
 		crankshape2rect.h \
 		crankshape2cpolygon.h \
+		\
 		crankshape3.h \
 		crankshape3finite.h \
 		crankshape3vertexed.h \
@@ -32,6 +34,7 @@ shapeinclude_HEADERS = \
 		crankshape3polyhedron.h \
 		crankshape3tpolyhedron.h \
 		crankshape3iround.h \
+		\
 		crankshape3sphere.h \
 		crankshape3point.h \
 		crankshape3segment.h \
@@ -39,6 +42,7 @@ shapeinclude_HEADERS = \
 		crankshape3tetrahedron.h \
 		crankshape3cuboid.h \
 		crankshape3cpolyhedron.h \
+		\
 		crankgjk.h
 
 

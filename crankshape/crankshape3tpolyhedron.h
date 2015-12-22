@@ -60,6 +60,6 @@ CrankPolyStruct3*   crank_shape3_tpolyhedron_class_get_template (CrankShape3TPol
 
 
 void                crank_shape3_tpolyhedron_class_set_template (CrankShape3TPolyhedronClass *c,
-                                                                 CrankPolyStruct3            *pstruct);
+                                                                 CrankPolyStruct3            *t);
 
 #endif

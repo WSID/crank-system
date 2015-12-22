@@ -2133,8 +2133,51 @@ crank_trans3_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankpolystruct3</FILE>
+CrankPolyStruct3
+CrankPolyStruct3EData
+CrankPolyStruct3VData
+CrankPolyStruct3FData
+crank_poly_struct3_new
+crank_poly_struct3_ref
+crank_poly_struct3_unref
+crank_poly_struct3_dup
+crank_poly_struct3_check_valid
+crank_poly_struct3_get_nvertices
+crank_poly_struct3_get_nedges
+crank_poly_struct3_get_nfaces
+crank_poly_struct3_get_vertex_edges
+crank_poly_struct3_get_vertex_faces
+crank_poly_struct3_get_edge_vertices
+crank_poly_struct3_get_edge_faces
+crank_poly_struct3_get_face_vertices
+crank_poly_struct3_get_face_edges
+crank_poly_struct3_get_edge_by_vertices
+crank_poly_struct3_set_nvertices
+crank_poly_struct3_add_edge
+crank_poly_struct3_add_face_vertex_array
+crank_poly_struct3_add_face_vertices
+crank_poly_struct3_add_face_edge_array
+crank_poly_struct3_add_face_edges
+<SUBSECTION Standard>
+CRANK_TYPE_POLY_STRUCT3
+crank_poly_struct3_get_type
+</SECTION>
+
+<SECTION>
 <FILE>crankshapemisc</FILE>
+CrankWinding
+crank_winding_from_point_arr
+crank_winding_from_points
+crank_winding_from_points_against
 crank_seg_intersect
+crank_tri_bcoord
+crank_tri_contains
+crank_tetra_bcoord
+crank_tetra_contains
+<SUBSECTION Standard>
+crank_winding_get_type
+CRANK_TYPE_WINDING
 </SECTION>
 
 
@@ -2180,6 +2223,7 @@ CRANK_TYPE_SHAPE2_VERTEXED
 <FILE>crankshape2polygon</FILE>
 crank_shape2_polygon_get_edge_normal
 crank_shape2_polygon_get_normal_edge
+crank_shape2_polygon_get_winding
 CrankShape2Polygon
 CrankShape2PolygonClass
 <SUBSECTION Standard>
@@ -2263,9 +2307,9 @@ crank_shape2_rect_get_type
 
 <SECTION>
 <FILE>crankshape2cpolygon</FILE>
+CrankShape2CPolygon
 crank_shape2_cpolygon_new
 crank_shape2_cpolygon_new_from_polygon
-CrankShape2CPolygon
 <SUBSECTION Standard>
 CRANK_TYPE_SHAPE2_CPOLYGON
 crank_shape2_cpolygon_get_type
@@ -2283,35 +2327,163 @@ crank_shape3_get_type
 </SECTION>
 
 <SECTION>
+<FILE>crankshape3iround</FILE>
+CrankShape3IRound
+CrankShape3IRoundInterface
+crank_shape3_iround_get_inner_shape
+crank_shape3_iround_get_round_radius
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_IROUND
+crank_shape3_iround_get_type
+</SECTION>
+
+<SECTION>
 <FILE>crankshape3finite</FILE>
 CrankShape3Finite
 CrankShape3FiniteClass
 crank_shape3_finite_is_convex
 crank_shape3_finite_get_bound_radius
-crank_shape3_finite_approximate_polyhedreon
+crank_shape3_finite_approximate_vertexed
 <SUBSECTION Standard>
 CRANK_TYPE_SHAPE3_FINITE
 crank_shape3_finite_get_type
 </SECTION>
+
 <SECTION>
-<FILE>crankshape3polyhedreon</FILE>
-CrankShape3Polyhedreon
-CrankShape3PolyhedreonClass
-crank_shape3_polyhedreon_get_nvertices
-crank_shape3_polyhedreon_get_nedges
-crank_shape3_polyhedreon_get_nfaces
-crank_shape3_polyhedreon_get_vertex_pos
-crank_shape3_polyhedreon_get_vertex_edges
-crank_shape3_polyhedreon_get_vertex_faces
-crank_shape3_polyhedreon_get_edge_vertices
-crank_shape3_polyhedreon_get_edge_faces
-crank_shape3_polyhedreon_get_face_vertices
-crank_shape3_polyhedreon_get_face_edges
-crank_shape3_polyhedreon_get_face_normal
-crank_shape3_polyhedreon_get_face_as_shape
-crank_shape3_polyhedreon_get_farthest_vertex
-crank_shape3_polyhedreon_get_normal_face
+<FILE>crankshape3vertexed</FILE>
+CrankShape3Vertexed
+CrankShape3VertexedClass
+crank_shape3_vertexed_get_dimension
+crank_shape3_vertexed_get_nvertices
+crank_shape3_vertexed_get_nedges
+crank_shape3_vertexed_get_nfaces
+crank_shape3_vertexed_get_vertex_pos
+crank_shape3_vertexed_get_vertex_edges
+crank_shape3_vertexed_get_vertex_faces
+crank_shape3_vertexed_get_edge_vertices
+crank_shape3_vertexed_get_edge_faces
+crank_shape3_vertexed_get_face_winding
+crank_shape3_vertexed_get_face_vertices
+crank_shape3_vertexed_get_face_edges
+crank_shape3_vertexed_get_face_as_shape
+crank_shape3_vertexed_get_farthest_vertex
 <SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_VERTEXED
+crank_shape3_vertexed_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3polygon</FILE>
+CrankShape3Polygon
+CrankShape3PolygonClass
+crank_shape3_polygon_get_winding
+crank_shape3_polygon_get_vertex_pos2
+crank_shape3_polygon_get_edge_normal
+crank_shape3_polygon_get_normal_edge
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_POLYGON
+crank_shape3_polygon_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3polyhedron</FILE>
+CrankShape3Polyhedron
+CrankShape3PolyhedronClass
+crank_shape3_polyhedron_get_face_normal
+crank_shape3_polyhedron_get_normal_face
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_POLYHEDRON
+crank_shape3_polyhedron_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3tpolyhedron</FILE>
+CrankShape3TPolyhedron
+CrankShape3TPolyhedronClass
+crank_shape3_tpolyhedron_class_get_template
+crank_shape3_tpolyhedron_class_set_template
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_TPOLYHEDRON
+crank_shape3_tpolyhedron_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3point</FILE>
+CrankShape3Point
+crank_shape3_point_new
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_POINT
+crank_shape3_point_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3segment</FILE>
+CrankShape3Segment
+crank_shape3_segment_new
+crank_shape3_segment_get_length
+crank_shape3_segment_set_length
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_SEGMENT
+crank_shape3_segment_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3triangle</FILE>
+CrankShape3Triangle
+crank_shape3_triangle_new
+crank_shape3_triangle_new_regular
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_TRIANGLE
+crank_shape3_triangle_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3tetrahedron</FILE>
+CrankShape3Tetrahedron
+crank_shape3_tetrahedron_new
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_TETRAHEDRON
+crank_shape3_triangle_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3cuboid</FILE>
+CrankShape3Cuboid
+crank_shape3_cuboid_new
+crank_shape3_cuboid_new_cube
+crank_shape3_cuboid_new_with_whd
+crank_shape3_cuboid_get_size
+crank_shape3_cuboid_set_size
+crank_shape3_cuboid_get_width
+crank_shape3_cuboid_set_width
+crank_shape3_cuboid_get_height
+crank_shape3_cuboid_set_height
+crank_shape3_cuboid_get_depth
+crank_shape3_cuboid_set_depth
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_CUBOID
+crank_shape3_cuboid_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3cpolyhedron</FILE>
+CrankShape3CPolyhedron
+crank_shape3_cpolyhedron_new
+crank_shape3_cpolyhedron_new_from_polyhedron
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_CPOLYHEDRON
+crank_shape3_cpolyhedron_get_type
+</SECTION>
+
+<SECTION>
+<FILE>crankshape3sphere</FILE>
+CrankShape3Sphere
+crank_shape3_sphere_new
+crank_shape3_sphere_get_radius
+crank_shape3_sphere_set_radius
+<SUBSECTION Standard>
+CRANK_TYPE_SHAPE3_SPHERE
+crank_shape3_sphere_get_type
 </SECTION>
 
 <SECTION>

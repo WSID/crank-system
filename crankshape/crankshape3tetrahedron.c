@@ -33,6 +33,15 @@
 #include "crankshape3tpolyhedron.h"
 #include "crankshape3tetrahedron.h"
 
+/**
+ * SECTION: crankshape3tetrahedron
+ * @title: CrankShape3Tetrahedron
+ * @short_description: Tetrahedron shape.
+ * @stability: unstable
+ * @include: crankshape.h
+ *
+ * Represents tetrahedron shape, which is 3D simplex.
+ */
 
 //////// List of virtual functions /////////////////////////////////////////////
 

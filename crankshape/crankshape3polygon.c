@@ -36,17 +36,30 @@
 #include "crankshape3vertexed.h"
 #include "crankshape3polygon.h"
 
-/*
+/**
+ * SECTION: crankshape3polygon
+ * @title: CrankShape3Polygon
+ * @short_description: Base class for polygonal shape.
+ * @stability: unstable
+ * @include: crankshape.h
+ *
+ * Base class for polygonal shape.
  *
  * # Abstract Functions
  *
- *
+ * * #CrankShape3Polygon.get_winding()
+ * * #CrankShape3Polygon.get_vertex_pos2()
  *
  * # Abstract Functions left
  *
  * * #CrankShape3VertexedClass.get_nvertices()
  * * #CrankShape3FiniteClass.get_bound_radius()
  * * #CrankShape3Class.contains()
+ *
+ * # Virtual functions
+ *
+ * * #CrankShape3Polygon.get_edge_normal()
+ * * #CrankShape3Polygon.get_normal_edge()
  *
  */
 

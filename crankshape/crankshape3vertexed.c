@@ -50,8 +50,12 @@
  * * #CrankShape3VertexedClass.get_nvertices()
  * * #CrankShape3VertexedClass.get_nedges()
  * * #CrankShape3VertexedClass.get_nfaces()
+ * * #CrankShape3VertexedClass.get_vertex_pos()
+ * * #CrankShape3VertexedClass.get_vertex_edges()
+ * * #CrankShape3VertexedClass.get_vertex_faces()
  * * #CrankShape3VertexedClass.get_edge_vertices()
  * * #CrankShape3VertexedClass.get_edge_faces()
+ * * #CrankShape3VertexedClass.get_face_winding()
  * * #CrankShape3VertexedClass.get_face_vertices()
  * * #CrankShape3VertexedClass.get_face_edges()
  *

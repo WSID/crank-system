@@ -38,6 +38,17 @@
 
 #include "crankshape3cpolyhedron.h"
 
+/**
+ * SECTION: crankshape3cpolyhedron
+ * @title: CrankShape3CPolyhedron
+ * @short_description: Concrete polyhedron shape.
+ * @stability: unstable
+ * @include: crankshape.h
+ *
+ * Represents concrete polyhedron descriptor, which stores actual position of
+ * vertices.
+ */
+
 
 //////// List of virtual functions /////////////////////////////////////////////
 
@@ -574,6 +585,16 @@ crank_shape3_cpolyhedron_build_convex (CrankShape3CPolyhedron *shape)
 
 //////// Constructors //////////////////////////////////////////////////////////
 
+/**
+ * crank_shape3_cpolyhedron_new:
+ * @vertices: (array length=nvertices): Position of vertices
+ * @nvertices: Number of vertices.
+ * @pstruct: Polyhedral structure.
+ *
+ * Constructs new polyhedral shape.
+ *
+ * Returns: (transfer full): A Polyhedral shape.
+ */
 CrankShape3CPolyhedron*
 crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
                               const guint       nvertices,
@@ -592,7 +613,14 @@ crank_shape3_cpolyhedron_new (CrankVecFloat3   *vertices,
 }
 
 
-
+/**
+ * crank_shape3_cpolyhedron_new_from_polyhedron:
+ * @polyhedron: A Polyhedral shape.
+ *
+ * Constructs new polyhedral shape from existing polyhedral shape.
+ *
+ * Returns: (transfer full): A Polyhedral shape.
+ */
 CrankShape3CPolyhedron*
 crank_shape3_cpolyhedron_new_from_polyhedron (CrankShape3Polyhedron *polyhedron)
 {

@@ -38,6 +38,16 @@
 #include "crankshape3polyhedron.h"
 #include "crankshape3cuboid.h"
 
+/**
+ * SECTION: crankshape3cuboid
+ * @title: CrankShape3Cuboid
+ * @short_description: Cuboid Shape.
+ * @stability: unstable
+ * @include: crankshape.h
+ *
+ * Represents a cuboid shape.
+ */
+
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void     crank_shape3_cuboid_get_property         (GObject    *object,

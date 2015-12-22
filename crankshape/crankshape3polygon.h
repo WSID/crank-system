@@ -48,6 +48,15 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape3Polygon,
                           CRANK, SHAPE3_POLYGON,
                           CrankShape3Vertexed)
 
+/**
+ * CrankShape3PolygonClass:
+ * @get_winding: Slot for crank_shape3_polygon_get_winding()
+ * @get_vertex_pos2: Slot for crank_shape3_polygon_get_vertex_pos2()
+ * @get_edge_normal: Slot for crank_shape3_polygon_get_edge_normal()
+ * @get_normal_edge: Slot for crank_shape3_polygon_get_normal_edge()
+ *
+ * Virtual function table for #CrankShape3Polygon.
+ */
 struct _CrankShape3PolygonClass {
   CrankShape3VertexedClass _parent;
 

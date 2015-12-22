@@ -53,7 +53,11 @@ typedef enum {
   CRANK_SHAPE2_RECT_VERTEX_LEFTDOWN
 } CrankShape2RectVertex;
 
-
+/**
+ * CrankShape2Rect:
+ *
+ * A Rect shape.
+ */
 #define CRANK_TYPE_SHAPE2_RECT crank_shape2_rect_get_type ()
 
 G_DECLARE_FINAL_TYPE (CrankShape2Rect,

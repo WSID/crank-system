@@ -40,6 +40,28 @@
  * @include: crankshape.h
  *
  * Represents polyhedron shape.
+ *
+ * # Abstract Functions left
+ *
+ * * #CrankShape3VertexedClass.get_nvertices()
+ * * #CrankShape3VertexedClass.get_nedges()
+ * * #CrankShape3VertexedClass.get_nfaces()
+ * * #CrankShape3VertexedClass.get_vertex_pos()
+ * * #CrankShape3VertexedClass.get_vertex_edges()
+ * * #CrankShape3VertexedClass.get_vertex_faces()
+ * * #CrankShape3VertexedClass.get_edge_vertices()
+ * * #CrankShape3VertexedClass.get_edge_faces()
+ * * #CrankShape3VertexedClass.get_face_winding()
+ * * #CrankShape3VertexedClass.get_face_vertices()
+ * * #CrankShape3VertexedClass.get_face_edges()
+ * * #CrankShape3FiniteClass.is_convex()
+ * * #CrankShape3FiniteClass.get_bound_radius()
+ * * #CrankShape3Class.contains()
+ *
+ * # Virtual Functions
+ *
+ * * #CrankShape3PolyhedronClass.get_face_normal()
+ * * #CrankShape3PolyhedronClass.get_normal_face()
  */
 
 //////// List of virtual functions /////////////////////////////////////////////

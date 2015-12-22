@@ -52,6 +52,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape2Vertexed,
 
 /**
  * CrankShape2VertexedClass:
+ * @get_dimension: Slot for crank_shape2_vertexed_get_dimension()
  * @get_nvertices: Slot for crank_shape2_vertexed_get_nvertices()
  * @get_nedges: Slot for crank_shape2_vertexed_get_nedges()
  * @get_vertex_pos: Slot for crank_shape2_vertexed_get_vertex_pos()

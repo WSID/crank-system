@@ -35,6 +35,35 @@
 #include "crankshape3polyhedron.h"
 #include "crankshape3tpolyhedron.h"
 
+/**
+ * SECTION: crankshape3tpolyhedron
+ * @title: CrankShape3TPolyhedron
+ * @short_description: Templated Polyhedral Shape.
+ * @stability: unstable
+ * @include: crankshape.h
+ *
+ * Base class for templated shape classes, whose instances share same structure.
+ *
+ * # Abstract Functions left
+ *
+ * * #CrankShape3VertexedClass.get_vertex_pos()
+ * * #CrankShape3VertexedClass.get_face_winding()
+ * * #CrankShape3FiniteClass.is_convex()
+ * * #CrankShape3FiniteClass.get_bound_radius()
+ * * #CrankShape3Class.contains()
+ *
+ * # Virtual functions
+ *
+ * * #CrankShape3VertexedClass.get_nvertices()
+ * * #CrankShape3VertexedClass.get_nedges()
+ * * #CrankShape3VertexedClass.get_nfaces()
+ * * #CrankShape3VertexedClass.get_vertex_edges()
+ * * #CrankShape3VertexedClass.get_vertex_faces()
+ * * #CrankShape3VertexedClass.get_edge_vertices()
+ * * #CrankShape3VertexedClass.get_edge_faces()
+ * * #CrankShape3VertexedClass.get_face_vertices()
+ * * #CrankShape3VertexedClass.get_face_edges()
+ */
 
 //////// List of Virtual functions /////////////////////////////////////////////
 
@@ -79,7 +108,7 @@ static CrankPolyStruct3 *crank_shape3_tpolyhedron_get_template (gpointer shape);
 
 typedef struct _CrankShape3TPolyhedronClassPrivate
 {
-  CrankPolyStruct3  *template;
+  CrankPolyStruct3  *t;
 } CrankShape3TPolyhedronClassPrivate;
 
 G_DEFINE_ABSTRACT_TYPE_WITH_CODE (CrankShape3TPolyhedron,
@@ -121,7 +150,7 @@ crank_shape3_tpolyhedron_class_init (CrankShape3TPolyhedronClass *c)
                                    CRANK_TYPE_SHAPE3_TPOLYHEDRON,
                                    CrankShape3TPolyhedronClassPrivate);
 
-  priv->template = NULL;
+  priv->t = NULL;
 }
 
 
@@ -216,12 +245,20 @@ crank_shape3_tpolyhedron_get_template (gpointer shape)
                                     CRANK_TYPE_SHAPE3_TPOLYHEDRON,
                                     CrankShape3TPolyhedronClassPrivate);
 
-  return cpriv->template;
+  return cpriv->t;
 }
 
 
 //////// Class Properties //////////////////////////////////////////////////////
 
+/**
+ * crank_shape3_tpolyhedron_class_get_template:
+ * @c: Class
+ *
+ * Gets template for the class.
+ *
+ * Returns: (transfer none): Polygonal structure as template.
+ */
 CrankPolyStruct3*
 crank_shape3_tpolyhedron_class_get_template (CrankShape3TPolyhedronClass *c)
 {
@@ -231,12 +268,21 @@ crank_shape3_tpolyhedron_class_get_template (CrankShape3TPolyhedronClass *c)
                                     CRANK_TYPE_SHAPE3_TPOLYHEDRON,
                                     CrankShape3TPolyhedronClassPrivate);
 
-  return cpriv->template;
+  return cpriv->t;
 }
 
+/**
+ * crank_shape3_tpolyhedron_class_set_template:
+ * @c: Class
+ * @t: (transfer none): Polygonal structure as template.
+ *
+ * Stage: Class initialization.
+ *
+ * Sets template for the class. A class should set template in its initialization.
+ */
 void
 crank_shape3_tpolyhedron_class_set_template (CrankShape3TPolyhedronClass *c,
-                                             CrankPolyStruct3            *template)
+                                             CrankPolyStruct3            *t)
 {
   CrankShape3TPolyhedronClassPrivate *cpriv;
 
@@ -244,11 +290,11 @@ crank_shape3_tpolyhedron_class_set_template (CrankShape3TPolyhedronClass *c,
                                     CRANK_TYPE_SHAPE3_TPOLYHEDRON,
                                     CrankShape3TPolyhedronClassPrivate);
 
-  if (cpriv->template != NULL)
-    crank_poly_struct3_unref (cpriv->template);
+  if (cpriv->t != NULL)
+    crank_poly_struct3_unref (cpriv->t);
 
-  if (template != NULL)
-    cpriv->template = crank_poly_struct3_ref (template);
+  if (t != NULL)
+    cpriv->t = crank_poly_struct3_ref (t);
   else
-    cpriv->template = NULL;
+    cpriv->t = NULL;
 }
