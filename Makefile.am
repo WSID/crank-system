@@ -5,6 +5,7 @@ DISTCHECK_CONFIGURE_FLAGS= --enable-introspection --enable-gtk-doc
 SUBDIRS= \
 		crankbase \
 		crankshape \
+		crankcore \
 		docs \
 		tests \
 		bench \
