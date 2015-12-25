@@ -6,7 +6,8 @@ lib_LTLIBRARIES = \
 		libcrankcore.la
 
 coreinclude_HEADERS = \
-		crankcore.h
+		crankcore.h \
+		cranksession.h
 
 
 # crankcore.la
@@ -20,7 +21,7 @@ libcrankcore_la_LIBADD = \
 		$(CRANK_BASE_LIBS)
 
 libcrankcore_la_SOURCES= \
-		""
+		cranksession.c
 
 
 

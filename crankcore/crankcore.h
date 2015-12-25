@@ -24,5 +24,6 @@
 
 #define CRANKCORE_INSIDE
 
+#include "cranksession.h"
 
 #endif
