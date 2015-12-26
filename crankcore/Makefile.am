@@ -13,12 +13,18 @@ coreinclude_HEADERS = \
 # crankcore.la
 libcrankcore_la_CFLAGS = \
 		$(CRANK_BASE_CFLAGS) \
+		$(CRANK_SHAPE_CFLAGS) \
+		-I$(top_srcdir)/crankbase \
+		-I$(top_srcdir)/crankshape \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
 		-DLOCALEDIR=\"$(localedir)\" \
 		-lm
 
 libcrankcore_la_LIBADD = \
-		$(CRANK_BASE_LIBS)
+		$(CRANK_BASE_LIBS) \
+		$(CRANK_SHAPE_LIBS) \
+		$(top_srcdir)/crankbase/libcrankbase.la \
+		$(top_srcdir)/crankshape/libcrankshape.la
 
 libcrankcore_la_SOURCES= \
 		cranksession.c
@@ -31,8 +37,8 @@ libcrankcore_la_SOURCES= \
 if HAVE_INTROSPECTION
 
 INTROSPECTION_GIRS=
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
-INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --add-include-path=$(top_builddir)/crankbase --add-include-path=$(top_builddir)/crankshape --warn-all
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=$(top_builddir)/crankbase --includedir=$(top_builddir)/crankshape
 
 CrankCore-0.0.gir: libcrankcore.la
 
@@ -41,7 +47,7 @@ CrankCore_0_0_gir_SCANNERFLAGS= \
 		--identifier-prefix="Crank"
 
 CrankCore_0_0_gir_INCLUDES= GObject-2.0
-CrankCore_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm
+CrankCore_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape
 CrankCore_0_0_gir_LIBS= libcrankcore.la
 CrankCore_0_0_gir_FILES= $(libcrankcore_la_SOURCES) $(coreinclude_HEADERS)
 
