@@ -7,7 +7,8 @@ lib_LTLIBRARIES = \
 
 coreinclude_HEADERS = \
 		crankcore.h \
-		cranksession.h
+		cranksession.h \
+		cranksession3.h
 
 
 # crankcore.la
@@ -27,7 +28,8 @@ libcrankcore_la_LIBADD = \
 		$(top_srcdir)/crankshape/libcrankshape.la
 
 libcrankcore_la_SOURCES= \
-		cranksession.c
+		cranksession.c \
+		cranksession3.c
 
 
 
