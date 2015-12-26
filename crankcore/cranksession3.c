@@ -98,6 +98,80 @@ crank_session3_class_init (CrankSession3Class *c)
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
+ * crank_session3_add_place_module:
+ * @session: A Session.
+ * @module: A module.
+ *
+ * Add module to session. If session has locked and initialized module, this
+ * operation will abort the application.
+ */
+void
+crank_session3_add_place_module (CrankSession3            *session,
+                                 CrankSession3PlaceModule *module)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  if (priv->mod_lock_init)
+    {
+      g_error ("Session's module setting has been locked, and being added module."
+               "\n  Session: %s, Module: %s",
+               G_OBJECT_TYPE_NAME (session), G_OBJECT_TYPE_NAME (module));
+    }
+
+  g_ptr_array_add (priv->place_modules, module);
+}
+
+
+/**
+ * crank_session3_remove_place_module:
+ * @session: A Session.
+ * @module: A Module.
+ *
+ * Remove a module from session. If session has locked and initialized module,
+ * this operation will abort the application.
+ */
+void
+crank_session3_remove_place_module (CrankSession3            *session,
+                                    CrankSession3PlaceModule *module)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  if (priv->mod_lock_init)
+    {
+      g_error ("Session's module setting has been locked, and being added module."
+               "\n  Session: %s, Module: %s",
+               G_OBJECT_TYPE_NAME (session), G_OBJECT_TYPE_NAME (module));
+    }
+
+  g_ptr_array_remove (priv->place_modules, module);
+}
+
+
+/**
+ * crank_session3_index_of_place_module:
+ * @session: A Session.
+ * @module: A Module.
+ *
+ * Gets index of module from session.
+ *
+ * Returns: index of module or -1 if module not found.
+ */
+gint
+crank_session3_index_of_place_module (CrankSession3            *session,
+                                      CrankSession3PlaceModule *module)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  guint i;
+
+  for (i = 0; i < priv->place_modules->len; i++)
+    {
+      if (priv->place_modules->pdata[i] == module)
+        return i;
+    }
+  return -1;
+}
+
+/**
  * crank_session3_add_entity_module:
  * @session: A Session.
  * @module: A module.

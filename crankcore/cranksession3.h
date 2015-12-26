@@ -98,13 +98,22 @@ struct _CrankEntity3 {
 
 //////// Public functions //////////////////////////////////////////////////////
 
+void    crank_session3_add_place_module (CrankSession3            *session,
+                                         CrankSession3PlaceModule *module);
+
+void    crank_session3_remove_place_module (CrankSession3            *session,
+                                            CrankSession3PlaceModule *module);
+
+gint    crank_session3_index_of_place_module (CrankSession3            *session,
+                                              CrankSession3PlaceModule *module);
+
 void    crank_session3_add_entity_module (CrankSession3       *session,
                                           CrankSession3EntityModule *module);
 
 void    crank_session3_remove_entity_module (CrankSession3             *session,
                                              CrankSession3EntityModule *module);
 
-gint    crank_session3_index_of_entity_module (CrankSession3       *session,
+gint    crank_session3_index_of_entity_module (CrankSession3             *session,
                                                CrankSession3EntityModule *module);
 
 
