@@ -29,6 +29,7 @@
 
 #include "cranksession.h"
 #include "cranksession3.h"
+#include "cranksession3module.h"
 
 /**
  * SECTION: cranksession3
@@ -38,6 +39,19 @@
  * @include: crankcore.h
  *
  * This represents a session with 3d envorinment.
+ *
+ * # Modules
+ *
+ * CrankSession3 has module system. This will enable application to replace some
+ * system (physics or others) with other implementation.
+ *
+ * Oncee session is constructed, modules can be added and removed. Before
+ * running, module should be initialized for this.
+ *
+ * Once initialized, place and entity structure will get pointer data for each
+ * modules, at allocation. place will get data from both of place module and
+ * entity module.
+ *
  */
 
 

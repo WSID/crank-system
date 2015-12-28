@@ -26,5 +26,6 @@
 
 #include "cranksession.h"
 #include "cranksession3.h"
+#include "cranksession3module.h"
 
 #endif
