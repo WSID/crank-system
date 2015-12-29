@@ -108,6 +108,9 @@ void    crank_session3_remove_place_module (CrankSession3            *session,
 gint    crank_session3_index_of_place_module (CrankSession3            *session,
                                               CrankSession3PlaceModule *module);
 
+guint   crank_session3_get_n_place_module (CrankSession3 *session);
+
+
 void    crank_session3_add_entity_module (CrankSession3       *session,
                                           CrankSession3EntityModule *module);
 
@@ -116,6 +119,9 @@ void    crank_session3_remove_entity_module (CrankSession3             *session,
 
 gint    crank_session3_index_of_entity_module (CrankSession3             *session,
                                                CrankSession3EntityModule *module);
+
+guint   crank_session3_get_n_entity_module (CrankSession3 *session);
+
 
 
 void    crank_session3_lock_and_init_modules (CrankSession3        *session,
@@ -133,4 +139,29 @@ void            crank_session3_dispose_place (CrankSession3 *session,
 
 void            crank_session3_dispose_entity (CrankSession3 *session,
                                                CrankEntity3  *entity);
+
+
+void            crank_place3_attach_data (CrankPlace3 *place,
+                                          const guint  index,
+                                          GObject     *data);
+
+void            crank_place3_detach_data (CrankPlace3 *place,
+                                          const guint  index);
+
+GObject        *crank_place3_get_data (CrankPlace3 *place,
+                                       const guint  index);
+
+GObject        *crank_place3_get_entity_data (CrankPlace3 *place,
+                                              const guint  index);
+
+
+void            crank_entity3_attach_data (CrankEntity3 *entity,
+                                           const guint   index,
+                                           GObject      *data);
+
+void            crank_entity3_detach_data (CrankEntity3 *entity,
+                                           const guint   index);
+
+GObject        *crank_entity3_get_data (CrankEntity3 *entity,
+                                        const guint   index);
 #endif

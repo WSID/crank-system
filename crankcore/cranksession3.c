@@ -186,6 +186,20 @@ crank_session3_index_of_place_module (CrankSession3            *session,
 }
 
 /**
+ * crank_session3_get_n_place_module:
+ * @session: A Session.
+ *
+ * Gets number of place module.
+ */
+guint
+crank_session3_get_n_place_module (CrankSession3 *session)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  return priv->place_modules->len;
+}
+
+/**
  * crank_session3_add_entity_module:
  * @session: A Session.
  * @module: A module.
@@ -258,6 +272,21 @@ crank_session3_index_of_entity_module (CrankSession3             *session,
     }
   return -1;
 }
+
+/**
+ * crank_session3_get_n_entity_module:
+ * @session: A Session.
+ *
+ * Gets number of entity module.
+ */
+guint
+crank_session3_get_n_entity_module (CrankSession3 *session)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  return priv->entity_modules->len;
+}
+
 
 
 
@@ -467,4 +496,151 @@ crank_session3_dispose_entity (CrankSession3 *session,
     g_ptr_array_remove (entity->place->entities, entity);
 
   g_slice_free1 (priv->entity_sz, entity);
+}
+
+/**
+ * crank_place3_atatch_data:
+ * @place: A Place.
+ * @index: Index of data.
+ * @data: (transfer none): A Data.
+ *
+ * Attaches a data on place.
+ */
+void
+crank_place3_attach_data (CrankPlace3 *place,
+                          const guint  index,
+                          GObject     *data)
+{
+  CrankSession3 *session = place->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+
+  CrankSession3PlaceModule *module = spriv->place_modules->pdata[index];
+
+  if (place->misc[index] != NULL)
+    {
+      crank_session3_place_module_detached_data (module, place, place->misc[index]);
+      g_object_unref (place->misc[index]);
+    }
+
+  if (data != NULL)
+    {
+      place->misc[index] = g_object_ref (data);
+      crank_session3_place_module_attached_data (module, place, data);
+    }
+  else
+    {
+      place->misc[index] = NULL;
+    }
+}
+
+/**
+ * crank_place3_detach_data:
+ * @place: A Place.
+ * @index: Index of data.
+ *
+ * Detaches a data from place. If there is no data, it does nothing.
+ */
+void
+crank_place3_detach_data (CrankPlace3 *place,
+                          const guint  index)
+{
+  CrankSession3 *session = place->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+
+  CrankSession3PlaceModule *module = spriv->place_modules->pdata[index];
+
+  if (place->misc[index] != NULL)
+    {
+      crank_session3_place_module_detached_data (module, place, place->misc[index]);
+      g_object_unref (place->misc[index]);
+      place->misc[index] = NULL;
+    }
+}
+
+/**
+ * crank_place3_get_data:
+ * @place: A Place.
+ * @index: Index of data.
+ *
+ * Gets data attached to a place.
+ *
+ * Retruns: (transfer none) (nullable): Data of place.
+ */
+GObject*
+crank_place3_get_data (CrankPlace3 *place,
+                       const guint  index)
+{
+  return place->misc[index];
+}
+
+/**
+ * crank_place3_get_entity_data:
+ * @place: A Place.
+ * @index: Index of data.
+ *
+ * Gets entity data from a place.
+ *
+ * Returns: (transfer none) (nullable): Data of place.
+ */
+GObject*
+crank_place3_get_entity_data (CrankPlace3 *place,
+                              const guint  index)
+{
+  CrankSession3 *session = place->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+
+  return place->misc[spriv->place_modules->len + index];
+}
+
+/**
+ * crank_entity3_attach_data:
+ * @entity: A Entity.
+ * @index: The index.
+ * @data: (nullable): The data, or %NULL to detach data.
+ *
+ * Attaches a data to entity. If there is alerady attached data, it will be
+ * detached.
+ */
+void
+crank_entity3_attach_data (CrankEntity3 *entity,
+                           const guint   index,
+                           GObject      *data)
+{
+  CrankSession3 *session = entity->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+  CrankSession3EntityModule *module;
+  module = spriv->entity_modules->pdata[index];
+
+  if (entity->misc[index] != NULL)
+    {
+      crank_session3_entity_module_detached_data (module, entity, entity->misc[index]);
+      g_object_unref (entity->misc[index]);
+    }
+
+  if (data != NULL)
+    {
+      entity->misc[index] = g_object_ref (data);
+      crank_session3_entity_module_attached_data (module, entity, data);
+    }
+  else
+    {
+      entity->misc[index] = NULL;
+    }
+}
+
+/**
+ * crank_entity3_get_data:
+ * @entity: A Entity.
+ * @index: The index.
+ *
+ * Gets entity data from an entity.
+ *
+ * Returns: (transfer none) (nullable): Data of entity, or %NULL if no data is
+ * attached.
+ */
+GObject*
+crank_entity3_get_data (CrankEntity3 *entity,
+                        const guint   index)
+{
+  return entity->misc[index];
 }
