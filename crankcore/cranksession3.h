@@ -37,6 +37,7 @@
 
 //////// Forward Declaration ///////////////////////////////////////////////////
 
+typedef struct _CrankSession3Module CrankSession3Module;
 typedef struct _CrankSession3PlaceModule CrankSession3PlaceModule;
 typedef struct _CrankSession3EntityModule CrankSession3EntityModule;
 
@@ -75,7 +76,7 @@ struct _CrankPlace3 {
 
   GPtrArray *entities;
 
-  gpointer misc[];
+  GObject *misc[];
 };
 
 
@@ -93,7 +94,7 @@ struct _CrankEntity3 {
   CrankPlace3 *place;
   CrankTrans3  pos;
 
-  gpointer misc[];
+  GObject *misc[];
 };
 
 //////// Public functions //////////////////////////////////////////////////////
@@ -117,7 +118,8 @@ gint    crank_session3_index_of_entity_module (CrankSession3             *sessio
                                                CrankSession3EntityModule *module);
 
 
-void    crank_session3_lock_and_init_modules (CrankSession3 *session);
+void    crank_session3_lock_and_init_modules (CrankSession3        *session,
+                                              GError              **error);
 
 
 

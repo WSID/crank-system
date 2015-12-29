@@ -264,6 +264,7 @@ crank_session3_index_of_entity_module (CrankSession3             *session,
 /**
  * crank_session3_lock_and_init_modules:
  * @session: A Session.
+ * @error: A Error.
  *
  * Lock module settings and initialize them for this session. After this,
  * session is able to construct #CrankPlace3 and #CrankEntity3.
@@ -273,9 +274,11 @@ crank_session3_index_of_entity_module (CrankSession3             *session,
  * After locking, adding or removing module is considered as error.
  */
 void
-crank_session3_lock_and_init_modules (CrankSession3 *session)
+crank_session3_lock_and_init_modules (CrankSession3  *session,
+                                      GError        **error)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  guint i;
 
   if (! priv->mod_lock_init)
     {
@@ -288,7 +291,38 @@ crank_session3_lock_and_init_modules (CrankSession3 *session)
       priv->places = g_ptr_array_new ();
       priv->entities = g_ptr_array_new ();
       priv->entities_placeless = g_ptr_array_new ();
-      // TODO: do initialize module.
+
+      for (i = 0; i < priv->place_modules->len; i++)
+        {
+          CrankSession3Module *module;
+          GError *merr = NULL;
+
+          module = (CrankSession3Module*)priv->place_modules->pdata[i];
+          crank_session3_module_session_init (module, session, &merr);
+
+          if (merr != NULL)
+            {
+              g_propagate_prefixed_error (error, merr, "%s: ", G_OBJECT_TYPE_NAME (module));
+              return;
+            }
+        }
+
+      for (i = 0; i < priv->entity_modules->len; i++)
+        {
+          CrankSession3Module *module;
+          GError *merr = NULL;
+
+          module = (CrankSession3Module*)priv->entity_modules->pdata[i];
+          crank_session3_module_session_init (module, session, &merr);
+
+          if (merr != NULL)
+            {
+              g_propagate_prefixed_error (error, merr, "%s: ", G_OBJECT_TYPE_NAME (module));
+              return;
+            }
+        }
+
+      priv->mod_lock_init = TRUE;
     }
 }
 
@@ -308,6 +342,7 @@ crank_session3_make_place (CrankSession3 *session)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
   CrankPlace3 *place;
+  guint i;
 
   g_return_val_if_fail (priv->mod_lock_init, NULL);
 
@@ -316,7 +351,15 @@ crank_session3_make_place (CrankSession3 *session)
   place->session = session;
   place->entities = g_ptr_array_new ();
 
-  // TODO: Attach entity modules' data to place.
+  for (i = 0; i < priv->entity_modules->len; i++)
+    {
+      CrankSession3EntityModule *module;
+
+      module = (CrankSession3EntityModule*) priv->entity_modules->pdata[i];
+
+      place->misc[i + priv->place_modules->len] =
+          crank_session3_entity_module_make_place_data (module, place);
+    }
 
   return place;
 }
@@ -364,7 +407,22 @@ crank_session3_dispose_place (CrankSession3 *session,
 
   g_ptr_array_remove (priv->places, place);
 
-  // TODO: Dispose modules' data from place
+  for (i = 0; i < priv->place_modules->len; i++)
+    {
+      if (place->misc[i] != NULL)
+        {
+          CrankSession3PlaceModule *module = priv->place_modules->pdata[i];
+          crank_session3_place_module_detached_data (module, place, place->misc[i]);
+          g_object_unref (place->misc[i]);
+        }
+    }
+
+  for (i = 0; i < priv->entity_modules->len; i++)
+    {
+      guint ni = i + priv->place_modules->len;
+      if (place->misc[ni] != NULL)
+        g_object_unref (place->misc[ni]);
+    }
 
   for (i = 0; i < place->entities->len; i++)
     {
@@ -389,6 +447,17 @@ crank_session3_dispose_entity (CrankSession3 *session,
                                CrankEntity3  *entity)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  guint i;
+
+  for (i = 0; i < priv->entity_modules->len; i++)
+    {
+      if (entity->misc[i] != NULL)
+        {
+          CrankSession3EntityModule *module = priv->entity_modules->pdata[i];
+          crank_session3_entity_module_detached_data (module, entity, entity->misc[i]);
+          g_object_unref (entity->misc[i]);
+        }
+    }
 
   g_ptr_array_remove (priv->entities, entity);
 
@@ -396,9 +465,6 @@ crank_session3_dispose_entity (CrankSession3 *session,
     g_ptr_array_remove (priv->entities_placeless, entity);
   else
     g_ptr_array_remove (entity->place->entities, entity);
-
-  // TODO: Dispose modules; data from entity.
-
 
   g_slice_free1 (priv->entity_sz, entity);
 }
