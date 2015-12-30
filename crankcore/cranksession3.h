@@ -97,7 +97,6 @@ struct _CrankEntity3 {
   GObject *misc[];
 };
 
-//////// Properties ////////////////////////////////////////////////////////////
 
 //////// Public functions //////////////////////////////////////////////////////
 
@@ -140,6 +139,14 @@ const GPtrArray *crank_session3_get_entity_modules (CrankSession3 *session);
 
 void    crank_session3_lock_and_init_modules (CrankSession3        *session,
                                               GError              **error);
+
+
+
+void    crank_session3_set_tick_interval (CrankSession3 *session,
+                                          guint          interval);
+
+guint   crank_session3_get_tick_interval (CrankSession3 *session);
+
 
 
 

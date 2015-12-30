@@ -45,13 +45,21 @@
  * CrankSession3 has module system. This will enable application to replace some
  * system (physics or others) with other implementation.
  *
- * Oncee session is constructed, modules can be added and removed. Before
- * running, module should be initialized for this.
+ * When session is constructed, modules can be added and removed. Before
+ * running, module should be initialized, with crank_session3_init_and_lock_module()
  *
  * Once initialized, place and entity structure will get pointer data for each
  * modules, at allocation. place will get data from both of place module and
  * entity module.
  *
+ * # Ticking
+ *
+ * When session is running, several things should be done periodically in short
+ * interval. For example, physics system should calculate new position for each
+ * items. CrankSession3 will invoke each module's CrankSession3Module.tick()
+ * function in every tick.
+ *
+ * Tick interval can be adjusted with property CrankSession3:tick-interval.
  */
 
 
@@ -63,6 +71,8 @@ enum {
   PROP_N_ENTITY_MODULES,
   PROP_PLACE_MODULES,
   PROP_ENTITY_MODULES,
+
+  PROP_TICK_INTERVAL,
 
   PROP_COUNTS
 };
@@ -78,9 +88,23 @@ static void  crank_session3_get_property (GObject    *object,
                                           GValue     *value,
                                           GParamSpec *pspec);
 
+static void crank_session3_set_property (GObject      *object,
+                                         guint         prop_id,
+                                         const GValue *value,
+                                         GParamSpec   *pspec);
+
 static void crank_session3_dispose (GObject *object);
 
 static void crank_session3_finalize (GObject *object);
+
+
+static void crank_session3_resume (CrankSession *session);
+
+static void crank_session3_pause (CrankSession *session);
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static gboolean crank_session3_tick (CrankSession3 *session);
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -99,6 +123,11 @@ typedef struct _CrankSession3Private {
   GPtrArray *places;
   GPtrArray *entities;
   GPtrArray *entities_placeless;
+
+  // Ticking
+
+  guint     tick_interval;
+  GSource  *tick_source;
 
 } CrankSession3Private;
 
@@ -138,6 +167,7 @@ crank_session3_class_init (CrankSession3Class *c)
   c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->get_property = crank_session3_get_property;
+  c_gobject->set_property = crank_session3_set_property;
   c_gobject->dispose = crank_session3_dispose;
   c_gobject->finalize = crank_session3_finalize;
 
@@ -164,6 +194,13 @@ crank_session3_class_init (CrankSession3Class *c)
                       "Entity Modules",
                       G_TYPE_PTR_ARRAY,
                       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  pspecs[PROP_TICK_INTERVAL] =
+  g_param_spec_uint ("tick-interval", "Tick Interval",
+                     "Tick Interval",
+                     0, G_MAXUINT, 17,
+                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
@@ -201,6 +238,30 @@ crank_session3_get_property (GObject    *object,
                          crank_session3_get_entity_modules (session));
       break;
 
+    case PROP_TICK_INTERVAL:
+      g_value_set_uint (value,
+                        crank_session3_get_tick_interval (session));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+crank_session3_set_property (GObject      *object,
+                             guint         prop_id,
+                             const GValue *value,
+                             GParamSpec   *pspec)
+{
+  CrankSession3 *session = (CrankSession3*) object;
+  switch (prop_id)
+    {
+    case PROP_TICK_INTERVAL:
+      crank_session3_set_tick_interval (session,
+                                        g_value_get_uint (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -226,6 +287,9 @@ crank_session3_dispose (GObject *object)
 
   g_ptr_array_set_size (priv->place_modules, 0);
   g_ptr_array_set_size (priv->entity_modules, 0);
+
+  priv->tick_interval = 17;
+  priv->tick_source = NULL;
 }
 
 static void
@@ -243,6 +307,56 @@ crank_session3_finalize (GObject *object)
 }
 
 
+//////// CrankSession //////////////////////////////////////////////////////////
+
+static void
+crank_session3_resume (CrankSession *session)
+{
+  CrankSession3 *self = (CrankSession3*)session;
+  CrankSession3Private *priv = crank_session3_get_instance_private (self);
+
+  CrankSessionClass *pc = (CrankSessionClass*)crank_session3_parent_class;
+
+  pc->resume (session);
+
+  g_return_if_fail (priv->mod_lock_init);
+
+  priv->tick_source = g_timeout_source_new (priv->tick_interval);
+  g_source_set_callback (priv->tick_source,
+                         (GSourceFunc)crank_session3_tick, self, NULL);
+  g_source_attach (priv->tick_source, NULL);
+}
+
+static void
+crank_session3_pause (CrankSession *session)
+{
+  CrankSession3 *self = (CrankSession3*)session;
+  CrankSession3Private *priv = crank_session3_get_instance_private (self);
+
+  CrankSessionClass *pc = (CrankSessionClass*)crank_session3_parent_class;
+
+  pc->resume (session);
+
+  g_source_destroy (priv->tick_source);
+  priv->tick_source = NULL;
+}
+
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static gboolean
+crank_session3_tick (CrankSession3 *session)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  g_ptr_array_foreach (priv->place_modules,
+                       (GFunc)crank_session3_module_tick, NULL);
+
+  g_ptr_array_foreach (priv->entity_modules,
+                       (GFunc)crank_session3_module_tick, NULL);
+
+  return TRUE;
+}
 
 //////// Public functions //////////////////////////////////////////////////////
 
@@ -574,6 +688,49 @@ crank_session3_lock_and_init_modules (CrankSession3  *session,
 
       priv->mod_lock_init = TRUE;
     }
+}
+
+
+/**
+ * crank_session3_set_tick_interval:
+ * @session: A Session.
+ * @interval: A Ticking interval.
+ *
+ * Set ticking interval.
+ */
+void
+crank_session3_set_tick_interval (CrankSession3 *session,
+                                  const guint    interval)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  priv->tick_interval = interval;
+  if (crank_session_is_running ((CrankSession*)session))
+    {
+      g_source_destroy (priv->tick_source);
+      priv->tick_source = g_timeout_source_new (priv->tick_interval);
+      g_source_set_callback (priv->tick_source,
+                             (GSourceFunc)crank_session3_tick, session, NULL);
+      g_source_attach (priv->tick_source, NULL);
+    }
+
+  g_object_notify_by_pspec ((GObject*)session, pspecs[PROP_TICK_INTERVAL]);
+}
+
+/**
+ * crank_session3_get_tick_interval:
+ * @session: A Session.
+ *
+ * Gets ticking interval.
+ *
+ * Returns: Ticking interval.
+ */
+guint
+crank_session3_get_tick_interval (CrankSession3 *session)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  return priv->tick_interval;
 }
 
 
