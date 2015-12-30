@@ -50,7 +50,7 @@ CrankCore_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
 		--identifier-prefix="Crank"
 
-CrankCore_0_0_gir_INCLUDES= GObject-2.0
+CrankCore_0_0_gir_INCLUDES= GObject-2.0 CrankBase-0.0 CrankShape-0.0
 CrankCore_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape
 CrankCore_0_0_gir_LIBS= libcrankcore.la
 CrankCore_0_0_gir_FILES= $(libcrankcore_la_SOURCES) $(coreinclude_HEADERS)
@@ -75,9 +75,9 @@ crank-core-0.0.vapi: CrankCore-0.0.gir
 
 VAPIGEN_VAPIS= crank-core-0.0.vapi
 
-crank_core_0_0_vapi_DEPS=crank-base-0.0
-crank_core_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase
-crank_core_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase
+crank_core_0_0_vapi_DEPS=crank-base-0.0 crank-shape-0.0
+crank_core_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase $(top_builddir)/crankshape
+crank_core_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase $(top_builddir)/crankshape
 crank_core_0_0_vapi_METADATADIRS= $(srcdir)
 crank_core_0_0_vapi_FILES= CrankCore-0.0.gir
 
