@@ -599,17 +599,16 @@ crank_session3_make_entity (CrankSession3 *session)
 
 
 /**
- * crank_session3_dispose_place:
- * @session: A Session.
- * @place: (transfer none): A Place to dispose.
+ * crank_place3_dispose:
+ * @place: A Place to dispose.
  *
  * Disposes a #CrankPlace3. entities staying in it are become placeless. (which
  * does not belongs to anywhere.)
  */
 void
-crank_session3_dispose_place (CrankSession3 *session,
-                              CrankPlace3   *place)
+crank_place3_dispose (CrankPlace3   *place)
 {
+  CrankSession3 *session = place->session;
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
   guint i;
 
@@ -644,16 +643,15 @@ crank_session3_dispose_place (CrankSession3 *session,
 
 
 /**
- * crank_session3_dispose_entity:
- * @session: A Session.
- * @entity: (transfer none): An entity to dispose.
+ * crank_entity3_dispose:
+ * @entity: An entity to dispose.
  *
  * Dispose a #CrankEntity3. It will be removed from place too.
  */
 void
-crank_session3_dispose_entity (CrankSession3 *session,
-                               CrankEntity3  *entity)
+crank_entity3_dispose (CrankEntity3  *entity)
 {
+  CrankSession3 *session = entity->session;
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
   guint i;
 
@@ -676,6 +674,9 @@ crank_session3_dispose_entity (CrankSession3 *session,
 
   g_slice_free1 (priv->entity_sz, entity);
 }
+
+
+
 
 /**
  * crank_place3_atatch_data:

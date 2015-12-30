@@ -155,6 +155,11 @@ void            crank_session3_dispose_entity (CrankSession3 *session,
                                                CrankEntity3  *entity);
 
 
+void            crank_place3_dispose (CrankPlace3 *place);
+
+void            crank_entity3_dispose (CrankEntity3 *entity);
+
+
 
 void            crank_place3_attach_data (CrankPlace3 *place,
                                           const guint  index,
