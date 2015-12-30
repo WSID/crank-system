@@ -61,41 +61,15 @@ typedef struct _CrankEntity3 CrankEntity3;
 
 /**
  * CrankPlace3:
- * @object: (transfer none): A #GObject that place belongs to.
- * @boundary: Boundary box for place.
- * @entities: Entities in the place.
- * @misc: Additional Information for session systems.
  *
  * Represents 3D space that entities are taking place.
  */
-struct _CrankPlace3 {
-  CrankSession3 *session;
-  GObject       *object;
-
-  CrankBox3 boundary;
-
-  GPtrArray *entities;
-
-  GObject *misc[];
-};
-
 
 /**
  * CrankEntity3:
- * @object: (transfer none): A #GObject that entity belongs to.
- * @place: Place that the entity take place in.
- * @pos: Position of entity.
- * @misc: Additional Information for session systems.
+ *
+ * Represents an entity.
  */
-struct _CrankEntity3 {
-  CrankSession3 *session;
-  GObject       *object;
-
-  CrankPlace3 *place;
-  CrankTrans3  pos;
-
-  GObject *misc[];
-};
 
 
 //////// Public functions //////////////////////////////////////////////////////
@@ -161,6 +135,23 @@ void            crank_entity3_dispose (CrankEntity3 *entity);
 
 
 
+CrankSession3  *crank_place3_get_session (CrankPlace3 *place);
+
+GObject        *crank_place3_get_object (CrankPlace3 *place);
+
+void            crank_place3_set_object (CrankPlace3 *place,
+                                         GObject     *object);
+
+void            crank_place3_get_boundary (CrankPlace3 *place,
+                                           CrankBox3   *boundary);
+
+void            crank_place3_set_boundary (CrankPlace3 *place,
+                                           CrankBox3   *boundary);
+
+const GPtrArray*crank_place3_get_entities (CrankPlace3 *place);
+
+
+
 void            crank_place3_attach_data (CrankPlace3 *place,
                                           const guint  index,
                                           GObject     *data);
@@ -173,6 +164,23 @@ GObject        *crank_place3_get_data (CrankPlace3 *place,
 
 GObject        *crank_place3_get_entity_data (CrankPlace3 *place,
                                               const guint  index);
+
+
+CrankSession3  *crank_entity3_get_session (CrankEntity3 *entity);
+
+GObject        *crank_entity3_get_object (CrankEntity3 *entity);
+
+void            crank_entity3_set_object (CrankEntity3 *entity,
+                                          GObject      *object);
+
+CrankPlace3    *crank_entity3_get_place (CrankEntity3 *entity);
+
+void            crank_entity3_get_position (CrankEntity3 *entity,
+                                            CrankTrans3  *pos);
+
+void            crank_entity3_set_position (CrankEntity3 *entity,
+                                            CrankTrans3  *pos);
+
 
 void            crank_entity3_attach_data (CrankEntity3 *entity,
                                            const guint   index,

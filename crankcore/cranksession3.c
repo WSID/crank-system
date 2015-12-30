@@ -108,6 +108,29 @@ static gboolean crank_session3_tick (CrankSession3 *session);
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
+struct _CrankPlace3 {
+  CrankSession3 *session;
+  GObject       *object;
+
+  CrankBox3 boundary;
+
+  GPtrArray *entities;
+
+  GObject *misc[];
+};
+
+struct _CrankEntity3 {
+  CrankSession3 *session;
+  GObject       *object;
+
+  CrankPlace3 *place;
+  CrankTrans3  pos;
+
+  GObject *misc[];
+};
+
+
+
 typedef struct _CrankSession3Private {
   // Module Management
   gboolean  mod_lock_init;
@@ -877,6 +900,94 @@ crank_entity3_dispose (CrankEntity3  *entity)
 }
 
 
+/**
+ * crank_place3_get_session:
+ * @place: A Place.
+ *
+ * Gets session of place.
+ *
+ * Returns: (transfer none): Session of place.
+ */
+CrankSession3*
+crank_place3_get_session (CrankPlace3 *place)
+{
+  return place->session;
+}
+
+/**
+ * crank_place3_get_object:
+ * @place: A Place.
+ *
+ * Gets object of this place. Generally, it is object that this place belongs to.
+ *
+ * Returns: (transfer none) (nullable): Object of place, or %NULL if it is not
+ * associatedt to
+ */
+GObject*
+crank_place3_get_object (CrankPlace3 *place)
+{
+  return place->object;
+}
+
+/**
+ * crank_place3_set_object:
+ * @place: A Place.
+ * @object: (nullable): A Object, or %NULL
+ *
+ * Sets object of this place. This is generally done when @object is creating
+ * @place for its own purpose.
+ *
+ * Note that @place will not hold reference to @object even after this.
+ */
+void
+crank_place3_set_object (CrankPlace3 *place,
+                         GObject     *object)
+{
+  place->object = object;
+}
+
+
+/**
+ * crank_place3_get_boundary:
+ * @place: A Place.
+ * @boundary: (out): Boundary of @place.
+ *
+ * Gets boundary of place.
+ */
+void
+crank_place3_get_boundary (CrankPlace3 *place,
+                           CrankBox3   *boundary)
+{
+  crank_box3_copy (& place->boundary, boundary);
+}
+
+/**
+ * crank_place3_set_boundary:
+ * @place: A Place.
+ * @boundary: Boundary of @place.
+ *
+ * Sets boundary of place.
+ */
+void
+crank_place3_set_boundary (CrankPlace3 *place,
+                           CrankBox3 *boundary)
+{
+  crank_box3_copy (boundary, & place->boundary);
+}
+
+/**
+ * crank_place3_get_entities:
+ * @place: A Place.
+ *
+ * Gets entities in form of #GPtrArray.
+ *
+ * Returns: (transfer none) (element-type CrankEntity3): Entities.
+ */
+const GPtrArray*
+crank_place3_get_entities (CrankPlace3 *place)
+{
+  return place->entities;
+}
 
 
 /**
@@ -971,6 +1082,91 @@ crank_place3_get_entity_data (CrankPlace3 *place,
   CrankSession3Private *spriv = crank_session3_get_instance_private (session);
 
   return place->misc[spriv->place_modules->len + index];
+}
+
+
+/**
+ * crank_entity3_get_session:
+ * @entity: A Entity.
+ *
+ * Gets session of entity.
+ *
+ * Returns: (transfer none): A Session.
+ */
+CrankSession3*
+crank_entity3_get_session (CrankEntity3 *entity)
+{
+  return entity->session;
+}
+
+/**
+ * crank_entity3_get_object:
+ * @entity: A Entity.
+ *
+ * Gets object of this entity.
+ *
+ * Returns: (transfer none) (nullable): A Object.
+ */
+GObject*
+crank_entity3_get_object (CrankEntity3 *entity)
+{
+  return entity->object;
+}
+
+/**
+ * crank_entity3_set_object:
+ * @entity: A Entity.
+ * @object: (transfer none) (nullable): A Object
+ *
+ * Sets object of this entity.
+ */
+void
+crank_entity3_set_object (CrankEntity3 *entity,
+                          GObject      *object)
+{
+  entity->object = object;
+}
+
+/**
+ * crank_entity3_get_place:
+ * @entity: A Entity.
+ *
+ * Gets place of this entity.
+ *
+ * Returns: (transfer none): Place that contains entity.
+ */
+CrankPlace3*
+crank_entity3_get_place (CrankEntity3 *entity)
+{
+  return entity->place;
+}
+
+/**
+ * crank_entity3_get_position:
+ * @entity: A Entity.
+ * @pos: (out): A position of entity.
+ *
+ * Gets position of this entity.
+ */
+void
+crank_entity3_get_position (CrankEntity3 *entity,
+                            CrankTrans3  *pos)
+{
+  crank_trans3_copy (& entity->pos, pos);
+}
+
+/**
+ * crank_entity3_set_position:
+ * @entity: A Entity.
+ * @pos: A Position of entity.
+ *
+ * Sets position of this entity.
+ */
+void
+crank_entity3_set_position (CrankEntity3 *entity,
+                            CrankTrans3  *pos)
+{
+  crank_trans3_copy (pos, & entity->pos);
 }
 
 /**
