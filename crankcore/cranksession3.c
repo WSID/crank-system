@@ -177,12 +177,12 @@ crank_session3_get_property (GObject    *object,
     {
     case PROP_N_PLACE_MODULES:
       g_value_set_uint (value,
-                        crank_session3_get_n_place_module (session));
+                        crank_session3_get_n_place_modules (session));
       break;
 
     case PROP_N_ENTITY_MODULES:
       g_value_set_uint (value,
-                        crank_session3_get_n_entity_module (session));
+                        crank_session3_get_n_entity_modules (session));
       break;
 
     case PROP_PLACE_MODULES:
@@ -286,13 +286,13 @@ crank_session3_index_of_place_module (CrankSession3            *session,
 }
 
 /**
- * crank_session3_get_n_place_module:
+ * crank_session3_get_n_place_modules:
  * @session: A Session.
  *
  * Gets number of place module.
  */
 guint
-crank_session3_get_n_place_module (CrankSession3 *session)
+crank_session3_get_n_place_modules (CrankSession3 *session)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
 
@@ -418,13 +418,13 @@ crank_session3_index_of_entity_module (CrankSession3             *session,
 }
 
 /**
- * crank_session3_get_n_entity_module:
+ * crank_session3_get_n_entity_modules:
  * @session: A Session.
  *
  * Gets number of entity module.
  */
 guint
-crank_session3_get_n_entity_module (CrankSession3 *session)
+crank_session3_get_n_entity_modules (CrankSession3 *session)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
 

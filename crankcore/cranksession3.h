@@ -110,7 +110,7 @@ void    crank_session3_remove_place_module (CrankSession3            *session,
 gint    crank_session3_index_of_place_module (CrankSession3            *session,
                                               CrankSession3PlaceModule *module);
 
-guint   crank_session3_get_n_place_module (CrankSession3 *session);
+guint   crank_session3_get_n_place_modules (CrankSession3 *session);
 
 CrankSession3PlaceModule *crank_session3_get_place_module (CrankSession3 *session,
                                                            const guint    index);
@@ -129,13 +129,12 @@ void    crank_session3_remove_entity_module (CrankSession3             *session,
 gint    crank_session3_index_of_entity_module (CrankSession3             *session,
                                                CrankSession3EntityModule *module);
 
-guint   crank_session3_get_n_entity_module (CrankSession3 *session);
+guint   crank_session3_get_n_entity_modules (CrankSession3 *session);
 
 CrankSession3EntityModule *crank_session3_get_entity_module (CrankSession3 *session,
                                                              const guint    index);
 
 const GPtrArray *crank_session3_get_entity_modules (CrankSession3 *session);
-
 
 
 
@@ -154,6 +153,7 @@ void            crank_session3_dispose_place (CrankSession3 *session,
 
 void            crank_session3_dispose_entity (CrankSession3 *session,
                                                CrankEntity3  *entity);
+
 
 
 void            crank_place3_attach_data (CrankPlace3 *place,
