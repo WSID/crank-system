@@ -155,13 +155,6 @@ CrankPlace3    *crank_session3_make_place (CrankSession3 *session);
 CrankEntity3   *crank_session3_make_entity (CrankSession3 *session);
 
 
-void            crank_session3_dispose_place (CrankSession3 *session,
-                                              CrankPlace3   *place);
-
-void            crank_session3_dispose_entity (CrankSession3 *session,
-                                               CrankEntity3  *entity);
-
-
 void            crank_place3_dispose (CrankPlace3 *place);
 
 void            crank_entity3_dispose (CrankEntity3 *entity);
