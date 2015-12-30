@@ -97,6 +97,8 @@ struct _CrankEntity3 {
   GObject *misc[];
 };
 
+//////// Properties ////////////////////////////////////////////////////////////
+
 //////// Public functions //////////////////////////////////////////////////////
 
 void    crank_session3_add_place_module (CrankSession3            *session,
@@ -110,6 +112,13 @@ gint    crank_session3_index_of_place_module (CrankSession3            *session,
 
 guint   crank_session3_get_n_place_module (CrankSession3 *session);
 
+CrankSession3PlaceModule *crank_session3_get_place_module (CrankSession3 *session,
+                                                           const guint    index);
+
+const GPtrArray *crank_session3_get_place_modules (CrankSession3 *session);
+
+
+
 
 void    crank_session3_add_entity_module (CrankSession3       *session,
                                           CrankSession3EntityModule *module);
@@ -121,6 +130,12 @@ gint    crank_session3_index_of_entity_module (CrankSession3             *sessio
                                                CrankSession3EntityModule *module);
 
 guint   crank_session3_get_n_entity_module (CrankSession3 *session);
+
+CrankSession3EntityModule *crank_session3_get_entity_module (CrankSession3 *session,
+                                                             const guint    index);
+
+const GPtrArray *crank_session3_get_entity_modules (CrankSession3 *session);
+
 
 
 
@@ -153,7 +168,6 @@ GObject        *crank_place3_get_data (CrankPlace3 *place,
 
 GObject        *crank_place3_get_entity_data (CrankPlace3 *place,
                                               const guint  index);
-
 
 void            crank_entity3_attach_data (CrankEntity3 *entity,
                                            const guint   index,

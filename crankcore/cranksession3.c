@@ -55,6 +55,29 @@
  */
 
 
+//////// Properties ////////////////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_N_PLACE_MODULES,
+  PROP_N_ENTITY_MODULES,
+  PROP_PLACE_MODULES,
+  PROP_ENTITY_MODULES,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+
+
+//////// List of Virtual functions /////////////////////////////////////////////
+
+
+static void  crank_session3_get_property (GObject    *object,
+                                          guint       prop_id,
+                                          GValue     *value,
+                                          GParamSpec *pspec);
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 typedef struct _CrankSession3Private {
@@ -106,7 +129,77 @@ static void
 crank_session3_class_init (CrankSession3Class *c)
 {
 
+  GObjectClass *c_gobject;
+
+  c_gobject = G_OBJECT_CLASS (c);
+
+  c_gobject->get_property = crank_session3_get_property;
+
+  pspecs[PROP_N_PLACE_MODULES] =
+  g_param_spec_uint ("n-place-modules", "NPlaceModules",
+                     "Number of place modules.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  pspecs[PROP_N_ENTITY_MODULES] =
+  g_param_spec_uint ("n-entity-modules", "NEntityModules",
+                     "Number of entity modules.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  pspecs[PROP_PLACE_MODULES] =
+  g_param_spec_boxed ("place-modules", "Place Modules",
+                      "Place Modules",
+                      G_TYPE_PTR_ARRAY,
+                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  pspecs[PROP_ENTITY_MODULES] =
+  g_param_spec_boxed ("entity-modules", "Entity Modules",
+                      "Entity Modules",
+                      G_TYPE_PTR_ARRAY,
+                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
 }
+
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_session3_get_property (GObject    *object,
+                             guint       prop_id,
+                             GValue     *value,
+                             GParamSpec *pspec)
+{
+  CrankSession3 *session = (CrankSession3*) object;
+  switch (prop_id)
+    {
+    case PROP_N_PLACE_MODULES:
+      g_value_set_uint (value,
+                        crank_session3_get_n_place_module (session));
+      break;
+
+    case PROP_N_ENTITY_MODULES:
+      g_value_set_uint (value,
+                        crank_session3_get_n_entity_module (session));
+      break;
+
+    case PROP_PLACE_MODULES:
+      g_value_set_boxed (value,
+                         crank_session3_get_place_modules (session));
+      break;
+
+    case PROP_ENTITY_MODULES:
+      g_value_set_boxed (value,
+                         crank_session3_get_entity_modules (session));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
 
 
 //////// Public functions //////////////////////////////////////////////////////
@@ -124,6 +217,7 @@ crank_session3_add_place_module (CrankSession3            *session,
                                  CrankSession3PlaceModule *module)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  GObject *self_gobject = (GObject*) session;
 
   if (priv->mod_lock_init)
     {
@@ -133,8 +227,10 @@ crank_session3_add_place_module (CrankSession3            *session,
     }
 
   g_ptr_array_add (priv->place_modules, module);
-}
 
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_PLACE_MODULES]);
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_PLACE_MODULES]);
+}
 
 /**
  * crank_session3_remove_place_module:
@@ -149,6 +245,7 @@ crank_session3_remove_place_module (CrankSession3            *session,
                                     CrankSession3PlaceModule *module)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  GObject *self_gobject = (GObject*) session;
 
   if (priv->mod_lock_init)
     {
@@ -158,6 +255,9 @@ crank_session3_remove_place_module (CrankSession3            *session,
     }
 
   g_ptr_array_remove (priv->place_modules, module);
+
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_PLACE_MODULES]);
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_PLACE_MODULES]);
 }
 
 
@@ -200,6 +300,42 @@ crank_session3_get_n_place_module (CrankSession3 *session)
 }
 
 /**
+ * crank_session3_get_place_module:
+ * @session: A Session.
+ * @index: Index of place module.
+ *
+ * Gets a place module.
+ *
+ * Returns: (transfer none): A Place module.
+ */
+CrankSession3PlaceModule*
+crank_session3_get_place_module (CrankSession3 *session,
+                                 const guint    index)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  return (CrankSession3PlaceModule*) g_ptr_array_index (priv->place_modules,
+                                                        index);
+}
+
+/**
+ * crank_session3_get_place_modules:
+ * @session: A Session.
+ *
+ * Gets place modules as #GPtrArray.
+ *
+ * Returns: (transfer none) (element-type CrankSession3PlaceModule):
+ *    #GPtrArray of place modules.
+ */
+const GPtrArray*
+crank_session3_get_place_modules (CrankSession3 *session)
+{
+  return G_PRIVATE_FIELD (CrankSession3, session,
+                          GPtrArray*, place_modules);
+}
+
+
+/**
  * crank_session3_add_entity_module:
  * @session: A Session.
  * @module: A module.
@@ -212,6 +348,7 @@ crank_session3_add_entity_module (CrankSession3             *session,
                                   CrankSession3EntityModule *module)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  GObject *self_gobject = (GObject*) session;
 
   if (priv->mod_lock_init)
     {
@@ -221,6 +358,9 @@ crank_session3_add_entity_module (CrankSession3             *session,
     }
 
   g_ptr_array_add (priv->entity_modules, module);
+
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_ENTITY_MODULES]);
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_ENTITY_MODULES]);
 }
 
 
@@ -233,10 +373,11 @@ crank_session3_add_entity_module (CrankSession3             *session,
  * this operation will abort the application.
  */
 void
-crank_session3_remove_module (CrankSession3             *session,
-                              CrankSession3EntityModule *module)
+crank_session3_remove_entity_module (CrankSession3             *session,
+                                     CrankSession3EntityModule *module)
 {
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
+  GObject *self_gobject = (GObject*) session;
 
   if (priv->mod_lock_init)
     {
@@ -246,6 +387,9 @@ crank_session3_remove_module (CrankSession3             *session,
     }
 
   g_ptr_array_remove (priv->entity_modules, module);
+
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_ENTITY_MODULES]);
+  g_object_notify_by_pspec (self_gobject, pspecs[PROP_ENTITY_MODULES]);
 }
 
 
@@ -285,6 +429,41 @@ crank_session3_get_n_entity_module (CrankSession3 *session)
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
 
   return priv->entity_modules->len;
+}
+
+/**
+ * crank_session3_get_entity_module:
+ * @session: A Session.
+ * @index: Index of module.
+ *
+ * Gets single entity module.
+ *
+ * Returns: (transfer none): Entity module.
+ */
+CrankSession3EntityModule*
+crank_session3_get_entity_module (CrankSession3 *session,
+                                  const guint    index)
+{
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  return (CrankSession3EntityModule*) g_ptr_array_index (priv->entity_modules,
+                                                         index);
+}
+
+/**
+ * crank_session3_get_entity_modules:
+ * @session: A Session.
+ *
+ * Gets entity modules as #GPtrArray.
+ *
+ * Returns: (transfer none) (element-type CrankSession3EntityModule):
+ *    Entity modules as #GPtrArray
+ */
+const GPtrArray*
+crank_session3_get_entity_modules (CrankSession3 *session)
+{
+  return G_PRIVATE_FIELD (CrankSession3, session,
+                          GPtrArray*, entity_modules);
 }
 
 
@@ -564,7 +743,7 @@ crank_place3_detach_data (CrankPlace3 *place,
  *
  * Gets data attached to a place.
  *
- * Retruns: (transfer none) (nullable): Data of place.
+ * Returns: (transfer none) (nullable): Data of place.
  */
 GObject*
 crank_place3_get_data (CrankPlace3 *place,
