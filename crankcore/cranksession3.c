@@ -636,6 +636,8 @@ crank_session3_make_entity (CrankSession3 *session)
 
   entity->session = session;
 
+  g_ptr_array_add (priv->entities_placeless, entity);
+
   return entity;
 }
 
