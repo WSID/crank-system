@@ -68,15 +68,12 @@ typedef struct _CrankSession3ModulePrivate
 typedef struct _CrankSession3PlaceModulePrivate
 {
   guint   index;
-  goffset data_offset;
 } CrankSession3PlaceModulePrivate;
 
 typedef struct _CrankSession3EntityModulePrivate
 {
   guint   place_index;
   guint   index;
-  goffset place_data_offset;
-  goffset data_offset;
 } CrankSession3EntityModulePrivate;
 
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3Module,
@@ -170,7 +167,6 @@ crank_session3_place_module_def_session_init (CrankSession3Module  *self,
   priv = crank_session3_place_module_get_instance_private (s);
 
   priv->index = crank_session3_index_of_place_module (session, s);
-  priv->data_offset = G_STRUCT_OFFSET (CrankPlace3, misc[priv->index]);
 }
 
 static void
@@ -189,9 +185,7 @@ crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
   priv = crank_session3_entity_module_get_instance_private (s);
 
   priv->index = crank_session3_index_of_entity_module (session, s);
-  priv->data_offset = G_STRUCT_OFFSET (CrankPlace3, misc[priv->index]);
-  // TODO: priv->place_index
-  // TODO: priv->place_data_offset
+  priv->place_index = crank_session3_get_n_place_modules (session) + priv->index;
 }
 
 
