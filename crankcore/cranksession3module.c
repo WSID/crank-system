@@ -328,3 +328,42 @@ crank_session3_entity_module_detached_data (CrankSession3EntityModule *module,
 
   c->detached_data (module, entity, data);
 }
+
+/**
+ * crank_session3_entity_module_entity_added:
+ * @module: A Module.
+ * @place: (transfer none): A Place.
+ * @entity: (transfer none): A Entity.
+ *
+ * This will be called when an entity is added to a place. In this function,
+ * module can add entity in managed list.
+ */
+void
+crank_session3_entity_module_entity_added (CrankSession3EntityModule *module,
+                                           CrankPlace3               *place,
+                                           CrankEntity3              *entity)
+{
+  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
+
+  c->entity_added (module, place, entity);
+}
+
+/**
+ * crank_session3_entity_module_entity_removed:
+ * @module: A Module.
+ * @place: (transfer none): A Place.
+ * @entity: (transfer none): A Entity.
+ *
+ * This will be called when an entity is removed from a place. In this function,
+ * module can remove entity from managed list.
+ */
+void
+crank_session3_entity_module_entity_removed (CrankSession3EntityModule *module,
+                                             CrankPlace3               *place,
+                                             CrankEntity3              *entity)
+{
+  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
+
+  c->entity_removed (module, place, entity);
+}
+

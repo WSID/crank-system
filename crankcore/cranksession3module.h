@@ -96,6 +96,14 @@ struct _CrankSession3EntityModuleClass {
   void (*detached_data) (CrankSession3EntityModule *module,
                          CrankEntity3              *entity,
                          GObject                   *data);
+
+  void (*entity_added) (CrankSession3EntityModule *module,
+                        CrankPlace3               *place,
+                        CrankEntity3              *entity);
+
+  void (*entity_removed) (CrankSession3EntityModule *module,
+                          CrankPlace3               *place,
+                          CrankEntity3              *entity);
 };
 
 //////// Virtual functions /////////////////////////////////////////////////////
@@ -127,5 +135,13 @@ void      crank_session3_entity_module_attached_data (CrankSession3EntityModule 
 void      crank_session3_entity_module_detached_data (CrankSession3EntityModule *module,
                                                       CrankEntity3              *entity,
                                                       GObject                   *data);
+
+void      crank_session3_entity_module_entity_added (CrankSession3EntityModule *module,
+                                                     CrankPlace3               *place,
+                                                     CrankEntity3              *entity);
+
+void      crank_session3_entity_module_entity_removed(CrankSession3EntityModule *module,
+                                                     CrankPlace3               *place,
+                                                     CrankEntity3              *entity);
 
 #endif
