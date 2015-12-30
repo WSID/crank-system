@@ -78,6 +78,10 @@ static void  crank_session3_get_property (GObject    *object,
                                           GValue     *value,
                                           GParamSpec *pspec);
 
+static void crank_session3_dispose (GObject *object);
+
+static void crank_session3_finalize (GObject *object);
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 typedef struct _CrankSession3Private {
@@ -134,6 +138,8 @@ crank_session3_class_init (CrankSession3Class *c)
   c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->get_property = crank_session3_get_property;
+  c_gobject->dispose = crank_session3_dispose;
+  c_gobject->finalize = crank_session3_finalize;
 
   pspecs[PROP_N_PLACE_MODULES] =
   g_param_spec_uint ("n-place-modules", "NPlaceModules",
@@ -198,6 +204,42 @@ crank_session3_get_property (GObject    *object,
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
+}
+
+static void
+crank_session3_dispose (GObject *object)
+{
+  CrankSession3 *session = (CrankSession3*)object;
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  g_ptr_array_foreach (priv->entities_placeless,
+                       (GFunc) crank_entity3_dispose, NULL);
+
+  g_ptr_array_foreach (priv->entities,
+                       (GFunc) crank_entity3_dispose, NULL);
+
+  g_ptr_array_foreach (priv->places,
+                       (GFunc) crank_place3_dispose, NULL);
+
+  priv->place_sz = 0;
+  priv->entity_sz = 0;
+
+  g_ptr_array_set_size (priv->place_modules, 0);
+  g_ptr_array_set_size (priv->entity_modules, 0);
+}
+
+static void
+crank_session3_finalize (GObject *object)
+{
+  CrankSession3 *session = (CrankSession3*)object;
+  CrankSession3Private *priv = crank_session3_get_instance_private (session);
+
+  g_ptr_array_unref (priv->entities_placeless);
+  g_ptr_array_unref (priv->entities);
+  g_ptr_array_unref (priv->places);
+
+  g_ptr_array_unref (priv->place_modules);
+  g_ptr_array_unref (priv->entity_modules);
 }
 
 
