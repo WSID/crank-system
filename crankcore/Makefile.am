@@ -75,7 +75,7 @@ EXTRA_DIST=CrankCore-0.0.metadata CrankCore-0.0-custom.vala
 if ENABLE_VAPIGEN
 -include $(VAPIGEN_MAKEFILE)
 
-crank-core-0.0.vapi: CrankCore-0.0.gir
+crank-core-0.0.vapi: CrankCore-0.0.gir CrankCore-0.0.metadata CrankCore-0.0-custom.vala
 
 VAPIGEN_VAPIS= crank-core-0.0.vapi
 
@@ -83,7 +83,7 @@ crank_core_0_0_vapi_DEPS=crank-base-0.0 crank-shape-0.0
 crank_core_0_0_vapi_GIRDIRS= $(top_builddir)/crankbase $(top_builddir)/crankshape
 crank_core_0_0_vapi_VAPIDIRS= $(top_builddir)/crankbase $(top_builddir)/crankshape
 crank_core_0_0_vapi_METADATADIRS= $(srcdir)
-crank_core_0_0_vapi_FILES= CrankCore-0.0.gir
+crank_core_0_0_vapi_FILES= CrankCore-0.0.gir CrankCore-0.0-custom.vala
 
 vapidir= $(datadir)/vala/vapi
 vapi_DATA= $(VAPIGEN_VAPIS)

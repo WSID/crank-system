@@ -1,0 +1,17 @@
+
+// Rebinding property
+Session.running skip
+
+
+Session3.place_modules type_arguments="Session3PlaceModule"
+Session3.entity_modules type_arguments="Session3EntityModule"
+
+Place3.dispose  destroys_instance
+
+Entity3.dispose destroys_instance
+
+// Rebinding property
+Session3Module.initialized skip
+
+// Remove useless type
+*_autoptr skip
