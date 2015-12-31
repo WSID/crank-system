@@ -143,6 +143,13 @@ void      crank_session3_module_session_init (CrankSession3Module  *module,
 
 void      crank_session3_module_tick (CrankSession3Module *module);
 
+gboolean       crank_session3_module_is_initialized (CrankSession3Module *module);
+
+CrankSession3 *crank_session3_module_get_session (CrankSession3Module *module);
+
+
+
+
 void      crank_session3_place_module_attached_data (CrankSession3PlaceModule *module,
                                                      CrankPlace3              *place,
                                                      GObject                  *data);

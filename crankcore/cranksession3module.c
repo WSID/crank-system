@@ -225,6 +225,38 @@ crank_session3_module_tick (CrankSession3Module *module)
   c->tick (module);
 }
 
+/**
+ * crank_session3_module_is_initialized:
+ * @module: A Module
+ *
+ * Check whether it is initialized for a session.
+ *
+ * An alternative way to check is crank_session3_module_get_session(), which
+ * will return #CrankSession3 which the module is initialized for.
+ */
+gboolean
+crank_session3_module_is_initialized (CrankSession3Module *module)
+{
+  CrankSession3ModulePrivate *priv = crank_session3_module_get_instance_private (module);
+
+  return (priv->session != NULL);
+}
+
+/**
+ * crank_session3_module_get_session:
+ * @module: A Module.
+ *
+ * Gets the session that the @module is initialized for.
+ *
+ * Returns: (transfer none) (nullable): The session that this module is initialized for.
+ */
+CrankSession3*
+crank_session3_module_get_session (CrankSession3Module *module)
+{
+  CrankSession3ModulePrivate *priv = crank_session3_module_get_instance_private (module);
+
+  return priv->session;
+}
 
 //////// Place Modules /////////////////////////////////////////////////////////
 
