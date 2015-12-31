@@ -49,9 +49,6 @@ static void crank_session3_module_def_session_init (CrankSession3Module  *self,
 
 static void crank_session3_module_def_tick (CrankSession3Module *self);
 
-static void crank_session3_place_module_def_session_init (CrankSession3Module  *self,
-                                                          CrankSession3        *session,
-                                                          GError              **error);
 
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -61,18 +58,9 @@ typedef struct _CrankSession3ModulePrivate
   CrankSession3 *session;
 } CrankSession3ModulePrivate;
 
-typedef struct _CrankSession3PlaceModulePrivate
-{
-  guint   index;
-} CrankSession3PlaceModulePrivate;
-
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3Module,
                                      crank_session3_module,
                                      G_TYPE_OBJECT)
-
-G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3PlaceModule,
-                                     crank_session3_place_module,
-                                     CRANK_TYPE_SESSION3_MODULE)
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
@@ -90,19 +78,9 @@ crank_session3_module_class_init (CrankSession3ModuleClass *c)
 }
 
 
-static void
-crank_session3_place_module_init (CrankSession3PlaceModule *self)
-{
-
-}
 
 static void
-crank_session3_place_module_class_init (CrankSession3PlaceModuleClass *c)
 {
-  CrankSession3ModuleClass *c_session3module;
-
-  c_session3module = CRANK_SESSION3_MODULE_CLASS (c);
-  c_session3module->session_init = crank_session3_place_module_def_session_init;
 }
 
 //////// Default implementations ///////////////////////////////////////////////
@@ -122,23 +100,6 @@ crank_session3_module_def_tick (CrankSession3Module *self)
   return;  // Does nothing on every tick.
 }
 
-static void
-crank_session3_place_module_def_session_init (CrankSession3Module  *self,
-                                              CrankSession3        *session,
-                                              GError              **error)
-{
-  CrankSession3ModuleClass *pc;
-  CrankSession3PlaceModule *s;
-  CrankSession3PlaceModulePrivate *priv;
-
-  pc = (CrankSession3ModuleClass*)crank_session3_place_module_parent_class;
-  pc->session_init (self, session, error);
-
-  s = (CrankSession3PlaceModule*)self;
-  priv = crank_session3_place_module_get_instance_private (s);
-
-  priv->index = crank_session3_index_of_place_module (session, s);
-}
 
 
 //////// Common ////////////////////////////////////////////////////////////////
@@ -208,45 +169,3 @@ crank_session3_module_get_session (CrankSession3Module *module)
 
   return priv->session;
 }
-
-//////// Place Modules /////////////////////////////////////////////////////////
-
-/**
- * crank_session3_place_module_attached_data:
- * @module: A Module.
- * @place: (transfer none): A Place that attached data.
- * @data: (transfer none): A data attached.
- *
- * This will be called when place data is attached to a #CrankPlace3.
- */
-void
-crank_session3_place_module_attached_data (CrankSession3PlaceModule *module,
-                                           CrankPlace3              *place,
-                                           GObject                  *data)
-{
-  CrankSession3PlaceModuleClass *c = CRANK_SESSION3_PLACE_MODULE_GET_CLASS (module);
-
-  c->attached_data (module, place, data);
-}
-
-/**
- * crank_session3_place_module_detached_data:
- * @module: A Module.
- * @place: (transfer none): A Place that detached data.
- * @data: (transfer none): A data detached.
- *
- * This will be called when data is detached from a #CrankPlace3.
- */
-void
-crank_session3_place_module_detached_data (CrankSession3PlaceModule *module,
-                                           CrankPlace3              *place,
-                                           GObject                  *data)
-{
-  CrankSession3PlaceModuleClass *c = CRANK_SESSION3_PLACE_MODULE_GET_CLASS (module);
-
-  c->detached_data (module, place, data);
-}
-
-
-
-

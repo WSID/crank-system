@@ -151,6 +151,8 @@
       <xi:include href="xml/cranksession.xml"/>
       <xi:include href="xml/cranksession3.xml"/>
       <xi:include href="xml/cranksession3module.xml"/>
+      <xi:include href="xml/cranksession3placemodule.xml"/>
+      <xi:include href="xml/cranksession3entitymodule.xml"/>
     </chapter>
   </part>
 

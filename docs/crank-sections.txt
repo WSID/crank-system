@@ -2568,16 +2568,21 @@ crank_session3_get_type
 <FILE>cranksession3module</FILE>
 CrankSession3Module
 CrankSession3ModuleClass
-CrankSession3PlaceModule
-CrankSession3PlaceModuleClass
 crank_session3_module_session_init
 crank_session3_module_tick
 crank_session3_module_is_initialized
 crank_session3_module_get_session
+<SUBSECTION Standard>
+CRANK_TYPE_SESSION3_MODULE
+</SECTION>
+
+<SECTION>
+<FILE>cranksession3placemodule</FILE>
+CrankSession3PlaceModule
+CrankSession3PlaceModuleClass
 crank_session3_place_module_attached_data
 crank_session3_place_module_detached_data
 <SUBSECTION Standard>
-CRANK_TYPE_SESSION3_MODULE
 CRANK_TYPE_SESSION3_PLACE_MODULE
 </SECTION>
 

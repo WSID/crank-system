@@ -30,6 +30,8 @@
 #include "cranksession.h"
 #include "cranksession3.h"
 #include "cranksession3module.h"
+#include "cranksession3placemodule.h"
+#include "cranksession3entitymodule.h"
 
 /**
  * SECTION: cranksession3

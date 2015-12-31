@@ -44,12 +44,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankSession3Module,
                           GObject)
 
 
-#define CRANK_TYPE_SESSION3_PLACE_MODULE (crank_session3_place_module_get_type())
-G_DECLARE_DERIVABLE_TYPE (CrankSession3PlaceModule,
-                          crank_session3_place_module,
-                          CRANK, SESSION3_PLACE_MODULE,
-                          CrankSession3Module)
-
 /**
  * CrankSession3ModuleClass:
  * @session_init: Slot for crank_session3_module_session_init().
@@ -69,28 +63,6 @@ struct _CrankSession3ModuleClass {
   void    (*tick) (CrankSession3Module *module);
 };
 
-/**
- * CrankSession3PlaceModuleClass:
- * @attached_data: Slot for crank_session3_place_module_attached_data().
- * @detached_data: Slot for crank_session3_place_module_detached_data().
- *
- * Virtual function table for #CrankSession3Module.
- */
-struct _CrankSession3PlaceModuleClass {
-  /*< private >*/
-  CrankSession3ModuleClass parent;
-
-  /*< public >*/
-  void (*attached_data) (CrankSession3PlaceModule *module,
-                         CrankPlace3              *place,
-                         GObject                  *data);
-
-
-  void (*detached_data) (CrankSession3PlaceModule *module,
-                         CrankPlace3              *place,
-                         GObject                  *data);
-};
-
 //////// Virtual functions /////////////////////////////////////////////////////
 
 void      crank_session3_module_session_init (CrankSession3Module  *module,
@@ -105,15 +77,6 @@ gboolean       crank_session3_module_is_initialized (CrankSession3Module *module
 CrankSession3 *crank_session3_module_get_session (CrankSession3Module *module);
 
 
-
-
-void      crank_session3_place_module_attached_data (CrankSession3PlaceModule *module,
-                                                     CrankPlace3              *place,
-                                                     GObject                  *data);
-
-void      crank_session3_place_module_detached_data (CrankSession3PlaceModule *module,
-                                                     CrankPlace3              *place,
-                                                     GObject                  *data);
 
 
 #endif
