@@ -41,6 +41,15 @@
  * sessions. Or it may be physics system so that it can perform simulations.
  */
 
+
+//////// List of Virtual Functions /////////////////////////////////////////////
+
+static void crank_session3_module_get_property (GObject    *object,
+                                                guint       prop_id,
+                                                GValue     *value,
+                                                GParamSpec *pspec);
+
+
 //////// Default implementations ///////////////////////////////////////////////
 
 static void crank_session3_module_def_session_init (CrankSession3Module  *self,
@@ -50,6 +59,17 @@ static void crank_session3_module_def_session_init (CrankSession3Module  *self,
 static void crank_session3_module_def_tick (CrankSession3Module *self);
 
 
+//////// Properties and signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_INITIALIZED,
+  PROP_SESSION,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -73,15 +93,58 @@ crank_session3_module_init (CrankSession3Module *self)
 static void
 crank_session3_module_class_init (CrankSession3ModuleClass *c)
 {
+  GObjectClass *c_gobject;
+
+  c_gobject = G_OBJECT_CLASS (c);
+
+  c_gobject->get_property = crank_session3_module_get_property;
+
+  pspecs[PROP_INITIALIZED] =
+  g_param_spec_boolean ("initialized", "initialized",
+                        "Whether it is initialized",
+                        FALSE,
+                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_SESSION] =
+  g_param_spec_object ("session", "Session",
+                       "Session that it is initialized for",
+                       CRANK_TYPE_SESSION3,
+                       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
   c->session_init = crank_session3_module_def_session_init;
   c->tick = crank_session3_module_def_tick;
 }
 
 
+//////// GObject ///////////////////////////////////////////////////////////////
 
 static void
+crank_session3_module_get_property (GObject    *object,
+                                    guint       prop_id,
+                                    GValue     *value,
+                                    GParamSpec *pspec)
 {
+  CrankSession3Module *module = (CrankSession3Module*) object;
+
+  switch (prop_id)
+    {
+    case PROP_INITIALIZED:
+      g_value_set_boolean (value,
+                           crank_session3_module_is_initialized (module));
+      break;
+
+    case PROP_SESSION:
+      g_value_set_object (value,
+                          crank_session3_module_get_session (module));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
+
 
 //////// Default implementations ///////////////////////////////////////////////
 
