@@ -2580,6 +2580,7 @@ CRANK_TYPE_SESSION3_MODULE
 <FILE>cranksession3placemodule</FILE>
 CrankSession3PlaceModule
 CrankSession3PlaceModuleClass
+crank_session3_place_module_get_index
 crank_session3_place_module_attached_data
 crank_session3_place_module_detached_data
 <SUBSECTION Standard>
