@@ -30,14 +30,14 @@
 
 
 /**
- * SESSION: cranksession3module
+ * SECTION: cranksession3module
  * @title: CrankSession3Module
  * @short_description: Base class for modulized logic of CrankSession3
  * @stability: unstable
  * @include: crankcore.h
  *
  * A CrankSession3Module represents modulized common logic for #CrankSession3.
- * This may be rendering system so that, it can render #CrankEntity in the
+ * This may be rendering system so that, it can render #CrankEntity3 in the
  * sessions. Or it may be physics system so that it can perform simulations.
  */
 

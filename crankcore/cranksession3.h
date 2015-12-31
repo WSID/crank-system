@@ -50,7 +50,13 @@ G_DECLARE_DERIVABLE_TYPE (CrankSession3,
                           CRANK, SESSION3,
                           CrankSession)
 
+/**
+ * CrankSession3Class:
+ *
+ * Virtual function table for #CrankSession3.
+ */
 struct _CrankSession3Class {
+  /*< private >*/
   CrankSessionClass parent;
 };
 

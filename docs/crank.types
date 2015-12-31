@@ -66,3 +66,9 @@ crank_shape3_tetrahedron_get_type
 crank_shape3_cuboid_get_type
 crank_shape3_cpolyhedron_get_type
 crank_shape3_sphere_get_type
+
+crank_session_get_type
+crank_session3_get_type
+crank_session3_module_get_type
+crank_session3_place_module_get_type
+crank_session3_entity_module_get_type

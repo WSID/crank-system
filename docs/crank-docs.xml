@@ -144,6 +144,16 @@
     </chapter>
   </part>
 
+  <part> <title>Crank Core</title>
+
+    <chapter>
+      <title>Sessions</title>
+      <xi:include href="xml/cranksession.xml"/>
+      <xi:include href="xml/cranksession3.xml"/>
+      <xi:include href="xml/cranksession3module.xml"/>
+    </chapter>
+  </part>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>

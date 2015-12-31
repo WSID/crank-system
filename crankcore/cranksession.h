@@ -40,13 +40,17 @@ G_DECLARE_DERIVABLE_TYPE (CrankSession, crank_session, CRANK, SESSION, GObject)
 
 /**
  * CrankSessionClass:
+ * @resume: Slot for signal CrankSession::resume
+ * @pause: Slot for signal CrankSession::pause
  *
  * Virtual function table for #CrankSession
  */
 struct _CrankSessionClass
 {
+  /*< private >*/
   GObjectClass parent;
 
+  /*< public >*/
   // Signals
 
   void (*resume)    (CrankSession *session);

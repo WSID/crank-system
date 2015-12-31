@@ -46,7 +46,7 @@
  * system (physics or others) with other implementation.
  *
  * When session is constructed, modules can be added and removed. Before
- * running, module should be initialized, with crank_session3_init_and_lock_module()
+ * running, module should be initialized, with crank_session3_lock_and_init_modules()
  *
  * Once initialized, place and entity structure will get pointer data for each
  * modules, at allocation. place will get data from both of place module and
@@ -56,10 +56,10 @@
  *
  * When session is running, several things should be done periodically in short
  * interval. For example, physics system should calculate new position for each
- * items. CrankSession3 will invoke each module's CrankSession3Module.tick()
- * function in every tick.
+ * items. CrankSession3 will invoke crank_session3_module_tick() on every module
+ * in every tick.
  *
- * Tick interval can be adjusted with property CrankSession3:tick-interval.
+ * Tick interval can be adjusted with property #CrankSession3:tick-interval.
  */
 
 

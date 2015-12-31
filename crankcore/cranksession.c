@@ -27,7 +27,7 @@
 #include "cranksession.h"
 
 /**
- * SESSION: cranksession
+ * SECTION: cranksession
  * @title: CrankSession
  * @short_description: Base Class for game session
  * @stability: unstable
@@ -41,7 +41,8 @@
  * the session. In other words, this is play time. If the session is serializable,
  * up time should be recovered when session is deserialized.
  *
- * Uptime timer can be paused and resumed by pause/resume funciton.
+ * Uptime timer can be paused and resumed by crank_session_pause() and
+ * crank_session_resume().
  */
 
 
@@ -252,8 +253,8 @@ crank_session_is_running (CrankSession *session)
  * @session: A Session.
  * @running: Running.
  *
- * Sets whether @session is running or not. this may emit CrankSession::resume
- * or CrankSession::pause
+ * Sets whether @session is running or not. this may emit #CrankSession::resume
+ * or #CrankSession::pause
  */
 void
 crank_session_set_running (CrankSession   *session,
@@ -298,8 +299,8 @@ crank_session_get_uptime (CrankSession *session)
  * @session: A Session.
  * @uptime: Uptime of session.
  *
- * Sets uptime of session. This is for serializable sessions, to restore uptime
- * from file.
+ * Sets uptime of session. This is mainly for serializable sessions, to restore
+ * uptime from file.
  *
  * You may not set uptime while session is running.
  */
@@ -324,11 +325,16 @@ crank_session_set_uptime (CrankSession *session,
  * @session: A Session
  *
  * Runs or resume session.
+ *
+ * When overriden, it should chain up from parent.
  */
 void
 crank_session_resume (CrankSession *session)
 {
   g_signal_emit (session, SIG_RESUME, 0, NULL);
+
+  if (! G_PRIVATE_FIELD (CrankSession, session, gboolean, running))
+    g_error ("crank_session_resume: Chain up required: %s", G_OBJECT_TYPE_NAME (session));
 }
 
 /**
@@ -336,9 +342,14 @@ crank_session_resume (CrankSession *session)
  * @session: A Session.
  *
  * Pauses a session.
+ *
+ * When overriden, it should chain up from parent.
  */
 void
 crank_session_pause (CrankSession *session)
 {
   g_signal_emit (session, SIG_PAUSE, 0, NULL);
+
+  if (G_PRIVATE_FIELD (CrankSession, session, gboolean, running))
+    g_error ("crank_session_pause: Chain up required: %s", G_OBJECT_TYPE_NAME (session));
 }
