@@ -53,10 +53,6 @@ static void crank_session3_place_module_def_session_init (CrankSession3Module  *
                                                           CrankSession3        *session,
                                                           GError              **error);
 
-static void crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
-                                                           CrankSession3        *session,
-                                                           GError              **error);
-
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -70,22 +66,12 @@ typedef struct _CrankSession3PlaceModulePrivate
   guint   index;
 } CrankSession3PlaceModulePrivate;
 
-typedef struct _CrankSession3EntityModulePrivate
-{
-  guint   place_index;
-  guint   index;
-} CrankSession3EntityModulePrivate;
-
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3Module,
                                      crank_session3_module,
                                      G_TYPE_OBJECT)
 
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3PlaceModule,
                                      crank_session3_place_module,
-                                     CRANK_TYPE_SESSION3_MODULE)
-
-G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3EntityModule,
-                                     crank_session3_entity_module,
                                      CRANK_TYPE_SESSION3_MODULE)
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -117,21 +103,6 @@ crank_session3_place_module_class_init (CrankSession3PlaceModuleClass *c)
 
   c_session3module = CRANK_SESSION3_MODULE_CLASS (c);
   c_session3module->session_init = crank_session3_place_module_def_session_init;
-}
-
-static void
-crank_session3_entity_module_init (CrankSession3EntityModule *self)
-{
-
-}
-
-static void
-crank_session3_entity_module_class_init (CrankSession3EntityModuleClass *c)
-{
-  CrankSession3ModuleClass *c_session3module;
-
-  c_session3module = CRANK_SESSION3_MODULE_CLASS (c);
-  c_session3module->session_init = crank_session3_entity_module_def_session_init;
 }
 
 //////// Default implementations ///////////////////////////////////////////////
@@ -168,26 +139,6 @@ crank_session3_place_module_def_session_init (CrankSession3Module  *self,
 
   priv->index = crank_session3_index_of_place_module (session, s);
 }
-
-static void
-crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
-                                               CrankSession3        *session,
-                                               GError              **error)
-{
-  CrankSession3ModuleClass *pc;
-  CrankSession3EntityModule *s;
-  CrankSession3EntityModulePrivate *priv;
-
-  pc = (CrankSession3ModuleClass*)crank_session3_entity_module_parent_class;
-  pc->session_init (self, session, error);
-
-  s = (CrankSession3EntityModule*)self;
-  priv = crank_session3_entity_module_get_instance_private (s);
-
-  priv->index = crank_session3_index_of_entity_module (session, s);
-  priv->place_index = crank_session3_get_n_place_modules (session) + priv->index;
-}
-
 
 
 //////// Common ////////////////////////////////////////////////////////////////
@@ -298,98 +249,4 @@ crank_session3_place_module_detached_data (CrankSession3PlaceModule *module,
 
 
 
-//////// Entity Module /////////////////////////////////////////////////////////
-
-/**
- * crank_session3_entity_module_make_place_data:
- * @module: A Module.
- * @place: A Place data.
- *
- * This will be called when #CrankPlace3 is constructed. Through this, it can
- * pass data structure to manage entities. (like octree)
- *
- * Returns: (transfer full) (nullable): Place data for this module.
- */
-GObject*
-crank_session3_entity_module_make_place_data (CrankSession3EntityModule *module,
-                                              CrankPlace3               *place)
-{
-  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
-
-  return c->make_place_data (module, place);
-}
-
-/**
- * crank_session3_entity_module_attached_data:
- * @module: A Module.
- * @entity: (transfer none): A Entity.
- * @data: (transfer none): Data for @entity.
- *
- * This will be called when data is attached to an entity.
- */
-void
-crank_session3_entity_module_attached_data (CrankSession3EntityModule *module,
-                                            CrankEntity3              *entity,
-                                            GObject                   *data)
-{
-  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
-
-  c->attached_data (module, entity, data);
-}
-
-/**
- * crank_session3_entity_module_detached_data:
- * @module: A Module.
- * @entity: (transfer none): A Entity.
- * @data: (transfer none): Data for @entity.
- *
- * This will be called when data is detached from an entity.
- */
-void
-crank_session3_entity_module_detached_data (CrankSession3EntityModule *module,
-                                            CrankEntity3              *entity,
-                                            GObject                   *data)
-{
-  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
-
-  c->detached_data (module, entity, data);
-}
-
-/**
- * crank_session3_entity_module_entity_added:
- * @module: A Module.
- * @place: (transfer none): A Place.
- * @entity: (transfer none): A Entity.
- *
- * This will be called when an entity is added to a place. In this function,
- * module can add entity in managed list.
- */
-void
-crank_session3_entity_module_entity_added (CrankSession3EntityModule *module,
-                                           CrankPlace3               *place,
-                                           CrankEntity3              *entity)
-{
-  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
-
-  c->entity_added (module, place, entity);
-}
-
-/**
- * crank_session3_entity_module_entity_removed:
- * @module: A Module.
- * @place: (transfer none): A Place.
- * @entity: (transfer none): A Entity.
- *
- * This will be called when an entity is removed from a place. In this function,
- * module can remove entity from managed list.
- */
-void
-crank_session3_entity_module_entity_removed (CrankSession3EntityModule *module,
-                                             CrankPlace3               *place,
-                                             CrankEntity3              *entity)
-{
-  CrankSession3EntityModuleClass *c = CRANK_SESSION3_ENTITY_MODULE_GET_CLASS (module);
-
-  c->entity_removed (module, place, entity);
-}
 

@@ -50,13 +50,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankSession3PlaceModule,
                           CRANK, SESSION3_PLACE_MODULE,
                           CrankSession3Module)
 
-
-#define CRANK_TYPE_SESSION3_ENTITY_MODULE (crank_session3_entity_module_get_type())
-G_DECLARE_DERIVABLE_TYPE (CrankSession3EntityModule,
-                          crank_session3_entity_module,
-                          CRANK, SESSION3_ENTITY_MODULE,
-                          CrankSession3Module)
-
 /**
  * CrankSession3ModuleClass:
  * @session_init: Slot for crank_session3_module_session_init().
@@ -98,42 +91,6 @@ struct _CrankSession3PlaceModuleClass {
                          GObject                  *data);
 };
 
-/**
- * CrankSession3EntityModuleClass:
- * @make_place_data: Slot for crank_session3_entity_module_make_place_data().
- * @attached_data: Slot for crank_session3_entity_module_attached_data().
- * @detached_data: Slot for crank_session3_entity_module_detached_data().
- * @entity_added: Slot for crank_session3_entity_module_entity_added().
- * @entity_removed: Slot for crank_session3_entity_module_entity_removed().
- *
- * Virtual function table for #CrankSession3Module.
- */
-struct _CrankSession3EntityModuleClass {
-  /*< private >*/
-  CrankSession3ModuleClass parent;
-
-  /*< public >*/
-  GObject *(*make_place_data) (CrankSession3EntityModule *module,
-                               CrankPlace3               *place);
-
-  void (*attached_data) (CrankSession3EntityModule *module,
-                         CrankEntity3              *entity,
-                         GObject                   *data);
-
-
-  void (*detached_data) (CrankSession3EntityModule *module,
-                         CrankEntity3              *entity,
-                         GObject                   *data);
-
-  void (*entity_added) (CrankSession3EntityModule *module,
-                        CrankPlace3               *place,
-                        CrankEntity3              *entity);
-
-  void (*entity_removed) (CrankSession3EntityModule *module,
-                          CrankPlace3               *place,
-                          CrankEntity3              *entity);
-};
-
 //////// Virtual functions /////////////////////////////////////////////////////
 
 void      crank_session3_module_session_init (CrankSession3Module  *module,
@@ -158,25 +115,5 @@ void      crank_session3_place_module_detached_data (CrankSession3PlaceModule *m
                                                      CrankPlace3              *place,
                                                      GObject                  *data);
 
-
-GObject  *crank_session3_entity_module_make_place_data (CrankSession3EntityModule *module,
-                                                        CrankPlace3               *place);
-
-
-void      crank_session3_entity_module_attached_data (CrankSession3EntityModule *module,
-                                                      CrankEntity3              *entity,
-                                                      GObject                   *data);
-
-void      crank_session3_entity_module_detached_data (CrankSession3EntityModule *module,
-                                                      CrankEntity3              *entity,
-                                                      GObject                   *data);
-
-void      crank_session3_entity_module_entity_added (CrankSession3EntityModule *module,
-                                                     CrankPlace3               *place,
-                                                     CrankEntity3              *entity);
-
-void      crank_session3_entity_module_entity_removed(CrankSession3EntityModule *module,
-                                                     CrankPlace3               *place,
-                                                     CrankEntity3              *entity);
 
 #endif
