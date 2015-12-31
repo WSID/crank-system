@@ -989,6 +989,83 @@ crank_place3_get_entities (CrankPlace3 *place)
   return place->entities;
 }
 
+/**
+ * crank_place3_add_entity:
+ * @place: A Place.
+ * @entity: An Entity.
+ *
+ * Adds an entity to a place.
+ */
+void
+crank_place3_add_entity (CrankPlace3  *place,
+                         CrankEntity3 *entity)
+{
+  CrankSession3 *session = place->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+
+  if (entity->place != NULL)
+    {
+      g_warning ("entity belongs to somewhere!");
+      return;
+    }
+
+  else
+    {
+      guint i;
+
+      g_ptr_array_remove (spriv->entities_placeless, entity);
+
+      entity->place = place;
+      g_ptr_array_add (place->entities, place);
+
+      for (i = 0; i < spriv->entity_modules->len; i++)
+        {
+          CrankSession3EntityModule *module =
+              (CrankSession3EntityModule*) spriv->entity_modules->pdata[i];
+
+          crank_session3_entity_module_entity_added (module, place, entity);
+        }
+    }
+}
+
+/**
+ * crank_place3_remove_entity:
+ * @place: A Place.
+ * @entity: An Entity.
+ *
+ * Removes an entity from a place.
+ */
+void
+crank_place3_remove_entity (CrankPlace3  *place,
+                            CrankEntity3 *entity)
+{
+  CrankSession3 *session = place->session;
+  CrankSession3Private *spriv = crank_session3_get_instance_private (session);
+
+  if (entity->place != place)
+    {
+      g_warning ("Entity does not belongs to the place!");
+      return;
+    }
+
+  else
+    {
+      guint i;
+
+      for (i = 0; i < spriv->entity_modules->len; i++)
+        {
+          CrankSession3EntityModule *module =
+              (CrankSession3EntityModule*) spriv->entity_modules->pdata[i];
+
+          crank_session3_entity_module_entity_removed (module, place, entity);
+        }
+
+      g_ptr_array_remove (place->entities, entity);
+      entity->place = NULL;
+      g_ptr_array_add (spriv->entities_placeless, entity);
+    }
+}
+
 
 /**
  * crank_place3_atatch_data:

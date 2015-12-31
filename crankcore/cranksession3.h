@@ -156,6 +156,12 @@ void            crank_place3_set_boundary (CrankPlace3 *place,
 
 const GPtrArray*crank_place3_get_entities (CrankPlace3 *place);
 
+void            crank_place3_add_entity (CrankPlace3  *place,
+                                         CrankEntity3 *entity);
+
+void            crank_place3_remove_entity (CrankPlace3  *place,
+                                            CrankEntity3 *entity);
+
 
 
 void            crank_place3_attach_data (CrankPlace3 *place,
