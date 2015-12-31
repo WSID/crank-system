@@ -38,11 +38,31 @@
  *
  */
 
-//////// Default Implementations ///////////////////////////////////////////////
 
-static void crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
-                                                           CrankSession3        *session,
-                                                           GError              **error);
+
+//////// List of virtual functions /////////////////////////////////////////////
+
+static void crank_session3_entity_module_get_property (GObject    *object,
+                                                       guint       prop_id,
+                                                       GValue     *value,
+                                                       GParamSpec *psepc);
+
+static void crank_session3_entity_module_session_init (CrankSession3Module  *self,
+                                                       CrankSession3        *session,
+                                                       GError              **error);
+
+//////// Properties and signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_INDEX,
+  PROP_PLACE_INDEX,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -61,23 +81,76 @@ G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankSession3EntityModule,
 static void
 crank_session3_entity_module_init (CrankSession3EntityModule *self)
 {
+  CrankSession3EntityModulePrivate *priv;
+  priv = crank_session3_entity_module_get_instance_private (self);
 
+  priv->index = 0;
+  priv->place_index = 0;
 }
 
 static void
 crank_session3_entity_module_class_init (CrankSession3EntityModuleClass *c)
 {
+  GObjectClass *c_gobject;
   CrankSession3ModuleClass *c_session3module;
 
+  c_gobject = G_OBJECT_CLASS (c);
+
+  c_gobject->get_property = crank_session3_entity_module_get_property;
+
+  pspecs[PROP_INDEX] =
+  g_param_spec_uint ("index", "Index",
+                     "Index of this module",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_PLACE_INDEX] =
+  g_param_spec_uint ("place-index", "Index of place data",
+                     "Index of place data for this module",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
   c_session3module = CRANK_SESSION3_MODULE_CLASS (c);
-  c_session3module->session_init = crank_session3_entity_module_def_session_init;
+  c_session3module->session_init = crank_session3_entity_module_session_init;
 }
 
 
-//////// Default Implementations ///////////////////////////////////////////////
+//////// GObject ///////////////////////////////////////////////////////////////
 
 static void
-crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
+crank_session3_entity_module_get_property (GObject    *object,
+                                           guint       prop_id,
+                                           GValue     *value,
+                                           GParamSpec *pspec)
+{
+  CrankSession3EntityModule *module = (CrankSession3EntityModule*)object;
+
+  switch (prop_id)
+    {
+    case PROP_INDEX:
+      g_value_set_uint (value,
+                        crank_session3_entity_module_get_index (module));
+      break;
+
+    case PROP_PLACE_INDEX:
+      g_value_set_uint (value,
+                        crank_session3_entity_module_get_place_index (module));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+
+
+//////// CrankSession3Module ///////////////////////////////////////////////////
+
+static void
+crank_session3_entity_module_session_init (CrankSession3Module  *self,
                                                CrankSession3        *session,
                                                GError              **error)
 {
@@ -97,7 +170,46 @@ crank_session3_entity_module_def_session_init (CrankSession3Module  *self,
 
 
 
+
 //////// Entity Module /////////////////////////////////////////////////////////
+
+/**
+ * crank_session3_entity_module_get_index:
+ * @module: A Module.
+ *
+ * Gets index of this module in the session. If it is not initialized for a
+ * session, it will return 0.
+ *
+ * Returns: index of this module, or 0 if it is not initialized.
+ */
+guint
+crank_session3_entity_module_get_index (CrankSession3EntityModule *module)
+{
+  CrankSession3EntityModulePrivate *priv;
+  priv = crank_session3_entity_module_get_instance_private (module);
+
+  return priv->index;
+}
+
+/**
+ * crank_session3_entity_module_get_place_index:
+ * @module: A Module.
+ *
+ * Gets index of place data for this module in the session. If it is not
+ * initialized for a session, it will return 0.
+ *
+ * Returns: index of place data for this module, or 0 if it is not initialized.
+ */
+guint
+crank_session3_entity_module_get_place_index (CrankSession3EntityModule *module)
+{
+  CrankSession3EntityModulePrivate *priv;
+  priv = crank_session3_entity_module_get_instance_private (module);
+
+  return priv->place_index;
+}
+
+
 
 /**
  * crank_session3_entity_module_make_place_data:

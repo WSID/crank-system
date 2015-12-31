@@ -81,6 +81,11 @@ struct _CrankSession3EntityModuleClass {
 
 //////// Public functions //////////////////////////////////////////////////////
 
+guint     crank_session3_entity_module_get_index (CrankSession3EntityModule *module);
+
+guint     crank_session3_entity_module_get_place_index (CrankSession3EntityModule *module);
+
+
 GObject  *crank_session3_entity_module_make_place_data (CrankSession3EntityModule *module,
                                                         CrankPlace3               *place);
 
