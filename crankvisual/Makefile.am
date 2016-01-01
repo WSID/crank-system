@@ -12,6 +12,7 @@ visualinclude_HEADERS = \
 libcrankvisual_la_CFLAGS = \
 		$(CRANK_BASE_CFLAGS) \
 		$(CRANK_SHAPE_CFLAGS) \
+		$(CRANK_VISUAL_CFLAGS) \
 		-I$(top_srcdir)/crankbase \
 		-I$(top_srcdir)/crankshape \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
@@ -21,6 +22,7 @@ libcrankvisual_la_CFLAGS = \
 libcrankvisual_la_LIBADD = \
 		$(CRANK_BASE_LIBS) \
 		$(CRANK_SHAPE_LIBS) \
+		$(CRANK_VISUAL_LIBS) \
 		$(top_srcdir)/crankbase/libcrankbase.la \
 		$(top_srcdir)/crankshape/libcrankshape.la \
 		$(top_srcdir)/crankcore/libcrankcore.la
@@ -55,7 +57,7 @@ CrankVisual_0_0_gir_SCANNERFLAGS= \
 		--identifier-prefix="Crank"
 
 CrankVisual_0_0_gir_INCLUDES= GObject-2.0 CrankBase-0.0 CrankShape-0.0 CrankCore-0.0
-CrankVisual_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape -I$(top_srcdir)/crankcore
+CrankVisual_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) $(CRANK_VISUAL_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape -I$(top_srcdir)/crankcore
 CrankVisual_0_0_gir_LIBS= libcrankvisual.la
 CrankVisual_0_0_gir_FILES= $(libcrankvisual_la_SOURCES) $(visualinclude_HEADERS)
 

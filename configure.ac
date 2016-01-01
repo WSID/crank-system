@@ -27,6 +27,7 @@ AC_PROG_CC
 ######## Module configure ######################################################
 PKG_CHECK_MODULES([CRANK_BASE], [glib-2.0 gobject-2.0])
 PKG_CHECK_MODULES([CRANK_SHAPE], [glib-2.0 gobject-2.0])
+PKG_CHECK_MODULES([CRANK_VISUAL], [glib-2.0 gobject-2.0 cogl-2.0-experimental clutter-1.0])
 
 
 ######## Build demo ############################################################

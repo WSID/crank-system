@@ -19,7 +19,9 @@ endif
 pkgconfigdir= $(libdir)/pkgconfig
 pkgconfig_DATA= \
 		crank-base-0.0.pc \
-		crank-shape-0.0.pc
+		crank-shape-0.0.pc \
+		crank-core-0.0.pc \
+		crank-visual-0.0.pc
 
 
 EXTRA_DIST= \
