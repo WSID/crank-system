@@ -6,6 +6,7 @@ SUBDIRS= \
 		crankbase \
 		crankshape \
 		crankcore \
+		crankvisual \
 		docs \
 		tests \
 		bench \

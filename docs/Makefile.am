@@ -25,7 +25,8 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 DOC_SOURCE_DIR= \
 		$(top_srcdir)/crankbase \
 		$(top_srcdir)/crankshape \
-		$(top_srcdir)/crankcore
+		$(top_srcdir)/crankcore \
+		$(top_srcdir)/crankvisual
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
 SCANGOBJ_OPTIONS=
@@ -55,11 +56,13 @@ FIXXREF_OPTIONS=
 HFILE_GLOB= \
 		$(top_srcdir)/crankbase/*.h \
 		$(top_srcdir)/crankshape/*.h \
-		$(top_srcdir)/crankcore/*.h
+		$(top_srcdir)/crankcore/*.h \
+		$(top_srcdir)/crankvisual/*.h
 CFILE_GLOB=$ \
 		$(top_srcdir)/crankbase/*.c \
 		$(top_srcdir)/crankshape/*.c \
-		$(top_srcdir)/crankcore/*.c
+		$(top_srcdir)/crankcore/*.c \
+		$(top_srcdir)/crankvisual/*.c
 		
 
 # Extra header to include when scanning, which are not under DOC_SOURCE_DIR
@@ -104,12 +107,14 @@ expand_content_files=
 GTKDOC_CFLAGS= \
 	-I$(top_srcdir)/crankbase -lm \
 	-I$(top_srcdir)/crankshape \
-	-I$(top_srcdir)/crankcore
+	-I$(top_srcdir)/crankcore \
+	-I$(top_srcdir)/crankvisual
 
 GTKDOC_LIBS= \
 	$(top_builddir)/crankbase/libcrankbase.la \
 	$(top_builddir)/crankshape/libcrankshape.la \
 	$(top_builddir)/crankcore/libcrankcore.la
+	$(top_builddir)/crankvisual/libcrankvisual.la
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make

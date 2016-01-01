@@ -107,6 +107,7 @@ AC_CONFIG_FILES([
 		crankbase/Makefile
 		crankshape/Makefile
 		crankcore/Makefile
+		crankvisual/Makefile
 
 		tests/Makefile
 		tests/c/Makefile
@@ -130,5 +131,6 @@ AC_CONFIG_FILES([
 		crank-base-0.0.pc
 		crank-shape-0.0.pc
 		crank-core-0.0.pc
+		crank-visual-0.0.pc
 ])
 AC_OUTPUT
