@@ -24,6 +24,7 @@
 
 #define _CRANKVISUAL_INSIDE
 
+#include "crankfilm.h"
 
 #undef  _CRANKVISUAL_INSIDE
 

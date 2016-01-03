@@ -6,7 +6,8 @@ lib_LTLIBRARIES = \
 		libcrankvisual.la
 
 visualinclude_HEADERS = \
-		crankvisual.h
+		crankvisual.h \
+		crankfilm.h
 
 # crankvisual.la
 libcrankvisual_la_CFLAGS = \
@@ -27,7 +28,8 @@ libcrankvisual_la_LIBADD = \
 		$(top_srcdir)/crankshape/libcrankshape.la \
 		$(top_srcdir)/crankcore/libcrankcore.la
 
-libcrankvisual_la_SOURCES=
+libcrankvisual_la_SOURCES= \
+		crankfilm.c
 
 
 
@@ -56,12 +58,12 @@ CrankVisual_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
 		--identifier-prefix="Crank"
 
-CrankVisual_0_0_gir_INCLUDES= GObject-2.0 CrankBase-0.0 CrankShape-0.0 CrankCore-0.0
+CrankVisual_0_0_gir_INCLUDES= GObject-2.0 Cogl-2.0 CrankBase-0.0 CrankShape-0.0 CrankCore-0.0
 CrankVisual_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) $(CRANK_VISUAL_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape -I$(top_srcdir)/crankcore
 CrankVisual_0_0_gir_LIBS= libcrankvisual.la
 CrankVisual_0_0_gir_FILES= $(libcrankvisual_la_SOURCES) $(visualinclude_HEADERS)
 
-# INTROSPECTION_GIRS+= CrankVisual-0.0.gir
+INTROSPECTION_GIRS+= CrankVisual-0.0.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
