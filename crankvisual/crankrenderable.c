@@ -128,6 +128,7 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable)
 /**
  * crank_renderable_render_geom:
  * @renderable: A Renderable.
+ * @position: Relative position from camera.
  * @framebuffer: A Framebuffer
  *
  * Render geometry information on given framebuffer.
@@ -137,16 +138,18 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable)
  */
 void
 crank_renderable_render_geom (CrankRenderable *renderable,
+                              CrankTrans3     *position,
                               CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_geom (renderable, framebuffer);
+  return c->render_geom (renderable, position, framebuffer);
 }
 
 /**
  * crank_renderable_render_color:
  * @renderable: A Renderable.
+ * @position: Relative position from camera.
  * @framebuffer: A Framebuffer
  *
  * Render color information on given framebuffer.
@@ -156,16 +159,18 @@ crank_renderable_render_geom (CrankRenderable *renderable,
  */
 void
 crank_renderable_render_color (CrankRenderable *renderable,
+                               CrankTrans3     *position,
                                CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_color (renderable, framebuffer);
+  return c->render_color (renderable, position, framebuffer);
 }
 
 /**
  * crank_renderable_render_material:
  * @renderable: A Renderable.
+ * @position: Relative position from camera.
  * @framebuffer: A Framebuffer
  *
  * Render material information on given framebuffer.
@@ -174,9 +179,10 @@ crank_renderable_render_color (CrankRenderable *renderable,
  */
 void
 crank_renderable_render_material (CrankRenderable *renderable,
+                                  CrankTrans3     *position,
                                   CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_material (renderable, framebuffer);
+  return c->render_material (renderable, position, framebuffer);
 }

@@ -30,6 +30,8 @@
 #include <glib-object.h>
 #include <cogl/cogl2-experimental.h>
 
+#include "crankshape.h"
+
 //////// Type Declarations /////////////////////////////////////////////////////
 
 #define CRANK_TYPE_RENDERABLE (crank_renderable_get_type ())
@@ -56,12 +58,15 @@ struct _CrankRenderableClass
   gfloat (*get_visible_radius) (CrankRenderable *renderable);
 
   void  (*render_geom)  (CrankRenderable *renderable,
+                         CrankTrans3     *position,
                          CoglFramebuffer *framebuffer);
 
   void  (*render_color) (CrankRenderable *renderable,
+                         CrankTrans3     *position,
                          CoglFramebuffer *framebuffer);
 
   void  (*render_material) (CrankRenderable *renderable,
+                            CrankTrans3     *position,
                             CoglFramebuffer *framebuffer);
 };
 
@@ -74,14 +79,17 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable);
 
 void
 crank_renderable_render_geom (CrankRenderable *renderable,
+                              CrankTrans3     *position,
                               CoglFramebuffer *framebuffer);
 
 void
 crank_renderable_render_color (CrankRenderable *renderable,
+                               CrankTrans3     *position,
                                CoglFramebuffer *framebuffer);
 
 void
 crank_renderable_render_material (CrankRenderable *renderable,
+                                  CrankTrans3     *position,
                                   CoglFramebuffer *framebuffer);
 
 #endif
