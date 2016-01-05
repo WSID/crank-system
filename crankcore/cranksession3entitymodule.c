@@ -209,6 +209,44 @@ crank_session3_entity_module_get_place_index (CrankSession3EntityModule *module)
   return priv->place_index;
 }
 
+/**
+ * crank_session3_entity_module_get_place_data:
+ * @module: A Module.
+ * @place: A Place.
+ *
+ * Gets place data from given @place.
+ *
+ * Returns: (transfer none) (nullable): Place data for this module.
+ */
+GObject*
+crank_session3_entity_module_get_place_data (CrankSession3EntityModule *module,
+                                             CrankPlace3               *place)
+{
+  CrankSession3EntityModulePrivate *priv;
+  priv = crank_session3_entity_module_get_instance_private (module);
+
+  return crank_place3_get_data (place, priv->place_index);
+}
+
+/**
+ * crank_session3_entity_module_get_entity_data:
+ * @module: A Module.
+ * @entity: A Entity.
+ *
+ * Gets entity data from given @entity.
+ *
+ * Returns: (transfer none) (nullable): Entity data for this module.
+ */
+GObject*
+crank_session3_entity_module_get_entity_data (CrankSession3EntityModule *module,
+                                              CrankEntity3              *entity)
+{
+  CrankSession3EntityModulePrivate *priv;
+  priv = crank_session3_entity_module_get_instance_private (module);
+
+  return crank_entity3_get_data (entity, priv->index);
+}
+
 
 
 /**
