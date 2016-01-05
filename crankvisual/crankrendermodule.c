@@ -195,7 +195,32 @@ static void
 crank_render_module_tick (CrankSession3Module *module)
 {
   // Doing nothing here
-  // TODO: Render scene for each films.
+
+  CrankRenderModule *rmodule = (CrankRenderModule*) module;
+
+  GHashTableIter iter;
+  gpointer ik, iv;
+
+  g_hash_table_iter_init (&iter, rmodule->film_table);
+
+  while (g_hash_table_iter_next (&iter, &ik, &iv))
+    {
+      CrankFilm *film = (CrankFilm *) ik;
+      CrankEntity3 *entity = (CrankEntity3 *) iv;
+      CrankPlace3 *place = crank_entity3_get_place (entity);
+
+      CrankTrans3 position;
+
+      crank_entity3_get_position (entity, &position);
+
+      if (place == NULL)
+        continue;
+
+      crank_render_module_render_at (rmodule,
+                                     place,
+                                     &position,
+                                     film);
+    }
 }
 
 
@@ -331,6 +356,30 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
       crank_renderable_render_geom (renderable, &rpos, framebuffer);
     }
+}
+
+
+/**
+ * crank_render_module_render_at:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position.
+ * @film: A Film.
+ *
+ * Renders a scene to a film.
+ */
+void
+crank_render_module_render_at (CrankRenderModule *module,
+                               CrankPlace3       *place,
+                               CrankTrans3       *position,
+                               CrankFilm         *film)
+{
+  crank_render_module_render_geom_at (module,
+                                      place,
+                                      position,
+                                      crank_film_get_texture (film, 0));
+
+  // TODO: Render to other buffers.
 }
 
 /**

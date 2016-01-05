@@ -51,6 +51,13 @@ void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankTrans3       *position,
                                             CoglFramebuffer   *framebuffer);
 
+
+void    crank_render_module_render_at (CrankRenderModule *module,
+                                       CrankPlace3       *place,
+                                       CrankTrans3       *position,
+                                       CrankFilm         *film);
+
+
 void    crank_render_module_add_film (CrankRenderModule *module,
                                       CrankFilm         *film,
                                       CrankEntity3      *entity);
