@@ -282,11 +282,10 @@ crank_render_module_entity_added (CrankSession3EntityModule *module,
 {
   CrankRenderPData *pdata;
 
-  if (crank_entity3_get_data (entity,
-                              crank_session3_entity_module_get_index (module)) == NULL)
+  if (crank_session3_entity_module_get_entity_data (module, entity) == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_place3_get_data (place, crank_session3_entity_module_get_place_index (module));
+  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data (module, place);
 
   crank_render_pdata_add_entity (pdata, entity);
 }
@@ -299,11 +298,10 @@ crank_render_module_entity_removed (CrankSession3EntityModule *module,
 {
   CrankRenderPData *pdata;
 
-  if (crank_entity3_get_data (entity,
-                              crank_session3_entity_module_get_index (module)) == NULL)
+  if (crank_session3_entity_module_get_entity_data (module, entity) == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_place3_get_data (place, crank_session3_entity_module_get_place_index (module));
+  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data (module, place);
 
   crank_render_pdata_remove_entity (pdata, entity);
 }
@@ -332,15 +330,14 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
   guint i;
 
   // TODO: Replace it with octree based version
-  pdata = (CrankRenderPData*) crank_place3_get_data (place,
-                                                     crank_session3_entity_module_get_place_index ((CrankSession3EntityModule *)module));
+  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
 
   crank_trans3_inverse (position, &ipos);
 
   for (i = 0; i < pdata->entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata;
-      CrankRenderable *renderable = (CrankRenderable*) crank_entity3_get_data (entity, crank_session3_entity_module_get_index((CrankSession3EntityModule *)module));
+      CrankRenderable *renderable = (CrankRenderable*) crank_session3_entity_module_get_entity_data ((CrankSession3EntityModule*)module, entity);
       CrankTrans3 pos;
 
 
@@ -351,8 +348,6 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
       crank_entity3_get_position (entity, &pos);
       crank_trans3_compose (&ipos, &pos, &rpos);
-
-      // TODO: Set modelview matrix.
 
       crank_renderable_render_geom (renderable, &rpos, framebuffer);
     }
