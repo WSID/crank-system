@@ -147,7 +147,9 @@ static void       crank_render_module_entity_removed (CrankSession3EntityModule 
 
 struct _CrankRenderModule
 {
-  GObject _parent;
+  GObject     _parent;
+
+  GHashTable *film_table;
 };
 
 G_DEFINE_TYPE (CrankRenderModule,
@@ -161,7 +163,10 @@ G_DEFINE_TYPE (CrankRenderModule,
 static void
 crank_render_module_init (CrankRenderModule *module)
 {
-
+  module->film_table = g_hash_table_new_full (g_direct_hash,
+                                              g_direct_equal,
+                                              g_object_unref,
+                                              NULL);
 }
 
 static void
@@ -281,6 +286,16 @@ crank_render_module_entity_removed (CrankSession3EntityModule *module,
 
 //////// Public functions //////////////////////////////////////////////////////
 
+
+/**
+ * crank_render_module_render_geom_at:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders @place which looked at @position, on @framebuffer.
+ */
 void
 crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CrankPlace3       *place,
@@ -316,4 +331,50 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
       crank_renderable_render_geom (renderable, &rpos, framebuffer);
     }
+}
+
+/**
+ * crank_render_module_add_film:
+ * @module: A Module.
+ * @film: A Film.
+ * @entity: A Entity.
+ *
+ * Adds @film to this module. Once added, it will renders place of @entity on
+ * @film.
+ */
+void
+crank_render_module_add_film (CrankRenderModule *module,
+                              CrankFilm         *film,
+                              CrankEntity3      *entity)
+{
+  g_hash_table_insert (module->film_table, g_object_ref (film), entity);
+}
+
+/**
+ * crank_render_module_remove_film:
+ * @module: A Module.
+ * @film: A Film.
+ *
+ * Removes a @film from this module.
+ */
+void
+crank_render_module_remove_film (CrankRenderModule *module,
+                                 CrankFilm         *film)
+{
+  g_hash_table_remove (module->film_table, film);
+}
+
+
+/**
+ * crank_render_module_get_n_film:
+ * @module: A Module.
+ *
+ * Get count of films in this module.
+ *
+ * Returns: Number of films in this module.
+ */
+guint
+crank_render_module_get_n_film (CrankRenderModule *module)
+{
+  return g_hash_table_size (module->film_table);
 }
