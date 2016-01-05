@@ -1,5 +1,5 @@
-#ifndef CRANKFILM_H
-#define CRANKFILM_H
+#ifndef CRANKRENDERABLE_H
+#define CRANKRENDERABLE_H
 
 /* Copyright (C) 2015, WSID   */
 
