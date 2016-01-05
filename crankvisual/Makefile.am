@@ -8,7 +8,8 @@ lib_LTLIBRARIES = \
 visualinclude_HEADERS = \
 		crankvisual.h \
 		crankfilm.h \
-		crankrenderable.h
+		crankrenderable.h \
+		crankrendermodule.h
 
 # crankvisual.la
 libcrankvisual_la_CFLAGS = \
@@ -17,6 +18,7 @@ libcrankvisual_la_CFLAGS = \
 		$(CRANK_VISUAL_CFLAGS) \
 		-I$(top_srcdir)/crankbase \
 		-I$(top_srcdir)/crankshape \
+		-I$(top_srcdir)/crankcore \
 		-DGETTEXT_PACKAGE=\"@GETTEXT_PACKAGE@\" \
 		-DLOCALEDIR=\"$(localedir)\" \
 		-lm
@@ -31,7 +33,8 @@ libcrankvisual_la_LIBADD = \
 
 libcrankvisual_la_SOURCES= \
 		crankfilm.c \
-		crankrenderable.c
+		crankrenderable.c \
+		crankrendermodule.c
 
 
 

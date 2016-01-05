@@ -1,5 +1,5 @@
-#ifndef CRANKVISUAL_H
-#define CRANKVISUAL_H
+#ifndef CRANKRENDERMODULE_H
+#define CRANKRENDERMODULE_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,13 +22,34 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKVISUAL_INSIDE
+#ifndef _CRANKVISUAL_INSIDE
+#error crankrendermodule.h cannot be included directly: include crankvisual.h
+#endif
 
-#include "crankfilm.h"
+#include <glib.h>
+#include <glib-object.h>
+
+#include "crankbase.h"
+#include "crankshape.h"
+#include "crankcore.h"
+
 #include "crankrenderable.h"
+#include "crankfilm.h"
 
-#include "crankrendermodule.h"
 
-#undef  _CRANKVISUAL_INSIDE
+//////// Type Definition ///////////////////////////////////////////////////////
+
+G_DECLARE_FINAL_TYPE (CrankRenderModule,
+                      crank_render_module,
+                      CRANK, RENKDER_MODULE,
+                      CrankSession3EntityModule)
+
+//////// Public functions //////////////////////////////////////////////////////
+
+void    crank_render_module_render_geom_at (CrankRenderModule *module,
+                                            CrankPlace3       *place,
+                                            CrankTrans3       *position,
+                                            CoglFramebuffer   *framebuffer);
+
 
 #endif
