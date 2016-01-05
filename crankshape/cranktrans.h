@@ -128,6 +128,11 @@ void            crank_trans2_compose           (CrankTrans2    *a,
 void            crank_trans2_compose_self      (CrankTrans2    *a,
                                                 CrankTrans2    *b);
 
+
+void            crank_trans2_relative_to       (CrankTrans2    *a,
+                                                CrankTrans2    *b,
+                                                CrankTrans2    *r);
+
 //////// Transformation ////////////////////////////////////////////////////////
 
 void            crank_trans2_transv            (CrankTrans2    *a,
@@ -189,6 +194,12 @@ void            crank_trans3_compose           (CrankTrans3    *a,
 
 void            crank_trans3_compose_self      (CrankTrans3    *a,
                                                 CrankTrans3    *b);
+
+
+void            crank_trans3_relative_to       (CrankTrans3    *a,
+                                                CrankTrans3    *b,
+                                                CrankTrans3    *r);
+
 
 //////// Transformation ////////////////////////////////////////////////////////
 

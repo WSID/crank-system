@@ -325,6 +325,25 @@ crank_trans2_compose_self (CrankTrans2 *a,
   a->mscl *= b->mscl;
 }
 
+/**
+ * crank_trans2_relative_to:
+ * @a: A Transformation.
+ * @b: Another transformation.
+ * @r: (out): A resulting transformation.
+ *
+ * Gets relative transformation from @a to @b, which resulting to @b when applied
+ * to @a.
+ */
+void
+crank_trans2_relative_to (CrankTrans2 *a,
+                          CrankTrans2 *b,
+                          CrankTrans2 *r)
+{
+  crank_trans2_inverse (a, r);
+  crank_trans2_compose_self (r, b);
+}
+
+
 //////// Transformation ////////////////////////////////////////////////////////
 
 /**
@@ -650,6 +669,23 @@ crank_trans3_compose_self (CrankTrans3 *a,
 
   crank_quat_float_mul_self (& a->mrot, & b->mrot);
   a->mscl *= b->mscl;
+}
+
+/**
+ * crank_trans3_relative_to:
+ * @a: A Transformation.
+ * @b: Another transformation.
+ * @r: (out): Resulting transformation.
+ *
+ * Gets a relative transformation from @a to @b.
+ */
+void
+crank_trans3_relative_to (CrankTrans3 *a,
+                          CrankTrans3 *b,
+                          CrankTrans3 *r)
+{
+  crank_trans3_inverse (a, r);
+  crank_trans3_compose_self (r, b);
 }
 
 //////// Transformation ////////////////////////////////////////////////////////
