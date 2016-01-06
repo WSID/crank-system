@@ -30,6 +30,7 @@
 
 #include "crankrenderable.h"
 #include "crankfilm.h"
+#include "crankcamera.h"
 
 #include "crankrendermodule.h"
 
@@ -149,7 +150,7 @@ struct _CrankRenderModule
 {
   GObject     _parent;
 
-  GHashTable *film_table;
+  GPtrArray   *cameras;
 };
 
 G_DEFINE_TYPE (CrankRenderModule,
@@ -163,10 +164,7 @@ G_DEFINE_TYPE (CrankRenderModule,
 static void
 crank_render_module_init (CrankRenderModule *module)
 {
-  module->film_table = g_hash_table_new_full (g_direct_hash,
-                                              g_direct_equal,
-                                              g_object_unref,
-                                              NULL);
+  module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
 }
 
 static void
@@ -198,20 +196,21 @@ crank_render_module_tick (CrankSession3Module *module)
 
   CrankRenderModule *rmodule = (CrankRenderModule*) module;
 
-  GHashTableIter iter;
-  gpointer ik, iv;
+  guint i;
 
-  g_hash_table_iter_init (&iter, rmodule->film_table);
-
-  while (g_hash_table_iter_next (&iter, &ik, &iv))
+  for (i = 0; i < rmodule->cameras->len; i++)
     {
-      CrankFilm *film = (CrankFilm *) ik;
-      CrankEntity3 *entity = (CrankEntity3 *) iv;
+      CrankCamera *camera = rmodule->cameras->pdata[i];
+      CrankFilm *film = crank_camera_get_film (camera);
+      CrankEntity3 *entity = crank_camera_get_entity (camera);
       CrankPlace3 *place = crank_entity3_get_place (entity);
 
       CrankTrans3 position;
+      CrankMatFloat4 projection;
 
       crank_entity3_get_position (entity, &position);
+      crank_camera_get_matrix (camera, &projection);
+      crank_mat_float4_transpose_self (&projection);
 
       if (place == NULL)
         continue;
@@ -219,6 +218,7 @@ crank_render_module_tick (CrankSession3Module *module)
       crank_render_module_render_at (rmodule,
                                      place,
                                      &position,
+                                     &projection,
                                      film);
     }
 }
@@ -323,11 +323,14 @@ void
 crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CrankPlace3       *place,
                                     CrankTrans3       *position,
+                                    CrankMatFloat4    *proj_t,
                                     CoglFramebuffer   *framebuffer)
 {
   CrankRenderPData *pdata;
   CrankTrans3 ipos;
   guint i;
+
+  cogl_framebuffer_set_projection_matrix (framebuffer, (const CoglMatrix*)proj_t);
 
   // TODO: Replace it with octree based version
   pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
@@ -367,58 +370,57 @@ void
 crank_render_module_render_at (CrankRenderModule *module,
                                CrankPlace3       *place,
                                CrankTrans3       *position,
+                               CrankMatFloat4    *proj_t,
                                CrankFilm         *film)
 {
   crank_render_module_render_geom_at (module,
                                       place,
                                       position,
+                                      proj_t,
                                       crank_film_get_texture (film, 0));
 
   // TODO: Render to other buffers.
 }
 
 /**
- * crank_render_module_add_film:
+ * crank_render_module_add_camera:
  * @module: A Module.
- * @film: A Film.
- * @entity: A Entity.
+ * @camera: A Camera.
  *
- * Adds @film to this module. Once added, it will renders place of @entity on
- * @film.
+ * Adds @camera to this module.
  */
 void
-crank_render_module_add_film (CrankRenderModule *module,
-                              CrankFilm         *film,
-                              CrankEntity3      *entity)
+crank_render_module_add_camera (CrankRenderModule *module,
+                                CrankCamera       *camera)
 {
-  g_hash_table_insert (module->film_table, g_object_ref (film), entity);
+  g_ptr_array_add (module->cameras, g_object_ref (camera));
 }
 
 /**
- * crank_render_module_remove_film:
+ * crank_render_module_remove_camera:
  * @module: A Module.
- * @film: A Film.
+ * @camera: A Camera.
  *
- * Removes a @film from this module.
+ * Removes a @camera from this module.
  */
 void
-crank_render_module_remove_film (CrankRenderModule *module,
-                                 CrankFilm         *film)
+crank_render_module_remove_camera (CrankRenderModule *module,
+                                   CrankCamera       *camera)
 {
-  g_hash_table_remove (module->film_table, film);
+  g_ptr_array_remove (module->cameras, camera);
 }
 
 
 /**
- * crank_render_module_get_n_film:
+ * crank_render_module_get_n_camera:
  * @module: A Module.
  *
- * Get count of films in this module.
+ * Get count of cameras in this module.
  *
- * Returns: Number of films in this module.
+ * Returns: Number of cameras in this module.
  */
 guint
-crank_render_module_get_n_film (CrankRenderModule *module)
+crank_render_module_get_n_camera (CrankRenderModule *module)
 {
-  return g_hash_table_size (module->film_table);
+  return module->cameras->len;
 }

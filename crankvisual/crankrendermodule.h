@@ -35,6 +35,7 @@
 
 #include "crankrenderable.h"
 #include "crankfilm.h"
+#include "crankcamera.h"
 
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -49,23 +50,24 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankPlace3       *place,
                                             CrankTrans3       *position,
+                                            CrankMatFloat4    *proj_t,
                                             CoglFramebuffer   *framebuffer);
 
 
 void    crank_render_module_render_at (CrankRenderModule *module,
                                        CrankPlace3       *place,
                                        CrankTrans3       *position,
+                                       CrankMatFloat4    *proj_t,
                                        CrankFilm         *film);
 
 
-void    crank_render_module_add_film (CrankRenderModule *module,
-                                      CrankFilm         *film,
-                                      CrankEntity3      *entity);
+void    crank_render_module_add_camera (CrankRenderModule *module,
+                                        CrankCamera       *camera);
 
-void    crank_render_module_remove_film (CrankRenderModule *module,
-                                         CrankFilm         *film);
+void    crank_render_module_remove_camera (CrankRenderModule *module,
+                                           CrankCamera       *camera);
 
-guint   crank_render_module_get_n_film (CrankRenderModule *module);
+guint   crank_render_module_get_n_camera (CrankRenderModule *module);
 
 
 
