@@ -27,6 +27,7 @@
 #include "crankfilm.h"
 #include "crankrenderable.h"
 
+#include "crankcamera.h"
 #include "crankrendermodule.h"
 
 #undef  _CRANKVISUAL_INSIDE
