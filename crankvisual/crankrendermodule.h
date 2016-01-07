@@ -53,6 +53,12 @@ void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankMatFloat4    *proj_t,
                                             CoglFramebuffer   *framebuffer);
 
+void    crank_render_module_render_color_at (CrankRenderModule *module,
+                                             CrankPlace3       *place,
+                                             CrankTrans3       *position,
+                                             CrankMatFloat4    *proj_t,
+                                             CoglFramebuffer   *framebuffer);
+
 
 void    crank_render_module_render_at (CrankRenderModule *module,
                                        CrankPlace3       *place,

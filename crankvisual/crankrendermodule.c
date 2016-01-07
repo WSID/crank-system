@@ -315,6 +315,7 @@ crank_render_module_entity_removed (CrankSession3EntityModule *module,
  * @module: A Module.
  * @place: A Place.
  * @position: A Position
+ * @proj_t: Transpose of projection matrix.
  * @framebuffer: A Framebuffer to render.
  *
  * Renders @place which looked at @position, on @framebuffer.
@@ -353,6 +354,53 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
       crank_trans3_compose (&ipos, &pos, &rpos);
 
       crank_renderable_render_geom (renderable, &rpos, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_color_at:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position
+ * @proj_t: Transpose of projection matrix.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders @place which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_color_at (CrankRenderModule *module,
+                                    CrankPlace3       *place,
+                                    CrankTrans3       *position,
+                                    CrankMatFloat4    *proj_t,
+                                    CoglFramebuffer   *framebuffer)
+{
+  CrankRenderPData *pdata;
+  CrankTrans3 ipos;
+  guint i;
+
+  cogl_framebuffer_set_projection_matrix (framebuffer, (const CoglMatrix*)proj_t);
+
+  // TODO: Replace it with octree based version
+  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (i = 0; i < pdata->entities->len; i++)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata;
+      CrankRenderable *renderable = (CrankRenderable*) crank_session3_entity_module_get_entity_data ((CrankSession3EntityModule*)module, entity);
+      CrankTrans3 pos;
+
+
+      CrankTrans3 rpos;
+
+      // TODO: Directly access position when it is available.
+      // Copying will be less efficiently.
+
+      crank_entity3_get_position (entity, &pos);
+      crank_trans3_compose (&ipos, &pos, &rpos);
+
+      crank_renderable_render_color (renderable, &rpos, framebuffer);
     }
 }
 
