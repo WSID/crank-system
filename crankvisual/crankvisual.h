@@ -26,6 +26,7 @@
 
 #include "crankfilm.h"
 #include "crankrenderable.h"
+#include "crankmaterial.h"
 
 #include "crankcamera.h"
 #include "crankrendermodule.h"
