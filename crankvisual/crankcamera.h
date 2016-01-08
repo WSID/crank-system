@@ -146,4 +146,20 @@ void    crank_camera_perspective (CrankCamera *camera,
 
 
 
+//////// CoglSnippet ///////////////////////////////////////////////////////////
+
+CoglSnippet *crank_camera_get_snippet_def (CoglSnippetHook snippet_type);
+
+
+void         crank_camera_get_uniform_locations (CoglPipeline *pipeline,
+                                                 const gchar  *struct_name,
+                                                 gint         *uniforms);
+
+
+void         crank_camera_set_uniforms (CrankCamera  *camera,
+                                        CoglPipeline *pipeline,
+                                        const gint   *uniforms);
+
+
+
 #endif

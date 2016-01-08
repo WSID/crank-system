@@ -842,3 +842,123 @@ crank_camera_perspective (CrankCamera  *camera,
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
 }
+
+
+
+//////// Cogl Snippet //////////////////////////////////////////////////////////
+
+/**
+ * crank_camera_get_snippet_def:
+ * @snippet_type: Type of snippet.
+ *
+ * Gets snippet that define structure which can be updated by
+ * crank_camera_set_uniform().
+ *
+ * Returns: (transfer none): Snippet item. Function holds reference of it.
+ */
+CoglSnippet*
+crank_camera_get_snippet_def (CoglSnippetHook snippet_type)
+{
+  static CoglSnippet *snippet_vertex = NULL;
+  static CoglSnippet *snippet_fragment = NULL;
+
+  static gchar *snippet_def = "#define CrankCameraViewType int\n"
+                              "const int CRANK_CAMERA_VIEW_ORTHO = 0;\n"
+                              "const int CRAMK_CAMERA_VIEW_FRUSTUM = 1;\n"
+                              "struct CrankCamera {\n"
+                              "  CrankCameraViewType view_type;\n"
+                              "  float left;\n"
+                              "  float right;\n"
+                              "  float bottom;\n"
+                              "  float top;\n"
+                              "  float near;\n"
+                              "  float far;\n"
+                              "};";
+
+  switch (snippet_type)
+    {
+    case COGL_SNIPPET_HOOK_VERTEX:
+      if (snippet_vertex == NULL)
+        snippet_vertex = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
+                                           snippet_def,
+                                           NULL);
+      return snippet_vertex;
+
+    case COGL_SNIPPET_HOOK_FRAGMENT:
+      if (snippet_fragment == NULL)
+        snippet_fragment = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
+                                             snippet_def,
+                                             NULL);
+      return snippet_fragment;
+
+    default:
+      g_warning ("Unsupported Type of snippet.");
+      return NULL;
+    }
+}
+
+
+/**
+ * crank_camera_get_uniform_locations:
+ * @pipeline: A Pipeline.
+ * @struct_name: A Structure name.
+ * @uniforms: (out caller-allocates) (array fixed-size=7): Uniform locations of each members.
+ *
+ * Gets uniform locations from @pipeline which points member of @struct_name.
+ */
+void
+crank_camera_get_uniform_locations (CoglPipeline *pipeline,
+                                    const gchar  *struct_name,
+                                    gint         *uniforms)
+{
+  GString *member_name;
+  guint member_prefix_len;
+
+  member_name = g_string_new (struct_name);
+  g_string_append_c (member_name, '.');
+
+  member_prefix_len = member_name->len;
+
+  g_string_append (member_name, "view_type");
+  uniforms[0] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "left");
+  uniforms[1] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "right");
+  uniforms[2] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "bottom");
+  uniforms[3] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "top");
+  uniforms[4] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "near");
+  uniforms[5] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+
+  g_string_truncate (member_name, member_prefix_len);
+  g_string_append (member_name, "far");
+  uniforms[6] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+}
+
+/**
+ * crank_camera_set_uniforms:
+ * @camera: A Camera.
+ * @pipeline: A Pipeline.
+ * @uniforms: (array fixed-size=7): Uniform locations of each structure members.
+ *
+ * Sets uniform value on @pipeline.
+ */
+void
+crank_camera_set_uniforms (CrankCamera  *camera,
+                           CoglPipeline *pipeline,
+                           const gint   *uniforms)
+{
+
+}
