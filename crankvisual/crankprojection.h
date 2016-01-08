@@ -69,6 +69,7 @@ enum _CrankProjectionType
  * Represents a projection.
  */
 #define CRANK_TYPE_PROJECTION (crank_projection_get_type())
+GType crank_projection_get_type (void);
 struct _CrankProjection
 {
   guint _refc;
