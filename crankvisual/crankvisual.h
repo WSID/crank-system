@@ -24,6 +24,7 @@
 
 #define _CRANKVISUAL_INSIDE
 
+#include "crankprojection.h"
 #include "crankfilm.h"
 #include "crankrenderable.h"
 #include "crankmaterial.h"
