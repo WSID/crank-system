@@ -50,20 +50,20 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankPlace3       *place,
                                             CrankTrans3       *position,
-                                            CrankMatFloat4    *proj_t,
+                                            CrankProjection   *projection,
                                             CoglFramebuffer   *framebuffer);
 
 void    crank_render_module_render_color_at (CrankRenderModule *module,
                                              CrankPlace3       *place,
                                              CrankTrans3       *position,
-                                             CrankMatFloat4    *proj_t,
+                                             CrankProjection   *projection,
                                              CoglFramebuffer   *framebuffer);
 
 
 void    crank_render_module_render_at (CrankRenderModule *module,
                                        CrankPlace3       *place,
                                        CrankTrans3       *position,
-                                       CrankMatFloat4    *proj_t,
+                                       CrankProjection   *projection,
                                        CrankFilm         *film);
 
 

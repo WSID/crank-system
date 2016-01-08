@@ -206,11 +206,10 @@ crank_render_module_tick (CrankSession3Module *module)
       CrankPlace3 *place = crank_entity3_get_place (entity);
 
       CrankTrans3 position;
-      CrankMatFloat4 projection;
+      CrankProjection *projection;
 
       crank_entity3_get_position (entity, &position);
-      crank_camera_get_matrix (camera, &projection);
-      crank_mat_float4_transpose_self (&projection);
+      projection = crank_camera_get_projection (camera);
 
       if (place == NULL)
         continue;
@@ -218,7 +217,7 @@ crank_render_module_tick (CrankSession3Module *module)
       crank_render_module_render_at (rmodule,
                                      place,
                                      &position,
-                                     &projection,
+                                     projection,
                                      film);
     }
 }
@@ -324,14 +323,15 @@ void
 crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CrankPlace3       *place,
                                     CrankTrans3       *position,
-                                    CrankMatFloat4    *proj_t,
+                                    CrankProjection   *projection,
                                     CoglFramebuffer   *framebuffer)
 {
   CrankRenderPData *pdata;
   CrankTrans3 ipos;
   guint i;
 
-  cogl_framebuffer_set_projection_matrix (framebuffer, (const CoglMatrix*)proj_t);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
 
   // TODO: Replace it with octree based version
   pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
@@ -353,7 +353,7 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
       crank_entity3_get_position (entity, &pos);
       crank_trans3_compose (&ipos, &pos, &rpos);
 
-      crank_renderable_render_geom (renderable, &rpos, framebuffer);
+      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
     }
 }
 
@@ -369,16 +369,17 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
  */
 void
 crank_render_module_render_color_at (CrankRenderModule *module,
-                                    CrankPlace3       *place,
-                                    CrankTrans3       *position,
-                                    CrankMatFloat4    *proj_t,
-                                    CoglFramebuffer   *framebuffer)
+                                     CrankPlace3       *place,
+                                     CrankTrans3       *position,
+                                     CrankProjection   *projection,
+                                     CoglFramebuffer   *framebuffer)
 {
   CrankRenderPData *pdata;
   CrankTrans3 ipos;
   guint i;
 
-  cogl_framebuffer_set_projection_matrix (framebuffer, (const CoglMatrix*)proj_t);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
 
   // TODO: Replace it with octree based version
   pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
@@ -400,7 +401,7 @@ crank_render_module_render_color_at (CrankRenderModule *module,
       crank_entity3_get_position (entity, &pos);
       crank_trans3_compose (&ipos, &pos, &rpos);
 
-      crank_renderable_render_color (renderable, &rpos, framebuffer);
+      crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
     }
 }
 
@@ -418,13 +419,13 @@ void
 crank_render_module_render_at (CrankRenderModule *module,
                                CrankPlace3       *place,
                                CrankTrans3       *position,
-                               CrankMatFloat4    *proj_t,
+                               CrankProjection   *projection,
                                CrankFilm         *film)
 {
   crank_render_module_render_geom_at (module,
                                       place,
                                       position,
-                                      proj_t,
+                                      projection,
                                       crank_film_get_texture (film, 0));
 
   // TODO: Render to other buffers.

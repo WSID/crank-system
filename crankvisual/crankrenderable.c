@@ -140,12 +140,12 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable)
 void
 crank_renderable_render_geom (CrankRenderable *renderable,
                               CrankTrans3     *position,
-                              CrankCamera     *camera,
+                              CrankProjection *projection,
                               CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_geom (renderable, position, camera, framebuffer);
+  return c->render_geom (renderable, position, projection, framebuffer);
 }
 
 /**
@@ -162,12 +162,12 @@ crank_renderable_render_geom (CrankRenderable *renderable,
 void
 crank_renderable_render_color (CrankRenderable *renderable,
                                CrankTrans3     *position,
-                               CrankCamera     *camera,
+                               CrankProjection *projection,
                                CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_color (renderable, position, camera, framebuffer);
+  return c->render_color (renderable, position, projection, framebuffer);
 }
 
 /**
@@ -183,10 +183,10 @@ crank_renderable_render_color (CrankRenderable *renderable,
 void
 crank_renderable_render_material (CrankRenderable *renderable,
                                   CrankTrans3     *position,
-                                  CrankCamera     *camera,
+                                  CrankProjection *projection,
                                   CoglFramebuffer *framebuffer)
 {
   CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
 
-  return c->render_material (renderable, position, camera, framebuffer);
+  return c->render_material (renderable, position, projection, framebuffer);
 }

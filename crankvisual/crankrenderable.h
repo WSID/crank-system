@@ -31,7 +31,7 @@
 #include <cogl/cogl2-experimental.h>
 
 #include "crankshape.h"
-#include "crankcamera.h"
+#include "crankprojection.h"
 
 //////// Type Declarations /////////////////////////////////////////////////////
 
@@ -60,17 +60,17 @@ struct _CrankRenderableClass
 
   void  (*render_geom)  (CrankRenderable *renderable,
                          CrankTrans3     *position,
-                         CrankCamera     *camera,
+                         CrankProjection *projection,
                          CoglFramebuffer *framebuffer);
 
   void  (*render_color) (CrankRenderable *renderable,
                          CrankTrans3     *position,
-                         CrankCamera     *camera,
+                         CrankProjection *projection,
                          CoglFramebuffer *framebuffer);
 
   void  (*render_material) (CrankRenderable *renderable,
                             CrankTrans3     *position,
-                            CrankCamera     *camera,
+                            CrankProjection *projection,
                             CoglFramebuffer *framebuffer);
 };
 
@@ -84,19 +84,19 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable);
 void
 crank_renderable_render_geom (CrankRenderable *renderable,
                               CrankTrans3     *position,
-                              CrankCamera     *camera,
+                              CrankProjection *projection,
                               CoglFramebuffer *framebuffer);
 
 void
 crank_renderable_render_color (CrankRenderable *renderable,
                                CrankTrans3     *position,
-                               CrankCamera     *camera,
+                               CrankProjection *projection,
                                CoglFramebuffer *framebuffer);
 
 void
 crank_renderable_render_material (CrankRenderable *renderable,
                                   CrankTrans3     *position,
-                                  CrankCamera     *camera,
+                                  CrankProjection *projection,
                                   CoglFramebuffer *framebuffer);
 
 #endif
