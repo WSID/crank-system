@@ -29,6 +29,8 @@
 
 #include "crankbase.h"
 #include "crankcore.h"
+
+#include "crankprojection.h"
 #include "crankfilm.h"
 #include "crankcamera.h"
 
@@ -53,34 +55,9 @@
  * have notify::matrix per single property change.
  */
 
-//////// Enum type function ////////////////////////////////////////////////////
-
-static const GEnumValue crank_camera_view_type_enum_values[] =
-{
-    {CRANK_CAMERA_VIEW_ORTHO, "CRANK_CAMERA_VIEW_ORTHO", "ortho"},
-    {CRANK_CAMERA_VIEW_FRUSTUM, "CRANK_CAMERA_VIEW_FRUSTUM", "frustum"},
-    {0, NULL, NULL}
-};
-
-GType crank_camera_view_type_get_type (void)
-{
-  static gsize type_id = 0;
-
-  if (g_once_init_enter (&type_id))
-    {
-      GType type_id_real = g_enum_register_static ("CrankCameraViewType",
-                                                   crank_camera_view_type_enum_values);
-
-      g_once_init_leave (&type_id, type_id_real);
-    }
-
-  return (GType) type_id;
-}
 
 
 //////// List of virtual functions /////////////////////////////////////////////
-
-static void   crank_camera_dispose (GObject *object);
 
 static void   crank_camera_get_property (GObject    *object,
                                          guint       prop_id,
@@ -92,10 +69,9 @@ static void   crank_camera_set_property (GObject      *object,
                                          const GValue *value,
                                          GParamSpec   *pspec);
 
+static void   crank_camera_dispose (GObject *object);
 
-//////// Private functions /////////////////////////////////////////////////////
-
-static void   crank_camera_build_matrix (CrankCamera *camera);
+static void   crank_camera_finalize (GObject *object);
 
 //////// Properties and signals ////////////////////////////////////////////////
 
@@ -103,15 +79,17 @@ enum {
   PROP_0,
   PROP_FILM,
   PROP_ENTITY,
-  PROP_MATRIX,
+  PROP_PROJECTION,
 
-  PROP_VIEW_TYPE,
+  PROP_PROJECTION_TYPE,
   PROP_LEFT,
   PROP_RIGHT,
   PROP_BOTTOM,
   PROP_TOP,
   PROP_NEAR,
   PROP_FAR,
+
+  PROP_MATRIX,
 
   PROP_COUNTS
 };
@@ -127,16 +105,7 @@ struct _CrankCamera {
   CrankFilm    *film;
   CrankEntity3 *entity;
 
-  CrankCameraViewType view_type;
-
-  gfloat  left;
-  gfloat  right;
-  gfloat  bottom;
-  gfloat  top;
-  gfloat  nval;
-  gfloat  fval;
-
-  CrankMatFloat4 matrix;
+  CrankProjection *projection;
 };
 G_DEFINE_TYPE (CrankCamera, crank_camera, G_TYPE_OBJECT);
 
@@ -144,7 +113,7 @@ G_DEFINE_TYPE (CrankCamera, crank_camera, G_TYPE_OBJECT);
 
 static void crank_camera_init (CrankCamera *self)
 {
-
+  self->projection = crank_projection_new ();
 }
 
 static void crank_camera_class_init (CrankCameraClass *c)
@@ -154,6 +123,7 @@ static void crank_camera_class_init (CrankCameraClass *c)
   c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->dispose = crank_camera_dispose;
+  c_gobject->finalize = crank_camera_finalize;
   c_gobject->get_property = crank_camera_get_property;
   c_gobject->set_property = crank_camera_set_property;
 
@@ -169,9 +139,14 @@ static void crank_camera_class_init (CrankCameraClass *c)
   pspecs[PROP_ENTITY] = g_param_spec_pointer ("entity", "entity", "Entity to track on",
                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
-  pspecs[PROP_VIEW_TYPE] = g_param_spec_enum ("view-type", "view type", "View type of camera.",
-                                              CRANK_TYPE_CAMERA_VIEW_TYPE, CRANK_CAMERA_VIEW_ORTHO,
-                                              G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+  pspecs[PROP_PROJECTION] = g_param_spec_boxed ("projection", "projection", "Projection of camera",
+                                                CRANK_TYPE_PROJECTION,
+                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_PROJECTION_TYPE] =
+  g_param_spec_enum ("projection-type", "projection type", "Projection type of camera.",
+                     CRANK_TYPE_PROJECTION_TYPE, CRANK_PROJECTION_ORTHO,
+                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_LEFT] = g_param_spec_float ("left", "left", "Left of camera",
                                           -G_MAXFLOAT, G_MAXFLOAT, -1,
@@ -201,7 +176,7 @@ static void crank_camera_class_init (CrankCameraClass *c)
   pspecs[PROP_MATRIX] = g_param_spec_boxed ("matrix", "Matrix",
                                             "Projection matrix",
                                             CRANK_TYPE_MAT_FLOAT4,
-                                            G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
@@ -210,18 +185,6 @@ static void crank_camera_class_init (CrankCameraClass *c)
 
 
 //////// GObject ///////////////////////////////////////////////////////////////
-
-static void
-crank_camera_dispose (GObject *object)
-{
-  CrankCamera *camera = (CrankCamera*) object;
-  GObjectClass *pc_gobject = (GObjectClass*) crank_camera_parent_class;
-
-  g_clear_object (& camera->film);
-  camera->entity = NULL;
-
-  pc_gobject->dispose (object);
-}
 
 static void
 crank_camera_get_property (GObject    *object,
@@ -241,36 +204,40 @@ crank_camera_get_property (GObject    *object,
       g_value_set_pointer (value, camera->entity);
       break;
 
-    case PROP_VIEW_TYPE:
-      g_value_set_enum (value, camera->view_type);
+    case PROP_PROJECTION:
+      g_value_set_boxed (value, camera->projection);
+      break;
+
+    case PROP_PROJECTION_TYPE:
+      g_value_set_enum (value, camera->projection->proj_type);
       break;
 
     case PROP_LEFT:
-      g_value_set_float (value, camera->left);
+      g_value_set_float (value, camera->projection->left);
       break;
 
     case PROP_RIGHT:
-      g_value_set_float (value, camera->right);
+      g_value_set_float (value, camera->projection->right);
       break;
 
     case PROP_BOTTOM:
-      g_value_set_float (value, camera->bottom);
+      g_value_set_float (value, camera->projection->bottom);
       break;
 
     case PROP_TOP:
-      g_value_set_float (value, camera->top);
+      g_value_set_float (value, camera->projection->top);
       break;
 
     case PROP_NEAR:
-      g_value_set_float (value, camera->nval);
+      g_value_set_float (value, camera->projection->near);
       break;
 
     case PROP_FAR:
-      g_value_set_float (value, camera->fval);
+      g_value_set_float (value, camera->projection->far);
       break;
 
     case PROP_MATRIX:
-      g_value_set_boxed (value, & camera->matrix);
+      g_value_set_boxed (value, & camera->projection->matrix);
       break;
 
     default:
@@ -299,8 +266,13 @@ crank_camera_set_property (GObject      *object,
                                (CrankEntity3*)g_value_get_pointer (value));
       break;
 
-    case PROP_VIEW_TYPE:
-      crank_camera_set_view_type (camera, g_value_get_enum (value));
+    case PROP_PROJECTION:
+      crank_camera_set_projection (camera,
+                                   (CrankProjection*) g_value_get_boxed (value));
+      break;
+
+    case PROP_PROJECTION_TYPE:
+      crank_camera_set_projection_type (camera, g_value_get_enum (value));
       break;
 
     case PROP_LEFT:
@@ -327,68 +299,43 @@ crank_camera_set_property (GObject      *object,
       crank_camera_set_far (camera, g_value_get_float (value));
       break;
 
+    case PROP_MATRIX:
+      crank_camera_set_matrix (camera,
+                               (CrankMatFloat4*) g_value_get_boxed (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 
     }
 }
 
+static void
+crank_camera_dispose (GObject *object)
+{
+  CrankCamera *camera = (CrankCamera*) object;
+  GObjectClass *pc_gobject = (GObjectClass*) crank_camera_parent_class;
 
-//////// Private Functions /////////////////////////////////////////////////////
+  g_clear_object (& camera->film);
+  camera->entity = NULL;
+
+  pc_gobject->dispose (object);
+}
 
 static void
-crank_camera_build_matrix (CrankCamera *camera)
+crank_camera_finalize (GObject *object)
 {
+  CrankCamera *camera = (CrankCamera*) object;
+  GObjectClass *pc_gobject = (GObjectClass*) crank_camera_parent_class;
 
-  gfloat rl = 1 / (camera->right - camera->left);
-  gfloat tb = 1 / (camera->top - camera->bottom);
-  gfloat fn = 1 / (camera->fval - camera->nval);
+  crank_projection_unref (camera->projection);
 
-  crank_mat_float4_init_fill (& camera->matrix, 0.0f);
-
-  // TODO: Move some calculation to crankbase or crankshape
-  if (camera->view_type == CRANK_CAMERA_VIEW_ORTHO)
-    {
-
-      camera->matrix.m00 = 2 * rl;
-      camera->matrix.m11 = 2 * tb;
-      camera->matrix.m22 = - 2 * fn;
-
-      camera->matrix.m03 = - (camera->right + camera->left) * rl;
-      camera->matrix.m13 = - (camera->top + camera->bottom) * tb;
-      camera->matrix.m23 = - (camera->fval + camera->nval) * fn;
-      camera->matrix.m33 = 1;
-    }
-
-  else
-    {
-      camera->matrix.m00 = 2 * rl * camera->nval;
-      camera->matrix.m11 = 2 * tb * camera->nval;
-      camera->matrix.m02 = (camera->right + camera->left) * rl;
-      camera->matrix.m12 = (camera->top + camera->bottom) * tb;
-      camera->matrix.m22 = - (camera->fval + camera->nval) * fn;
-      camera->matrix.m23 = - 2 * camera->fval * camera->nval * fn;
-      camera->matrix.m32 = -1;
-    }
+  pc_gobject->finalize (object);
 }
 
 
 //////// Properties ////////////////////////////////////////////////////////////
 
-
-/**
- * crank_camera_get_matrix:
- * @camera: A Camera.
- * @mat: (out): A Matrix.
- *
- * Get projection matrix from camera.
- */
-void
-crank_camera_get_matrix (CrankCamera    *camera,
-                         CrankMatFloat4 *mat)
-{
-  crank_mat_float4_copy (& camera->matrix, mat);
-}
 
 
 
@@ -457,24 +404,51 @@ crank_camera_set_entity (CrankCamera  *camera,
     }
 }
 
-
+/**
+ * crank_camera_get_projection:
+ * @camera: A Camera.
+ *
+ * Gets projection of camera.
+ *
+ * Returns: (transfer none): Projection of camera.
+ */
+CrankProjection*
+crank_camera_get_projection (CrankCamera *camera)
+{
+  return camera->projection;
+}
 
 /**
- * crank_camera_get_view_type:
+ * crank_camera_set_projection:
+ * @camera: A Camera.
+ * @projection: (transfer none): A Projection.
+ *
+ * Sets projection of camera.
+ */
+void
+crank_camera_set_projection (CrankCamera     *camera,
+                             CrankProjection *projection)
+{
+  crank_projection_unref (camera->projection);
+  camera->projection = crank_projection_ref (projection);
+}
+
+/**
+ * crank_camera_get_projection_type:
  * @camera: A Camera.
  *
  * Gets view type of camera.
  *
  * Returns: View type of camera.
  */
-CrankCameraViewType
-crank_camera_get_view_type (CrankCamera *camera)
+CrankProjectionType
+crank_camera_get_projection_type (CrankCamera *camera)
 {
-  return camera->view_type;
+  return camera->projection->proj_type;
 }
 
 /**
- * crank_camera_set_view_type:
+ * crank_camera_set_projection_type:
  * @camera: A Camera:
  * @view_type: View type of camera.
  *
@@ -482,15 +456,15 @@ crank_camera_get_view_type (CrankCamera *camera)
  */
 void
 crank_camera_set_view_type (CrankCamera         *camera,
-                            CrankCameraViewType  view_type)
+                            CrankProjectionType  proj_type)
 {
-  if (view_type != camera->view_type)
+  if (proj_type != camera->projection->proj_type)
     {
-      camera->view_type = view_type;
+      camera->projection->proj_type = proj_type;
 
-      crank_camera_build_matrix (camera);
+      crank_projection_update_matrix (camera->projection);
 
-      g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_VIEW_TYPE]);
+      g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_PROJECTION_TYPE]);
       g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
     }
 }
@@ -508,7 +482,7 @@ crank_camera_set_view_type (CrankCamera         *camera,
 gfloat
 crank_camera_get_left (CrankCamera *camera)
 {
-  return camera->left;
+  return camera->projection->left;
 }
 
 /**
@@ -522,9 +496,9 @@ void
 crank_camera_set_left (CrankCamera *camera,
                        const gfloat cleft)
 {
-  camera->left = cleft;
+  camera->projection->left = cleft;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_LEFT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
@@ -543,7 +517,7 @@ crank_camera_set_left (CrankCamera *camera,
 gfloat
 crank_camera_get_right (CrankCamera *camera)
 {
-  return camera->right;
+  return camera->projection->right;
 }
 
 /**
@@ -557,9 +531,9 @@ void
 crank_camera_set_right (CrankCamera *camera,
                         const gfloat cright)
 {
-  camera->right = cright;
+  camera->projection->right = cright;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_RIGHT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
@@ -578,7 +552,7 @@ crank_camera_set_right (CrankCamera *camera,
 gfloat
 crank_camera_get_bottom (CrankCamera *camera)
 {
-  return camera->bottom;
+  return camera->projection->bottom;
 }
 
 /**
@@ -592,9 +566,9 @@ void
 crank_camera_set_bottom (CrankCamera *camera,
                          const gfloat cbottom)
 {
-  camera->bottom = cbottom;
+  camera->projection->bottom = cbottom;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_BOTTOM]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
@@ -613,7 +587,7 @@ crank_camera_set_bottom (CrankCamera *camera,
 gfloat
 crank_camera_get_top (CrankCamera *camera)
 {
-  return camera->top;
+  return camera->projection->top;
 }
 
 /**
@@ -627,9 +601,9 @@ void
 crank_camera_set_top (CrankCamera *camera,
                       const gfloat ctop)
 {
-  camera->top = ctop;
+  camera->projection->top = ctop;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_TOP]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
@@ -648,7 +622,7 @@ crank_camera_set_top (CrankCamera *camera,
 gfloat
 crank_camera_get_near (CrankCamera *camera)
 {
-  return camera->nval;
+  return camera->projection->near;
 }
 
 /**
@@ -662,9 +636,9 @@ void
 crank_camera_set_near (CrankCamera  *camera,
                        const gfloat  cnear)
 {
-  camera->nval = cnear;
+  camera->projection->near = cnear;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_NEAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
@@ -683,7 +657,7 @@ crank_camera_set_near (CrankCamera  *camera,
 gfloat
 crank_camera_get_far (CrankCamera *camera)
 {
-  return camera->fval;
+  return camera->projection->far;
 }
 
 /**
@@ -697,14 +671,56 @@ void
 crank_camera_set_far (CrankCamera  *camera,
                       const gfloat  cfar)
 {
-  camera->fval = cfar;
+  camera->projection->far = cfar;
 
-  crank_camera_build_matrix (camera);
+  crank_projection_update_matrix (camera->projection);
 
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
 }
 
+
+
+/**
+ * crank_camera_get_matrix:
+ * @camera: A Camera.
+ * @mat: (out): A Matrix.
+ *
+ * Get projection matrix from camera.
+ */
+void
+crank_camera_get_matrix (CrankCamera    *camera,
+                         CrankMatFloat4 *mat)
+{
+  crank_mat_float4_copy (& camera->projection->matrix, mat);
+}
+
+/**
+ * crank_camera_set_matrix:
+ * @camera: A Camera.
+ * @mat: A Matrix.
+ *
+ * Set projection matrix. See crank_projection_set_matrix() for detail.
+ */
+void
+crank_camera_set_matrix (CrankCamera    *camera,
+                         CrankMatFloat4 *mat)
+{
+  crank_projection_set_matrix (camera->projection, mat);
+
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_PROJECTION_TYPE]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_LEFT]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_RIGHT]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_BOTTOM]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_TOP]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_NEAR]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FAR]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
+}
+
+
+
+//////// Public functions //////////////////////////////////////////////////////
 
 /**
  * crank_camera_ortho:
@@ -730,18 +746,15 @@ crank_camera_ortho (CrankCamera  *camera,
                     const gfloat  nval,
                     const gfloat  fval)
 {
-  camera->view_type = CRANK_CAMERA_VIEW_ORTHO;
+  crank_projection_set_ortho (camera->projection,
+                              left,
+                              right,
+                              bottom,
+                              top,
+                              nval,
+                              fval);
 
-  camera->left = left;
-  camera->right = right;
-  camera->bottom = bottom;
-  camera->top = top;
-  camera->nval = nval;
-  camera->fval = fval;
-
-  crank_camera_build_matrix (camera);
-
-  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_VIEW_TYPE]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_PROJECTION_TYPE]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_LEFT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_RIGHT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_BOTTOM]);
@@ -776,18 +789,15 @@ crank_camera_frustum (CrankCamera  *camera,
                       const gfloat  nval,
                       const gfloat  fval)
 {
-  camera->view_type = CRANK_CAMERA_VIEW_FRUSTUM;
+  crank_projection_set_frustum (camera->projection,
+                                left,
+                                right,
+                                bottom,
+                                top,
+                                nval,
+                                fval);
 
-  camera->left = left;
-  camera->right = right;
-  camera->bottom = bottom;
-  camera->top = top;
-  camera->nval = nval;
-  camera->fval = fval;
-
-  crank_camera_build_matrix (camera);
-
-  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_VIEW_TYPE]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_PROJECTION_TYPE]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_LEFT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_RIGHT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_BOTTOM]);
@@ -818,22 +828,13 @@ crank_camera_perspective (CrankCamera  *camera,
                           const gfloat  nval,
                           const gfloat  fval)
 {
-  camera->view_type = CRANK_CAMERA_VIEW_FRUSTUM;
+  crank_projection_set_perspective (camera->projection,
+                                    fovy,
+                                    aspect,
+                                    nval,
+                                    fval);
 
-
-
-  camera->top = 1 / tanf (fovy / 2);
-  camera->bottom = -camera->top;
-
-  camera->right = camera->top * aspect;
-  camera->left = -camera->right;
-
-  camera->nval = nval;
-  camera->fval = fval;
-
-  crank_camera_build_matrix (camera);
-
-  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_VIEW_TYPE]);
+  g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_PROJECTION_TYPE]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_LEFT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_RIGHT]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_BOTTOM]);
@@ -841,124 +842,4 @@ crank_camera_perspective (CrankCamera  *camera,
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_NEAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
-}
-
-
-
-//////// Cogl Snippet //////////////////////////////////////////////////////////
-
-/**
- * crank_camera_get_snippet_def:
- * @snippet_type: Type of snippet.
- *
- * Gets snippet that define structure which can be updated by
- * crank_camera_set_uniform().
- *
- * Returns: (transfer none): Snippet item. Function holds reference of it.
- */
-CoglSnippet*
-crank_camera_get_snippet_def (CoglSnippetHook snippet_type)
-{
-  static CoglSnippet *snippet_vertex = NULL;
-  static CoglSnippet *snippet_fragment = NULL;
-
-  static gchar *snippet_def = "#define CrankCameraViewType int\n"
-                              "const int CRANK_CAMERA_VIEW_ORTHO = 0;\n"
-                              "const int CRAMK_CAMERA_VIEW_FRUSTUM = 1;\n"
-                              "struct CrankCamera {\n"
-                              "  CrankCameraViewType view_type;\n"
-                              "  float left;\n"
-                              "  float right;\n"
-                              "  float bottom;\n"
-                              "  float top;\n"
-                              "  float near;\n"
-                              "  float far;\n"
-                              "};";
-
-  switch (snippet_type)
-    {
-    case COGL_SNIPPET_HOOK_VERTEX:
-      if (snippet_vertex == NULL)
-        snippet_vertex = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
-                                           snippet_def,
-                                           NULL);
-      return snippet_vertex;
-
-    case COGL_SNIPPET_HOOK_FRAGMENT:
-      if (snippet_fragment == NULL)
-        snippet_fragment = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
-                                             snippet_def,
-                                             NULL);
-      return snippet_fragment;
-
-    default:
-      g_warning ("Unsupported Type of snippet.");
-      return NULL;
-    }
-}
-
-
-/**
- * crank_camera_get_uniform_locations:
- * @pipeline: A Pipeline.
- * @struct_name: A Structure name.
- * @uniforms: (out caller-allocates) (array fixed-size=7): Uniform locations of each members.
- *
- * Gets uniform locations from @pipeline which points member of @struct_name.
- */
-void
-crank_camera_get_uniform_locations (CoglPipeline *pipeline,
-                                    const gchar  *struct_name,
-                                    gint         *uniforms)
-{
-  GString *member_name;
-  guint member_prefix_len;
-
-  member_name = g_string_new (struct_name);
-  g_string_append_c (member_name, '.');
-
-  member_prefix_len = member_name->len;
-
-  g_string_append (member_name, "view_type");
-  uniforms[0] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "left");
-  uniforms[1] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "right");
-  uniforms[2] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "bottom");
-  uniforms[3] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "top");
-  uniforms[4] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "near");
-  uniforms[5] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-
-  g_string_truncate (member_name, member_prefix_len);
-  g_string_append (member_name, "far");
-  uniforms[6] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
-}
-
-/**
- * crank_camera_set_uniforms:
- * @camera: A Camera.
- * @pipeline: A Pipeline.
- * @uniforms: (array fixed-size=7): Uniform locations of each structure members.
- *
- * Sets uniform value on @pipeline.
- */
-void
-crank_camera_set_uniforms (CrankCamera  *camera,
-                           CoglPipeline *pipeline,
-                           const gint   *uniforms)
-{
-
 }

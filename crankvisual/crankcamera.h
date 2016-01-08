@@ -34,17 +34,10 @@
 #include "crankbase.h"
 #include "crankcore.h"
 
+#include "crankprojection.h"
 #include "crankfilm.h"
 
 //////// Type Declaration //////////////////////////////////////////////////////
-
-#define CRANK_TYPE_CAMERA_VIEW_TYPE (crank_camera_view_type_get_type())
-GType crank_camera_view_type_get_type (void);
-typedef enum {
-  CRANK_CAMERA_VIEW_ORTHO,
-  CRANK_CAMERA_VIEW_FRUSTUM
-} CrankCameraViewType;
-
 
 #define CRANK_TYPE_CAMERA (crank_camera_get_type())
 G_DECLARE_FINAL_TYPE (CrankCamera,
@@ -60,9 +53,6 @@ CrankCamera *crank_camera_new (void);
 
 //////// Properties ////////////////////////////////////////////////////////////
 
-void    crank_camera_get_matrix (CrankCamera    *camera,
-                                 CrankMatFloat4 *mat);
-
 CrankFilm *crank_camera_get_film (CrankCamera *camera);
 
 void       crank_camera_set_film (CrankCamera *camera,
@@ -75,10 +65,16 @@ void          crank_camera_set_entity (CrankCamera  *camera,
                                        CrankEntity3 *entity);
 
 
-CrankCameraViewType crank_camera_get_view_type (CrankCamera *camera);
+CrankProjection *crank_camera_get_projection (CrankCamera *camera);
 
-void                crank_camera_set_view_type (CrankCamera         *camera,
-                                                CrankCameraViewType  view_type);
+void             crank_camera_set_projection (CrankCamera     *camera,
+                                              CrankProjection *projection);
+
+
+CrankProjectionType crank_camera_get_projection_type (CrankCamera *camera);
+
+void                crank_camera_set_projection_type (CrankCamera         *camera,
+                                                      CrankProjectionType  projection_type);
 
 
 
@@ -119,6 +115,12 @@ gfloat  crank_camera_get_far (CrankCamera *camera);
 void    crank_camera_set_far (CrankCamera *camera,
                               const gfloat cfar);
 
+void    crank_camera_get_matrix (CrankCamera    *camera,
+                                 CrankMatFloat4 *mat);
+
+void    crank_camera_set_matrix (CrankCamera    *camera,
+                                 CrankMatFloat4 *mat);
+
 //////// Public Functions //////////////////////////////////////////////////////
 
 void    crank_camera_ortho (CrankCamera *camera,
@@ -143,23 +145,6 @@ void    crank_camera_perspective (CrankCamera *camera,
                                   const gfloat aspect,
                                   const gfloat nval,
                                   const gfloat fval);
-
-
-
-//////// CoglSnippet ///////////////////////////////////////////////////////////
-
-CoglSnippet *crank_camera_get_snippet_def (CoglSnippetHook snippet_type);
-
-
-void         crank_camera_get_uniform_locations (CoglPipeline *pipeline,
-                                                 const gchar  *struct_name,
-                                                 gint         *uniforms);
-
-
-void         crank_camera_set_uniforms (CrankCamera  *camera,
-                                        CoglPipeline *pipeline,
-                                        const gint   *uniforms);
-
 
 
 #endif
