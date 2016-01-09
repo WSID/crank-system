@@ -862,3 +862,18 @@ crank_camera_perspective (CrankCamera  *camera,
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FAR]);
   g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_MATRIX]);
 }
+
+
+//////// Signal Emitter ////////////////////////////////////////////////////////
+
+/**
+ * crank_camera_rendered:
+ * @camera: A Camera.
+ *
+ * Emits a signal 'rendered'.
+ */
+void
+crank_camera_rendered (CrankCamera *camera)
+{
+  g_signal_emit (camera, sig_rendered, 0);
+}

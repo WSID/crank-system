@@ -147,4 +147,8 @@ void    crank_camera_perspective (CrankCamera *camera,
                                   const gfloat fval);
 
 
+//////// Signal Emitter ////////////////////////////////////////////////////////
+
+void    crank_camera_rendered (CrankCamera *camera);
+
 #endif
