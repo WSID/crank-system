@@ -353,10 +353,8 @@ crank_projection_set_frustum (CrankProjection *projection,
 /**
  * crank_projection_set_perspective:
  * @projection: A Projection
- * @left: Left of projection.
- * @right: Rigth of projection.
- * @bottom: Bottom of projection.
- * @top: Top of projection.
+ * @fovy: Left of projection.
+ * @aspect: Rigth of projection.
  * @near: Near of projection.
  * @far: Far of projection.
  *
@@ -536,7 +534,7 @@ crank_projection_get_snippet_def (CoglSnippetHook hook)
  * crank_projection_get_uniform_location:
  * @pipeline: A Pipeline that contains uniform.
  * @uniform_name: Name of uniform variable in @pipeline.
- * @locations: (array fixed-size=2) (out caller-allocate):
+ * @locations: (array fixed-size=2) (out caller-allocates):
  *     Uniform locations of members in the structures.
  *
  * Gets array of uniform locations that #CrankProjection needs to know in order

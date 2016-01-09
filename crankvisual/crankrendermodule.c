@@ -314,7 +314,7 @@ crank_render_module_entity_removed (CrankSession3EntityModule *module,
  * @module: A Module.
  * @place: A Place.
  * @position: A Position
- * @proj_t: Transpose of projection matrix.
+ * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
  *
  * Renders @place which looked at @position, on @framebuffer.
@@ -362,7 +362,7 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
  * @module: A Module.
  * @place: A Place.
  * @position: A Position
- * @proj_t: Transpose of projection matrix.
+ * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
  *
  * Renders @place which looked at @position, on @framebuffer.
@@ -411,6 +411,7 @@ crank_render_module_render_color_at (CrankRenderModule *module,
  * @module: A Module.
  * @place: A Place.
  * @position: A Position.
+ * @projection: A Projection.
  * @film: A Film.
  *
  * Renders a scene to a film.

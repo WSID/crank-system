@@ -450,13 +450,13 @@ crank_camera_get_projection_type (CrankCamera *camera)
 /**
  * crank_camera_set_projection_type:
  * @camera: A Camera:
- * @view_type: View type of camera.
+ * @projection_type: View type of camera.
  *
  * Sets view type of camera.
  */
 void
-crank_camera_set_view_type (CrankCamera         *camera,
-                            CrankProjectionType  proj_type)
+crank_camera_set_projection_type (CrankCamera         *camera,
+                                  CrankProjectionType  proj_type)
 {
   if (proj_type != camera->projection->proj_type)
     {
