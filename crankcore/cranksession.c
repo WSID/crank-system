@@ -154,6 +154,9 @@ crank_session_class_init (CrankSessionClass *c)
                              G_TYPE_NONE,
                              0);
 
+
+  c->resume = crank_session_def_resume;
+  c->pause = crank_session_def_pause;
 }
 
 
