@@ -1,5 +1,5 @@
-#ifndef CRANKVISUAL_H
-#define CRANKVISUAL_H
+#ifndef CRANKCAMERACONTENT_H
+#define CRANKCAMERACONTENT_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,21 +22,38 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKVISUAL_INSIDE
+#ifndef _CRANKVISUAL_INSIDE
+#error crankcameracontent.h cannot be included directly: include crankvisual.h
+#endif
+
+#include <glib.h>
+#include <glib-object.h>
+#include <cogl/cogl2-experimental.h>
+#include <clutter/clutter.h>
+
+#include "crankbase.h"
+#include "crankcore.h"
 
 #include "crankprojection.h"
 #include "crankfilm.h"
-
-#include "crankrenderable.h"
-#include "crankrenderableprimitive.h"
-
-#include "crankmaterial.h"
-
 #include "crankcamera.h"
-#include "crankrendermodule.h"
 
-#include "crankcameracontent.h"
 
-#undef  _CRANKVISUAL_INSIDE
+
+//////// Type Declaration //////////////////////////////////////////////////////
+
+#define CRANK_TYPE_CAMERA_CONTENT (crank_camera_content_get_type())
+G_DECLARE_FINAL_TYPE (CrankCameraContent,
+                      crank_camera_content,
+                      CRANK, CAMERA_CONTENT,
+                      GObject)
+
+
+//////// Public Functions ///////////////////////////////////////////////////////
+
+CrankCamera *crank_camera_content_get_camera (CrankCameraContent *content);
+
+void         crank_camera_content_set_camera (CrankCameraContent *content,
+                                              CrankCamera        *camera);
 
 #endif
