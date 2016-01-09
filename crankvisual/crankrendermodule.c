@@ -219,6 +219,8 @@ crank_render_module_tick (CrankSession3Module *module)
                                      &position,
                                      projection,
                                      film);
+
+      crank_camera_rendered (camera);
     }
 }
 
