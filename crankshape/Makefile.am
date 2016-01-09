@@ -30,7 +30,7 @@ shapeinclude_HEADERS = \
 		crankshape3.h \
 		crankshape3finite.h \
 		crankshape3vertexed.h \
-		crankshape3polygon.c \
+		crankshape3polygon.h \
 		crankshape3polyhedron.h \
 		crankshape3tpolyhedron.h \
 		crankshape3iround.h \
