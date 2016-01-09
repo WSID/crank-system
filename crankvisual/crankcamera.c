@@ -55,8 +55,6 @@
  * have notify::matrix per single property change.
  */
 
-
-
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void   crank_camera_get_property (GObject    *object,
@@ -97,6 +95,9 @@ enum {
 static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 
+static guint sig_rendered = 0;
+
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 struct _CrankCamera {
@@ -109,6 +110,8 @@ struct _CrankCamera {
 };
 G_DEFINE_TYPE (CrankCamera, crank_camera, G_TYPE_OBJECT);
 
+
+
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
 static void crank_camera_init (CrankCamera *self)
@@ -119,6 +122,22 @@ static void crank_camera_init (CrankCamera *self)
 static void crank_camera_class_init (CrankCameraClass *c)
 {
   GObjectClass *c_gobject;
+
+  /**
+   * CrankCamera:rendered:
+   *
+   * Signal for rendering scene.
+   *
+   * When scene is rendered, signal will be emitted.
+   */
+  sig_rendered = g_signal_new ("rendered",
+                               CRANK_TYPE_CAMERA,
+                               G_SIGNAL_NO_RECURSE,
+                               0,
+                               NULL, NULL,
+                               NULL,
+                               G_TYPE_NONE,
+                               0);
 
   c_gobject = G_OBJECT_CLASS (c);
 
