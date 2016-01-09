@@ -298,17 +298,25 @@ crank_session3_dispose (GObject *object)
   CrankSession3 *session = (CrankSession3*)object;
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
 
-  g_ptr_array_foreach (priv->entities_placeless,
-                       (GFunc) crank_entity3_dispose, NULL);
+  if (priv->mod_lock_init)
+    {
+      priv->mod_lock_init = FALSE;
+      g_ptr_array_foreach (priv->entities_placeless,
+                           (GFunc) crank_entity3_dispose, NULL);
 
-  g_ptr_array_foreach (priv->entities,
-                       (GFunc) crank_entity3_dispose, NULL);
+      g_ptr_array_foreach (priv->entities,
+                           (GFunc) crank_entity3_dispose, NULL);
 
-  g_ptr_array_foreach (priv->places,
-                       (GFunc) crank_place3_dispose, NULL);
+      g_ptr_array_foreach (priv->places,
+                           (GFunc) crank_place3_dispose, NULL);
 
-  priv->place_sz = 0;
-  priv->entity_sz = 0;
+      g_ptr_array_unref (priv->entities_placeless);
+      g_ptr_array_unref (priv->entities);
+      g_ptr_array_unref (priv->places);
+
+      priv->place_sz = 0;
+      priv->entity_sz = 0;
+    }
 
   g_ptr_array_set_size (priv->place_modules, 0);
   g_ptr_array_set_size (priv->entity_modules, 0);
@@ -322,10 +330,6 @@ crank_session3_finalize (GObject *object)
 {
   CrankSession3 *session = (CrankSession3*)object;
   CrankSession3Private *priv = crank_session3_get_instance_private (session);
-
-  g_ptr_array_unref (priv->entities_placeless);
-  g_ptr_array_unref (priv->entities);
-  g_ptr_array_unref (priv->places);
 
   g_ptr_array_unref (priv->place_modules);
   g_ptr_array_unref (priv->entity_modules);
