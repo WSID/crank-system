@@ -6,6 +6,6 @@ includedir=@includedir@/crank/core
 Name: CrankCore
 Description: Crank System Core Classes Foundation
 Version: @VERSION@
-Requires: glib-2.0 crank-base-0.0
+Requires: glib-2.0 crank-base-0.0 crank-shape-0.0
 Libs: -L${libdir} -lcrankcore
 Cflags: -I${includedir}
