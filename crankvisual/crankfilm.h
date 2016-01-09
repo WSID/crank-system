@@ -38,26 +38,26 @@ G_DECLARE_FINAL_TYPE (CrankFilm,
                       CRANK, FILM,
                       GObject)
 
-//////// Public functions //////////////////////////////////////////////////////
+//////// Constructors //////////////////////////////////////////////////////////
 
-CrankFilm    *crank_film_new ();
+CrankFilm    *crank_film_new (CoglContext  *cogl_context,
+                              const guint   width,
+                              const guint   height,
+                              GError      **error);
 
-void          crank_film_add_texture (CrankFilm   *film,
-                                      CoglTexture *texture);
+//////// Properties ////////////////////////////////////////////////////////////
 
-void          crank_film_remove_texture (CrankFilm   *film,
-                                         CoglTexture *texture);
+CoglContext  *crank_film_get_cogl_context (CrankFilm *film);
 
-CoglTexture  *crank_film_get_texture (CrankFilm   *film,
-                                      const guint  index);
+guint         crank_film_get_width (CrankFilm *film);
 
-guint         crank_film_get_n_textures (CrankFilm *film);
-
-
-void          crank_film_allocate (CrankFilm  *film,
-                                   GError    **error);
+guint         crank_film_get_height(CrankFilm *film);
 
 
+//////// Retrieve textures and framebuffers ////////////////////////////////////
+
+CoglTexture    *crank_film_get_texture (CrankFilm   *film,
+                                        const guint  index);
 
 CoglOffscreen  *crank_film_get_framebuffer (CrankFilm   *film,
                                             const guint  index);
