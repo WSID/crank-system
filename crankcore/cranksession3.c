@@ -411,7 +411,7 @@ crank_session3_add_place_module (CrankSession3            *session,
                G_OBJECT_TYPE_NAME (session), G_OBJECT_TYPE_NAME (module));
     }
 
-  g_ptr_array_add (priv->place_modules, module);
+  g_ptr_array_add (priv->place_modules, g_object_ref (module));
 
   g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_PLACE_MODULES]);
   g_object_notify_by_pspec (self_gobject, pspecs[PROP_PLACE_MODULES]);
@@ -542,7 +542,7 @@ crank_session3_add_entity_module (CrankSession3             *session,
                G_OBJECT_TYPE_NAME (session), G_OBJECT_TYPE_NAME (module));
     }
 
-  g_ptr_array_add (priv->entity_modules, module);
+  g_ptr_array_add (priv->entity_modules, g_object_ref (module));
 
   g_object_notify_by_pspec (self_gobject, pspecs[PROP_N_ENTITY_MODULES]);
   g_object_notify_by_pspec (self_gobject, pspecs[PROP_ENTITY_MODULES]);
