@@ -219,7 +219,7 @@ crank_session_def_resume (CrankSession *session)
   CrankSessionPrivate *priv = crank_session_get_instance_private (session);
 
   priv->running = TRUE;
-  g_timer_continue (priv->uptime_timer);
+  g_timer_start (priv->uptime_timer);
 }
 
 static void
@@ -228,7 +228,7 @@ crank_session_def_pause (CrankSession *session)
   CrankSessionPrivate *priv = crank_session_get_instance_private (session);
 
   priv->running = FALSE;
-  g_timer_stop (priv->uptime_timer);
+  priv->uptime_base += (gfloat) g_timer_elapsed (priv->uptime_timer, NULL);
 }
 
 
