@@ -125,7 +125,7 @@ crank_film_class_init (CrankFilmClass *c)
   g_param_spec_uint ("height", "height",
                      "Height of film",
                      0, G_MAXUINT, 0,
-                     G_PARAM_READABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS );
+                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
