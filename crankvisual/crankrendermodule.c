@@ -346,6 +346,8 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
   CrankTrans3 ipos;
   guint i;
 
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
                                           (const CoglMatrix*) & projection->matrix_t);
 
@@ -394,6 +396,8 @@ crank_render_module_render_color_at (CrankRenderModule *module,
   CrankTrans3 ipos;
   guint i;
 
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
                                           (const CoglMatrix*) & projection->matrix_t);
 
