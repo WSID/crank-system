@@ -831,6 +831,7 @@ crank_session3_make_entity (CrankSession3 *session)
   entity = (CrankEntity3*) g_slice_alloc0 (priv->entity_sz);
 
   entity->session = session;
+  crank_trans3_init (& entity->pos);
 
   g_ptr_array_add (priv->entities_placeless, entity);
 
