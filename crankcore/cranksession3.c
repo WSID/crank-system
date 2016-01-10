@@ -371,10 +371,11 @@ crank_session3_pause (CrankSession *session)
 
   CrankSessionClass *pc = (CrankSessionClass*)crank_session3_parent_class;
 
-  pc->resume (session);
 
   g_source_destroy (priv->tick_source);
   priv->tick_source = NULL;
+
+  pc->pause (session);
 }
 
 
