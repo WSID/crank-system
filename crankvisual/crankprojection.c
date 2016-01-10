@@ -398,10 +398,16 @@ crank_projection_set_matrix (CrankProjection *projection,
   if (matrix->m32 == -1)
     {
       projection->proj_type = CRANK_PROJECTION_FRUSTUM;
+      crank_mat_float4_copy (matrix, & projection->matrix);
+      crank_mat_float4_transpose (matrix, & projection->matrix_t);
+      crank_projection_build_frustum_param (projection);
     }
   else if (matrix->m33 == 1)
     {
       projection->proj_type = CRANK_PROJECTION_ORTHO;
+      crank_mat_float4_copy (matrix, & projection->matrix);
+      crank_mat_float4_transpose (matrix, & projection->matrix_t);
+      crank_projection_build_ortho_param (projection);
     }
   else
     {
