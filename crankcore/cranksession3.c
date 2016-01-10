@@ -181,6 +181,8 @@ crank_session3_init (CrankSession3 *self)
   priv->places = NULL;
   priv->entities = NULL;
   priv->entities_placeless = NULL;
+
+  priv->tick_interval = 17;
 }
 
 static void
