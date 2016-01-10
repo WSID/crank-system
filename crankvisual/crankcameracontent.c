@@ -237,7 +237,7 @@ crank_camera_content_paint_content (ClutterContent   *content,
   if (film == NULL)
     return;
 
-  child_node = clutter_texture_node_new (crank_film_get_texture (film, 6),
+  child_node = clutter_texture_node_new (crank_film_get_texture (film, 5),
                                          NULL,
                                          CLUTTER_SCALING_FILTER_LINEAR,
                                          CLUTTER_SCALING_FILTER_LINEAR);
