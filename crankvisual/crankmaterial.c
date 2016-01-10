@@ -167,9 +167,11 @@ crank_material_class_init (CrankMaterialClass *c)
    * Texture for color.
    */
   pspecs[PROP_TEXTURE_COLOR] =
-  g_param_spec_pointer ("texture-normal", "Texture Normal",
+  g_param_spec_pointer ("texture-color", "Texture Color",
                         "Texture for color",
                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
 
