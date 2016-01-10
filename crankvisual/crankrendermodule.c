@@ -200,10 +200,24 @@ crank_render_module_tick (CrankSession3Module *module)
 
   for (i = 0; i < rmodule->cameras->len; i++)
     {
-      CrankCamera *camera = rmodule->cameras->pdata[i];
-      CrankFilm *film = crank_camera_get_film (camera);
-      CrankEntity3 *entity = crank_camera_get_entity (camera);
-      CrankPlace3 *place = crank_entity3_get_place (entity);
+      CrankCamera *camera;
+      CrankFilm *film;
+      CrankEntity3 *entity;
+      CrankPlace3 *place;
+
+      camera = rmodule->cameras->pdata[i];
+
+      film = crank_camera_get_film (camera);
+      if (film == NULL)
+        continue;
+
+      entity = crank_camera_get_entity (camera);
+      if (entity == NULL)
+        continue;
+
+      place = crank_entity3_get_place (entity);
+      if (place == NULL)
+        continue;
 
       CrankTrans3 position;
       CrankProjection *projection;
