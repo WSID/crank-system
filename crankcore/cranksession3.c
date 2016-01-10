@@ -188,6 +188,7 @@ crank_session3_class_init (CrankSession3Class *c)
 {
 
   GObjectClass *c_gobject;
+  CrankSessionClass *c_session;
 
   c_gobject = G_OBJECT_CLASS (c);
 
@@ -228,6 +229,12 @@ crank_session3_class_init (CrankSession3Class *c)
 
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  c_session = CRANK_SESSION_CLASS (c);
+
+  c_session->resume = crank_session3_resume;
+  c_session->pause = crank_session3_pause;
 
 }
 
