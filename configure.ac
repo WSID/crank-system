@@ -36,7 +36,9 @@ AC_ARG_ENABLE(demo,
                  [Enable build of demos to show functions of Crank System]),
   [AS_IF([test s$enableval == s"yes"],
          [PKG_CHECK_MODULES([CRANK_BASE_DEMO],
-                            [glib-2.0 gobject-2.0 gtk+-3.0]) ] ) ] )
+                            [glib-2.0 gobject-2.0 gtk+-3.0])
+          PKG_CHECK_MODULES([CRANK_VISUAL_DEMO],
+                            [glib-2.0 gobject-2.0 gtk+-3.0 cogl-2.0-experimental clutter-1.0 clutter-gtk-1.0])] ) ] )
 AM_CONDITIONAL([CRANK_DEMO], [test s$enable_demo == s"yes"])
 
 ######## Testing ###############################################################
@@ -128,6 +130,7 @@ AC_CONFIG_FILES([
 		
 		demo/Makefile
 		demo/matrix/Makefile
+		demo/triangles/Makefile
 		
 		crank-base-0.0.pc
 		crank-shape-0.0.pc

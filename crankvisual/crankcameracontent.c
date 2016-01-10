@@ -46,6 +46,10 @@
  */
 
 
+static const ClutterColor BLACK = {
+  0, 0, 0, 255
+};
+
 //////// List of virtual functions /////////////////////////////////////////////
 
 static void     crank_camera_content_content_iface_init (ClutterContentIface *iface);
@@ -199,6 +203,9 @@ crank_camera_content_dispose (GObject *object)
 }
 
 
+
+
+
 //////// ClutterContent ////////////////////////////////////////////////////////
 
 static gboolean
@@ -247,7 +254,6 @@ crank_camera_content_paint_content (ClutterContent   *content,
   clutter_paint_node_add_texture_rectangle (child_node, & actor_allocation,
                                             0, 1,
                                             1, 0);
-
   clutter_paint_node_add_child (node, child_node);
   clutter_paint_node_unref (child_node);
 }
@@ -265,6 +271,8 @@ crank_camera_content_detached (ClutterContent *content,
 {
 
 }
+
+
 
 
 //////// Properties ////////////////////////////////////////////////////////////

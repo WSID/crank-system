@@ -225,9 +225,6 @@ crank_render_module_tick (CrankSession3Module *module)
       crank_entity3_get_position (entity, &position);
       projection = crank_camera_get_projection (camera);
 
-      if (place == NULL)
-        continue;
-
       crank_render_module_render_at (rmodule,
                                      place,
                                      &position,
@@ -443,13 +440,24 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
+  /*
   crank_render_module_render_geom_at (module,
                                       place,
                                       position,
                                       projection,
                                       crank_film_get_texture (film, 0));
 
+   */
+  crank_render_module_render_color_at (module,
+                                       place,
+                                       position,
+                                       projection,
+                                       crank_film_get_framebuffer (film, 5));
+
+  // XXX: For now, rendering a color buffer on result buffer.
+
   // TODO: Render to other buffers.
+  //
 }
 
 /**

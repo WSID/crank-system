@@ -148,7 +148,7 @@ crank_renderable_primitive_render_color (CrankRenderable *renderable,
   pipeline = crank_material_get_pipeline_color (material);
 
   crank_trans3_to_matrix (position, & mv_matrix);
-  crank_mat_float4_transpose_self (& mv_matrix);
+  //crank_mat_float4_transpose_self (& mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
 

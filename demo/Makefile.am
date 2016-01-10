@@ -1,1 +1,1 @@
-SUBDIRS=matrix
+SUBDIRS=matrix triangles
