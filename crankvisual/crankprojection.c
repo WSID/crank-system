@@ -486,9 +486,6 @@ crank_projection_update_matrix (CrankProjection *projection)
 
   else
     g_error ("update_matrix: Unsupported projection type: %u", projection->proj_type);
-
-  crank_mat_float4_transpose (& projection->matrix,
-                              & projection->matrix_t);
 }
 
 
@@ -648,6 +645,8 @@ crank_projection_build_ortho_mat (CrankProjection *projection)
   mat->m31 = 0;
   mat->m32 = 0;
   mat->m33 = 1;
+
+  crank_mat_float4_transpose (mat, & projection->matrix_t);
 }
 
 
@@ -679,6 +678,8 @@ crank_projection_build_frustum_mat (CrankProjection *projection)
   mat->m31 = 0;
   mat->m32 = -1;
   mat->m33 = 0;
+
+  crank_mat_float4_transpose (mat, & projection->matrix_t);
 }
 
 
