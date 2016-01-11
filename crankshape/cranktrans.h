@@ -84,6 +84,9 @@ void            crank_trans2_init_from_matrix  (CrankTrans2    *trans,
 void            crank_trans2_to_matrix         (CrankTrans2    *trans,
                                                 CrankMatFloat3 *mat);
 
+void            crank_trans2_to_matrix_transpose(CrankTrans2    *trans,
+                                                 CrankMatFloat3 *mat);
+
 
 void            crank_trans2_copy              (CrankTrans2    *trans,
                                                 CrankTrans2    *other);
@@ -150,6 +153,9 @@ void            crank_trans3_init_from_matrix  (CrankTrans3    *trans,
 
 void            crank_trans3_to_matrix         (CrankTrans3    *trans,
                                                 CrankMatFloat4 *mat);
+
+void            crank_trans3_to_matrix_transpose(CrankTrans3    *trans,
+                                                 CrankMatFloat4 *mat);
 
 
 void            crank_trans3_copy              (CrankTrans3    *trans,

@@ -108,6 +108,30 @@ crank_trans2_to_matrix (CrankTrans2    *trans,
                                 0.0f, 0.0f, 1.0f);
 }
 
+/**
+ * crank_trans2_to_matrix_transpose:
+ * @trans: A Transformation.
+ * @mat: (out): A Matrix.
+ *
+ * Converts transformation into matrix form.
+ *
+ * This is useful when column-major matrices are required.
+ */
+void
+crank_trans2_to_matrix_transpose (CrankTrans2    *trans,
+                                  CrankMatFloat3 *mat)
+{
+  gfloat ss;
+  gfloat sc;
+
+  ss = trans->mscl * sinf (trans->mrot);
+  sc = trans->mscl * cosf (trans->mrot);
+
+  crank_mat_float3_init (mat,    sc,             ss,              0.0f,
+                                -ss,             sc,              0.0f,
+                                trans->mtrans.x, trans->mtrans.y, 1.0f);
+}
+
 
 /**
  * crank_trans2_copy:
@@ -426,7 +450,42 @@ void
 crank_trans3_to_matrix (CrankTrans3    *trans,
                         CrankMatFloat4 *mat)
 {
+  // Rotating.
   crank_rot_quat_float_to_mat_float4 (&trans->mrot, mat);
+
+  // Scaling..
+  mat->m00 *= trans->mscl;
+  mat->m01 *= trans->mscl;
+  mat->m02 *= trans->mscl;
+  mat->m10 *= trans->mscl;
+  mat->m11 *= trans->mscl;
+  mat->m12 *= trans->mscl;
+  mat->m20 *= trans->mscl;
+  mat->m21 *= trans->mscl;
+  mat->m22 *= trans->mscl;
+
+  // Translating.
+  mat->m03 = trans->mtrans.x;
+  mat->m13 = trans->mtrans.y;
+  mat->m23 = trans->mtrans.z;
+}
+
+
+/**
+ * crank_trans3_to_matrix_transpose:
+ * @trans: A Transformation.
+ * @mat: (out): A Matrix.
+ *
+ * Converts transformation into matrix form.
+ *
+ * This is useful when column-major matrices are required.
+ */
+void
+crank_trans3_to_matrix_transpose (CrankTrans3    *trans,
+                                  CrankMatFloat4 *mat)
+{
+  // Rotating.
+  crank_rot_quat_float_to_mat_float4_t (&trans->mrot, mat);
 
   // Scaling..
   mat->m00 *= trans->mscl;
@@ -604,8 +663,7 @@ crank_trans3_inverse (CrankTrans3 *a,
   crank_quat_float_conjugate (&a->mrot, &r->mrot);
 
   crank_quat_float_rotatev (&r->mrot, &a->mtrans, &r->mtrans);
-  crank_vec_float3_divs_self (& r->mtrans, a->mscl);
-
+  crank_vec_float3_divs_self (& r->mtrans, - a->mscl);
 }
 
 /**
