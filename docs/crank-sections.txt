@@ -2063,6 +2063,8 @@ crank_rot_quat_float_to_mat_float3
 crank_rot_quat_float_to_mat_float4
 crank_rot_mat_float3_to_quat_float
 crank_rot_mat_float4_to_quat_float
+crank_rot_quat_float_to_mat_float3_t
+crank_rot_quat_float_to_mat_float4_t
 </SECTION>
 
 

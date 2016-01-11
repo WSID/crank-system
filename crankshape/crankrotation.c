@@ -243,3 +243,97 @@ crank_rot_mat_float4_to_quat_float (CrankMatFloat4 *mat,
   quat->y = (mat->m02 - mat->m20) * s;
   quat->z = (mat->m10 - mat->m01) * s;
 }
+
+
+
+//////// Transposed conversions ////////////////////////////////////////////////
+
+/**
+ * crank_rot_quat_float_to_mat_float3_t:
+ * @quat: A Rotation Quaternion.
+ * @mat: (out): Transpose of rotation matrix.
+ *
+ * Converts a quaternion to a transpose of matrix that represents same rotation.
+ *
+ * This is useful when dealing with column-major matrices.
+ */
+void
+crank_rot_quat_float_to_mat_float3_t (CrankQuatFloat *quat,
+                                      CrankMatFloat3 *mat)
+{
+  gfloat ww  = quat->w * quat->w;
+  gfloat xx  = quat->x * quat->x;
+  gfloat yy  = quat->y * quat->y;
+  gfloat zz  = quat->z * quat->z;
+
+  gfloat wz  = quat->w * quat->z;
+  gfloat xy  = quat->x * quat->y;
+
+  gfloat wy  = quat->w * quat->y;
+  gfloat xz  = quat->x * quat->z;
+
+  gfloat wx  = quat->w * quat->x;
+  gfloat yz  = quat->y * quat->z;
+
+  mat->m00 = (ww + xx - yy - zz);
+  mat->m01 = 2 * (wz + xy);
+  mat->m02 = 2 * (xz - wy);
+
+  mat->m10 = 2 * (xy - wz);
+  mat->m11 = (ww - xx + yy - zz);
+  mat->m12 = 2 * (wx + yz);
+
+  mat->m20 = 2 * (wy + xz);
+  mat->m21 = 2 * (yz - wx);
+  mat->m22 = (ww - xx - yy + zz);
+
+}
+
+/**
+ * crank_rot_quat_float_to_mat_float4_t:
+ * @quat: A Rotation Quaternion.
+ * @mat: (out): Transpose of rotation matrix.
+ *
+ * Converts a quaternion to a transpose of matrix that represents same rotation.
+ *
+ * This is useful when dealing with column-major matrices.
+ */
+void
+crank_rot_quat_float_to_mat_float4_t (CrankQuatFloat *quat,
+                                      CrankMatFloat4 *mat)
+{
+  gfloat ww  = quat->w * quat->w;
+  gfloat xx  = quat->x * quat->x;
+  gfloat yy  = quat->y * quat->y;
+  gfloat zz  = quat->z * quat->z;
+
+  gfloat wz  = quat->w * quat->z;
+  gfloat xy  = quat->x * quat->y;
+
+  gfloat wy  = quat->w * quat->y;
+  gfloat xz  = quat->x * quat->z;
+
+  gfloat wx  = quat->w * quat->x;
+  gfloat yz  = quat->y * quat->z;
+
+  mat->m00 = (ww + xx - yy - zz);
+  mat->m01 = 2 * (wz + xy);
+  mat->m02 = 2 * (xz - wy);
+  mat->m03 = 0;
+
+  mat->m10 = 2 * (xy - wz);
+  mat->m11 = (ww - xx + yy - zz);
+  mat->m12 = 2 * (wx + yz);
+  mat->m13 = 0;
+
+  mat->m20 = 2 * (wy + xz);
+  mat->m21 = 2 * (yz - wx);
+  mat->m22 = (ww - xx - yy + zz);
+  mat->m23 = 0;
+
+  mat->m30 = 0;
+  mat->m31 = 0;
+  mat->m32 = 0;
+  mat->m33 = 1;
+
+}

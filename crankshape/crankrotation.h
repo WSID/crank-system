@@ -62,6 +62,15 @@ void            crank_rot_mat_float3_to_quat_float       (CrankMatFloat3 *mat,
 void            crank_rot_mat_float4_to_quat_float       (CrankMatFloat4 *mat,
                                                           CrankQuatFloat *quat);
 
+
+//////// Transposed conversions ////////////////////////////////////////////////
+
+void            crank_rot_quat_float_to_mat_float3_t     (CrankQuatFloat *quat,
+                                                          CrankMatFloat3 *mat);
+
+void            crank_rot_quat_float_to_mat_float4_t     (CrankQuatFloat *quat,
+                                                          CrankMatFloat4 *mat);
+
 G_END_DECLS
 
 #endif 
