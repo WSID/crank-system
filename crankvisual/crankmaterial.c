@@ -204,7 +204,7 @@ crank_material_get_property (GObject    *object,
       break;
 
     case PROP_TEXTURE_COLOR:
-      //g_value_set_pointer (value, cogl_pipeline_get_layer_texture (material->pipe_color, 0));
+      g_value_set_pointer (value, cogl_pipeline_get_layer_texture (material->pipe_color, 0));
       break;
 
     default:
@@ -250,8 +250,8 @@ crank_material_set_property (GObject      *object,
 
     case PROP_TEXTURE_COLOR:
         {
-          //CoglTexture *texture = (CoglTexture*) g_value_get_pointer (value);
-          //crank_material_set_texture_color (material, texture);
+          CoglTexture *texture = (CoglTexture*) g_value_get_pointer (value);
+          crank_material_set_texture_color (material, texture);
         }
       break;
 
