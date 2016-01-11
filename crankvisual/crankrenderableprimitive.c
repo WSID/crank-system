@@ -116,8 +116,7 @@ crank_renderable_primitive_render_geom (CrankRenderable *renderable,
 
   pipeline = crank_material_get_pipeline_geom (material);
 
-  crank_trans3_to_matrix (position, & mv_matrix);
-  crank_mat_float4_transpose_self (& mv_matrix);
+  crank_trans3_to_matrix_transpose (position, & mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
   cogl_primitive_draw (primitive, framebuffer, pipeline);
@@ -147,11 +146,9 @@ crank_renderable_primitive_render_color (CrankRenderable *renderable,
 
   pipeline = crank_material_get_pipeline_color (material);
 
-  crank_trans3_to_matrix (position, & mv_matrix);
-  //crank_mat_float4_transpose_self (& mv_matrix);
+  crank_trans3_to_matrix_transpose (position, & mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
-
   cogl_primitive_draw (primitive, framebuffer, pipeline);
 }
 
@@ -180,11 +177,9 @@ crank_renderable_primitive_render_material (CrankRenderable *renderable,
 
   pipeline = crank_material_get_pipeline_material (material);
 
-  crank_trans3_to_matrix (position, & mv_matrix);
-  crank_mat_float4_transpose_self (& mv_matrix);
+  crank_trans3_to_matrix_transpose (position, & mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
-
   cogl_primitive_draw (primitive, framebuffer, pipeline);
 }
 
