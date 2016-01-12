@@ -25,6 +25,8 @@
 #include <glib-object.h>
 #include <cogl/cogl2-experimental.h>
 
+#include "crankprojection.h"
+
 #include "crankmaterial.h"
 
 /**
@@ -46,6 +48,63 @@
  * On Geometry buffer, RG is used for depth, BA is used for surface normal.
  */
 
+static const gchar *geom_vert_decl =
+"varying float crank_geom_depth_vert;\n"
+"varying vec3  crank_geom_normal_vert;\n"
+
+"#define crank_geom_depth_out crank_geom_depth_vert\n"
+"#define crank_geom_normal_out crank_geom_normal_vert\n";
+
+static const gchar *geom_vert_replace = ""
+// Only write position
+"cogl_position_out = cogl_modelview_projection_matrix * cogl_position_in;\n"
+"cogl_color_out = vec4(0.0);\n"
+"cogl_tex_coord_out[0] = cogl_tex_coord_in;\n"
+
+// Get relative position of vertex.
+"vec4 crank_vpos = cogl_modelview_matrix * cogl_position_in;\n"
+
+// Make linear depth.
+"crank_geom_depth_out = -crank_vpos.z * crank_vpos.w;\n"
+"crank_geom_normal_out =\n"
+"    ( cogl_modelview_matrix * \n"
+"      vec4 (cogl_normal_in, 0.0) ).xyz; \n";
+
+
+
+static const gchar *geom_frag_decl =
+"uniform CrankProjection crank_render_projection;\n"
+
+"varying float crank_geom_depth_vert;\n"
+"varying vec3  crank_geom_normal_vert;\n"
+
+"float crank_geom_depth_frag;\n"
+"vec3  crank_geom_normal_frag;\n"
+
+"#define crank_geom_depth_in crank_geom_depth_vert\n"
+"#define crank_geom_normal_in crank_geom_normal_vert\n"
+"#define crank_geom_depth_out crank_geom_depth_frag\n"
+"#define crank_geom_normal_out crank_geom_normal_frag\n";
+
+
+static const gchar *geom_frag_replace =
+"crank_geom_depth_out = crank_geom_depth_in;\n"
+"crank_geom_normal_out = crank_geom_normal_in;\n";
+static const gchar *geom_frag_post =
+"cogl_color_out.b =\n"
+"           ((crank_geom_depth_out -\n"
+"             crank_projection_get_near (crank_render_projection)) /\n"
+"            (crank_projection_get_far (crank_render_projection) -  \n"
+"             crank_projection_get_near (crank_render_projection)));\n"
+
+"cogl_color_out.a = fract (cogl_color_out.b * 256.0);\n"
+"cogl_color_out.b -= cogl_color_out.a / 256;\n"
+
+"cogl_color_out.rg = normalize (crank_geom_normal_out).xy;";
+
+
+static CoglSnippet *geom_vert_snippet;
+static CoglSnippet *geom_frag_snippet;
 
 //////// List of virtual functions /////////////////////////////////////////////
 
@@ -172,6 +231,20 @@ crank_material_class_init (CrankMaterialClass *c)
                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  // Snippet
+
+  geom_vert_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
+                                        geom_vert_decl,
+                                        NULL);
+  cogl_snippet_set_replace (geom_vert_snippet, geom_vert_replace);
+
+
+  geom_frag_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
+                                        geom_frag_decl,
+                                        geom_frag_post);
+  cogl_snippet_set_replace (geom_frag_snippet, geom_frag_replace);
 }
 
 
@@ -228,16 +301,53 @@ crank_material_set_property (GObject      *object,
 
           CoglSnippet *snippet_geom_vert;
           CoglSnippet *snippet_geom_frag;
+          CoglDepthState depth_state;
+
+          cogl_depth_state_init (& depth_state);
+
+          cogl_depth_state_set_test_enabled (& depth_state, TRUE);
+          cogl_depth_state_set_write_enabled (& depth_state, TRUE);
 
           material->pipe_geom = cogl_pipeline_new (context);
           material->pipe_color = cogl_pipeline_new (context);
           material->pipe_mat = cogl_pipeline_new (context);
+
+          cogl_pipeline_set_depth_state (material->pipe_geom,
+                                         & depth_state,
+                                         NULL);
+
+          cogl_pipeline_set_depth_state (material->pipe_color,
+                                         & depth_state,
+                                         NULL);
+
+          cogl_pipeline_set_depth_state (material->pipe_mat,
+                                         & depth_state,
+                                         NULL);
+
+          // Disable alpha blend, as alpha value also contains parameter value.
+          cogl_pipeline_set_blend (material->pipe_geom,
+                                   "RGBA = ADD(SRC_COLOR, 0)",
+                                   NULL);
+
+          cogl_pipeline_set_blend (material->pipe_color,
+                                   "RGBA = ADD(SRC_COLOR, 0)",
+                                   NULL);
+
+          cogl_pipeline_set_blend (material->pipe_mat,
+                                   "RGBA = ADD(SRC_COLOR, 0)",
+                                   NULL);
 
           cogl_pipeline_set_layer_null_texture (material->pipe_geom, 0,
                                                 COGL_TEXTURE_TYPE_2D);
 
           cogl_pipeline_set_layer_null_texture (material->pipe_color, 0,
                                                 COGL_TEXTURE_TYPE_2D);
+
+          cogl_pipeline_add_snippet (material->pipe_geom, geom_vert_snippet);
+          cogl_pipeline_add_snippet (material->pipe_geom, geom_frag_snippet);
+          cogl_pipeline_add_snippet (material->pipe_geom,
+                                     crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_FRAGMENT));
+
         }
       break;
 
