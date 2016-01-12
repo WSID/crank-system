@@ -72,6 +72,7 @@ static const gchar *geom_vert_replace = ""
 
 
 
+
 static const gchar *geom_frag_decl =
 "uniform CrankProjection crank_render_projection;\n"
 
@@ -90,7 +91,10 @@ static const gchar *geom_frag_decl =
 static const gchar *geom_frag_replace =
 "crank_geom_depth_out = crank_geom_depth_in;\n"
 "crank_geom_normal_out = crank_geom_normal_in;\n";
+
 static const gchar *geom_frag_post =
+"vec2 normal_result;\n"
+
 "cogl_color_out.b =\n"
 "           ((crank_geom_depth_out -\n"
 "             crank_projection_get_near (crank_render_projection)) /\n"
@@ -100,7 +104,10 @@ static const gchar *geom_frag_post =
 "cogl_color_out.a = fract (cogl_color_out.b * 256.0);\n"
 "cogl_color_out.b -= cogl_color_out.a / 256;\n"
 
-"cogl_color_out.rg = normalize (crank_geom_normal_out).xy;";
+"normal_result = normalize (crank_geom_normal_out).xy *\n"
+"                sign (crank_geom_normal_out.z);\n"
+
+"cogl_color_out.rg = vec2 (0.5) + normal_result * 0.5;";
 
 
 static CoglSnippet *geom_vert_snippet;
