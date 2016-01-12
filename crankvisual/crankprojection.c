@@ -511,7 +511,7 @@ crank_projection_get_snippet_def (CoglSnippetHook hook)
   if (hook == COGL_SNIPPET_HOOK_VERTEX)
     {
       if (snippet_vertex == NULL)
-        snippet_vertex = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
+        snippet_vertex = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX_GLOBALS,
                                            snippet_definition,
                                            NULL);
 
@@ -521,7 +521,7 @@ crank_projection_get_snippet_def (CoglSnippetHook hook)
   else if (hook == COGL_SNIPPET_HOOK_FRAGMENT)
     {
       if (snippet_fragment == NULL)
-        snippet_fragment = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
+        snippet_fragment = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT_GLOBALS,
                                              snippet_definition,
                                              NULL);
 
