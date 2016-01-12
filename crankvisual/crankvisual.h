@@ -37,6 +37,8 @@
 
 #include "crankcameracontent.h"
 
+#include "crankvertexstruct.h"
+
 #undef  _CRANKVISUAL_INSIDE
 
 #endif
