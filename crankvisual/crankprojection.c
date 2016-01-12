@@ -563,6 +563,7 @@ crank_projection_get_uniform_locations (CoglPipeline *pipeline,
   g_string_truncate (member_name, member_prefix_len);
   g_string_append (member_name, "params");
   locations[1] = cogl_pipeline_get_uniform_location (pipeline, member_name->str);
+  g_string_free (member_name, TRUE);
 }
 
 /**
