@@ -34,10 +34,10 @@
 
 //////// Private constant values ///////////////////////////////////////////////
 
-static CoglVertexP3C4 vertices[3] = {
-    {1, -1, -1, 255, 0, 0, 255},
-    {0, 1,   1, 0, 255, 0, 255},
-    {-1, -1,-1, 0, 0, 255, 255}
+static CrankVertexP3N3C4 vertices[3] = {
+    {1, -1, -1,   0.0f, -0.7071f, 0.7071f,    255, 0, 0, 255},
+    {0, 1,   1,   0.0f, -0.7071f, 0.7071f,    0, 255, 0, 255},
+    {-1, -1,-1,   0.0f, -0.7071f, 0.7071f,    0, 0, 255, 255}
 };
 
 
@@ -168,10 +168,10 @@ crank_demo_renderable_triangle_constructed (GObject *object)
 
   pc_gobject->constructed (object);
 
-  renderable->primitive = cogl_primitive_new_p3c4 (renderable->cogl_context,
-                                                   COGL_VERTICES_MODE_TRIANGLES,
-                                                   3,
-                                                   vertices);
+  renderable->primitive = crank_cogl_primitive_new_p3n3c4 (renderable->cogl_context,
+                                                           COGL_VERTICES_MODE_TRIANGLES,
+                                                           3,
+                                                           vertices);
 
   renderable->material = crank_material_new (renderable->cogl_context);
 }
