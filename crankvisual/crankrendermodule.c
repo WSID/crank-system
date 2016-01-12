@@ -355,7 +355,7 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
   for (i = 0; i < pdata->entities->len; i++)
     {
-      CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata;
+      CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata[i];
       CrankRenderable *renderable = (CrankRenderable*) crank_session3_entity_module_get_entity_data ((CrankSession3EntityModule*)module, entity);
       CrankTrans3 pos;
 
