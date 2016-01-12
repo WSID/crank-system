@@ -72,6 +72,17 @@ static void crank_demo_triangle_app_startup (GApplication *application);
 static void crank_demo_triangle_app_activate (GApplication *application);
 
 
+//////// Private functions /////////////////////////////////////////////////////
+
+static void crank_demo_triangle_app_build_ui (CrankDemoTriangleApp *app,
+                                              CoglContext          *cogl_context);
+
+static void crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
+                                                   CoglContext          *cogl_context);
+
+static void crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app);
+
+
 //////// Private Functions /////////////////////////////////////////////////////
 
 static gboolean move_cam_pos (gpointer ptr)
@@ -108,7 +119,6 @@ struct _CrankDemoTriangleApp
   CrankRenderModule *rmodule;
 
   CrankPlace3       *place;
-  CrankEntity3      *entity;
   CrankEntity3      *camera_hook;
 
   CrankDemoRenderableTriangle  *renderable;
@@ -166,90 +176,10 @@ crank_demo_triangle_app_startup (GApplication *application)
   backend = clutter_get_default_backend ();
   cogl_context = clutter_backend_get_cogl_context (backend);
 
-
-  //// GUI
-  // Build up!
-  app->window = (GtkApplicationWindow*)gtk_application_window_new ((GtkApplication*)app);
-  app->embed =  (GtkClutterEmbed*) gtk_clutter_embed_new ();
-  app->stage = (ClutterStage*) gtk_clutter_embed_get_stage (app->embed);
-  app->actor = clutter_actor_new ();
-
-  layout = clutter_bin_layout_new (0, 0);
-  clutter_actor_set_layout_manager ((ClutterActor*)app->stage, layout);
-
-  // Add ui!
-  gtk_container_add ((GtkContainer*) app->window,
-                     (GtkWidget*) app->embed);
-
-  clutter_actor_add_child ((ClutterActor*) app->stage,
-                           app->actor);
-
-  clutter_actor_set_x_align (app->actor, CLUTTER_ACTOR_ALIGN_FILL);
-  clutter_actor_set_y_align (app->actor, CLUTTER_ACTOR_ALIGN_FILL);
-  clutter_actor_set_x_expand (app->actor, TRUE);
-  clutter_actor_set_y_expand (app->actor, TRUE);
-  clutter_actor_set_width (app->actor, 300);
-  clutter_actor_set_height (app->actor, 300);
-
-  gtk_widget_show_all ((GtkWidget*) app->embed);
-  clutter_actor_show ((ClutterActor*)app->actor);
-
-  //// Session
-  // Build up!
-  app->session = (CrankSession3*) g_object_new (CRANK_TYPE_SESSION3,
-                                                "tick-interval", 17,
-                                                NULL);
-  app->rmodule = (CrankRenderModule*) g_object_new (CRANK_TYPE_RENDER_MODULE, NULL);
-
-  crank_session3_add_entity_module (app->session,
-                                    (CrankSession3EntityModule*) app->rmodule);
-
-  crank_session3_lock_and_init_modules (app->session, NULL);
-
-
-  // Make entities.
-  app->place = crank_session3_make_place (app->session);
-  app->entity = crank_session3_make_entity (app->session);
-  app->camera_hook = crank_session3_make_entity (app->session);
-
-  app->renderable = crank_demo_renderable_triangle_new (cogl_context);
-
-  crank_entity3_attach_data (app->entity, 0, (GObject*) app->renderable);
-
-  app->camera = (CrankCamera*) g_object_new (CRANK_TYPE_CAMERA, NULL);
-
-  app->content = (CrankCameraContent*) g_object_new (CRANK_TYPE_CAMERA_CONTENT,
-                                                     "camera", app->camera,
-                                                     NULL);
-
-    {
-      GError *err = NULL;
-      app->film = crank_film_new (cogl_context, 300, 300, &err);
-
-      if (err != NULL)
-        g_error ("!!!: %s", err->message);
-    }
-
-  crank_camera_set_entity (app->camera, app->camera_hook);
-  crank_camera_set_film (app->camera, app->film);
-
-  clutter_actor_set_content (app->actor, (ClutterContent*) app->content);
-
-  // Add session!
-  crank_place3_add_entity (app->place, app->camera_hook);
-  crank_place3_add_entity (app->place, app->entity);
-  crank_render_module_add_camera (app->rmodule, app->camera);
-
-    {
-      CrankTrans3 campos = {{0, 0, -10}, {1, 0, 0, 0}, 1};
-
-      crank_entity3_set_position (app->camera_hook, &campos);
-      //crank_camera_ortho (app->camera, -10, 10, -10, 10, 10, -10);
-      crank_camera_perspective (app->camera, G_PI_2, 1, 0.2, 100);
-    }
-
-  g_timeout_add (17, move_cam_pos, app->camera_hook);
+  crank_demo_triangle_app_build_ui (app, cogl_context);
+  crank_demo_triangle_app_build_session (app, cogl_context);
 }
+
 
 static void
 crank_demo_triangle_app_activate (GApplication *application)
@@ -266,6 +196,110 @@ crank_demo_triangle_app_activate (GApplication *application)
   gtk_window_present ((GtkWindow*) app->window);
 
   crank_session_resume ((CrankSession*) app->session);
+}
+
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static void
+crank_demo_triangle_app_build_ui (CrankDemoTriangleApp *app,
+                                  CoglContext          *cogl_context)
+{
+  ClutterLayoutManager *layout;
+  GError *error = NULL;
+
+  app->window = (GtkApplicationWindow*)gtk_application_window_new ((GtkApplication*)app);
+  app->embed =  (GtkClutterEmbed*) gtk_clutter_embed_new ();
+  app->stage = (ClutterStage*) gtk_clutter_embed_get_stage (app->embed);
+  app->actor = clutter_actor_new ();
+
+  app->film = crank_film_new (cogl_context, 1024, 1024, &error);
+  if (error != NULL)
+    g_error ("Film cannot be initialized: %s", error->message);
+
+  app->camera = (CrankCamera*) g_object_new (CRANK_TYPE_CAMERA,
+                                             "film", app->film,
+                                             NULL);
+
+  app->content = (CrankCameraContent*) g_object_new (CRANK_TYPE_CAMERA_CONTENT,
+                                                     "camera", app->camera,
+                                                     NULL);
+
+
+  layout = clutter_bin_layout_new (0, 0);
+  clutter_actor_set_layout_manager ((ClutterActor*)app->stage, layout);
+
+  // Add ui!
+  gtk_container_add ((GtkContainer*) app->window,
+                     (GtkWidget*) app->embed);
+
+  clutter_actor_add_child ((ClutterActor*) app->stage,
+                           app->actor);
+
+  clutter_actor_set_x_align (app->actor, CLUTTER_ACTOR_ALIGN_FILL);
+  clutter_actor_set_y_align (app->actor, CLUTTER_ACTOR_ALIGN_FILL);
+  clutter_actor_set_x_expand (app->actor, TRUE);
+  clutter_actor_set_y_expand (app->actor, TRUE);
+
+  gtk_widget_show_all ((GtkWidget*) app->embed);
+  clutter_actor_show ((ClutterActor*)app->actor);
+
+  clutter_actor_set_content (app->actor, (ClutterContent*) app->content);
+}
+
+static void
+crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
+                                       CoglContext          *cogl_context)
+{
+  app->session = (CrankSession3*) g_object_new (CRANK_TYPE_SESSION3,
+                                                "tick-interval", 17,
+                                                NULL);
+  app->rmodule = (CrankRenderModule*) g_object_new (CRANK_TYPE_RENDER_MODULE, NULL);
+
+  crank_session3_add_entity_module (app->session,
+                                    (CrankSession3EntityModule*) app->rmodule);
+
+  crank_session3_lock_and_init_modules (app->session, NULL);
+
+
+  // Make entities.
+  app->place = crank_session3_make_place (app->session);
+  app->camera_hook = crank_session3_make_entity (app->session);
+
+  app->renderable = crank_demo_renderable_triangle_new (cogl_context);
+
+  // Add session!
+  crank_place3_add_entity (app->place, app->camera_hook);
+  crank_render_module_add_camera (app->rmodule, app->camera);
+  crank_camera_set_entity (app->camera, app->camera_hook);
+
+  for (int i = 0; i < 1; i++)
+    crank_demo_triangle_app_add_triangle (app);
+
+    {
+      CrankTrans3 campos = {{0, 0, 0}, {1, 0, 0, 0}, 1};
+
+      crank_entity3_set_position (app->camera_hook, &campos);
+      crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 10);
+    }
+
+  g_timeout_add (17, move_cam_pos, app->camera_hook);
+}
+
+static void
+crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
+{
+  CrankEntity3 *entity = crank_session3_make_entity (app->session);
+
+  CrankTrans3 pos = {{
+    0, //g_random_double_range (-100, 100),
+    0, //g_random_double_range (-100, 100),
+    0, //g_random_double_range (-100, 100)
+  }, {1, 0, 0, 0}, 1};
+
+  crank_entity3_attach_data (entity, 0, (GObject*) app->renderable);
+  crank_entity3_set_position (entity, &pos);
+  crank_place3_add_entity (app->place, entity);
 }
 
 
