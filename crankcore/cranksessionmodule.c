@@ -163,6 +163,7 @@ crank_session_module_def_session_init (CrankSessionModule  *self,
 {
   CrankSessionModulePrivate *priv = crank_session_module_get_instance_private (self);
   priv->session = session;
+  priv->session_index = crank_session_index_of_module (session, self);
 }
 
 
