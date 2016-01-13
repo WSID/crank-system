@@ -8,7 +8,6 @@ lib_LTLIBRARIES = \
 coreinclude_HEADERS = \
 		crankcore.h \
 		cranksession.h \
-		cranksessionelement.h \
 		cranksession3.h \
 		cranksession3module.h \
 		cranksession3placemodule.h \
@@ -33,7 +32,6 @@ libcrankcore_la_LIBADD = \
 
 libcrankcore_la_SOURCES= \
 		cranksession.c \
-		cranksessionelement.c \
 		cranksession3.c \
 		cranksession3module.c \
 		cranksession3placemodule.c \
