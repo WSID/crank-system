@@ -144,6 +144,7 @@
     </chapter>
   </part>
 
+
   <part> <title>Crank Core</title>
 
     <chapter>
@@ -160,6 +161,22 @@
       <title>Session Modules</title>
       <xi:include href="xml/cranksessionmoduletick.xml"/>
       <xi:include href="xml/cranksessionmodulesimtimed.xml"/>
+    </chapter>
+  </part>
+
+
+  <part> <title>Crank Visual</title>
+    <chapter>
+      <title>Visual Classes</title>
+      <xi:include href="xml/crankrendermodule.xml"/>
+      <xi:include href="xml/crankvertexstruct.xml"/>
+      <xi:include href="xml/crankfilm.xml"/>
+      <xi:include href="xml/crankprojection.xml"/>
+      <xi:include href="xml/crankcamera.xml"/>
+      <xi:include href="xml/crankmaterial.xml"/>
+      <xi:include href="xml/crankrenderable.xml"/>
+      <xi:include href="xml/crankrenderableprimitive.xml"/>
+      <xi:include href="xml/crankcameracontent.xml"/>
     </chapter>
   </part>
 

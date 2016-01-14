@@ -42,6 +42,12 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderable,
                           GObject)
 
 /**
+ * CrankRenderable:
+ *
+ * Instance Structure.
+ */
+
+/**
  * CrankRenderableClass:
  * @get_visible_radius: Slot for crank_renderable_get_visible_radius()
  * @render_geom: Slot for crank_renderable_render_geom()

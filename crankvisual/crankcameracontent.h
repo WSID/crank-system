@@ -48,6 +48,11 @@ G_DECLARE_FINAL_TYPE (CrankCameraContent,
                       CRANK, CAMERA_CONTENT,
                       GObject)
 
+/**
+ * CrankCameraContent:
+ *
+ * Instance Structure.
+ */
 
 //////// Public Functions ///////////////////////////////////////////////////////
 

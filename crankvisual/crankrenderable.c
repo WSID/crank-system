@@ -129,7 +129,8 @@ crank_renderable_get_visible_radius (CrankRenderable *renderable)
 /**
  * crank_renderable_render_geom:
  * @renderable: A Renderable.
- * @position: Relative position from camera.
+ * @position: Relative position from view.
+ * @projection: Projection of view.
  * @framebuffer: A Framebuffer
  *
  * Render geometry information on given framebuffer.
@@ -151,7 +152,8 @@ crank_renderable_render_geom (CrankRenderable *renderable,
 /**
  * crank_renderable_render_color:
  * @renderable: A Renderable.
- * @position: Relative position from camera.
+ * @position: Relative position from view.
+ * @projection: Projection of view.
  * @framebuffer: A Framebuffer
  *
  * Render color information on given framebuffer.
@@ -173,7 +175,8 @@ crank_renderable_render_color (CrankRenderable *renderable,
 /**
  * crank_renderable_render_material:
  * @renderable: A Renderable.
- * @position: Relative position from camera.
+ * @position: Relative position from view.
+ * @projection: Projection of view.
  * @framebuffer: A Framebuffer
  *
  * Render material information on given framebuffer.

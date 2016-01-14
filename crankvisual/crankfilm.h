@@ -38,6 +38,12 @@ G_DECLARE_FINAL_TYPE (CrankFilm,
                       CRANK, FILM,
                       GObject)
 
+/**
+ * CrankFilm:
+ *
+ * Instance Structure.
+ */
+
 //////// Constructors //////////////////////////////////////////////////////////
 
 CrankFilm    *crank_film_new (CoglContext  *cogl_context,

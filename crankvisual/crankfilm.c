@@ -19,6 +19,16 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankfilm
+ * @title: CrankFilm
+ * @short_description: Group of framebuffers for deferred shading.
+ * @stability: Unstable
+ * @include: crankvisual.h
+ *
+ * This represents a set of framebuffers.
+ */
+
 #define _CRANKVISUAL_INSIDE
 
 #include <glib.h>
@@ -106,7 +116,7 @@ crank_film_class_init (CrankFilmClass *c)
 
 
   /**
-   * CrankFilm::cogl-context: (type CoglContext)
+   * CrankFilm:cogl-context: (type CoglContext)
    *
    * CoglContext to initialize textures and framebuffers
    */
@@ -282,6 +292,7 @@ crank_film_initable_inst_init (GInitable     *initable,
 
 /**
  * crank_film_new:
+ * @cogl_context: A CoglContext to initialize with.
  * @width: Width of film.
  * @height: Height of film.
  * @error: Error

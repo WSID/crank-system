@@ -45,6 +45,12 @@ G_DECLARE_FINAL_TYPE (CrankCamera,
                       CRANK, CAMERA,
                       GObject)
 
+/**
+ * CrankCamera:
+ *
+ * Instance Structure.
+ */
+
 //////// Constructors //////////////////////////////////////////////////////////
 
 CrankCamera *crank_camera_new (void);

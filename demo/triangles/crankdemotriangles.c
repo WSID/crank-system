@@ -273,14 +273,14 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   crank_render_module_add_camera (app->rmodule, app->camera);
   crank_camera_set_entity (app->camera, app->camera_hook);
 
-  for (int i = 0; i < 1; i++)
+  for (int i = 0; i < 100; i++)
     crank_demo_triangle_app_add_triangle (app);
 
     {
       CrankTrans3 campos = {{0, 0, 0}, {1, 0, 0, 0}, 1};
 
       crank_entity3_set_position (app->camera_hook, &campos);
-      crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 10);
+      crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 1000);
     }
 
   g_timeout_add (17, move_cam_pos, app->camera_hook);
@@ -292,10 +292,17 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
   CrankEntity3 *entity = crank_session3_make_entity (app->session);
 
   CrankTrans3 pos = {{
-    0, //g_random_double_range (-100, 100),
-    0, //g_random_double_range (-100, 100),
-    0, //g_random_double_range (-100, 100)
-  }, {1, 0, 0, 0}, 1};
+    g_random_double_range (-100, 100),
+    g_random_double_range (-100, 100),
+    g_random_double_range (-100, 100)
+  }, {
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1)
+  }, g_random_double_range (0.5, 10)};
+
+  crank_quat_float_unit_self (& pos.mrot);
 
   crank_entity3_attach_data (entity, 0, (GObject*) app->renderable);
   crank_entity3_set_position (entity, &pos);

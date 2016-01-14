@@ -46,6 +46,12 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
                       CRANK, RENKDER_MODULE,
                       CrankSession3EntityModule)
 
+/**
+ * CrankRenderModule:
+ *
+ * Instance Structure.
+ */
+
 //////// Public functions //////////////////////////////////////////////////////
 
 void    crank_render_module_render_geom_at (CrankRenderModule *module,

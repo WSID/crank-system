@@ -49,6 +49,8 @@
  * @data: (array length=n_vertices): Number of vertices.
  *
  * Constructs #CoglPrimitive with structure.
+ *
+ * Returns: (transfer full): Newly constructed primitive.
  */
 CoglPrimitive*
 crank_cogl_primitive_new_p3n3 (CoglContext           *context,
@@ -95,6 +97,8 @@ crank_cogl_primitive_new_p3n3 (CoglContext           *context,
  * @data: (array length=n_vertices): Number of vertices.
  *
  * Constructs #CoglPrimitive with structure.
+ *
+ * Returns: (transfer full): Newly constructed primitive.
  */
 CoglPrimitive*
 crank_cogl_primitive_new_p3n3c4 (CoglContext             *context,
@@ -149,6 +153,8 @@ crank_cogl_primitive_new_p3n3c4 (CoglContext             *context,
  * @data: (array length=n_vertices): Number of vertices.
  *
  * Constructs #CoglPrimitive with structure.
+ *
+ * Returns: (transfer full): Newly constructed primitive.
  */
 CoglPrimitive*
 crank_cogl_primitive_new_p3n3t2 (CoglContext             *context,

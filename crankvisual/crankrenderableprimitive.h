@@ -43,6 +43,12 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderablePrimitive,
                           CrankRenderable)
 
 /**
+ * CrankRenderablePrimitive:
+ *
+ * Instance Structure.
+ */
+
+/**
  * CrankRenderablePrimitiveClass
  * @get_primitive: Slot for crank_renderable_primitive_get_primitive()
  * @get_material: Slot fo crank_renderable_primitive_get_material()
@@ -51,8 +57,10 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderablePrimitive,
  */
 struct _CrankRenderablePrimitiveClass
 {
+  /*< private >*/
   CrankRenderableClass _parent;
 
+  /*< public >*/
   CoglPrimitive *(*get_primitive) (CrankRenderablePrimitive *renderable,
                                    CrankTrans3              *position,
                                    CrankProjection          *projection);

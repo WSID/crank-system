@@ -38,6 +38,11 @@ G_DECLARE_FINAL_TYPE (CrankMaterial,
                       CRANK, MATERIAL,
                       GObject)
 
+/**
+ * CrankMaterial:
+ *
+ * Instance structures
+ */
 
 
 //////// Public Functions //////////////////////////////////////////////////////

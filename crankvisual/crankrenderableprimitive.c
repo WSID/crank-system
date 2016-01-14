@@ -103,6 +103,7 @@ crank_renderable_primitive_render_geom (CrankRenderable *renderable,
   CrankMaterial *material;
   CoglPipeline *pipeline;
   CrankMatFloat4 mv_matrix;
+  gint projection_uniforms[2];
 
   prenderable = (CrankRenderablePrimitive*) renderable;
 

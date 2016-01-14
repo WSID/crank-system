@@ -124,7 +124,7 @@ static void crank_camera_class_init (CrankCameraClass *c)
   GObjectClass *c_gobject;
 
   /**
-   * CrankCamera:rendered:
+   * CrankCamera::rendered:
    *
    * Signal for rendering scene.
    *
@@ -351,6 +351,23 @@ crank_camera_finalize (GObject *object)
 
   pc_gobject->finalize (object);
 }
+
+
+//////// Constructor ///////////////////////////////////////////////////////////
+
+/**
+ * crank_camera_new:
+ *
+ * Construct a camera.
+ *
+ * Returns: (transfer full): Newly constructed camera.
+ */
+CrankCamera*
+crank_camera_new (void)
+{
+  return (CrankCamera*) g_object_new (CRANK_TYPE_CAMERA, NULL);
+}
+
 
 
 //////// Properties ////////////////////////////////////////////////////////////

@@ -19,6 +19,16 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankrendermodule
+ * @title: CrankRenderModule
+ * @short_description: Rendering Module.
+ * @stability: Unstable
+ * @include: crankvisual.h
+ *
+ * Represents Rendering function.
+ */
+
 #define _CRANKVISUAL_INSIDE
 
 #include <glib.h>
@@ -440,19 +450,19 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
-  /*
-  crank_render_module_render_geom_at (module,
-                                      place,
-                                      position,
-                                      projection,
-                                      crank_film_get_texture (film, 0));
 
-   */
+/*
   crank_render_module_render_color_at (module,
                                        place,
                                        position,
                                        projection,
                                        crank_film_get_framebuffer (film, 5));
+ */
+  crank_render_module_render_geom_at (module,
+                                      place,
+                                      position,
+                                      projection,
+                                      crank_film_get_framebuffer (film, 5));
 
   // XXX: For now, rendering a color buffer on result buffer.
 

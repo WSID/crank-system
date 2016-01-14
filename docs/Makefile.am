@@ -113,7 +113,7 @@ GTKDOC_CFLAGS= \
 GTKDOC_LIBS= \
 	$(top_builddir)/crankbase/libcrankbase.la \
 	$(top_builddir)/crankshape/libcrankshape.la \
-	$(top_builddir)/crankcore/libcrankcore.la
+	$(top_builddir)/crankcore/libcrankcore.la \
 	$(top_builddir)/crankvisual/libcrankvisual.la
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.

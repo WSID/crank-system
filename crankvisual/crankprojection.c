@@ -20,7 +20,7 @@
  */
 
 /**
- * SECTION: crankprojection:
+ * SECTION: crankprojection
  * @title: CrankProjection
  * @short_description: Projeciton Representation.
  * @stability: unstable
@@ -535,7 +535,7 @@ crank_projection_get_snippet_def (CoglSnippetHook hook)
 }
 
 /**
- * crank_projection_get_uniform_location:
+ * crank_projection_get_uniform_locations:
  * @pipeline: A Pipeline that contains uniform.
  * @uniform_name: Name of uniform variable in @pipeline.
  * @locations: (array fixed-size=2) (out caller-allocates):
