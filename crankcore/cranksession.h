@@ -22,6 +22,11 @@
  * THE SOFTWARE.
  */
 
+#ifndef CRANKCORE_INSIDE
+#error cranksession.h cannot be included directly: include crankcore.h
+#endif
+
+
 #include <glib.h>
 #include <glib-object.h>
 
@@ -94,6 +99,13 @@ CrankSessionModule *crank_session_get_module (CrankSession *session,
 
 gint            crank_session_index_of_module (CrankSession       *session,
                                                CrankSessionModule *module);
+
+CrankSessionModule *crank_session_get_module_by_gtype (CrankSession *session,
+                                                       const GType   gtype);
+
+gint            crank_session_index_of_module_by_gtype (CrankSession *session,
+                                                        const GType   gtype);
+
 
 void            crank_session_foreach_modules (CrankSession *session,
                                                GFunc         func,

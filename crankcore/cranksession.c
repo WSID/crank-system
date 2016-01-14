@@ -480,6 +480,55 @@ crank_session_index_of_module (CrankSession       *session,
   return -1;
 }
 
+/**
+ * crank_session_get_module_by_gtype:
+ * @session: A Session.
+ * @gtype: GType of module. should be descendant of %CRANK_TYPE_SESSION_MODULE
+ *
+ * Gets a module with given @gtype or one of its descendants.
+ *
+ * Returns: (transfer none) (nullable): A Module or %NULL if not found.
+ */
+CrankSessionModule*
+crank_session_get_module_by_gtype (CrankSession *session,
+                                   const GType   gtype)
+{
+  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
+  guint i;
+
+  for (i = 0; i < priv->modules->len; i++)
+    {
+      if (gtype == G_OBJECT_TYPE (priv->modules->pdata[i]))
+        return priv->modules->pdata[i];
+    }
+  return NULL;
+}
+
+
+/**
+ * crank_session_index_of_module_by_gtype:
+ * @session: A Session.
+ * @gtype: GType of module. should be descendant of %CRANK_TYPE_SESSION_MODULE
+ *
+ * Gets index of module with given @gtype or one of its descendants.
+ *
+ * Returns: Index of a module or -1 if not found.
+ */
+gint
+crank_session_index_of_module_by_gtype (CrankSession *session,
+                                        const GType   gtype)
+{
+  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
+  guint i;
+
+  for (i = 0; i < priv->modules->len; i++)
+    {
+      if (gtype == G_OBJECT_TYPE (priv->modules->pdata[i]))
+        return i;
+    }
+  return -1;
+}
+
 
 /**
  * crank_session_foreach_modules:
