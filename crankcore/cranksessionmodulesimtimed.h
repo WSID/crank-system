@@ -44,10 +44,25 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModuleSimTimed,
                           CRANK, SESSION_MODULE_SIM_TIMED,
                           CrankSessionModule)
 
+/**
+ * CrankSessionModuleSimTimed:
+ *
+ * Instance Structure.
+ */
+
+/**
+ * CrankSessionModuleSimTimedClass:
+ * @flow_time: Slot for crank_session_module_sim_timed_flow_time()
+ *
+ * Virtual function table for #CrankSessionModuleSimTimed
+ */
+
 struct _CrankSessionModuleSimTimedClass
 {
+  /*< private >*/
   CrankSessionModuleClass _parent;
 
+  /*< public >*/
   void (*flow_time) (CrankSessionModuleSimTimed *module,
                      const gfloat                time);
 };

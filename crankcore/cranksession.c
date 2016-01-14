@@ -159,6 +159,11 @@ crank_session_class_init (CrankSessionClass *c)
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
+  /**
+   * CrankSession::resume:
+   *
+   * Emitted when session is starting or resuming.
+   */
   SIG_RESUME = g_signal_new ("resume",
                              CRANK_TYPE_SESSION,
                              G_SIGNAL_RUN_LAST,
@@ -168,6 +173,11 @@ crank_session_class_init (CrankSessionClass *c)
                              G_TYPE_NONE,
                              0);
 
+  /**
+   * CrankSession::pause:
+   *
+   * Emitted when session is pausing or finishing.
+   */
   SIG_PAUSE = g_signal_new ("pause",
                              CRANK_TYPE_SESSION,
                              G_SIGNAL_RUN_LAST,

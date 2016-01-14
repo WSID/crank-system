@@ -120,6 +120,13 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
 
   c->flow_time = crank_session_module_sim_timed_def_flow_time;
 
+  /**
+   * CrankSessionModuleSimTimed::flow-time:
+   * @time: Time to flow.
+   *
+   * Performs flow time to this module. Other modules can connect to this signal
+   * so that they can simulate for given time.
+   */
   sig_flow_time = g_signal_new ("flow-time", CRANK_TYPE_SESSION_MODULE_SIM_TIMED,
                                 G_SIGNAL_RUN_LAST,
                                 G_STRUCT_OFFSET (CrankSessionModuleSimTimedClass, flow_time),

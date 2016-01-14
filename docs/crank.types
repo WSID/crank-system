@@ -68,6 +68,11 @@ crank_shape3_cpolyhedron_get_type
 crank_shape3_sphere_get_type
 
 crank_session_get_type
+crank_session_module_get_type
+
+crank_session_module_tick_get_type
+crank_session_module_sim_timed_get_type
+
 crank_session3_get_type
 crank_session3_module_get_type
 crank_session3_place_module_get_type

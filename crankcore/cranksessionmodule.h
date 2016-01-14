@@ -42,10 +42,15 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModule,
                           CRANK, SESSION_MODULE,
                           GObject)
 
+/**
+ * CrankSessionModule:
+ *
+ * Instance structure.
+ */
 
 /**
  * CrankSessionModuleClass:
- * @init: Slot for crank_session_module_init().
+ * @session_init: Slot for crank_session_module_session_init().
  *
  * Virtual function table for #CrankSessionModule.
  */

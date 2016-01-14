@@ -139,6 +139,14 @@ crank_session_module_tick_class_init (CrankSessionModuleTickClass *c)
   c_session_module = CRANK_SESSION_MODULE_CLASS (c);
   c_session_module->session_init = crank_session_module_tick_session_init;
 
+  /**
+   * CrankSessionModuleTick::tick:
+   *
+   * Performs single tick.
+   *
+   * Emitted on each tick. Other modules can connect to this signal to perform
+   * per-tick tasks.
+   */
   sig_tick = g_signal_new ("tick", CRANK_TYPE_SESSION_MODULE_TICK,
                            G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION ,
                            0,
@@ -367,7 +375,7 @@ crank_session_module_tick_set_tick_interval (CrankSessionModuleTick *module,
  * crank_session_module_tick_tick:
  * @module: A Module.
  *
- * Ticks once.
+ * Ticks once. See CrankSessionModuleTick::tick
  */
 void
 crank_session_module_tick_tick (CrankSessionModuleTick *module)

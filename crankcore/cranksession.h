@@ -40,13 +40,14 @@ typedef struct _CrankSessionModule CrankSessionModule;
 //////// Type Declaration //////////////////////////////////////////////////////
 
 
+#define CRANK_TYPE_SESSION (crank_session_get_type())
+G_DECLARE_DERIVABLE_TYPE (CrankSession, crank_session, CRANK, SESSION, GObject)
+
 /**
  * CrankSession:
  *
  * Instance structure.
  */
-#define CRANK_TYPE_SESSION (crank_session_get_type())
-G_DECLARE_DERIVABLE_TYPE (CrankSession, crank_session, CRANK, SESSION, GObject)
 
 /**
  * CrankSessionClass:
@@ -66,6 +67,7 @@ struct _CrankSessionClass
   void (*resume)    (CrankSession *session);
   void (*pause)     (CrankSession *session);
 };
+
 
 
 //////// Properties ////////////////////////////////////////////////////////////

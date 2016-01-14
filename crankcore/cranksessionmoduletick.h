@@ -44,6 +44,19 @@ G_DECLARE_FINAL_TYPE (CrankSessionModuleTick,
                       CRANK, SESSION_MODULE_TICK,
                       CrankSessionModule)
 
+/**
+ * CrankSessionModuleTick:
+ *
+ * Instance structure.
+ */
+
+/**
+ * CrankSessionModuleTickClass:
+ *
+ * Virutal Function table for #CrankSessionModuleTick.
+ *
+ * As #CrankSessionModuleTick is sealed type, all members are private.
+ */
 
 //////// Properties ////////////////////////////////////////////////////////////
 

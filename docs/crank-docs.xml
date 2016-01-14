@@ -149,10 +149,17 @@
     <chapter>
       <title>Sessions</title>
       <xi:include href="xml/cranksession.xml"/>
+      <xi:include href="xml/cranksessionmodule.xml"/>
       <xi:include href="xml/cranksession3.xml"/>
       <xi:include href="xml/cranksession3module.xml"/>
       <xi:include href="xml/cranksession3placemodule.xml"/>
       <xi:include href="xml/cranksession3entitymodule.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Session Modules</title>
+      <xi:include href="xml/cranksessionmoduletick.xml"/>
+      <xi:include href="xml/cranksessionmodulesimtimed.xml"/>
     </chapter>
   </part>
 
