@@ -52,6 +52,10 @@ static void crank_session_module_sim_timed_set_property (GObject      *object,
                                                          GParamSpec   *pspec);
 
 
+static void crank_session_module_sim_timed_def_flow_time (CrankSessionModuleSimTimed *self,
+                                                          const gfloat                time);
+
+
 //////// Properties and signals ////////////////////////////////////////////////
 
 enum {
@@ -114,6 +118,8 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
+  c->flow_time = crank_session_module_sim_timed_def_flow_time;
+
   sig_flow_time = g_signal_new ("flow-time", CRANK_TYPE_SESSION_MODULE_SIM_TIMED,
                                 G_SIGNAL_RUN_LAST,
                                 G_STRUCT_OFFSET (CrankSessionModuleSimTimedClass, flow_time),
@@ -122,6 +128,10 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
                                 G_TYPE_NONE,
                                 1, G_TYPE_FLOAT);
 }
+
+
+
+
 
 //////// GObject ///////////////////////////////////////////////////////////////
 
@@ -176,6 +186,9 @@ crank_session_module_sim_timed_set_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
+
+
 
 
 //////// Properties ////////////////////////////////////////////////////////////
@@ -250,6 +263,26 @@ crank_session_module_sim_timed_set_sim_steps (CrankSessionModuleSimTimed *module
 
   priv->sim_steps = sim_steps;
 }
+
+
+
+
+
+//////// CrankSessionModuleSimTimed ////////////////////////////////////////////
+
+static void
+crank_session_module_sim_timed_def_flow_time (CrankSessionModuleSimTimed *module,
+                                              const gfloat                time)
+{
+  CrankSessionModuleSimTimedPrivate *priv;
+  priv = crank_session_module_sim_timed_get_instance_private (module);
+
+  priv->sim_time += time;
+  priv->sim_steps ++;
+}
+
+
+
 
 
 
