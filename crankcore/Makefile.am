@@ -10,6 +10,8 @@ coreinclude_HEADERS = \
 		cranksession.h \
 		cranksessionmodule.h \
 		\
+		cranksessionmoduletick.h \
+		\
 		cranksession3.h \
 		cranksession3module.h \
 		cranksession3placemodule.h \
@@ -35,6 +37,8 @@ libcrankcore_la_LIBADD = \
 libcrankcore_la_SOURCES= \
 		cranksession.c \
 		cranksessionmodule.c \
+		\
+		cranksessionmoduletick.c \
 		\
 		cranksession3.c \
 		cranksession3module.c \
