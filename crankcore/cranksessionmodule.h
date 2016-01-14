@@ -59,18 +59,22 @@ struct _CrankSessionModuleClass {
                            GError             **error);
 };
 
-//////// Virtual functions /////////////////////////////////////////////////////
-
-void      crank_session_module_session_init (CrankSessionModule  *module,
-                                             CrankSession        *session,
-                                             GError             **error);
-
+//////// Properties ////////////////////////////////////////////////////////////
 
 gboolean       crank_session_module_is_initialized    (CrankSessionModule *module);
 
 CrankSession  *crank_session_module_get_session       (CrankSessionModule *module);
 
 guint          crank_session_module_get_session_index (CrankSessionModule *module);
+
+
+
+//////// Session Initialization ////////////////////////////////////////////////
+
+void      crank_session_module_session_init (CrankSessionModule  *module,
+                                             CrankSession        *session,
+                                             GError             **error);
+
 
 
 #endif

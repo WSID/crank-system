@@ -167,27 +167,7 @@ crank_session_module_def_session_init (CrankSessionModule  *self,
 }
 
 
-
-//////// Common ////////////////////////////////////////////////////////////////
-
-/**
- * crank_session_module_session_init:
- * @module: A Module.
- * @session: A Session.
- * @error: Error.
- *
- * Initialize a module for session.
- */
-void
-crank_session_module_session_init (CrankSessionModule  *module,
-                                   CrankSession        *session,
-                                   GError             **error)
-{
-  CrankSessionModuleClass *c = CRANK_SESSION_MODULE_GET_CLASS (module);
-
-  c->session_init (module, session, error);
-}
-
+//////// Properties ////////////////////////////////////////////////////////////
 
 /**
  * crank_session_module_is_initialized:
@@ -237,4 +217,27 @@ crank_session_module_get_session_index (CrankSessionModule *module)
   CrankSessionModulePrivate *priv = crank_session_module_get_instance_private (module);
 
   return priv->session_index;
+}
+
+
+
+
+//////// Session Initialization ////////////////////////////////////////////////
+
+/**
+ * crank_session_module_session_init:
+ * @module: A Module.
+ * @session: A Session.
+ * @error: Error.
+ *
+ * Initialize a module for session.
+ */
+void
+crank_session_module_session_init (CrankSessionModule  *module,
+                                   CrankSession        *session,
+                                   GError             **error)
+{
+  CrankSessionModuleClass *c = CRANK_SESSION_MODULE_GET_CLASS (module);
+
+  c->session_init (module, session, error);
 }
