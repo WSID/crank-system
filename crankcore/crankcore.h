@@ -28,6 +28,7 @@
 #include "cranksessionmodule.h"
 
 #include "cranksessionmoduletick.h"
+#include "cranksessionmodulesimtimed.h"
 
 #include "cranksession3.h"
 #include "cranksession3module.h"
