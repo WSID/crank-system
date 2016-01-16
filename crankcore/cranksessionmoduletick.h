@@ -58,6 +58,12 @@ G_DECLARE_FINAL_TYPE (CrankSessionModuleTick,
  * As #CrankSessionModuleTick is sealed type, all members are private.
  */
 
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankSessionModuleTick *crank_session_module_tick_new (const guint  tick_interval);
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
 GMainContext  *crank_session_module_tick_get_tick_context (CrankSessionModuleTick *module);

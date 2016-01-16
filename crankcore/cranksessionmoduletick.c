@@ -238,10 +238,10 @@ crank_session_module_tick_session_init (CrankSessionModule  *module,
   pc_sessionmodule->session_init (module, session, error);
 
   g_signal_connect_swapped (session, "resume",
-                            (GCallback)crank_session_module_tick_build_source, NULL);
+                            (GCallback)crank_session_module_tick_build_source, module);
 
   g_signal_connect_swapped (session, "pause",
-                            (GCallback)crank_session_module_tick_destroy_source, NULL);
+                            (GCallback)crank_session_module_tick_destroy_source, module);
 }
 
 
@@ -294,6 +294,19 @@ crank_session_module_tick_real_tick (gpointer userdata)
 
 
 
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankSessionModuleTick*
+crank_session_module_tick_new (const guint tick_interval)
+{
+  return (CrankSessionModuleTick*) g_object_new (CRANK_TYPE_SESSION_MODULE_TICK,
+                                                 "tick-interval",
+                                                 tick_interval,
+                                                 NULL);
+}
+
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
 /**
@@ -313,7 +326,7 @@ crank_session_module_tick_get_tick_context (CrankSessionModuleTick *module)
 /**
  * crank_session_module_tick_set_tick_context:
  * @module: A Module.
- * @tick_context: (transfer none): Ticking Context.
+ * @tick_context: (transfer none) (nullable): Ticking Context.
  *
  * Sets a #GMainContext to perform tick.
  */
