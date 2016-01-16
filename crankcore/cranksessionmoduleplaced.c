@@ -39,6 +39,16 @@
 
 static void crank_session_module_placed_constructed (GObject *object);
 
+static void crank_session_module_placed_get_property (GObject    *object,
+                                                      guint       prop_id,
+                                                      GValue     *value,
+                                                      GParamSpec *pspec);
+
+static void crank_session_module_placed_set_property (GObject      *object,
+                                                      guint         prop_id,
+                                                      const GValue *value,
+                                                      GParamSpec   *pspec);
+
 static void crank_session_module_placed_dispose (GObject *object);
 
 
@@ -52,6 +62,31 @@ static void fini_pointer (gpointer data,
 
 static void fini_boxed (gpointer data,
                         gpointer userdata);
+
+
+//////// Properties and signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_PLACE_BASE_SIZE,
+  PROP_ENTITY_BASE_SIZE,
+  PROP_PLACE_SIZE,
+  PROP_ENTITY_SIZE,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
+
+static guint sig_place_created;
+static guint sig_place_disposed;
+
+static guint sig_entity_created;
+static guint sig_entity_disposed;
+
+static guint sig_entity_added;
+static guint sig_entity_removed;
+
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -101,7 +136,108 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->constructed =crank_session_module_placed_constructed;
+  c_gobject->get_property = crank_session_module_placed_get_property;
+  c_gobject->set_property = crank_session_module_placed_set_property;
   c_gobject->dispose = crank_session_module_placed_dispose;
+
+
+  pspecs[PROP_PLACE_BASE_SIZE] = g_param_spec_ulong ("place-base-size", "Base size for place",
+                                                     "Base size of CrankPlaceBase.",
+                                                     sizeof (CrankPlaceBase),
+                                                     G_MAXUINT,
+                                                     sizeof (CrankPlaceBase),
+                                                     G_PARAM_READWRITE |
+                                                     G_PARAM_CONSTRUCT_ONLY |
+                                                     G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_ENTITY_BASE_SIZE] = g_param_spec_ulong ("entity-base-size", "Base size for entity",
+                                                      "Base size of CrankEntityBase.",
+                                                      sizeof (CrankEntityBase),
+                                                      G_MAXUINT,
+                                                      sizeof (CrankEntityBase),
+                                                      G_PARAM_READWRITE |
+                                                      G_PARAM_CONSTRUCT_ONLY |
+                                                      G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_PLACE_SIZE] = g_param_spec_ulong ("place-size", "Size for place",
+                                                     "Size of CrankPlaceBase.",
+                                                     sizeof (CrankPlaceBase),
+                                                     G_MAXUINT,
+                                                     sizeof (CrankPlaceBase),
+                                                     G_PARAM_READABLE |
+                                                     G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_ENTITY_SIZE] = g_param_spec_ulong ("entity-size", "Size for entity",
+                                                      "Size of CrankEntityBase.",
+                                                      sizeof (CrankEntityBase),
+                                                      G_MAXUINT,
+                                                      sizeof (CrankEntityBase),
+                                                      G_PARAM_READABLE |
+                                                      G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  sig_place_created = g_signal_new ("place-created",
+                                    CRANK_TYPE_SESSION_MODULE_PLACED,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                     place_created),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__BOXED,
+                                    G_TYPE_NONE,
+                                    1, CRANK_TYPE_PLACE_BASE);
+
+  sig_place_disposed = g_signal_new ("place-disposed",
+                                    CRANK_TYPE_SESSION_MODULE_PLACED,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                     place_disposed),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__BOXED,
+                                    G_TYPE_NONE,
+                                    1, CRANK_TYPE_PLACE_BASE);
+
+  sig_entity_created = g_signal_new ("entity-created",
+                                    CRANK_TYPE_SESSION_MODULE_PLACED,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                     entity_created),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__BOXED,
+                                    G_TYPE_NONE,
+                                    1, CRANK_TYPE_ENTITY_BASE);
+
+  sig_entity_disposed = g_signal_new ("entity-disposed",
+                                    CRANK_TYPE_SESSION_MODULE_PLACED,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                     entity_disposed),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__BOXED,
+                                    G_TYPE_NONE,
+                                    1, CRANK_TYPE_ENTITY_BASE);
+
+  sig_entity_added = g_signal_new ("entity-added",
+                                   CRANK_TYPE_SESSION_MODULE_PLACED,
+                                   G_SIGNAL_RUN_LAST,
+                                   G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                    entity_added),
+                                   NULL, NULL,
+                                   NULL,
+                                   G_TYPE_NONE,
+                                   2, CRANK_TYPE_PLACE_BASE, CRANK_TYPE_ENTITY_BASE);
+
+  sig_entity_removed = g_signal_new ("entity-removed",
+                                   CRANK_TYPE_SESSION_MODULE_PLACED,
+                                   G_SIGNAL_RUN_LAST,
+                                   G_STRUCT_OFFSET (CrankSessionModulePlacedClass,
+                                                    entity_removed),
+                                   NULL, NULL,
+                                   NULL,
+                                   G_TYPE_NONE,
+                                   2, CRANK_TYPE_PLACE_BASE, CRANK_TYPE_ENTITY_BASE);
+
 }
 
 
@@ -131,6 +267,68 @@ crank_session_module_placed_constructed (GObject *object)
   priv->places = g_ptr_array_new ();
   priv->entities = g_ptr_array_new ();
   priv->entities_placeless = g_ptr_array_new ();
+}
+
+static void
+crank_session_module_placed_get_property (GObject    *object,
+                                          guint       prop_id,
+                                          GValue     *value,
+                                          GParamSpec *pspec)
+{
+  CrankSessionModulePlaced *module;
+  CrankSessionModulePlacedPrivate *priv;
+
+  module = (CrankSessionModulePlaced*) object;
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  switch (prop_id)
+    {
+    case PROP_PLACE_BASE_SIZE:
+      g_value_set_ulong (value, priv->place_base_size);
+      break;
+
+    case PROP_ENTITY_BASE_SIZE:
+      g_value_set_ulong (value, priv->entity_base_size);
+      break;
+
+    case PROP_PLACE_SIZE:
+      g_value_set_ulong (value, priv->place_size);
+      break;
+
+    case PROP_ENTITY_SIZE:
+      g_value_set_ulong (value, priv->entity_size);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+crank_session_module_placed_set_property (GObject      *object,
+                                          guint         prop_id,
+                                          const GValue *value,
+                                          GParamSpec   *pspec)
+{
+  CrankSessionModulePlaced *module;
+  CrankSessionModulePlacedPrivate *priv;
+
+  module = (CrankSessionModulePlaced*) object;
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  switch (prop_id)
+    {
+    case PROP_PLACE_BASE_SIZE:
+      priv->place_base_size = g_value_get_ulong (value);
+      break;
+
+    case PROP_ENTITY_BASE_SIZE:
+      priv->entity_base_size = g_value_get_ulong (value);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 static void
