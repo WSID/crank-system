@@ -201,8 +201,7 @@ crank_place_base_unref (CrankPlaceBase* place)
           entity_header->place = NULL;
         }
 
-      // 2. Finalize all atatched data
-
+      crank_session_module_placed_fini_place (header->module, place);
       crank_session_module_placed_place_disposed (header->module, place);
 
       g_ptr_array_unref (header->entities);
@@ -258,8 +257,7 @@ crank_entity_base_unref (CrankEntityBase* entity)
           g_ptr_array_remove (place_header->entities, entity);
         }
 
-      // 2. Finalize all atatched data
-      //
+      crank_session_module_placed_fini_entity (header->module, entity);
       crank_session_module_placed_entity_disposed (header->module, entity);
 
       g_object_unref (header->module);

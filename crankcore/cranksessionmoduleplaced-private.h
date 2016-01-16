@@ -32,6 +32,14 @@
 #include "cranksessionmodule.h"
 #include "cranksessionmoduleplaced.h"
 
+
+G_GNUC_INTERNAL
+void      crank_session_module_placed_fini_place (CrankSessionModulePlaced *module,
+                                                  CrankPlaceBase           *place);
+G_GNUC_INTERNAL
+void      crank_session_module_placed_fini_entity (CrankSessionModulePlaced *module,
+                                                   CrankEntityBase          *entity);
+
 G_GNUC_INTERNAL
 void      crank_session_module_placed_place_created (CrankSessionModulePlaced *module,
                                                      CrankPlaceBase           *place);

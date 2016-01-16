@@ -373,6 +373,7 @@ alloc_data_fini (gpointer data)
     alloc_data->fini_destroy (alloc_data->fini_userdata);
 }
 
+
 static void
 fini_pointer (gpointer data,
               gpointer userdata)
@@ -398,6 +399,44 @@ fini_boxed (gpointer data,
 
 
 //////// Internal Functions ////////////////////////////////////////////////////
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_fini_place (CrankSessionModulePlaced *module,
+                                        CrankPlaceBase           *place)
+{
+  CrankSessionModulePlacedPrivate *priv;
+  guint i;
+
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  for (i = 0; i < priv->alloc_place->len; i++)
+    {
+      AllocData* alloc_data = & g_array_index (priv->alloc_place, AllocData, i);
+      gpointer attachment = CRANK_PTR_ADD (place, alloc_data->offset);
+
+      alloc_data->fini (attachment, alloc_data->fini_userdata);
+    }
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_fini_entity (CrankSessionModulePlaced *module,
+                                         CrankEntityBase          *entity)
+{
+  CrankSessionModulePlacedPrivate *priv;
+  guint i;
+
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  for (i = 0; i < priv->alloc_place->len; i++)
+    {
+      AllocData* alloc_data = & g_array_index (priv->alloc_entity, AllocData, i);
+      gpointer attachment = CRANK_PTR_ADD (entity, alloc_data->offset);
+
+      alloc_data->fini (attachment, alloc_data->fini_userdata);
+    }
+}
 
 G_GNUC_INTERNAL
 void
