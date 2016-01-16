@@ -570,21 +570,31 @@ crank_session_init_modules (CrankSession  *session,
                             GError       **error)
 {
   CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-  GError *merr = NULL;
-  guint i;
 
-  for (i = 0; i < priv->modules->len; i++)
+  if (! priv->initialized)
     {
-      CrankSessionModule *module;
-      module = (CrankSessionModule*) priv->modules->pdata[i];
+      GError *merr = NULL;
+      guint i;
 
-      crank_session_module_session_init (module, session, &merr);
-
-      if (merr != NULL)
+      for (i = 0; i < priv->modules->len; i++)
         {
-          g_propagate_prefixed_error (error, merr, "crank_sessin_init_modules: ");
-          // Fini
+          CrankSessionModule *module;
+          module = (CrankSessionModule*) priv->modules->pdata[i];
+
+          crank_session_module_session_init (module, session, &merr);
+
+          if (merr != NULL)
+            {
+              g_propagate_prefixed_error (error, merr, "crank_session_init_modules: ");
+              // Fini
+            }
         }
+
+      priv->initialized = TRUE;
+    }
+  else
+    {
+      g_warning ("crank_session_init_module: Attempt to initialize already initialized session.");
     }
 }
 
