@@ -259,6 +259,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   crank_session3_add_entity_module (app->session,
                                     (CrankSession3EntityModule*) app->rmodule);
 
+  crank_session_init_modules (app->session, NULL);
   crank_session3_lock_and_init_modules (app->session, NULL);
 
 
