@@ -96,6 +96,20 @@ CrankSessionModulePlaced* crank_place_base_get_module (CrankPlaceBase* place);
 CrankSessionModulePlaced* crank_entity_base_get_module (CrankEntityBase* entity);
 
 
+guint           crank_place_base_get_n_entities (CrankPlaceBase *place);
+
+
+CrankPlaceBase *crank_entity_base_get_place (CrankEntityBase *entity);
+
+
+//////// Place Functions ///////////////////////////////////////////////////////
+
+void    crank_place_add_entity   (CrankPlaceBase  *place,
+                                  CrankEntityBase *entity);
+
+void    crank_place_remove_entity(CrankPlaceBase  *place,
+                                  CrankEntityBase *entity);
+
 
 
 

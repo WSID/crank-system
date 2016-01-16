@@ -186,8 +186,21 @@ crank_place_base_unref (CrankPlaceBase* place)
     {
       gsize sz = crank_session_module_placed_get_place_size (header->module) +
                  sizeof (CrankPlaceHeader);
+      guint i;
 
-      // 1. Move all entity to outside.
+      for (i = 0; i < header->entities->len; i++)
+        {
+          CrankEntityBase *entity;
+          CrankEntityHeader *entity_header;
+
+          entity = (CrankEntityBase*) header->entities->pdata[i];
+          entity_header = crank_entity_base_get_header (entity);
+
+          crank_session_module_placed_entity_removed (header->module, place, entity);
+
+          entity_header->place = NULL;
+        }
+
       // 2. Finalize all atatched data
 
       crank_session_module_placed_place_disposed (header->module, place);
@@ -234,7 +247,17 @@ crank_entity_base_unref (CrankEntityBase* entity)
       gsize sz = crank_session_module_placed_get_place_size (header->module) +
                  sizeof (CrankEntityHeader);
 
-      // 1. Remove this from place.
+      if (header->place != NULL)
+        {
+          CrankPlaceHeader *place_header = crank_place_base_get_header (header->place);
+
+          crank_session_module_placed_entity_removed (header->module,
+                                                      header->place,
+                                                      entity);
+
+          g_ptr_array_remove (place_header->entities, entity);
+        }
+
       // 2. Finalize all atatched data
       //
       crank_session_module_placed_entity_disposed (header->module, entity);
@@ -277,4 +300,123 @@ crank_entity_base_get_module (CrankEntityBase* entity)
   CrankEntityHeader* header = crank_entity_base_get_header (entity);
 
   return header->module;
+}
+
+
+/**
+ * crank_place_base_get_n_entities:
+ * @place: A Place.
+ *
+ * Get number of entities in the place.
+ *
+ * Returns: Number of entities.
+ */
+guint
+crank_place_base_get_n_entities (CrankPlaceBase *place)
+{
+  CrankPlaceHeader *header = crank_place_base_get_header (place);
+
+  return header->entities->len;
+}
+
+/**
+ * crank_entity_base_get_place:
+ * @entity: A Entity.
+ *
+ * Get place where this belongs to.
+ *
+ * Returns: (nullable): Place that holds entity, or %NULL if it does not belong
+ *                      to nowhere.
+ */
+CrankPlaceBase*
+crank_entity_base_get_place (CrankEntityBase *entity)
+{
+  CrankEntityHeader *header = crank_entity_base_get_header (entity);
+
+  return header->place;
+}
+
+
+//////// Place Functions ///////////////////////////////////////////////////////
+
+/**
+ * crank_place_base_add_entity:
+ * @place: A Place.
+ * @entity: A Entity.
+ *
+ * Add entity to place.
+ */
+void
+crank_place_base_add_entity (CrankPlaceBase  *place,
+                             CrankEntityBase *entity)
+{
+  CrankPlaceHeader *place_header = crank_place_base_get_header (place);
+  CrankEntityHeader *entity_header = crank_entity_base_get_header (entity);
+
+  if (entity_header->module != place_header->module)
+    {
+      g_warning ("crank_place_base_add_entity: place and entity belong to different module.");
+      return;
+    }
+
+  else if (entity_header->place == place)
+    {
+      g_warning ("crank_place_base_add_entity: Attempt to add entity that already added to the place.");
+      return;
+    }
+  else if (entity_header->place != NULL)
+    {
+      g_warning ("crank_place_base_add_entity: Attempt to add entity that belongs to other place.");
+      return;
+    }
+  else
+    {
+      g_ptr_array_add (place_header->entities, entity);
+      entity_header->place = place;
+
+      crank_session_module_placed_entity_added (entity_header->module,
+                                                place,
+                                                entity);
+    }
+}
+
+/**
+ * crank_place_base_remove_entity:
+ * @place: A Place.
+ * @entity: A Entity.
+ *
+ * Remove entity from place.
+ */
+void
+crank_place_base_remove_entity (CrankPlaceBase  *place,
+                                CrankEntityBase *entity)
+{
+  CrankPlaceHeader *place_header = crank_place_base_get_header (place);
+  CrankEntityHeader *entity_header = crank_entity_base_get_header (entity);
+
+  if (entity_header->module != place_header->module)
+    {
+      g_warning ("crank_place_base_remove_entity: place and entity belong to different module.");
+      return;
+    }
+
+  else if (entity_header->place == NULL)
+    {
+      g_warning ("crank_place_base_remove_entity: Attempt to remove entity that belongs to nowhere.");
+      return;
+    }
+  else if (entity_header->place != place)
+    {
+      g_warning ("crank_place_base_remove_entity: Attempt to remove entity that does not belong the place.");
+      return;
+    }
+  else
+    {
+      crank_session_module_placed_entity_removed (entity_header->module,
+                                                  place,
+                                                  entity);
+
+      g_ptr_array_remove (place_header->entities, entity);
+      entity_header->place = NULL;
+    }
 }
