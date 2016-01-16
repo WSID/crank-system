@@ -43,7 +43,7 @@
 #define CRANK_TYPE_RENDER_MODULE (crank_render_module_get_type())
 G_DECLARE_FINAL_TYPE (CrankRenderModule,
                       crank_render_module,
-                      CRANK, RENKDER_MODULE,
+                      CRANK, RENDER_MODULE,
                       CrankSession3EntityModule)
 
 /**
