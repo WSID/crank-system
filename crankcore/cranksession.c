@@ -275,6 +275,20 @@ crank_session_def_pause (CrankSession *session)
 }
 
 
+
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankSession*
+crank_session_new (void)
+{
+  return (CrankSession*) g_object_new (CRANK_TYPE_SESSION,
+                                       NULL);
+}
+
+
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
 /**
