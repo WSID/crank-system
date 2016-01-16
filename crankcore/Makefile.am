@@ -10,13 +10,19 @@ coreinclude_HEADERS = \
 		cranksession.h \
 		cranksessionmodule.h \
 		\
+		crankplaceentity.h \
+		\
 		cranksessionmoduletick.h \
 		cranksessionmodulesimtimed.h \
+		cranksessionmoduleplaced.h \
 		\
 		cranksession3.h \
 		cranksession3module.h \
 		cranksession3placemodule.h \
 		cranksession3entitymodule.h
+
+noinst_HEADERS= \
+		cranksessionmoduleplaced-private.h
 
 
 # crankcore.la
@@ -39,8 +45,11 @@ libcrankcore_la_SOURCES= \
 		cranksession.c \
 		cranksessionmodule.c \
 		\
+		crankplaceentity.c \
+		\
 		cranksessionmoduletick.c \
 		cranksessionmodulesimtimed.c \
+		cranksessionmoduleplaced.c \
 		\
 		cranksession3.c \
 		cranksession3module.c \

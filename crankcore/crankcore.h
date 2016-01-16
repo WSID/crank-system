@@ -27,8 +27,11 @@
 #include "cranksession.h"
 #include "cranksessionmodule.h"
 
+#include "crankplaceentity.h"
+
 #include "cranksessionmoduletick.h"
 #include "cranksessionmodulesimtimed.h"
+#include "cranksessionmoduleplaced.h"
 
 #include "cranksession3.h"
 #include "cranksession3module.h"
