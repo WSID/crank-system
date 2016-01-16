@@ -104,11 +104,11 @@ CrankPlaceBase *crank_entity_base_get_place (CrankEntityBase *entity);
 
 //////// Place Functions ///////////////////////////////////////////////////////
 
-void    crank_place_add_entity   (CrankPlaceBase  *place,
-                                  CrankEntityBase *entity);
+void    crank_place_base_add_entity   (CrankPlaceBase  *place,
+                                       CrankEntityBase *entity);
 
-void    crank_place_remove_entity(CrankPlaceBase  *place,
-                                  CrankEntityBase *entity);
+void    crank_place_base_remove_entity(CrankPlaceBase  *place,
+                                       CrankEntityBase *entity);
 
 
 
