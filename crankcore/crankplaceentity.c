@@ -108,6 +108,8 @@ crank_place_base_new (CrankSessionModulePlaced *module)
   CrankPlaceBase* place;
   gsize size;
 
+  g_return_val_if_fail (module != NULL, NULL);
+
   size = sizeof (CrankPlaceHeader) +
          crank_session_module_placed_get_place_size (module);
 
@@ -137,6 +139,8 @@ crank_entity_base_new (CrankSessionModulePlaced *module)
   CrankEntityHeader *header;
   CrankEntityBase *entity;
   gsize size;
+
+  g_return_val_if_fail (module != NULL, NULL);
 
   size = sizeof (CrankEntityHeader) +
          crank_session_module_placed_get_entity_size (module);
