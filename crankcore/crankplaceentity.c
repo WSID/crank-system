@@ -29,6 +29,7 @@
 #include "crankshape.h"
 
 #include "cranksessionmoduleplaced.h"
+#include "cranksessionmoduleplaced-private.h"
 #include "crankplaceentity.h"
 
 
@@ -104,6 +105,7 @@ CrankPlaceBase*
 crank_place_base_new (CrankSessionModulePlaced *module)
 {
   CrankPlaceHeader* header;
+  CrankPlaceBase* place;
   gsize size;
 
   size = sizeof (CrankPlaceHeader) +
@@ -115,9 +117,10 @@ crank_place_base_new (CrankSessionModulePlaced *module)
   header->module = g_object_ref (module);
   header->entities = g_ptr_array_new ();
 
-  // Emit module's place_created
+  place = (CrankPlaceBase*) header->place_data;
 
-  return (CrankPlaceBase*) header->place_data;
+  crank_session_module_placed_place_created (module, place);
+  return place;
 }
 
 /**
@@ -131,7 +134,8 @@ crank_place_base_new (CrankSessionModulePlaced *module)
 CrankEntityBase*
 crank_entity_base_new (CrankSessionModulePlaced *module)
 {
-  CrankEntityHeader* header;
+  CrankEntityHeader *header;
+  CrankEntityBase *entity;
   gsize size;
 
   size = sizeof (CrankEntityHeader) +
@@ -142,9 +146,10 @@ crank_entity_base_new (CrankSessionModulePlaced *module)
   header->_refc = 1;
   header->module = g_object_ref (module);
 
-  // Emit module's entity_created
+  entity = (CrankEntityBase*) header->entity_data;
 
-  return (CrankEntityBase*) header->entity_data;
+  crank_session_module_placed_entity_created (module, entity);
+  return entity;
 }
 
 /**
@@ -184,7 +189,8 @@ crank_place_base_unref (CrankPlaceBase* place)
 
       // 1. Move all entity to outside.
       // 2. Finalize all atatched data
-      // 3. Emit module's place_disposed.
+
+      crank_session_module_placed_place_disposed (header->module, place);
 
       g_ptr_array_unref (header->entities);
       g_object_unref (header->module);
@@ -230,7 +236,8 @@ crank_entity_base_unref (CrankEntityBase* entity)
 
       // 1. Remove this from place.
       // 2. Finalize all atatched data
-      // 3. Emit module's entity_disposed.
+      //
+      crank_session_module_placed_entity_disposed (header->module, entity);
 
       g_object_unref (header->module);
       g_slice_free1 (sz, header);
