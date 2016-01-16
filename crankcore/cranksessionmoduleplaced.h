@@ -44,7 +44,7 @@ typedef struct _CrankEntityBase CrankEntityBase;
 
 //////// Type Declaration //////////////////////////////////////////////////////
 
-#define CRANK_TYPE_SESSIION_MODULE_PLACED (crank_session3_module_placed_get_type())
+#define CRANK_TYPE_SESSION_MODULE_PLACED (crank_session_module_placed_get_type())
 G_DECLARE_DERIVABLE_TYPE (CrankSessionModulePlaced,
                           crank_session_module_placed,
                           CRANK, SESSION_MODULE_PLACED,
