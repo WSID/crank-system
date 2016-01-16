@@ -58,24 +58,43 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModulePlaced,
 
 /**
  * CrankSessionModulePlacedClass:
+ * @place_created: Slot for CrankSessionModulePlaced:place_created
+ * @place_disposed: Slot for CrankSessionModulePlaced:place_disposed
+ * @entity_created: Slot for CrankSessionModulePlaced:entity_created
+ * @entity_disposed: Slot for CrankSessionModulePlaced:entity_disposed
+ * @entity_added: Slot for CrankSessionModulePlaced:entity_added
+ * @entity_removed: Slot for CrankSessionModulePlaced:entity_removed
+ * @place_base_size: A Base size for #CrankPlaceBase.
+ * @entity_base_size: A Base size of #CrankEntityBase.
  *
  * Virtual function table for #CrankSessionModulePlaced.
  */
 
 struct _CrankSessionModulePlacedClass {
   /*< private >*/
-  CrankSessionModuleClass _paret;
+  CrankSessionModuleClass _parent;
 
   /*< public >*/
-  gsize   (*get_place_base_size) (CrankSessionModulePlaced *module);
-  gsize   (*get_entity_base_size) (CrankSessionModulePlaced *module);
-
-  gsize   (*place_created) (CrankSessionModulePlaced *module,
+  void    (*place_created) (CrankSessionModulePlaced *module,
                             CrankPlaceBase           *place);
+
+  void    (*place_disposed)(CrankSessionModulePlaced *module,
+                            CrankPlaceBase           *place);
+
+  void    (*entity_created)(CrankSessionModulePlaced *module,
+                            CrankEntityBase          *entity);
+
+  void    (*entity_disposed)(CrankSessionModulePlaced *module,
+                             CrankEntityBase          *entity);
+
+  void    (*entity_added)   (CrankSessionModulePlaced *module,
+                             CrankPlaceBase           *place,
+                             CrankEntityBase          *entity);
+
+  void    (*entity_removed) (CrankSessionModulePlaced *module,
+                             CrankPlaceBase           *place,
+                             CrankEntityBase          *entity);
 };
-
-
-//////// Base function
 
 
 
@@ -85,11 +104,12 @@ struct _CrankSessionModulePlacedClass {
 
 gsize       crank_session_module_placed_get_place_base_size (CrankSessionModulePlaced *module);
 
+gsize       crank_session_module_placed_get_entity_base_size (CrankSessionModulePlaced *module);
+
+
 gsize       crank_session_module_placed_get_place_size (CrankSessionModulePlaced *module);
 
 
-
-gsize       crank_session_module_placed_get_entity_base_size (CrankSessionModulePlaced *module);
 
 gsize       crank_session_module_placed_get_entity_size (CrankSessionModulePlaced* module);
 
