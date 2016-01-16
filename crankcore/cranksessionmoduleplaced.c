@@ -170,7 +170,8 @@ alloc_data_fini (gpointer data)
 {
   AllocData *alloc_data = (AllocData*) data;
 
-  alloc_data->fini_destroy (alloc_data->fini_userdata);
+  if (alloc_data->fini_destroy != NULL)
+    alloc_data->fini_destroy (alloc_data->fini_userdata);
 }
 
 static void
