@@ -197,6 +197,23 @@ crank_session_module_sim_timed_set_property (GObject    *object,
 
 
 
+//////// Constructor ///////////////////////////////////////////////////////////
+
+/**
+ * crank_session_module_sim_timed_new:
+ *
+ * Constructs new module.
+ *
+ * Returns: (transfer full): Newly constructed instance.
+ */
+CrankSessionModuleSimTimed*
+crank_session_module_sim_timed_new (void)
+{
+  return (CrankSessionModuleSimTimed*) g_object_new (CRANK_TYPE_SESSION_MODULE_SIM_TIMED,
+                                                     NULL);
+}
+
+
 
 //////// Properties ////////////////////////////////////////////////////////////
 

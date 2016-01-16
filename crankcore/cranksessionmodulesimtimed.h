@@ -67,6 +67,12 @@ struct _CrankSessionModuleSimTimedClass
                      const gfloat                time);
 };
 
+
+//////// Constructor ///////////////////////////////////////////////////////////
+
+CrankSessionModuleSimTimed* crank_session_module_sim_timed_new (void);
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
 gfloat  crank_session_module_sim_timed_get_sim_time (CrankSessionModuleSimTimed *module);
