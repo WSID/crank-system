@@ -185,12 +185,14 @@ crank_place_base_unref (CrankPlaceBase* place)
 {
 
   CrankPlaceHeader* header = crank_place_base_get_header (place);
+  gsize sz;
 
-  if (g_atomic_int_dec_and_test (& header->_refc))
+  if (header->_refc == 1)
     {
-      gsize sz = crank_session_module_placed_get_place_size (header->module) +
-                 sizeof (CrankPlaceHeader);
       guint i;
+
+      sz = crank_session_module_placed_get_place_size (header->module) +
+           sizeof (CrankPlaceHeader);
 
       for (i = 0; i < header->entities->len; i++)
         {
@@ -200,14 +202,16 @@ crank_place_base_unref (CrankPlaceBase* place)
           entity = (CrankEntityBase*) header->entities->pdata[i];
           entity_header = crank_entity_base_get_header (entity);
 
-          crank_session_module_placed_entity_removed (header->module, place, entity);
-
           entity_header->place = NULL;
-        }
 
+          crank_session_module_placed_entity_removed (header->module, place, entity);
+        }
       crank_session_module_placed_fini_place (header->module, place);
       crank_session_module_placed_place_disposed (header->module, place);
+    }
 
+    if (g_atomic_int_dec_and_test (& header->_refc))
+        {
       g_ptr_array_unref (header->entities);
       g_object_unref (header->module);
       g_slice_free1 (sz, header);
@@ -244,26 +248,33 @@ crank_entity_base_unref (CrankEntityBase* entity)
 {
 
   CrankEntityHeader* header = crank_entity_base_get_header (entity);
+  gsize sz;
 
-  if (g_atomic_int_dec_and_test (& header->_refc))
+  // Dispose phase
+  if (header->_refc == 1)
     {
-      gsize sz = crank_session_module_placed_get_place_size (header->module) +
-                 sizeof (CrankEntityHeader);
+      sz = crank_session_module_placed_get_place_size (header->module) +
+           sizeof (CrankEntityHeader);
 
       if (header->place != NULL)
         {
           CrankPlaceHeader *place_header = crank_place_base_get_header (header->place);
 
+          g_ptr_array_remove (place_header->entities, entity);
+          header->place = NULL;
+
           crank_session_module_placed_entity_removed (header->module,
                                                       header->place,
                                                       entity);
-
-          g_ptr_array_remove (place_header->entities, entity);
         }
 
       crank_session_module_placed_fini_entity (header->module, entity);
       crank_session_module_placed_entity_disposed (header->module, entity);
+    }
 
+  // Free phase
+  if (g_atomic_int_dec_and_test (& header->_refc))
+    {
       g_object_unref (header->module);
       g_slice_free1 (sz, header);
     }
@@ -396,6 +407,7 @@ crank_place_base_remove_entity (CrankPlaceBase  *place,
   CrankPlaceHeader *place_header = crank_place_base_get_header (place);
   CrankEntityHeader *entity_header = crank_entity_base_get_header (entity);
 
+  g_message ("RM ENTITY");
   if (entity_header->module != place_header->module)
     {
       g_warning ("crank_place_base_remove_entity: place and entity belong to different module.");
@@ -414,11 +426,12 @@ crank_place_base_remove_entity (CrankPlaceBase  *place,
     }
   else
     {
-      crank_session_module_placed_entity_removed (entity_header->module,
-                                                  place,
-                                                  entity);
 
       g_ptr_array_remove (place_header->entities, entity);
       entity_header->place = NULL;
+
+      crank_session_module_placed_entity_removed (entity_header->module,
+                                                  place,
+                                                  entity);
     }
 }
