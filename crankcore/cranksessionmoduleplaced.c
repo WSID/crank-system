@@ -33,6 +33,7 @@
 #include "cranksession.h"
 #include "cranksessionmodule.h"
 #include "cranksessionmoduleplaced.h"
+#include "cranksessionmoduleplaced-private.h"
 
 
 //////// Virtual function override /////////////////////////////////////////////
@@ -393,6 +394,61 @@ fini_boxed (gpointer data,
   if (*pptr != NULL)
     g_boxed_free (gtype, *pptr);
 }
+
+
+
+//////// Internal Functions ////////////////////////////////////////////////////
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_place_created (CrankSessionModulePlaced *module,
+                                           CrankPlaceBase           *place)
+{
+  g_signal_emit (module, sig_place_created, 0, place);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_place_disposed (CrankSessionModulePlaced *module,
+                                            CrankPlaceBase           *place)
+{
+  g_signal_emit (module, sig_place_disposed, 0, place);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_entity_created (CrankSessionModulePlaced *module,
+                                            CrankEntityBase          *entity)
+{
+  g_signal_emit (module, sig_entity_created, 0, entity);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_entity_disposed (CrankSessionModulePlaced *module,
+                                             CrankEntityBase          *entity)
+{
+  g_signal_emit (module, sig_entity_disposed, 0, entity);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_entity_added (CrankSessionModulePlaced *module,
+                                          CrankPlaceBase           *place,
+                                          CrankEntityBase          *entity)
+{
+  g_signal_emit (module, sig_entity_added, 0, place, entity);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_entity_removed (CrankSessionModulePlaced *module,
+                                            CrankPlaceBase           *place,
+                                            CrankEntityBase          *entity)
+{
+  g_signal_emit (module, sig_entity_removed, 0, place, entity);
+}
+
 
 
 //////// Properties ////////////////////////////////////////////////////////////
