@@ -99,6 +99,11 @@ struct _CrankSessionModulePlacedClass {
 
 
 
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankSessionModulePlaced*  crank_session_module_placed_new (const gsize place_base_size,
+                                                            const gsize entity_base_size);
+
 
 //////// Properties ////////////////////////////////////////////////////////////
 

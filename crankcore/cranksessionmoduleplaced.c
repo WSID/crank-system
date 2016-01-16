@@ -490,6 +490,31 @@ crank_session_module_placed_entity_removed (CrankSessionModulePlaced *module,
 
 
 
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+/**
+ * crank_session_module_placed_new:
+ * @place_base_size: Base size for #CrankPlaceBase.
+ * @entity_base_size: Base size for #CrankEntityBase.
+ *
+ * Constructs new instance.
+ *
+ * Returns: (transfer full): Newly constructed instance.
+ */
+CrankSessionModulePlaced*
+crank_session_module_placed_new (const gsize place_base_size,
+                                 const gsize entity_base_size)
+{
+  return (CrankSessionModulePlaced*)
+      g_object_new (CRANK_TYPE_SESSION_MODULE_PLACED,
+                    "place-base-size", place_base_size,
+                    "entity-base-size", entity_base_size,
+                    NULL);
+}
+
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
 /**
