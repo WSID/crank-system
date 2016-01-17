@@ -205,7 +205,6 @@ crank_camera_content_dispose (GObject *object)
 
 
 
-
 //////// ClutterContent ////////////////////////////////////////////////////////
 
 static gboolean
@@ -272,6 +271,23 @@ crank_camera_content_detached (ClutterContent *content,
 
 }
 
+
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+/**
+ * crank_camera_content_new:
+ *
+ * Creates newly created content.
+ *
+ * Returns: (transfer full): Newly created instance.
+ */
+CrankCameraContent*
+crank_camera_content_new (void)
+{
+  return (CrankCameraContent*) g_object_new (CRANK_TYPE_CAMERA_CONTENT,
+                                             NULL);
+}
 
 
 

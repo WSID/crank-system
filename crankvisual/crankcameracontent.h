@@ -54,7 +54,12 @@ G_DECLARE_FINAL_TYPE (CrankCameraContent,
  * Instance Structure.
  */
 
-//////// Public Functions ///////////////////////////////////////////////////////
+//////// Constrructors /////////////////////////////////////////////////////////
+
+CrankCameraContent *crank_camera_content_new (void);
+
+
+//////// Public Functions //////////////////////////////////////////////////////
 
 CrankCamera *crank_camera_content_get_camera (CrankCameraContent *content);
 
