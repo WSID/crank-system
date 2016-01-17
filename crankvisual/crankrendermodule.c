@@ -218,8 +218,8 @@ crank_render_module_session_init (CrankSessionModule  *module,
   CrankSessionModuleTick *tmodule;
   // Placed Module
 
-  pmodule = (CrankSessionModulePlaced*) crank_session_get_module_by_gtype (session,
-                                               CRANK_TYPE_SESSION_MODULE_PLACED);
+  pmodule = CRANK_SESSION_MODULE_PLACED (crank_session_get_module_by_gtype (session,
+                                               CRANK_TYPE_SESSION_MODULE_PLACED));
 
   if (pmodule == NULL)
     g_error ("CrankRenderModule: requires CrankSessionModulePlaced.");
@@ -241,7 +241,7 @@ crank_render_module_session_init (CrankSessionModule  *module,
 
 
   // Tick Module
-  tmodule = (CrankSessionModuleTick*) crank_session_get_module_by_gtype (session, CRANK_TYPE_SESSION_MODULE_TICK);
+  tmodule = CRANK_SESSION_MODULE_TICK (crank_session_get_module_by_gtype (session, CRANK_TYPE_SESSION_MODULE_TICK));
 
   if (tmodule == NULL)
     return;
