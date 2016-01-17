@@ -66,10 +66,10 @@ struct _CrankRenderPData
 //////// Private Type functions ////////////////////////////////////////////////
 
 static void crank_render_pdata_add_entity (CrankRenderPData *pdata,
-                                           CrankEntity3     *entity);
+                                           CrankEntityBase  *entity);
 
 static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
-                                              CrankEntity3     *entity);
+                                              CrankEntityBase  *entity);
 
 //////// Private type vfuncs ///////////////////////////////////////////////////
 
@@ -117,13 +117,13 @@ static void crank_render_pdata_finalize (GObject *object)
 //////// Private type functions ////////////////////////////////////////////////
 
 static void crank_render_pdata_add_entity (CrankRenderPData *pdata,
-                                           CrankEntity3     *entity)
+                                           CrankEntityBase  *entity)
 {
   g_ptr_array_add (pdata->entities, entity);
 }
 
 static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
-                                              CrankEntity3     *entity)
+                                              CrankEntityBase  *entity)
 {
   g_ptr_array_remove (pdata->entities, entity);
 }
@@ -133,39 +133,56 @@ static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
 
 //////// List of virtual functions /////////////////////////////////////////////
 
-static void       crank_render_module_tick (CrankSession3Module *module);
+static void       crank_render_module_session_init (CrankSessionModule  *module,
+                                                    CrankSession        *session,
+                                                    GError             **error);
 
-static GObject*   crank_render_module_make_place_data (CrankSession3EntityModule *module,
-                                                       CrankPlace3               *place);
 
-static void       crank_render_module_attached_data (CrankSession3EntityModule *module,
-                                                     CrankEntity3              *entity,
-                                                     GObject                   *data);
+//////// Functions for other modules ///////////////////////////////////////////
 
-static void       crank_render_module_detached_data (CrankSession3EntityModule *module,
-                                                     CrankEntity3              *entity,
-                                                     GObject                   *data);
+static void       crank_render_module_tick (CrankSessionModuleTick *module,
+                                            gpointer                user_data);
 
-static void       crank_render_module_entity_added (CrankSession3EntityModule *module,
-                                                    CrankPlace3               *place,
-                                                    CrankEntity3              *entity);
+static void       crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
+                                                     CrankPlaceBase           *place,
+                                                     gpointer                  user_data);
 
-static void       crank_render_module_entity_removed (CrankSession3EntityModule *module,
-                                                      CrankPlace3               *place,
-                                                      CrankEntity3              *entity);
+static void       crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
+                                                    CrankPlaceBase           *place,
+                                                    CrankEntityBase          *entity,
+                                                    gpointer                  userdata);
+
+static void       crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
+                                                      CrankPlaceBase           *place,
+                                                      CrankEntityBase          *entity,
+                                                      gpointer                  userdata);
+
+//////// Unused spare functions ////////////////////////////////////////////////
+
+static void       crank_render_module_attached_data (CrankRenderModule *module,
+                                                     CrankEntityBase   *entity,
+                                                     GObject           *data);
+
+static void       crank_render_module_detached_data (CrankRenderModule *module,
+                                                     CrankEntityBase   *entity,
+                                                     GObject           *data);
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
 struct _CrankRenderModule
 {
-  GObject     _parent;
+  CrankSessionModule  _parent;
+
+  goffset     offset_pdata;
+
+  goffset     offset_renderable;
 
   GPtrArray   *cameras;
 };
 
 G_DEFINE_TYPE (CrankRenderModule,
                crank_render_module,
-               CRANK_TYPE_SESSION3_ENTITY_MODULE)
+               CRANK_TYPE_SESSION_MODULE)
 
 
 
@@ -180,31 +197,65 @@ crank_render_module_init (CrankRenderModule *module)
 static void
 crank_render_module_class_init (CrankRenderModuleClass *c)
 {
-  CrankSession3ModuleClass *c_session3module;
-  CrankSession3EntityModuleClass *c_session3entitymodule;
+  CrankSessionModuleClass *c_sessionmodule;
 
-  c_session3module = CRANK_SESSION3_MODULE_CLASS (c);
+  c_sessionmodule = CRANK_SESSION_MODULE_CLASS (c);
 
-  c_session3module->tick = crank_render_module_tick;
-
-
-  c_session3entitymodule = CRANK_SESSION3_ENTITY_MODULE_CLASS (c);
-
-  c_session3entitymodule->make_place_data = crank_render_module_make_place_data;
-  c_session3entitymodule->attached_data = crank_render_module_attached_data;
-  c_session3entitymodule->detached_data = crank_render_module_detached_data;
-  c_session3entitymodule->entity_added = crank_render_module_entity_added;
-  c_session3entitymodule->entity_removed = crank_render_module_entity_removed;
+  c_sessionmodule->session_init = crank_render_module_session_init;
 }
 
-//////// CrankSession3Module ///////////////////////////////////////////////////
+//////// CrankSessionModule ///////////////////////////////////////////////////
 
 static void
-crank_render_module_tick (CrankSession3Module *module)
+crank_render_module_session_init (CrankSessionModule  *module,
+                                  CrankSession        *session,
+                                  GError             **error)
 {
-  // Doing nothing here
+  CrankRenderModule *rmodule = (CrankRenderModule*)module;
+  CrankSessionModulePlaced *pmodule;
+  CrankSessionModuleTick *tmodule;
+  // Placed Module
 
-  CrankRenderModule *rmodule = (CrankRenderModule*) module;
+  pmodule = (CrankSessionModulePlaced*) crank_session_get_module_by_gtype (session,
+                                               CRANK_TYPE_SESSION_MODULE_PLACED);
+
+  if (pmodule == NULL)
+    g_error ("CrankRenderModule: requires CrankSessionModulePlaced.");
+
+  crank_session_module_placed_attach_place_alloc_object (pmodule,
+                                                         & rmodule->offset_pdata);
+
+  crank_session_module_placed_attach_entity_alloc_object (pmodule,
+                                                          & rmodule->offset_renderable);
+
+  g_signal_connect (pmodule, "place-created",
+                    (GCallback)crank_render_module_place_created, rmodule);
+
+  g_signal_connect (pmodule, "entity-added",
+                    (GCallback)crank_render_module_entity_added, rmodule);
+
+  g_signal_connect (pmodule, "entity-removed",
+                    (GCallback)crank_render_module_entity_removed, rmodule);
+
+
+  // Tick Module
+  tmodule = (CrankSessionModuleTick*) crank_session_get_module_by_gtype (session, CRANK_TYPE_SESSION_MODULE_TICK);
+
+  if (tmodule == NULL)
+    return;
+
+  g_signal_connect (tmodule, "tick", (GCallback)crank_render_module_tick, rmodule);
+}
+
+
+
+//////// Callback functions for other modules //////////////////////////////////
+
+static void
+crank_render_module_tick (CrankSessionModuleTick *tmodule,
+                          gpointer                user_data)
+{
+  CrankRenderModule *rmodule = (CrankRenderModule*) user_data;
 
   guint i;
 
@@ -245,6 +296,61 @@ crank_render_module_tick (CrankSession3Module *module)
     }
 }
 
+static void
+crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
+                                   CrankPlaceBase           *place,
+                                   gpointer                  userdata)
+{
+  CrankRenderModule *module  = (CrankRenderModule*) userdata;
+
+  G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata) =
+      g_object_new (CRANK_TYPE_RENDER_PDATA, NULL);
+}
+
+
+static void
+crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
+                                  CrankPlaceBase           *place,
+                                  CrankEntityBase          *entity,
+                                  gpointer                  userdata)
+{
+  CrankRenderModule *module = (CrankRenderModule*) userdata;
+
+  CrankRenderPData *pdata;
+  CrankRenderable *renderable;
+
+  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+
+  if (renderable == NULL)
+    return;
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+  crank_render_pdata_add_entity (pdata, entity);
+}
+
+
+static void
+crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
+                                    CrankPlaceBase           *place,
+                                    CrankEntityBase          *entity,
+                                    gpointer                  userdata)
+{
+  CrankRenderModule *module = (CrankRenderModule*) userdata;
+
+  CrankRenderPData *pdata;
+  CrankRenderable *renderable;
+
+  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+
+  if (renderable == NULL)
+    return;
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+  crank_render_pdata_remove_entity (pdata, entity);
+}
+
 
 //////// CrankSession3EntityModule /////////////////////////////////////////////
 
@@ -258,72 +364,38 @@ crank_render_module_make_place_data (CrankSession3EntityModule *module,
 
 
 static void
-crank_render_module_attached_data (CrankSession3EntityModule *module,
-                                   CrankEntity3              *entity,
-                                   GObject                   *data)
+crank_render_module_attached_data (CrankRenderModule *module,
+                                   CrankEntityBase   *entity,
+                                   GObject           *data)
 {
-  CrankPlace3 *place;
+  CrankPlaceBase *place;
   CrankRenderPData *pdata;
 
-  place = crank_entity3_get_place (entity);
+  place = crank_entity_base_get_place (entity);
 
   if (place == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_place3_get_data (place,
-                                                     crank_session3_entity_module_get_place_index (module));
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
   crank_render_pdata_add_entity (pdata, entity);
 }
 
 
 static void
-crank_render_module_detached_data (CrankSession3EntityModule *module,
-                                   CrankEntity3              *entity,
-                                   GObject                   *data)
+crank_render_module_detached_data (CrankRenderModule *module,
+                                   CrankEntityBase   *entity,
+                                   GObject           *data)
 {
-  CrankPlace3 *place;
+  CrankPlaceBase *place;
   CrankRenderPData *pdata;
 
-  place = crank_entity3_get_place (entity);
+  place = crank_entity_base_get_place (entity);
 
   if (place == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_place3_get_data (place,
-                                                     crank_session3_entity_module_get_place_index (module));
-
-  crank_render_pdata_remove_entity (pdata, entity);
-}
-
-
-static void
-crank_render_module_entity_added (CrankSession3EntityModule *module,
-                                  CrankPlace3               *place,
-                                  CrankEntity3              *entity)
-{
-  CrankRenderPData *pdata;
-
-  if (crank_session3_entity_module_get_entity_data (module, entity) == NULL)
-    return;
-
-  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data (module, place);
-
-  crank_render_pdata_add_entity (pdata, entity);
-}
-
-
-static void
-crank_render_module_entity_removed (CrankSession3EntityModule *module,
-                                    CrankPlace3               *place,
-                                    CrankEntity3              *entity)
-{
-  CrankRenderPData *pdata;
-
-  if (crank_session3_entity_module_get_entity_data (module, entity) == NULL)
-    return;
-
-  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data (module, place);
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
   crank_render_pdata_remove_entity (pdata, entity);
 }

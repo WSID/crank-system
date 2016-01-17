@@ -37,14 +37,13 @@
 #include "crankfilm.h"
 #include "crankcamera.h"
 
-
 //////// Type Definition ///////////////////////////////////////////////////////
 
 #define CRANK_TYPE_RENDER_MODULE (crank_render_module_get_type())
 G_DECLARE_FINAL_TYPE (CrankRenderModule,
                       crank_render_module,
                       CRANK, RENDER_MODULE,
-                      CrankSession3EntityModule)
+                      CrankSessionModule)
 
 /**
  * CrankRenderModule:
