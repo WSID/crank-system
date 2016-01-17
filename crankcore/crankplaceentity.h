@@ -48,9 +48,12 @@ GType crank_entity_base_get_type (void);
 typedef struct _CrankPlaceBase CrankPlaceBase;
 typedef struct _CrankEntityBase CrankEntityBase;
 
+typedef struct _CrankPlace3 CrankPlace3;
+typedef struct _CrankEntity3 CrankEntity3;
 
 /**
  * CrankPlaceBase:
+ * @object: Object that holds this place.
  *
  * A Pointer type.
  */
@@ -61,12 +64,39 @@ struct _CrankPlaceBase
 
 /**
  * CrankEntityBase:
+ * @object: Object that holds this entity.
  *
  * A Pointer type.
  */
 struct _CrankEntityBase
 {
   GObject *object;
+};
+
+
+/**
+ * CrankPlace3:
+ * @object: Object that holds this place.
+ *
+ * Place representation for 3D space.
+ */
+struct _CrankPlace3
+{
+  GObject   *object;
+  CrankBox3 *boundary;
+};
+
+/**
+ * CrankEntity3:
+ * @object: Object that holds this place.
+ * @position: Position of the entity.
+ *
+ * Entity represention for 3D space.
+ */
+struct _CrankEntity3
+{
+  GObject     *object;
+  CrankTrans3 *position;
 };
 
 
