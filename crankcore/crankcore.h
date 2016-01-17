@@ -33,9 +33,4 @@
 #include "cranksessionmodulesimtimed.h"
 #include "cranksessionmoduleplaced.h"
 
-#include "cranksession3.h"
-#include "cranksession3module.h"
-#include "cranksession3placemodule.h"
-#include "cranksession3entitymodule.h"
-
 #endif

@@ -14,12 +14,7 @@ coreinclude_HEADERS = \
 		\
 		cranksessionmoduletick.h \
 		cranksessionmodulesimtimed.h \
-		cranksessionmoduleplaced.h \
-		\
-		cranksession3.h \
-		cranksession3module.h \
-		cranksession3placemodule.h \
-		cranksession3entitymodule.h
+		cranksessionmoduleplaced.h
 
 noinst_HEADERS= \
 		cranksessionmoduleplaced-private.h
@@ -49,13 +44,7 @@ libcrankcore_la_SOURCES= \
 		\
 		cranksessionmoduletick.c \
 		cranksessionmodulesimtimed.c \
-		cranksessionmoduleplaced.c \
-		\
-		cranksession3.c \
-		cranksession3module.c \
-		cranksession3placemodule.c \
-		cranksession3entitymodule.c
-
+		cranksessionmoduleplaced.c
 
 
 # Introspection
