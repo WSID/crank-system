@@ -51,6 +51,18 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
  * Instance Structure.
  */
 
+
+//////// Place and Entity functions ////////////////////////////////////////////
+
+void              crank_render_module_set_renderable (CrankRenderModule *module,
+                                                      CrankEntityBase   *entity,
+                                                      CrankRenderable   *renderable);
+
+CrankRenderable   *crank_render_module_get_renderable (CrankRenderModule *module,
+                                                       CrankEntityBase   *entity);
+
+
+
 //////// Public functions //////////////////////////////////////////////////////
 
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
@@ -71,6 +83,7 @@ void    crank_render_module_render_at (CrankRenderModule *module,
                                        CrankTrans3       *position,
                                        CrankProjection   *projection,
                                        CrankFilm         *film);
+
 
 
 void    crank_render_module_add_camera (CrankRenderModule *module,

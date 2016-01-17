@@ -98,6 +98,8 @@ static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 }
 
 
+
+
 //////// Private type: GObject /////////////////////////////////////////////////
 
 static void crank_render_pdata_dispose (GObject *object)
@@ -352,24 +354,27 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
 }
 
 
-//////// CrankSession3EntityModule /////////////////////////////////////////////
-
-static GObject*
-crank_render_module_make_place_data (CrankSession3EntityModule *module,
-                                     CrankPlace3               *place)
-{
-  // TODO: Get boundary of place and apply it.
-  return g_object_new (CRANK_TYPE_RENDER_PDATA, NULL);
-}
 
 
-static void
-crank_render_module_attached_data (CrankRenderModule *module,
-                                   CrankEntityBase   *entity,
-                                   GObject           *data)
+//////// Entities and places functions /////////////////////////////////////////
+
+/**
+ * crank_render_module_set_renderable:
+ * @module: A Module.
+ * @entity: A Entity.
+ * @renderable: (nullable): A Renderable.
+ *
+ * Sets a renderable for the entity. The renderable may be %NULL, for non-visible
+ * entity. (For example, camera hook, spawn point, etc...)
+ */
+void
+crank_render_module_set_renderable (CrankRenderModule *module,
+                                    CrankEntityBase   *entity,
+                                    CrankRenderable   *renderable)
 {
   CrankPlaceBase *place;
   CrankRenderPData *pdata;
+  CrankRenderable **prenderable;
 
   place = crank_entity_base_get_place (entity);
 
@@ -377,27 +382,38 @@ crank_render_module_attached_data (CrankRenderModule *module,
     return;
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  prenderable = & G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
 
-  crank_render_pdata_add_entity (pdata, entity);
+  // TODO: Replace it with more clear logic.
+  if (*prenderable == renderable)
+    return;
+
+
+  if (*prenderable == NULL)
+    crank_render_pdata_add_entity (pdata, entity);
+
+
+  else if (renderable == NULL)
+    crank_render_pdata_remove_entity (pdata, entity);
+
+  g_set_object (prenderable, renderable);
 }
 
 
-static void
-crank_render_module_detached_data (CrankRenderModule *module,
-                                   CrankEntityBase   *entity,
-                                   GObject           *data)
+/**
+ * crank_render_module_get_renderable:
+ * @module: A Module.
+ * @entity: A Entity.
+ *
+ * Gets a renderable from entity. Non-visible entities does not have renderable.
+ *
+ * Returns: (nullable): Renderable, or %NULL if it does not have.
+ */
+CrankRenderable*
+crank_render_module_get_renderable (CrankRenderModule *module,
+                                    CrankEntityBase   *entity)
 {
-  CrankPlaceBase *place;
-  CrankRenderPData *pdata;
-
-  place = crank_entity_base_get_place (entity);
-
-  if (place == NULL)
-    return;
-
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-
-  crank_render_pdata_remove_entity (pdata, entity);
+  return G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
 }
 
 
