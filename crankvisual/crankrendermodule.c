@@ -278,19 +278,18 @@ crank_render_module_tick (CrankSessionModuleTick *tmodule,
       if (entity == NULL)
         continue;
 
-      place = crank_entity3_get_place (entity);
+      place = (CrankPlace3*)crank_entity_base_get_place ((CrankEntityBase*)entity);
       if (place == NULL)
         continue;
 
       CrankTrans3 position;
       CrankProjection *projection;
 
-      crank_entity3_get_position (entity, &position);
       projection = crank_camera_get_projection (camera);
 
       crank_render_module_render_at (rmodule,
                                      place,
-                                     &position,
+                                     & entity->position,
                                      projection,
                                      film);
 
@@ -447,24 +446,18 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
                                           (const CoglMatrix*) & projection->matrix_t);
 
   // TODO: Replace it with octree based version
-  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
   crank_trans3_inverse (position, &ipos);
 
   for (i = 0; i < pdata->entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata[i];
-      CrankRenderable *renderable = (CrankRenderable*) crank_session3_entity_module_get_entity_data ((CrankSession3EntityModule*)module, entity);
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
       CrankTrans3 pos;
-
-
       CrankTrans3 rpos;
 
-      // TODO: Directly access position when it is available.
-      // Copying will be less efficiently.
-
-      crank_entity3_get_position (entity, &pos);
-      crank_trans3_compose (&ipos, &pos, &rpos);
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
 
       crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
     }
@@ -497,24 +490,18 @@ crank_render_module_render_color_at (CrankRenderModule *module,
                                           (const CoglMatrix*) & projection->matrix_t);
 
   // TODO: Replace it with octree based version
-  pdata = (CrankRenderPData*) crank_session3_entity_module_get_place_data ((CrankSession3EntityModule*)module, place);
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
   crank_trans3_inverse (position, &ipos);
 
   for (i = 0; i < pdata->entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata[i];
-      CrankRenderable *renderable = (CrankRenderable*) crank_session3_entity_module_get_entity_data ((CrankSession3EntityModule*)module, entity);
-      CrankTrans3 pos;
-
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
 
       CrankTrans3 rpos;
 
-      // TODO: Directly access position when it is available.
-      // Copying will be less efficiently.
-
-      crank_entity3_get_position (entity, &pos);
-      crank_trans3_compose (&ipos, &pos, &rpos);
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
 
       crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
     }
