@@ -373,29 +373,29 @@ crank_render_module_set_renderable (CrankRenderModule *module,
 {
   CrankPlaceBase *place;
   CrankRenderPData *pdata;
-  CrankRenderable **prenderable;
+  CrankRenderable **renderable_ptr;
+  CrankRenderable *renderable_prev;
+
+  renderable_ptr = G_STRUCT_MEMBER_P (entity, module->offset_renderable);
+  renderable_prev = *renderable_ptr;
+
+  if (! g_set_object (renderable_ptr, renderable))
+    return;
+
 
   place = crank_entity_base_get_place (entity);
 
-  if (place == NULL)
-    return;
+  if (place != NULL)
+    {
+      pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  prenderable = & G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      if (renderable_prev == NULL)
+          crank_render_pdata_add_entity (pdata, entity);
 
-  // TODO: Replace it with more clear logic.
-  if (*prenderable == renderable)
-    return;
+      else if (renderable == NULL)
+        crank_render_pdata_remove_entity (pdata, entity);
+    }
 
-
-  if (*prenderable == NULL)
-    crank_render_pdata_add_entity (pdata, entity);
-
-
-  else if (renderable == NULL)
-    crank_render_pdata_remove_entity (pdata, entity);
-
-  g_set_object (prenderable, renderable);
 }
 
 
