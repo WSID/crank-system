@@ -85,14 +85,7 @@ static void crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app);
 
 //////// Private Functions /////////////////////////////////////////////////////
 
-static gboolean move_cam_pos (gpointer ptr)
-{
-  CrankEntity3* entity = (CrankEntity3*)ptr;
-
-  entity->position.mtrans.z += 0.1;
-
-  return TRUE;
-}
+static void move_cam_pos (CrankSessionModuleTick *module, gpointer ptr);
 
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -288,7 +281,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
       crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 1000);
     }
 
-  g_timeout_add (17, move_cam_pos, app->camera_hook);
+  g_signal_connect (app->tmodule, "tick", move_cam_pos, app->camera_hook);
 }
 
 static void
@@ -318,6 +311,14 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
                                (CrankEntityBase*)entity);
 }
 
+static void
+move_cam_pos (CrankSessionModuleTick *tick,
+              gpointer                ptr)
+{
+  CrankEntity3* entity = (CrankEntity3*)ptr;
+
+  entity->position.mtrans.z += 0.1;
+}
 
 //////// Constructors //////////////////////////////////////////////////////////
 
