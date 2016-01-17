@@ -96,7 +96,7 @@ struct _CrankPlace3
 struct _CrankEntity3
 {
   GObject     *object;
-  CrankTrans3 *position;
+  CrankTrans3  position;
 };
 
 
