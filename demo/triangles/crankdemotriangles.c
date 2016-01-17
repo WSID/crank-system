@@ -89,13 +89,7 @@ static gboolean move_cam_pos (gpointer ptr)
 {
   CrankEntity3* entity = (CrankEntity3*)ptr;
 
-  CrankTrans3 pos;
-
-  crank_entity3_get_position (entity, &pos);
-
-  pos.mtrans.z += 0.01;
-
-  crank_entity3_set_position (entity, &pos);
+  entity->position.mtrans.z += 0.1;
 
   return TRUE;
 }
@@ -115,8 +109,10 @@ struct _CrankDemoTriangleApp
 
 
   // Session part.
-  CrankSession3    *session;
-  CrankRenderModule *rmodule;
+  CrankSession             *session;
+  CrankSessionModulePlaced *pmodule;
+  CrankSessionModuleTick   *tmodule;
+  CrankRenderModule        *rmodule;
 
   CrankPlace3       *place;
   CrankEntity3      *camera_hook;
@@ -251,26 +247,34 @@ static void
 crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
                                        CoglContext          *cogl_context)
 {
-  app->session = (CrankSession3*) g_object_new (CRANK_TYPE_SESSION3,
-                                                "tick-interval", 17,
-                                                NULL);
+  app->session = crank_session_new ();
+  app->pmodule = crank_session_module_placed_new (sizeof (CrankPlace3),
+                                                  sizeof (CrankEntity3));
+  app->tmodule = crank_session_module_tick_new (17);
+
   app->rmodule = (CrankRenderModule*) g_object_new (CRANK_TYPE_RENDER_MODULE, NULL);
 
-  crank_session3_add_entity_module (app->session,
-                                    (CrankSession3EntityModule*) app->rmodule);
+  crank_session_add_module (app->session,
+                            (CrankSessionModule*) app->pmodule);
+
+  crank_session_add_module (app->session,
+                            (CrankSessionModule*) app->tmodule);
+
+  crank_session_add_module (app->session,
+                            (CrankSessionModule*) app->rmodule);
 
   crank_session_init_modules (app->session, NULL);
-  crank_session3_lock_and_init_modules (app->session, NULL);
 
 
   // Make entities.
-  app->place = crank_session3_make_place (app->session);
-  app->camera_hook = crank_session3_make_entity (app->session);
+  app->place = (CrankPlace3*) crank_place_base_new (app->pmodule);
+  app->camera_hook = (CrankEntity3*) crank_entity_base_new (app->pmodule);
 
   app->renderable = crank_demo_renderable_triangle_new (cogl_context);
 
   // Add session!
-  crank_place3_add_entity (app->place, app->camera_hook);
+  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
+                               (CrankEntityBase*)app->camera_hook);
   crank_render_module_add_camera (app->rmodule, app->camera);
   crank_camera_set_entity (app->camera, app->camera_hook);
 
@@ -280,7 +284,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
     {
       CrankTrans3 campos = {{0, 0, 0}, {1, 0, 0, 0}, 1};
 
-      crank_entity3_set_position (app->camera_hook, &campos);
+      crank_trans3_init (& app->camera_hook->position);
       crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 1000);
     }
 
@@ -290,7 +294,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
 static void
 crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 {
-  CrankEntity3 *entity = crank_session3_make_entity (app->session);
+  CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
 
   CrankTrans3 pos = {{
     g_random_double_range (-100, 100),
@@ -305,9 +309,13 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 
   crank_quat_float_unit_self (& pos.mrot);
 
-  crank_entity3_attach_data (entity, 0, (GObject*) app->renderable);
-  crank_entity3_set_position (entity, &pos);
-  crank_place3_add_entity (app->place, entity);
+  crank_render_module_set_renderable (app->rmodule,
+                                      (CrankEntityBase*)entity,
+                                      (CrankRenderable*)app->renderable);
+
+  crank_trans3_copy (&pos, & entity->position);
+  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
+                               (CrankEntityBase*)entity);
 }
 
 
