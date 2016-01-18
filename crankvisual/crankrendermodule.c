@@ -44,6 +44,54 @@
 
 #include "crankrendermodule.h"
 
+
+//////// Snippet declarations //////////////////////////////////////////////////
+
+static gchar *pos_vert_decl =
+"uniform CrankProjection crank_deferr_proj;\n"
+"varying vec3 crank_deferr_near;\n"
+"varying vec3 crank_deferr_far;";
+
+static gchar *pos_vert_replace =
+"cogl_tex_coord0_out = vec4 (0, 0, 0, 1);\n"
+"cogl_tex_coord0_out.xy = vec2 (0.5) + cogl_position_in.xy * 0.5;\n"
+"cogl_position_out = cogl_position_in;\n"
+
+"float nf = mix (1,"
+"                crank_projection_get_far (crank_deferr_proj) /\n"
+"                crank_projection_get_near (crank_deferr_proj),\n"
+"                crank_deferr_proj.proj_type);\n"
+
+"vec2 base_lb = vec2 (crank_projection_get_left (crank_deferr_proj),\n"
+"                     crank_projection_get_top (crank_deferr_proj));\n"
+"vec2 base_rt = vec2 (crank_projection_get_right (crank_deferr_proj),\n"
+"                     crank_projection_get_bottom (crank_deferr_proj));\n"
+"vec2 base_xy = mix (base_lb, base_rt, cogl_tex_coord0_out.xy);\n"
+
+"crank_deferr_near = vec3 (base_xy,\n"
+"                          -crank_projection_get_near (crank_deferr_proj));\n"
+
+"crank_deferr_far = vec3 (base_xy * nf,\n"
+"                         -crank_projection_get_far (crank_deferr_proj));\n";
+
+
+static gchar *pos_frag_decl =
+"uniform CrankProjection crank_deferr_proj;\n"
+"varying vec3 crank_deferr_near;\n"
+"varying vec3 crank_deferr_far;\n"
+"uniform sampler2D  crank_deferr_geom;";
+
+static gchar *pos_frag_replace =
+"vec4  crank_geom_value = texture2D (crank_deferr_geom, cogl_tex_coord0_in.xy);\n"
+"float crank_depth =      dot (crank_geom_value.ba, vec2 (1, 1 / 256));\n"
+"vec3  crank_normal =     vec3 (crank_geom_value.rg, 0);\n"
+"crank_normal.z = sqrt (1 - dot (crank_normal.xy, crank_normal.xy));\n"
+
+"vec3  crank_frag_position = mix (crank_deferr_near, crank_deferr_far, crank_depth);\n"
+
+"cogl_color_out = vec4 (crank_frag_position, 1);"
+;
+
 //////// Private Type Declaration //////////////////////////////////////////////
 
 #define CRANK_TYPE_RENDER_PDATA (crank_render_pdata_get_type())
@@ -61,6 +109,7 @@ struct _CrankRenderPData
   GPtrArray *entities;
 
 
+  CoglPipeline *pipe_position;
 };
 
 //////// Private Type functions ////////////////////////////////////////////////
@@ -135,6 +184,20 @@ static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
 
 //////// List of virtual functions /////////////////////////////////////////////
 
+static void       crank_render_module_constructed (GObject *object);
+
+static void       crank_render_module_get_property (GObject    *object,
+                                                    guint       prop_id,
+                                                    GValue     *value,
+                                                    GParamSpec *pspec);
+
+static void       crank_render_module_set_property (GObject      *object,
+                                                    guint         prop_id,
+                                                    const GValue *value,
+                                                    GParamSpec   *pspec);
+
+static void       crank_render_module_dispose (GObject *object);
+
 static void       crank_render_module_session_init (CrankSessionModule  *module,
                                                     CrankSession        *session,
                                                     GError             **error);
@@ -159,15 +222,17 @@ static void       crank_render_module_entity_removed (CrankSessionModulePlaced *
                                                       CrankEntityBase          *entity,
                                                       gpointer                  userdata);
 
-//////// Unused spare functions ////////////////////////////////////////////////
 
-static void       crank_render_module_attached_data (CrankRenderModule *module,
-                                                     CrankEntityBase   *entity,
-                                                     GObject           *data);
+//////// Properties and signals ////////////////////////////////////////////////
 
-static void       crank_render_module_detached_data (CrankRenderModule *module,
-                                                     CrankEntityBase   *entity,
-                                                     GObject           *data);
+enum {
+  PROP_0,
+  PROP_COGL_CONTEXT,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -175,11 +240,15 @@ struct _CrankRenderModule
 {
   CrankSessionModule  _parent;
 
-  goffset     offset_pdata;
+  CoglContext *cogl_context;
 
+  goffset     offset_pdata;
   goffset     offset_renderable;
 
   GPtrArray   *cameras;
+
+  CoglPipeline *pipe_position;
+  gint          pipe_position_deferr_proj[2];
 };
 
 G_DEFINE_TYPE (CrankRenderModule,
@@ -196,17 +265,129 @@ crank_render_module_init (CrankRenderModule *module)
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
 }
 
+
+
 static void
 crank_render_module_class_init (CrankRenderModuleClass *c)
 {
+  GObjectClass *c_gobject;
   CrankSessionModuleClass *c_sessionmodule;
 
-  c_sessionmodule = CRANK_SESSION_MODULE_CLASS (c);
+  c_gobject = G_OBJECT_CLASS (c);
+  c_gobject->constructed = crank_render_module_constructed;
+  c_gobject->get_property = crank_render_module_get_property;
+  c_gobject->set_property = crank_render_module_set_property;
+  c_gobject->dispose = crank_render_module_dispose;
 
+  pspecs[PROP_COGL_CONTEXT] = g_param_spec_pointer ("cogl-context", "CoglContext",
+                                                    "CoglContext to initialize with.",
+                                                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+                                                    G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  c_sessionmodule = CRANK_SESSION_MODULE_CLASS (c);
   c_sessionmodule->session_init = crank_render_module_session_init;
 }
 
-//////// CrankSessionModule ///////////////////////////////////////////////////
+
+
+
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_render_module_constructed (GObject *object)
+{
+  CrankRenderModule *module = (CrankRenderModule*) object;
+
+  CoglSnippet *pos_snippet_vert;
+  CoglSnippet *pos_snippet_frag;
+
+  module->pipe_position = cogl_pipeline_new (module->cogl_context);
+
+  pos_snippet_vert = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX, NULL, NULL);
+  cogl_snippet_set_declarations (pos_snippet_vert, pos_vert_decl);
+  cogl_snippet_set_replace (pos_snippet_vert, pos_vert_replace);
+
+  pos_snippet_frag = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT, NULL, NULL);
+  cogl_snippet_set_declarations (pos_snippet_frag, pos_frag_decl);
+  cogl_snippet_set_replace (pos_snippet_frag, pos_frag_replace);
+
+  cogl_pipeline_add_snippet (module->pipe_position,
+                             crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_VERTEX));
+  cogl_pipeline_add_snippet (module->pipe_position,
+                             crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_FRAGMENT));
+
+  cogl_pipeline_add_snippet (module->pipe_position, pos_snippet_vert);
+  cogl_pipeline_add_snippet (module->pipe_position, pos_snippet_frag);
+
+  cogl_object_unref (pos_snippet_vert);
+  cogl_object_unref (pos_snippet_frag);
+
+
+
+  crank_projection_get_uniform_locations (module->pipe_position,
+                                          "crank_deferr_proj",
+                                          module->pipe_position_deferr_proj);
+}
+
+
+
+static void
+crank_render_module_get_property (GObject    *object,
+                                  guint       prop_id,
+                                  GValue     *value,
+                                  GParamSpec *pspecs)
+{
+  CrankRenderModule *module = (CrankRenderModule*) object;
+
+  switch (prop_id)
+    {
+    case PROP_COGL_CONTEXT:
+      g_value_set_pointer (value, module->cogl_context);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspecs);
+    }
+}
+
+
+
+static void
+crank_render_module_set_property (GObject      *object,
+                                  guint         prop_id,
+                                  const GValue *value,
+                                  GParamSpec   *pspecs)
+{
+  CrankRenderModule *module = (CrankRenderModule*) object;
+
+  switch (prop_id)
+    {
+    case PROP_COGL_CONTEXT:
+      module->cogl_context = g_value_get_pointer (value);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspecs);
+    }
+}
+
+
+
+static void
+crank_render_module_dispose (GObject *object)
+{
+  CrankRenderModule *module = (CrankRenderModule*) object;
+
+  cogl_object_unref (module->pipe_position);
+  module->pipe_position = NULL;
+}
+
+
+//////// CrankSessionModule ////////////////////////////////////////////////////
 
 static void
 crank_render_module_session_init (CrankSessionModule  *module,
@@ -248,7 +429,6 @@ crank_render_module_session_init (CrankSessionModule  *module,
 
   g_signal_connect (tmodule, "tick", (GCallback)crank_render_module_tick, rmodule);
 }
-
 
 
 //////// Callback functions for other modules //////////////////////////////////
@@ -354,6 +534,27 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
 
 
 
+
+
+
+
+//////// Constructors //////////////////////////////////////////////////////////
+
+/**
+ * crank_render_module_new:
+ * @cogl_context: A Cogl Context.
+ *
+ * Constructs a rendering module.
+ *
+ * Returns: (transfer full): Newly constructed module.
+ */
+CrankRenderModule*
+crank_render_module_new (CoglContext *cogl_context)
+{
+  return (CrankRenderModule*) g_object_new (CRANK_TYPE_RENDER_MODULE,
+                                            "cogl-context", cogl_context,
+                                            NULL);
+}
 
 //////// Entities and places functions /////////////////////////////////////////
 
@@ -509,6 +710,36 @@ crank_render_module_render_color_at (CrankRenderModule *module,
 
 
 /**
+ * crank_render_module_render_pos:
+ * @module: A Module.
+ * @geom_tex: Geometry texture.
+ * @framebuffer: Framebuffer to render.
+ *
+ * Renders fragment position from @geom_tex.
+ *
+ * Hmm.
+ */
+void
+crank_render_module_render_pos (CrankRenderModule *module,
+                                CoglTexture       *geom_tex,
+                                CrankProjection   *projection,
+                                CoglFramebuffer   *framebuffer)
+{
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
+
+  crank_projection_set_uniform_value (projection,
+                                      module->pipe_position,
+                                      module->pipe_position_deferr_proj);
+
+  cogl_pipeline_set_layer_texture (module->pipe_position, 0, geom_tex);
+
+  cogl_framebuffer_draw_rectangle (framebuffer,
+                                   module->pipe_position,
+                                   -1, -1, 1, 1);
+}
+
+/**
  * crank_render_module_render_at:
  * @module: A Module.
  * @place: A Place.
@@ -537,8 +768,12 @@ crank_render_module_render_at (CrankRenderModule *module,
                                       place,
                                       position,
                                       projection,
-                                      crank_film_get_framebuffer (film, 5));
+                                      crank_film_get_framebuffer (film, 0));
 
+  crank_render_module_render_pos (module,
+                                  crank_film_get_texture (film, 0),
+                                  projection,
+                                  crank_film_get_framebuffer (film, 5));
   // XXX: For now, rendering a color buffer on result buffer.
 
   // TODO: Render to other buffers.

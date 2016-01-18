@@ -52,6 +52,11 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
  */
 
 
+//////// Constructors //////////////////////////////////////////////////////////
+
+CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
+
+
 //////// Place and Entity functions ////////////////////////////////////////////
 
 void              crank_render_module_set_renderable (CrankRenderModule *module,
@@ -76,6 +81,11 @@ void    crank_render_module_render_color_at (CrankRenderModule *module,
                                              CrankTrans3       *position,
                                              CrankProjection   *projection,
                                              CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_pos (CrankRenderModule *module,
+                                        CoglTexture       *geom_tex,
+                                        CrankProjection   *projection,
+                                        CoglFramebuffer   *framebuffer);
 
 
 void    crank_render_module_render_at (CrankRenderModule *module,
