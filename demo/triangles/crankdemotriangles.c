@@ -203,16 +203,12 @@ crank_demo_triangle_app_build_ui (CrankDemoTriangleApp *app,
   app->actor = clutter_actor_new ();
 
   app->film = crank_film_new (cogl_context, 1024, 1024, &error);
+
   if (error != NULL)
     g_error ("Film cannot be initialized: %s", error->message);
 
-  app->camera = (CrankCamera*) g_object_new (CRANK_TYPE_CAMERA,
-                                             "film", app->film,
-                                             NULL);
-
-  app->content = (CrankCameraContent*) g_object_new (CRANK_TYPE_CAMERA_CONTENT,
-                                                     "camera", app->camera,
-                                                     NULL);
+  app->camera = crank_camera_new ();
+  app->content = crank_camera_content_new ();
 
 
   layout = clutter_bin_layout_new (0, 0);
@@ -234,19 +230,23 @@ crank_demo_triangle_app_build_ui (CrankDemoTriangleApp *app,
   clutter_actor_show ((ClutterActor*)app->actor);
 
   clutter_actor_set_content (app->actor, (ClutterContent*) app->content);
+  crank_camera_content_set_camera (app->content, app->camera);
+  crank_camera_set_film (app->camera, app->film);
 }
 
 static void
 crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
                                        CoglContext          *cogl_context)
 {
+  // Constructs sessions and modules.
   app->session = crank_session_new ();
   app->pmodule = crank_session_module_placed_new (sizeof (CrankPlace3),
                                                   sizeof (CrankEntity3));
   app->tmodule = crank_session_module_tick_new (17);
 
-  app->rmodule = (CrankRenderModule*) g_object_new (CRANK_TYPE_RENDER_MODULE, NULL);
+  app->rmodule = crank_render_module_new (cogl_context);
 
+  // Add modules to session.
   crank_session_add_module (app->session,
                             (CrankSessionModule*) app->pmodule);
 
@@ -271,6 +271,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   crank_render_module_add_camera (app->rmodule, app->camera);
   crank_camera_set_entity (app->camera, app->camera_hook);
 
+
   for (int i = 0; i < 100; i++)
     crank_demo_triangle_app_add_triangle (app);
 
@@ -281,7 +282,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
       crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 1000);
     }
 
-  g_signal_connect (app->tmodule, "tick", move_cam_pos, app->camera_hook);
+  g_signal_connect (app->tmodule, "tick", (GCallback) move_cam_pos, app->camera_hook);
 }
 
 static void
@@ -317,7 +318,7 @@ move_cam_pos (CrankSessionModuleTick *tick,
 {
   CrankEntity3* entity = (CrankEntity3*)ptr;
 
-  entity->position.mtrans.z += 0.1;
+  entity->position.mtrans.z += 0.5;
 }
 
 //////// Constructors //////////////////////////////////////////////////////////
