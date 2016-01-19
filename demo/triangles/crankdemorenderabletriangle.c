@@ -53,6 +53,8 @@ static void crank_demo_renderable_triangle_set_property (GObject      *object,
 static void crank_demo_renderable_triangle_constructed (GObject *object);
 
 
+static gfloat crank_demo_renderable_triangle_get_visible_radius (CrankRenderable *renderable);
+
 static CoglPrimitive *crank_demo_renderable_triangle_get_primitive (
     CrankRenderablePrimitive *renderable,
     CrankTrans3 *position,
@@ -101,6 +103,7 @@ static void
 crank_demo_renderable_triangle_class_init (CrankDemoRenderableTriangleClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  CrankRenderableClass *c_renderable = CRANK_RENDERABLE_CLASS (c);
   CrankRenderablePrimitiveClass *c_renderableprimitive =
       CRANK_RENDERABLE_PRIMITIVE_CLASS (c);
 
@@ -112,6 +115,8 @@ crank_demo_renderable_triangle_class_init (CrankDemoRenderableTriangleClass *c)
                                    g_param_spec_pointer ("cogl-context", "CoglContext",
                                                          "CoglContext to initialize this renderable.",
                                                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS ));
+
+  c_renderable->get_visible_radius = crank_demo_renderable_triangle_get_visible_radius;
 
   c_renderableprimitive->get_primitive = crank_demo_renderable_triangle_get_primitive;
   c_renderableprimitive->get_material = crank_demo_renderable_triangle_get_material;
@@ -174,6 +179,15 @@ crank_demo_renderable_triangle_constructed (GObject *object)
                                                            vertices);
 
   renderable->material = crank_material_new (renderable->cogl_context);
+}
+
+
+//////// CrankRenderable ///////////////////////////////////////////////////////
+
+static gfloat
+crank_demo_renderable_triangle_get_visible_radius (CrankRenderable *renderable)
+{
+  return 1.7320f;
 }
 
 
