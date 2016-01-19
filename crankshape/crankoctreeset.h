@@ -101,6 +101,8 @@ void        crank_octree_set_foreach (CrankOctreeSet *set,
                                       GFunc           func,
                                       gpointer        userdata);
 
+GList      *crank_octree_set_get_data_list (CrankOctreeSet *set);
+
 
 
 //////// Getting nodes /////////////////////////////////////////////////////////

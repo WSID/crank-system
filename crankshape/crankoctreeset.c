@@ -615,6 +615,19 @@ crank_octree_set_foreach (CrankOctreeSet *set,
     func (data, userdata);
 }
 
+/**
+ * crank_octree_set_get_data_list:
+ * @set: An octree set.
+ *
+ * Gets #GList of elements in octree.
+ *
+ * Returns: (transfer container): List of elements in octree.
+ */
+GList*
+crank_octree_set_get_data_list (CrankOctreeSet *set)
+{
+  return g_hash_table_get_keys (set->map_data_node);
+}
 
 
 //////// Getting nodes /////////////////////////////////////////////////////////
