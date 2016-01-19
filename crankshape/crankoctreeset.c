@@ -441,6 +441,8 @@ crank_octree_set_new (CrankBox3             *boundary,
   set->root = crank_octree_set_node_alloc ();
   crank_box3_copy (boundary, & set->root->boundary);
 
+  set->map_data_node = g_hash_table_new (g_direct_hash, g_direct_equal);
+
   set->min_capacity = 5;
   set->max_capacity = 10;
   set->max_height = G_MAXUINT;
