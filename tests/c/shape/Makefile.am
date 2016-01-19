@@ -18,6 +18,7 @@ test_programs= \
 		test_rot \
 		test_trans \
 		test_misc \
+		test_octreeset \
 		test_gjk \
 		test_poly_struct
 
@@ -29,6 +30,9 @@ test_rot_LDADD= $(TEST_SHAPE_LDADD)
 
 test_trans_SOURCES= test_trans.c
 test_trans_LDADD= $(TEST_SHAPE_LDADD)
+
+test_octreeset_SOURCES= test_octreeset.c
+test_octreeset_LDADD= $(TEST_SHAPE_LDADD)
 
 test_misc_SOURCES= test_misc.c
 test_misc_LDADD= $(TEST_SHAPE_LDADD)

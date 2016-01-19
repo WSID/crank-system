@@ -43,8 +43,11 @@ typedef gfloat          (*CrankOctreeRadiusFunc) (gpointer data,
                                                   gpointer userdata);
 
 
+
 typedef struct _CrankOctreeSet CrankOctreeSet;
 typedef struct _CrankOctreeSetIter CrankOctreeSetIter;
+
+typedef struct _CrankOctreeSetNode CrankOctreeSetNode;
 
 #define CRANK_TYPE_OCTREE_SET (crank_octree_set_get_type())
 GType crank_octree_set_get_type(void);
@@ -100,7 +103,33 @@ void        crank_octree_set_foreach (CrankOctreeSet *set,
 
 
 
+//////// Getting nodes /////////////////////////////////////////////////////////
 
+CrankOctreeSetNode *crank_octree_set_get_root (CrankOctreeSet *set);
+
+CrankOctreeSetNode *crank_octree_set_get_node (CrankOctreeSet *set,
+                                               gpointer        data);
+
+
+
+//////// Node Properties ///////////////////////////////////////////////////////
+
+void                crank_octree_set_node_get_boundary (CrankOctreeSetNode *node,
+                                                        CrankBox3          *boundary);
+
+void                crank_octree_set_node_get_middle (CrankOctreeSetNode *node,
+                                                      CrankVecFloat3     *middle);
+
+
+//////// Node children /////////////////////////////////////////////////////////
+
+gboolean            crank_octree_set_node_has_children (CrankOctreeSetNode *node);
+
+CrankOctreeSetNode *crank_octree_set_node_get_child    (CrankOctreeSetNode *node,
+                                                        const guint         index);
+
+CrankOctreeSetNode *crank_octree_set_node_get_child_pos (CrankOctreeSetNode *node,
+                                                         CrankVecFloat3     *pos);
 
 G_END_DECLS
 

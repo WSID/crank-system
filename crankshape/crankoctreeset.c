@@ -44,24 +44,6 @@
 #include "crankoctreeset.h"
 
 
-//////// Private Types: CrankOctreeSetNode /////////////////////////////////////
-
-typedef struct _CrankOctreeSetNode CrankOctreeSetNode;
-
-struct _CrankOctreeSetNode
-{
-  CrankOctreeSetNode *parent;
-  CrankOctreeSetNode *children[8];
-
-  GPtrArray         *data_array;
-
-  // Node props
-  CrankBox3         boundary;
-  CrankVecFloat3    middle;
-
-  // Cache area
-  guint             part_size;
-};
 
 
 //////// Functions for private types ///////////////////////////////////////////
@@ -107,23 +89,23 @@ static void               crank_octree_set_node_join (CrankOctreeSetNode *node,
                                                       CrankOctreeSet     *set);
 
 
-static void               crank_octree_set_node_update (CrankOctreeSetNode *node,
-                                                        CrankOctreeSet     *set,
-                                                        gpointer            data);
-
-static void               crank_octree_set_node_update_upward (CrankOctreeSetNode *node,
-                                                               CrankOctreeSet     *set,
-                                                               gpointer            data,
-                                                               CrankVecFloat3     *pos,
-                                                               gfloat              rad);
-
-static void               crank_octree_set_node_update_downward (CrankOctreeSetNode *node,
-                                                                 CrankOctreeSet     *set,
-                                                                 gpointer            data,
-                                                                 CrankVecFloat3     *pos,
-                                                                 gfloat              rad);
-
 //////// Type Definitions //////////////////////////////////////////////////////
+
+struct _CrankOctreeSetNode
+{
+  CrankOctreeSetNode *parent;
+  CrankOctreeSetNode *children[8];
+
+  GPtrArray         *data_array;
+
+  // Node props
+  CrankBox3         boundary;
+  CrankVecFloat3    middle;
+
+  // Cache area
+  guint             part_size;
+};
+
 
 struct _CrankOctreeSet
 {
@@ -631,4 +613,124 @@ crank_octree_set_foreach (CrankOctreeSet *set,
   g_hash_table_iter_init (&iter, set->map_data_node);
   while (g_hash_table_iter_next (&iter, &data, NULL))
     func (data, userdata);
+}
+
+
+
+//////// Getting nodes /////////////////////////////////////////////////////////
+
+/**
+ * crank_octree_set_get_root:
+ * @set: An octree set.
+ *
+ * Gets root node of octree.
+ *
+ * Returns: (transfer none): A node.
+ */
+CrankOctreeSetNode*
+crank_octree_set_get_root (CrankOctreeSet *set)
+{
+  return set->root;
+}
+
+
+/**
+ * crank_octree_set_get_node:
+ * @set: An octree set.
+ * @data: A Data.
+ *
+ * Gets node associated to
+ *
+ * Returns: (transfer none) (nullable): A node.
+ */
+CrankOctreeSetNode*
+crank_octree_set_get_node (CrankOctreeSet *set,
+                           gpointer        data)
+{
+  return g_hash_table_lookup (set->map_data_node, data);
+}
+
+
+
+//////// Node Properties ///////////////////////////////////////////////////////
+
+/**
+ * crank_octree_set_node_get_boundary:
+ * @node: A Node.
+ * @boundary: (out): Boundary of node.
+ *
+ * Get boundary of node.
+ */
+void
+crank_octree_set_node_get_boundary (CrankOctreeSetNode *node,
+                                    CrankBox3          *boundary)
+{
+  crank_box3_copy (& node->boundary, boundary);
+}
+
+/**
+ * crank_octree_set_node_get_middle:
+ * @node: A Node.
+ * @middle: (out): Middle of node.
+ *
+ * Get middle of node.
+ */
+void
+crank_octree_set_node_get_middle (CrankOctreeSetNode *node,
+                                  CrankVecFloat3     *middle)
+{
+  crank_vec_float3_copy (&node->middle, middle);
+}
+
+
+
+//////// Node children /////////////////////////////////////////////////////////
+
+/**
+ * crank_octree_set_node_has_children:
+ * @node: A Node.
+ *
+ * Checks whether this has children.
+ *
+ * Returns: Whether this has children.
+ */
+gboolean
+crank_octree_set_node_has_children (CrankOctreeSetNode *node)
+{
+  return node->children[0] != NULL;
+}
+
+/**
+ * crank_octree_set_node_get_child:
+ * @node: A Node.
+ * @index: index of children.
+ *
+ * Get child node of this node.
+ *
+ * Returns: (nullable): Child node of this node, or %NULL if it does not have
+ *     child node.
+ */
+CrankOctreeSetNode*
+crank_octree_set_node_get_child (CrankOctreeSetNode *node,
+                                 const guint         index)
+{
+  return node->children[index];
+}
+
+
+/**
+ * crank_octree_set_node_get_child_pos:
+ * @index: A Node.
+ * @pos: Position of
+ *
+ * Get child node of this node, according to given position.
+ *
+ * Returns: (nullable): Child node of this node, or %NULL if it does not have
+ *     child node.
+ */
+CrankOctreeSetNode*
+crank_octree_set_node_get_child_pos (CrankOctreeSetNode *node,
+                                     CrankVecFloat3     *pos)
+{
+  return node->children[crank_octree_set_node_get_child_index (node, pos, 0)];
 }
