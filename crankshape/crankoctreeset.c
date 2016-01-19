@@ -707,8 +707,8 @@ crank_octree_set_node_has_children (CrankOctreeSetNode *node)
  *
  * Get child node of this node.
  *
- * Returns: (nullable): Child node of this node, or %NULL if it does not have
- *     child node.
+ * Returns: (nullable) (transfer none): Child node of this node, or %NULL if it
+ *     does not have child node.
  */
 CrankOctreeSetNode*
 crank_octree_set_node_get_child (CrankOctreeSetNode *node,
@@ -720,13 +720,13 @@ crank_octree_set_node_get_child (CrankOctreeSetNode *node,
 
 /**
  * crank_octree_set_node_get_child_pos:
- * @index: A Node.
+ * @node: A Node.
  * @pos: Position of
  *
  * Get child node of this node, according to given position.
  *
- * Returns: (nullable): Child node of this node, or %NULL if it does not have
- *     child node.
+ * Returns: (nullable) (transfer none): Child node of this node, or %NULL if it
+ *     does not have child node.
  */
 CrankOctreeSetNode*
 crank_octree_set_node_get_child_pos (CrankOctreeSetNode *node,
