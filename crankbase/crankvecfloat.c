@@ -974,6 +974,23 @@ crank_vec_float2_max (CrankVecFloat2 *a,
   r->y = MAX (a->y, b->y);
 }
 
+/**
+ * crank_vec_float2_abs:
+ * @a: A Vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets absolute value of each components.
+ */
+void
+crank_vec_float2_abs (CrankVecFloat2 *a,
+                      CrankVecFloat2 *r)
+{
+  g_return_if_fail (a != r);
+
+  r->x = ABS (a->x);
+  r->y = ABS (a->y);
+}
+
 
 /**
  * crank_vec_float2_mulm:
@@ -1979,6 +1996,23 @@ crank_vec_float3_max (CrankVecFloat3 *a,
   r->z = MAX (a->z, b->z);
 }
 
+/**
+ * crank_vec_float3_abs:
+ * @a: A Vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets absolute value of each components.
+ */
+void
+crank_vec_float3_abs (CrankVecFloat3 *a,
+                      CrankVecFloat3 *r)
+{
+  g_return_if_fail (a != r);
+
+  r->x = ABS (a->x);
+  r->y = ABS (a->y);
+  r->z = ABS (a->z);
+}
 
 /**
  * crank_vec_float3_mulm:
@@ -2983,6 +3017,25 @@ crank_vec_float4_max (CrankVecFloat4 *a,
   r->y = MAX (a->y, b->y);
   r->z = MAX (a->z, b->z);
   r->w = MAX (a->w, b->w);
+}
+
+/**
+ * crank_vec_float4_abs:
+ * @a: A Vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets absolute value of each components.
+ */
+void
+crank_vec_float4_abs (CrankVecFloat4 *a,
+                      CrankVecFloat4 *r)
+{
+  g_return_if_fail (a != r);
+
+  r->x = ABS (a->x);
+  r->y = ABS (a->y);
+  r->z = ABS (a->z);
+  r->w = ABS (a->w);
 }
 
 
@@ -4346,6 +4399,28 @@ crank_vec_float_n_max (CrankVecFloatN *a,
 
   for (i = 0; i < a->n; i++)
     r->data[i] = MAX (a->data[i], b->data[i]);
+}
+
+
+/**
+ * crank_vec_float_n_abs:
+ * @a: A Vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets absolute value of each components.
+ */
+void
+crank_vec_float_n_abs (CrankVecFloatN *a,
+                       CrankVecFloatN *r)
+{
+  guint i;
+
+  g_return_if_fail (a != r);
+
+  CRANK_VEC_ALLOC(r, gfloat, a->n);
+
+  for (i = 0; i < a->n; i++)
+    r->data[i] = ABS (a->data[i]);
 }
 
 
