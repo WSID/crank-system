@@ -995,6 +995,7 @@ crank_vec_float2_cmpcmp
 crank_vec_float2_min
 crank_vec_float2_max
 crank_vec_float2_abs
+crank_vec_float2_abs_self
 crank_vec_float2_mulm
 crank_vec_float2_mulm_self
 crank_vec_float2_mixs
@@ -1045,6 +1046,7 @@ crank_vec_float3_cmpcmp
 crank_vec_float3_min
 crank_vec_float3_max
 crank_vec_float3_abs
+crank_vec_float3_abs_self
 crank_vec_float3_mulm
 crank_vec_float3_mulm_self
 crank_vec_float3_mixs
@@ -1093,6 +1095,7 @@ crank_vec_float4_cmpcmp
 crank_vec_float4_min
 crank_vec_float4_max
 crank_vec_float4_abs
+crank_vec_float4_abs_self
 crank_vec_float4_mulm
 crank_vec_float4_mulm_self
 crank_vec_float4_mixs
@@ -1155,6 +1158,7 @@ crank_vec_float_n_cmpcmp
 crank_vec_float_n_min
 crank_vec_float_n_max
 crank_vec_float_n_abs
+crank_vec_float_n_abs_self
 crank_vec_float_n_mulm
 crank_vec_float_n_mulm_self
 crank_vec_float_n_mixs

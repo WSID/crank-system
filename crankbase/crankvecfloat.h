@@ -210,6 +210,8 @@ void            crank_vec_float2_max    (CrankVecFloat2 *a,
 void            crank_vec_float2_abs    (CrankVecFloat2 *a,
                                          CrankVecFloat2 *r);
 
+void            crank_vec_float2_abs_self(CrankVecFloat2 *a);
+
 //////// Matrix Operations /////////////////////////////////////////////////////
 
 void            crank_vec_float2_mulm (CrankVecFloat2 *a,
@@ -421,6 +423,8 @@ void            crank_vec_float3_max    (CrankVecFloat3 *a,
 void            crank_vec_float3_abs    (CrankVecFloat3 *a,
                                          CrankVecFloat3 *r);
 
+void            crank_vec_float3_abs_self(CrankVecFloat3 *a);
+
 //////// Matrix operations ////////
 
 void            crank_vec_float3_mulm   (CrankVecFloat3 *a,
@@ -626,6 +630,8 @@ void            crank_vec_float4_max    (CrankVecFloat4 *a,
 
 void            crank_vec_float4_abs    (CrankVecFloat4 *a,
                                          CrankVecFloat4 *r);
+
+void            crank_vec_float4_abs_self(CrankVecFloat4 *a);
 
 //////// Matrix operations ////////
 
@@ -863,6 +869,8 @@ void            crank_vec_float_n_max   (CrankVecFloatN *a,
 
 void            crank_vec_float_n_abs   (CrankVecFloatN *a,
                                          CrankVecFloatN *r);
+
+void            crank_vec_float_n_abs_self (CrankVecFloatN *a);
 
 //////// Matrix operations ////////
 

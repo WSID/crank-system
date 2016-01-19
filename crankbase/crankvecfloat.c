@@ -993,6 +993,19 @@ crank_vec_float2_abs (CrankVecFloat2 *a,
 
 
 /**
+ * crank_vec_float2_abs_self:
+ * @a: A Vector.
+ *
+ * Applys absolute value of each components.
+ */
+void
+crank_vec_float2_abs_self (CrankVecFloat2 *a)
+{
+  a->x = ABS (a->x);
+  a->y = ABS (a->y);
+}
+
+/**
  * crank_vec_float2_mulm:
  * @a: A Vector
  * @b: A Matrix
@@ -2012,6 +2025,21 @@ crank_vec_float3_abs (CrankVecFloat3 *a,
   r->x = ABS (a->x);
   r->y = ABS (a->y);
   r->z = ABS (a->z);
+}
+
+
+/**
+ * crank_vec_float3_abs_self:
+ * @a: A Vector.
+ *
+ * Applys absolute value of each components.
+ */
+void
+crank_vec_float3_abs_self (CrankVecFloat3 *a)
+{
+  a->x = ABS (a->x);
+  a->y = ABS (a->y);
+  a->z = ABS (a->z);
 }
 
 /**
@@ -3036,6 +3064,22 @@ crank_vec_float4_abs (CrankVecFloat4 *a,
   r->y = ABS (a->y);
   r->z = ABS (a->z);
   r->w = ABS (a->w);
+}
+
+
+/**
+ * crank_vec_float4_abs_self:
+ * @a: A Vector.
+ *
+ * Applys absolute value of each components.
+ */
+void
+crank_vec_float4_abs_self (CrankVecFloat4 *a)
+{
+  a->x = ABS (a->x);
+  a->y = ABS (a->y);
+  a->z = ABS (a->z);
+  a->w = ABS (a->w);
 }
 
 
@@ -4421,6 +4465,22 @@ crank_vec_float_n_abs (CrankVecFloatN *a,
 
   for (i = 0; i < a->n; i++)
     r->data[i] = ABS (a->data[i]);
+}
+
+/**
+ * crank_vec_float_n_abs_self:
+ * @a: A Vector.
+ * @r: (out): A vector to store result.
+ *
+ * Gets absolute value of each components.
+ */
+void
+crank_vec_float_n_abs_self (CrankVecFloatN *a)
+{
+  guint i;
+
+  for (i = 0; i < a->n; i++)
+    a->data[i] = ABS (a->data[i]);
 }
 
 
