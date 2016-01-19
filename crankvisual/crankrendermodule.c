@@ -104,12 +104,7 @@ struct _CrankRenderPData
 {
   GObject parent;
 
-  // Entities store.
-  // TODO: Replace it with octree structure.
-  GPtrArray *entities;
-
-
-  CoglPipeline *pipe_position;
+  CrankOctreeSet *entities;
 };
 
 //////// Private Type functions ////////////////////////////////////////////////
@@ -122,9 +117,21 @@ static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
 
 //////// Private type vfuncs ///////////////////////////////////////////////////
 
+static void crank_render_pdata_constructed (GObject *object);
+
 static void crank_render_pdata_dispose (GObject *object);
 
 static void crank_render_pdata_finalize (GObject *object);
+
+
+//////// Private type callbacks ////////////////////////////////////////////////
+
+static CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
+                                                   gpointer userdata);
+
+static gfloat crank_render_pdata_get_rad (gpointer data,
+                                          gpointer userdata);
+
 
 //////// Private type definition ///////////////////////////////////////////////
 
@@ -135,13 +142,20 @@ G_DEFINE_TYPE (CrankRenderPData, crank_render_pdata, G_TYPE_OBJECT)
 
 static void crank_render_pdata_init (CrankRenderPData *pdata)
 {
-  pdata->entities = g_ptr_array_new ();
+  CrankBox3 box;
+
+  crank_box3_init_uvec (& box, -100, -100, -100, 100, 100, 100);
+
+  pdata->entities = crank_octree_set_new (& box,
+                                          crank_render_pdata_get_pos, NULL, NULL,
+                                          crank_render_pdata_get_rad, NULL, NULL);
 }
 
 static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 {
   GObjectClass *c_gobject;
 
+  c_gobject->constructed = crank_render_pdata_constructed;
   c_gobject->dispose = crank_render_pdata_dispose;
   c_gobject->finalize = crank_render_pdata_finalize;
 }
@@ -151,18 +165,48 @@ static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 
 //////// Private type: GObject /////////////////////////////////////////////////
 
-static void crank_render_pdata_dispose (GObject *object)
+static void
+crank_render_pdata_constructed (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
-
-  g_ptr_array_set_size (pdata->entities, 0);
 }
 
-static void crank_render_pdata_finalize (GObject *object)
+static void
+crank_render_pdata_dispose (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
 
-  g_ptr_array_unref (pdata->entities);
+  crank_octree_set_remove_all (pdata->entities);
+}
+
+static void
+crank_render_pdata_finalize (GObject *object)
+{
+  CrankRenderPData *pdata = (CrankRenderPData*) object;
+
+  crank_octree_set_unref (pdata->entities);
+}
+
+//////// Private type callbacks ////////////////////////////////////////////////
+
+static CrankVecFloat3*
+crank_render_pdata_get_pos (gpointer data,
+                            gpointer userdata)
+{
+  CrankEntity3 *entity = (CrankEntity3*)data;
+
+  return & entity->position.mtrans;
+}
+
+static gfloat
+crank_render_pdata_get_rad (gpointer data,
+                            gpointer userdata)
+{
+  goffset offset = (goffset) userdata;
+
+  CrankEntity3 *entity = (CrankEntity3*)data;
+
+  return entity->position.mscl;
 }
 
 //////// Private type functions ////////////////////////////////////////////////
@@ -170,13 +214,13 @@ static void crank_render_pdata_finalize (GObject *object)
 static void crank_render_pdata_add_entity (CrankRenderPData *pdata,
                                            CrankEntityBase  *entity)
 {
-  g_ptr_array_add (pdata->entities, entity);
+  crank_octree_set_add (pdata->entities, entity);
 }
 
 static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
                                               CrankEntityBase  *entity)
 {
-  g_ptr_array_remove (pdata->entities, entity);
+  crank_octree_set_remove (pdata->entities, entity);
 }
 
 
@@ -641,6 +685,9 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
   CrankTrans3 ipos;
   guint i;
 
+  GList *list;
+  GList *iter;
+
   cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
                             0, 0, 0, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
@@ -651,9 +698,10 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
   crank_trans3_inverse (position, &ipos);
 
-  for (i = 0; i < pdata->entities->len; i++)
+  list = crank_octree_set_get_data_list (pdata->entities);
+  for (iter = list; iter != NULL; iter = iter->next)
     {
-      CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata[i];
+      CrankEntity3 *entity = (CrankEntity3*) iter->data;
       CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
       CrankTrans3 pos;
       CrankTrans3 rpos;
@@ -662,6 +710,8 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
 
       crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
     }
+
+  g_list_free (list);
 }
 
 /**
@@ -685,6 +735,9 @@ crank_render_module_render_color_at (CrankRenderModule *module,
   CrankTrans3 ipos;
   guint i;
 
+  GList *list;
+  GList *iter;
+
   cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
                             0, 0, 0, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
@@ -695,9 +748,10 @@ crank_render_module_render_color_at (CrankRenderModule *module,
 
   crank_trans3_inverse (position, &ipos);
 
-  for (i = 0; i < pdata->entities->len; i++)
+  list = crank_octree_set_get_data_list (pdata->entities);
+  for (iter = list; iter != NULL; iter = iter->next)
     {
-      CrankEntity3 *entity = (CrankEntity3*) pdata->entities->pdata[i];
+      CrankEntity3 *entity = (CrankEntity3*) iter->data;
       CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
 
       CrankTrans3 rpos;
@@ -706,6 +760,8 @@ crank_render_module_render_color_at (CrankRenderModule *module,
 
       crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
     }
+
+  g_list_free (list);
 }
 
 
