@@ -81,11 +81,22 @@ static void               crank_octree_set_node_remove (CrankOctreeSetNode *node
 
 
 
-static void               crank_octree_set_node_divide (CrankOctreeSetNode *node,
+static gboolean           crank_octree_set_node_divide (CrankOctreeSetNode *node,
                                                         CrankOctreeSet     *set);
 
 static void               crank_octree_set_node_join (CrankOctreeSetNode *node,
                                                       CrankOctreeSet     *set);
+
+
+
+static GList*             crank_octree_set_node_list (CrankOctreeSetNode *node,
+                                                      GList              *list);
+
+static GList*             crank_octree_set_node_cull (CrankOctreeSetNode *node,
+                                                      CrankOctreeSet     *set,
+                                                      GList              *list,
+                                                      CrankPlane3        *culls,
+                                                      const guint         nculls);
 
 
 //////// Type Definitions //////////////////////////////////////////////////////
@@ -103,6 +114,7 @@ struct _CrankOctreeSetNode
 
   // Cache area
   guint             part_size;
+  guint             depth;
 };
 
 
@@ -347,9 +359,8 @@ crank_octree_set_node_divide (CrankOctreeSetNode *node,
   crank_vec_float3_copy (& node->boundary.end, & node->children[7]->boundary.end);
 
   for (i = 0; i < 8; i++)
-    crank_vec_float3_mixs (&node->children[i]->boundary.start,
-                           &node->children[i]->boundary.end,
-                           0.5, &node->children[i]->middle);
+    crank_box3_gets (&node->children[i]->boundary,
+                     0.5, &node->children[i]->middle);
 
 
   // Distribute elements.
@@ -421,6 +432,85 @@ crank_octree_set_node_join (CrankOctreeSetNode *node,
         }
     }
 }
+
+static GList*
+crank_octree_set_node_list (CrankOctreeSetNode *node,
+                            GList              *list)
+{
+  guint i;
+
+  if (node->children[0] != NULL)
+    {
+      for (i = 0; i < 8; i++)
+        list = crank_octree_set_node_list (node->children[i], list);
+    }
+
+
+  for (i = 0; i < node->data_array->len; i++)
+    {
+      list = g_list_prepend (list, node->data_array->pdata[i]);
+    }
+
+  return list;
+}
+
+static GList*
+crank_octree_set_node_cull (CrankOctreeSetNode *node,
+                            CrankOctreeSet     *set,
+                            GList              *list,
+                            CrankPlane3        *culls,
+                            const guint         nculls)
+{
+  gboolean partial = FALSE;
+  guint i;
+  guint j;
+
+  // Check whether it is in cull.
+
+  for (i = 0; i < nculls; i++)
+    {
+      gint sign = crank_box3_get_plane_sign (& node->boundary,
+                                             culls + i);
+
+      if (sign < 0)
+        return list;
+
+      else if (sign == 0)
+        partial = TRUE;
+    }
+
+  if (partial)
+    {
+      for (i = 0; i < node->data_array->len; i++)
+        {
+          gpointer data = node->data_array->pdata[i];
+
+          CrankVecFloat3 *pos = set->pos_func (data, set->pos_func_data);
+          gfloat          rad = set->rad_func (data, set->rad_func_data);
+
+          for (j = 0; j < nculls; j++)
+            {
+              if (rad < crank_plane3_get_distance (culls + j, pos))
+                break;
+            }
+
+          if (j == nculls)
+            list = g_list_prepend (list, data);
+        }
+
+      for (i = 0; i < 8; i++)
+        {
+          list = crank_octree_set_node_cull (node, set, list, culls, nculls);
+        }
+    }
+  else
+    {
+      list = crank_octree_set_node_list (node, list);
+    }
+
+  return list;
+}
+
 
 //////// Constructors //////////////////////////////////////////////////////////
 
@@ -643,13 +733,32 @@ crank_octree_set_foreach (CrankOctreeSet *set,
  *
  * Gets #GList of elements in octree.
  *
- * Returns: (transfer container): List of elements in octree.
+ * Returns: (transfer container) (element-type gpointer): List of elements in octree.
  */
 GList*
 crank_octree_set_get_data_list (CrankOctreeSet *set)
 {
   return g_hash_table_get_keys (set->map_data_node);
 }
+
+
+/**
+ * crank_octree_get_culled_list:
+ * @set: An octree set.
+ * @culls: (array length=nculls): Culling plane.
+ * @nculls: Number of @culls.
+ *
+ * Returns: (transfer container) (element-type gpointer): List of elements in octree.
+ */
+GList*
+crank_octree_set_get_culled_list (CrankOctreeSet *set,
+                                  CrankPlane3    *culls,
+                                  const guint     nculls)
+{
+  return crank_octree_set_node_cull (set->root, set, NULL, culls, nculls);
+}
+
+
 
 
 //////// Getting nodes /////////////////////////////////////////////////////////

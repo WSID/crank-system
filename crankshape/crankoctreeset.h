@@ -31,6 +31,7 @@
 
 #include "crankbase.h"
 #include "crankbox.h"
+#include "crankshapemisc.h"
 
 G_BEGIN_DECLS
 
@@ -42,7 +43,7 @@ typedef CrankVecFloat3 *(*CrankOctreePosFunc) (gpointer data,
 typedef gfloat          (*CrankOctreeRadiusFunc) (gpointer data,
                                                   gpointer userdata);
 
-
+typedef struct _CrankOctreePlaneCull CrankOctreePlaneCull;
 
 typedef struct _CrankOctreeSet CrankOctreeSet;
 typedef struct _CrankOctreeSetIter CrankOctreeSetIter;
@@ -51,6 +52,7 @@ typedef struct _CrankOctreeSetNode CrankOctreeSetNode;
 
 #define CRANK_TYPE_OCTREE_SET (crank_octree_set_get_type())
 GType crank_octree_set_get_type(void);
+
 
 
 //////// Constructors //////////////////////////////////////////////////////////
@@ -103,6 +105,12 @@ void        crank_octree_set_foreach (CrankOctreeSet *set,
 
 GList      *crank_octree_set_get_data_list (CrankOctreeSet *set);
 
+
+//////// Culled iterations /////////////////////////////////////////////////////
+
+GList      *crank_octree_set_get_culled_list (CrankOctreeSet *set,
+                                              CrankPlane3    *culls,
+                                              const guint     nculls);
 
 
 //////// Getting nodes /////////////////////////////////////////////////////////
