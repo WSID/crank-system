@@ -92,6 +92,18 @@ static gchar *pos_frag_replace =
 "cogl_color_out = vec4 (crank_frag_position, 1);"
 ;
 
+//////// Properties of private types ///////////////////////////////////////////
+
+enum {
+  PROP_PRIV_0,
+  PROP_PRIV_PLACE,
+  PROP_PRIV_RENDERABLE_OFFSET,
+
+  PROP_PRIV_COUNTS
+};
+
+static GParamSpec *pspecs_priv[PROP_PRIV_COUNTS] = {NULL};
+
 //////// Private Type Declaration //////////////////////////////////////////////
 
 #define CRANK_TYPE_RENDER_PDATA (crank_render_pdata_get_type())
@@ -119,6 +131,11 @@ static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
 
 static void crank_render_pdata_constructed (GObject *object);
 
+static void crank_render_pdata_set_property (GObject      *object,
+                                             guint         prop_id,
+                                             const GValue *value,
+                                             GParamSpec   *pspec);
+
 static void crank_render_pdata_dispose (GObject *object);
 
 static void crank_render_pdata_finalize (GObject *object);
@@ -142,22 +159,33 @@ G_DEFINE_TYPE (CrankRenderPData, crank_render_pdata, G_TYPE_OBJECT)
 
 static void crank_render_pdata_init (CrankRenderPData *pdata)
 {
-  CrankBox3 box;
-
-  crank_box3_init_uvec (& box, -100, -100, -100, 100, 100, 100);
-
-  pdata->entities = crank_octree_set_new (& box,
-                                          crank_render_pdata_get_pos, NULL, NULL,
-                                          crank_render_pdata_get_rad, NULL, NULL);
 }
 
 static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 {
-  GObjectClass *c_gobject;
+  GObjectClass *c_gobject = G_OBJECT_CLASS (c);
 
   c_gobject->constructed = crank_render_pdata_constructed;
+  c_gobject->set_property = crank_render_pdata_set_property;
   c_gobject->dispose = crank_render_pdata_dispose;
   c_gobject->finalize = crank_render_pdata_finalize;
+
+  pspecs_priv[PROP_PRIV_PLACE] = g_param_spec_pointer ("place", "place", "Place",
+                                                      G_PARAM_PRIVATE |
+                                                      G_PARAM_WRITABLE |
+                                                      G_PARAM_CONSTRUCT_ONLY |
+                                                      G_PARAM_STATIC_STRINGS );
+
+  pspecs_priv[PROP_PRIV_RENDERABLE_OFFSET] =
+      g_param_spec_int64 ("renderable-offset", "Renderable offset",
+                          "Renderable offset",
+                          0, G_MAXINT64, 0,
+                          G_PARAM_PRIVATE |
+                          G_PARAM_WRITABLE |
+                          G_PARAM_CONSTRUCT_ONLY |
+                          G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_PRIV_COUNTS, pspecs_priv);
 }
 
 
@@ -169,6 +197,39 @@ static void
 crank_render_pdata_constructed (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
+  CrankPlace3 *place = g_object_get_data (object, "place");
+  gpointer renderable_offset = g_object_get_data (object, "renderable-offset");
+
+  CrankBox3 box;
+
+  crank_box3_init_uvec (& box, -1000, -1000, -1000, 1000, 1000, 1000);
+
+  pdata->entities = crank_octree_set_new (& box,
+                                          crank_render_pdata_get_pos, NULL, NULL,
+                                          crank_render_pdata_get_rad, renderable_offset, NULL);
+}
+
+static void
+crank_render_pdata_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  switch (prop_id)
+    {
+    case PROP_PRIV_PLACE:
+      g_object_set_data (object, "place",
+                         g_value_get_pointer (value));
+      break;
+
+    case PROP_PRIV_RENDERABLE_OFFSET:
+      g_object_set_data (object, "renderable-offset",
+                         GINT_TO_POINTER (g_value_get_int64 (value)));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 static void
@@ -205,8 +266,10 @@ crank_render_pdata_get_rad (gpointer data,
   goffset offset = (goffset) userdata;
 
   CrankEntity3 *entity = (CrankEntity3*)data;
+  CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, offset);
 
-  return entity->position.mscl;
+  return entity->position.mscl *
+         crank_renderable_get_visible_radius (renderable);
 }
 
 //////// Private type functions ////////////////////////////////////////////////
@@ -529,7 +592,10 @@ crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
   CrankRenderModule *module  = (CrankRenderModule*) userdata;
 
   G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata) =
-      g_object_new (CRANK_TYPE_RENDER_PDATA, NULL);
+      g_object_new (CRANK_TYPE_RENDER_PDATA,
+                    "place", place,
+                    "renderable-offset", module->offset_renderable,
+                    NULL);
 }
 
 
