@@ -215,8 +215,8 @@ void            crank_trans3_transv            (CrankTrans3    *a,
                                                 CrankVecFloat3 *r);
 
 void            crank_trans3_trans_plane       (CrankTrans3 *a,
-                                                CrankPlane3 *p,
-                                                CrankPlane3 *q);
+                                                CrankPlane3 *b,
+                                                CrankPlane3 *r);
 
 G_END_DECLS
 
