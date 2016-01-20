@@ -765,3 +765,22 @@ crank_trans3_transv (CrankTrans3    *a,
   crank_vec_float3_muls_self (r, a->mscl);
   crank_vec_float3_add_self (r, & a->mtrans);
 }
+
+/**
+ * crank_trans3_trans_plane:
+ * @a: A transformation.
+ * @b: A Plane.
+ * @r: (out): A result.
+ *
+ * Transform a plane representation.
+ */
+void
+crank_trans3_trans_plane (CrankTrans3 *a,
+                          CrankPlane3 *p,
+                          CrankPlane3 *r)
+{
+  crank_quat_float_rotatev (& a->mrot, & p->normal, & r->normal);
+
+  r->dist_origin = crank_vec_float3_dot (& a->mtrans, & r->normal) +
+                   a->mscl * p->dist_origin;
+}

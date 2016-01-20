@@ -30,6 +30,7 @@
 #include <glib-object.h>
 
 #include "crankbase.h"
+#include "crankplane.h"
 
 G_BEGIN_DECLS
 
@@ -212,6 +213,10 @@ void            crank_trans3_relative_to       (CrankTrans3    *a,
 void            crank_trans3_transv            (CrankTrans3    *a,
                                                 CrankVecFloat3 *b,
                                                 CrankVecFloat3 *r);
+
+void            crank_trans3_trans_plane       (CrankTrans3 *a,
+                                                CrankPlane3 *p,
+                                                CrankPlane3 *q);
 
 G_END_DECLS
 
