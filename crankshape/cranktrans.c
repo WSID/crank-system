@@ -761,7 +761,7 @@ crank_trans3_transv (CrankTrans3    *a,
                      CrankVecFloat3 *b,
                      CrankVecFloat3 *r)
 {
-  crank_quat_float_rotatev (&a->mrot, & a->mtrans, r);
+  crank_quat_float_rotatev (&a->mrot, b, r);
   crank_vec_float3_muls_self (r, a->mscl);
   crank_vec_float3_add_self (r, & a->mtrans);
 }
