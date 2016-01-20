@@ -44,9 +44,13 @@ libcrankvisual_la_SOURCES= \
 		crankrenderableprimitive.c \
 		crankmaterial.c \
 		crankcamera.c \
+		crankrenderpdata.c \
 		crankrendermodule.c \
 		crankcameracontent.c \
 		crankvertexstruct.c
+
+noinst_HEADERS= \
+		crankrenderpdata.h
 
 
 
