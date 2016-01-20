@@ -820,7 +820,7 @@ crank_box3_get_plane_sign (CrankBox3      *box,
   ppd = crank_vec_float3_dot (&ppt, & plane->normal);
   npd = crank_vec_float3_dot (&npt, & plane->normal);
 
-  return  (plane->dot_anchor < npd) ? -1 :
-          (plane->dot_anchor < ppd) ? 0 :
+  return  (plane->dist_origin < npd) ? -1 :
+          (plane->dist_origin < ppd) ? 0 :
                                       1;
 }

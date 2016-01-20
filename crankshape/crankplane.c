@@ -52,10 +52,8 @@ crank_plane3_init (CrankPlane3    *plane,
                    const CrankVecFloat3 *anchor,
                    const CrankVecFloat3 *normal)
 {
-  crank_vec_float3_copy (anchor, & plane->anchor);
+  plane->dist_origin = crank_vec_float3_dot (normal, anchor);
   crank_vec_float3_unit (normal, & plane->normal);
-
-  plane->dot_anchor = crank_vec_float3_dot (normal, anchor);
 }
 
 /**
@@ -69,10 +67,8 @@ void
 crank_plane3_copy (const CrankPlane3 *plane,
                    CrankPlane3       *other)
 {
-  crank_vec_float3_copy (& plane->anchor, & other->anchor);
+  other->dist_origin = plane->dist_origin;
   crank_vec_float3_copy (& plane->normal, & other->normal);
-
-  other->dot_anchor = plane->dot_anchor;
 }
 
 /**
@@ -87,9 +83,7 @@ CrankPlane3*
 crank_plane3_dup (const CrankPlane3 *plane)
 {
   CrankPlane3 *result = g_new (CrankPlane3, 1);
-
   crank_plane3_copy (plane, result);
-
   return result;
 }
 
@@ -105,8 +99,7 @@ crank_plane3_get_distance (const CrankPlane3    *plane,
                            const CrankVecFloat3 *point)
 {
   gfloat dot_point = crank_vec_float3_dot (& plane->normal, point);
-
-  return dot_point - plane->dot_anchor;
+  return dot_point - plane->dist_origin;
 }
 
 

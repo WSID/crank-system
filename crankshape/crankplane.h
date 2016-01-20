@@ -37,19 +37,16 @@ G_BEGIN_DECLS
 
 /**
  * CrankPlane3:
- * @anchor: Anchor point for plane.
+ * @dist_origin: Signed distance from origin.
  * @normal: Normal in positive direction.
- * @dot_anchor: Dot product result of @anchor and @normal.
  *
- * Represents an infinite plane in 3D Space. This structure holds additional
- * precomputed value for faster computation.
+ * Represents an infinite plane in 3D Space. Does not include anchor to keep this
+ * compact.
  */
 typedef struct _CrankPlane3
 {
-  CrankVecFloat3  anchor;
+  gfloat          dist_origin;
   CrankVecFloat3  normal;
-
-  gfloat          dot_anchor;
 } CrankPlane3;
 
 #define CRANK_TYPE_PLANE3 (crank_plane3_get_type ())
