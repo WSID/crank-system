@@ -139,9 +139,9 @@ void            crank_vec_float2_set        (CrankVecFloat2 *vec,
                                              const guint     index,
                                              const gfloat    value);
 
-gboolean        crank_vec_float2_foreach    (CrankVecFloat2    *vec,
-                                             CrankBoolFloatFunc func,
-                                             gpointer           userdata);
+gboolean        crank_vec_float2_foreach    (const CrankVecFloat2 *vec,
+                                             CrankBoolFloatFunc    func,
+                                             gpointer              userdata);
 
 void            crank_vec_float2_iterator   (CrankVecFloat2    *vec,
                                              CrankIterMemFloat *iter);
@@ -157,139 +157,139 @@ gboolean        crank_vec_float2_equal_delta(gconstpointer a,
                                              gconstpointer b,
                                              const gfloat  d);
 
-gchar          *crank_vec_float2_to_string  (CrankVecFloat2 *vec);
+gchar          *crank_vec_float2_to_string  (const CrankVecFloat2 *vec);
 
-gchar          *crank_vec_float2_to_string_full (CrankVecFloat2 *vec,
-                                                 const gchar    *left,
-                                                 const gchar    *in,
-                                                 const gchar    *right,
-                                                 const gchar    *format);
+gchar          *crank_vec_float2_to_string_full (const CrankVecFloat2 *vec,
+                                                 const gchar          *left,
+                                                 const gchar          *in,
+                                                 const gchar          *right,
+                                                 const gchar          *format);
 
 
 //////// Standard vector property ///////
 
-gfloat          crank_vec_float2_get_magn_sq        (CrankVecFloat2 *vec);
+gfloat          crank_vec_float2_get_magn_sq        (const CrankVecFloat2 *vec);
 
-gfloat          crank_vec_float2_get_magn           (CrankVecFloat2 *vec);
+gfloat          crank_vec_float2_get_magn           (const CrankVecFloat2 *vec);
 
 
 //////// Standard unary operations ////////
 
-void            crank_vec_float2_neg            (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_neg            (const CrankVecFloat2 *a,
+                                                 CrankVecFloat2       *r);
 
 void            crank_vec_float2_neg_self       (CrankVecFloat2 *a);
 
-void            crank_vec_float2_unit           (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_unit           (const CrankVecFloat2 *a,
+                                                 CrankVecFloat2       *r);
 
 void            crank_vec_float2_unit_self      (CrankVecFloat2 *a);
 
 
 //////// Scalar operations ////////
 
-void            crank_vec_float2_muls           (CrankVecFloat2 *a,
-                                                 const gfloat    b,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_muls           (const CrankVecFloat2 *a,
+                                                 const gfloat          b,
+                                                 CrankVecFloat2       *r);
 
 void            crank_vec_float2_muls_self      (CrankVecFloat2 *a,
                                                  const gfloat    b);
 
-void            crank_vec_float2_divs           (CrankVecFloat2 *a,
-                                                 const gfloat    b,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_divs           (const CrankVecFloat2 *a,
+                                                 const gfloat          b,
+                                                 CrankVecFloat2       *r);
 
 void            crank_vec_float2_divs_self      (CrankVecFloat2 *a,
                                                  const gfloat    b);
 
 //////// Standard vector operations ////////
 
-void            crank_vec_float2_add            (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_add            (const CrankVecFloat2 *a,
+                                                 const CrankVecFloat2 *b,
+                                                 CrankVecFloat2       *r);
 
-void            crank_vec_float2_add_self       (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b);
+void            crank_vec_float2_add_self       (CrankVecFloat2       *a,
+                                                 const CrankVecFloat2 *b);
 
-void            crank_vec_float2_sub            (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b,
-                                                 CrankVecFloat2 *r);
+void            crank_vec_float2_sub            (const CrankVecFloat2 *a,
+                                                 const CrankVecFloat2 *b,
+                                                 CrankVecFloat2       *r);
 
-void            crank_vec_float2_sub_self       (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b);
+void            crank_vec_float2_sub_self       (CrankVecFloat2       *a,
+                                                 const CrankVecFloat2 *b);
 
-gfloat          crank_vec_float2_dot            (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b);
+gfloat          crank_vec_float2_dot            (const CrankVecFloat2 *a,
+                                                 const CrankVecFloat2 *b);
 
-gfloat          crank_vec_float2_crs            (CrankVecFloat2 *a,
-                                                 CrankVecFloat2 *b);
+gfloat          crank_vec_float2_crs            (const CrankVecFloat2 *a,
+                                                 const CrankVecFloat2 *b);
 
 //////// Component vector operations ////////
 
-void            crank_vec_float2_cmpmul     (CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b,
-                                             CrankVecFloat2 *r);
+void            crank_vec_float2_cmpmul     (const CrankVecFloat2 *a,
+                                             const CrankVecFloat2 *b,
+                                             CrankVecFloat2       *r);
 
-void            crank_vec_float2_cmpmul_self(CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b);
+void            crank_vec_float2_cmpmul_self(CrankVecFloat2       *a,
+                                             const CrankVecFloat2 *b);
 
-void            crank_vec_float2_cmpdiv     (CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b,
-                                             CrankVecFloat2 *r);
+void            crank_vec_float2_cmpdiv     (const CrankVecFloat2 *a,
+                                             const CrankVecFloat2 *b,
+                                             CrankVecFloat2       *r);
 
-void            crank_vec_float2_cmpdiv_self(CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b);
+void            crank_vec_float2_cmpdiv_self(CrankVecFloat2       *a,
+                                             const CrankVecFloat2 *b);
 
-void            crank_vec_float2_cmpless    (CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b,
-                                             CrankVecBool2  *r);
+void            crank_vec_float2_cmpless    (const CrankVecFloat2 *a,
+                                             const CrankVecFloat2 *b,
+                                             CrankVecBool2        *r);
 
-void            crank_vec_float2_cmpeq      (CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b,
-                                             CrankVecBool2  *r);
+void            crank_vec_float2_cmpeq      (const CrankVecFloat2 *a,
+                                             const CrankVecFloat2 *b,
+                                             CrankVecBool2        *r);
 
-void            crank_vec_float2_cmpgreater (CrankVecFloat2 *a,
-                                             CrankVecFloat2 *b,
-                                             CrankVecBool2  *r);
+void            crank_vec_float2_cmpgreater (const CrankVecFloat2 *a,
+                                             const CrankVecFloat2 *b,
+                                             CrankVecBool2        *r);
 
-void            crank_vec_float2_cmpcmp (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *b,
-                                         CrankVecInt2   *r);
+void            crank_vec_float2_cmpcmp (const CrankVecFloat2 *a,
+                                         const CrankVecFloat2 *b,
+                                         CrankVecInt2         *r);
 
-void            crank_vec_float2_min    (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *b,
-                                         CrankVecFloat2 *r);
+void            crank_vec_float2_min    (const CrankVecFloat2 *a,
+                                         const CrankVecFloat2 *b,
+                                         CrankVecFloat2       *r);
 
-void            crank_vec_float2_max    (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *b,
-                                         CrankVecFloat2 *r);
+void            crank_vec_float2_max    (const CrankVecFloat2 *a,
+                                         const CrankVecFloat2 *b,
+                                         CrankVecFloat2       *r);
 
-void            crank_vec_float2_abs    (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *r);
+void            crank_vec_float2_abs    (const CrankVecFloat2 *a,
+                                         CrankVecFloat2       *r);
 
 void            crank_vec_float2_abs_self(CrankVecFloat2 *a);
 
 //////// Matrix Operations /////////////////////////////////////////////////////
 
-void            crank_vec_float2_mulm (CrankVecFloat2 *a,
-                                       CrankMatFloat2 *b,
-                                       CrankVecFloat2 *r);
+void            crank_vec_float2_mulm (const CrankVecFloat2 *a,
+                                       const CrankMatFloat2 *b,
+                                       CrankVecFloat2       *r);
 
-void            crank_vec_float2_mulm_self (CrankVecFloat2 *a,
-                                            CrankMatFloat2 *b);
+void            crank_vec_float2_mulm_self (CrankVecFloat2       *a,
+                                            const CrankMatFloat2 *b);
 
 
 //////// Ternary Operations ////////
 
-void            crank_vec_float2_mixs   (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *b,
-                                         gfloat          c,
-                                         CrankVecFloat2 *r);
+void            crank_vec_float2_mixs   (const CrankVecFloat2 *a,
+                                         const CrankVecFloat2 *b,
+                                         const gfloat          c,
+                                         CrankVecFloat2       *r);
 
-void            crank_vec_float2_mix    (CrankVecFloat2 *a,
-                                         CrankVecFloat2 *b,
-                                         CrankVecFloat2 *c,
-                                         CrankVecFloat2 *r);
+void            crank_vec_float2_mix    (const CrankVecFloat2 *a,
+                                         const CrankVecFloat2 *b,
+                                         const CrankVecFloat2 *c,
+                                         CrankVecFloat2       *r);
 
 
 

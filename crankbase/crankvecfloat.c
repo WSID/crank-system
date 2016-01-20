@@ -395,9 +395,9 @@ crank_vec_float2_set (CrankVecFloat2 *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float2_foreach (CrankVecFloat2    *vec,
-                          CrankBoolFloatFunc func,
-                          gpointer           userdata)
+crank_vec_float2_foreach (const CrankVecFloat2 *vec,
+                          CrankBoolFloatFunc    func,
+                          gpointer              userdata)
 {
   if (func (vec->x, userdata) &&
       func (vec->y, userdata))
@@ -503,7 +503,7 @@ crank_vec_float2_equal_delta (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float2_to_string (CrankVecFloat2 *vec)
+crank_vec_float2_to_string (const CrankVecFloat2 *vec)
 {
   return crank_vec_float2_to_string_full (vec, "(", ", ", ")", "%g");
 }
@@ -521,7 +521,7 @@ crank_vec_float2_to_string (CrankVecFloat2 *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float2_to_string_full (CrankVecFloat2 *vec,
+crank_vec_float2_to_string_full (const CrankVecFloat2 *vec,
                                  const gchar    *left,
                                  const gchar    *in,
                                  const gchar    *right,
@@ -555,7 +555,7 @@ crank_vec_float2_to_string_full (CrankVecFloat2 *vec,
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float2_get_magn_sq (CrankVecFloat2 *vec)
+crank_vec_float2_get_magn_sq (const CrankVecFloat2 *vec)
 {
   return (vec->x * vec->x) +
          (vec->y * vec->y);
@@ -570,7 +570,7 @@ crank_vec_float2_get_magn_sq (CrankVecFloat2 *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float2_get_magn (CrankVecFloat2 *vec)
+crank_vec_float2_get_magn (const CrankVecFloat2 *vec)
 {
   gfloat sq = crank_vec_float2_get_magn_sq (vec);
   return sqrtf (sq);
@@ -589,8 +589,8 @@ crank_vec_float2_get_magn (CrankVecFloat2 *vec)
  * Applies negation.
  */
 void
-crank_vec_float2_neg (CrankVecFloat2 *a,
-                      CrankVecFloat2 *r)
+crank_vec_float2_neg (const CrankVecFloat2 *a,
+                      CrankVecFloat2       *r)
 {
   r->x = -(a->x);
   r->y = -(a->y);
@@ -619,8 +619,8 @@ crank_vec_float2_neg_self (CrankVecFloat2 *a)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float2_unit (CrankVecFloat2 *a,
-                       CrankVecFloat2 *r)
+crank_vec_float2_unit (const CrankVecFloat2 *a,
+                       CrankVecFloat2       *r)
 {
   crank_vec_float2_divs (a, crank_vec_float2_get_magn (a), r);
 }
@@ -649,9 +649,9 @@ crank_vec_float2_unit_self (CrankVecFloat2 *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float2_muls (CrankVecFloat2 *a,
-                       const gfloat    b,
-                       CrankVecFloat2 *r)
+crank_vec_float2_muls (const CrankVecFloat2 *a,
+                       const gfloat          b,
+                       CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -683,9 +683,9 @@ crank_vec_float2_muls_self (CrankVecFloat2 *a,
  * Applies scalar division.
  */
 void
-crank_vec_float2_divs (CrankVecFloat2 *a,
-                       const gfloat    b,
-                       CrankVecFloat2 *r)
+crank_vec_float2_divs (const CrankVecFloat2 *a,
+                       const gfloat          b,
+                       CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -720,9 +720,9 @@ crank_vec_float2_divs_self (CrankVecFloat2 *a,
  * Adds two vectors.
  */
 void
-crank_vec_float2_add (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b,
-                      CrankVecFloat2 *r)
+crank_vec_float2_add (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b,
+                      CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -739,8 +739,8 @@ crank_vec_float2_add (CrankVecFloat2 *a,
  * Adds two vectors.
  */
 void
-crank_vec_float2_add_self (CrankVecFloat2 *a,
-                           CrankVecFloat2 *b)
+crank_vec_float2_add_self (CrankVecFloat2       *a,
+                           const CrankVecFloat2 *b)
 {
   a->x += b->x;
   a->y += b->y;
@@ -755,9 +755,9 @@ crank_vec_float2_add_self (CrankVecFloat2 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float2_sub (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b,
-                      CrankVecFloat2 *r)
+crank_vec_float2_sub (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b,
+                      CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -774,8 +774,8 @@ crank_vec_float2_sub (CrankVecFloat2 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float2_sub_self (CrankVecFloat2 *a,
-                           CrankVecFloat2 *b)
+crank_vec_float2_sub_self (CrankVecFloat2       *a,
+                           const CrankVecFloat2 *b)
 {
   a->x -= b->x;
   a->y -= b->y;
@@ -791,8 +791,8 @@ crank_vec_float2_sub_self (CrankVecFloat2 *a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float2_dot (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b)
+crank_vec_float2_dot (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b)
 {
   return (a->x) * (b->x) + (a->y) * (b->y);
 }
@@ -807,8 +807,8 @@ crank_vec_float2_dot (CrankVecFloat2 *a,
  * Returns: Cross product of two vectors, as scalar.
  */
 gfloat
-crank_vec_float2_crs (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b)
+crank_vec_float2_crs (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b)
 {
   return (a->x) * (b->y) - (a->y) * (b->x);
 }
@@ -824,9 +824,9 @@ crank_vec_float2_crs (CrankVecFloat2 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float2_cmpmul (CrankVecFloat2 *a,
-                         CrankVecFloat2 *b,
-                         CrankVecFloat2 *r)
+crank_vec_float2_cmpmul (const CrankVecFloat2 *a,
+                         const CrankVecFloat2 *b,
+                         CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -843,8 +843,8 @@ crank_vec_float2_cmpmul (CrankVecFloat2 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float2_cmpmul_self (CrankVecFloat2 *a,
-                              CrankVecFloat2 *b)
+crank_vec_float2_cmpmul_self (CrankVecFloat2       *a,
+                              const CrankVecFloat2 *b)
 {
   a->x *= b->x;
   a->y *= b->y;
@@ -859,9 +859,9 @@ crank_vec_float2_cmpmul_self (CrankVecFloat2 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_float2_cmpdiv (CrankVecFloat2 *a,
-                         CrankVecFloat2 *b,
-                         CrankVecFloat2 *r)
+crank_vec_float2_cmpdiv (const CrankVecFloat2 *a,
+                         const CrankVecFloat2 *b,
+                         CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -878,8 +878,8 @@ crank_vec_float2_cmpdiv (CrankVecFloat2 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_float2_cmpdiv_self (CrankVecFloat2 *a,
-                              CrankVecFloat2 *b)
+crank_vec_float2_cmpdiv_self (CrankVecFloat2       *a,
+                              const CrankVecFloat2 *b)
 {
   a->x /= b->x;
   a->y /= b->y;
@@ -894,9 +894,9 @@ crank_vec_float2_cmpdiv_self (CrankVecFloat2 *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float2_cmpless (CrankVecFloat2 *a,
-                          CrankVecFloat2 *b,
-                          CrankVecBool2  *r)
+crank_vec_float2_cmpless (const CrankVecFloat2 *a,
+                          const CrankVecFloat2 *b,
+                          CrankVecBool2        *r)
 {
   r->x = (a->x) < (b->x);
   r->y = (a->y) < (b->y);
@@ -911,9 +911,9 @@ crank_vec_float2_cmpless (CrankVecFloat2 *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float2_cmpeq (CrankVecFloat2 *a,
-                        CrankVecFloat2 *b,
-                        CrankVecBool2  *r)
+crank_vec_float2_cmpeq (const CrankVecFloat2 *a,
+                        const CrankVecFloat2 *b,
+                        CrankVecBool2        *r)
 {
   r->x = (a->x) == (b->x);
   r->y = (a->y) == (b->y);
@@ -928,9 +928,9 @@ crank_vec_float2_cmpeq (CrankVecFloat2 *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_float2_cmpgreater (CrankVecFloat2 *a,
-                             CrankVecFloat2 *b,
-                             CrankVecBool2  *r)
+crank_vec_float2_cmpgreater (const CrankVecFloat2 *a,
+                             const CrankVecFloat2 *b,
+                             CrankVecBool2        *r)
 {
   r->x = (a->x) > (b->x);
   r->y = (a->y) > (b->y);
@@ -945,9 +945,9 @@ crank_vec_float2_cmpgreater (CrankVecFloat2 *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_float2_cmpcmp (CrankVecFloat2 *a,
-                         CrankVecFloat2 *b,
-                         CrankVecInt2   *r)
+crank_vec_float2_cmpcmp (const CrankVecFloat2 *a,
+                         const CrankVecFloat2 *b,
+                         CrankVecInt2         *r)
 {
   r->x = CMP(a->x, b->x);
   r->y = CMP(a->y, b->y);
@@ -962,9 +962,9 @@ crank_vec_float2_cmpcmp (CrankVecFloat2 *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float2_min (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b,
-                      CrankVecFloat2 *r)
+crank_vec_float2_min (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b,
+                      CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -982,9 +982,9 @@ crank_vec_float2_min (CrankVecFloat2 *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float2_max (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b,
-                      CrankVecFloat2 *r)
+crank_vec_float2_max (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b,
+                      CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1001,8 +1001,8 @@ crank_vec_float2_max (CrankVecFloat2 *a,
  * Gets absolute value of each components.
  */
 void
-crank_vec_float2_abs (CrankVecFloat2 *a,
-                      CrankVecFloat2 *r)
+crank_vec_float2_abs (const CrankVecFloat2 *a,
+                      CrankVecFloat2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1033,9 +1033,9 @@ crank_vec_float2_abs_self (CrankVecFloat2 *a)
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float2_mulm (CrankVecFloat2 *a,
-                       CrankMatFloat2 *b,
-                       CrankVecFloat2 *r)
+crank_vec_float2_mulm (const CrankVecFloat2 *a,
+                       const CrankMatFloat2 *b,
+                       CrankVecFloat2       *r)
 {
   gfloat nx, ny;
 
@@ -1057,8 +1057,8 @@ crank_vec_float2_mulm (CrankVecFloat2 *a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float2_mulm_self (CrankVecFloat2 *a,
-                            CrankMatFloat2 *b)
+crank_vec_float2_mulm_self (CrankVecFloat2       *a,
+                            const CrankMatFloat2 *b)
 {
   gfloat nx, ny;
 
@@ -1082,10 +1082,10 @@ crank_vec_float2_mulm_self (CrankVecFloat2 *a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float2_mixs (CrankVecFloat2 *a,
-                       CrankVecFloat2 *b,
-                       const gfloat    c,
-                       CrankVecFloat2 *r)
+crank_vec_float2_mixs (const CrankVecFloat2 *a,
+                       const CrankVecFloat2 *b,
+                       const gfloat          c,
+                       CrankVecFloat2       *r)
 {
   gfloat d = 1.0f - c;
 
@@ -1110,10 +1110,10 @@ crank_vec_float2_mixs (CrankVecFloat2 *a,
  *    (a cmpmul c) + (b cmpmul ({1, 1} - c))
  */
 void
-crank_vec_float2_mix (CrankVecFloat2 *a,
-                      CrankVecFloat2 *b,
-                      CrankVecFloat2 *c,
-                      CrankVecFloat2 *r)
+crank_vec_float2_mix (const CrankVecFloat2 *a,
+                      const CrankVecFloat2 *b,
+                      const CrankVecFloat2 *c,
+                      CrankVecFloat2       *r)
 {
   CrankVecFloat2 d;
 
