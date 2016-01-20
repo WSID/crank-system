@@ -239,8 +239,8 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  */
 void
 crank_vec_float2_init (CrankVecFloat2 *vec,
-                       gfloat          x,
-                       gfloat          y)
+                       const gfloat    x,
+                       const gfloat    y)
 {
   vec->x = x;
   vec->y = y;
@@ -255,7 +255,7 @@ crank_vec_float2_init (CrankVecFloat2 *vec,
  */
 void
 crank_vec_float2_init_arr (CrankVecFloat2 *vec,
-                           gfloat         *arr)
+                           const gfloat   *arr)
 {
   vec->x = arr[0];
   vec->y = arr[1];
@@ -299,8 +299,8 @@ crank_vec_float2_init_fill (CrankVecFloat2 *vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float2_init_from_vb (CrankVecFloat2 *vec,
-                               CrankVecBool2  *vb)
+crank_vec_float2_init_from_vb (CrankVecFloat2      *vec,
+                               const CrankVecBool2 *vb)
 {
   vec->x = vb->x ? 1 : 0;
   vec->y = vb->y ? 1 : 0;
@@ -314,8 +314,8 @@ crank_vec_float2_init_from_vb (CrankVecFloat2 *vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float2_init_from_vi (CrankVecFloat2 *vec,
-                               CrankVecInt2   *vi)
+crank_vec_float2_init_from_vi (CrankVecFloat2     *vec,
+                               const CrankVecInt2 *vi)
 {
   vec->x = vi->x;
   vec->y = vi->y;
@@ -330,8 +330,8 @@ crank_vec_float2_init_from_vi (CrankVecFloat2 *vec,
  * Copies vector.
  */
 void
-crank_vec_float2_copy (CrankVecFloat2 *vec,
-                       CrankVecFloat2 *other)
+crank_vec_float2_copy (const CrankVecFloat2 *vec,
+                       CrankVecFloat2       *other)
 {
   memcpy (other, vec, sizeof(CrankVecFloat2));
 }
@@ -345,7 +345,7 @@ crank_vec_float2_copy (CrankVecFloat2 *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat2*
-crank_vec_float2_dup (CrankVecFloat2 *vec)
+crank_vec_float2_dup (const CrankVecFloat2 *vec)
 {
   return (CrankVecFloat2*) g_memdup (vec, sizeof (CrankVecFloat2));
 }
@@ -360,8 +360,8 @@ crank_vec_float2_dup (CrankVecFloat2 *vec)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float2_get (CrankVecFloat2 *vec,
-                      const guint     index)
+crank_vec_float2_get (const CrankVecFloat2 *vec,
+                      const guint           index)
 {
   return ((gfloat*)vec)[index];
 }

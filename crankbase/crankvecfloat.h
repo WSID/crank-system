@@ -109,31 +109,31 @@ GType           crank_vec_float2_get_type   (void);
 
 
 void            crank_vec_float2_init       (CrankVecFloat2 *vec,
-                                             gfloat          x,
-                                             gfloat          y);
+                                             const gfloat    x,
+                                             const gfloat    y);
 
 void            crank_vec_float2_init_arr   (CrankVecFloat2 *vec,
-                                             gfloat         *arr);
+                                             const gfloat   *arr);
 
 void            crank_vec_float2_init_valist (CrankVecFloat2 *vec,
                                               va_list         varargs);
 
 void            crank_vec_float2_init_fill  (CrankVecFloat2 *vec,
-                                             gfloat          fill);
+                                             const gfloat    fill);
 
-void            crank_vec_float2_init_from_vb (CrankVecFloat2 *vec,
-                                               CrankVecBool2  *vb);
+void            crank_vec_float2_init_from_vb (CrankVecFloat2      *vec,
+                                               const CrankVecBool2 *vb);
 
-void            crank_vec_float2_init_from_vi (CrankVecFloat2 *vec,
-                                               CrankVecInt2   *vi);
+void            crank_vec_float2_init_from_vi (CrankVecFloat2     *vec,
+                                               const CrankVecInt2 *vi);
 
-void            crank_vec_float2_copy       (CrankVecFloat2 *vec,
-                                             CrankVecFloat2 *other);
+void            crank_vec_float2_copy       (const CrankVecFloat2 *vec,
+                                             CrankVecFloat2       *other);
 
-CrankVecFloat2 *crank_vec_float2_dup        (CrankVecFloat2 *vec);
+CrankVecFloat2 *crank_vec_float2_dup        (const CrankVecFloat2 *vec);
 
-gfloat          crank_vec_float2_get        (CrankVecFloat2 *vec,
-                                             const guint     index);
+gfloat          crank_vec_float2_get        (const CrankVecFloat2 *vec,
+                                             const guint           index);
 
 void            crank_vec_float2_set        (CrankVecFloat2 *vec,
                                              const guint     index,
