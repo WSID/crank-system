@@ -1208,9 +1208,9 @@ G_DEFINE_BOXED_TYPE_WITH_CODE (
  */
 void
 crank_vec_float3_init (CrankVecFloat3 *vec,
-                       gfloat          x,
-                       gfloat          y,
-                       gfloat          z)
+                       const gfloat    x,
+                       const gfloat    y,
+                       const gfloat    z)
 {
   vec->x = x;
   vec->y = y;
@@ -1226,7 +1226,7 @@ crank_vec_float3_init (CrankVecFloat3 *vec,
  */
 void
 crank_vec_float3_init_arr (CrankVecFloat3 *vec,
-                           gfloat         *arr)
+                           const gfloat   *arr)
 {
   vec->x = arr[0];
   vec->y = arr[1];
@@ -1258,7 +1258,7 @@ crank_vec_float3_init_valist (CrankVecFloat3 *vec,
  */
 void
 crank_vec_float3_init_fill (CrankVecFloat3 *vec,
-                            gfloat          fill)
+                            const gfloat    fill)
 {
   vec->x = fill;
   vec->y = fill;
@@ -1273,8 +1273,8 @@ crank_vec_float3_init_fill (CrankVecFloat3 *vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_float3_init_from_vb (CrankVecFloat3 *vec,
-                               CrankVecBool3  *vb)
+crank_vec_float3_init_from_vb (CrankVecFloat3      *vec,
+                               const CrankVecBool3 *vb)
 {
   vec->x = vb->x ? 1 : 0;
   vec->y = vb->y ? 1 : 0;
@@ -1289,8 +1289,8 @@ crank_vec_float3_init_from_vb (CrankVecFloat3 *vec,
  * Initialize vector from integer vector.
  */
 void
-crank_vec_float3_init_from_vi (CrankVecFloat3 *vec,
-                               CrankVecInt3   *vi)
+crank_vec_float3_init_from_vi (CrankVecFloat3     *vec,
+                               const CrankVecInt3 *vi)
 {
   vec->x = vi->x;
   vec->y = vi->y;
@@ -1306,8 +1306,8 @@ crank_vec_float3_init_from_vi (CrankVecFloat3 *vec,
  * Copies vector.
  */
 void
-crank_vec_float3_copy (CrankVecFloat3 *vec,
-                       CrankVecFloat3 *other)
+crank_vec_float3_copy (const CrankVecFloat3 *vec,
+                       CrankVecFloat3       *other)
 {
   memcpy (other, vec, sizeof(CrankVecFloat3));
 }
@@ -1321,7 +1321,7 @@ crank_vec_float3_copy (CrankVecFloat3 *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecFloat3*
-crank_vec_float3_dup (CrankVecFloat3 *vec)
+crank_vec_float3_dup (const CrankVecFloat3 *vec)
 {
   return (CrankVecFloat3*) g_memdup (vec, sizeof (CrankVecFloat3));
 }
@@ -1336,8 +1336,8 @@ crank_vec_float3_dup (CrankVecFloat3 *vec)
  * Returns: element on vector.
  */
 gfloat
-crank_vec_float3_get (CrankVecFloat3 *vec,
-                      const guint     index)
+crank_vec_float3_get (const CrankVecFloat3 *vec,
+                      const guint           index)
 {
   return ((gfloat*)vec)[index];
 }
@@ -1371,9 +1371,9 @@ crank_vec_float3_set (CrankVecFloat3 *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_float3_foreach (CrankVecFloat3    *vec,
-                          CrankBoolFloatFunc func,
-                          gpointer           userdata)
+crank_vec_float3_foreach (const CrankVecFloat3 *vec,
+                          CrankBoolFloatFunc    func,
+                          gpointer              userdata)
 {
   if (func (vec->x, userdata) &&
       func (vec->y, userdata) &&
@@ -1483,7 +1483,7 @@ crank_vec_float3_equal_delta (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_float3_to_string (CrankVecFloat3 *vec)
+crank_vec_float3_to_string (const CrankVecFloat3 *vec)
 {
   return crank_vec_float3_to_string_full (vec, "(", ", ", ")", "%g");
 }
@@ -1501,11 +1501,11 @@ crank_vec_float3_to_string (CrankVecFloat3 *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_float3_to_string_full (CrankVecFloat3 *vec,
-                                 const gchar    *left,
-                                 const gchar    *in,
-                                 const gchar    *right,
-                                 const gchar    *format)
+crank_vec_float3_to_string_full (const CrankVecFloat3 *vec,
+                                 const gchar          *left,
+                                 const gchar          *in,
+                                 const gchar          *right,
+                                 const gchar          *format)
 {
   GString *strb = g_string_new (left);
   gchar *result;
@@ -1538,7 +1538,7 @@ crank_vec_float3_to_string_full (CrankVecFloat3 *vec,
  * Returns: square of magn/norm of @vec.
  */
 gfloat
-crank_vec_float3_get_magn_sq (CrankVecFloat3 *vec)
+crank_vec_float3_get_magn_sq (const CrankVecFloat3 *vec)
 {
   return (vec->x * vec->x) +
          (vec->y * vec->y) +
@@ -1554,7 +1554,7 @@ crank_vec_float3_get_magn_sq (CrankVecFloat3 *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_float3_get_magn (CrankVecFloat3 *vec)
+crank_vec_float3_get_magn (const CrankVecFloat3 *vec)
 {
   gfloat sq = crank_vec_float3_get_magn_sq (vec);
   return sqrtf (sq);
@@ -1573,8 +1573,8 @@ crank_vec_float3_get_magn (CrankVecFloat3 *vec)
  * Applies negation.
  */
 void
-crank_vec_float3_neg (CrankVecFloat3 *a,
-                      CrankVecFloat3 *r)
+crank_vec_float3_neg (const CrankVecFloat3 *a,
+                      CrankVecFloat3       *r)
 {
   r->x = -(a->x);
   r->y = -(a->y);
@@ -1603,8 +1603,8 @@ crank_vec_float3_neg_self (CrankVecFloat3 *a)
  * Gets unit length of vector with same direction of @a
  */
 void
-crank_vec_float3_unit (CrankVecFloat3 *a,
-                       CrankVecFloat3 *r)
+crank_vec_float3_unit (const CrankVecFloat3 *a,
+                       CrankVecFloat3       *r)
 {
   crank_vec_float3_divs (a, crank_vec_float3_get_magn (a), r);
 }
@@ -1633,9 +1633,9 @@ crank_vec_float3_unit_self (CrankVecFloat3 *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_float3_muls (CrankVecFloat3 *a,
-                       const gfloat    b,
-                       CrankVecFloat3 *r)
+crank_vec_float3_muls (const CrankVecFloat3 *a,
+                       const gfloat          b,
+                       CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1669,9 +1669,9 @@ crank_vec_float3_muls_self (CrankVecFloat3 *a,
  * Applies scalar division.
  */
 void
-crank_vec_float3_divs (CrankVecFloat3 *a,
-                       const gfloat    b,
-                       CrankVecFloat3 *r)
+crank_vec_float3_divs (const CrankVecFloat3 *a,
+                       const gfloat          b,
+                       CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1708,9 +1708,9 @@ crank_vec_float3_divs_self (CrankVecFloat3 *a,
  * Adds two vectors.
  */
 void
-crank_vec_float3_add (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *r)
+crank_vec_float3_add (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1728,8 +1728,8 @@ crank_vec_float3_add (CrankVecFloat3 *a,
  * Adds two vectors.
  */
 void
-crank_vec_float3_add_self (CrankVecFloat3 *a,
-                           CrankVecFloat3 *b)
+crank_vec_float3_add_self (CrankVecFloat3       *a,
+                           const CrankVecFloat3 *b)
 {
   a->x += b->x;
   a->y += b->y;
@@ -1745,9 +1745,9 @@ crank_vec_float3_add_self (CrankVecFloat3 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float3_sub (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *r)
+crank_vec_float3_sub (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1765,8 +1765,8 @@ crank_vec_float3_sub (CrankVecFloat3 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_float3_sub_self (CrankVecFloat3 *a,
-                           CrankVecFloat3 *b)
+crank_vec_float3_sub_self (CrankVecFloat3       *a,
+                           const CrankVecFloat3 *b)
 {
   a->x -= b->x;
   a->y -= b->y;
@@ -1783,8 +1783,8 @@ crank_vec_float3_sub_self (CrankVecFloat3 *a,
  * Returns: dot product of two vectors.
  */
 gfloat
-crank_vec_float3_dot (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b)
+crank_vec_float3_dot (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b)
 {
   return (a->x) * (b->x) + (a->y) * (b->y) + (a->z) * (b->z);
 }
@@ -1798,9 +1798,9 @@ crank_vec_float3_dot (CrankVecFloat3 *a,
  * Get cross product of two vectors.
  */
 void
-crank_vec_float3_crs (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *r)
+crank_vec_float3_crs (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      CrankVecFloat3       *r)
 {
   gfloat nx;
   gfloat ny;
@@ -1826,8 +1826,8 @@ crank_vec_float3_crs (CrankVecFloat3 *a,
  * Get cross product of two vectors.
  */
 void
-crank_vec_float3_crs_self (CrankVecFloat3 *a,
-                           CrankVecFloat3 *b)
+crank_vec_float3_crs_self (CrankVecFloat3       *a,
+                           const CrankVecFloat3 *b)
 {
   gfloat nx = (a->y * b->z) - (a->z * b->y);
   gfloat ny = (a->z * b->x) - (a->x * b->z);
@@ -1849,9 +1849,9 @@ crank_vec_float3_crs_self (CrankVecFloat3 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float3_cmpmul (CrankVecFloat3 *a,
-                         CrankVecFloat3 *b,
-                         CrankVecFloat3 *r)
+crank_vec_float3_cmpmul (const CrankVecFloat3 *a,
+                         const CrankVecFloat3 *b,
+                         CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1869,8 +1869,8 @@ crank_vec_float3_cmpmul (CrankVecFloat3 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_float3_cmpmul_self (CrankVecFloat3 *a,
-                              CrankVecFloat3 *b)
+crank_vec_float3_cmpmul_self (CrankVecFloat3       *a,
+                              const CrankVecFloat3 *b)
 {
   a->x *= b->x;
   a->y *= b->y;
@@ -1886,9 +1886,9 @@ crank_vec_float3_cmpmul_self (CrankVecFloat3 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_float3_cmpdiv (CrankVecFloat3 *a,
-                         CrankVecFloat3 *b,
-                         CrankVecFloat3 *r)
+crank_vec_float3_cmpdiv (const CrankVecFloat3 *a,
+                         const CrankVecFloat3 *b,
+                         CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1906,8 +1906,8 @@ crank_vec_float3_cmpdiv (CrankVecFloat3 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_float3_cmpdiv_self (CrankVecFloat3 *a,
-                              CrankVecFloat3 *b)
+crank_vec_float3_cmpdiv_self (CrankVecFloat3       *a,
+                              const CrankVecFloat3 *b)
 {
   a->x /= b->x;
   a->y /= b->y;
@@ -1923,9 +1923,9 @@ crank_vec_float3_cmpdiv_self (CrankVecFloat3 *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_float3_cmpless (CrankVecFloat3 *a,
-                          CrankVecFloat3 *b,
-                          CrankVecBool3  *r)
+crank_vec_float3_cmpless (const CrankVecFloat3 *a,
+                          const CrankVecFloat3 *b,
+                          CrankVecBool3        *r)
 {
   r->x = (a->x) < (b->x);
   r->y = (a->y) < (b->y);
@@ -1941,9 +1941,9 @@ crank_vec_float3_cmpless (CrankVecFloat3 *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_float3_cmpeq (CrankVecFloat3 *a,
-                        CrankVecFloat3 *b,
-                        CrankVecBool3  *r)
+crank_vec_float3_cmpeq (const CrankVecFloat3 *a,
+                        const CrankVecFloat3 *b,
+                        CrankVecBool3        *r)
 {
   r->x = (a->x) == (b->x);
   r->y = (a->y) == (b->y);
@@ -1959,9 +1959,9 @@ crank_vec_float3_cmpeq (CrankVecFloat3 *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_float3_cmpgreater (CrankVecFloat3 *a,
-                             CrankVecFloat3 *b,
-                             CrankVecBool3  *r)
+crank_vec_float3_cmpgreater (const CrankVecFloat3 *a,
+                             const CrankVecFloat3 *b,
+                             CrankVecBool3        *r)
 {
   r->x = (a->x) > (b->x);
   r->y = (a->y) > (b->y);
@@ -1977,9 +1977,9 @@ crank_vec_float3_cmpgreater (CrankVecFloat3 *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_float3_cmpcmp (CrankVecFloat3 *a,
-                         CrankVecFloat3 *b,
-                         CrankVecInt3   *r)
+crank_vec_float3_cmpcmp (const CrankVecFloat3 *a,
+                         const CrankVecFloat3 *b,
+                         CrankVecInt3         *r)
 {
   r->x = CMP(a->x, b->x);
   r->y = CMP(a->y, b->y);
@@ -1995,9 +1995,9 @@ crank_vec_float3_cmpcmp (CrankVecFloat3 *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_float3_min (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *r)
+crank_vec_float3_min (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2016,9 +2016,9 @@ crank_vec_float3_min (CrankVecFloat3 *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_float3_max (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *r)
+crank_vec_float3_max (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2036,8 +2036,8 @@ crank_vec_float3_max (CrankVecFloat3 *a,
  * Gets absolute value of each components.
  */
 void
-crank_vec_float3_abs (CrankVecFloat3 *a,
-                      CrankVecFloat3 *r)
+crank_vec_float3_abs (const CrankVecFloat3 *a,
+                      CrankVecFloat3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -2070,9 +2070,9 @@ crank_vec_float3_abs_self (CrankVecFloat3 *a)
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float3_mulm (CrankVecFloat3 *a,
-                       CrankMatFloat3 *b,
-                       CrankVecFloat3 *r)
+crank_vec_float3_mulm (const CrankVecFloat3 *a,
+                       const CrankMatFloat3 *b,
+                       CrankVecFloat3       *r)
 {
   gfloat nx, ny, nz;
 
@@ -2095,8 +2095,8 @@ crank_vec_float3_mulm (CrankVecFloat3 *a,
  * Multiplies transpose of vector by matrix. (Vector transpose * Matrix)
  */
 void
-crank_vec_float3_mulm_self (CrankVecFloat3 *a,
-                            CrankMatFloat3 *b)
+crank_vec_float3_mulm_self (CrankVecFloat3       *a,
+                            const CrankMatFloat3 *b)
 {
   gfloat nx, ny, nz;
 
@@ -2123,10 +2123,10 @@ crank_vec_float3_mulm_self (CrankVecFloat3 *a,
  *    (a * (1-c)) + (b * c)
  */
 void
-crank_vec_float3_mixs (CrankVecFloat3 *a,
-                       CrankVecFloat3 *b,
-                       const gfloat    c,
-                       CrankVecFloat3 *r)
+crank_vec_float3_mixs (const CrankVecFloat3 *a,
+                       const CrankVecFloat3 *b,
+                       const gfloat          c,
+                       CrankVecFloat3       *r)
 {
   gfloat d;
 
@@ -2154,10 +2154,10 @@ crank_vec_float3_mixs (CrankVecFloat3 *a,
  *    (a cmpmul c) + (b cmpmul ({1, 1, 1} - c))
  */
 void
-crank_vec_float3_mix (CrankVecFloat3 *a,
-                      CrankVecFloat3 *b,
-                      CrankVecFloat3 *c,
-                      CrankVecFloat3 *r)
+crank_vec_float3_mix (const CrankVecFloat3 *a,
+                      const CrankVecFloat3 *b,
+                      const CrankVecFloat3 *c,
+                      CrankVecFloat3       *r)
 {
   CrankVecFloat3 d;
 

@@ -315,40 +315,40 @@ GType           crank_vec_float3_get_type   (void);
 
 
 void            crank_vec_float3_init       (CrankVecFloat3 *vec,
-                                             gfloat          x,
-                                             gfloat          y,
-                                             gfloat          z);
+                                             const gfloat    x,
+                                             const gfloat    y,
+                                             const gfloat    z);
 
 void            crank_vec_float3_init_arr   (CrankVecFloat3 *vec,
-                                             gfloat         *arr);
+                                             const gfloat   *arr);
 
 void            crank_vec_float3_init_valist (CrankVecFloat3 *vec,
                                               va_list         varargs);
 
 void            crank_vec_float3_init_fill  (CrankVecFloat3 *vec,
-                                             gfloat          fill);
+                                             const gfloat    fill);
 
-void            crank_vec_float3_init_from_vb (CrankVecFloat3 *vec,
-                                               CrankVecBool3  *vb);
+void            crank_vec_float3_init_from_vb (CrankVecFloat3      *vec,
+                                               const CrankVecBool3 *vb);
 
-void            crank_vec_float3_init_from_vi (CrankVecFloat3 *vec,
-                                               CrankVecInt3   *vi);
+void            crank_vec_float3_init_from_vi (CrankVecFloat3     *vec,
+                                               const CrankVecInt3 *vi);
 
-void            crank_vec_float3_copy       (CrankVecFloat3 *vec,
-                                             CrankVecFloat3 *other);
+void            crank_vec_float3_copy       (const CrankVecFloat3 *vec,
+                                             CrankVecFloat3       *other);
 
-CrankVecFloat3 *crank_vec_float3_dup        (CrankVecFloat3 *vec);
+CrankVecFloat3 *crank_vec_float3_dup        (const CrankVecFloat3 *vec);
 
-gfloat          crank_vec_float3_get        (CrankVecFloat3 *vec,
-                                             const guint     index);
+gfloat          crank_vec_float3_get        (const CrankVecFloat3 *vec,
+                                             const guint           index);
 
 void            crank_vec_float3_set        (CrankVecFloat3 *vec,
                                              const guint     index,
                                              const gfloat    value);
 
-gboolean        crank_vec_float3_foreach    (CrankVecFloat3    *vec,
-                                             CrankBoolFloatFunc func,
-                                             gpointer           userdata);
+gboolean        crank_vec_float3_foreach    (const CrankVecFloat3 *vec,
+                                             CrankBoolFloatFunc    func,
+                                             gpointer              userdata);
 
 void            crank_vec_float3_iterator   (CrankVecFloat3    *vec,
                                              CrankIterMemFloat *iter);
@@ -364,145 +364,145 @@ gboolean        crank_vec_float3_equal_delta(gconstpointer a,
                                              gconstpointer b,
                                              const gfloat  d);
 
-gchar          *crank_vec_float3_to_string  (CrankVecFloat3 *vec);
+gchar          *crank_vec_float3_to_string  (const CrankVecFloat3 *vec);
 
-gchar          *crank_vec_float3_to_string_full (CrankVecFloat3 *vec,
-                                                 const gchar    *left,
-                                                 const gchar    *in,
-                                                 const gchar    *right,
-                                                 const gchar    *format);
+gchar          *crank_vec_float3_to_string_full (const CrankVecFloat3 *vec,
+                                                 const gchar          *left,
+                                                 const gchar          *in,
+                                                 const gchar          *right,
+                                                 const gchar          *format);
 
 
 //////// Standard vector property ///////
 
-gfloat          crank_vec_float3_get_magn_sq        (CrankVecFloat3 *vec);
+gfloat          crank_vec_float3_get_magn_sq  (const CrankVecFloat3 *vec);
 
-gfloat          crank_vec_float3_get_magn           (CrankVecFloat3 *vec);
+gfloat          crank_vec_float3_get_magn     (const CrankVecFloat3 *vec);
 
 
 //////// Standard unary operations ////////
 
-void            crank_vec_float3_neg            (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_neg          (const CrankVecFloat3 *a,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_neg_self       (CrankVecFloat3 *a);
+void            crank_vec_float3_neg_self     (CrankVecFloat3       *a);
 
-void            crank_vec_float3_unit           (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_unit         (const CrankVecFloat3 *a,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_unit_self      (CrankVecFloat3 *a);
+void            crank_vec_float3_unit_self    (CrankVecFloat3       *a);
 
 
 //////// Scalar operations ////////
 
-void            crank_vec_float3_muls           (CrankVecFloat3 *a,
-                                                 const gfloat    b,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_muls         (const CrankVecFloat3 *a,
+                                               const gfloat          b,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_muls_self      (CrankVecFloat3 *a,
-                                                 const gfloat    b);
+void            crank_vec_float3_muls_self    (CrankVecFloat3 *a,
+                                               const gfloat    b);
 
-void            crank_vec_float3_divs           (CrankVecFloat3 *a,
-                                                 const gfloat    b,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_divs         (const CrankVecFloat3 *a,
+                                               const gfloat          b,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_divs_self      (CrankVecFloat3 *a,
-                                                 const gfloat    b);
+void            crank_vec_float3_divs_self    (CrankVecFloat3 *a,
+                                               const gfloat    b);
 
 //////// Standard vector operations ////////
 
-void            crank_vec_float3_add            (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_add          (const CrankVecFloat3 *a,
+                                               const CrankVecFloat3 *b,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_add_self       (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b);
+void            crank_vec_float3_add_self     (CrankVecFloat3       *a,
+                                               const CrankVecFloat3 *b);
 
-void            crank_vec_float3_sub            (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_sub          (const CrankVecFloat3 *a,
+                                               const CrankVecFloat3 *b,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_sub_self       (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b);
+void            crank_vec_float3_sub_self     (CrankVecFloat3       *a,
+                                               const CrankVecFloat3 *b);
 
-gfloat          crank_vec_float3_dot            (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b);
+gfloat          crank_vec_float3_dot          (const CrankVecFloat3 *a,
+                                               const CrankVecFloat3 *b);
 
-void            crank_vec_float3_crs            (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b,
-                                                 CrankVecFloat3 *r);
+void            crank_vec_float3_crs          (const CrankVecFloat3 *a,
+                                               const CrankVecFloat3 *b,
+                                               CrankVecFloat3       *r);
 
-void            crank_vec_float3_crs_self       (CrankVecFloat3 *a,
-                                                 CrankVecFloat3 *b);
+void            crank_vec_float3_crs_self     (CrankVecFloat3       *a,
+                                               const CrankVecFloat3 *b);
 
 
 //////// Component vector operations ////////
 
-void            crank_vec_float3_cmpmul     (CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b,
-                                             CrankVecFloat3 *r);
+void            crank_vec_float3_cmpmul     (const CrankVecFloat3 *a,
+                                             const CrankVecFloat3 *b,
+                                             CrankVecFloat3       *r);
 
-void            crank_vec_float3_cmpmul_self(CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b);
+void            crank_vec_float3_cmpmul_self(CrankVecFloat3       *a,
+                                             const CrankVecFloat3 *b);
 
-void            crank_vec_float3_cmpdiv     (CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b,
-                                             CrankVecFloat3 *r);
+void            crank_vec_float3_cmpdiv     (const CrankVecFloat3 *a,
+                                             const CrankVecFloat3 *b,
+                                             CrankVecFloat3       *r);
 
-void            crank_vec_float3_cmpdiv_self(CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b);
+void            crank_vec_float3_cmpdiv_self(CrankVecFloat3       *a,
+                                             const CrankVecFloat3 *b);
 
 
-void            crank_vec_float3_cmpless    (CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b,
-                                             CrankVecBool3  *r);
+void            crank_vec_float3_cmpless    (const CrankVecFloat3 *a,
+                                             const CrankVecFloat3 *b,
+                                             CrankVecBool3        *r);
 
-void            crank_vec_float3_cmpeq      (CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b,
-                                             CrankVecBool3  *r);
+void            crank_vec_float3_cmpeq      (const CrankVecFloat3 *a,
+                                             const CrankVecFloat3 *b,
+                                             CrankVecBool3        *r);
 
-void            crank_vec_float3_cmpgreater (CrankVecFloat3 *a,
-                                             CrankVecFloat3 *b,
-                                             CrankVecBool3  *r);
+void            crank_vec_float3_cmpgreater (const CrankVecFloat3 *a,
+                                             const CrankVecFloat3 *b,
+                                             CrankVecBool3        *r);
 
-void            crank_vec_float3_cmpcmp (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *b,
-                                         CrankVecInt3   *r);
+void            crank_vec_float3_cmpcmp (const CrankVecFloat3 *a,
+                                         const CrankVecFloat3 *b,
+                                         CrankVecInt3         *r);
 
-void            crank_vec_float3_min    (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *b,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_min    (const CrankVecFloat3 *a,
+                                         const CrankVecFloat3 *b,
+                                         CrankVecFloat3       *r);
 
-void            crank_vec_float3_max    (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *b,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_max    (const CrankVecFloat3 *a,
+                                         const CrankVecFloat3 *b,
+                                         CrankVecFloat3       *r);
 
-void            crank_vec_float3_abs    (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_abs    (const CrankVecFloat3 *a,
+                                         CrankVecFloat3       *r);
 
 void            crank_vec_float3_abs_self(CrankVecFloat3 *a);
 
 //////// Matrix operations ////////
 
-void            crank_vec_float3_mulm   (CrankVecFloat3 *a,
-                                         CrankMatFloat3 *b,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_mulm   (const CrankVecFloat3 *a,
+                                         const CrankMatFloat3 *b,
+                                         CrankVecFloat3       *r);
 
-void            crank_vec_float3_mulm_self(CrankVecFloat3 *a,
-                                           CrankMatFloat3 *b);
+void            crank_vec_float3_mulm_self(CrankVecFloat3       *a,
+                                           const CrankMatFloat3 *b);
 
 
 //////// Ternary Operations ////////
 
-void            crank_vec_float3_mixs   (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *b,
-                                         gfloat          c,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_mixs   (const CrankVecFloat3 *a,
+                                         const CrankVecFloat3 *b,
+                                         const gfloat          c,
+                                         CrankVecFloat3       *r);
 
-void            crank_vec_float3_mix    (CrankVecFloat3 *a,
-                                         CrankVecFloat3 *b,
-                                         CrankVecFloat3 *c,
-                                         CrankVecFloat3 *r);
+void            crank_vec_float3_mix    (const CrankVecFloat3 *a,
+                                         const CrankVecFloat3 *b,
+                                         const CrankVecFloat3 *c,
+                                         CrankVecFloat3       *r);
 
 
 
