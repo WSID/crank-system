@@ -214,6 +214,9 @@ gboolean        crank_box3_get_intersection (CrankBox3 *box,
                                              CrankBox3 *other,
                                              CrankBox3 *intersect);
 
+gint            crank_box3_get_plane_sign (CrankBox3      *box,
+                                           CrankPlane3    *plane);
+
 G_END_DECLS
 
 #endif

@@ -786,3 +786,42 @@ crank_box3_get_intersection (CrankBox3 *box,
 
   return result;
 }
+
+
+/**
+ * crank_box3_get_plane_sign:
+ * @box: A Box.
+ * @point: A Point on the plane.
+ * @normal: Normal of the plane for positive direction.
+ *
+ * Checks whether the plane described by @point and @normal cuts through @box.
+ *
+ * If the plane cut through the box, 0 will be returned. If box is placed above
+ * the plane in positive direction, 1 is returned. if box is placed below the
+ * plane, -1 is returned.
+ */
+gint
+crank_box3_get_plane_sign (CrankBox3      *box,
+                           CrankPlane3    *plane)
+{
+  CrankVecFloat3 ppt;
+  CrankVecFloat3 npt;
+
+  gfloat ppd;
+  gfloat npd;
+
+  ppt.x = (plane->normal.x < 0) ? box->start.x : box->end.x;
+  ppt.y = (plane->normal.y < 0) ? box->start.y : box->end.y;
+  ppt.z = (plane->normal.z < 0) ? box->start.z : box->end.z;
+
+  npt.x = (plane->normal.x < 0) ? box->end.x : box->start.x;
+  npt.y = (plane->normal.y < 0) ? box->end.y : box->start.y;
+  npt.z = (plane->normal.z < 0) ? box->end.z : box->start.z;
+
+  ppd = crank_vec_float3_dot (&ppt, & plane->normal);
+  npd = crank_vec_float3_dot (&npt, & plane->normal);
+
+  return  (plane->dot_anchor < npd) ? -1 :
+          (plane->dot_anchor < ppd) ? 0 :
+                                      1;
+}
