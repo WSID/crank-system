@@ -44,7 +44,10 @@
 #include "crankoctreeset.h"
 
 
+//////// Private macros ////////////////////////////////////////////////////////
 
+#define NODE_THIS 8
+#define NODE_PARENT 9
 
 //////// Functions for private types ///////////////////////////////////////////
 
@@ -54,10 +57,6 @@ static void                crank_octree_set_node_dealloc (CrankOctreeSetNode *no
 
 static void                crank_octree_set_node_dealloc_all (CrankOctreeSetNode *node);
 
-
-static gboolean           crank_octree_set_node_belongs_middle (CrankOctreeSetNode *node,
-                                                                CrankVecFloat3     *position,
-                                                                gfloat              radius);
 
 static guint              crank_octree_set_node_get_child_index (CrankOctreeSetNode *node,
                                                                  CrankVecFloat3     *position,
@@ -177,35 +176,24 @@ crank_octree_set_node_dealloc_all (CrankOctreeSetNode *node)
 }
 
 
-static gboolean
-crank_octree_set_node_belongs_middle (CrankOctreeSetNode *node,
-                                      CrankVecFloat3     *position,
-                                      gfloat              radius)
-{
-  CrankVecFloat3 dist;
-
-  crank_vec_float3_sub (position, &node->middle, &dist);
-  crank_vec_float3_abs_self (&dist);
-
-  return  (dist.x > radius) ||
-          (dist.y > radius) ||
-          (dist.z > radius);
-}
-
 static guint
 crank_octree_set_node_get_child_index (CrankOctreeSetNode *node,
                                        CrankVecFloat3     *position,
                                        gfloat              radius)
 {
-  guint xindex;
-  guint yindex;
-  guint zindex;
+  CrankVecFloat3 displacement;
+  CrankVecBool3 lm;
 
-  xindex = (position->x > node->middle.x) ? 1 : 0;
-  yindex = (position->y > node->middle.y) ? 1 : 0;
-  zindex = (position->z > node->middle.z) ? 1 : 0;
+  crank_vec_float3_sub (position, & node->middle, &displacement);
+  crank_vec_float3_cmpgreater (&displacement, crank_vec_float3_static_zero, &lm);
 
-  return (zindex << 2) | (yindex << 1) | xindex;
+
+  if (((lm.x ? displacement.x : -displacement.x ) < radius) &&
+      ((lm.y ? displacement.y : -displacement.y ) < radius) &&
+      ((lm.z ? displacement.z : -displacement.z ) < radius) )
+    return NODE_THIS;
+
+  return (lm.x ? 1 : 0) | (lm.y ? 2 : 0) | (lm.z ? 4 : 0);
 }
 
 
@@ -231,15 +219,29 @@ crank_octree_set_node_add_part (CrankOctreeSetNode *node,
 
   crank_vec_float3_sub (& node->middle, pos, &dist);
 
-  if (set->max_capacity <= node->part_size)
+  if ((node->depth + 1 < set->max_height) && (set->max_capacity <= node->part_size))
     {
-      if (node->children[0] == NULL)
-        crank_octree_set_node_divide (node, set);
+      guint index;
 
-      if (crank_octree_set_node_belongs_middle (node, pos, radius))
+      if (node->children[0] == NULL)
+        {
+          if (! crank_octree_set_node_divide (node, set))
+            {
+              crank_octree_set_node_add (node, set, data);
+              return;
+            }
+        }
+
+      index = crank_octree_set_node_get_child_index (node, pos, radius);
+
+      if (index == NODE_THIS)
         crank_octree_set_node_add (node, set, data);
       else
-        crank_octree_set_node_get_child_index (node, pos, radius);
+        crank_octree_set_node_add_part (node->children[index],
+                                        set,
+                                        data,
+                                        pos,
+                                        radius);
     }
   else
     {
@@ -270,13 +272,20 @@ crank_octree_set_node_remove (CrankOctreeSetNode *node,
 
 
 
-static void
+static gboolean
 crank_octree_set_node_divide (CrankOctreeSetNode *node,
                               CrankOctreeSet     *set)
 {
   GPtrArray *n_data_array;
 
+  guint depth1;
   guint i;
+
+  depth1 = node->depth + 1;
+
+  if (set->max_height <= depth1)
+    return FALSE;
+
 
   // Allocate child nodes.
 
@@ -297,6 +306,15 @@ crank_octree_set_node_divide (CrankOctreeSetNode *node,
   node->children[5]->parent = node;
   node->children[6]->parent = node;
   node->children[7]->parent = node;
+
+  node->children[0]->depth = depth1;
+  node->children[1]->depth = depth1;
+  node->children[2]->depth = depth1;
+  node->children[3]->depth = depth1;
+  node->children[4]->depth = depth1;
+  node->children[5]->depth = depth1;
+  node->children[6]->depth = depth1;
+  node->children[7]->depth = depth1;
 
   crank_vec_float3_copy (& node->boundary.start, & node->children[0]->boundary.start);
   crank_vec_float3_copy (& node->middle, & node->children[0]->boundary.end);
@@ -341,20 +359,20 @@ crank_octree_set_node_divide (CrankOctreeSetNode *node,
   for (i = 0; i < node->data_array->len; i++)
     {
       gpointer data = node->data_array->pdata[i];
+      guint child_index;
 
       CrankVecFloat3 *pos = set->pos_func (data, set->pos_func_data);
       gfloat          rad = set->rad_func (data, set->rad_func_data);
 
+      child_index = crank_octree_set_node_get_child_index (node, pos, rad);
 
       // for data that does not belongs to child nodes.
-      if (crank_octree_set_node_belongs_middle (node, pos, rad))
+      if (child_index == NODE_THIS)
         {
           g_ptr_array_add (n_data_array, data);
         }
       else
         {
-          guint child_index = crank_octree_set_node_get_child_index (node, pos, rad);
-
           CrankOctreeSetNode *child = node->children[child_index];
 
           child->part_size ++;
@@ -372,6 +390,8 @@ crank_octree_set_node_divide (CrankOctreeSetNode *node,
       if (set->max_capacity <= node->children[i]->part_size)
         crank_octree_set_node_divide (node->children[i], set);
     }
+
+  return TRUE;
 }
 
 
