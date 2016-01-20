@@ -682,34 +682,12 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CoglFramebuffer   *framebuffer)
 {
   CrankRenderPData *pdata;
-  CrankTrans3 ipos;
-  guint i;
-
   GList *list;
-  GList *iter;
 
-  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
-                            0, 0, 0, 1);
-  cogl_framebuffer_set_projection_matrix (framebuffer,
-                                          (const CoglMatrix*) & projection->matrix_t);
-
-  // TODO: Replace it with octree based version
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-
-  crank_trans3_inverse (position, &ipos);
-
   list = crank_octree_set_get_data_list (pdata->entities);
-  for (iter = list; iter != NULL; iter = iter->next)
-    {
-      CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-      CrankTrans3 pos;
-      CrankTrans3 rpos;
 
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
-
-      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
-    }
+  crank_render_module_render_geom_list (module, list, position, projection, framebuffer);
 
   g_list_free (list);
 }
@@ -732,10 +710,36 @@ crank_render_module_render_color_at (CrankRenderModule *module,
                                      CoglFramebuffer   *framebuffer)
 {
   CrankRenderPData *pdata;
+  GList *list;
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  list = crank_octree_set_get_data_list (pdata->entities);
+
+  crank_render_module_render_color_list (module, list, position, projection, framebuffer);
+
+  g_list_free (list);
+}
+
+/**
+ * crank_render_module_render_geom_list:
+ * @module: A Module.
+ * @list: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_geom_list (CrankRenderModule *module,
+                                      GList *list,
+                                      CrankTrans3       *position,
+                                      CrankProjection   *projection,
+                                      CoglFramebuffer   *framebuffer)
+{
   CrankTrans3 ipos;
   guint i;
 
-  GList *list;
   GList *iter;
 
   cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
@@ -743,26 +747,61 @@ crank_render_module_render_color_at (CrankRenderModule *module,
   cogl_framebuffer_set_projection_matrix (framebuffer,
                                           (const CoglMatrix*) & projection->matrix_t);
 
-  // TODO: Replace it with octree based version
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-
   crank_trans3_inverse (position, &ipos);
 
-  list = crank_octree_set_get_data_list (pdata->entities);
   for (iter = list; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
       CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankTrans3 rpos;
 
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
+
+      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_color_list:
+ * @module: A Module.
+ * @list: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_color_list (CrankRenderModule *module,
+                                       GList *list,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection,
+                                       CoglFramebuffer   *framebuffer)
+{
+  CrankTrans3 ipos;
+  guint i;
+
+  GList *iter;
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (iter = list; iter != NULL; iter = iter->next)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) iter->data;
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
 
       crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
     }
-
-  g_list_free (list);
 }
+
 
 
 /**

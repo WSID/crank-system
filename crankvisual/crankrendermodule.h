@@ -82,6 +82,20 @@ void    crank_render_module_render_color_at (CrankRenderModule *module,
                                              CrankProjection   *projection,
                                              CoglFramebuffer   *framebuffer);
 
+
+void    crank_render_module_render_geom_list (CrankRenderModule *module,
+                                              GList             *entities,
+                                              CrankTrans3       *position,
+                                              CrankProjection   *projection,
+                                              CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_color_list(CrankRenderModule *module,
+                                              GList             *entities,
+                                              CrankTrans3       *position,
+                                              CrankProjection   *projection,
+                                              CoglFramebuffer   *framebuffer);
+
+
 void    crank_render_module_render_pos (CrankRenderModule *module,
                                         CoglTexture       *geom_tex,
                                         CrankProjection   *projection,
