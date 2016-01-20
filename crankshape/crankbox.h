@@ -29,7 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
-#include "crankshapemisc.h"
+#include "crankplane.h"
 
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////

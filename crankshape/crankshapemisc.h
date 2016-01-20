@@ -51,22 +51,6 @@ typedef enum {
 GType crank_winding_get_type (void);
 
 
-/**
- * CrankPlane3:
- * @anchor: Anchor point for plane.
- * @normal: Normal in positive direction.
- *
- * Represents an infinite plane in 3D Space.
- */
-typedef struct _CrankPlane3
-{
-  CrankVecFloat3  anchor;
-  CrankVecFloat3  normal;
-
-  gfloat          dot_anchor;
-} CrankPlane3;
-
-
 //////// Functions /////////////////////////////////////////////////////////////
 
 CrankWinding crank_winding_from_points (CrankVecFloat2 *p1,
@@ -101,15 +85,6 @@ gboolean  crank_tetra_contains (CrankVecFloat3 *tetra,
                                 CrankVecFloat3 *pt);
 
 
-
-//////// CrankPlane3 functions /////////////////////////////////////////////////
-
-void      crank_plane3_init (CrankPlane3    *plane,
-                             CrankVecFloat3 *anchor,
-                             CrankVecFloat3 *normal);
-
-gfloat    crank_plane3_get_distance (CrankPlane3    *plane,
-                                     CrankVecFloat3 *point);
 
 G_END_DECLS
 
