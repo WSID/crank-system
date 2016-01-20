@@ -164,6 +164,8 @@ crank_ran_uint_dup (CrankRanUint *ran)
 {
   CrankRanUint *result = g_new (CrankRanUint, 1);
   crank_ran_uint_copy (ran, result);
+
+  return result;
 }
 
 
@@ -894,8 +896,8 @@ crank_ran_float_hash (gconstpointer a)
 gchar*
 crank_ran_float_to_string (CrankRanFloat *ran)
 {
-  crank_ran_float_to_string_full (ran,
-                                  CRANK_RAN_FLOAT_DEFFORMAT);
+  return crank_ran_float_to_string_full (ran,
+                                         CRANK_RAN_FLOAT_DEFFORMAT);
 }
 
 /**
