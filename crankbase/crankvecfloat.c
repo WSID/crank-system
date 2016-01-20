@@ -180,6 +180,25 @@
  */
 
 
+const gfloat CRANK_VEC_FLOAT_S0[4] = {0, 0, 0, 0};
+const gfloat CRANK_VEC_FLOAT_S1[4] = {1, 1, 1, 1};
+
+const CrankVecFloat2 * const crank_vec_float2_static_zero =
+    (const CrankVecFloat2*) CRANK_VEC_FLOAT_S0;
+const CrankVecFloat3 * const crank_vec_float3_static_zero =
+    (const CrankVecFloat3*) CRANK_VEC_FLOAT_S0;
+const CrankVecFloat4 * const crank_vec_float4_static_zero =
+    (const CrankVecFloat4*) CRANK_VEC_FLOAT_S0;
+
+const CrankVecFloat2 * const crank_vec_float2_static_one =
+    (const CrankVecFloat2*) CRANK_VEC_FLOAT_S1;
+const CrankVecFloat3 * const crank_vec_float3_static_one =
+    (const CrankVecFloat3*) CRANK_VEC_FLOAT_S1;
+const CrankVecFloat4 * const crank_vec_float4_static_one =
+    (const CrankVecFloat4*) CRANK_VEC_FLOAT_S1;
+
+
+
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
 static void crank_vec_float2_transform_from_vb (const GValue *src,

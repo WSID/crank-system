@@ -36,6 +36,63 @@
 G_BEGIN_DECLS
 
 /**
+ * CRANK_VEC_FLOAT_S0: (skip)
+ *
+ * Static vector filled with 0.
+ */
+const gfloat CRANK_VEC_FLOAT_S0[4];
+
+/**
+ * CRANK_VEC_FLOAT_S1: (skip)
+ *
+ * Static vector filled with 1.
+ */
+const gfloat CRANK_VEC_FLOAT_S1[4];
+
+/**
+ * crank_vec_float2_static_zero:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat2 * const crank_vec_float2_static_zero;
+
+/**
+ * crank_vec_float3_static_zero:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat3 * const crank_vec_float3_static_zero;
+
+/**
+ * crank_vec_float4_static_zero:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat4 * const crank_vec_float4_static_zero;
+
+/**
+ * crank_vec_float2_static_one:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat2 * const crank_vec_float2_static_one;
+
+/**
+ * crank_vec_float3_static_one:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat3 * const crank_vec_float3_static_one;
+
+/**
+ * crank_vec_float4_static_one:
+ *
+ * Static vector filled with 0.
+ */
+const CrankVecFloat4 * const crank_vec_float4_static_one;
+
+
+/**
  * CrankVecFloat2:
  * @x: First element.
  * @y: Second element.
