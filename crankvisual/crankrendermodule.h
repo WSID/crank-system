@@ -70,6 +70,12 @@ CrankRenderable   *crank_render_module_get_renderable (CrankRenderModule *module
 
 //////// Public functions //////////////////////////////////////////////////////
 
+GList  *crank_render_module_get_culled_list (CrankRenderModule *module,
+                                             CrankPlace3       *place,
+                                             CrankTrans3       *position,
+                                             CrankProjection   *projection);
+
+
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankPlace3       *place,
                                             CrankTrans3       *position,
@@ -96,10 +102,14 @@ void    crank_render_module_render_color_list(CrankRenderModule *module,
                                               CoglFramebuffer   *framebuffer);
 
 
+
+
 void    crank_render_module_render_pos (CrankRenderModule *module,
                                         CoglTexture       *geom_tex,
                                         CrankProjection   *projection,
                                         CoglFramebuffer   *framebuffer);
+
+
 
 
 void    crank_render_module_render_at (CrankRenderModule *module,

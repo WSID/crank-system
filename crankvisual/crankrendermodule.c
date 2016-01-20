@@ -729,6 +729,29 @@ crank_render_module_get_renderable (CrankRenderModule *module,
 
 //////// Public functions //////////////////////////////////////////////////////
 
+/**
+ * crank_render_module_get_culled_list:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer container) (element-type CrankEntity3): Entities.
+ */
+GList*
+crank_render_module_get_culled_list (CrankRenderModule *module,
+                                     CrankPlace3       *place,
+                                     CrankTrans3       *position,
+                                     CrankProjection   *projection)
+{
+  CrankRenderPData *pdata;
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  return crank_octree_set_get_data_list (pdata->entities);
+}
+
 
 /**
  * crank_render_module_render_geom_at:
@@ -747,11 +770,7 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CrankProjection   *projection,
                                     CoglFramebuffer   *framebuffer)
 {
-  CrankRenderPData *pdata;
-  GList *list;
-
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  list = crank_octree_set_get_data_list (pdata->entities);
+  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
 
   crank_render_module_render_geom_list (module, list, position, projection, framebuffer);
 
@@ -775,11 +794,7 @@ crank_render_module_render_color_at (CrankRenderModule *module,
                                      CrankProjection   *projection,
                                      CoglFramebuffer   *framebuffer)
 {
-  CrankRenderPData *pdata;
-  GList *list;
-
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  list = crank_octree_set_get_data_list (pdata->entities);
+  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
 
   crank_render_module_render_color_list (module, list, position, projection, framebuffer);
 
@@ -917,19 +932,20 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
+  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
 
 /*
-  crank_render_module_render_color_at (module,
-                                       place,
-                                       position,
-                                       projection,
-                                       crank_film_get_framebuffer (film, 5));
+  crank_render_module_render_color_list (module,
+                                         list,
+                                         position,
+                                         projection,
+                                         crank_film_get_framebuffer (film, 5));
  */
-  crank_render_module_render_geom_at (module,
-                                      place,
-                                      position,
-                                      projection,
-                                      crank_film_get_framebuffer (film, 0));
+  crank_render_module_render_geom_list (module,
+                                        list,
+                                        position,
+                                        projection,
+                                        crank_film_get_framebuffer (film, 0));
 
   crank_render_module_render_pos (module,
                                   crank_film_get_texture (film, 0),
@@ -939,6 +955,9 @@ crank_render_module_render_at (CrankRenderModule *module,
 
   // TODO: Render to other buffers.
   //
+  //
+
+  g_list_free (list);
 }
 
 /**
