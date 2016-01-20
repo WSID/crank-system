@@ -791,8 +791,7 @@ crank_box3_get_intersection (CrankBox3 *box,
 /**
  * crank_box3_get_plane_sign:
  * @box: A Box.
- * @point: A Point on the plane.
- * @normal: Normal of the plane for positive direction.
+ * @plane: A Plane.
  *
  * Checks whether the plane described by @point and @normal cuts through @box.
  *
