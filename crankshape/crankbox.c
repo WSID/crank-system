@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
+#include "crankshapemisc.h"
 #include "crankbox.h"
 
 /**
@@ -284,6 +285,25 @@ crank_box2_get (CrankBox2      *box,
 {
   res->x = (box->end.x * index->x) + (box->start.x * (1 - index->x));
   res->y = (box->end.y * index->y) + (box->start.y * (1 - index->y));
+}
+
+/**
+ * crank_box2_gets:
+ * @box: A Box.
+ * @index: A Index.
+ * @res: (out): A Result value.
+ *
+ * Gets value of @box at {@index, @index}.
+ *
+ * If @index is out of [0, 1], the value also out of @box.
+ */
+void
+crank_box2_gets (CrankBox2      *box,
+                 const gfloat    index,
+                 CrankVecFloat2 *res)
+{
+  res->x = (box->end.x * index) + (box->start.x * (1 - index));
+  res->y = (box->end.y * index) + (box->start.y * (1 - index));
 }
 
 /**
@@ -649,6 +669,26 @@ crank_box3_get (CrankBox3      *box,
   res->x = (box->end.x * index->x) + (box->start.x * (1 - index->x));
   res->y = (box->end.y * index->y) + (box->start.y * (1 - index->y));
   res->z = (box->end.z * index->z) + (box->start.z * (1 - index->z));
+}
+
+/**
+ * crank_box3_gets:
+ * @box: A Box.
+ * @index: A Index.
+ * @res: (out): A Result value.
+ *
+ * Gets value of @box at {@index, @index, @index}.
+ *
+ * If @index is out of a box [0, 1] x [0, 1], the value also out of @box.
+ */
+void
+crank_box3_gets (CrankBox3      *box,
+                 const gfloat    index,
+                 CrankVecFloat3 *res)
+{
+  res->x = (box->end.x * index) + (box->start.x * (1 - index));
+  res->y = (box->end.y * index) + (box->start.y * (1 - index));
+  res->z = (box->end.z * index) + (box->start.z * (1 - index));
 }
 
 /**

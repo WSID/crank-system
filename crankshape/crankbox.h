@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include "crankbase.h"
+#include "crankshapemisc.h"
 
 G_BEGIN_DECLS
 //////// Type declaration //////////////////////////////////////////////////////
@@ -122,6 +123,10 @@ void            crank_box2_get         (CrankBox2      *box,
                                         CrankVecFloat2 *index,
                                         CrankVecFloat2 *res);
 
+void            crank_box2_gets        (CrankBox2      *box,
+                                        const gfloat    index,
+                                        CrankVecFloat2 *res);
+
 void            crank_box2_index_of    (CrankBox2      *box,
                                         CrankVecFloat2 *value,
                                         CrankVecFloat2 *index);
@@ -191,6 +196,10 @@ gboolean        crank_box3_contains    (CrankBox3      *box,
 
 void            crank_box3_get         (CrankBox3      *box,
                                         CrankVecFloat3 *index,
+                                        CrankVecFloat3 *res);
+
+void            crank_box3_gets        (CrankBox3      *box,
+                                        const gfloat    index,
                                         CrankVecFloat3 *res);
 
 void            crank_box3_index_of    (CrankBox3      *box,
