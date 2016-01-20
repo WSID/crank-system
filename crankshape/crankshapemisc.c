@@ -56,6 +56,10 @@ crank_winding_get_type (void)
 }
 
 
+
+
+//////// Public Functions //////////////////////////////////////////////////////
+
 /**
  * crank_winding_from_points
  * @p1: A point.
@@ -309,4 +313,31 @@ crank_tetra_contains (CrankVecFloat3 *tetra,
 
   return (0 < bcoord.x) && (0 < bcoord.y) && (0 < bcoord.z) && (0 < bcoord.w);
 }
+
+
+
+//////// CrankPlane3 Functions /////////////////////////////////////////////////
+
+void
+crank_plane3_init (CrankPlane3    *plane,
+                   CrankVecFloat3 *anchor,
+                   CrankVecFloat3 *normal)
+{
+  crank_vec_float3_copy (anchor, & plane->anchor);
+  crank_vec_float3_unit (normal, & plane->normal);
+
+  plane->dot_anchor = crank_vec_float3_dot (normal, anchor);
+}
+
+
+gfloat
+crank_plane3_get_distance (CrankPlane3    *plane,
+                           CrankVecFloat3 *point)
+{
+  gfloat dot_point = crank_vec_float3_dot (& plane->normal, point);
+
+  return dot_point - plane->dot_anchor;
+}
+
+
 
