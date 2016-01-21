@@ -555,9 +555,63 @@ crank_render_module_get_culled_list (CrankRenderModule *module,
                                      CrankProjection   *projection)
 {
   CrankRenderPData *pdata;
+  CrankPlane3 cullplane[6];
+  CrankPlane3 cullplane_t[6];
+
+  guint i;
+
+  if (projection->proj_type == CRANK_PROJECTION_ORTHO)
+    {
+      cullplane[0].dist_origin = projection->left;     // Left
+      crank_vec_float3_init (& cullplane[0].normal, 1, 0, 0);
+
+      cullplane[1].dist_origin = -projection->right;     // Right
+      crank_vec_float3_init (& cullplane[1].normal, -1, 0, 0);
+
+      cullplane[2].dist_origin = projection->bottom;     // Bottom
+      crank_vec_float3_init (& cullplane[2].normal, 0, 1, 0);
+
+      cullplane[3].dist_origin = -projection->top;     // top
+      crank_vec_float3_init (& cullplane[3].normal, 0, -1, 0);
+
+      cullplane[4].dist_origin = projection->near;     // near
+      crank_vec_float3_init (& cullplane[4].normal, 0, 0, -1);
+
+      cullplane[5].dist_origin = -projection->far;     // far
+      crank_vec_float3_init (& cullplane[5].normal, 0, 0, 1);
+
+    }
+  else if (projection->proj_type == CRANK_PROJECTION_FRUSTUM)
+    {
+      cullplane[0].dist_origin = 0;     // Left
+      crank_vec_float3_init (& cullplane[0].normal, projection->near, 0, projection->left);
+      crank_vec_float3_unit_self (& cullplane[0].normal);
+
+      cullplane[1].dist_origin = 0;     // Right
+      crank_vec_float3_init (& cullplane[1].normal, -projection->near, 0, -projection->right);
+      crank_vec_float3_unit_self (& cullplane[1].normal);
+
+      cullplane[2].dist_origin = 0;     // Bottom
+      crank_vec_float3_init (& cullplane[2].normal, 0, projection->near, projection->bottom);
+      crank_vec_float3_unit_self (& cullplane[2].normal);
+
+      cullplane[3].dist_origin = 0;     // top
+      crank_vec_float3_init (& cullplane[3].normal, 0, -projection->near, -projection->top);
+      crank_vec_float3_unit_self (& cullplane[3].normal);
+
+      cullplane[4].dist_origin = projection->near;     // near
+      crank_vec_float3_init (& cullplane[4].normal, 0, 0, -1);
+
+      cullplane[5].dist_origin = -projection->far;     // far
+      crank_vec_float3_init (& cullplane[5].normal, 0, 0, 1);
+    }
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (position, cullplane + i, cullplane_t + i);
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  return crank_octree_set_get_data_list (pdata->entities);
+  return crank_octree_set_get_culled_list (pdata->entities, cullplane_t, 4);
+  //return crank_octree_set_get_data_list (pdata->entities);
 }
 
 
