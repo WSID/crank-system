@@ -159,7 +159,7 @@ crank_assert_message_eq_free (const gchar *domain,
 }
 
 /**
- * crank_equal_sarray: (skip):
+ * crank_equal_sarray: (skip)
  * @element_size: Size of a element.
  * @arr_a: Structure array.
  * @arr_length_a: Length of array.
@@ -200,7 +200,7 @@ crank_equal_sarray (const gsize  element_size,
 }
 
 /**
- * crank_equal_parray: (skip):
+ * crank_equal_parray: (skip)
  * @arr_a: Pointer array.
  * @arr_length_a: Length of array.
  * @arr_b: Pointer array.
@@ -239,7 +239,7 @@ crank_equal_parray (const gpointer *arr_a,
 }
 
 /**
- * crank_equal_delta_sarray: (skip):
+ * crank_equal_delta_sarray: (skip)
  * @element_size: Size of a element.
  * @arr_a: Structure array.
  * @arr_length_a: Length of array.
@@ -282,7 +282,7 @@ crank_equal_delta_sarray (const gsize          element_size,
 }
 
 /**
- * crank_equal_delta_parray: (skip):
+ * crank_equal_delta_parray: (skip)
  * @arr_a: Pointer array.
  * @arr_length_a: Length of array.
  * @arr_b: Pointer array.
@@ -323,7 +323,7 @@ crank_equal_delta_parray (const gpointer      *arr_a,
 }
 
 /**
- * crank_equal_glist_arr: (skip):
+ * crank_equal_glist_arr: (skip)
  * @list: (element-type gpointer): A Pointer list.
  * @arr: Poitner array.
  * @arr_length: Length of array.
@@ -361,7 +361,7 @@ crank_equal_glist_arr (GList          *list,
 }
 
 /**
- * crank_equal_gptrarray_arr: (skip):
+ * crank_equal_gptrarray_arr: (skip)
  * @ptrarray: (element-type gpointer): A Pointer list.
  * @arr: Poitner array.
  * @arr_length: Length of array.

@@ -125,7 +125,7 @@ crank_rot_vec2_right (CrankVecFloat2 *vec,
  */
 void
 crank_rot_quat_float_to_mat_float3 (CrankQuatFloat *quat,
-                                  CrankMatFloat3 *mat)
+                                    CrankMatFloat3 *mat)
 {
   gfloat ww  = quat->w * quat->w;
   gfloat xx  = quat->x * quat->x;
@@ -164,7 +164,7 @@ crank_rot_quat_float_to_mat_float3 (CrankQuatFloat *quat,
  */
 void
 crank_rot_quat_float_to_mat_float4 (CrankQuatFloat *quat,
-                                  CrankMatFloat4 *mat)
+                                    CrankMatFloat4 *mat)
 {
   gfloat ww  = quat->w * quat->w;
   gfloat xx  = quat->x * quat->x;

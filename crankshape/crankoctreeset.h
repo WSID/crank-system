@@ -37,9 +37,27 @@ G_BEGIN_DECLS
 
 //////// Type Declarations /////////////////////////////////////////////////////
 
+/**
+ * CrankOctreePosFunc:
+ * @data: A Data of octree item.
+ * @userdata: (closure): A Userdata.
+ *
+ * Function for getting position of each data.
+ *
+ * Returns: (transfer none): Position of @data.
+ */
 typedef CrankVecFloat3 *(*CrankOctreePosFunc) (gpointer data,
                                                gpointer userdata);
 
+/**
+ * CrankOctreeRadiusFunc:
+ * @data: A Data of octree item.
+ * @userdata: (closure): A userdata.
+ *
+ * Function for getting radius of each data.
+ *
+ * Returns: Radius of @data.
+ */
 typedef gfloat          (*CrankOctreeRadiusFunc) (gpointer data,
                                                   gpointer userdata);
 
@@ -50,7 +68,17 @@ typedef struct _CrankOctreeSetNode CrankOctreeSetNode;
 #define CRANK_TYPE_OCTREE_SET (crank_octree_set_get_type())
 GType crank_octree_set_get_type(void);
 
+/**
+ * CrankOctreeSet:
+ *
+ * Represents an octree based set.
+ */
 
+/**
+ * CrankOctreeSetNode:
+ *
+ * Represents node of octree for a set.
+ */
 
 //////// Constructors //////////////////////////////////////////////////////////
 

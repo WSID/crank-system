@@ -279,6 +279,13 @@ crank_session_def_pause (CrankSession *session)
 
 //////// Constructors //////////////////////////////////////////////////////////
 
+/**
+ * crank_session_new:
+ *
+ * Constructs new instance.
+ *
+ * Returns: (transfer full): Newly constructed instance.
+ */
 CrankSession*
 crank_session_new (void)
 {

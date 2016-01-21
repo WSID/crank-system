@@ -1,8 +1,14 @@
+crank_ran_uint_get_type
+crank_ran_int_get_type
+crank_ran_float_get_type
+crank_ran_ptr_get_type
+
 crank_pair_uint_get_type
 
 crank_permutation_get_type
 
 crank_cplx_float_get_type
+crank_quat_float_get_type
 
 crank_vec_bool2_get_type
 crank_vec_bool3_get_type
@@ -30,12 +36,31 @@ crank_mat_float4_get_type
 
 crank_mat_float_n_get_type
 
+crank_mat_cplx_float_n_get_type
+
 crank_digraph_get_type
 
+
+
+
+
+
+crank_winding_get_type
+
+crank_plane3_get_type
+
 crank_box2_get_type
+crank_box3_get_type
+
+crank_octree_set_get_type
 
 crank_euler_get_type
 crank_euler_type_get_type
+
+crank_trans2_get_type
+crank_trans3_get_type
+
+crank_poly_struct3_get_type
 
 crank_shape2_get_type
 crank_shape2_finite_get_type
@@ -67,16 +92,22 @@ crank_shape3_cuboid_get_type
 crank_shape3_cpolyhedron_get_type
 crank_shape3_sphere_get_type
 
+
+
+
+
 crank_session_get_type
 crank_session_module_get_type
 
 crank_session_module_tick_get_type
 crank_session_module_sim_timed_get_type
+crank_session_module_placed_get_type
 
-crank_session3_get_type
-crank_session3_module_get_type
-crank_session3_place_module_get_type
-crank_session3_entity_module_get_type
+crank_place_base_get_type
+crank_entity_base_get_type
+
+
+
 
 
 

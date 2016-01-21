@@ -320,7 +320,7 @@ crank_vec_cplx_float_n_init_ucarr (CrankVecCplxFloatN *vec,
  *
  * Initialize vector with given an array of pairs.
  *
- * Difference to crank_vec_cplx_float_n_init_arr_uc() is, this function receives
+ * Difference to crank_vec_cplx_float_n_init_ucarr() is, this function receives
  * a single array, rather than 2 arrays.
  */
 void

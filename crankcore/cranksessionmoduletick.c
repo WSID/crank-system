@@ -296,6 +296,14 @@ crank_session_module_tick_real_tick (gpointer userdata)
 
 //////// Constructors //////////////////////////////////////////////////////////
 
+/**
+ * crank_session_module_tick_new:
+ * @tick_interval: Tick interval.
+ *
+ * Constructs an instance with tick interval.
+ *
+ * Returns: (transfer full): Newly constructed instance.
+ */
 CrankSessionModuleTick*
 crank_session_module_tick_new (const guint tick_interval)
 {

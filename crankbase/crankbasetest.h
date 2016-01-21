@@ -517,7 +517,7 @@ gchar  *crank_assert_stringify_gptrarray (GPtrArray       *ptrarray,
 
 /**
  * crank_assert_eq_permutation_imm: (skip)
- * @a: (type CrankPermutaion): A #CrankPermutaion
+ * @a: (type CrankPermutaion): A #CrankPermutation
  * @...: Variadic list to compare with @a.
  *
  * Asserts a given permutation has same elements with given variadic list.

@@ -95,7 +95,7 @@ static GList*             crank_octree_set_node_list (CrankOctreeSetNode *node,
 static GList*             crank_octree_set_node_cull (CrankOctreeSetNode *node,
                                                       CrankOctreeSet     *set,
                                                       GList              *list,
-                                                      CrankPlane3        *culls,
+                                                      const CrankPlane3  *culls,
                                                       const guint         nculls);
 
 
@@ -458,7 +458,7 @@ static GList*
 crank_octree_set_node_cull (CrankOctreeSetNode *node,
                             CrankOctreeSet     *set,
                             GList              *list,
-                            CrankPlane3        *culls,
+                            const CrankPlane3  *culls,
                             const guint         nculls)
 {
   gboolean partial = FALSE;
@@ -616,7 +616,7 @@ crank_octreee_set_get_size (CrankOctreeSet *set)
 }
 
 /**
- * crank_octree_set_get_boundeary:
+ * crank_octree_set_get_boundary:
  * @set: An Octree set.
  * @boundary: (out): A Boundary of octree.
  *
@@ -746,7 +746,7 @@ crank_octree_set_get_data_list (CrankOctreeSet *set)
 
 
 /**
- * crank_octree_get_culled_list:
+ * crank_octree_set_get_culled_list:
  * @set: An octree set.
  * @culls: (array length=nculls): Culling plane.
  * @nculls: Number of @culls.

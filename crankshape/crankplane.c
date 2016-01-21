@@ -19,6 +19,16 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankplane
+ * @title: CrankPlane
+ * @short_description: Simple plane representation.
+ * @stability: Unstable
+ * @include: crankshape.h
+ *
+ * Represents a plane.
+ */
+
 
 #define _CRANKSHAPE_INSIDE
 

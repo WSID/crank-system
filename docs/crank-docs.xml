@@ -90,9 +90,11 @@
 
     <chapter>
       <title>Basic structures</title>
+      <xi:include href="xml/crankplane.xml"/>
       <xi:include href="xml/crankbox.xml"/>
       <xi:include href="xml/crankeuler.xml"/>
       <xi:include href="xml/crankrotation.xml"/>
+      <xi:include href="xml/crankoctreeset.xml"/>
       <xi:include href="xml/cranktrans.xml"/>
       <xi:include href="xml/crankshapemisc.xml"/>
       <xi:include href="xml/crankpolystruct3.xml"/>
@@ -151,16 +153,14 @@
       <title>Sessions</title>
       <xi:include href="xml/cranksession.xml"/>
       <xi:include href="xml/cranksessionmodule.xml"/>
-      <xi:include href="xml/cranksession3.xml"/>
-      <xi:include href="xml/cranksession3module.xml"/>
-      <xi:include href="xml/cranksession3placemodule.xml"/>
-      <xi:include href="xml/cranksession3entitymodule.xml"/>
     </chapter>
 
     <chapter>
       <title>Session Modules</title>
       <xi:include href="xml/cranksessionmoduletick.xml"/>
       <xi:include href="xml/cranksessionmodulesimtimed.xml"/>
+      <xi:include href="xml/cranksessionmoduleplaced.xml"/>
+      <xi:include href="xml/crankplaceentity.xml"/>
     </chapter>
   </part>
 

@@ -179,6 +179,12 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
 
+  /**
+   * CrankSessionModulePlaced::place-created:
+   * @place: A Newly created place.
+   *
+   * Emitted when a place is constructed with this module.
+   */
   sig_place_created = g_signal_new ("place-created",
                                     CRANK_TYPE_SESSION_MODULE_PLACED,
                                     G_SIGNAL_RUN_LAST,
@@ -189,6 +195,12 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                                     G_TYPE_NONE,
                                     1, CRANK_TYPE_PLACE_BASE);
 
+  /**
+   * CrankSessionModulePlaced::place-disposed:
+   * @place: A place to be disposed.
+   *
+   * Emitted when a place is disposed.
+   */
   sig_place_disposed = g_signal_new ("place-disposed",
                                     CRANK_TYPE_SESSION_MODULE_PLACED,
                                     G_SIGNAL_RUN_LAST,
@@ -199,6 +211,12 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                                     G_TYPE_NONE,
                                     1, CRANK_TYPE_PLACE_BASE);
 
+  /**
+   * CrankSessionModulePlaced::entity-created:
+   * @entity: A Newly created entity.
+   *
+   * Emitted when an entity is constructed with this module.
+   */
   sig_entity_created = g_signal_new ("entity-created",
                                     CRANK_TYPE_SESSION_MODULE_PLACED,
                                     G_SIGNAL_RUN_LAST,
@@ -209,6 +227,12 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                                     G_TYPE_NONE,
                                     1, CRANK_TYPE_ENTITY_BASE);
 
+  /**
+   * CrankSessionModulePlaced::entity-disposed:
+   * @entity: A entity to be disposed.
+   *
+   * Emitted when an entity is disposed.
+   */
   sig_entity_disposed = g_signal_new ("entity-disposed",
                                     CRANK_TYPE_SESSION_MODULE_PLACED,
                                     G_SIGNAL_RUN_LAST,
@@ -219,6 +243,13 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                                     G_TYPE_NONE,
                                     1, CRANK_TYPE_ENTITY_BASE);
 
+  /**
+   * CrankSessionModulePlaced::entity-added:
+   * @place: A Place.
+   * @entity: A Entity.
+   *
+   * Emitted when entity is added to a place.
+   */
   sig_entity_added = g_signal_new ("entity-added",
                                    CRANK_TYPE_SESSION_MODULE_PLACED,
                                    G_SIGNAL_RUN_LAST,
@@ -229,6 +260,13 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                                    G_TYPE_NONE,
                                    2, CRANK_TYPE_PLACE_BASE, CRANK_TYPE_ENTITY_BASE);
 
+  /**
+   * CrankSessionModulePlaced::entity-removed:
+   * @place: A Place.
+   * @entity: A Entity.
+   *
+   * Emitted when entity is removed from a place.
+   */
   sig_entity_removed = g_signal_new ("entity-removed",
                                    CRANK_TYPE_SESSION_MODULE_PLACED,
                                    G_SIGNAL_RUN_LAST,
@@ -399,6 +437,7 @@ fini_boxed (gpointer data,
 
 
 //////// Internal Functions ////////////////////////////////////////////////////
+#ifndef __GTK_DOC_IGNORE__
 
 G_GNUC_INTERNAL
 void
@@ -488,7 +527,7 @@ crank_session_module_placed_entity_removed (CrankSessionModulePlaced *module,
   g_signal_emit (module, sig_entity_removed, 0, place, entity);
 }
 
-
+#endif
 
 
 //////// Constructors //////////////////////////////////////////////////////////

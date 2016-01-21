@@ -19,6 +19,16 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankplaceentity
+ * @title: Place and Entities.
+ * @short_description: Place and entity representations.
+ * @stability: Unstable
+ * @include: crankcore.h
+ *
+ * Represents places and entities.
+ */
+
 #define CRANKCORE_INSIDE
 
 

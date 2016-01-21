@@ -121,7 +121,7 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
   c->flow_time = crank_session_module_sim_timed_def_flow_time;
 
   /**
-   * CrankSessionModuleSimTimed:flow-time:
+   * CrankSessionModuleSimTimed::flow-time:
    * @time: Time to flow.
    *
    * Performs flow time to this module. Other modules can connect to this signal
@@ -257,7 +257,7 @@ crank_session_module_sim_timed_set_sim_time (CrankSessionModuleSimTimed *module,
  * @module: A Module.
  *
  * Gets simulated steps of @module. Generally, this is count of emission of
- * #CrankSessionModuleSimTimed:flow-time.
+ * #CrankSessionModuleSimTimed::flow-time.
  *
  * Returns: Simulated steps of @module.
  */

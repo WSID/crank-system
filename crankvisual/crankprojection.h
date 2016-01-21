@@ -34,7 +34,6 @@
 #include "crankshape.h"
 
 //////// Type Declarations /////////////////////////////////////////////////////
-typedef enum _CrankProjectionType CrankProjectionType;
 typedef struct _CrankProjection CrankProjection;
 
 /**
@@ -47,11 +46,11 @@ typedef struct _CrankProjection CrankProjection;
 
 #define CRANK_TYPE_PROJECTION_TYPE (crank_projection_type_get_type())
 GType crank_projection_type_get_type (void);
-enum _CrankProjectionType
+typedef enum _CrankProjectionType
 {
   CRANK_PROJECTION_ORTHO,
   CRANK_PROJECTION_FRUSTUM
-};
+} CrankProjectionType;
 
 
 /**
@@ -66,6 +65,7 @@ enum _CrankProjectionType
  * @far: Far of projection.
  * @matrix: A Projection matrix.
  * @matrix_t: Transpose of @matrix. This is for Cogl, which is column major.
+ * @cull_plane: Cull Plane for view frustum/cuboid culling.
  *
  * Represents a projection.
  */

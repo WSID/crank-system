@@ -2015,6 +2015,19 @@ CrankBenchResultCase
 
 
 <SECTION>
+<FILE>crankplane</FILE>
+CrankPlane3
+crank_plane3_init
+crank_plane3_copy
+crank_plane3_dup
+crank_plane3_get_distance
+<SUBSECTION Standard>
+CRANK_TYPE_PLANE3
+crank_plane3_get_type
+</SECTION>
+
+
+<SECTION>
 <FILE>crankbox</FILE>
 CrankBox2
 CrankBox3
@@ -2032,6 +2045,7 @@ crank_box2_get_dimen
 crank_box2_get_diaglen
 crank_box2_contains
 crank_box2_get
+crank_box2_gets
 crank_box2_index_of
 crank_box2_clamp
 crank_box2_get_intersection
@@ -2050,9 +2064,11 @@ crank_box3_get_dimen
 crank_box3_get_diaglen
 crank_box3_contains
 crank_box3_get
+crank_box3_gets
 crank_box3_index_of
 crank_box3_clamp
 crank_box3_get_intersection
+crank_box3_get_plane_sign
 <SUBSECTION Standard>
 CRANK_TYPE_BOX2
 CRANK_TYPE_BOX3
@@ -2073,6 +2089,46 @@ crank_rot_mat_float3_to_quat_float
 crank_rot_mat_float4_to_quat_float
 crank_rot_quat_float_to_mat_float3_t
 crank_rot_quat_float_to_mat_float4_t
+</SECTION>
+
+
+<SECTION>
+<FILE>crankoctreeset</FILE>
+CrankOctreeSet
+CrankOctreeSetNode
+
+CrankOctreePosFunc
+CrankOctreeRadiusFunc
+
+crank_octree_set_new
+crank_octree_set_ref
+crank_octree_set_unref
+
+crank_octree_set_get_size
+crank_octree_set_get_boundary
+
+crank_octree_set_add
+crank_octree_set_remove
+crank_octree_set_remove_all
+crank_octree_set_contains
+
+crank_octree_set_foreach
+
+crank_octree_set_get_data_list
+crank_octree_set_get_culled_list
+
+crank_octree_set_get_root
+crank_octree_set_get_node
+
+crank_octree_set_node_get_boundary
+crank_octree_set_node_get_middle
+crank_octree_set_node_has_children
+crank_octree_set_node_get_child
+crank_octree_set_node_get_child_pos
+
+<SUBSECTION Standard>
+CRANK_TYPE_OCTREE_SET
+crank_octree_set_get_type
 </SECTION>
 
 
@@ -2119,6 +2175,7 @@ crank_trans2_inverse
 crank_trans2_inverse_self
 crank_trans2_compose
 crank_trans2_compose_self
+crank_trans2_relative_to
 crank_trans2_transv
 crank_trans3_init
 crank_trans3_init_from_matrix
@@ -2136,7 +2193,9 @@ crank_trans3_inverse
 crank_trans3_inverse_self
 crank_trans3_compose
 crank_trans3_compose_self
+crank_trans3_relative_to
 crank_trans3_transv
+crank_trans3_trans_plane
 <SUBSECTION Standard>
 CRANK_TYPE_TRANS2
 CRANK_TYPE_TRANS3
@@ -2512,6 +2571,8 @@ crank_epa2
 CrankSession
 CrankSessionClass
 
+crank_session_new
+
 crank_session_is_initialized
 
 crank_session_add_module
@@ -2553,7 +2614,8 @@ CRANK_TYPE_SESSION_MODULE
 <SECTION>
 <FILE>cranksessionmoduletick</FILE>
 CrankSessionModuleTick
-CrankSessionModuleTickClass
+
+crank_session_module_tick_new
 
 crank_session_module_tick_get_tick_context
 crank_session_module_tick_set_tick_context
@@ -2569,6 +2631,8 @@ CRANK_TYPE_SESSION_MODULE_TICK
 CrankSessionModuleSimTimed
 CrankSessionModuleSimTimedClass
 
+crank_session_module_sim_timed_new
+
 crank_session_module_sim_timed_get_sim_time
 crank_session_module_sim_timed_set_sim_time
 crank_session_module_sim_timed_get_sim_steps
@@ -2582,96 +2646,68 @@ CRANK_TYPE_SESSION_MODULE_SIM_TIMED
 </SECTION>
 
 
+
 <SECTION>
-<FILE>cranksession3</FILE>
-CrankSession3
-CrankSession3Class
+<FILE>crankplaceentity</FILE>
+CrankPlaceBase
+CrankEntityBase
+
 CrankPlace3
 CrankEntity3
-crank_session3_add_place_module
-crank_session3_remove_place_module
-crank_session3_index_of_place_module
-crank_session3_get_n_place_modules
-crank_session3_get_place_module
-crank_session3_get_place_modules
-crank_session3_add_entity_module
-crank_session3_remove_entity_module
-crank_session3_index_of_entity_module
-crank_session3_get_n_entity_modules
-crank_session3_get_entity_module
-crank_session3_get_entity_modules
-crank_session3_lock_and_init_modules
-crank_session3_set_tick_interval
-crank_session3_get_tick_interval
-crank_session3_make_place
-crank_session3_make_entity
 
-crank_place3_dispose
-crank_entity3_dispose
+crank_place_base_new
+crank_place_base_ref
+crank_place_base_unref
+crank_place_base_get_module
+crank_place_base_get_n_entities
 
-crank_place3_get_session
-crank_place3_get_object
-crank_place3_set_object
-crank_place3_get_boundary
-crank_place3_set_boundary
-crank_place3_get_entities
-crank_place3_attach_data
-crank_place3_detach_data
-crank_place3_get_data
-crank_place3_get_entity_data
-crank_place3_add_entity
-crank_place3_remove_entity
+crank_place_base_add_entity
+crank_place_base_remove_entity
 
-crank_entity3_get_session
-crank_entity3_get_object
-crank_entity3_set_object
-crank_entity3_get_place
-crank_entity3_get_position
-crank_entity3_set_position
-crank_entity3_attach_data
-crank_entity3_detach_data
-crank_entity3_get_data
+crank_entity_base_new
+crank_entity_base_ref
+crank_entity_base_unref
+
+crank_entity_base_get_module
+crank_entity_base_get_place
+
 <SUBSECTION Standard>
-CRANK_TYPE_SESSION3
-crank_session3_get_type
+CRANK_TYPE_PLACE_BASE
+CRANK_TYPE_ENTITY_BASE
+crank_place_base_get_type
+crank_entity_base_get_type
 </SECTION>
 
-<SECTION>
-<FILE>cranksession3module</FILE>
-CrankSession3Module
-CrankSession3ModuleClass
-crank_session3_module_session_init
-crank_session3_module_tick
-crank_session3_module_is_initialized
-crank_session3_module_get_session
-<SUBSECTION Standard>
-CRANK_TYPE_SESSION3_MODULE
-</SECTION>
+
 
 <SECTION>
-<FILE>cranksession3placemodule</FILE>
-CrankSession3PlaceModule
-CrankSession3PlaceModuleClass
-crank_session3_place_module_get_index
-crank_session3_place_module_attached_data
-crank_session3_place_module_detached_data
-<SUBSECTION Standard>
-CRANK_TYPE_SESSION3_PLACE_MODULE
-</SECTION>
+<FILE>cranksessionmoduleplaced</FILE>
+CrankSessionModulePlaced
+CrankSessionModulePlacedClass
 
-<SECTION>
-<FILE>cranksession3entitymodule</FILE>
-CrankSession3EntityModule
-CrankSession3EntityModuleClass
-crank_session3_entity_module_get_index
-crank_session3_entity_module_get_place_index
-crank_session3_entity_module_make_place_data
-crank_session3_entity_module_attached_data
-crank_session3_entity_module_detached_data
-crank_session3_entity_module_entity_added
-crank_session3_entity_module_entity_removed
+crank_session_module_placed_new
+crank_session_module_placed_get_place_base_size
+crank_session_module_placed_get_place_size
+crank_session_module_placed_get_entity_base_size
+crank_session_module_placed_get_entity_size
+crank_session_module_placed_attach_entity_alloc
+crank_session_module_placed_attach_entity_alloc_full
+crank_session_module_placed_attach_entity_alloc_boxed
+crank_session_module_placed_attach_entity_alloc_pointer
+crank_session_module_placed_attach_entity_alloc_object
+crank_session_module_placed_attach_place_alloc
+crank_session_module_placed_attach_place_alloc_full
+crank_session_module_placed_attach_place_alloc_boxed
+crank_session_module_placed_attach_place_alloc_pointer
+crank_session_module_placed_attach_place_alloc_object
+crank_session_module_placed_get_place_alloc_offset
+crank_session_module_placed_get_place_alloc_size
+crank_session_module_placed_get_entity_alloc_offset
+crank_session_module_placed_get_entity_alloc_size
+
 <SUBSECTION Standard>
-CRANK_TYPE_SESSION3_ENTITY_MODULE
+CRANK_TYPE_SESSION_MODULE_PLACED
+
 </SECTION>
 
 
@@ -2681,11 +2717,22 @@ CRANK_TYPE_SESSION3_ENTITY_MODULE
 <SECTION>
 <FILE>crankrendermodule</FILE>
 CrankRenderModule
+crank_render_module_new
 crank_render_module_get_n_camera
 crank_render_module_add_camera
 crank_render_module_remove_camera
+
+crank_render_module_get_renderable
+crank_render_module_set_renderable
+
+crank_render_module_get_culled_list
+
+crank_render_module_render_geom_list
+crank_render_module_render_color_list
+
 crank_render_module_render_color_at
 crank_render_module_render_geom_at
+
 crank_render_module_render_at
 <SUBSECTION Standard>
 CRANK_TYPE_RENDER_MODULE
@@ -2737,6 +2784,7 @@ crank_projection_set_matrix
 
 crank_projection_update_matrix
 crank_projection_update_params
+crank_projection_update_cull_plane
 
 crank_projection_get_snippet_def
 crank_projection_get_uniform_locations
@@ -2829,6 +2877,7 @@ CRANK_TYPE_RENDERABLE_PRIMITIVE
 <SECTION>
 <FILE>crankcameracontent</FILE>
 CrankCameraContent
+crank_camera_content_new
 crank_camera_content_get_camera
 crank_camera_content_set_camera
 <SUBSECTION Standard>

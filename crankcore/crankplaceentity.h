@@ -77,6 +77,7 @@ struct _CrankEntityBase
 /**
  * CrankPlace3:
  * @object: Object that holds this place.
+ * @boundary: Boundary of place.
  *
  * Place representation for 3D space.
  */

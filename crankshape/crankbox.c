@@ -36,7 +36,7 @@
  *
  * Represents box shaped range for #CrankVecFloat2.
  *
- * As it represents range, this has similarities to [ranges][crank-Range-of-primitives]
+ * As it represents range, this has similarities to [ranges][crank-Range-of-primitives.]
  */
 
 //////// Type Definitions //////////////////////////////////////////////////////
@@ -796,8 +796,8 @@ crank_box3_get_intersection (CrankBox3 *box,
  * Checks whether the plane described by @point and @normal cuts through @box.
  *
  * If the plane cut through the box, 0 will be returned. If box is placed above
- * the plane in positive direction, 1 is returned. if box is placed below the
- * plane, -1 is returned.
+ * the plane in positive direction, -1 is returned. if box is placed below the
+ * plane, 1 is returned.
  */
 gint
 crank_box3_get_plane_sign (CrankBox3      *box,

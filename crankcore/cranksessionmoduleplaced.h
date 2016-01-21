@@ -64,8 +64,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModulePlaced,
  * @entity_disposed: Slot for CrankSessionModulePlaced:entity_disposed
  * @entity_added: Slot for CrankSessionModulePlaced:entity_added
  * @entity_removed: Slot for CrankSessionModulePlaced:entity_removed
- * @place_base_size: A Base size for #CrankPlaceBase.
- * @entity_base_size: A Base size of #CrankEntityBase.
  *
  * Virtual function table for #CrankSessionModulePlaced.
  */
