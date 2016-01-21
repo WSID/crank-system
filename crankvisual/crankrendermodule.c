@@ -525,7 +525,7 @@ crank_render_module_set_renderable (CrankRenderModule *module,
  *
  * Gets a renderable from entity. Non-visible entities does not have renderable.
  *
- * Returns: (nullable): Renderable, or %NULL if it does not have.
+ * Returns: (transfer none) (nullable): Renderable, or %NULL if it does not have.
  */
 CrankRenderable*
 crank_render_module_get_renderable (CrankRenderModule *module,
@@ -619,7 +619,7 @@ crank_render_module_render_color_at (CrankRenderModule *module,
 /**
  * crank_render_module_render_geom_list:
  * @module: A Module.
- * @list: (element-type CrankEntity3): entities.
+ * @entities: (element-type CrankEntity3): entities.
  * @position: A Position
  * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
@@ -628,7 +628,7 @@ crank_render_module_render_color_at (CrankRenderModule *module,
  */
 void
 crank_render_module_render_geom_list (CrankRenderModule *module,
-                                      GList *list,
+                                      GList             *entities,
                                       CrankTrans3       *position,
                                       CrankProjection   *projection,
                                       CoglFramebuffer   *framebuffer)
@@ -645,7 +645,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
 
   crank_trans3_inverse (position, &ipos);
 
-  for (iter = list; iter != NULL; iter = iter->next)
+  for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
       CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
@@ -660,7 +660,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
 /**
  * crank_render_module_render_color_list:
  * @module: A Module.
- * @list: (element-type CrankEntity3): entities.
+ * @entities: (element-type CrankEntity3): entities.
  * @position: A Position
  * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
@@ -669,7 +669,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
  */
 void
 crank_render_module_render_color_list (CrankRenderModule *module,
-                                       GList *list,
+                                       GList             *entities,
                                        CrankTrans3       *position,
                                        CrankProjection   *projection,
                                        CoglFramebuffer   *framebuffer)
@@ -686,7 +686,7 @@ crank_render_module_render_color_list (CrankRenderModule *module,
 
   crank_trans3_inverse (position, &ipos);
 
-  for (iter = list; iter != NULL; iter = iter->next)
+  for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
       CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);

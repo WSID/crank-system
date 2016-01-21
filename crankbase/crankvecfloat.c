@@ -4489,7 +4489,6 @@ crank_vec_float_n_abs (const CrankVecFloatN *a,
 /**
  * crank_vec_float_n_abs_self:
  * @a: A Vector.
- * @r: (out): A vector to store result.
  *
  * Gets absolute value of each components.
  */

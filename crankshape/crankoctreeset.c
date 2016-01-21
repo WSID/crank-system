@@ -736,7 +736,7 @@ crank_octree_set_foreach (CrankOctreeSet *set,
  *
  * Gets #GList of elements in octree.
  *
- * Returns: (transfer container) (element-type gpointer): List of elements in octree.
+ * Returns: (element-type gpointer) (transfer container): List of elements in octree.
  */
 GList*
 crank_octree_set_get_data_list (CrankOctreeSet *set)
@@ -751,7 +751,7 @@ crank_octree_set_get_data_list (CrankOctreeSet *set)
  * @culls: (array length=nculls): Culling plane.
  * @nculls: Number of @culls.
  *
- * Returns: (transfer container) (element-type gpointer): List of elements in octree.
+ * Returns: (element-type gpointer) (transfer container): List of elements in octree.
  */
 GList*
 crank_octree_set_get_culled_list (CrankOctreeSet *set,
