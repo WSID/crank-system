@@ -52,8 +52,8 @@ crank_plane3_init (CrankPlane3    *plane,
                    const CrankVecFloat3 *anchor,
                    const CrankVecFloat3 *normal)
 {
-  plane->dist_origin = crank_vec_float3_dot (normal, anchor);
   crank_vec_float3_unit (normal, & plane->normal);
+  plane->dist_origin = crank_vec_float3_dot (& plane->normal, anchor);
 }
 
 /**
