@@ -754,9 +754,9 @@ crank_octree_set_get_data_list (CrankOctreeSet *set)
  * Returns: (element-type gpointer) (transfer container): List of elements in octree.
  */
 GList*
-crank_octree_set_get_culled_list (CrankOctreeSet *set,
-                                  CrankPlane3    *culls,
-                                  const guint     nculls)
+crank_octree_set_get_culled_list (CrankOctreeSet    *set,
+                                  const CrankPlane3 *culls,
+                                  const guint        nculls)
 {
   return crank_octree_set_node_cull (set->root, set, NULL, culls, nculls);
 }

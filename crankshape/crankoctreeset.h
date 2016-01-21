@@ -133,9 +133,9 @@ GList      *crank_octree_set_get_data_list (CrankOctreeSet *set);
 
 //////// Culled iterations /////////////////////////////////////////////////////
 
-GList      *crank_octree_set_get_culled_list (CrankOctreeSet *set,
-                                              CrankPlane3    *culls,
-                                              const guint     nculls);
+GList      *crank_octree_set_get_culled_list (CrankOctreeSet    *set,
+                                              const CrankPlane3 *culls,
+                                              const guint        nculls);
 
 
 //////// Getting nodes /////////////////////////////////////////////////////////

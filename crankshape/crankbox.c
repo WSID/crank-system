@@ -800,8 +800,8 @@ crank_box3_get_intersection (CrankBox3 *box,
  * plane, 1 is returned.
  */
 gint
-crank_box3_get_plane_sign (CrankBox3      *box,
-                           CrankPlane3    *plane)
+crank_box3_get_plane_sign (CrankBox3         *box,
+                           const CrankPlane3 *plane)
 {
   CrankVecFloat3 ppt;
   CrankVecFloat3 npt;
