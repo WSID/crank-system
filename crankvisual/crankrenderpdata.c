@@ -38,11 +38,11 @@ G_DEFINE_TYPE (CrankRenderPData, crank_render_pdata, G_TYPE_OBJECT)
 
 //////// Private type: GTypeInstance ///////////////////////////////////////////
 
-static void crank_render_pdata_init (CrankRenderPData *pdata)
+void crank_render_pdata_init (CrankRenderPData *pdata)
 {
 }
 
-static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
+void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
 
@@ -74,7 +74,7 @@ static void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 
 //////// Private type: GObject /////////////////////////////////////////////////
 
-static void
+void
 crank_render_pdata_constructed (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
@@ -90,7 +90,7 @@ crank_render_pdata_constructed (GObject *object)
                                           crank_render_pdata_get_rad, renderable_offset, NULL);
 }
 
-static void
+void
 crank_render_pdata_set_property (GObject      *object,
                                  guint         prop_id,
                                  const GValue *value,
@@ -113,7 +113,7 @@ crank_render_pdata_set_property (GObject      *object,
     }
 }
 
-static void
+void
 crank_render_pdata_dispose (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
@@ -121,7 +121,7 @@ crank_render_pdata_dispose (GObject *object)
   crank_octree_set_remove_all (pdata->entities);
 }
 
-static void
+void
 crank_render_pdata_finalize (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
@@ -131,7 +131,7 @@ crank_render_pdata_finalize (GObject *object)
 
 //////// Private type callbacks ////////////////////////////////////////////////
 
-static CrankVecFloat3*
+CrankVecFloat3*
 crank_render_pdata_get_pos (gpointer data,
                             gpointer userdata)
 {
@@ -140,7 +140,7 @@ crank_render_pdata_get_pos (gpointer data,
   return & entity->position.mtrans;
 }
 
-static gfloat
+gfloat
 crank_render_pdata_get_rad (gpointer data,
                             gpointer userdata)
 {
@@ -155,13 +155,13 @@ crank_render_pdata_get_rad (gpointer data,
 
 //////// Private type functions ////////////////////////////////////////////////
 
-static void crank_render_pdata_add_entity (CrankRenderPData *pdata,
+void crank_render_pdata_add_entity (CrankRenderPData *pdata,
                                            CrankEntityBase  *entity)
 {
   crank_octree_set_add (pdata->entities, entity);
 }
 
-static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
+void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
                                               CrankEntityBase  *entity)
 {
   crank_octree_set_remove (pdata->entities, entity);

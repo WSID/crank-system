@@ -67,32 +67,32 @@ struct _CrankRenderPData
 
 //////// Private Type functions ////////////////////////////////////////////////
 
-static void crank_render_pdata_add_entity (CrankRenderPData *pdata,
+void crank_render_pdata_add_entity (CrankRenderPData *pdata,
                                            CrankEntityBase  *entity);
 
-static void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
+void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
                                               CrankEntityBase  *entity);
 
 //////// Private type vfuncs ///////////////////////////////////////////////////
 
-static void crank_render_pdata_constructed (GObject *object);
+void crank_render_pdata_constructed (GObject *object);
 
-static void crank_render_pdata_set_property (GObject      *object,
+void crank_render_pdata_set_property (GObject      *object,
                                              guint         prop_id,
                                              const GValue *value,
                                              GParamSpec   *pspec);
 
-static void crank_render_pdata_dispose (GObject *object);
+void crank_render_pdata_dispose (GObject *object);
 
-static void crank_render_pdata_finalize (GObject *object);
+void crank_render_pdata_finalize (GObject *object);
 
 
 //////// Private type callbacks ////////////////////////////////////////////////
 
-static CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
+CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
                                                    gpointer userdata);
 
-static gfloat crank_render_pdata_get_rad (gpointer data,
+gfloat crank_render_pdata_get_rad (gpointer data,
                                           gpointer userdata);
 
 
