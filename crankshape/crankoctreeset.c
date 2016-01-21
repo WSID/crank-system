@@ -472,7 +472,7 @@ crank_octree_set_node_cull (CrankOctreeSetNode *node,
       gint sign = crank_box3_get_plane_sign (& node->boundary,
                                              culls + i);
 
-      if (sign < 0)
+      if (0 < sign)
         return list;
 
       else if (sign == 0)
@@ -490,7 +490,7 @@ crank_octree_set_node_cull (CrankOctreeSetNode *node,
 
           for (j = 0; j < nculls; j++)
             {
-              if (rad < crank_plane3_get_distance (culls + j, pos))
+              if (rad < -crank_plane3_get_distance (culls + j, pos))
                 break;
             }
 
@@ -498,9 +498,12 @@ crank_octree_set_node_cull (CrankOctreeSetNode *node,
             list = g_list_prepend (list, data);
         }
 
-      for (i = 0; i < 8; i++)
+      if (node->children[0] != NULL)
         {
-          list = crank_octree_set_node_cull (node, set, list, culls, nculls);
+          for (i = 0; i < 8; i++)
+            {
+              list = crank_octree_set_node_cull (node->children[i], set, list, culls, nculls);
+            }
         }
     }
   else
