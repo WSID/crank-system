@@ -101,6 +101,10 @@ static void crank_projection_build_ortho_mat (CrankProjection *projection);
 
 static void crank_projection_build_frustum_mat (CrankProjection *projection);
 
+static void crank_projection_build_ortho_cull_plane (CrankProjection *projection);
+
+static void crank_projection_build_frustum_cull_plane (CrankProjection *projection);
+
 
 //////// Type Definition ///////////////////////////////////////////////////////
 GType crank_projection_type_get_type (void)
@@ -285,6 +289,8 @@ crank_projection_set_identity (CrankProjection *projection)
 
   crank_mat_float4_init_diag (& projection->matrix,   1, 1, 1, 1);
   crank_mat_float4_init_diag (& projection->matrix_t, 1, 1, 1, 1);
+
+  crank_projection_build_ortho_cull_plane (projection);
 }
 
 /**
@@ -317,6 +323,7 @@ crank_projection_set_ortho (CrankProjection *projection,
   projection->far = far;
 
   crank_projection_build_ortho_mat (projection);
+  crank_projection_build_ortho_cull_plane (projection);
 }
 
 /**
@@ -349,6 +356,7 @@ crank_projection_set_frustum (CrankProjection *projection,
   projection->far = far;
 
   crank_projection_build_frustum_mat (projection);
+  crank_projection_build_frustum_cull_plane (projection);
 }
 
 /**
@@ -379,6 +387,7 @@ crank_projection_set_perspective (CrankProjection *projection,
   projection->far = far;
 
   crank_projection_build_frustum_mat (projection);
+  crank_projection_build_frustum_cull_plane (projection);
 }
 
 /**
@@ -402,6 +411,7 @@ crank_projection_set_matrix (CrankProjection *projection,
       crank_mat_float4_copy (matrix, & projection->matrix);
       crank_mat_float4_transpose (matrix, & projection->matrix_t);
       crank_projection_build_frustum_param (projection);
+      crank_projection_build_frustum_cull_plane (projection);
     }
   else if (matrix->m33 == 1)
     {
@@ -409,6 +419,7 @@ crank_projection_set_matrix (CrankProjection *projection,
       crank_mat_float4_copy (matrix, & projection->matrix);
       crank_mat_float4_transpose (matrix, & projection->matrix_t);
       crank_projection_build_ortho_param (projection);
+      crank_projection_build_ortho_cull_plane (projection);
     }
   else
     {
@@ -465,8 +476,6 @@ crank_projection_update_params (CrankProjection *projection)
       crank_projection_set_identity (projection);
       return;
     }
-
-
 }
 
 /**
@@ -484,6 +493,26 @@ crank_projection_update_matrix (CrankProjection *projection)
 
   else if (projection->proj_type == CRANK_PROJECTION_ORTHO)
     crank_projection_build_ortho_mat (projection);
+
+  else
+    g_error ("update_matrix: Unsupported projection type: %u", projection->proj_type);
+}
+
+/**
+ * crank_projection_update_cull_plane:
+ * @projection: A Projection.
+ *
+ * Updates cull plane from parameters. This is used when user updates parameter
+ * by itself.
+ */
+void
+crank_projection_update_cull_plane (CrankProjection *projection)
+{
+  if (projection->proj_type == CRANK_PROJECTION_FRUSTUM)
+    crank_projection_build_frustum_cull_plane (projection);
+
+  else if (projection->proj_type == CRANK_PROJECTION_ORTHO)
+    crank_projection_build_ortho_cull_plane (projection);
 
   else
     g_error ("update_matrix: Unsupported projection type: %u", projection->proj_type);
@@ -684,4 +713,51 @@ crank_projection_build_frustum_mat (CrankProjection *projection)
   crank_mat_float4_transpose (mat, & projection->matrix_t);
 }
 
+static void
+crank_projection_build_ortho_cull_plane (CrankProjection *projection)
+{
+  projection->cull_plane[0].dist_origin = projection->left;
+  crank_vec_float3_init (& projection->cull_plane[0].normal, 1, 0, 0);
 
+  projection->cull_plane[1].dist_origin = -projection->right;
+  crank_vec_float3_init (& projection->cull_plane[1].normal, -1, 0, 0);
+
+  projection->cull_plane[2].dist_origin = projection->bottom;
+  crank_vec_float3_init (& projection->cull_plane[2].normal, 0, 1, 0);
+
+  projection->cull_plane[3].dist_origin = -projection->top;
+  crank_vec_float3_init (& projection->cull_plane[3].normal, 0, -1, 0);
+
+  projection->cull_plane[4].dist_origin = projection->near;
+  crank_vec_float3_init (& projection->cull_plane[4].normal, 0, 0, -1);
+
+  projection->cull_plane[5].dist_origin = -projection->far;
+  crank_vec_float3_init (& projection->cull_plane[5].normal, 0, 0, 1);
+}
+
+
+static void
+crank_projection_build_frustum_cull_plane (CrankProjection *projection)
+{
+  projection->cull_plane[0].dist_origin = 0;     // Left
+  crank_vec_float3_init (& projection->cull_plane[0].normal, projection->near, 0, projection->left);
+  crank_vec_float3_unit_self (& projection->cull_plane[0].normal);
+
+  projection->cull_plane[1].dist_origin = 0;     // Right
+  crank_vec_float3_init (& projection->cull_plane[1].normal, -projection->near, 0, -projection->right);
+  crank_vec_float3_unit_self (& projection->cull_plane[1].normal);
+
+  projection->cull_plane[2].dist_origin = 0;     // Bottom
+  crank_vec_float3_init (& projection->cull_plane[2].normal, 0, projection->near, projection->bottom);
+  crank_vec_float3_unit_self (& projection->cull_plane[2].normal);
+
+  projection->cull_plane[3].dist_origin = 0;     // top
+  crank_vec_float3_init (& projection->cull_plane[3].normal, 0, -projection->near, -projection->top);
+  crank_vec_float3_unit_self (& projection->cull_plane[3].normal);
+
+  projection->cull_plane[4].dist_origin = projection->near;     // near
+  crank_vec_float3_init (& projection->cull_plane[4].normal, 0, 0, -1);
+
+  projection->cull_plane[5].dist_origin = -projection->far;     // far
+  crank_vec_float3_init (& projection->cull_plane[5].normal, 0, 0, 1);
+}

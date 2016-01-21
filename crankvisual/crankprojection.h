@@ -31,6 +31,7 @@
 #include <cogl/cogl2-experimental.h>
 
 #include "crankbase.h"
+#include "crankshape.h"
 
 //////// Type Declarations /////////////////////////////////////////////////////
 typedef enum _CrankProjectionType CrankProjectionType;
@@ -84,6 +85,8 @@ struct _CrankProjection
 
   CrankMatFloat4        matrix;
   CrankMatFloat4        matrix_t;
+
+  CrankPlane3           cull_plane[6];
 };
 
 
@@ -150,6 +153,8 @@ void  crank_projection_set_matrix (CrankProjection *projection,
 void  crank_projection_update_params (CrankProjection *projection);
 
 void  crank_projection_update_matrix (CrankProjection *projection);
+
+void  crank_projection_update_cull_plane (CrankProjection *projection);
 
 
 //////// GLSL Uniform Declaration //////////////////////////////////////////////
