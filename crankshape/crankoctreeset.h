@@ -43,10 +43,7 @@ typedef CrankVecFloat3 *(*CrankOctreePosFunc) (gpointer data,
 typedef gfloat          (*CrankOctreeRadiusFunc) (gpointer data,
                                                   gpointer userdata);
 
-typedef struct _CrankOctreePlaneCull CrankOctreePlaneCull;
-
 typedef struct _CrankOctreeSet CrankOctreeSet;
-typedef struct _CrankOctreeSetIter CrankOctreeSetIter;
 
 typedef struct _CrankOctreeSetNode CrankOctreeSetNode;
 
