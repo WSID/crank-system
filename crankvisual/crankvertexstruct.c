@@ -112,7 +112,7 @@ crank_cogl_primitive_new_p3n3c4 (CoglContext             *context,
   CoglAttribute *attrs[3];
 
   buffer = cogl_attribute_buffer_new (context,
-                                      n_vertices * sizeof (CrankVertexP3N3),
+                                      n_vertices * sizeof (CrankVertexP3N3C4),
                                       data);
 
   attrs [0] = cogl_attribute_new (buffer,
@@ -134,7 +134,7 @@ crank_cogl_primitive_new_p3n3c4 (CoglContext             *context,
                                   sizeof (CrankVertexP3N3C4),
                                   G_STRUCT_OFFSET (CrankVertexP3N3C4, r),
                                   4,
-                                  COGL_ATTRIBUTE_TYPE_BYTE);
+                                  COGL_ATTRIBUTE_TYPE_UNSIGNED_BYTE);
 
   primitive = cogl_primitive_new_with_attributes (mode, n_vertices, attrs, 3);
 
@@ -190,7 +190,7 @@ crank_cogl_primitive_new_p3n3t2 (CoglContext             *context,
                                   sizeof (CrankVertexP3N3T2),
                                   G_STRUCT_OFFSET (CrankVertexP3N3T2, s),
                                   2,
-                                  COGL_ATTRIBUTE_TYPE_BYTE);
+                                  COGL_ATTRIBUTE_TYPE_FLOAT);
 
   primitive = cogl_primitive_new_with_attributes (mode, n_vertices, attrs, 3);
 
