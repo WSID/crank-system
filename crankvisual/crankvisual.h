@@ -34,6 +34,7 @@
 #include "crankrenderableprimitive.h"
 
 #include "cranklightable.h"
+#include "cranklightablearanged.h"
 
 #include "crankmaterial.h"
 
