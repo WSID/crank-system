@@ -1,5 +1,5 @@
-#ifndef CRANKVISUAL_H
-#define CRANKVISUAL_H
+#ifndef CRANKMESHUTIL_H
+#define CRANKMESHUTIL_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,24 +22,26 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKVISUAL_INSIDE
+#ifndef _CRANKVISUAL_INSIDE
+#error crankmeshutil.h cannot be included directly: include crankvisual.h
+#endif
 
-#include "crankprojection.h"
-#include "crankfilm.h"
+#include <glib.h>
+#include <glib-object.h>
+#include <cogl/cogl2-experimental.h>
 
-#include "crankmeshutil.h"
-#include "crankrenderable.h"
-#include "crankrenderableprimitive.h"
+G_BEGIN_DECLS
 
-#include "crankmaterial.h"
+//////// Publuc functions //////////////////////////////////////////////////////
 
-#include "crankcamera.h"
-#include "crankrendermodule.h"
+CoglPrimitive *crank_make_mesh_sphere_uv_p3 (CoglContext *cogl_context,
+                                             const guint  nu,
+                                             const guint  nv);
 
-#include "crankcameracontent.h"
+CoglPrimitive *crank_make_mesh_sphere_uv_p3n3 (CoglContext *cogl_context,
+                                               const guint  nu,
+                                               const guint  nv);
 
-#include "crankvertexstruct.h"
-
-#undef  _CRANKVISUAL_INSIDE
+G_END_DECLS
 
 #endif
