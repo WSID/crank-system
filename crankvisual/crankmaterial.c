@@ -104,9 +104,7 @@ static const gchar *geom_frag_post =
 "cogl_color_out.a = fract (cogl_color_out.b * 256.0);\n"
 "cogl_color_out.b -= cogl_color_out.a / 256;\n"
 
-"normal_result = normalize (crank_geom_normal_out).xy *\n"
-"                sign (crank_geom_normal_out.z);\n"
-
+"normal_result = normalize (crank_geom_normal_out).xy;\n"
 "cogl_color_out.rg = vec2 (0.5) + normal_result * 0.5;";
 
 
