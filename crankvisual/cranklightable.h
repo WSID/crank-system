@@ -31,6 +31,10 @@
 
 #include <cogl/cogl2-experimental.h>
 
+#include "crankshape.h"
+
+#include "crankprojection.h"
+
 G_BEGIN_DECLS
 
 ///////// Type Definitions /////////////////////////////////////////////////////
@@ -44,13 +48,39 @@ struct _CrankLightableClass
 {
   GObjectClass _parent;
 
-  gfloat (*get_visible_radius)  (CrankLightable *lightable);
+  gfloat  (*get_visible_radius)  (CrankLightable *lightable);
+
+  void    (*render)              (CrankLightable  *lightable,
+                                  CrankTrans3     *position,
+                                  CrankProjection *projection,
+                                  CoglTexture     *tex_geom,
+                                  CoglTexture     *tex_color,
+                                  CoglTexture     *tex_mater,
+                                  const gfloat     lscale,
+                                  CoglFramebuffer *framebuffer);
 };
 
 
 //////// Public functions //////////////////////////////////////////////////////
 
 gfloat  crank_lightable_get_visible_radius (CrankLightable *lightable);
+
+
+void    crank_lightable_get_primary_color (CrankLightable *lightable,
+                                           CrankVecFloat3 *color);
+
+void    crank_lightable_set_primary_color (CrankLightable *lightable,
+                                           CrankVecFloat3 *color);
+
+
+void    crank_lightable_render (CrankLightable  *lightable,
+                                CrankTrans3     *position,
+                                CrankProjection *projection,
+                                CoglTexture     *tex_geom,
+                                CoglTexture     *tex_color,
+                                CoglTexture     *tex_mater,
+                                const gfloat     lscale,
+                                CoglFramebuffer *framebuffer);
 
 G_END_DECLS
 
