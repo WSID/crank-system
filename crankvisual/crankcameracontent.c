@@ -251,8 +251,8 @@ crank_camera_content_paint_content (ClutterContent   *content,
   clutter_actor_get_allocation_box (actor, & actor_allocation);
 
   clutter_paint_node_add_texture_rectangle (child_node, & actor_allocation,
-                                            0, 1,
-                                            1, 0);
+                                            0, 0,
+                                            1, 1);
   clutter_paint_node_add_child (node, child_node);
   clutter_paint_node_unref (child_node);
 }
