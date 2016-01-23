@@ -1,5 +1,5 @@
-#ifndef CRANKVISUAL_H
-#define CRANKVISUAL_H
+#ifndef CRANKLIGHTABLE_H
+#define CRANKLIGHTABLE_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,25 +22,37 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKVISUAL_INSIDE
+#ifndef _CRANKVISUAL_INSIDE
+#error cranklightable.h cannot be included directly: include crankvisual.h
+#endif
 
-#include "crankprojection.h"
-#include "crankfilm.h"
+#include <glib.h>
+#include <glib-object.h>
 
-#include "crankmeshutil.h"
-#include "crankrenderable.h"
-#include "crankrenderableprimitive.h"
+#include <cogl/cogl2-experimental.h>
 
-#include "cranklightable.h"
-#include "crankmaterial.h"
+G_BEGIN_DECLS
 
-#include "crankcamera.h"
-#include "crankrendermodule.h"
+///////// Type Definitions /////////////////////////////////////////////////////
 
-#include "crankcameracontent.h"
+G_DECLARE_DERIVABLE_TYPE (CrankLightable,
+                          crank_lightable,
+                          CRANK, LIGHTABLE,
+                          GObject)
 
-#include "crankvertexstruct.h"
+struct _CrankLightableClass
+{
+  GObjectClass _parent;
 
-#undef  _CRANKVISUAL_INSIDE
+  gfloat (*get_visible_radius)  (CrankLightable *lightable);
+};
+
+
+//////// Public functions //////////////////////////////////////////////////////
+
+gfloat  crank_lightable_get_visible_radius (CrankLightable *lightable);
+
+G_END_DECLS
+
 
 #endif
