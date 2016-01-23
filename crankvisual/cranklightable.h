@@ -39,6 +39,8 @@ G_BEGIN_DECLS
 
 ///////// Type Definitions /////////////////////////////////////////////////////
 
+#define CRANK_TYPE_LIGHTABLE (crank_lightable_get_type())
+
 G_DECLARE_DERIVABLE_TYPE (CrankLightable,
                           crank_lightable,
                           CRANK, LIGHTABLE,
