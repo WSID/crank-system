@@ -27,19 +27,20 @@
 #include "crankprojection.h"
 #include "crankfilm.h"
 
+#include "crankvertexstruct.h"
 #include "crankmeshutil.h"
+
 #include "crankrenderable.h"
 #include "crankrenderableprimitive.h"
 
 #include "cranklightable.h"
+
 #include "crankmaterial.h"
 
 #include "crankcamera.h"
 #include "crankrendermodule.h"
 
 #include "crankcameracontent.h"
-
-#include "crankvertexstruct.h"
 
 #undef  _CRANKVISUAL_INSIDE
 

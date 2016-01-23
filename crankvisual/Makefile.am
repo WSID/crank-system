@@ -10,14 +10,14 @@ visualinclude_HEADERS = \
 		crankprojection.h \
 		crankfilm.h \
 		crankcamera.h \
+		crankvertexstruct.h \
 		crankmeshutil.h \
 		crankrenderable.h \
 		crankrenderableprimitive.h \
 		cranklightable.h \
 		crankmaterial.h \
 		crankrendermodule.h \
-		crankcameracontent.h \
-		crankvertexstruct.h
+		crankcameracontent.h
 
 # crankvisual.la
 libcrankvisual_la_CFLAGS = \
@@ -42,6 +42,7 @@ libcrankvisual_la_LIBADD = \
 libcrankvisual_la_SOURCES= \
 		crankfilm.c \
 		crankprojection.c \
+		crankvertexstruct.c \
 		crankmeshutil.c \
 		crankrenderable.c \
 		crankrenderableprimitive.c \
@@ -50,8 +51,7 @@ libcrankvisual_la_SOURCES= \
 		crankcamera.c \
 		crankrenderpdata.c \
 		crankrendermodule.c \
-		crankcameracontent.c \
-		crankvertexstruct.c
+		crankcameracontent.c
 
 noinst_HEADERS= \
 		crankrenderpdata.h
