@@ -32,6 +32,7 @@
 #include "crankcore.h"
 
 #include "crankrenderable.h"
+#include "cranklightable.h"
 
 #ifndef _CRANKVISUAL_INSIDE
 #error crankrendermodule.h cannot be included directly: include crankvisual.h
@@ -44,6 +45,7 @@ enum {
   PROP_PRIV_0,
   PROP_PRIV_PLACE,
   PROP_PRIV_RENDERABLE_OFFSET,
+  PROP_PRIV_LIGHTABLE_OFFSET,
 
   PROP_PRIV_COUNTS
 };
@@ -62,25 +64,32 @@ struct _CrankRenderPData
 {
   GObject parent;
 
-  CrankOctreeSet *entities;
+  CrankOctreeSet *rentities;
+  CrankOctreeSet *lentities;
 };
 
 //////// Private Type functions ////////////////////////////////////////////////
 
-void crank_render_pdata_add_entity (CrankRenderPData *pdata,
-                                           CrankEntityBase  *entity);
+void crank_render_pdata_add_rentity (CrankRenderPData *pdata,
+                                     CrankEntityBase  *entity);
 
-void crank_render_pdata_remove_entity (CrankRenderPData *pdata,
-                                              CrankEntityBase  *entity);
+void crank_render_pdata_remove_rentity (CrankRenderPData *pdata,
+                                        CrankEntityBase  *entity);
+
+void crank_render_pdata_add_lentity (CrankRenderPData *pdata,
+                                     CrankEntityBase  *entity);
+
+void crank_render_pdata_remove_lentity (CrankRenderPData *pdata,
+                                        CrankEntityBase  *entity);
 
 //////// Private type vfuncs ///////////////////////////////////////////////////
 
 void crank_render_pdata_constructed (GObject *object);
 
 void crank_render_pdata_set_property (GObject      *object,
-                                             guint         prop_id,
-                                             const GValue *value,
-                                             GParamSpec   *pspec);
+                                      guint         prop_id,
+                                      const GValue *value,
+                                      GParamSpec   *pspec);
 
 void crank_render_pdata_dispose (GObject *object);
 
@@ -89,11 +98,17 @@ void crank_render_pdata_finalize (GObject *object);
 
 //////// Private type callbacks ////////////////////////////////////////////////
 
-CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
-                                                   gpointer userdata);
+CrankVecFloat3 *crank_render_pdata_r_get_pos (gpointer data,
+                                              gpointer userdata);
 
-gfloat crank_render_pdata_get_rad (gpointer data,
-                                          gpointer userdata);
+gfloat          crank_render_pdata_r_get_rad (gpointer data,
+                                              gpointer userdata);
+
+CrankVecFloat3 *crank_render_pdata_l_get_pos (gpointer data,
+                                              gpointer userdata);
+
+gfloat          crank_render_pdata_l_get_rad (gpointer data,
+                                              gpointer userdata);
 
 
 

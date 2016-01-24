@@ -34,6 +34,8 @@
 #include "crankcore.h"
 
 #include "crankrenderable.h"
+#include "cranklightable.h"
+
 #include "crankfilm.h"
 #include "crankcamera.h"
 
@@ -63,14 +65,26 @@ void              crank_render_module_set_renderable (CrankRenderModule *module,
                                                       CrankEntityBase   *entity,
                                                       CrankRenderable   *renderable);
 
-CrankRenderable   *crank_render_module_get_renderable (CrankRenderModule *module,
-                                                       CrankEntityBase   *entity);
+CrankRenderable  *crank_render_module_get_renderable (CrankRenderModule *module,
+                                                      CrankEntityBase   *entity);
 
+
+void              crank_render_module_set_lightable (CrankRenderModule *module,
+                                                     CrankEntityBase   *entity,
+                                                     CrankLightable    *lightable);
+
+CrankLightable   *crank_render_module_get_lightable (CrankRenderModule *module,
+                                                     CrankEntityBase   *entity);
 
 
 //////// Public functions //////////////////////////////////////////////////////
 
-GList  *crank_render_module_get_culled_list (CrankRenderModule *module,
+GList  *crank_render_module_get_culled_rlist(CrankRenderModule *module,
+                                             CrankPlace3       *place,
+                                             CrankTrans3       *position,
+                                             CrankProjection   *projection);
+
+GList  *crank_render_module_get_culled_llist(CrankRenderModule *module,
                                              CrankPlace3       *place,
                                              CrankTrans3       *position,
                                              CrankProjection   *projection);
@@ -88,6 +102,15 @@ void    crank_render_module_render_color_at (CrankRenderModule *module,
                                              CrankProjection   *projection,
                                              CoglFramebuffer   *framebuffer);
 
+void    crank_render_module_render_light_at (CrankRenderModule *module,
+                                             CrankPlace3       *place,
+                                             CrankTrans3       *position,
+                                             CrankProjection   *projection,
+                                             CoglTexture       *tex_geom,
+                                             CoglTexture       *tex_color,
+                                             CoglTexture       *tex_mater,
+                                             CoglFramebuffer   *framebuffer);
+
 
 void    crank_render_module_render_geom_list (CrankRenderModule *module,
                                               GList             *entities,
@@ -100,6 +123,15 @@ void    crank_render_module_render_color_list(CrankRenderModule *module,
                                               CrankTrans3       *position,
                                               CrankProjection   *projection,
                                               CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_light_list (CrankRenderModule *module,
+                                               GList             *entities,
+                                               CrankTrans3       *position,
+                                               CrankProjection   *projection,
+                                               CoglTexture       *tex_geom,
+                                               CoglTexture       *tex_color,
+                                               CoglTexture       *tex_mater,
+                                               CoglFramebuffer   *framebuffer);
 
 
 

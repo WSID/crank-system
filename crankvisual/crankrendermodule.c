@@ -407,6 +407,7 @@ crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
       g_object_new (CRANK_TYPE_RENDER_PDATA,
                     "place", place,
                     "renderable-offset", module->offset_renderable,
+                    "lightable-offset", module->offset_lightable,
                     NULL);
 }
 
@@ -421,15 +422,20 @@ crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
 
   CrankRenderPData *pdata;
   CrankRenderable *renderable;
-
-  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-
-  if (renderable == NULL)
-    return;
+  CrankLightable *lightable;
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
-  crank_render_pdata_add_entity (pdata, entity);
+  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+  lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+
+  if (renderable != NULL)
+    crank_render_pdata_add_rentity (pdata, entity);
+
+  if (lightable != NULL)
+    crank_render_pdata_add_lentity (pdata, entity);
+
+
 }
 
 
@@ -443,15 +449,18 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
 
   CrankRenderPData *pdata;
   CrankRenderable *renderable;
-
-  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-
-  if (renderable == NULL)
-    return;
+  CrankLightable *lightable;
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
-  crank_render_pdata_remove_entity (pdata, entity);
+  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+  lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+
+  if (renderable != NULL)
+    crank_render_pdata_remove_rentity (pdata, entity);
+
+  if (lightable != NULL)
+    crank_render_pdata_remove_lentity (pdata, entity);
 }
 
 
@@ -513,12 +522,11 @@ crank_render_module_set_renderable (CrankRenderModule *module,
       pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
       if (renderable_prev == NULL)
-          crank_render_pdata_add_entity (pdata, entity);
+          crank_render_pdata_add_rentity (pdata, entity);
 
       else if (renderable == NULL)
-        crank_render_pdata_remove_entity (pdata, entity);
+        crank_render_pdata_remove_rentity (pdata, entity);
     }
-
 }
 
 
@@ -538,11 +546,68 @@ crank_render_module_get_renderable (CrankRenderModule *module,
   return G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
 }
 
+/**
+ * crank_render_module_set_lightable:
+ * @module: A Module.
+ * @entity: A Entity.
+ * @lightable: (nullable): A Lightable.
+ *
+ * Sets a lightable for the entity. The lightable may be %NULL, for non-lighting
+ * entities like chairs, doors,..
+ */
+void
+crank_render_module_set_lightable (CrankRenderModule *module,
+                                   CrankEntityBase   *entity,
+                                   CrankLightable    *lightable)
+{
+  CrankPlaceBase *place;
+  CrankRenderPData *pdata;
+  CrankLightable **lightable_ptr;
+  CrankLightable *lightable_prev;
+
+  lightable_ptr = G_STRUCT_MEMBER_P (entity, module->offset_lightable);
+  lightable_prev = *lightable_ptr;
+
+  if (! g_set_object (lightable_ptr, lightable))
+    return;
+
+
+  place = crank_entity_base_get_place (entity);
+
+  if (place != NULL)
+    {
+      pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+      if (lightable_prev == NULL)
+          crank_render_pdata_add_lentity (pdata, entity);
+
+      else if (lightable == NULL)
+        crank_render_pdata_remove_lentity (pdata, entity);
+    }
+}
+
+
+/**
+ * crank_render_module_get_lightable:
+ * @module: A Module.
+ * @entity: A Entity.
+ *
+ * Gets a lightable from entity.
+ *
+ * Returns: (transfer none) (nullable): Lightable, or %NULL if it does not have.
+ */
+CrankLightable*
+crank_render_module_get_lightable (CrankRenderModule *module,
+                                   CrankEntityBase   *entity)
+{
+  return G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+}
+
 
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
- * crank_render_module_get_culled_list:
+ * crank_render_module_get_culled_rlist:
  * @module: A Module.
  * @place: A Place.
  * @position: A Position.
@@ -553,10 +618,10 @@ crank_render_module_get_renderable (CrankRenderModule *module,
  * Returns: (transfer container) (element-type CrankEntity3): Entities.
  */
 GList*
-crank_render_module_get_culled_list (CrankRenderModule *module,
-                                     CrankPlace3       *place,
-                                     CrankTrans3       *position,
-                                     CrankProjection   *projection)
+crank_render_module_get_culled_rlist (CrankRenderModule *module,
+                                      CrankPlace3       *place,
+                                      CrankTrans3       *position,
+                                      CrankProjection   *projection)
 {
   CrankRenderPData *pdata;
   CrankPlane3 cullplane_t[6];
@@ -567,9 +632,37 @@ crank_render_module_get_culled_list (CrankRenderModule *module,
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  return crank_octree_set_get_culled_list (pdata->rentities, cullplane_t, 4);
+  return crank_octree_set_get_culled_list (pdata->rentities, cullplane_t, 6);
 }
 
+/**
+ * crank_render_module_get_culled_llist:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer container) (element-type CrankEntity3): Entities.
+ */
+GList*
+crank_render_module_get_culled_llist (CrankRenderModule *module,
+                                      CrankPlace3       *place,
+                                      CrankTrans3       *position,
+                                      CrankProjection   *projection)
+{
+  CrankRenderPData *pdata;
+  CrankPlane3 cullplane_t[6];
+
+  guint i;
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  return crank_octree_set_get_culled_list (pdata->lentities, cullplane_t, 6);
+}
 
 /**
  * crank_render_module_render_geom_at:
@@ -588,7 +681,7 @@ crank_render_module_render_geom_at (CrankRenderModule *module,
                                     CrankProjection   *projection,
                                     CoglFramebuffer   *framebuffer)
 {
-  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
+  GList *list = crank_render_module_get_culled_rlist (module, place, position, projection);
 
   crank_render_module_render_geom_list (module, list, position, projection, framebuffer);
 
@@ -612,9 +705,40 @@ crank_render_module_render_color_at (CrankRenderModule *module,
                                      CrankProjection   *projection,
                                      CoglFramebuffer   *framebuffer)
 {
-  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
+  GList *list = crank_render_module_get_culled_rlist (module, place, position, projection);
 
   crank_render_module_render_color_list (module, list, position, projection, framebuffer);
+
+  g_list_free (list);
+}
+
+
+/**
+ * crank_render_module_render_light_at:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: Position of view.
+ * @projection: Projection of view.
+ * @tex_geom: Texture that holds geometry info.
+ * @tex_color: Texture that holds color info.
+ * @tex_mater: Texture that holds material info.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders light info ont @framebuffer.
+ */
+void
+crank_render_module_render_light_at (CrankRenderModule *module,
+                                     CrankPlace3       *place,
+                                     CrankTrans3       *position,
+                                     CrankProjection   *projection,
+                                     CoglTexture       *tex_geom,
+                                     CoglTexture       *tex_color,
+                                     CoglTexture       *tex_mater,
+                                     CoglFramebuffer   *framebuffer)
+{
+  GList *list = crank_render_module_get_culled_llist (module, place, position, projection);
+
+  crank_render_module_render_light_list (module, list, position, projection, tex_geom, tex_color, tex_mater, framebuffer);
 
   g_list_free (list);
 }
@@ -701,6 +825,52 @@ crank_render_module_render_color_list (CrankRenderModule *module,
     }
 }
 
+/**
+ * crank_render_module_render_light_list:
+ * @module: A Module.
+ * @entities: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @tex_geom: Texture that holds geometry info.
+ * @tex_color: Texture that holds color info.
+ * @tex_mater: Texture that holds material info.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_light_list (CrankRenderModule *module,
+                                       GList             *entities,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection,
+                                       CoglTexture       *tex_geom,
+                                       CoglTexture       *tex_color,
+                                       CoglTexture       *tex_mater,
+                                       CoglFramebuffer   *framebuffer)
+{
+  CrankTrans3 ipos;
+  guint i;
+
+  GList *iter;
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (iter = entities; iter != NULL; iter = iter->next)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) iter->data;
+      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+      CrankTrans3 rpos;
+
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
+
+      crank_lightable_render (lightable, &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
+    }
+}
 
 
 /**
@@ -750,20 +920,30 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
-  GList *list = crank_render_module_get_culled_list (module, place, position, projection);
+  GList *rlist = crank_render_module_get_culled_rlist (module, place, position, projection);
+  GList *llist = crank_render_module_get_culled_llist (module, place, position, projection);
 
+
+  crank_render_module_render_geom_list (module,
+                                        rlist,
+                                        position,
+                                        projection,
+                                        crank_film_get_framebuffer (film, 0));
 
   crank_render_module_render_color_list (module,
-                                         list,
+                                         rlist,
                                          position,
                                          projection,
                                          crank_film_get_framebuffer (film, 1));
 
-  crank_render_module_render_geom_list (module,
-                                        list,
-                                        position,
-                                        projection,
-                                        crank_film_get_framebuffer (film, 5));
+  crank_render_module_render_light_list (module,
+                                         llist,
+                                         position,
+                                         projection,
+                                         crank_film_get_texture (film, 0),
+                                         crank_film_get_texture (film, 1),
+                                         crank_film_get_texture (film, 2),
+                                         crank_film_get_framebuffer (film, 5));
 /*
   crank_render_module_render_pos (module,
                                   crank_film_get_texture (film, 0),
@@ -776,7 +956,8 @@ crank_render_module_render_at (CrankRenderModule *module,
   //
   //
 
-  g_list_free (list);
+  g_list_free (rlist);
+  g_list_free (llist);
 }
 
 /**
