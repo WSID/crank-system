@@ -112,7 +112,7 @@ crank_lightable_class_init (CrankLightableClass *c)
       "primary-color", "Primary Color",
       "Primary color of lightable",
       CRANK_TYPE_VEC_FLOAT3,
-      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
