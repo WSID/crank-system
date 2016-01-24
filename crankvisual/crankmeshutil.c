@@ -310,7 +310,7 @@ crank_make_mesh_sphere_uv_p3 (CoglContext *context,
                                      lvdata,
                                      vdata);
 
-  cogl_primitive_set_indices (primitive, indices, lvdata);
+  cogl_primitive_set_indices (primitive, indices, lidata * 3);
 
   cogl_object_unref (indices);
 

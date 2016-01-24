@@ -159,6 +159,7 @@ struct _CrankRenderModule
 
   goffset     offset_pdata;
   goffset     offset_renderable;
+  goffset     offset_lightable;
 
   GPtrArray   *cameras;
 
@@ -325,6 +326,9 @@ crank_render_module_session_init (CrankSessionModule  *module,
 
   crank_session_module_placed_attach_entity_alloc_object (pmodule,
                                                           & rmodule->offset_renderable);
+
+  crank_session_module_placed_attach_entity_alloc_object (pmodule,
+                                                          & rmodule->offset_lightable);
 
   g_signal_connect (pmodule, "place-created",
                     (GCallback)crank_render_module_place_created, rmodule);
@@ -563,8 +567,7 @@ crank_render_module_get_culled_list (CrankRenderModule *module,
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  return crank_octree_set_get_culled_list (pdata->entities, cullplane_t, 4);
-  //return crank_octree_set_get_data_list (pdata->entities);
+  return crank_octree_set_get_culled_list (pdata->rentities, cullplane_t, 4);
 }
 
 
@@ -749,23 +752,24 @@ crank_render_module_render_at (CrankRenderModule *module,
 {
   GList *list = crank_render_module_get_culled_list (module, place, position, projection);
 
-/*
+
   crank_render_module_render_color_list (module,
                                          list,
                                          position,
                                          projection,
-                                         crank_film_get_framebuffer (film, 5));
- */
+                                         crank_film_get_framebuffer (film, 1));
+
   crank_render_module_render_geom_list (module,
                                         list,
                                         position,
                                         projection,
-                                        crank_film_get_framebuffer (film, 0));
-
+                                        crank_film_get_framebuffer (film, 5));
+/*
   crank_render_module_render_pos (module,
                                   crank_film_get_texture (film, 0),
                                   projection,
                                   crank_film_get_framebuffer (film, 5));
+ * */
   // XXX: For now, rendering a color buffer on result buffer.
 
   // TODO: Render to other buffers.
