@@ -47,7 +47,54 @@
 #include "cranklightable.h"
 #include "cranklightablearanged.h"
 
+//////// GLSL Snippet code. ////////////////////////////////////////////////////
 
+
+static gchar *vert_decl =
+"uniform CrankProjection crank_deferr_proj;\n"
+"varying vec3 crank_deferr_near;\n"
+"varying vec3 crank_deferr_far;";
+
+static gchar *vert_replace =
+"cogl_position_out = cogl_modelview_projection_matrix * cogl_position_in;\n"
+"cogl_tex_coord0_out = vec4 (0, 0, 0, 1);\n"
+"cogl_tex_coord0_out.xy = vec2 (0.5) + cogl_position_out.xy / cogl_position_out.w * 0.5;\n"
+
+"float nf = mix (1,"
+"                crank_projection_get_far (crank_deferr_proj) /\n"
+"                crank_projection_get_near (crank_deferr_proj),\n"
+"                crank_deferr_proj.proj_type);\n"
+
+"vec2 base_lb = vec2 (crank_projection_get_left (crank_deferr_proj),\n"
+"                     crank_projection_get_top (crank_deferr_proj));\n"
+"vec2 base_rt = vec2 (crank_projection_get_right (crank_deferr_proj),\n"
+"                     crank_projection_get_bottom (crank_deferr_proj));\n"
+"vec2 base_xy = mix (base_lb, base_rt, cogl_tex_coord0_out.xy);\n"
+
+"crank_deferr_near = vec3 (base_xy,\n"
+"                          -crank_projection_get_near (crank_deferr_proj));\n"
+
+"crank_deferr_far = vec3 (base_xy * nf,\n"
+"                         -crank_projection_get_far (crank_deferr_proj));\n";
+
+
+static gchar *frag_decl =
+"uniform CrankProjection crank_deferr_proj;\n"
+"varying vec3 crank_deferr_near;\n"
+"varying vec3 crank_deferr_far;\n"
+"uniform sampler2D  crank_deferr_geom;\n"
+"uniform sampler2D  crank_deferr_color;";
+
+static gchar *frag_replace =
+"vec4  crank_geom_value = texture2D (crank_deferr_geom, cogl_tex_coord0_in.xy);\n"
+"float crank_depth =      dot (crank_geom_value.ba, vec2 (1, 1 / 256));\n"
+"vec3  crank_normal =     vec3 (crank_geom_value.rg, 0);\n"
+"crank_normal.z = sqrt (1 - dot (crank_normal.xy, crank_normal.xy));\n"
+
+"vec3  crank_frag_position = mix (crank_deferr_near, crank_deferr_far, crank_depth);\n"
+
+"cogl_color_out = texture2D (crank_deferr_color, cogl_tex_coord0_in.xy);"
+;
 
 //////// List of virtual functions /////////////////////////////////////////////
 
@@ -69,6 +116,9 @@ crank_lightable_a_ranged_set_property (GObject      *objet,
 static void
 crank_lightable_a_ranged_dispose (GObject *object);
 
+
+static gfloat
+crank_lightable_a_ranged_get_visible_radius (CrankLightable *lightable);
 
 static void
 crank_lightable_a_ranged_render (CrankLightable  *lightable,
@@ -153,6 +203,7 @@ crank_lightable_a_ranged_class_init (CrankLightableARangedClass *c)
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
   c_lightable->render = crank_lightable_a_ranged_render;
+  c_lightable->get_visible_radius = crank_lightable_a_ranged_get_visible_radius;
 }
 
 
@@ -164,6 +215,9 @@ crank_lightable_a_ranged_constructed (GObject *object)
   CrankLightableARanged *lightable;
   GObjectClass *pc_gobject;
 
+  CoglSnippet *snippet_vert;
+  CoglSnippet *snippet_frag;
+
   pc_gobject = (GObjectClass*)crank_lightable_a_ranged_parent_class;
 
   pc_gobject->constructed (object);
@@ -174,7 +228,31 @@ crank_lightable_a_ranged_constructed (GObject *object)
     g_error ("CrankLightableARanged: Requires cogl-context at construction.");
 
   lightable->pipe_line = cogl_pipeline_new (lightable->cogl_context);
-  lightable->bound_volume = crank_make_mesh_sphere_uv_p3 (lightable->cogl_context, 10, 10);
+  lightable->bound_volume = crank_make_mesh_sphere_uv_p3n3 (lightable->cogl_context, 10, 10);
+
+  snippet_vert = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
+                                   vert_decl,
+                                   NULL);
+  cogl_snippet_set_replace (snippet_vert, vert_replace);
+
+  snippet_frag = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
+                                   frag_decl,
+                                   NULL);
+  cogl_snippet_set_replace (snippet_frag, frag_replace);
+
+  cogl_pipeline_set_layer_null_texture (lightable->pipe_line, 0, COGL_TEXTURE_TYPE_2D);
+  cogl_pipeline_set_layer_null_texture (lightable->pipe_line, 1, COGL_TEXTURE_TYPE_2D);
+
+  cogl_pipeline_add_snippet (lightable->pipe_line,
+                             crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_VERTEX));
+  cogl_pipeline_add_snippet (lightable->pipe_line,
+                             crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_FRAGMENT));
+
+  cogl_pipeline_add_snippet (lightable->pipe_line, snippet_vert);
+  cogl_pipeline_add_snippet (lightable->pipe_line, snippet_frag);
+
+  cogl_object_unref (snippet_vert);
+  cogl_object_unref (snippet_frag);
 }
 
 static void
@@ -246,6 +324,14 @@ crank_lightable_a_ranged_dispose (GObject *object)
 
 //////// CrankLightable ////////////////////////////////////////////////////////
 
+static gfloat
+crank_lightable_a_ranged_get_visible_radius (CrankLightable *lightable)
+{
+  CrankLightableARanged *self = (CrankLightableARanged*)lightable;
+
+  return self->radius;
+}
+
 static void
 crank_lightable_a_ranged_render (CrankLightable  *lightable,
                                  CrankTrans3     *position,
@@ -259,11 +345,13 @@ crank_lightable_a_ranged_render (CrankLightable  *lightable,
   CrankLightableARanged *self = (CrankLightableARanged*) lightable;
 
   CrankMatFloat4 mv_matrix;
-  gint projection_uniforms[2];
 
   crank_trans3_to_matrix_transpose (position, & mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
+
+  cogl_pipeline_set_layer_texture (self->pipe_line, 0, tex_geom);
+  cogl_pipeline_set_layer_texture (self->pipe_line, 1, tex_color);
 
   cogl_primitive_draw (self->bound_volume, framebuffer, self->pipe_line);
 }
