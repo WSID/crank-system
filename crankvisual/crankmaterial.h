@@ -30,6 +30,8 @@
 #include <glib-object.h>
 #include <cogl/cogl2-experimental.h>
 
+#include "crankprojection.h"
+
 //////// Type Declaration //////////////////////////////////////////////////////
 
 #define CRANK_TYPE_MATERIAL (crank_material_get_type())
@@ -77,5 +79,10 @@ void         crank_material_set_texture_color (CrankMaterial *material,
                                                CoglTexture   *texture);
 
 
+
+//////// Functions /////////////////////////////////////////////////////////////
+
+void         crank_material_geom_set_render_projection (CrankMaterial   *material,
+                                                        CrankProjection *projection);
 
 #endif

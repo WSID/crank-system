@@ -219,6 +219,8 @@ struct _CrankMaterial
   CoglPipeline *pipe_geom;
   CoglPipeline *pipe_color;
   CoglPipeline *pipe_mat;
+
+  gint          geom_uniform_render_projection[2];
 };
 
 G_DEFINE_TYPE (CrankMaterial,
@@ -399,6 +401,10 @@ crank_material_constructed (GObject *object)
   material->pipe_mat = cogl_pipeline_copy (template->pipe_mat);
 
   cogl_pipeline_set_layer_null_texture (material->pipe_geom, 0, COGL_TEXTURE_TYPE_2D);
+
+  crank_projection_get_uniform_locations (material->pipe_geom,
+                                          "crank_render_projection",
+                                          material->geom_uniform_render_projection);
 }
 
 
@@ -688,4 +694,24 @@ crank_material_set_texture_color (CrankMaterial *material,
   cogl_pipeline_set_layer_texture (material->pipe_color, 0, texture);
 
   g_object_notify_by_pspec ((GObject*)material, pspecs[PROP_TEXTURE_COLOR]);
+}
+
+
+//////// Public functions //////////////////////////////////////////////////////
+
+/**
+ * crank_material_geom_set_render_projection:
+ * @material: A Material.
+ * @projection: A Projection.
+ *
+ * Sets render projection to material. This is for #CrankRenderable
+ * implementations, to prepare pipeline to render.
+ */
+void
+crank_material_geom_set_render_projection (CrankMaterial   *material,
+                                           CrankProjection *projection)
+{
+  crank_projection_set_uniform_value (projection,
+                                      material->pipe_geom,
+                                      material->geom_uniform_render_projection);
 }
