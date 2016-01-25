@@ -344,7 +344,7 @@ crank_material_constructed (GObject *object)
       template->pipe_base=  cogl_pipeline_new (cogl_context);
 
       cogl_pipeline_set_cull_face_mode (template->pipe_base,
-                                        COGL_PIPELINE_CULL_FACE_MODE_FRONT);
+                                        COGL_PIPELINE_CULL_FACE_MODE_BACK);
 
       cogl_pipeline_set_depth_state (template->pipe_base, &depth_state, &merr);
       if (merr != NULL)
