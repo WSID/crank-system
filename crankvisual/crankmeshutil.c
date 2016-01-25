@@ -201,8 +201,8 @@ crank_make_indices_sphere_uv (const guint  uc,
       TriIndices *face = indices + i;
 
       face[0][0] = 0;
-      face[0][1] = 1 + i;
-      face[0][2] = 2 + i;
+      face[0][1] = 2 + i;
+      face[0][2] = 1 + i;
     }
 
   indices[uc1][0] = 0;
