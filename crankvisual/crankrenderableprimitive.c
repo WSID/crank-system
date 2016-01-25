@@ -103,7 +103,6 @@ crank_renderable_primitive_render_geom (CrankRenderable *renderable,
   CrankMaterial *material;
   CoglPipeline *pipeline;
   CrankMatFloat4 mv_matrix;
-  gint projection_uniforms[2];
 
   prenderable = (CrankRenderablePrimitive*) renderable;
 
@@ -116,17 +115,10 @@ crank_renderable_primitive_render_geom (CrankRenderable *renderable,
                                                       projection);
 
   pipeline = crank_material_get_pipeline_geom (material);
-  crank_projection_get_uniform_locations (pipeline,
-                                          "crank_render_projection",
-                                          projection_uniforms);
+
+  crank_material_geom_set_render_projection (material, projection);
 
   crank_trans3_to_matrix_transpose (position, & mv_matrix);
-
-  crank_projection_set_uniform_value (projection,
-                                      pipeline,
-                                      projection_uniforms);
-
-
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
 
   cogl_primitive_draw (primitive, framebuffer, pipeline);
