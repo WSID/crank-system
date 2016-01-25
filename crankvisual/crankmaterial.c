@@ -379,7 +379,8 @@ crank_material_constructed (GObject *object)
                                             geom_frag_post);
 
 
-      cogl_pipeline_add_snippet (template->pipe_geom, geom_pack);
+      cogl_pipeline_add_snippet (template->pipe_geom,
+                                 crank_material_get_snippet_geom_pack ());
       cogl_pipeline_add_snippet (template->pipe_geom,
                                  crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_VERTEX));
       cogl_pipeline_add_snippet (template->pipe_geom,
@@ -499,6 +500,65 @@ crank_material_temp_free (gpointer data)
 
   g_free (template);
 }
+
+
+
+//////// Static Functions //////////////////////////////////////////////////////
+
+/**
+ * crank_material_get_snippet_geom_pack:
+ *
+ * This returns a #CoglSnippet with %COGL_SNIPPET_HOOK_FRAGMENT_GLOBALS,
+ * that holds a single function.
+ *
+ * vec4 crank_geom_pack (vec3 normal, float depth)
+ * * normal: Normal in camera space.
+ * * depth: Linear depth.
+ * * Returns: Texel value for geometry buffer.
+ *
+ * Returns: (transfer none): A #CoglSnippet.
+ */
+CoglSnippet*
+crank_material_get_snippet_geom_pack (void)
+{
+  static gsize snippet = 0;
+  if (g_once_init_enter (&snippet))
+    {
+      CoglSnippet* real_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT_GLOBALS,
+                                                    geom_pack_decl, NULL);
+
+      g_once_init_leave (&snippet, (gsize)real_snippet);
+    }
+  return (CoglSnippet*) snippet;
+}
+
+/**
+ * crank_material_get_snippet_geom_unpack:
+ *
+ * This returns a #CoglSnippet with %COGL_SNIPPET_HOOK_FRAGMENT_GLOBALS,
+ * that holds a single function.
+ *
+ * vec4 crank_geom_unpack (vec4 texel, out vec3 normal, out float depth)
+ * * texel: Texel value for geometry buffer.
+ * * normal: (out): Normal in camera space.
+ * * depth: (out): Linear depth.
+ *
+ * Returns: (transfer none): A #CoglSnippet.
+ */
+CoglSnippet*
+crank_material_get_snippet_geom_unpack (void)
+{
+  static gsize snippet = 0;
+  if (g_once_init_enter (&snippet))
+    {
+      CoglSnippet* real_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT_GLOBALS,
+                                                    geom_unpack_decl, NULL);
+
+      g_once_init_leave (&snippet, (gsize)real_snippet);
+    }
+  return (CoglSnippet*) snippet;
+}
+
 
 
 //////// Constructor ///////////////////////////////////////////////////////////

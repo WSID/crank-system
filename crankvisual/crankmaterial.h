@@ -44,6 +44,12 @@ G_DECLARE_FINAL_TYPE (CrankMaterial,
  * Instance structures
  */
 
+//////// Static functions //////////////////////////////////////////////////////
+
+CoglSnippet *crank_material_get_snippet_geom_pack (void);
+
+CoglSnippet *crank_material_get_snippet_geom_unpack (void);
+
 
 //////// Public Functions //////////////////////////////////////////////////////
 
