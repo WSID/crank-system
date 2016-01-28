@@ -95,18 +95,18 @@ static const gchar *geom_pack_decl =
  */
 static CoglSnippet *geom_unpack = NULL;
 static const gchar *geom_unpack_decl =
-"vec4 crank_geom_unpack (vec4      texel,"
-"                        out vec3  normal,"
-"                        out float depth)"
-"{"
+"void crank_geom_unpack (vec4      texel,\n"
+"                        out vec3  normal,\n"
+"                        out float depth)\n"
+"{\n"
 
    // Unpack normal from RG channel.
-"  normal.xy = texel.xy * 2.0 - vec2 (1.0);"
-"  normal.z = sqrt (1 - dot (normal.xy, normal.xy));"
+"  normal.xy = texel.xy * 2.0 - vec2 (1.0);\n"
+"  normal.z = sqrt (1 - dot (normal.xy, normal.xy));\n"
 
    // Unpack depth into BA channel.
-"  depth = dot ( vec2 (1, 1/256), texel.ba);"
-"}";
+"  depth = dot ( vec2 (1, 1/256), texel.ba);\n"
+"}\n";
 
 
 
