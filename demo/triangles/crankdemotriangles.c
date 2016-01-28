@@ -82,6 +82,9 @@ static void crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
 
 static void crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app);
 
+static void crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app);
+
+
 
 //////// Private Functions /////////////////////////////////////////////////////
 
@@ -111,6 +114,7 @@ struct _CrankDemoTriangleApp
   CrankEntity3      *camera_hook;
 
   CrankDemoRenderableTriangle  *renderable;
+  CrankLightableARanged        *lightable;
 
   CrankCamera       *camera;
   CrankCameraContent *content;
@@ -264,6 +268,10 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   app->camera_hook = (CrankEntity3*) crank_entity_base_new (app->pmodule);
 
   app->renderable = crank_demo_renderable_triangle_new (cogl_context);
+  app->lightable = crank_lightable_a_ranged_new (cogl_context,
+                                                 crank_vec_float3_static_one,
+                                                 10,
+                                                 10);
 
   // Add session!
   crank_place_base_add_entity ((CrankPlaceBase*)app->place,
@@ -272,14 +280,16 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   crank_camera_set_entity (app->camera, app->camera_hook);
 
 
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 400; i++)
     crank_demo_triangle_app_add_triangle (app);
+
+  crank_demo_triangle_app_add_lightable (app);
 
     {
       CrankTrans3 campos = {{0, 0, 0}, {1, 0, 0, 0}, 1};
 
       crank_trans3_init (& app->camera_hook->position);
-      crank_camera_perspective (app->camera, G_PI * 0.7, 1, 0.2, 1000);
+      crank_camera_frustum (app->camera, -0.2, 0.2, -0.2, 0.2, 0.2, 1000);
     }
 
   g_signal_connect (app->tmodule, "tick", (GCallback) move_cam_pos, app->camera_hook);
@@ -299,7 +309,7 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1)
-  }, g_random_double_range (0.5, 10)};
+  }, g_random_double_range (0.2, 10)};
 
   crank_quat_float_unit_self (& pos.mrot);
 
@@ -313,12 +323,39 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 }
 
 static void
+crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app)
+{
+  CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
+
+  CrankTrans3 pos = {{
+    g_random_double_range (0, 0),
+    g_random_double_range (0, 0),
+    g_random_double_range (-10, 0)
+  }, {
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1),
+    g_random_double_range (-1, 1)
+  }, g_random_double_range (0.2, 10)};
+
+  crank_quat_float_unit_self (& pos.mrot);
+
+  crank_render_module_set_lightable (app->rmodule,
+                                      (CrankEntityBase*)entity,
+                                      (CrankLightable*)app->lightable);
+
+  crank_trans3_copy (&pos, & entity->position);
+  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
+                               (CrankEntityBase*)entity);
+}
+
+static void
 move_cam_pos (CrankSessionModuleTick *tick,
               gpointer                ptr)
 {
   CrankEntity3* entity = (CrankEntity3*)ptr;
 
-  entity->position.mtrans.z += 0.5;
+  entity->position.mtrans.z += 0.1;
 }
 
 //////// Constructors //////////////////////////////////////////////////////////
