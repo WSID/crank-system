@@ -105,7 +105,7 @@ static const gchar *geom_unpack_decl =
 "  normal.z = sqrt (1 - dot (normal.xy, normal.xy));\n"
 
    // Unpack depth into BA channel.
-"  depth = dot ( vec2 (1, 1/256), texel.ba);\n"
+"  depth = dot (vec2 (1.0, 1.0/256.0), texel.ba);\n"
 "}\n";
 
 
