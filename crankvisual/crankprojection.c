@@ -49,6 +49,11 @@
  * * float crank_projection_get_top (#CrankProjection projection)
  * * float crank_projection_get_near (#CrankProjection projection)
  * * float crank_projection_get_far (#CrankProjection projection)
+ * * void crank_projection_get_nf_points (#CrankProjection projection,
+ *                                        vec2 screen_coord,
+ *                                        out vec3 near_point,
+ *                                        out vec3 far_point)
+ *   Gets @near_point and @far_point of given @screen_coord.
  */
 
 #define _CRANKVISUAL_INSIDE
@@ -88,7 +93,25 @@ static const gchar *snippet_definition =
 "}\n"
 "float crank_projection_get_far (CrankProjection projection) {\n"
 "  return projection.params[5];\n"
-"}\n";
+"}\n"
+"void crank_projection_get_nf_points (CrankProjection projection,\n"
+"                                     vec2            screen_coord,"
+"                                     out vec3        near_point,"
+"                                     out vec3        far_point)"
+"{"
+"  vec2 base_lb = vec2 (crank_projection_get_left (projection),\n"
+"                       crank_projection_get_bottom (projection));\n"
+"  vec2 base_rt = vec2 (crank_projection_get_right (projection),\n"
+"                       crank_projection_get_top (projection));\n"
+"  float nf_base_ratio = mix (1,\n"
+"                             crank_projection_get_far (projection) /\n"
+"                             crank_projection_get_near (projection),\n"
+"                             projection.proj_type);\n"
+"  vec2 base = mix (base_lb, base_rt, screen_coord);\n"
+"  near_point = vec3 (base, crank_projection_get_near (projection));\n"
+"  far_point = vec3 (base * nf_base_ratio, crank_projection_get_far (projection));\n"
+"}"
+;
 
 
 //////// Private Functions /////////////////////////////////////////////////////
