@@ -128,6 +128,11 @@ void        crank_octree_set_foreach (CrankOctreeSet *set,
                                       GFunc           func,
                                       gpointer        userdata);
 
+void        crank_octree_set_cull_foreach (CrankOctreeSet    *set,
+                                           const CrankPlane3 *culls,
+                                           const guint        nculls,
+                                           GFunc              func,
+                                           gpointer           userdtata);
 
 
 GList      *crank_octree_set_get_data_list (CrankOctreeSet *set);

@@ -766,6 +766,26 @@ crank_octree_set_foreach (CrankOctreeSet *set,
 }
 
 /**
+ * crank_octree_set_cull_foreach:
+ * @set: An octree set
+ * @culls: (array length=nculls): Culling plane.
+ * @nculls: Number of @culls.
+ * @func: (scope call): A Function to iterate.
+ * @userdata: (closure func): A Userdata.
+ *
+ * Iterate over items culled by @culls, with @func.
+ */
+void
+crank_octree_set_cull_foreach (CrankOctreeSet    *set,
+                               const CrankPlane3 *culls,
+                               const guint        nculls,
+                               GFunc              func,
+                               gpointer           userdata)
+{
+  crank_octree_set_node_cull_foreach (set->root, set, culls, nculls, func, userdata);
+}
+
+/**
  * crank_octree_set_get_data_list:
  * @set: An octree set.
  *
@@ -794,8 +814,9 @@ crank_octree_set_get_culled_list (CrankOctreeSet    *set,
                                   const guint        nculls)
 {
   GList *list = NULL;
-  crank_octree_set_node_cull_foreach (set->root, set, culls, nculls,
-                                      _add_to_g_list, &list);
+  crank_octree_set_cull_foreach (set,
+                                 culls, nculls,
+                                 _add_to_g_list, &list);
   return list;
 }
 
@@ -815,7 +836,7 @@ GPtrArray*
 crank_octree_set_add_data_array (CrankOctreeSet *set,
                                  GPtrArray      *array)
 {
-  crank_octree_set_node_foreach (set->root, _add_to_g_ptr_array, array);
+  crank_octree_set_foreach (set, _add_to_g_ptr_array, array);
   return array;
 }
 
@@ -836,10 +857,9 @@ crank_octree_set_add_culled_array (CrankOctreeSet    *set,
                                    const CrankPlane3 *culls,
                                    const guint        nculls)
 {
-  crank_octree_set_node_cull_foreach (set->root,
-                                      set,
-                                      culls, nculls,
-                                      _add_to_g_ptr_array, array);
+  crank_octree_set_cull_foreach (set,
+                                 culls, nculls,
+                                 _add_to_g_ptr_array, array);
   return array;
 }
 
