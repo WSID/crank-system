@@ -90,6 +90,19 @@ GList  *crank_render_module_get_culled_llist(CrankRenderModule *module,
                                              CrankProjection   *projection);
 
 
+GPtrArray  *crank_render_module_get_culled_rarray(CrankRenderModule *module,
+                                                  GPtrArray         *entites,
+                                                  CrankPlace3       *place,
+                                                  CrankTrans3       *position,
+                                                  CrankProjection   *projection);
+
+GPtrArray  *crank_render_module_get_culled_larray(CrankRenderModule *module,
+                                                  GPtrArray         *entities,
+                                                  CrankPlace3       *place,
+                                                  CrankTrans3       *position,
+                                                  CrankProjection   *projection);
+
+
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankPlace3       *place,
                                             CrankTrans3       *position,
@@ -132,6 +145,29 @@ void    crank_render_module_render_light_list (CrankRenderModule *module,
                                                CoglTexture       *tex_color,
                                                CoglTexture       *tex_mater,
                                                CoglFramebuffer   *framebuffer);
+
+
+void    crank_render_module_render_geom_array(CrankRenderModule *module,
+                                              GPtrArray         *entities,
+                                              CrankTrans3       *position,
+                                              CrankProjection   *projection,
+                                              CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_color_array(CrankRenderModule *module,
+                                              GPtrArray          *entities,
+                                              CrankTrans3       *position,
+                                              CrankProjection   *projection,
+                                              CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_light_array(CrankRenderModule *module,
+                                               GPtrArray         *entities,
+                                               CrankTrans3       *position,
+                                               CrankProjection   *projection,
+                                               CoglTexture       *tex_geom,
+                                               CoglTexture       *tex_color,
+                                               CoglTexture       *tex_mater,
+                                               CoglFramebuffer   *framebuffer);
+
 
 
 

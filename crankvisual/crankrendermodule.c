@@ -109,6 +109,8 @@ struct _CrankRenderModule
   goffset     offset_lightable;
 
   GPtrArray   *cameras;
+
+  GPtrArray   *render_entities;
 };
 
 G_DEFINE_TYPE (CrankRenderModule,
@@ -123,6 +125,7 @@ static void
 crank_render_module_init (CrankRenderModule *module)
 {
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
+  module->render_entities = g_ptr_array_new ();
 }
 
 
@@ -558,6 +561,74 @@ crank_render_module_get_culled_llist (CrankRenderModule *module,
   return crank_octree_set_get_culled_list (pdata->lentities, cullplane_t, 6);
 }
 
+
+
+/**
+ * crank_render_module_get_culled_rarray:
+ * @module: A Module.
+ * @entities: (transfer none) (element-type CrankEntity3): Entitiy array.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ */
+GPtrArray*
+crank_render_module_get_culled_rarray (CrankRenderModule *module,
+                                       GPtrArray         *entities,
+                                       CrankPlace3       *place,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection)
+{
+  CrankRenderPData *pdata;
+  CrankPlane3 cullplane_t[6];
+
+  guint i;
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  return crank_octree_set_add_culled_array (pdata->rentities, entities, cullplane_t, 6);
+}
+
+/**
+ * crank_render_module_get_culled_larray:
+ * @module: A Module.
+ * @entities: (transfer none) (element-type CrankEntity3): Entity array.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ */
+GPtrArray*
+crank_render_module_get_culled_larray (CrankRenderModule *module,
+                                       GPtrArray         *entities,
+                                       CrankPlace3       *place,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection)
+{
+  CrankRenderPData *pdata;
+  CrankPlane3 cullplane_t[6];
+
+  guint i;
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+
+  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  return crank_octree_set_add_culled_array (pdata->lentities, entities, cullplane_t, 6);
+}
+
+
+
+
+
 /**
  * crank_render_module_render_geom_at:
  * @module: A Module.
@@ -660,7 +731,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
   GList *iter;
 
   cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
-                            0, 0, 0, 1);
+                            0, 0, 1, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
                                           (const CoglMatrix*) & projection->matrix_t);
 
@@ -768,6 +839,129 @@ crank_render_module_render_light_list (CrankRenderModule *module,
 
 
 /**
+ * crank_render_module_render_geom_array:
+ * @module: A Module.
+ * @entities: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_geom_array(CrankRenderModule *module,
+                                      GPtrArray         *entities,
+                                      CrankTrans3       *position,
+                                      CrankProjection   *projection,
+                                      CoglFramebuffer   *framebuffer)
+{
+  CrankTrans3 ipos;
+  guint i;
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 1, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (i = 0; i < entities->len; i++)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankTrans3 rpos;
+
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
+
+      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_color_array:
+ * @module: A Module.
+ * @entities: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_color_array(CrankRenderModule *module,
+                                       GPtrArray         *entities,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection,
+                                       CoglFramebuffer   *framebuffer)
+{
+  CrankTrans3 ipos;
+  guint i;
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (i = 0; i < entities->len; i++)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankTrans3 rpos;
+
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
+
+      crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_light_array:
+ * @module: A Module.
+ * @entities: (element-type CrankEntity3): entities.
+ * @position: A Position
+ * @projection: A Projection.
+ * @tex_geom: Texture that holds geometry info.
+ * @tex_color: Texture that holds color info.
+ * @tex_mater: Texture that holds material info.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_light_array (CrankRenderModule *module,
+                                       GPtrArray          *entities,
+                                       CrankTrans3       *position,
+                                       CrankProjection   *projection,
+                                       CoglTexture       *tex_geom,
+                                       CoglTexture       *tex_color,
+                                       CoglTexture       *tex_mater,
+                                       CoglFramebuffer   *framebuffer)
+{
+  CrankTrans3 ipos;
+  guint i;
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 0, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  crank_trans3_inverse (position, &ipos);
+
+  for (i = 0; i < entities->len; i++)
+    {
+      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
+      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+      CrankTrans3 rpos;
+
+      crank_trans3_compose (&ipos, & entity->position, &rpos);
+
+      crank_lightable_render (lightable, &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
+    }
+}
+
+/**
  * crank_render_module_render_at:
  * @module: A Module.
  * @place: A Place.
@@ -784,31 +978,36 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
-  GList *rlist = crank_render_module_get_culled_rlist (module, place, position, projection);
-  GList *llist = crank_render_module_get_culled_llist (module, place, position, projection);
+  g_ptr_array_set_size (module->render_entities, 0);
+  crank_render_module_get_culled_rarray (module, module->render_entities, place, position, projection);
 
 
-  crank_render_module_render_geom_list (module,
-                                        rlist,
-                                        position,
-                                        projection,
-                                        crank_film_get_framebuffer (film, 0));
-
-  crank_render_module_render_color_list (module,
-                                         rlist,
+  crank_render_module_render_geom_array (module,
+                                         module->render_entities,
                                          position,
                                          projection,
-                                         crank_film_get_framebuffer (film, 1));
+                                         crank_film_get_framebuffer (film, 0));
 
-  crank_render_module_render_light_list (module,
-                                         llist,
-                                         position,
-                                         projection,
-                                         crank_film_get_texture (film, 0),
-                                         crank_film_get_texture (film, 1),
-                                         crank_film_get_texture (film, 2),
-                                         crank_film_get_framebuffer (film, 5));
-/*
+  crank_render_module_render_color_array (module,
+                                          module->render_entities,
+                                          position,
+                                          projection,
+                                          crank_film_get_framebuffer (film, 1));
+
+  g_ptr_array_set_size (module->render_entities, 0);
+  crank_render_module_get_culled_larray (module, module->render_entities, place, position, projection);
+
+
+  crank_render_module_render_light_array (module,
+                                          module->render_entities,
+                                          position,
+                                          projection,
+                                          crank_film_get_texture (film, 0),
+                                          crank_film_get_texture (film, 1),
+                                          crank_film_get_texture (film, 2),
+                                          crank_film_get_framebuffer (film, 5));
+
+  /*
   crank_render_module_render_pos (module,
                                   crank_film_get_texture (film, 0),
                                   projection,
@@ -819,9 +1018,6 @@ crank_render_module_render_at (CrankRenderModule *module,
   // TODO: Render to other buffers.
   //
   //
-
-  g_list_free (rlist);
-  g_list_free (llist);
 }
 
 /**
