@@ -52,60 +52,85 @@
 
 static CoglUserDataKey key_template;
 
-static CoglSnippet *vert_snippet;
-static gchar *vert_decl =
-"uniform CrankProjection crank_render_projection;\n"
-"varying vec3            crank_render_tex_coord_vert;\n"
-"varying vec3            crank_frag_near;\n"
-"varying vec3            crank_frag_far;\n"
 
-"#define crank_render_tex_coord_out crank_render_tex_coord_vert\n";
-
-static gchar *vert_post =
-"crank_render_tex_coord_out.xy = cogl_position_out.xy +\n"
-"                                vec2 (cogl_position_out.w);\n"
-"crank_render_tex_coord_out.z = cogl_position_out.w * 2;"
-
-"float nf = mix (1,\n"
-"                crank_projection_get_far (crank_render_projection) /\n"
-"                crank_projection_get_near (crank_render_projection),\n"
-"                crank_render_projection.proj_type);\n"
-
-"vec2 base_lb = vec2 (crank_projection_get_left (crank_render_projection),\n"
-"                     crank_projection_get_bottom (crank_render_projection));\n"
-"vec2 base_rt = vec2 (crank_projection_get_right (crank_render_projection),\n"
-"                     crank_projection_get_top (crank_render_projection));\n"
-"vec2 base_xy = mix (base_lb, base_rt, crank_render_tex_coord_out.xy);\n"
-
-"crank_frag_near = vec3 (base_xy,\n"
-"                        -crank_projection_get_near (crank_render_projection));\n"
-
-"crank_frag_far = vec3 (base_xy * nf,\n"
-"                       -crank_projection_get_far (crank_render_projection));\n";
+static CoglSnippet *v_snippet;
+static CoglSnippet *f_snippet;
 
 
-static gchar *frag_decl =
-"uniform CrankProjection crank_render_projection;\n"
-"varying vec3 crank_render_tex_coord_vert;\n"
+static gchar* v_decl =
+"uniform CrankProjection crank_render_proj;\n"
+"varying vec2 crank_frag_coord;\n"
 "varying vec3 crank_frag_near;\n"
 "varying vec3 crank_frag_far;\n"
-"uniform sampler2D  crank_render_geom;\n"
-"uniform sampler2D  crank_render_color;\n"
-"uniform vec3 crank_lightable_position;\n"
-"float crank_frag_depth;\n"
-"vec3 crank_frag_normal;\n"
-"vec3 crank_frag_pos;\n";
-
-static gchar *frag_post =
-"vec2 tc = crank_render_tex_coord_vert.xy / crank_render_tex_coord_vert.z;\n"
-"vec4  crank_geom_value = texture2D (crank_render_geom, tc);\n"
-"crank_geom_unpack (crank_geom_value, crank_frag_normal, crank_frag_depth);\n"
-
-"crank_frag_pos = mix (crank_frag_near, crank_frag_far, crank_frag_depth);\n"
-
-
-"cogl_color_out = vec4 (crank_frag_near, 1);"
 ;
+
+static gchar* v_replace =
+// Write vertex position for screen quad.
+"cogl_position_out = vec4 (cogl_position_in.xy, 1, 1);\n"
+
+// Write fragment coordination.
+"crank_frag_coord = cogl_position_out.xy * 0.5 + vec2 (0.5);\n"
+
+// Write near point and far point position of fragment coordination.
+"crank_projection_get_nf_points (crank_render_proj,\n"
+"                                crank_frag_coord,\n"
+"                                crank_frag_near,\n"
+"                                crank_frag_far);\n"
+;
+
+static gchar* f_decl =
+// G-Buffer sampler.
+"uniform sampler2D crank_geom_sampler;\n"
+"uniform sampler2D crank_color_sampler;\n"
+
+// Lightable info
+"uniform vec3  crank_lightable_pos;\n"
+"uniform vec3  crank_lightable_primary_color;\n"
+"uniform float crank_lightable_intensity;\n"
+"uniform float crank_lightable_radius;\n"
+
+// Fragment info that available by vertices.
+"varying vec2  crank_frag_coord;\n"
+"varying vec3  crank_frag_near;\n"
+"varying vec3  crank_frag_far;\n"
+
+// Fragment info that available by G-Buffers
+"vec3 crank_frag_nor;\n"
+"float crank_frag_depth;\n"
+"vec3 crank_frag_pos;\n"
+"vec3 crank_frag_color;\n"
+;
+
+static gchar* f_replace =
+// Fetch texel value from G-Buffers
+"vec4 layer_geom_value = texture2D (crank_geom_sampler, crank_frag_coord);\n"
+"vec4 layer_color_value = texture2D (crank_color_sampler, crank_frag_coord);\n"
+
+// Unpack Geometry buffer content.
+"crank_geom_unpack (layer_geom_value, crank_frag_nor, crank_frag_depth);\n"
+
+// Set Fragment information.
+"crank_frag_pos = mix (crank_frag_near, crank_frag_far, crank_frag_depth);\n"
+"crank_frag_color = layer_color_value.xyz;\n"
+
+// Light calculation
+"vec3  pos_diff = crank_frag_pos - crank_lightable_pos;\n"
+"float distance = length (pos_diff);\n"
+"float strength = max (crank_lightable_radius - distance, 0) /\n"
+"                 crank_lightable_radius *\n"
+"                 crank_lightable_intensity;\n"
+
+
+"cogl_color_out = vec4 (crank_lightable_primary_color *\n"
+"                       crank_frag_color *\n"
+"                       strength, 1);\n"
+
+;
+
+
+static CoglVertexP2 screen_quadv[4] = {
+    {-1, -1}, {1, -1}, {1, 1}, {-1, 1}
+};
 
 //////// List of virtual functions /////////////////////////////////////////////
 
@@ -169,6 +194,7 @@ typedef struct _CrankLightableARangedTemp
 {
   CoglPipeline *pipeline;
   CoglPrimitive *bounding_volume;
+  CoglPrimitive *screen_quad;
 } CrankLightableARangedTemp;
 
 struct _CrankLightableARanged
@@ -181,9 +207,15 @@ struct _CrankLightableARanged
   CoglContext  *cogl_context;
   CoglPipeline *pipe_line;
   CoglPrimitive *bound_volume;
+  CoglPrimitive *screen_quad;
 
-  gint        uniform_render_projection[2];
-  gint        uniform_lightable_position;
+  gint        uniform_render_proj[2];
+  gint        uniform_geom_sampler;
+  gint        uniform_color_sampler;
+  gint        uniform_lightable_pos;
+  gint        uniform_lightable_primary_color;
+  gint        uniform_lightable_intensity;
+  gint        uniform_lightable_radius;
 };
 
 G_DEFINE_TYPE (CrankLightableARanged,
@@ -257,37 +289,49 @@ crank_lightable_a_ranged_constructed (GObject *object)
 
   if (template == NULL)
     {
-      CoglSnippet *snippet_frag;
+      CoglDepthState dstate;
 
       template = g_new (CrankLightableARangedTemp, 1);
 
       template->pipeline = cogl_pipeline_new (lightable->cogl_context);
-      cogl_pipeline_set_cull_face_mode (template->pipeline,
-                                        COGL_PIPELINE_CULL_FACE_MODE_FRONT);
-      template->bounding_volume = crank_make_mesh_sphere_uv_p3n3 (lightable->cogl_context, 10, 10);
 
-      vert_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX,
-                                       vert_decl,
-                                       vert_post);
+      template->bounding_volume = crank_make_mesh_sphere_uv_p3 (lightable->cogl_context, 6, 4);
 
-      snippet_frag = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT,
-                                       frag_decl,
-                                       frag_post);
+      template->screen_quad = cogl_primitive_new_p2 (lightable->cogl_context,
+                                                     COGL_VERTICES_MODE_TRIANGLE_FAN,
+                                                     4, screen_quadv);
+
+
+      //cogl_pipeline_set_alpha_test_function (template->pipeline, COGL_PIPELINE_ALPHA_FUNC_NEVER, 0);
+      cogl_pipeline_set_blend (template->pipeline, "RGBA = ADD (SRC_COLOR, DST_COLOR)", NULL);
+
+      cogl_depth_state_init (&dstate);
+      cogl_depth_state_set_test_enabled (&dstate, FALSE);
+      cogl_depth_state_set_write_enabled (&dstate, FALSE);
+      cogl_pipeline_set_depth_state (template->pipeline, &dstate, NULL);
 
       cogl_pipeline_set_layer_null_texture (template->pipeline, 0, COGL_TEXTURE_TYPE_2D);
       cogl_pipeline_set_layer_null_texture (template->pipeline, 1, COGL_TEXTURE_TYPE_2D);
 
-      cogl_pipeline_add_snippet (template->pipeline,
-                                 crank_material_get_snippet_geom_unpack ());
+
+      // Snippet construction
+      v_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_VERTEX, v_decl, NULL);
+      cogl_snippet_set_replace (v_snippet, v_replace);
+
+      f_snippet = cogl_snippet_new (COGL_SNIPPET_HOOK_FRAGMENT, f_decl, NULL);
+      cogl_snippet_set_replace (f_snippet, f_replace);
+
       cogl_pipeline_add_snippet (template->pipeline,
                                  crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_VERTEX));
+
       cogl_pipeline_add_snippet (template->pipeline,
                                  crank_projection_get_snippet_def (COGL_SNIPPET_HOOK_FRAGMENT));
 
-      cogl_pipeline_add_snippet (template->pipeline, vert_snippet);
-      cogl_pipeline_add_snippet (template->pipeline, snippet_frag);
+      cogl_pipeline_add_snippet (template->pipeline,
+                                 crank_material_get_snippet_geom_unpack ());
 
-      cogl_object_unref (snippet_frag);
+      cogl_pipeline_add_snippet (template->pipeline, v_snippet);
+      cogl_pipeline_add_snippet (template->pipeline, f_snippet);
 
       cogl_object_set_user_data ((CoglObject*) lightable->cogl_context,
                                  &key_template,
@@ -297,13 +341,36 @@ crank_lightable_a_ranged_constructed (GObject *object)
 
   lightable->pipe_line = template->pipeline;
   lightable->bound_volume = template->bounding_volume;
+  lightable->screen_quad = template->screen_quad;
 
   crank_projection_get_uniform_locations (lightable->pipe_line,
-                                         "crank_render_projection",
-                                         lightable->uniform_render_projection);
-  lightable->uniform_lightable_position =
+                                         "crank_render_proj",
+                                         lightable->uniform_render_proj);
+
+  lightable->uniform_geom_sampler =
   cogl_pipeline_get_uniform_location (lightable->pipe_line,
-                                      "crank_lightable_position");
+                                      "crank_geom_sampler");
+
+  lightable->uniform_color_sampler =
+  cogl_pipeline_get_uniform_location (lightable->pipe_line,
+                                      "crank_color_sampler");
+
+  lightable->uniform_lightable_pos =
+  cogl_pipeline_get_uniform_location (lightable->pipe_line,
+                                      "crank_lightable_pos");
+
+
+  lightable->uniform_lightable_primary_color =
+  cogl_pipeline_get_uniform_location (lightable->pipe_line,
+                                      "crank_lightable_primary_color");
+
+  lightable->uniform_lightable_intensity =
+  cogl_pipeline_get_uniform_location (lightable->pipe_line,
+                                      "crank_lightable_intensity");
+
+  lightable->uniform_lightable_radius =
+  cogl_pipeline_get_uniform_location (lightable->pipe_line,
+                                      "crank_lightable_radius");
 }
 
 static void
@@ -396,6 +463,7 @@ crank_lightable_a_ranged_render (CrankLightable  *lightable,
   CrankLightableARanged *self = (CrankLightableARanged*) lightable;
 
   CrankMatFloat4 mv_matrix;
+  CrankVecFloat3 primary_color;
 
   position->mscl *= self->radius;
   crank_trans3_to_matrix_transpose (position, & mv_matrix);
@@ -407,14 +475,35 @@ crank_lightable_a_ranged_render (CrankLightable  *lightable,
 
   crank_projection_set_uniform_value (projection,
                                       self->pipe_line,
-                                      self->uniform_render_projection);
+                                      self->uniform_render_proj);
 
   cogl_pipeline_set_uniform_float (self->pipe_line,
-                                   self->uniform_lightable_position,
+                                   self->uniform_lightable_pos,
                                    3, 1, (gfloat*) & position->mtrans);
 
+  cogl_pipeline_set_uniform_1i (self->pipe_line,
+                                self->uniform_geom_sampler,
+                                0);
 
-  //cogl_primitive_draw (self->bound_volume, framebuffer, self->pipe_line);
+  cogl_pipeline_set_uniform_1i (self->pipe_line,
+                                 self->uniform_color_sampler,
+                                 1);
+
+  crank_lightable_get_primary_color (lightable, &primary_color);
+
+  cogl_pipeline_set_uniform_float (self->pipe_line,
+                                   self->uniform_lightable_primary_color,
+                                   3, 1, (gfloat*) & primary_color);
+
+  cogl_pipeline_set_uniform_1f (self->pipe_line,
+                                self->uniform_lightable_radius,
+                                position->mscl);
+
+  cogl_pipeline_set_uniform_1f (self->pipe_line,
+                                self->uniform_lightable_intensity,
+                                self->intensity);
+
+  cogl_primitive_draw (self->screen_quad, framebuffer, self->pipe_line);
 }
 
 
