@@ -108,8 +108,8 @@ static const gchar *snippet_definition =
 "                             crank_projection_get_near (projection),\n"
 "                             projection.proj_type);\n"
 "  vec2 base = mix (base_lb, base_rt, screen_coord);\n"
-"  near_point = vec3 (base, crank_projection_get_near (projection));\n"
-"  far_point = vec3 (base * nf_base_ratio, crank_projection_get_far (projection));\n"
+"  near_point = vec3 (base, -crank_projection_get_near (projection));\n"
+"  far_point = vec3 (base * nf_base_ratio, -crank_projection_get_far (projection));\n"
 "}"
 ;
 
