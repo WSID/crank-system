@@ -88,6 +88,17 @@ static void               crank_octree_set_node_join (CrankOctreeSetNode *node,
                                                       CrankOctreeSet     *set);
 
 
+static void               crank_octree_set_node_foreach (CrankOctreeSetNode *node,
+                                                         GFunc               func,
+                                                         gpointer            userdata);
+
+static void               crank_octree_set_node_cull_foreach (CrankOctreeSetNode *node,
+                                                              CrankOctreeSet     *set,
+                                                              const CrankPlane3  *culls,
+                                                              const guint         nculls,
+                                                              GFunc               func,
+                                                              gpointer            userdata);
+
 
 static GList*             crank_octree_set_node_list (CrankOctreeSetNode *node,
                                                       GList              *list);
@@ -97,6 +108,15 @@ static GList*             crank_octree_set_node_cull (CrankOctreeSetNode *node,
                                                       GList              *list,
                                                       const CrankPlane3  *culls,
                                                       const guint         nculls);
+
+
+//////// Private Functions /////////////////////////////////////////////////////
+
+static void                _add_to_g_list             (gpointer data,
+                                                       gpointer userdata);
+
+static void                _add_to_g_ptr_array        (gpointer data,
+                                                       gpointer userdata);
 
 
 //////// Type Definitions //////////////////////////////////////////////////////
@@ -433,39 +453,37 @@ crank_octree_set_node_join (CrankOctreeSetNode *node,
     }
 }
 
-static GList*
-crank_octree_set_node_list (CrankOctreeSetNode *node,
-                            GList              *list)
+
+static void
+crank_octree_set_node_foreach (CrankOctreeSetNode *node,
+                               GFunc               func,
+                               gpointer            userdata)
 {
   guint i;
 
   if (node->children[0] != NULL)
     {
       for (i = 0; i < 8; i++)
-        list = crank_octree_set_node_list (node->children[i], list);
+        crank_octree_set_node_foreach (node->children[i], func, userdata);
     }
-
 
   for (i = 0; i < node->data_array->len; i++)
-    {
-      list = g_list_prepend (list, node->data_array->pdata[i]);
-    }
-
-  return list;
+    func (node->data_array->pdata[i], userdata);
 }
 
-static GList*
-crank_octree_set_node_cull (CrankOctreeSetNode *node,
-                            CrankOctreeSet     *set,
-                            GList              *list,
-                            const CrankPlane3  *culls,
-                            const guint         nculls)
+static void
+crank_octree_set_node_cull_foreach (CrankOctreeSetNode *node,
+                                    CrankOctreeSet     *set,
+                                    const CrankPlane3  *culls,
+                                    const guint         nculls,
+                                    GFunc               func,
+                                    gpointer            userdata)
 {
   gboolean partial = FALSE;
   guint i;
   guint j;
 
-  // Check whether it is in cull.
+  // Chech whether it is being culled, or not.
 
   for (i = 0; i < nculls; i++)
     {
@@ -473,11 +491,11 @@ crank_octree_set_node_cull (CrankOctreeSetNode *node,
                                              culls + i);
 
       if (0 < sign)
-        return list;
-
+        return;
       else if (sign == 0)
         partial = TRUE;
     }
+
 
   if (partial)
     {
@@ -495,25 +513,42 @@ crank_octree_set_node_cull (CrankOctreeSetNode *node,
             }
 
           if (j == nculls)
-            list = g_list_prepend (list, data);
+            func (data, userdata);
         }
 
       if (node->children[0] != NULL)
         {
           for (i = 0; i < 8; i++)
             {
-              list = crank_octree_set_node_cull (node->children[i], set, list, culls, nculls);
+              crank_octree_set_node_cull_foreach (node->children[i], set, culls, nculls, func, userdata);
             }
         }
     }
   else
     {
-      list = crank_octree_set_node_list (node, list);
+      crank_octree_set_node_foreach (node, func, userdata);
     }
-
-  return list;
 }
 
+
+
+//////// Private Functions /////////////////////////////////////////////////////
+
+static void
+_add_to_g_list (gpointer data,
+                gpointer userdata)
+{
+  GList **listp = (GList**)userdata;
+  *listp = g_list_prepend (*listp, data);
+}
+
+static void
+_add_to_g_ptr_array (gpointer data,
+                     gpointer userdata)
+{
+  GPtrArray *array = userdata;
+  g_ptr_array_add (array, data);
+}
 
 //////// Constructors //////////////////////////////////////////////////////////
 
@@ -758,11 +793,55 @@ crank_octree_set_get_culled_list (CrankOctreeSet    *set,
                                   const CrankPlane3 *culls,
                                   const guint        nculls)
 {
-  return crank_octree_set_node_cull (set->root, set, NULL, culls, nculls);
+  GList *list = NULL;
+  crank_octree_set_node_cull_foreach (set->root, set, culls, nculls,
+                                      _add_to_g_list, &list);
+  return list;
 }
 
 
 
+/**
+ * crank_octree_set_add_data_array:
+ * @set: An octree set.
+ * @array: (element-type gpointer) (transfer none): An array.
+ *
+ * Adds items in #GPtrArray in octree. This will help reusing allocated memory
+ * block.
+ *
+ * Returns: (element-type gpointer) (transfer none): An array.
+ */
+GPtrArray*
+crank_octree_set_add_data_array (CrankOctreeSet *set,
+                                 GPtrArray      *array)
+{
+  crank_octree_set_node_foreach (set->root, _add_to_g_ptr_array, array);
+  return array;
+}
+
+
+/**
+ * crank_octree_set_add_culled_array:
+ * @set: An octree set.
+ * @array: (element-type gpointer) (transfer none): An array.
+ *
+ * Adds items in #GPtrArray in octree. This will help reusing allocated memory
+ * block.
+ *
+ * Returns: (element-type gpointer) (transfer none): An array.
+ */
+GPtrArray*
+crank_octree_set_add_culled_array (CrankOctreeSet    *set,
+                                   GPtrArray         *array,
+                                   const CrankPlane3 *culls,
+                                   const guint        nculls)
+{
+  crank_octree_set_node_cull_foreach (set->root,
+                                      set,
+                                      culls, nculls,
+                                      _add_to_g_ptr_array, array);
+  return array;
+}
 
 //////// Getting nodes /////////////////////////////////////////////////////////
 

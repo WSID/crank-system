@@ -128,12 +128,22 @@ void        crank_octree_set_foreach (CrankOctreeSet *set,
                                       GFunc           func,
                                       gpointer        userdata);
 
+
+
 GList      *crank_octree_set_get_data_list (CrankOctreeSet *set);
+
+GPtrArray  *crank_octree_set_add_data_array(CrankOctreeSet *set,
+                                            GPtrArray      *array);
 
 
 //////// Culled iterations /////////////////////////////////////////////////////
 
 GList      *crank_octree_set_get_culled_list (CrankOctreeSet    *set,
+                                              const CrankPlane3 *culls,
+                                              const guint        nculls);
+
+GPtrArray  *crank_octree_set_add_culled_array(CrankOctreeSet    *set,
+                                              GPtrArray         *array,
                                               const CrankPlane3 *culls,
                                               const guint        nculls);
 
