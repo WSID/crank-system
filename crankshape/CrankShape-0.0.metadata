@@ -1,5 +1,7 @@
 * cheader_filename = "crankshape.h"
 
+Plane3          struct=true
+
 Box*            struct=true
 box*_init*      skip
 
@@ -9,6 +11,11 @@ euler_init*     skip=true
 
 Trans*          struct=true
 trans*_init*    skip=true
+
+// Hide generic decorated entity.
+OctreePosFunc     skip=true
+OctreeRadiusFunc  skip=true
+OctreeSet         skip=true
 
 PolyStruct3VData
     .edges      array_length_field="nedges"
@@ -22,7 +29,7 @@ PolyStruct3FData
     .vertices   array_length_field="nvertices"
     .edges      array_length_field="nvertices"
 
-Shape2.approximate_polygon abstract=true
+Shape2.approximate_vertexed abstract=true
 
 Shape2IPolygon
     .get_nedges                 virtual=true

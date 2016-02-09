@@ -46,4 +46,55 @@ namespace Crank {
     public uint nedges { get; }
     public uint nfaces { get; }
   }
+
+  public delegate unowned Crank.VecFloat3 OctreePosFunc <G> (G data);
+  public delegate float                   OctreeRadiusFunc <G> (G data);
+
+  [Compact]
+  [CCode (ref_function="crank_octree_set_ref", unref_function="crank_octree_set_unref", simple_generics=true)]
+  public class OctreeSet <G> {
+    [Compact]
+    [CCode (simple_generics=true)]
+    public class Node <G> {
+      private Node ();
+      public Crank.Box3 boundary { owned get; }
+      public Crank.VecFloat3 middle { owned get; }
+
+      public bool has_children ();
+      public Crank.OctreeSet.Node <G> get_child (uint index);
+      public Crank.OctreeSet.Node <G> get_child_pos (uint index, Crank.VecFloat3 pos);
+    }
+
+    public OctreeSet (Crank.Box3 boundary,
+                      owned Crank.OctreePosFunc <G> pos_func,
+                      owned Crank.OctreeRadiusFunc <G> rad_func);
+
+    public OctreeSet @ref ();
+    [DestroysInstance]
+    public void @unref ();
+
+
+    public uint       size { get; }
+    public Crank.Box3 boundary { owned get; }
+
+    public void add (G data);
+    public bool remove (G data);
+    public void remove_all ();
+    public bool contains (G data);
+
+
+    public void @foreach (GLib.Func <G> func);
+    public void cull_foreach (Crank.Plane3[] culls, GLib.Func <G> func);
+
+    public GLib.List <unowned G>?                get_data_list ();
+    public unowned GLib.GenericArray <unowned G> add_data_array (GLib.GenericArray <unowned G> array);
+
+    public GLib.List <unowned G>?                get_culled_list (Crank.Plane3[] culls);
+    public unowned GLib.GenericArray <unowned G> add_culled_array (GLib.GenericArray <unowned G> array, Crank.Plane3[] culls);
+
+
+    public Crank.OctreeSet.Node<G> root { get; }
+
+    public Crank.OctreeSet.Node<G>? get_node (G data);
+  }
 }
