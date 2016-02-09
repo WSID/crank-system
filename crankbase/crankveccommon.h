@@ -31,6 +31,11 @@ typedef struct _CrankVecBool3 CrankVecBool3;
 typedef struct _CrankVecBool4 CrankVecBool4;
 typedef struct _CrankVecBoolN CrankVecBoolN;
 
+typedef struct _CrankVecUint2 CrankVecUint2;
+typedef struct _CrankVecUint3 CrankVecUint3;
+typedef struct _CrankVecUint4 CrankVecUint4;
+typedef struct _CrankVecUintN CrankVecUintN;
+
 typedef struct _CrankVecInt2 CrankVecInt2;
 typedef struct _CrankVecInt3 CrankVecInt3;
 typedef struct _CrankVecInt4 CrankVecInt4;

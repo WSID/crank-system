@@ -25,6 +25,7 @@ baseinclude_HEADERS = \
 		\
 		crankveccommon.h \
 		crankvecbool.h \
+		crankvecuint.h \
 		crankvecint.h \
 		crankvecfloat.h \
 		crankveccplxfloat.h \
@@ -71,6 +72,7 @@ libcrankbase_la_SOURCES= \
 		crankdigraph.c \
 		crankpermutation.c \
 		crankvecbool.c \
+		crankvecuint.c \
 		crankvecint.c \
 		crankvecfloat.c \
 		crankveccplxfloat.c \

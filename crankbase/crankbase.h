@@ -41,6 +41,7 @@
 
 #include "crankveccommon.h"
 #include "crankvecbool.h"
+#include "crankvecuint.h"
 #include "crankvecint.h"
 #include "crankvecfloat.h"
 #include "crankveccplxfloat.h"
