@@ -186,10 +186,10 @@
 
 
 static void crank_vec_uint2_transform_from_b (const GValue *src,
-                                             GValue       *dest);
+                                              GValue       *dest);
 
 static void crank_vec_uint2_transform_to_string (const GValue *src,
-                                                GValue       *dest);
+                                                 GValue       *dest);
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
   CrankVecUint2,
@@ -276,8 +276,8 @@ crank_vec_uint2_init_fill (CrankVecUint2 *vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_uint2_init_from_vb (CrankVecUint2  *vec,
-                             CrankVecBool2 *vb)
+crank_vec_uint2_init_from_vb (CrankVecUint2       *vec,
+                              const CrankVecBool2 *vb)
 {
   vec->x = vb->x ? 1 : 0;
   vec->y = vb->y ? 1 : 0;
@@ -292,8 +292,8 @@ crank_vec_uint2_init_from_vb (CrankVecUint2  *vec,
  * Copies vector.
  */
 void
-crank_vec_uint2_copy (CrankVecUint2 *vec,
-                     CrankVecUint2 *other)
+crank_vec_uint2_copy (const CrankVecUint2 *vec,
+                      CrankVecUint2       *other)
 {
   memcpy (other, vec, sizeof (CrankVecUint2));
 }
@@ -308,7 +308,7 @@ crank_vec_uint2_copy (CrankVecUint2 *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecUint2*
-crank_vec_uint2_dup (CrankVecUint2 *vec)
+crank_vec_uint2_dup (const CrankVecUint2 *vec)
 {
   return (CrankVecUint2*) g_memdup (vec, sizeof (CrankVecUint2));
 }
@@ -323,8 +323,8 @@ crank_vec_uint2_dup (CrankVecUint2 *vec)
  * Returns: element on vector.
  */
 guint
-crank_vec_uint2_get (CrankVecUint2 *vec,
-                     const guint   index)
+crank_vec_uint2_get (const CrankVecUint2 *vec,
+                     const guint          index)
 {
   return ((gint*)vec)[index];
 }
@@ -338,9 +338,9 @@ crank_vec_uint2_get (CrankVecUint2 *vec,
  * Sets element of vector at @index, by @value.
  */
 void
-crank_vec_uint2_set (CrankVecUint2 *vec,
-                     const guint   index,
-                     const guint   value)
+crank_vec_uint2_set (const CrankVecUint2 *vec,
+                     const guint          index,
+                     const guint          value)
 {
   ((gint*)vec)[index] = value;
 }
@@ -358,9 +358,9 @@ crank_vec_uint2_set (CrankVecUint2 *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_uint2_foreach (CrankVecUint2    *vec,
-                        CrankBoolUintFunc func,
-                        gpointer         userdata)
+crank_vec_uint2_foreach (const CrankVecUint2    *vec,
+                         CrankBoolUintFunc func,
+                         gpointer         userdata)
 {
   if (func (vec->x, userdata) && func (vec->y, userdata) )
     return TRUE;
@@ -376,8 +376,8 @@ crank_vec_uint2_foreach (CrankVecUint2    *vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_uint2_iterator (CrankVecUint2    *vec,
-                         CrankIterMemUint *iter)
+crank_vec_uint2_iterator (const CrankVecUint2 *vec,
+                          CrankIterMemUint    *iter)
 {
   crank_iter_mem_uint_init_with_count (iter, (guint*)vec, 2);
 }
@@ -435,7 +435,7 @@ crank_vec_uint2_equal (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_uint2_to_string (CrankVecUint2 *vec)
+crank_vec_uint2_to_string (const CrankVecUint2 *vec)
 {
   return crank_vec_uint2_to_string_full (vec, "(", ", ", ")", "%d");
 }
@@ -453,11 +453,11 @@ crank_vec_uint2_to_string (CrankVecUint2 *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_uint2_to_string_full (CrankVecUint2 *vec,
-                               const gchar  *left,
-                               const gchar  *in,
-                               const gchar  *right,
-                               const gchar  *format)
+crank_vec_uint2_to_string_full (const CrankVecUint2 *vec,
+                                const gchar         *left,
+                                const gchar         *in,
+                                const gchar         *right,
+                                const gchar         *format)
 {
   GString *strb = g_string_new (left);
   gchar *result;
@@ -487,7 +487,7 @@ crank_vec_uint2_to_string_full (CrankVecUint2 *vec,
  * Returns: square of magn/norm of @vec.
  */
 guint
-crank_vec_uint2_get_magn_sq (CrankVecUint2 *vec)
+crank_vec_uint2_get_magn_sq (const CrankVecUint2 *vec)
 {
   guint vx = (guint) ABS(vec->x);
   guint vy = (guint) ABS(vec->y);
@@ -504,7 +504,7 @@ crank_vec_uint2_get_magn_sq (CrankVecUint2 *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_uint2_get_magn (CrankVecUint2 *vec)
+crank_vec_uint2_get_magn (const CrankVecUint2 *vec)
 {
   gfloat sq = (gfloat) crank_vec_uint2_get_magn_sq (vec);
   return sqrtf (sq);
@@ -523,8 +523,8 @@ crank_vec_uint2_get_magn (CrankVecUint2 *vec)
  * Applies negation.
  */
 void
-crank_vec_uint2_neg (CrankVecUint2 *a,
-                    CrankVecUint2 *r)
+crank_vec_uint2_neg (const CrankVecUint2 *a,
+                     CrankVecUint2       *r)
 {
   r->x = -(a->x);
   r->y = -(a->y);
@@ -556,9 +556,9 @@ crank_vec_uint2_neg_self (CrankVecUint2 *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_uint2_muls (CrankVecUint2 *a,
-                      const guint    b,
-                      CrankVecUint2 *r)
+crank_vec_uint2_muls (const CrankVecUint2 *a,
+                      const guint          b,
+                      CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -590,9 +590,9 @@ crank_vec_uint2_muls_self (CrankVecUint2 *a,
  * Applies scalar division.
  */
 void
-crank_vec_uint2_divs (CrankVecUint2 *a,
-                      const guint    b,
-                      CrankVecUint2 *r)
+crank_vec_uint2_divs (const CrankVecUint2 *a,
+                      const guint          b,
+                      CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -625,9 +625,9 @@ crank_vec_uint2_divs_self (CrankVecUint2 *a,
  * Gets modular of each component.
  */
 void
-crank_vec_uint2_mods (CrankVecUint2 *a,
-                      const guint    b,
-                      CrankVecUint2 *r)
+crank_vec_uint2_mods (const CrankVecUint2 *a,
+                      const guint          b,
+                      CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
 
@@ -660,9 +660,9 @@ crank_vec_uint2_mods_self (CrankVecUint2 *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint2_add (CrankVecUint2 *a,
-                     CrankVecUint2 *b,
-                     CrankVecUint2 *r)
+crank_vec_uint2_add (const CrankVecUint2 *a,
+                     const CrankVecUint2 *b,
+                     CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -679,8 +679,8 @@ crank_vec_uint2_add (CrankVecUint2 *a,
  * Applies addition to a vector.
  */
 void
-crank_vec_uint2_add_self (CrankVecUint2 *a,
-                         CrankVecUint2 *b)
+crank_vec_uint2_add_self (CrankVecUint2       *a,
+                          const CrankVecUint2 *b)
 {
   a->x += b->x;
   a->y += b->y;
@@ -695,9 +695,9 @@ crank_vec_uint2_add_self (CrankVecUint2 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint2_sub (CrankVecUint2 *a,
-                    CrankVecUint2 *b,
-                    CrankVecUint2 *r)
+crank_vec_uint2_sub (const CrankVecUint2 *a,
+                     const CrankVecUint2 *b,
+                     CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -714,8 +714,8 @@ crank_vec_uint2_sub (CrankVecUint2 *a,
  * Applies subtraction to a vector.
  */
 void
-crank_vec_uint2_sub_self (CrankVecUint2 *a,
-                         CrankVecUint2 *b)
+crank_vec_uint2_sub_self (CrankVecUint2       *a,
+                          const CrankVecUint2 *b)
 {
   a->x -= b->x;
   a->y -= b->y;
@@ -731,8 +731,8 @@ crank_vec_uint2_sub_self (CrankVecUint2 *a,
  * Returns: dot product of two vectors.
  */
 guint
-crank_vec_uint2_dot (CrankVecUint2 *a,
-                     CrankVecUint2 *b)
+crank_vec_uint2_dot (const CrankVecUint2 *a,
+                     const CrankVecUint2 *b)
 {
   return (a->x) * (b->x) + (a->y) * (b->y);
 }
@@ -747,9 +747,9 @@ crank_vec_uint2_dot (CrankVecUint2 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint2_cmpmul (CrankVecUint2 *a,
-                       CrankVecUint2 *b,
-                       CrankVecUint2 *r)
+crank_vec_uint2_cmpmul (const CrankVecUint2 *a,
+                        const CrankVecUint2 *b,
+                        CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -766,8 +766,8 @@ crank_vec_uint2_cmpmul (CrankVecUint2 *a,
  * Applies component-wise multiplication on a vector.
  */
 void
-crank_vec_uint2_cmpmul_self (CrankVecUint2 *a,
-                            CrankVecUint2 *b)
+crank_vec_uint2_cmpmul_self (CrankVecUint2       *a,
+                             const CrankVecUint2 *b)
 {
   a->x *= b->x;
   a->y *= b->y;
@@ -783,9 +783,9 @@ crank_vec_uint2_cmpmul_self (CrankVecUint2 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint2_cmpdiv (CrankVecUint2 *a,
-                       CrankVecUint2 *b,
-                       CrankVecUint2 *r)
+crank_vec_uint2_cmpdiv (const CrankVecUint2 *a,
+                        const CrankVecUint2 *b,
+                        CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -802,8 +802,8 @@ crank_vec_uint2_cmpdiv (CrankVecUint2 *a,
  * Applies component-wise division on a vector.
  */
 void
-crank_vec_uint2_cmpdiv_self (CrankVecUint2 *a,
-                            CrankVecUint2 *b)
+crank_vec_uint2_cmpdiv_self (CrankVecUint2       *a,
+                             const CrankVecUint2 *b)
 {
   a->x /= b->x;
   a->y /= b->y;
@@ -818,9 +818,9 @@ crank_vec_uint2_cmpdiv_self (CrankVecUint2 *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint2_cmpmod (CrankVecUint2 *a,
-                       CrankVecUint2 *b,
-                       CrankVecUint2 *r)
+crank_vec_uint2_cmpmod (const CrankVecUint2 *a,
+                        const CrankVecUint2 *b,
+                        CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -837,8 +837,8 @@ crank_vec_uint2_cmpmod (CrankVecUint2 *a,
  * Applies component-wise modular on a vector.
  */
 void
-crank_vec_uint2_cmpmod_self (CrankVecUint2 *a,
-                            CrankVecUint2 *b)
+crank_vec_uint2_cmpmod_self (CrankVecUint2       *a,
+                             const CrankVecUint2 *b)
 {
   a->x %= b->x;
   a->y %= b->y;
@@ -853,9 +853,9 @@ crank_vec_uint2_cmpmod_self (CrankVecUint2 *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_uint2_cmpless (CrankVecUint2  *a,
-                        CrankVecUint2  *b,
-                        CrankVecBool2 *r)
+crank_vec_uint2_cmpless (const CrankVecUint2 *a,
+                         const CrankVecUint2 *b,
+                         CrankVecBool2       *r)
 {
   r->x = (a->x) < (b->x);
   r->y = (a->y) < (b->y);
@@ -870,9 +870,9 @@ crank_vec_uint2_cmpless (CrankVecUint2  *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_uint2_cmpeq (CrankVecUint2  *a,
-                       CrankVecUint2  *b,
-                       CrankVecBool2 *r)
+crank_vec_uint2_cmpeq (const CrankVecUint2 *a,
+                       const CrankVecUint2 *b,
+                       CrankVecBool2       *r)
 {
   r->x = (a->x) == (b->x);
   r->y = (a->y) == (b->y);
@@ -887,9 +887,9 @@ crank_vec_uint2_cmpeq (CrankVecUint2  *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_uint2_cmpgreater (CrankVecUint2  *a,
-                           CrankVecUint2  *b,
-                           CrankVecBool2 *r)
+crank_vec_uint2_cmpgreater (const CrankVecUint2 *a,
+                            const CrankVecUint2 *b,
+                            CrankVecBool2       *r)
 {
   r->x = (a->x) > (b->x);
   r->y = (a->y) > (b->y);
@@ -904,9 +904,9 @@ crank_vec_uint2_cmpgreater (CrankVecUint2  *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_uint2_cmpcmp (CrankVecUint2 *a,
-                        CrankVecUint2 *b,
-                        CrankVecInt2 *r)
+crank_vec_uint2_cmpcmp (const CrankVecUint2 *a,
+                        const CrankVecUint2 *b,
+                        CrankVecInt2        *r)
 {
   r->x = CMP(a->x, b->x);
   r->y = CMP(a->y, b->y);
@@ -921,9 +921,9 @@ crank_vec_uint2_cmpcmp (CrankVecUint2 *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_uint2_min (CrankVecUint2 *a,
-                    CrankVecUint2 *b,
-                    CrankVecUint2 *r)
+crank_vec_uint2_min (const CrankVecUint2 *a,
+                     const CrankVecUint2 *b,
+                     CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -941,9 +941,9 @@ crank_vec_uint2_min (CrankVecUint2 *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_uint2_max (CrankVecUint2 *a,
-                    CrankVecUint2 *b,
-                    CrankVecUint2 *r)
+crank_vec_uint2_max (const CrankVecUint2 *a,
+                     const CrankVecUint2 *b,
+                     CrankVecUint2       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1047,7 +1047,7 @@ crank_vec_uint3_init_arr (CrankVecUint3 *vec,
  */
 void
 crank_vec_uint3_init_valist (CrankVecUint3 *vec,
-                            va_list       varargs)
+                             va_list       varargs)
 {
   vec->x = va_arg (varargs, gint);
   vec->y = va_arg (varargs, gint);
@@ -1078,8 +1078,8 @@ crank_vec_uint3_init_fill (CrankVecUint3 *vec,
  * Initialize vector from boolean vector.
  */
 void
-crank_vec_uint3_init_from_vb (CrankVecUint3  *vec,
-                             CrankVecBool3 *vb)
+crank_vec_uint3_init_from_vb (CrankVecUint3       *vec,
+                              const CrankVecBool3 *vb)
 {
   vec->x = vb->x ? 1 : 0;
   vec->y = vb->y ? 1 : 0;
@@ -1095,8 +1095,8 @@ crank_vec_uint3_init_from_vb (CrankVecUint3  *vec,
  * Copies vector.
  */
 void
-crank_vec_uint3_copy (CrankVecUint3 *vec,
-                     CrankVecUint3 *other)
+crank_vec_uint3_copy (const CrankVecUint3 *vec,
+                      CrankVecUint3       *other)
 {
   memcpy (other, vec, sizeof (CrankVecUint3));
 }
@@ -1111,7 +1111,7 @@ crank_vec_uint3_copy (CrankVecUint3 *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecUint3*
-crank_vec_uint3_dup (CrankVecUint3 *vec)
+crank_vec_uint3_dup (const CrankVecUint3 *vec)
 {
   return (CrankVecUint3*) g_memdup (vec, sizeof (CrankVecUint3));
 }
@@ -1126,8 +1126,8 @@ crank_vec_uint3_dup (CrankVecUint3 *vec)
  * Returns: element on vector.
  */
 guint
-crank_vec_uint3_get (CrankVecUint3 *vec,
-                     const guint   index)
+crank_vec_uint3_get (const CrankVecUint3 *vec,
+                     const guint          index)
 {
   return ((gint*)vec)[index];
 }
@@ -1161,9 +1161,9 @@ crank_vec_uint3_set (CrankVecUint3 *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_uint3_foreach (CrankVecUint3    *vec,
-                        CrankBoolUintFunc func,
-                        gpointer         userdata)
+crank_vec_uint3_foreach (const CrankVecUint3 *vec,
+                         CrankBoolUintFunc    func,
+                         gpointer             userdata)
 {
   if (func (vec->x, userdata) &&
       func (vec->y, userdata) &&
@@ -1181,8 +1181,8 @@ crank_vec_uint3_foreach (CrankVecUint3    *vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_uint3_iterator (CrankVecUint3    *vec,
-                         CrankIterMemUint *iter)
+crank_vec_uint3_iterator (const CrankVecUint3 *vec,
+                          CrankIterMemUint    *iter)
 {
   crank_iter_mem_uint_init_with_count (iter, (guint*)vec, 3);
 }
@@ -1222,7 +1222,7 @@ crank_vec_uint3_hash (gconstpointer a)
  */
 gboolean
 crank_vec_uint3_equal (gconstpointer a,
-                      gconstpointer b)
+                       gconstpointer b)
 {
   CrankVecUint3 *veca = (CrankVecUint3*)a;
   CrankVecUint3 *vecb = (CrankVecUint3*)b;
@@ -1243,7 +1243,7 @@ crank_vec_uint3_equal (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_uint3_to_string (CrankVecUint3 *vec)
+crank_vec_uint3_to_string (const CrankVecUint3 *vec)
 {
   return crank_vec_uint3_to_string_full (vec, "(", ", ", ")", "%d");
 }
@@ -1261,11 +1261,11 @@ crank_vec_uint3_to_string (CrankVecUint3 *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_uint3_to_string_full (CrankVecUint3 *vec,
-                               const gchar  *left,
-                               const gchar  *in,
-                               const gchar  *right,
-                               const gchar  *format)
+crank_vec_uint3_to_string_full (const CrankVecUint3 *vec,
+                                const gchar         *left,
+                                const gchar         *in,
+                                const gchar         *right,
+                                const gchar         *format)
 {
   GString *strb = g_string_new (left);
   gchar *result;
@@ -1298,7 +1298,7 @@ crank_vec_uint3_to_string_full (CrankVecUint3 *vec,
  * Returns: square of magn/norm of @vec.
  */
 guint
-crank_vec_uint3_get_magn_sq (CrankVecUint3 *vec)
+crank_vec_uint3_get_magn_sq (const CrankVecUint3 *vec)
 {
   guint vx = (guint) ABS(vec->x);
   guint vy = (guint) ABS(vec->y);
@@ -1316,7 +1316,7 @@ crank_vec_uint3_get_magn_sq (CrankVecUint3 *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_uint3_get_magn (CrankVecUint3 *vec)
+crank_vec_uint3_get_magn (const CrankVecUint3 *vec)
 {
   gfloat sq = (gfloat) crank_vec_uint3_get_magn_sq (vec);
   return sqrtf (sq);
@@ -1335,8 +1335,8 @@ crank_vec_uint3_get_magn (CrankVecUint3 *vec)
  * Applies negation.
  */
 void
-crank_vec_uint3_neg (CrankVecUint3 *a,
-                    CrankVecUint3 *r)
+crank_vec_uint3_neg (const CrankVecUint3 *a,
+                     CrankVecUint3       *r)
 {
   r->x = -(a->x);
   r->y = -(a->y);
@@ -1370,9 +1370,9 @@ crank_vec_uint3_neg_self (CrankVecUint3 *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_uint3_muls (CrankVecUint3 *a,
-                      const guint    b,
-                      CrankVecUint3 *r)
+crank_vec_uint3_muls (const CrankVecUint3 *a,
+                      const guint          b,
+                      CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1406,9 +1406,9 @@ crank_vec_uint3_muls_self (CrankVecUint3 *a,
  * Applies scalar division.
  */
 void
-crank_vec_uint3_divs (CrankVecUint3 *a,
-                      const guint    b,
-                      CrankVecUint3 *r)
+crank_vec_uint3_divs (const CrankVecUint3 *a,
+                      const guint          b,
+                      CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1442,9 +1442,9 @@ crank_vec_uint3_divs_self (CrankVecUint3 *a,
  * Gets modular of each component.
  */
 void
-crank_vec_uint3_mods (CrankVecUint3 *a,
-                      const guint    b,
-                      CrankVecUint3 *r)
+crank_vec_uint3_mods (const CrankVecUint3 *a,
+                      const guint          b,
+                      CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
 
@@ -1480,9 +1480,9 @@ crank_vec_uint3_mods_self (CrankVecUint3 *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint3_add (CrankVecUint3 *a,
-                    CrankVecUint3 *b,
-                    CrankVecUint3 *r)
+crank_vec_uint3_add (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b,
+                     CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1500,8 +1500,8 @@ crank_vec_uint3_add (CrankVecUint3 *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint3_add_self (CrankVecUint3 *a,
-                         CrankVecUint3 *b)
+crank_vec_uint3_add_self (CrankVecUint3       *a,
+                          const CrankVecUint3 *b)
 {
   a->x += b->x;
   a->y += b->y;
@@ -1517,9 +1517,9 @@ crank_vec_uint3_add_self (CrankVecUint3 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint3_sub (CrankVecUint3 *a,
-                    CrankVecUint3 *b,
-                    CrankVecUint3 *r)
+crank_vec_uint3_sub (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b,
+                     CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1537,8 +1537,8 @@ crank_vec_uint3_sub (CrankVecUint3 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint3_sub_self (CrankVecUint3 *a,
-                         CrankVecUint3 *b)
+crank_vec_uint3_sub_self (CrankVecUint3       *a,
+                          const CrankVecUint3 *b)
 {
   a->x -= b->x;
   a->y -= b->y;
@@ -1555,8 +1555,8 @@ crank_vec_uint3_sub_self (CrankVecUint3 *a,
  * Returns: dot product of two vectors.
  */
 guint
-crank_vec_uint3_dot (CrankVecUint3 *a,
-                     CrankVecUint3 *b)
+crank_vec_uint3_dot (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b)
 {
   return (a->x) * (b->x) +
          (a->y) * (b->y) +
@@ -1574,13 +1574,10 @@ crank_vec_uint3_dot (CrankVecUint3 *a,
  * Returns: dot product of two vectors.
  */
 void
-crank_vec_uint3_crs (CrankVecUint3 *a,
-                    CrankVecUint3 *b,
-                    CrankVecUint3 *r)
+crank_vec_uint3_crs (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b,
+                     CrankVecInt3        *r)
 {
-  g_return_if_fail (a != r);
-  g_return_if_fail (b != r);
-
   guint nx = (a->y * b->z) - (a->z * b->y);
   guint ny = (a->z * b->x) - (a->x * b->z);
   guint nz = (a->x * b->y) - (a->y * b->x);
@@ -1588,28 +1585,6 @@ crank_vec_uint3_crs (CrankVecUint3 *a,
   r->x = nx;
   r->y = ny;
   r->z = nz;
-}
-
-/**
- * crank_vec_uint3_crs_self:
- * @a: A vector
- * @b: A vector
- *
- * Gets cross product of two vectors.
- *
- * Returns: dot product of two vectors.
- */
-void
-crank_vec_uint3_crs_self (CrankVecUint3 *a,
-                         CrankVecUint3 *b)
-{
-  guint nx = (a->y * b->z) - (a->z * b->y);
-  guint ny = (a->z * b->x) - (a->x * b->z);
-  guint nz = (a->x * b->y) - (a->y * b->x);
-
-  a->x = nx;
-  a->y = ny;
-  a->z = nz;
 }
 
 
@@ -1625,9 +1600,9 @@ crank_vec_uint3_crs_self (CrankVecUint3 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint3_cmpmul (CrankVecUint3 *a,
-                       CrankVecUint3 *b,
-                       CrankVecUint3 *r)
+crank_vec_uint3_cmpmul (const CrankVecUint3 *a,
+                        const CrankVecUint3 *b,
+                        CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1645,8 +1620,8 @@ crank_vec_uint3_cmpmul (CrankVecUint3 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint3_cmpmul_self (CrankVecUint3 *a,
-                            CrankVecUint3 *b)
+crank_vec_uint3_cmpmul_self (CrankVecUint3       *a,
+                             const CrankVecUint3 *b)
 {
   a->x *= b->x;
   a->y *= b->y;
@@ -1663,9 +1638,9 @@ crank_vec_uint3_cmpmul_self (CrankVecUint3 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint3_cmpdiv (CrankVecUint3 *a,
-                       CrankVecUint3 *b,
-                       CrankVecUint3 *r)
+crank_vec_uint3_cmpdiv (const CrankVecUint3 *a,
+                        const CrankVecUint3 *b,
+                        CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1683,8 +1658,8 @@ crank_vec_uint3_cmpdiv (CrankVecUint3 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint3_cmpdiv_self (CrankVecUint3 *a,
-                            CrankVecUint3 *b)
+crank_vec_uint3_cmpdiv_self (CrankVecUint3       *a,
+                             const CrankVecUint3 *b)
 {
   a->x /= b->x;
   a->y /= b->y;
@@ -1700,9 +1675,9 @@ crank_vec_uint3_cmpdiv_self (CrankVecUint3 *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint3_cmpmod (CrankVecUint3 *a,
-                       CrankVecUint3 *b,
-                       CrankVecUint3 *r)
+crank_vec_uint3_cmpmod (const CrankVecUint3 *a,
+                        const CrankVecUint3 *b,
+                        CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1720,8 +1695,8 @@ crank_vec_uint3_cmpmod (CrankVecUint3 *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint3_cmpmod_self (CrankVecUint3 *a,
-                            CrankVecUint3 *b)
+crank_vec_uint3_cmpmod_self (CrankVecUint3       *a,
+                             const CrankVecUint3 *b)
 {
   a->x %= b->x;
   a->y %= b->y;
@@ -1737,9 +1712,9 @@ crank_vec_uint3_cmpmod_self (CrankVecUint3 *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_uint3_cmpless (CrankVecUint3  *a,
-                        CrankVecUint3  *b,
-                        CrankVecBool3 *r)
+crank_vec_uint3_cmpless (const CrankVecUint3 *a,
+                         const CrankVecUint3 *b,
+                         CrankVecBool3       *r)
 {
   r->x = (a->x) < (b->x);
   r->y = (a->y) < (b->y);
@@ -1755,9 +1730,9 @@ crank_vec_uint3_cmpless (CrankVecUint3  *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_uint3_cmpeq (CrankVecUint3  *a,
-                      CrankVecUint3  *b,
-                      CrankVecBool3 *r)
+crank_vec_uint3_cmpeq (const CrankVecUint3 *a,
+                       const CrankVecUint3 *b,
+                       CrankVecBool3       *r)
 {
   r->x = (a->x) == (b->x);
   r->y = (a->y) == (b->y);
@@ -1773,9 +1748,9 @@ crank_vec_uint3_cmpeq (CrankVecUint3  *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_uint3_cmpgreater (CrankVecUint3  *a,
-                           CrankVecUint3  *b,
-                           CrankVecBool3 *r)
+crank_vec_uint3_cmpgreater (const CrankVecUint3 *a,
+                            const CrankVecUint3 *b,
+                            CrankVecBool3       *r)
 {
   r->x = (a->x) > (b->x);
   r->y = (a->y) > (b->y);
@@ -1791,9 +1766,9 @@ crank_vec_uint3_cmpgreater (CrankVecUint3  *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_uint3_cmpcmp (CrankVecUint3 *a,
-                        CrankVecUint3 *b,
-                        CrankVecInt3  *r)
+crank_vec_uint3_cmpcmp (const CrankVecUint3 *a,
+                        const CrankVecUint3 *b,
+                        CrankVecInt3        *r)
 {
   r->x = CMP(a->x, b->x);
   r->y = CMP(a->y, b->y);
@@ -1809,9 +1784,9 @@ crank_vec_uint3_cmpcmp (CrankVecUint3 *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_uint3_min (CrankVecUint3 *a,
-                    CrankVecUint3 *b,
-                    CrankVecUint3 *r)
+crank_vec_uint3_min (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b,
+                     CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1830,9 +1805,9 @@ crank_vec_uint3_min (CrankVecUint3 *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_uint3_max (CrankVecUint3 *a,
-                    CrankVecUint3 *b,
-                    CrankVecUint3 *r)
+crank_vec_uint3_max (const CrankVecUint3 *a,
+                     const CrankVecUint3 *b,
+                     CrankVecUint3       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -1846,7 +1821,7 @@ crank_vec_uint3_max (CrankVecUint3 *a,
 
 static void
 crank_vec_uint3_transform_from_b (const GValue *src,
-                                 GValue       *dest)
+                                  GValue       *dest)
 {
   CrankVecUint3 *vi = g_new (CrankVecUint3, 1);
   CrankVecBool3 *vb = (CrankVecBool3*) g_value_get_boxed (src);
@@ -1992,8 +1967,8 @@ crank_vec_uint4_init_from_vb (CrankVecUint4  *vec,
  * Copies vector.
  */
 void
-crank_vec_uint4_copy (CrankVecUint4 *vec,
-                      CrankVecUint4 *other)
+crank_vec_uint4_copy (const CrankVecUint4 *vec,
+                      CrankVecUint4       *other)
 {
   memcpy (other, vec, sizeof (CrankVecUint4));
 }
@@ -2008,7 +1983,7 @@ crank_vec_uint4_copy (CrankVecUint4 *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecUint4*
-crank_vec_uint4_dup (CrankVecUint4 *vec)
+crank_vec_uint4_dup (const CrankVecUint4 *vec)
 {
   return (CrankVecUint4*) g_memdup (vec, sizeof (CrankVecUint4));
 }
@@ -2023,8 +1998,8 @@ crank_vec_uint4_dup (CrankVecUint4 *vec)
  * Returns: element on vector.
  */
 guint
-crank_vec_uint4_get (CrankVecUint4 *vec,
-                     const guint   index)
+crank_vec_uint4_get (const CrankVecUint4 *vec,
+                     const guint          index)
 {
   return ((gint*)vec)[index];
 }
@@ -2039,8 +2014,8 @@ crank_vec_uint4_get (CrankVecUint4 *vec,
  */
 void
 crank_vec_uint4_set (CrankVecUint4 *vec,
-                     const guint   index,
-                     const guint   value)
+                     const guint    index,
+                     const guint    value)
 {
   ((gint*)vec)[index] = value;
 }
@@ -2058,9 +2033,9 @@ crank_vec_uint4_set (CrankVecUint4 *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_uint4_foreach (CrankVecUint4    *vec,
-                        CrankBoolUintFunc func,
-                        gpointer         userdata)
+crank_vec_uint4_foreach (const CrankVecUint4 *vec,
+                         CrankBoolUintFunc    func,
+                         gpointer             userdata)
 {
   if (func (vec->x, userdata) &&
       func (vec->y, userdata) &&
@@ -2079,8 +2054,8 @@ crank_vec_uint4_foreach (CrankVecUint4    *vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_uint4_iterator (CrankVecUint4    *vec,
-                         CrankIterMemUint *iter)
+crank_vec_uint4_iterator (const CrankVecUint4 *vec,
+                          CrankIterMemUint    *iter)
 {
   crank_iter_mem_uint_init_with_count (iter, (guint*)vec, 4);
 }
@@ -2143,7 +2118,7 @@ crank_vec_uint4_equal (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_uint4_to_string (CrankVecUint4 *vec)
+crank_vec_uint4_to_string (const CrankVecUint4 *vec)
 {
   return crank_vec_uint4_to_string_full (vec, "(", ", ", ")", "%d");
 }
@@ -2161,11 +2136,11 @@ crank_vec_uint4_to_string (CrankVecUint4 *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_uint4_to_string_full (CrankVecUint4 *vec,
-                               const gchar  *left,
-                               const gchar  *in,
-                               const gchar  *right,
-                               const gchar  *format)
+crank_vec_uint4_to_string_full (const CrankVecUint4 *vec,
+                                const gchar         *left,
+                                const gchar         *in,
+                                const gchar         *right,
+                                const gchar         *format)
 {
   GString *strb = g_string_new (left);
   gchar *result;
@@ -2201,7 +2176,7 @@ crank_vec_uint4_to_string_full (CrankVecUint4 *vec,
  * Returns: square of magn/norm of @vec.
  */
 guint
-crank_vec_uint4_get_magn_sq (CrankVecUint4 *vec)
+crank_vec_uint4_get_magn_sq (const CrankVecUint4 *vec)
 {
   guint vx = (guint) ABS(vec->x);
   guint vy = (guint) ABS(vec->y);
@@ -2220,7 +2195,7 @@ crank_vec_uint4_get_magn_sq (CrankVecUint4 *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_uint4_get_magn (CrankVecUint4 *vec)
+crank_vec_uint4_get_magn (const CrankVecUint4 *vec)
 {
   gfloat sq = (gfloat) crank_vec_uint4_get_magn_sq (vec);
   return sqrtf (sq);
@@ -2239,8 +2214,8 @@ crank_vec_uint4_get_magn (CrankVecUint4 *vec)
  * Applies negation.
  */
 void
-crank_vec_uint4_neg (CrankVecUint4 *a,
-                    CrankVecUint4 *r)
+crank_vec_uint4_neg (const CrankVecUint4 *a,
+                     CrankVecUint4       *r)
 {
   r->x = -(a->x);
   r->y = -(a->y);
@@ -2275,9 +2250,9 @@ crank_vec_uint4_neg_self (CrankVecUint4 *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_uint4_muls (CrankVecUint4 *a,
-                      const guint    b,
-                      CrankVecUint4 *r)
+crank_vec_uint4_muls (const CrankVecUint4 *a,
+                      const guint          b,
+                      CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
 
@@ -2313,9 +2288,9 @@ crank_vec_uint4_muls_self (CrankVecUint4 *a,
  * Applies scalar division.
  */
 void
-crank_vec_uint4_divs (CrankVecUint4 *a,
-                      const guint    b,
-                      CrankVecUint4 *r)
+crank_vec_uint4_divs (const CrankVecUint4 *a,
+                      const guint          b,
+                      CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
 
@@ -2351,9 +2326,9 @@ crank_vec_uint4_divs_self (CrankVecUint4 *a,
  * Gets modular of each component.
  */
 void
-crank_vec_uint4_mods (CrankVecUint4 *a,
-                      const guint    b,
-                      CrankVecUint4 *r)
+crank_vec_uint4_mods (const CrankVecUint4 *a,
+                      const guint          b,
+                      CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
 
@@ -2391,9 +2366,9 @@ crank_vec_uint4_mods_self (CrankVecUint4 *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint4_add (CrankVecUint4 *a,
-                    CrankVecUint4 *b,
-                    CrankVecUint4 *r)
+crank_vec_uint4_add (const CrankVecUint4 *a,
+                     const CrankVecUint4 *b,
+                     CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2412,8 +2387,8 @@ crank_vec_uint4_add (CrankVecUint4 *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint4_add_self (CrankVecUint4 *a,
-                         CrankVecUint4 *b)
+crank_vec_uint4_add_self (CrankVecUint4       *a,
+                          const CrankVecUint4 *b)
 {
   a->x += b->x;
   a->y += b->y;
@@ -2430,9 +2405,9 @@ crank_vec_uint4_add_self (CrankVecUint4 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint4_sub (CrankVecUint4 *a,
-                    CrankVecUint4 *b,
-                    CrankVecUint4 *r)
+crank_vec_uint4_sub (const CrankVecUint4 *a,
+                     const CrankVecUint4 *b,
+                     CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2451,8 +2426,8 @@ crank_vec_uint4_sub (CrankVecUint4 *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint4_sub_self (CrankVecUint4 *a,
-                         CrankVecUint4 *b)
+crank_vec_uint4_sub_self (CrankVecUint4       *a,
+                          const CrankVecUint4 *b)
 {
   a->x -= b->x;
   a->y -= b->y;
@@ -2470,8 +2445,8 @@ crank_vec_uint4_sub_self (CrankVecUint4 *a,
  * Returns: dot product of two vectors.
  */
 guint
-crank_vec_uint4_dot (CrankVecUint4 *a,
-                     CrankVecUint4 *b)
+crank_vec_uint4_dot (const CrankVecUint4 *a,
+                     const CrankVecUint4 *b)
 {
   return (a->x) * (b->x) +
          (a->y) * (b->y) +
@@ -2490,9 +2465,9 @@ crank_vec_uint4_dot (CrankVecUint4 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint4_cmpmul (CrankVecUint4 *a,
-                       CrankVecUint4 *b,
-                       CrankVecUint4 *r)
+crank_vec_uint4_cmpmul (const CrankVecUint4 *a,
+                        const CrankVecUint4 *b,
+                        CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2511,8 +2486,8 @@ crank_vec_uint4_cmpmul (CrankVecUint4 *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint4_cmpmul_self (CrankVecUint4 *a,
-                            CrankVecUint4 *b)
+crank_vec_uint4_cmpmul_self (CrankVecUint4       *a,
+                             const CrankVecUint4 *b)
 {
   a->x *= b->x;
   a->y *= b->y;
@@ -2529,9 +2504,9 @@ crank_vec_uint4_cmpmul_self (CrankVecUint4 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint4_cmpdiv (CrankVecUint4 *a,
-                       CrankVecUint4 *b,
-                       CrankVecUint4 *r)
+crank_vec_uint4_cmpdiv (const CrankVecUint4 *a,
+                        const CrankVecUint4 *b,
+                        CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2550,8 +2525,8 @@ crank_vec_uint4_cmpdiv (CrankVecUint4 *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint4_cmpdiv_self (CrankVecUint4 *a,
-                            CrankVecUint4 *b)
+crank_vec_uint4_cmpdiv_self (CrankVecUint4       *a,
+                             const CrankVecUint4 *b)
 {
   a->x /= b->x;
   a->y /= b->y;
@@ -2568,9 +2543,9 @@ crank_vec_uint4_cmpdiv_self (CrankVecUint4 *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint4_cmpmod (CrankVecUint4 *a,
-                       CrankVecUint4 *b,
-                       CrankVecUint4 *r)
+crank_vec_uint4_cmpmod (const CrankVecUint4 *a,
+                        const CrankVecUint4 *b,
+                        CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2589,8 +2564,8 @@ crank_vec_uint4_cmpmod (CrankVecUint4 *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint4_cmpmod_self (CrankVecUint4 *a,
-                            CrankVecUint4 *b)
+crank_vec_uint4_cmpmod_self (CrankVecUint4       *a,
+                             const CrankVecUint4 *b)
 {
   a->x %= b->x;
   a->y %= b->y;
@@ -2607,9 +2582,9 @@ crank_vec_uint4_cmpmod_self (CrankVecUint4 *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_uint4_cmpless (CrankVecUint4  *a,
-                        CrankVecUint4  *b,
-                        CrankVecBool4 *r)
+crank_vec_uint4_cmpless (const CrankVecUint4 *a,
+                         const CrankVecUint4 *b,
+                         CrankVecBool4       *r)
 {
   r->x = (a->x) < (b->x);
   r->y = (a->y) < (b->y);
@@ -2626,9 +2601,9 @@ crank_vec_uint4_cmpless (CrankVecUint4  *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_uint4_cmpeq (CrankVecUint4  *a,
-                      CrankVecUint4  *b,
-                      CrankVecBool4 *r)
+crank_vec_uint4_cmpeq (const CrankVecUint4 *a,
+                       const CrankVecUint4 *b,
+                       CrankVecBool4       *r)
 {
   r->x = (a->x) == (b->x);
   r->y = (a->y) == (b->y);
@@ -2645,9 +2620,9 @@ crank_vec_uint4_cmpeq (CrankVecUint4  *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_uint4_cmpgreater (CrankVecUint4  *a,
-                           CrankVecUint4  *b,
-                           CrankVecBool4 *r)
+crank_vec_uint4_cmpgreater (const CrankVecUint4 *a,
+                            const CrankVecUint4 *b,
+                            CrankVecBool4       *r)
 {
   r->x = (a->x) > (b->x);
   r->y = (a->y) > (b->y);
@@ -2664,9 +2639,9 @@ crank_vec_uint4_cmpgreater (CrankVecUint4  *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_uint4_cmpcmp (CrankVecUint4 *a,
-                        CrankVecUint4 *b,
-                        CrankVecInt4 *r)
+crank_vec_uint4_cmpcmp (const CrankVecUint4 *a,
+                        const CrankVecUint4 *b,
+                        CrankVecInt4        *r)
 {
   r->x = CMP(a->x, b->x);
   r->y = CMP(a->y, b->y);
@@ -2683,9 +2658,9 @@ crank_vec_uint4_cmpcmp (CrankVecUint4 *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_uint4_min (CrankVecUint4 *a,
-                    CrankVecUint4 *b,
-                    CrankVecUint4 *r)
+crank_vec_uint4_min (const CrankVecUint4 *a,
+                     const CrankVecUint4 *b,
+                     CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2705,9 +2680,9 @@ crank_vec_uint4_min (CrankVecUint4 *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_uint4_max (CrankVecUint4 *a,
-                    CrankVecUint4 *b,
-                    CrankVecUint4 *r)
+crank_vec_uint4_max (const CrankVecUint4 *a,
+                     const CrankVecUint4 *b,
+                     CrankVecUint4       *r)
 {
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
@@ -2722,7 +2697,7 @@ crank_vec_uint4_max (CrankVecUint4 *a,
 
 static void
 crank_vec_uint4_transform_from_b (const GValue *src,
-                                 GValue       *dest)
+                                  GValue       *dest)
 {
   CrankVecUint4 *vi = g_new (CrankVecUint4, 1);
   CrankVecBool4 *vb = (CrankVecBool4*) g_value_get_boxed (src);
@@ -2732,7 +2707,7 @@ crank_vec_uint4_transform_from_b (const GValue *src,
 
 static void
 crank_vec_uint4_transform_to_string (const GValue *src,
-                                    GValue       *dest)
+                                     GValue       *dest)
 {
   CrankVecUint4 *vi = (CrankVecUint4*) g_value_get_boxed (src);
   gchar *str = crank_vec_uint4_to_string (vi);
@@ -2746,19 +2721,19 @@ crank_vec_uint4_transform_to_string (const GValue *src,
 
 
 static void crank_vec_uint_n_transform_from_b (const GValue *src,
-                                              GValue       *dest);
+                                               GValue       *dest);
 
 static void crank_vec_uint_n_transform_from_v2 (const GValue *src,
-                                               GValue       *dest);
+                                                GValue       *dest);
 
 static void crank_vec_uint_n_transform_from_v3 (const GValue *src,
-                                               GValue       *dest);
+                                                GValue       *dest);
 
 static void crank_vec_uint_n_transform_from_v4 (const GValue *src,
-                                               GValue       *dest);
+                                                GValue       *dest);
 
 static void crank_vec_uint_n_transform_to_string (const GValue *src,
-                                                 GValue       *dest);
+                                                  GValue       *dest);
 
 
 G_DEFINE_BOXED_TYPE_WITH_CODE (
@@ -2880,8 +2855,8 @@ crank_vec_uint_n_init_fill (CrankVecUintN *vec,
  * Initialize vector from boolean vector, which has same length of it.
  */
 void
-crank_vec_uint_n_init_from_vb (CrankVecUintN  *vec,
-                              CrankVecBoolN *vb)
+crank_vec_uint_n_init_from_vb (CrankVecUintN       *vec,
+                               const CrankVecBoolN *vb)
 {
   guint i;
 
@@ -2916,8 +2891,8 @@ crank_vec_uint_n_fini (CrankVecUintN *vec)
  * Copies vector.
  */
 void
-crank_vec_uint_n_copy (CrankVecUintN *vec,
-                      CrankVecUintN *other)
+crank_vec_uint_n_copy (const CrankVecUintN *vec,
+                       CrankVecUintN *other)
 {
   crank_vec_uint_n_init_arr (other, vec->n, vec->data);
 }
@@ -2931,7 +2906,7 @@ crank_vec_uint_n_copy (CrankVecUintN *vec,
  * Returns: (transfer full): copied vector
  */
 CrankVecUintN*
-crank_vec_uint_n_dup (CrankVecUintN *vec)
+crank_vec_uint_n_dup (const CrankVecUintN *vec)
 {
   CrankVecUintN *result = g_new0 (CrankVecUintN, 1);
 
@@ -2962,7 +2937,7 @@ crank_vec_uint_n_free (CrankVecUintN *vec)
  * Returns: Size of vector.
  */
 guint
-crank_vec_uint_n_get_size (CrankVecUintN *vec)
+crank_vec_uint_n_get_size (const CrankVecUintN *vec)
 {
   return vec->n;
 }
@@ -2977,7 +2952,7 @@ crank_vec_uint_n_get_size (CrankVecUintN *vec)
  * Returns: element on vector.
  */
 guint
-crank_vec_uint_n_get (CrankVecUintN *vec,
+crank_vec_uint_n_get (const CrankVecUintN *vec,
                       const guint   index)
 {
   return vec->data[index];
@@ -3089,9 +3064,9 @@ crank_vec_uint_n_remove (CrankVecUintN *vec,
  * Returns: Whether iteration was stopped.
  */
 gboolean
-crank_vec_uint_n_foreach (CrankVecUintN    *vec,
-                         CrankBoolUintFunc func,
-                         gpointer         userdata)
+crank_vec_uint_n_foreach (const CrankVecUintN *vec,
+                          CrankBoolUintFunc    func,
+                          gpointer             userdata)
 {
   guint i;
 
@@ -3110,8 +3085,8 @@ crank_vec_uint_n_foreach (CrankVecUintN    *vec,
  * Initialize a iterator for a vector.
  */
 void
-crank_vec_uint_n_iterator (CrankVecUintN    *vec,
-                           CrankIterMemUint *iter)
+crank_vec_uint_n_iterator (const CrankVecUintN *vec,
+                           CrankIterMemUint    *iter)
 {
   crank_iter_mem_uint_init_with_count (iter, vec->data, vec->n);
 }
@@ -3178,7 +3153,7 @@ crank_vec_uint_n_equal (gconstpointer a,
  * Returns: (transfer full): string representation of value.
  */
 gchar*
-crank_vec_uint_n_to_string (CrankVecUintN *vec)
+crank_vec_uint_n_to_string (const CrankVecUintN *vec)
 {
   return crank_vec_uint_n_to_string_full (vec, "(", ", ", ")", "%d");
 }
@@ -3196,11 +3171,11 @@ crank_vec_uint_n_to_string (CrankVecUintN *vec)
  * Returns: (transfer full): stringified items of value.
  */
 gchar*
-crank_vec_uint_n_to_string_full (CrankVecUintN *vec,
-                                const gchar  *left,
-                                const gchar  *in,
-                                const gchar  *right,
-                                const gchar  *format)
+crank_vec_uint_n_to_string_full (const CrankVecUintN *vec,
+                                 const gchar         *left,
+                                 const gchar         *in,
+                                 const gchar         *right,
+                                 const gchar         *format)
 {
   GString *strb = g_string_new (left);
   gchar *result;
@@ -3237,7 +3212,7 @@ crank_vec_uint_n_to_string_full (CrankVecUintN *vec,
  * Returns: whether the vector is "zero vector".
  */
 gboolean
-crank_vec_uint_n_is_zero (CrankVecUintN *vec)
+crank_vec_uint_n_is_zero (const CrankVecUintN *vec)
 {
   guint i;
 
@@ -3259,7 +3234,7 @@ crank_vec_uint_n_is_zero (CrankVecUintN *vec)
  * Returns: whether the vector has all component as 1.
  */
 gboolean
-crank_vec_uint_n_is_one (CrankVecUintN *vec)
+crank_vec_uint_n_is_one (const CrankVecUintN *vec)
 {
   guint i;
 
@@ -3280,7 +3255,7 @@ crank_vec_uint_n_is_one (CrankVecUintN *vec)
  * Returns: whether the vector is empty.
  */
 gboolean
-crank_vec_uint_n_is_empty (CrankVecUintN *vec)
+crank_vec_uint_n_is_empty (const CrankVecUintN *vec)
 {
   return vec->n == 0;
 }
@@ -3296,7 +3271,7 @@ crank_vec_uint_n_is_empty (CrankVecUintN *vec)
  * Returns: square of magn/norm of @vec.
  */
 guint
-crank_vec_uint_n_get_magn_sq (CrankVecUintN *vec)
+crank_vec_uint_n_get_magn_sq (const CrankVecUintN *vec)
 {
   guint result = 0;
   guint i;
@@ -3319,7 +3294,7 @@ crank_vec_uint_n_get_magn_sq (CrankVecUintN *vec)
  * Returns: magn/norm of @vec.
  */
 gfloat
-crank_vec_uint_n_get_magn (CrankVecUintN *vec)
+crank_vec_uint_n_get_magn (const CrankVecUintN *vec)
 {
   gfloat sq = (gfloat) crank_vec_uint_n_get_magn_sq (vec);
   return sqrtf (sq);
@@ -3338,8 +3313,8 @@ crank_vec_uint_n_get_magn (CrankVecUintN *vec)
  * Applies negation.
  */
 void
-crank_vec_uint_n_neg (CrankVecUintN *a,
-                     CrankVecUintN *r)
+crank_vec_uint_n_neg (const CrankVecUintN *a,
+                      CrankVecUintN       *r)
 {
   guint i;
 
@@ -3376,9 +3351,9 @@ crank_vec_uint_n_neg_self (CrankVecUintN *a)
  * Applies scalar multiplication.
  */
 void
-crank_vec_uint_n_muls (CrankVecUintN *a,
-                       const guint    b,
-                       CrankVecUintN *r)
+crank_vec_uint_n_muls (const CrankVecUintN *a,
+                       const guint          b,
+                       CrankVecUintN       *r)
 {
   guint i;
 
@@ -3415,9 +3390,9 @@ crank_vec_uint_n_muls_self (CrankVecUintN *a,
  * Applies scalar division.
  */
 void
-crank_vec_uint_n_divs (CrankVecUintN *a,
-                       const guint    b,
-                       CrankVecUintN *r)
+crank_vec_uint_n_divs (const CrankVecUintN *a,
+                       const guint          b,
+                       CrankVecUintN       *r)
 {
   guint i;
 
@@ -3454,9 +3429,9 @@ crank_vec_uint_n_divs_self (CrankVecUintN *a,
  * Gets modular of each component.
  */
 void
-crank_vec_uint_n_mods (CrankVecUintN *a,
-                       const guint    b,
-                       CrankVecUintN *r)
+crank_vec_uint_n_mods (const CrankVecUintN *a,
+                       const guint          b,
+                       CrankVecUintN       *r)
 {
   guint i;
 
@@ -3494,15 +3469,15 @@ crank_vec_uint_n_mods_self (CrankVecUintN *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint_n_add (CrankVecUintN *a,
-                     CrankVecUintN *b,
-                     CrankVecUintN *r)
+crank_vec_uint_n_add (const CrankVecUintN *a,
+                      const CrankVecUintN *b,
+                      CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "add", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "add", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3516,12 +3491,12 @@ crank_vec_uint_n_add (CrankVecUintN *a,
  * Adds two vectors.
  */
 void
-crank_vec_uint_n_add_self (CrankVecUintN *a,
-                          CrankVecUintN *b)
+crank_vec_uint_n_add_self (CrankVecUintN       *a,
+                           const CrankVecUintN *b)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "add-self", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "add-self", a, b);
 
   for (i = 0; i < a->n; i++)
     a->data[i] += b->data[i];
@@ -3536,15 +3511,15 @@ crank_vec_uint_n_add_self (CrankVecUintN *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint_n_sub (CrankVecUintN *a,
-                     CrankVecUintN *b,
-                     CrankVecUintN *r)
+crank_vec_uint_n_sub (const CrankVecUintN *a,
+                      const CrankVecUintN *b,
+                      CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "sub", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "sub", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3559,12 +3534,12 @@ crank_vec_uint_n_sub (CrankVecUintN *a,
  * Subtracts @a by @b.
  */
 void
-crank_vec_uint_n_sub_self (CrankVecUintN *a,
-                          CrankVecUintN *b)
+crank_vec_uint_n_sub_self (CrankVecUintN       *a,
+                           const CrankVecUintN *b)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "sub-self", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "sub-self", a, b);
 
   for (i = 0; i < a->n; i++)
     a->data[i] -= b->data[i];
@@ -3580,13 +3555,13 @@ crank_vec_uint_n_sub_self (CrankVecUintN *a,
  * Returns: dot product of two vectors.
  */
 guint
-crank_vec_uint_n_dot (CrankVecUintN *a,
-                      CrankVecUintN *b)
+crank_vec_uint_n_dot (const CrankVecUintN *a,
+                      const CrankVecUintN *b)
 {
   gint result = 0;
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET("VecIntN", "dot", a, b, 0.0f);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2_RET("VecUintN", "dot", a, b, 0.0f);
 
   for (i = 0; i < a->n; i++)
     result += (a->data[i] * b->data[i]);
@@ -3605,15 +3580,15 @@ crank_vec_uint_n_dot (CrankVecUintN *a,
  * Gets component-wise multiplication.
  */
 void
-crank_vec_uint_n_cmpmul (CrankVecUintN *a,
-                        CrankVecUintN *b,
-                        CrankVecUintN *r)
+crank_vec_uint_n_cmpmul (const CrankVecUintN *a,
+                         const CrankVecUintN *b,
+                         CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmul", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpmul", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3628,12 +3603,12 @@ crank_vec_uint_n_cmpmul (CrankVecUintN *a,
  * Apply component-wise multiplication.
  */
 void
-crank_vec_uint_n_cmpmul_self (CrankVecUintN *a,
-                             CrankVecUintN *b)
+crank_vec_uint_n_cmpmul_self (CrankVecUintN       *a,
+                              const CrankVecUintN *b)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmul-self", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpmul-self", a, b);
 
   for (i = 0; i < a->n; i++)
     a->data[i] *= b->data[i];
@@ -3648,15 +3623,15 @@ crank_vec_uint_n_cmpmul_self (CrankVecUintN *a,
  * Gets component-wise division.
  */
 void
-crank_vec_uint_n_cmpdiv (CrankVecUintN *a,
-                        CrankVecUintN *b,
-                        CrankVecUintN *r)
+crank_vec_uint_n_cmpdiv (const CrankVecUintN *a,
+                         const CrankVecUintN *b,
+                         CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpdiv", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpdiv", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3671,12 +3646,12 @@ crank_vec_uint_n_cmpdiv (CrankVecUintN *a,
  * Apply component-wise multiplication.
  */
 void
-crank_vec_uint_n_cmpdiv_self (CrankVecUintN *a,
-                             CrankVecUintN *b)
+crank_vec_uint_n_cmpdiv_self (CrankVecUintN       *a,
+                              const CrankVecUintN *b)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpdiv-self", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpdiv-self", a, b);
 
   for (i = 0; i < a->n; i++)
     a->data[i] /= b->data[i];
@@ -3691,15 +3666,15 @@ crank_vec_uint_n_cmpdiv_self (CrankVecUintN *a,
  * Gets component-wise modular.
  */
 void
-crank_vec_uint_n_cmpmod (CrankVecUintN *a,
-                        CrankVecUintN *b,
-                        CrankVecUintN *r)
+crank_vec_uint_n_cmpmod (const CrankVecUintN *a,
+                         const CrankVecUintN *b,
+                         CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmod", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpmod", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3714,12 +3689,12 @@ crank_vec_uint_n_cmpmod (CrankVecUintN *a,
  * Apply component-wise multiplication.
  */
 void
-crank_vec_uint_n_cmpmod_self (CrankVecUintN *a,
-                             CrankVecUintN *b)
+crank_vec_uint_n_cmpmod_self (CrankVecUintN       *a,
+                              const CrankVecUintN *b)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpmod-self", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpmod-self", a, b);
 
   for (i = 0; i < a->n; i++)
     a->data[i] %= b->data[i];
@@ -3734,12 +3709,12 @@ crank_vec_uint_n_cmpmod_self (CrankVecUintN *a,
  * Gets each component of @a is less than counterpart of @b
  */
 void
-crank_vec_uint_n_cmpless (CrankVecUintN  *a,
-                         CrankVecUintN  *b,
-                         CrankVecBoolN *r)
+crank_vec_uint_n_cmpless (const CrankVecUintN *a,
+                          const CrankVecUintN *b,
+                          CrankVecBoolN       *r)
 {
   guint i;
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpless", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpless", a, b);
   CRANK_VEC_ALLOC(r,gboolean,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3755,13 +3730,13 @@ crank_vec_uint_n_cmpless (CrankVecUintN  *a,
  * Gets each component of @a equals to counterpart of @b
  */
 void
-crank_vec_uint_n_cmpeq (CrankVecUintN  *a,
-                       CrankVecUintN  *b,
-                       CrankVecBoolN *r)
+crank_vec_uint_n_cmpeq (const CrankVecUintN *a,
+                        const CrankVecUintN *b,
+                        CrankVecBoolN       *r)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpeq", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpeq", a, b);
   CRANK_VEC_ALLOC(r,gboolean,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3777,13 +3752,13 @@ crank_vec_uint_n_cmpeq (CrankVecUintN  *a,
  * Gets each component of @a is greater than counterpart of @b
  */
 void
-crank_vec_uint_n_cmpgreater (CrankVecUintN  *a,
-                            CrankVecUintN  *b,
-                            CrankVecBoolN *r)
+crank_vec_uint_n_cmpgreater (const CrankVecUintN *a,
+                             const CrankVecUintN *b,
+                             CrankVecBoolN       *r)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpgreater", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpgreater", a, b);
   CRANK_VEC_ALLOC(r,gboolean,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3799,13 +3774,13 @@ crank_vec_uint_n_cmpgreater (CrankVecUintN  *a,
  * Gets compare result of each components.
  */
 void
-crank_vec_uint_n_cmpcmp (CrankVecUintN *a,
-                        CrankVecUintN *b,
-                        CrankVecIntN *r)
+crank_vec_uint_n_cmpcmp (const CrankVecUintN *a,
+                         const CrankVecUintN *b,
+                         CrankVecIntN        *r)
 {
   guint i;
 
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "cmpcmp", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "cmpcmp", a, b);
   CRANK_VEC_ALLOC(r,gint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3823,15 +3798,15 @@ crank_vec_uint_n_cmpcmp (CrankVecUintN *a,
  * Gets smaller value of each components.
  */
 void
-crank_vec_uint_n_min (CrankVecUintN *a,
-                     CrankVecUintN *b,
-                     CrankVecUintN *r)
+crank_vec_uint_n_min (const CrankVecUintN *a,
+                      const CrankVecUintN *b,
+                      CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "min", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "min", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
@@ -3849,15 +3824,15 @@ crank_vec_uint_n_min (CrankVecUintN *a,
  * Gets greater value of each components.
  */
 void
-crank_vec_uint_n_max (CrankVecUintN *a,
-                     CrankVecUintN *b,
-                     CrankVecUintN *r)
+crank_vec_uint_n_max (const CrankVecUintN *a,
+                      const CrankVecUintN *b,
+                      CrankVecUintN       *r)
 {
   guint i;
 
   g_return_if_fail (a != r);
   g_return_if_fail (b != r);
-  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecIntN", "max", a, b);
+  CRANK_VEC_WARN_IF_SIZE_MISMATCH2("VecUintN", "max", a, b);
   CRANK_VEC_ALLOC(r,guint,a->n);
 
   for (i = 0; i < a->n; i++)
