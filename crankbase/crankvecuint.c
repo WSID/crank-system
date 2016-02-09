@@ -185,6 +185,19 @@
 #define CMP(a, b) (((a) > (b)) - ((a) < (b)))
 
 
+static const guint crank_vec_uint_arrzero[4] = {0, 0, 0, 0};
+static const guint crank_vec_uint_arrone[4] = {1, 1, 1, 1};
+
+const CrankVecUint2 *crank_vec_uint2_zero = (CrankVecUint2*) crank_vec_uint_arrzero;
+const CrankVecUint3 *crank_vec_uint3_zero = (CrankVecUint3*) crank_vec_uint_arrzero;
+const CrankVecUint4 *crank_vec_uint4_zero = (CrankVecUint4*) crank_vec_uint_arrzero;
+
+const CrankVecUint2 *crank_vec_uint2_one = (CrankVecUint2*) crank_vec_uint_arrone;
+const CrankVecUint3 *crank_vec_uint3_one = (CrankVecUint3*) crank_vec_uint_arrone;
+const CrankVecUint4 *crank_vec_uint4_one = (CrankVecUint4*) crank_vec_uint_arrone;
+
+
+
 static void crank_vec_uint2_transform_from_b (const GValue *src,
                                               GValue       *dest);
 

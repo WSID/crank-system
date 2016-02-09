@@ -35,6 +35,50 @@
 G_BEGIN_DECLS
 
 /**
+ * crank_vec_uint2_zero:
+ *
+ * Static zero vector, whose all elements are 0.
+ */
+extern const CrankVecUint2 *crank_vec_uint2_zero;
+
+/**
+ * crank_vec_uint3_zero:
+ *
+ * Static zero vector, whose all elements are 0.
+ */
+extern const CrankVecUint3 *crank_vec_uint3_zero;
+
+/**
+ * crank_vec_uint4_zero:
+ *
+ * Static zero vector, whose all elements are 0.
+ */
+extern const CrankVecUint4 *crank_vec_uint4_zero;
+
+
+
+/**
+ * crank_vec_uint2_one:
+ *
+ * Static one vector, whose all elements are 1.
+ */
+extern const CrankVecUint2 *crank_vec_uint2_one;
+
+/**
+ * crank_vec_uint3_one:
+ *
+ * Static one vector, whose all elements are 1.
+ */
+extern const CrankVecUint3 *crank_vec_uint3_one;
+
+/**
+ * crank_vec_uint4_one:
+ *
+ * Static one vector, whose all elements are 1.
+ */
+extern const CrankVecUint4 *crank_vec_uint4_one;
+
+/**
  * CrankVecUint2:
  * @x: First element.
  * @y: Second element.
