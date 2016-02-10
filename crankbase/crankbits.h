@@ -35,6 +35,11 @@ guint   crank_bits_shift_to_left64  (guint64 *subject);
 guint64 crank_bits_remquo_2_64      (guint64  divisor,
                                      guint64 *remainder);
 
+
+guint32 crank_bits_least_pow2_32    (const guint32 number);
+
+guint64 crank_bits_least_pow2_64    (const guint64 number);
+
 /**
  * CRANK_ADD_CARRY64:
  * @a: A 64-bit integer.
