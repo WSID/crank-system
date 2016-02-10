@@ -51,6 +51,25 @@
 #include "crankvalue.h"
 
 
+/**
+ * crank_value_unset: (skip)
+ * @value: (nullable) (type GValue): #GValue to unset.
+ *
+ * Unsets @value if it is initialized. If @value is not initialized or %NULL,
+ * this function does nothing.
+ *
+ * This is useful for clear function. For free function, use crank_value_free().
+ */
+void
+crank_value_unset (gpointer value)
+{
+  GValue *value_real = value;
+
+  if (G_IS_VALUE (value_real))
+    g_value_unset (value_real);
+}
+
+
 
 /**
  * crank_value_dup: (skip)
@@ -84,8 +103,7 @@ crank_value_dup (const GValue *value)
 void
 crank_value_free (GValue *value)
 {
-  if (G_IS_VALUE (value))
-    g_value_unset (value);
+  crank_value_unset (value);
   g_free (value);
 }
 

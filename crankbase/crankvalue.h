@@ -31,6 +31,8 @@
 
 G_BEGIN_DECLS
 
+void    crank_value_unset                  (gpointer value);
+
 GValue *crank_value_dup                    (const GValue *value);
 
 void    crank_value_free                   (GValue      *value);
