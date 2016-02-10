@@ -30,6 +30,7 @@
 #include <glib-object.h>
 
 #include "crankfunction.h"
+#include "crankiter.h"
 #include "crankveccommon.h"
 
 G_BEGIN_DECLS
