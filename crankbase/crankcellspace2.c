@@ -992,3 +992,333 @@ crank_cell_space2_set_int (CrankCellSpace2 *cs,
 
   crank_value_overwrite_int (vcell, value);
 }
+
+
+
+/**
+ * crank_cell_space2_get_float:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @def: Failback default value.
+ *
+ * Gets float value on the cell.
+ *
+ * Returns: Float value, or @def if the cell does not contain float value.
+ */
+gfloat
+crank_cell_space2_get_float (const CrankCellSpace2 *cs,
+                             const guint            wi,
+                             const guint            hi,
+                             const gfloat           def)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  return G_VALUE_HOLDS_FLOAT (vcell) ? g_value_get_float (vcell) : def;
+}
+
+
+
+/**
+ * crank_cell_space2_set_float:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @value: A float value.
+ *
+ * Sets float value on the cell.
+ */
+void
+crank_cell_space2_set_float (CrankCellSpace2 *cs,
+                             const guint      wi,
+                             const guint      hi,
+                             const gfloat     value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_float (vcell, value);
+}
+
+
+
+/**
+ * crank_cell_space2_get_pointer:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: (optional) (out): A optional type receiver.
+ *
+ * Gets pointer value on the cell. GType may be returned as a GType may derive
+ * from a pointer type.
+ *
+ * Returns: (nullable): Pointer value, or %NULL if the cell does not contain
+ * pointer value.
+ */
+gpointer
+crank_cell_space2_get_pointer (const CrankCellSpace2 *cs,
+                               const guint            wi,
+                               const guint            hi,
+                               GType                 *type)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  gboolean holds_value = G_VALUE_HOLDS_POINTER (vcell);
+
+  if (type != NULL)
+    *type = holds_value ? G_VALUE_TYPE (type) : G_TYPE_INVALID;
+
+  return holds_value ? g_value_get_pointer (vcell) : NULL;
+}
+
+
+
+/**
+ * crank_cell_space2_set_pointer:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: GType of pointer type.
+ * @value: A float value.
+ *
+ * Sets pointer value on the cell. If @type is 0, G_TYPE_POINTER will be used.
+ */
+void
+crank_cell_space2_set_pointer (CrankCellSpace2 *cs,
+                               const guint      wi,
+                               const guint      hi,
+                               const GType      type,
+                               const gpointer   value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_pointer (vcell, type, value);
+}
+
+
+
+/**
+ * crank_cell_space2_get_boxed:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: (optional) (out): A optional type receiver.
+ *
+ * Gets boxed value on the cell. GType may be returned for type identification.
+ *
+ * Returns: (nullable) (transfer none): Boxed value, or %NULL if the cell does
+ * not contain pointer value.
+ */
+gpointer
+crank_cell_space2_get_boxed (const CrankCellSpace2 *cs,
+                             const guint            wi,
+                             const guint            hi,
+                             GType                 *type)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  gboolean holds_value = G_VALUE_HOLDS_BOXED (vcell);
+
+  if (type != NULL)
+    *type = holds_value ? G_VALUE_TYPE (type) : G_TYPE_INVALID;
+
+  return holds_value ? g_value_get_boxed (vcell) : NULL;
+}
+
+
+
+/**
+ * crank_cell_space2_set_boxed:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: GType of pointer type.
+ * @value: (transfer none): A boxed value.
+ *
+ * Sets (duplicated) boxed value on the cell.
+ */
+void
+crank_cell_space2_set_boxed (CrankCellSpace2 *cs,
+                             const guint      wi,
+                             const guint      hi,
+                             const GType      type,
+                             const gpointer   value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_boxed (vcell, type, value);
+}
+
+
+/**
+ * crank_cell_space2_dup_boxed:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: (optional) (out): A optional type receiver.
+ *
+ * Duplicates boxed value on the cell. #GType may be returned for type
+ * identification.
+ *
+ * Returns: (nullable) (transfer full): Boxed value, or %NULL if the cell does not contain
+ * pointer value. Free/unref with g_boxed_free() with #GType.
+ */
+gpointer
+crank_cell_space2_dup_boxed (const CrankCellSpace2 *cs,
+                             const guint            wi,
+                             const guint            hi,
+                             GType                 *type)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  gboolean holds_value = G_VALUE_HOLDS_BOXED (vcell);
+
+  if (type != NULL)
+    *type = holds_value ? G_VALUE_TYPE (type) : G_TYPE_INVALID;
+
+  return holds_value ? g_value_dup_boxed (vcell) : NULL;
+}
+
+
+
+/**
+ * crank_cell_space2_take_boxed:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @type: GType of pointer type.
+ * @value: (transfer full): A boxed value.
+ *
+ * Take boxed value to the cell. The cell will take the owneership of @value.
+ */
+void
+crank_cell_space2_take_boxed (CrankCellSpace2 *cs,
+                             const guint      wi,
+                             const guint      hi,
+                             const GType      type,
+                             const gpointer   value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_init (vcell, type);
+  g_value_take_boxed (vcell, value);
+}
+
+
+
+/**
+ * crank_cell_space2_get_object:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ *
+ * Gets #GObject value on the cell.
+ *
+ * Returns: (nullable) (transfer none) (type GObject) : #GObject value, or %NULL
+ * if the cell does not contain #GObject value.
+ */
+gpointer
+crank_cell_space2_get_object (const CrankCellSpace2 *cs,
+                               const guint            wi,
+                               const guint            hi)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  gboolean holds_value = G_VALUE_HOLDS_OBJECT (vcell);
+
+  return holds_value ? g_value_get_object (vcell) : NULL;
+}
+
+
+
+/**
+ * crank_cell_space2_set_object:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @value: (transfer none) (type GObject): A object value.
+ *
+ * Sets #GObject value on the cell.
+ */
+void
+crank_cell_space2_set_object (CrankCellSpace2 *cs,
+                              const guint      wi,
+                              const guint      hi,
+                              const gpointer   value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_object (vcell, (GObject*) value);
+}
+
+
+
+/**
+ * crank_cell_space2_dup_object:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ *
+ * Gets #GObject value on the cell.
+ *
+ * Returns: (nullable) (transfer full) (type GObject) : #GObject value, or %NULL
+ * if the cell does not contain #GObject value.
+ */
+gpointer
+crank_cell_space2_dup_object (const CrankCellSpace2 *cs,
+                              const guint            wi,
+                              const guint            hi)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  gboolean holds_value = G_VALUE_HOLDS_OBJECT (vcell);
+
+  return holds_value ? g_value_dup_object (vcell) : NULL;
+}
+
+
+
+/**
+ * crank_cell_space2_take_object:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @value: (transfer full) (type GObject): A object value.
+ *
+ * Sets #GObject value on the cell. The cell will take ownership for @value.
+ */
+void
+crank_cell_space2_take_object (CrankCellSpace2 *cs,
+                               const guint      wi,
+                               const guint      hi,
+                               const gpointer   value)
+{
+  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+
+  if (! G_IS_VALUE (vcell))
+    cs->count ++;
+
+  crank_value_overwrite_init (vcell, G_TYPE_OBJECT);
+  g_value_take_object (vcell, (GObject*) value);
+}

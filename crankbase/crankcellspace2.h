@@ -167,6 +167,71 @@ void              crank_cell_space2_set_int        (CrankCellSpace2       *cs,
                                                     const gint             value);
 
 
+gfloat            crank_cell_space2_get_float      (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const gfloat           def);
+
+void              crank_cell_space2_set_float      (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const gfloat           value);
+
+
+gpointer          crank_cell_space2_get_pointer    (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    GType                 *type);
+
+void              crank_cell_space2_set_pointer    (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const GType            type,
+                                                    const gpointer         value);
+
+
+gpointer          crank_cell_space2_get_boxed      (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    GType                 *type);
+
+void              crank_cell_space2_set_boxed      (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const GType            type,
+                                                    const gpointer         value);
+
+
+gpointer          crank_cell_space2_dup_boxed      (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    GType                 *type);
+
+void              crank_cell_space2_take_boxed     (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const GType            type,
+                                                    gpointer               value);
+
+gpointer          crank_cell_space2_get_object     (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi);
+
+void              crank_cell_space2_set_object     (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    gpointer               value);
+
+gpointer          crank_cell_space2_dup_object     (const CrankCellSpace2 *cs,
+                                                    const guint            wi,
+                                                    const guint            hi);
+
+void              crank_cell_space2_take_object    (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    gpointer               value);
+
+
 
 
 G_END_DECLS
