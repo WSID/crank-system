@@ -257,7 +257,6 @@ crank_cell_space2_extend_cols (CrankCellSpace2 *cs,
 
       crank_cell_space2_extend_reserv_rows (cs, nrheight);
     }
-  crank_cell_space2_extend_cols (cs, height);
 
   // Janitor jobs.
   extend_size = sizeof (GValue) * cs->size.x;
@@ -629,7 +628,7 @@ crank_cell_space2_get_reserved_size (CrankCellSpace2 *cs,
  * used size which can be queried by crank_cell_space2_get_size().
  */
 void
-crank_cell_space_set_reserved_size (CrankCellSpace2     *cs,
+crank_cell_space2_set_reserved_size (CrankCellSpace2     *cs,
                                     const CrankVecUint2 *size)
 {
   g_return_if_fail (cs->size.y <= size->y);
