@@ -50,6 +50,15 @@
  * Initially created cell space will have power of 2 of size.
  */
 
+
+//////// Private macro /////////////////////////////////////////////////////////
+
+#define CELL_INDEX(_w, _x, _y) (((_w) * (_y)) + (_x))
+#define CELL_SPACE_INDEX(cs,_x,_y) CELL_INDEX((cs)->reserved_size.x, _x, _y)
+
+#define CELL_VALUE(cs,_x,_y) (&g_array_index((cs)->varray, GValue, CELL_SPACE_INDEX(cs,_x,_y)))
+
+
 //////// Private functions /////////////////////////////////////////////////////
 
 static void   crank_cell_space2_extend_reserv_rows (CrankCellSpace2 *cs,
@@ -103,7 +112,9 @@ crank_cell_space2_extend_reserv_rows (CrankCellSpace2 *cs,
   guint   i;
 
   // Reallocate extended size.
-  g_array_set_size (cs->varray, width * cs->reserved_size.y);
+  g_array_set_size (cs->varray,
+                    width *
+                    cs->reserved_size.y);
 
   // Shift from last rows.
   // The first row does not need to move.
@@ -114,8 +125,8 @@ crank_cell_space2_extend_reserv_rows (CrankCellSpace2 *cs,
       guint index_row;
       guint nindex_row;
 
-      index_row = i * cs->reserved_size.x;
-      nindex_row = i * width;
+      index_row = CELL_SPACE_INDEX (cs, 0, i);
+      nindex_row = CELL_INDEX (width, 0, i);
 
       memmove (&g_array_index (cs->varray, GValue, nindex_row),
                &g_array_index (cs->varray, GValue, index_row),
@@ -141,8 +152,8 @@ crank_cell_space2_shrink_reserv_rows (CrankCellSpace2 *cs,
       guint index_row;
       guint nindex_row;
 
-      index_row = i * cs->reserved_size.x;
-      nindex_row = i * width;
+      index_row = CELL_SPACE_INDEX (cs, 0, i);
+      nindex_row = CELL_INDEX (width, 0, i);
 
       memmove (&g_array_index (cs->varray, GValue, nindex_row),
                &g_array_index (cs->varray, GValue, index_row),
@@ -179,7 +190,7 @@ crank_cell_space2_extend_rows (CrankCellSpace2 *cs,
 
   for (i = 0; i < cs->size.y; i++)
     {
-      guint index_extend = i * cs->reserved_size.x + cs->size.x;
+      guint index_extend = CELL_SPACE_INDEX (cs, cs->size.x, i);
 
       memset (&g_array_index (cs->varray, GValue, index_extend),
               0,
@@ -198,7 +209,7 @@ crank_cell_space2_shrink_rows (CrankCellSpace2 *cs,
   // Clean out truncated values.
   for (i = 0; i < cs->size.y; i++)
     {
-      guint rowindex = cs->reserved_size.x * i;
+      guint rowindex = CELL_SPACE_INDEX (cs, 0, i);
       guint jend = rowindex + cs->size.x;
       guint j;
 
@@ -262,7 +273,7 @@ crank_cell_space2_extend_cols (CrankCellSpace2 *cs,
   extend_size = sizeof (GValue) * cs->size.x;
   for (i = cs->size.y; i < height; i++)
     {
-      guint rowindex = cs->reserved_size.x * i;
+      guint rowindex = CELL_SPACE_INDEX (cs, 0, i);
       memset (&g_array_index (cs->varray, GValue, rowindex),
               0,
               extend_size);
@@ -281,7 +292,7 @@ crank_cell_space2_shrink_cols (CrankCellSpace2 *cs,
   // Clear out truncated values.
   for (i = height; i < cs->size.y; i++)
     {
-      guint j = i * cs->reserved_size.x;
+      guint j = CELL_SPACE_INDEX (cs, 0, i);
       guint jend = j + cs->size.x;
 
       for (; j < jend; j++)
@@ -355,7 +366,8 @@ crank_cell_space2_new_with_size (const guint width,
 
   cs->varray = g_array_sized_new (FALSE, TRUE,
                                   sizeof (GValue),
-                                  cs->reserved_size.x * cs->reserved_size.y);
+                                  cs->reserved_size.x *
+                                  cs->reserved_size.y);
 
   cs->count = 0;
 
@@ -667,10 +679,8 @@ crank_cell_space2_get (const CrankCellSpace2 *cs,
                        const guint            hi,
                        GValue                *value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-
-  crank_value_overwrite (value,
-                         &g_array_index (cs->varray, GValue, index));
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
+  crank_value_overwrite (value, vcell);
 }
 
 /**
@@ -688,8 +698,7 @@ crank_cell_space2_set (CrankCellSpace2 *cs,
                        const guint      hi,
                        const GValue    *value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (G_IS_VALUE (vcell))
     cs->count--;
@@ -716,9 +725,9 @@ crank_cell_space2_dup (const CrankCellSpace2 *cs,
                        const guint            wi,
                        const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
-  return crank_value_dup (&g_array_index (cs->varray, GValue, index));
+  return crank_value_dup (vcell);
 }
 
 
@@ -737,9 +746,7 @@ crank_cell_space2_peek (const CrankCellSpace2 *cs,
                         const guint            wi,
                         const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-
-  return &g_array_index (cs->varray, GValue, index);
+  return CELL_VALUE (cs, wi, hi);
 }
 
 
@@ -758,9 +765,7 @@ crank_cell_space2_unset (CrankCellSpace2 *cs,
                          const guint      wi,
                          const guint      hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
-
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   return crank_cell_space2_unset_value (cs, vcell);
 }
 
@@ -780,9 +785,7 @@ crank_cell_space2_is_unset (const CrankCellSpace2 *cs,
                             const guint            wi,
                             const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
-
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   return G_IS_VALUE (vcell);
 }
 
@@ -802,9 +805,7 @@ crank_cell_space2_type_of (const CrankCellSpace2 *cs,
                            const guint            wi,
                            const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
-
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   return G_IS_VALUE (vcell) ? G_VALUE_TYPE (vcell) : G_TYPE_INVALID;
 }
 
@@ -824,7 +825,7 @@ crank_cell_space2_unset_all (CrankCellSpace2 *cs)
 
   for (i = 0; i < cs->size.y; i++)
     {
-      guint rowindex = i * cs->reserved_size.x;
+      guint rowindex = CELL_SPACE_INDEX (cs, 0, i);
 
       for (j = rowindex, jend = rowindex + cs->size.x;
            j < jend;
@@ -862,8 +863,7 @@ crank_cell_space2_get_boolean (const CrankCellSpace2 *cs,
                                const guint            hi,
                                const gboolean         def)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   return G_VALUE_HOLDS_BOOLEAN (vcell) ? g_value_get_boolean (vcell) : def;
 }
@@ -883,8 +883,7 @@ crank_cell_space2_set_boolean (CrankCellSpace2 *cs,
                                const guint      hi,
                                const gboolean   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -913,8 +912,7 @@ crank_cell_space2_get_uint (const CrankCellSpace2 *cs,
                             const guint            hi,
                             const guint            def)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   return G_VALUE_HOLDS_UINT (vcell) ? g_value_get_uint (vcell) : def;
 }
@@ -934,8 +932,7 @@ crank_cell_space2_set_uint (CrankCellSpace2 *cs,
                             const guint      hi,
                             const guint      value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -962,8 +959,7 @@ crank_cell_space2_get_int (const CrankCellSpace2 *cs,
                            const guint            hi,
                            const gint             def)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   return G_VALUE_HOLDS_INT (vcell) ? g_value_get_int (vcell) : def;
 }
@@ -983,8 +979,7 @@ crank_cell_space2_set_int (CrankCellSpace2 *cs,
                            const guint      hi,
                            const gint       value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1011,8 +1006,7 @@ crank_cell_space2_get_float (const CrankCellSpace2 *cs,
                              const guint            hi,
                              const gfloat           def)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   return G_VALUE_HOLDS_FLOAT (vcell) ? g_value_get_float (vcell) : def;
 }
@@ -1034,8 +1028,7 @@ crank_cell_space2_set_float (CrankCellSpace2 *cs,
                              const guint      hi,
                              const gfloat     value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1064,8 +1057,7 @@ crank_cell_space2_get_pointer (const CrankCellSpace2 *cs,
                                const guint            hi,
                                GType                 *type)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   gboolean holds_value = G_VALUE_HOLDS_POINTER (vcell);
 
   if (type != NULL)
@@ -1093,8 +1085,7 @@ crank_cell_space2_set_pointer (CrankCellSpace2 *cs,
                                const GType      type,
                                const gpointer   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1122,8 +1113,7 @@ crank_cell_space2_get_boxed (const CrankCellSpace2 *cs,
                              const guint            hi,
                              GType                 *type)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   gboolean holds_value = G_VALUE_HOLDS_BOXED (vcell);
 
   if (type != NULL)
@@ -1151,8 +1141,7 @@ crank_cell_space2_set_boxed (CrankCellSpace2 *cs,
                              const GType      type,
                              const gpointer   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1180,8 +1169,7 @@ crank_cell_space2_dup_boxed (const CrankCellSpace2 *cs,
                              const guint            hi,
                              GType                 *type)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   gboolean holds_value = G_VALUE_HOLDS_BOXED (vcell);
 
   if (type != NULL)
@@ -1209,8 +1197,7 @@ crank_cell_space2_take_boxed (CrankCellSpace2 *cs,
                              const GType      type,
                              const gpointer   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1237,8 +1224,7 @@ crank_cell_space2_get_object (const CrankCellSpace2 *cs,
                                const guint            wi,
                                const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   gboolean holds_value = G_VALUE_HOLDS_OBJECT (vcell);
 
   return holds_value ? g_value_get_object (vcell) : NULL;
@@ -1261,8 +1247,7 @@ crank_cell_space2_set_object (CrankCellSpace2 *cs,
                               const guint      hi,
                               const gpointer   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
@@ -1288,8 +1273,7 @@ crank_cell_space2_dup_object (const CrankCellSpace2 *cs,
                               const guint            wi,
                               const guint            hi)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
   gboolean holds_value = G_VALUE_HOLDS_OBJECT (vcell);
 
   return holds_value ? g_value_dup_object (vcell) : NULL;
@@ -1312,8 +1296,7 @@ crank_cell_space2_take_object (CrankCellSpace2 *cs,
                                const guint      hi,
                                const gpointer   value)
 {
-  guint index = hi * cs->reserved_size.x + wi;
-  GValue *vcell = & g_array_index (cs->varray, GValue, index);
+  GValue *vcell = CELL_VALUE (cs, wi, hi);
 
   if (! G_IS_VALUE (vcell))
     cs->count ++;
