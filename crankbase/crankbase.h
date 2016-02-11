@@ -55,6 +55,7 @@
 #include "crankadvgraph.h"
 
 #include "crankcellspace2.h"
+#include "crankcellspace3.h"
 
 #include "crankbasetest.h"
 #include "crankbench.h"

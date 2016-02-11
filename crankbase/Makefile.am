@@ -35,6 +35,7 @@ baseinclude_HEADERS = \
 		crankmatcplxfloat.h \
 		\
 		crankcellspace2.h \
+		crankcellspace3.h \
 		\
 		crankadvmat.h \
 		\
@@ -82,6 +83,7 @@ libcrankbase_la_SOURCES= \
 		crankmatcplxfloat.c \
 		\
 		crankcellspace2.c \
+		crankcellspace3.c \
 		\
 		crankadvgraph.c \
 		crankadvmat.c \
