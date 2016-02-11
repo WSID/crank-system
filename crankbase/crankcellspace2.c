@@ -76,12 +76,11 @@ static void   crank_cell_space2_shrink_rows (CrankCellSpace2 *cs,
 static void   crank_cell_space2_extend_reserv_cols (CrankCellSpace2 *cs,
                                                     const guint      heights);
 
-static void   crank_cell_space2_shrink_cols (CrankCellSpace2 *cs,
+static void   crank_cell_space2_extend_cols (CrankCellSpace2 *cs,
                                              const guint      heights);
 
-
-static gboolean crank_cell_space2_unset_value (CrankCellSpace2 *cs,
-                                               GValue          *value);
+static void   crank_cell_space2_shrink_cols (CrankCellSpace2 *cs,
+                                             const guint      heights);
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
@@ -97,8 +96,6 @@ struct _CrankCellSpace2
   GArray         *varray;
   CrankVecUint2   size;
   CrankVecUint2   reserved_size;
-
-  guint           count;
 };
 
 
@@ -216,12 +213,7 @@ crank_cell_space2_shrink_rows (CrankCellSpace2 *cs,
       for (j = rowindex + width; j < jend; j++)
         {
           GValue *value = &g_array_index (cs->varray, GValue, j);
-
-          if (G_IS_VALUE (value))
-            {
-              g_value_unset (value);
-              cs->count --;
-            }
+          crank_value_unset (value);
         }
     }
 
@@ -298,31 +290,11 @@ crank_cell_space2_shrink_cols (CrankCellSpace2 *cs,
       for (; j < jend; j++)
         {
           GValue *value = &g_array_index (cs->varray, GValue, j);
-
-          if (G_IS_VALUE (value))
-            {
-              g_value_unset (value);
-              cs->count--;
-            }
+          crank_value_unset (value);
         }
     }
 
   cs->size.y = height;
-}
-
-
-static gboolean
-crank_cell_space2_unset_value (CrankCellSpace2 *cs,
-                               GValue          *value)
-{
-  if (G_IS_VALUE (value))
-    {
-      g_value_unset (value);
-      cs->count --;
-      return TRUE;
-    }
-
-  return FALSE;
 }
 
 
@@ -368,10 +340,6 @@ crank_cell_space2_new_with_size (const guint width,
                                   sizeof (GValue),
                                   cs->reserved_size.x *
                                   cs->reserved_size.y);
-
-  cs->count = 0;
-
-
   return cs;
 }
 
@@ -699,13 +667,6 @@ crank_cell_space2_set (CrankCellSpace2 *cs,
                        const GValue    *value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (G_IS_VALUE (vcell))
-    cs->count--;
-
-  if (G_IS_VALUE (value))
-    cs->count++;
-
   crank_value_overwrite (vcell, value);
 }
 
@@ -766,7 +727,9 @@ crank_cell_space2_unset (CrankCellSpace2 *cs,
                          const guint      hi)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-  return crank_cell_space2_unset_value (cs, vcell);
+  gboolean result = G_IS_VALUE(vcell);
+  crank_value_unset (vcell);
+  return result;
 }
 
 
@@ -831,12 +794,9 @@ crank_cell_space2_unset_all (CrankCellSpace2 *cs)
            j < jend;
            j++)
         {
-          crank_cell_space2_unset_value (cs,
-                                         & g_array_index (cs->varray, GValue, j));
+          crank_value_unset (& g_array_index (cs->varray, GValue, j));
         }
     }
-
-  g_return_if_fail (cs->count == 0);
 }
 
 
@@ -884,10 +844,6 @@ crank_cell_space2_set_boolean (CrankCellSpace2 *cs,
                                const gboolean   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_boolean (vcell, value);
 }
 
@@ -933,10 +889,6 @@ crank_cell_space2_set_uint (CrankCellSpace2 *cs,
                             const guint      value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_uint (vcell, value);
 }
 
@@ -980,10 +932,6 @@ crank_cell_space2_set_int (CrankCellSpace2 *cs,
                            const gint       value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_int (vcell, value);
 }
 
@@ -1007,7 +955,6 @@ crank_cell_space2_get_float (const CrankCellSpace2 *cs,
                              const gfloat           def)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
   return G_VALUE_HOLDS_FLOAT (vcell) ? g_value_get_float (vcell) : def;
 }
 
@@ -1029,10 +976,6 @@ crank_cell_space2_set_float (CrankCellSpace2 *cs,
                              const gfloat     value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_float (vcell, value);
 }
 
@@ -1086,10 +1029,6 @@ crank_cell_space2_set_pointer (CrankCellSpace2 *cs,
                                const gpointer   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_pointer (vcell, type, value);
 }
 
@@ -1142,10 +1081,6 @@ crank_cell_space2_set_boxed (CrankCellSpace2 *cs,
                              const gpointer   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_boxed (vcell, type, value);
 }
 
@@ -1198,10 +1133,6 @@ crank_cell_space2_take_boxed (CrankCellSpace2 *cs,
                              const gpointer   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_init (vcell, type);
   g_value_take_boxed (vcell, value);
 }
@@ -1248,10 +1179,6 @@ crank_cell_space2_set_object (CrankCellSpace2 *cs,
                               const gpointer   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_object (vcell, (GObject*) value);
 }
 
@@ -1297,10 +1224,6 @@ crank_cell_space2_take_object (CrankCellSpace2 *cs,
                                const gpointer   value)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi);
-
-  if (! G_IS_VALUE (vcell))
-    cs->count ++;
-
   crank_value_overwrite_init (vcell, G_TYPE_OBJECT);
   g_value_take_object (vcell, (GObject*) value);
 }
