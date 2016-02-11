@@ -110,7 +110,11 @@ GValue           *crank_cell_space2_dup            (const CrankCellSpace2 *cs,
                                                     const guint            wi,
                                                     const guint            hi);
 
-const GValue     *crank_cell_space2_peek           (const CrankCellSpace2 *cs,
+GValue           *crank_cell_space2_peek           (CrankCellSpace2       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi);
+
+const GValue     *crank_cell_space2_peek_const     (const CrankCellSpace2 *cs,
                                                     const guint            wi,
                                                     const guint            hi);
 

@@ -698,14 +698,34 @@ crank_cell_space2_dup (const CrankCellSpace2 *cs,
  * @wi: Width-side index
  * @hi: Height-side index
  *
- * Gets value structure on cell.
+ * Gets value structure on cell, for both read and write.
+ *
+ * Returns: (transfer none): The #GValue on the cell.
+ */
+GValue*
+crank_cell_space2_peek (CrankCellSpace2 *cs,
+                        const guint      wi,
+                        const guint      hi)
+{
+  return CELL_VALUE (cs, wi, hi);
+}
+
+
+
+/**
+ * crank_cell_space2_peek_const: (skip)
+ * @cs: A Cell Space.
+ * @wi: Width-side index
+ * @hi: Height-side index
+ *
+ * Same as crank_cell_space2_peek() but for read.
  *
  * Returns: (transfer none): The #GValue on the cell.
  */
 const GValue*
-crank_cell_space2_peek (const CrankCellSpace2 *cs,
-                        const guint            wi,
-                        const guint            hi)
+crank_cell_space2_peek_const (const CrankCellSpace2 *cs,
+                              const guint            wi,
+                              const guint            hi)
 {
   return CELL_VALUE (cs, wi, hi);
 }
