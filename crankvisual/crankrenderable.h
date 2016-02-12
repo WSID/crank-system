@@ -32,6 +32,7 @@
 
 #include "crankshape.h"
 #include "crankprojection.h"
+#include "crankvisible.h"
 
 //////// Type Declarations /////////////////////////////////////////////////////
 
@@ -39,7 +40,7 @@
 G_DECLARE_DERIVABLE_TYPE (CrankRenderable,
                           crank_renderable,
                           CRANK, RENDERABLE,
-                          GObject)
+                          CrankVisible)
 
 /**
  * CrankRenderable:

@@ -27,6 +27,7 @@
 
 #include "crankrenderable.h"
 #include "crankcamera.h"
+#include "crankvisible.h"
 
 /**
  * SECTION: crankrenderable
@@ -36,30 +37,13 @@
  * #CrankRenderable class provides common interface for rendering.
  */
 
-//////// List of virtual functions /////////////////////////////////////////////
 
-static void crank_renderable_get_property (GObject    *object,
-                                           guint       prop_id,
-                                           GValue     *value,
-                                           GParamSpec *pspec);
-
-
-//////// Properties and signals ////////////////////////////////////////////////
-
-enum {
-  PROP_0,
-  PROP_VISIBLE_RADIUS,
-
-  PROP_COUNTS
-};
-
-static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
 G_DEFINE_ABSTRACT_TYPE (CrankRenderable,
                         crank_renderable,
-                        G_TYPE_OBJECT)
+                        CRANK_TYPE_VISIBLE)
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
 
@@ -71,42 +55,7 @@ crank_renderable_init (CrankRenderable *self)
 static void
 crank_renderable_class_init (CrankRenderableClass *c)
 {
-  GObjectClass *c_gobject;
-
-  c_gobject = G_OBJECT_CLASS (c);
-
-  c_gobject->get_property = crank_renderable_get_property;
-
-  pspecs[PROP_VISIBLE_RADIUS] =
-  g_param_spec_float ("visible-radius", "Visible Radius", "Visible radius of renderable.",
-                      0, G_MAXFLOAT, 0,
-                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
-
-  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
-
 }
-
-//////// GObject ///////////////////////////////////////////////////////////////
-
-static void
-crank_renderable_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
-{
-  CrankRenderable *renderable = (CrankRenderable*)object;
-
-  switch (prop_id)
-    {
-    case PROP_VISIBLE_RADIUS:
-      g_value_set_float (value, crank_renderable_get_visible_radius (renderable));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
 
 //////// Public functions //////////////////////////////////////////////////////
 

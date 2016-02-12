@@ -173,7 +173,7 @@ crank_render_pdata_r_get_rad (gpointer data,
   CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, offset);
 
   return entity->position.mscl *
-         crank_renderable_get_visible_radius (renderable);
+         crank_visible_get_visible_radius ((CrankVisible*)renderable);
 }
 
 CrankVecFloat3*
