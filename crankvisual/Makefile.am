@@ -12,6 +12,7 @@ visualinclude_HEADERS = \
 		crankcamera.h \
 		crankvertexstruct.h \
 		crankmeshutil.h \
+		crankvisible.h \
 		crankrenderable.h \
 		crankrenderableprimitive.h \
 		cranklightable.h \
@@ -45,6 +46,7 @@ libcrankvisual_la_SOURCES= \
 		crankprojection.c \
 		crankvertexstruct.c \
 		crankmeshutil.c \
+		crankvisible.c \
 		crankrenderable.c \
 		crankrenderableprimitive.c \
 		cranklightable.c \

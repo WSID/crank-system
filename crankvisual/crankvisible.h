@@ -1,5 +1,5 @@
-#ifndef CRANKVISUAL_H
-#define CRANKVISUAL_H
+#ifndef CRANKVISIBLE_H
+#define CRANKVISIBLE_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,29 +22,45 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKVISUAL_INSIDE
+#ifndef _CRANKVISUAL_INSIDE
+#error crankvisible.h cannot be included directly: include crankvisual.h
+#endif
 
-#include "crankprojection.h"
-#include "crankfilm.h"
+#include <glib.h>
+#include <glib-object.h>
 
-#include "crankvertexstruct.h"
-#include "crankmeshutil.h"
+G_BEGIN_DECLS
 
-#include "crankvisible.h"
+//////// Type Declarations /////////////////////////////////////////////////////
 
-#include "crankrenderable.h"
-#include "crankrenderableprimitive.h"
+#define CRANK_TYPE_VISIBLE (crank_visible_get_type())
+G_DECLARE_DERIVABLE_TYPE(CrankVisible,
+                         crank_visible,
+                         CRANK, VISIBLE,
+                         GObject)
 
-#include "cranklightable.h"
-#include "cranklightablearanged.h"
+/**
+ * CrankVisibleClass:
+ * @get_visible_radius: Slot for crank_visible_get_visible_radius().
+ *
+ * Represents virtual function table for #CrankVisible.
+ */
+struct _CrankVisibleClass {
+  GObjectClass _parent;
 
-#include "crankmaterial.h"
+  gfloat  (*get_visible_radius)  (CrankVisible *visible);
+};
 
-#include "crankcamera.h"
-#include "crankrendermodule.h"
 
-#include "crankcameracontent.h"
 
-#undef  _CRANKVISUAL_INSIDE
+//////// Properties ////////////////////////////////////////////////////////////
+
+gfloat  crank_visible_get_visible_radius (CrankVisible *visible);
+
+
+
+
+G_END_DECLS
+
 
 #endif
