@@ -30,6 +30,7 @@ test_programs= \
 		test_mat_float \
 		test_mat_cplx_float \
 		test_advmat \
+		test_cell_space \
 		test_digraph \
 		test_advgraph
 
@@ -68,6 +69,8 @@ test_mat_float_LDADD=  $(TEST_BASE_LDADD)
 test_mat_cplx_float_LDADD=  $(TEST_BASE_LDADD)
 
 test_advmat_LDADD=  $(TEST_BASE_LDADD)
+
+test_cell_space_LDADD = $(TEST_BASE_LDADD)
 
 test_digraph_LDADD=  $(TEST_BASE_LDADD)
 
