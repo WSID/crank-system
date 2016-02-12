@@ -34,6 +34,7 @@
 #include "crankshape.h"
 
 #include "crankprojection.h"
+#include "crankvisible.h"
 #include "cranklightable.h"
 
 G_BEGIN_DECLS

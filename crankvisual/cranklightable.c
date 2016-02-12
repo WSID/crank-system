@@ -60,7 +60,6 @@ static void     crank_lightable_set_property (GObject      *object,
 
 enum {
   PROP_0,
-  PROP_VISIBLE_RADIUS,
   PROP_PRIMARY_COLOR,
 
   PROP_COUNTS
@@ -77,7 +76,7 @@ typedef struct _CrankLightablePrivate
 } CrankLightablePrivate;
 
 
-G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankLightable, crank_lightable, G_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankLightable, crank_lightable, CRANK_TYPE_VISIBLE);
 
 
 
@@ -100,13 +99,6 @@ crank_lightable_class_init (CrankLightableClass *c)
 
   c_gobject->get_property = crank_lightable_get_property;
   c_gobject->set_property = crank_lightable_set_property;
-
-  pspecs[PROP_VISIBLE_RADIUS] = g_param_spec_float (
-      "visible-radius", "Visible Radius",
-      "Visible radius for lightable.\n"
-      "This may used when culling lights that does not affects.",
-      0, G_MAXFLOAT, 0,
-      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_PRIMARY_COLOR] = g_param_spec_boxed (
       "primary-color", "Primary Color",
@@ -132,10 +124,6 @@ crank_lightable_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_VISIBLE_RADIUS:
-      g_value_set_float (value, crank_lightable_get_visible_radius (lightable));
-      break;
-
     case PROP_PRIMARY_COLOR:
       g_value_set_boxed (value, & priv->primary_color);
       break;
@@ -167,22 +155,6 @@ crank_lightable_set_property (GObject      *object,
 
 
 //////// Public functions //////////////////////////////////////////////////////
-
-/**
- * crank_lightable_get_visible_radius:
- * @lightable: A Lightable.
- *
- * Gets light's visible radius.
- *
- * Returns: light's visible radius, or %INFINITY if it applied to fullscreen.
- */
-gfloat
-crank_lightable_get_visible_radius (CrankLightable *lightable)
-{
-  CrankLightableClass *c = CRANK_LIGHTABLE_GET_CLASS (lightable);
-
-  return c->get_visible_radius (lightable);
-}
 
 /**
  * crank_lightable_get_primary_color:

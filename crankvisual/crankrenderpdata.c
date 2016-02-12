@@ -159,7 +159,6 @@ crank_render_pdata_r_get_pos (gpointer data,
                               gpointer userdata)
 {
   CrankEntity3 *entity = (CrankEntity3*)data;
-
   return & entity->position.mtrans;
 }
 
@@ -195,7 +194,7 @@ crank_render_pdata_l_get_rad (gpointer data,
   CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, offset);
 
   return entity->position.mscl *
-         crank_lightable_get_visible_radius (lightable);
+         crank_visible_get_visible_radius ((CrankVisible*)lightable);
 }
 
 //////// Private type functions ////////////////////////////////////////////////

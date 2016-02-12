@@ -34,6 +34,7 @@
 #include "crankshape.h"
 
 #include "crankprojection.h"
+#include "crankvisible.h"
 
 G_BEGIN_DECLS
 
@@ -44,13 +45,11 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE (CrankLightable,
                           crank_lightable,
                           CRANK, LIGHTABLE,
-                          GObject)
+                          CrankVisible)
 
 struct _CrankLightableClass
 {
-  GObjectClass _parent;
-
-  gfloat  (*get_visible_radius)  (CrankLightable *lightable);
+  CrankVisibleClass _parent;
 
   void    (*render)              (CrankLightable  *lightable,
                                   CrankTrans3     *position,
@@ -64,9 +63,6 @@ struct _CrankLightableClass
 
 
 //////// Public functions //////////////////////////////////////////////////////
-
-gfloat  crank_lightable_get_visible_radius (CrankLightable *lightable);
-
 
 void    crank_lightable_get_primary_color (CrankLightable *lightable,
                                            CrankVecFloat3 *color);

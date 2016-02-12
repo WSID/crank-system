@@ -45,6 +45,7 @@
 #include "crankmaterial.h"
 #include "crankmeshutil.h"
 
+#include "crankvisible.h"
 #include "cranklightable.h"
 #include "cranklightablearanged.h"
 
@@ -66,7 +67,7 @@ static gchar* v_decl =
 
 static gchar* v_replace =
 // Write vertex position for screen quad.
-"cogl_position_out = vec4 (cogl_position_in.xy, 1, 1);\n"
+"cogl_position_out = vec4 (cogl_position_in.xy, -1, 1);\n"
 
 // Write fragment coordination.
 "crank_frag_coord = cogl_position_out.xy * 0.5 + vec2 (0.5);\n"
@@ -154,7 +155,7 @@ crank_lightable_a_ranged_dispose (GObject *object);
 
 
 static gfloat
-crank_lightable_a_ranged_get_visible_radius (CrankLightable *lightable);
+crank_lightable_a_ranged_get_visible_radius (CrankVisible *visible);
 
 static void
 crank_lightable_a_ranged_render (CrankLightable  *lightable,
@@ -193,6 +194,7 @@ GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 typedef struct _CrankLightableARangedTemp
 {
   CoglPipeline *pipeline;
+  CoglPipeline *pipeline_depth;
   CoglPrimitive *bounding_volume;
   CoglPrimitive *screen_quad;
 } CrankLightableARangedTemp;
@@ -206,6 +208,7 @@ struct _CrankLightableARanged
 
   CoglContext  *cogl_context;
   CoglPipeline *pipe_line;
+  CoglPipeline *pipeline_depth;
   CoglPrimitive *bound_volume;
   CoglPrimitive *screen_quad;
 
@@ -235,6 +238,7 @@ static void
 crank_lightable_a_ranged_class_init (CrankLightableARangedClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  CrankVisibleClass *c_visible = CRANK_VISIBLE_CLASS (c);
   CrankLightableClass *c_lightable = CRANK_LIGHTABLE_CLASS (c);
 
   c_gobject->constructed = crank_lightable_a_ranged_constructed;
@@ -262,8 +266,10 @@ crank_lightable_a_ranged_class_init (CrankLightableARangedClass *c)
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
+  c_visible->get_visible_radius = crank_lightable_a_ranged_get_visible_radius;
+
+
   c_lightable->render = crank_lightable_a_ranged_render;
-  c_lightable->get_visible_radius = crank_lightable_a_ranged_get_visible_radius;
 }
 
 
@@ -290,10 +296,12 @@ crank_lightable_a_ranged_constructed (GObject *object)
   if (template == NULL)
     {
       CoglDepthState dstate;
+      CoglDepthState dstate_depth;
 
       template = g_new (CrankLightableARangedTemp, 1);
 
       template->pipeline = cogl_pipeline_new (lightable->cogl_context);
+      template->pipeline_depth = cogl_pipeline_new (lightable->cogl_context);
 
       template->bounding_volume = crank_make_mesh_sphere_uv_p3 (lightable->cogl_context, 6, 4);
 
@@ -302,16 +310,27 @@ crank_lightable_a_ranged_constructed (GObject *object)
                                                      4, screen_quadv);
 
 
-      //cogl_pipeline_set_alpha_test_function (template->pipeline, COGL_PIPELINE_ALPHA_FUNC_NEVER, 0);
+      cogl_pipeline_set_alpha_test_function (template->pipeline, COGL_PIPELINE_ALPHA_FUNC_ALWAYS, 0);
       cogl_pipeline_set_blend (template->pipeline, "RGBA = ADD (SRC_COLOR, DST_COLOR)", NULL);
 
       cogl_depth_state_init (&dstate);
-      cogl_depth_state_set_test_enabled (&dstate, FALSE);
+      cogl_depth_state_set_test_enabled (&dstate, TRUE);
       cogl_depth_state_set_write_enabled (&dstate, FALSE);
+      cogl_depth_state_set_test_function (&dstate, COGL_DEPTH_TEST_FUNCTION_LESS);
       cogl_pipeline_set_depth_state (template->pipeline, &dstate, NULL);
 
       cogl_pipeline_set_layer_null_texture (template->pipeline, 0, COGL_TEXTURE_TYPE_2D);
       cogl_pipeline_set_layer_null_texture (template->pipeline, 1, COGL_TEXTURE_TYPE_2D);
+
+
+
+      cogl_pipeline_set_alpha_test_function (template->pipeline_depth, COGL_PIPELINE_ALPHA_FUNC_ALWAYS, 0);
+
+      cogl_depth_state_init (&dstate_depth);
+      cogl_depth_state_set_test_enabled (&dstate_depth, FALSE);
+      cogl_depth_state_set_write_enabled (&dstate_depth, TRUE);
+      cogl_pipeline_set_depth_state (template->pipeline_depth, &dstate_depth, NULL);
+      cogl_pipeline_set_color4f (template->pipeline_depth, 1, 0, 0, 1);
 
 
       // Snippet construction
@@ -340,6 +359,7 @@ crank_lightable_a_ranged_constructed (GObject *object)
     }
 
   lightable->pipe_line = template->pipeline;
+  lightable->pipeline_depth = template->pipeline_depth;
   lightable->bound_volume = template->bounding_volume;
   lightable->screen_quad = template->screen_quad;
 
@@ -443,9 +463,9 @@ crank_lightable_a_ranged_dispose (GObject *object)
 //////// CrankLightable ////////////////////////////////////////////////////////
 
 static gfloat
-crank_lightable_a_ranged_get_visible_radius (CrankLightable *lightable)
+crank_lightable_a_ranged_get_visible_radius (CrankVisible *visible)
 {
-  CrankLightableARanged *self = (CrankLightableARanged*)lightable;
+  CrankLightableARanged *self = (CrankLightableARanged*)visible;
 
   return self->radius;
 }
@@ -469,6 +489,15 @@ crank_lightable_a_ranged_render (CrankLightable  *lightable,
   crank_trans3_to_matrix_transpose (position, & mv_matrix);
 
   cogl_framebuffer_set_modelview_matrix (framebuffer, (CoglMatrix*)&mv_matrix);
+
+  // Draw depth.
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH, 1, 1, 1, 1);
+  cogl_framebuffer_set_color_mask (framebuffer, COGL_COLOR_MASK_NONE);
+  cogl_primitive_draw (self->bound_volume, framebuffer, self->pipeline_depth);
+
+
+  // Draw lights.
+  cogl_framebuffer_set_color_mask (framebuffer, COGL_COLOR_MASK_ALL);
 
   cogl_pipeline_set_layer_texture (self->pipe_line, 0, tex_geom);
   cogl_pipeline_set_layer_texture (self->pipe_line, 1, tex_color);
