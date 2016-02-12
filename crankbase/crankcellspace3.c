@@ -1086,7 +1086,7 @@ crank_cell_space3_is_unset (const CrankCellSpace3 *cs,
                             const guint            hi,
                             const guint            di)
 {
-  return G_IS_VALUE (CELL_VALUE (cs, wi, hi, di));
+  return ! G_IS_VALUE (CELL_VALUE (cs, wi, hi, di));
 }
 
 
