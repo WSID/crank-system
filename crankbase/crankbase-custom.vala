@@ -269,7 +269,23 @@ namespace Crank {
 		public PairUint.array ([CCode (array_length=false)]
 		                       uint array[2]);
 	}
-	
+
+	[CCode (simple_generics=true)]
+	public struct PairPointer <A, B> {
+		public unowned A a;
+		public unowned B b;
+
+		public PairPointer (A a = null,
+		                    B b = null);
+		public PairPointer.array (void*[] array);
+
+		public PairPointer<A, B> copy ();
+		public PairPointer<A, B>? dup ();
+		public PairPointer<B, A> swap ();
+		public void swap_self ();
+
+		public void @foreach (GLib.Func<void*> func);
+	}
 	
 	public struct CplxFloat {
 	

@@ -62,6 +62,8 @@ str_*		parent="Crank.Str"	name="str_(.+)"
 Pair*           struct=true
 pair_*_init*    skip=true
 
+PairPointer     skip=true
+
 //////// Benchmark /////////////////////////////////////////////////////////////
 
 bench_*         skip=false  parent="Crank.Bench" name="bench_(.+)"
