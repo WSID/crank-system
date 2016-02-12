@@ -599,6 +599,11 @@ crank_cell_space3_new_with_size (const guint width,
                                   cs->reserved_size.y *
                                   cs->reserved_size.z);
 
+  crank_cell_space3_clean_rows (cs,
+                                0, width,
+                                0, height,
+                                0, depth);
+
   return cs;
 }
 
