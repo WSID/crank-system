@@ -82,10 +82,7 @@ struct _CrankRenderableClass
 
 
 //////// Public functions //////////////////////////////////////////////////////
-
-gfloat
-crank_renderable_get_visible_radius (CrankRenderable *renderable);
-
+//
 void
 crank_renderable_render_geom (CrankRenderable *renderable,
                               CrankTrans3     *position,

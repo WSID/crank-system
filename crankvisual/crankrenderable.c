@@ -60,22 +60,6 @@ crank_renderable_class_init (CrankRenderableClass *c)
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
- * crank_renderable_get_visible_radius:
- * @renderable: A Renderable.
- *
- * Gets visible radius of this renderable.
- *
- * Returns: visible radius of @renderable.
- */
-gfloat
-crank_renderable_get_visible_radius (CrankRenderable *renderable)
-{
-  CrankRenderableClass *c = CRANK_RENDERABLE_GET_CLASS (renderable);
-
-  return c->get_visible_radius (renderable);
-}
-
-/**
  * crank_renderable_render_geom:
  * @renderable: A Renderable.
  * @position: Relative position from view.
