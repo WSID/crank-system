@@ -332,8 +332,9 @@ crank_cell_space3_extend_reserv_cols (CrankCellSpace3 *cs,
 
   // Shift from last rows.
   rowsize = sizeof (GValue) * cs->reserved_size.x;
-  for (i = cs->size.z - 1; 0 < i;i--)
+  for (i = cs->size.z; 0 < i;)
     {
+      i--;
       for (j = cs->size.y; 0 < j;)
         {
           guint index;
