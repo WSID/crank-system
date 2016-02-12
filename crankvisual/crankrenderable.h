@@ -50,7 +50,6 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderable,
 
 /**
  * CrankRenderableClass:
- * @get_visible_radius: Slot for crank_renderable_get_visible_radius()
  * @render_geom: Slot for crank_renderable_render_geom()
  * @render_color: Slot for crank_renderable_render_color()
  * @render_material: Slot for crank_renderable_render_material()
@@ -60,10 +59,9 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderable,
 struct _CrankRenderableClass
 {
   /*< private >*/
-  GObjectClass _parent;
+  CrankVisibleClass _parent;
 
   /*< public >*/
-  gfloat (*get_visible_radius) (CrankRenderable *renderable);
 
   void  (*render_geom)  (CrankRenderable *renderable,
                          CrankTrans3     *position,
