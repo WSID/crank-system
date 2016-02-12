@@ -322,7 +322,9 @@ crank_value_overwrite_pointer (GValue     *value,
                                const GType value_type,
                                gpointer    pointer_value)
 {
-  crank_value_overwrite_init (value, value_type);
+  GType real_value_type = (value_type != G_TYPE_INVALID) ? value_type : G_TYPE_POINTER;
+
+  crank_value_overwrite_init (value, real_value_type);
   g_value_set_pointer (value, pointer_value);
 }
 
