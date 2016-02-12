@@ -84,8 +84,8 @@ crank_pair_uint_init_array (CrankPairUint *pair,
  * Copy a @pair to @other.
  */
 void
-crank_pair_uint_copy (CrankPairUint *pair,
-                      CrankPairUint *other)
+crank_pair_uint_copy (const CrankPairUint *pair,
+                      CrankPairUint       *other)
 {
   other->a = pair->a;
   other->b = pair->b;
@@ -100,7 +100,7 @@ crank_pair_uint_copy (CrankPairUint *pair,
  * Returns: (transfer full): A Pair same as @pair.
  */
 CrankPairUint*
-crank_pair_uint_dup (CrankPairUint *pair)
+crank_pair_uint_dup (const CrankPairUint *pair)
 {
   CrankPairUint *result = g_new (CrankPairUint, 1);
 
@@ -118,8 +118,8 @@ crank_pair_uint_dup (CrankPairUint *pair)
  * Swap elements in a pair.
  */
 void
-crank_pair_uint_swap (CrankPairUint *a,
-                      CrankPairUint *r)
+crank_pair_uint_swap (const CrankPairUint *a,
+                      CrankPairUint       *r)
 {
   r->b = a->a;
   r->a = a->b;

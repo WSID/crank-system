@@ -54,27 +54,30 @@ struct _CrankPairUint {
 
 //////// Public Functions //////////////////////////////////////////////////////
 
-void            crank_pair_uint_init (CrankPairUint *pair,
-                                      const guint    a,
-                                      const guint    b);
+void            crank_pair_uint_init          (CrankPairUint       *pair,
+                                               const guint          a,
+                                               const guint          b);
 
-void            crank_pair_uint_init_array (CrankPairUint *pair,
-                                            const guint*   array);
-
-
-
-void            crank_pair_uint_copy (CrankPairUint *pair,
-                                      CrankPairUint *other);
-
-CrankPairUint  *crank_pair_uint_dup (CrankPairUint *pair);
+void            crank_pair_uint_init_array    (CrankPairUint       *pair,
+                                               const guint*         array);
 
 
 
-void            crank_pair_uint_swap (CrankPairUint *a,
-                                      CrankPairUint *r);
+void            crank_pair_uint_copy          (const CrankPairUint *pair,
+                                               CrankPairUint       *other);
+
+CrankPairUint  *crank_pair_uint_dup           (const CrankPairUint *pair);
 
 
-void            crank_pair_uint_swap_self (CrankPairUint *a);
+
+void            crank_pair_uint_swap          (const CrankPairUint *a,
+                                               CrankPairUint       *r);
+
+void            crank_pair_uint_swap_self     (CrankPairUint       *a);
+
+
+
+
 
 G_END_DECLS
 
