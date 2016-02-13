@@ -52,24 +52,23 @@ void crank_render_pdata_class_init (CrankRenderPDataClass *c)
   c_gobject->dispose = crank_render_pdata_dispose;
   c_gobject->finalize = crank_render_pdata_finalize;
 
+  pspecs_priv[PROP_PRIV_VISIBLE_TYPES] =
+      g_param_spec_uint ("visible-types", "Visible types", "Visible types",
+                         0, 16, 2,
+                         G_PARAM_PRIVATE |
+                         G_PARAM_WRITABLE |
+                         G_PARAM_CONSTRUCT_ONLY |
+                         G_PARAM_STATIC_STRINGS );
+
   pspecs_priv[PROP_PRIV_PLACE] = g_param_spec_pointer ("place", "place", "Place",
                                                       G_PARAM_PRIVATE |
                                                       G_PARAM_WRITABLE |
                                                       G_PARAM_CONSTRUCT_ONLY |
                                                       G_PARAM_STATIC_STRINGS );
 
-  pspecs_priv[PROP_PRIV_RENDERABLE_OFFSET] =
-      g_param_spec_int64 ("renderable-offset", "Renderable offset",
-                          "Renderable offset",
-                          0, G_MAXINT64, 0,
-                          G_PARAM_PRIVATE |
-                          G_PARAM_WRITABLE |
-                          G_PARAM_CONSTRUCT_ONLY |
-                          G_PARAM_STATIC_STRINGS );
-
-  pspecs_priv[PROP_PRIV_LIGHTABLE_OFFSET] =
-      g_param_spec_int64 ("lightable-offset", "Lightable offset",
-                          "Lightable offset",
+  pspecs_priv[PROP_PRIV_VISIBLE_OFFSET] =
+      g_param_spec_int64 ("visible-offset", "Visible offset",
+                          "Visible offset",
                           0, G_MAXINT64, 0,
                           G_PARAM_PRIVATE |
                           G_PARAM_WRITABLE |
@@ -89,20 +88,26 @@ crank_render_pdata_constructed (GObject *object)
 {
   CrankRenderPData *pdata = (CrankRenderPData*) object;
   CrankPlace3 *place = g_object_get_data (object, "place");
-  gpointer renderable_offset = g_object_get_data (object, "renderable-offset");
-  gpointer lightable_offset = g_object_get_data (object, "lightable-offset");
+  guint visible_types = GPOINTER_TO_UINT (g_object_get_data (object, "visible-types"));
+  gpointer visible_offset = g_object_get_data (object, "visible-offset");
 
   CrankBox3 box;
 
   crank_box3_init_uvec (& box, -1000, -1000, -1000, 1000, 1000, 1000);
 
+  pdata->nentity_sets = visible_types;
+  pdata->entity_sets = g_new (CrankOctreeSet*, pdata->nentity_sets);
+
   pdata->rentities = crank_octree_set_new (& box,
-        crank_render_pdata_r_get_pos, NULL, NULL,
-        crank_render_pdata_r_get_rad, renderable_offset, NULL);
+        crank_render_pdata_get_pos, NULL, NULL,
+        crank_render_pdata_get_rad, visible_offset, NULL);
 
   pdata->lentities = crank_octree_set_new (& box,
-        crank_render_pdata_l_get_pos, NULL, NULL,
-        crank_render_pdata_l_get_rad, lightable_offset, NULL);
+        crank_render_pdata_get_pos, NULL, NULL,
+        crank_render_pdata_get_rad, visible_offset, NULL);
+
+  pdata->entity_sets[0] = pdata->rentities;
+  pdata->entity_sets[1] = pdata->lentities;
 }
 
 void
@@ -118,14 +123,13 @@ crank_render_pdata_set_property (GObject      *object,
                          g_value_get_pointer (value));
       break;
 
-    case PROP_PRIV_RENDERABLE_OFFSET:
-      g_object_set_data (object, "renderable-offset",
-                         GINT_TO_POINTER (g_value_get_int64 (value)));
+    case PROP_PRIV_VISIBLE_TYPES:
+      g_object_set_data (object, "visible-types",
+                         GINT_TO_POINTER (g_value_get_uint (value)));
       break;
 
-    case PROP_PRIV_LIGHTABLE_OFFSET:
-      g_message ("lightable offset: %ld", g_value_get_int64 (value));
-      g_object_set_data (object, "lightable-offset",
+    case PROP_PRIV_VISIBLE_OFFSET:
+      g_object_set_data (object, "visible-offset",
                          GINT_TO_POINTER (g_value_get_int64 (value)));
       break;
 
@@ -137,93 +141,67 @@ crank_render_pdata_set_property (GObject      *object,
 void
 crank_render_pdata_dispose (GObject *object)
 {
+  GObjectClass *pc = crank_render_pdata_parent_class;
   CrankRenderPData *pdata = (CrankRenderPData*) object;
+  guint i;
 
-  crank_octree_set_remove_all (pdata->rentities);
-  crank_octree_set_remove_all (pdata->lentities);
+  for (i = 0; i < pdata->nentity_sets; i++)
+    crank_octree_set_remove_all (pdata->entity_sets[i]);
+
+  pc->dispose (object);
 }
 
 void
 crank_render_pdata_finalize (GObject *object)
 {
+  GObjectClass *pc = crank_render_pdata_parent_class;
   CrankRenderPData *pdata = (CrankRenderPData*) object;
+  guint i;
 
-  crank_octree_set_unref (pdata->rentities);
-  crank_octree_set_unref (pdata->lentities);
+  for (i = 0; i < pdata->nentity_sets; i++)
+    crank_octree_set_unref (pdata->entity_sets[i]);
+  g_free (pdata->entity_sets);
+
+  pc->finalize (object);
 }
 
 //////// Private type callbacks ////////////////////////////////////////////////
 
 CrankVecFloat3*
-crank_render_pdata_r_get_pos (gpointer data,
-                              gpointer userdata)
+crank_render_pdata_get_pos (gpointer data,
+                           gpointer userdata)
 {
   CrankEntity3 *entity = (CrankEntity3*)data;
   return & entity->position.mtrans;
 }
 
 gfloat
-crank_render_pdata_r_get_rad (gpointer data,
-                              gpointer userdata)
+crank_render_pdata_get_rad (gpointer data,
+                            gpointer userdata)
 {
   goffset offset = (goffset) userdata;
 
   CrankEntity3 *entity = (CrankEntity3*)data;
-  CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, offset);
+  CrankVisible *visible = G_STRUCT_MEMBER (CrankVisible*, entity, offset);
 
   return entity->position.mscl *
-         crank_visible_get_visible_radius ((CrankVisible*)renderable);
-}
-
-CrankVecFloat3*
-crank_render_pdata_l_get_pos (gpointer data,
-                              gpointer userdata)
-{
-  CrankEntity3 *entity = (CrankEntity3*)data;
-
-  return & entity->position.mtrans;
-}
-
-gfloat
-crank_render_pdata_l_get_rad (gpointer data,
-                              gpointer userdata)
-{
-  goffset offset = (goffset) userdata;
-
-  CrankEntity3 *entity = (CrankEntity3*)data;
-  CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, offset);
-
-  return entity->position.mscl *
-         crank_visible_get_visible_radius ((CrankVisible*)lightable);
+         crank_visible_get_visible_radius (visible);
 }
 
 //////// Private type functions ////////////////////////////////////////////////
 
 void
-crank_render_pdata_add_rentity (CrankRenderPData *pdata,
-                                CrankEntityBase  *entity)
+crank_render_pdata_add_entity (CrankRenderPData *pdata,
+                               CrankEntityBase  *entity,
+                               const guint       tindex)
 {
-  crank_octree_set_add (pdata->rentities, entity);
+  crank_octree_set_add (pdata->entity_sets[tindex], entity);
 }
 
-void
-crank_render_pdata_remove_rentity (CrankRenderPData *pdata,
-                                   CrankEntityBase  *entity)
+gboolean
+crank_render_pdata_remove_entity (CrankRenderPData *pdata,
+                                  CrankEntityBase  *entity,
+                                  const guint       tindex)
 {
-  crank_octree_set_remove (pdata->rentities, entity);
-}
-
-void
-crank_render_pdata_add_lentity (CrankRenderPData *pdata,
-                                CrankEntityBase  *entity)
-{
-  crank_octree_set_add (pdata->lentities, entity);
-  g_message ("L entity added");
-}
-
-void
-crank_render_pdata_remove_lentity (CrankRenderPData *pdata,
-                                   CrankEntityBase  *entity)
-{
-  crank_octree_set_remove (pdata->lentities, entity);
+  return crank_octree_set_remove (pdata->entity_sets[tindex], entity);
 }

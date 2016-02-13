@@ -85,6 +85,12 @@ static void       crank_render_module_entity_removed (CrankSessionModulePlaced *
                                                       gpointer                  userdata);
 
 
+//////// Private functions /////////////////////////////////////////////////////
+
+static gint      crank_render_module_get_tindex (CrankRenderModule *module,
+                                                  GType              type);
+
+
 //////// Properties and signals ////////////////////////////////////////////////
 
 enum {
@@ -105,8 +111,8 @@ struct _CrankRenderModule
   CoglContext *cogl_context;
 
   goffset     offset_pdata;
-  goffset     offset_renderable;
-  goffset     offset_lightable;
+  goffset     offset_visible;
+  goffset     offset_visible_tindex;
 
   GPtrArray   *cameras;
 
@@ -222,10 +228,12 @@ crank_render_module_session_init (CrankSessionModule  *module,
                                                          & rmodule->offset_pdata);
 
   crank_session_module_placed_attach_entity_alloc_object (pmodule,
-                                                          & rmodule->offset_renderable);
+                                                          & rmodule->offset_visible);
 
-  crank_session_module_placed_attach_entity_alloc_object (pmodule,
-                                                          & rmodule->offset_lightable);
+  crank_session_module_placed_attach_entity_alloc (pmodule,
+                                                   sizeof (guint),
+                                                   NULL,
+                                                   & rmodule->offset_visible);
 
   g_signal_connect (pmodule, "place-created",
                     (GCallback)crank_render_module_place_created, rmodule);
@@ -303,8 +311,8 @@ crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
   G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata) =
       g_object_new (CRANK_TYPE_RENDER_PDATA,
                     "place", place,
-                    "renderable-offset", module->offset_renderable,
-                    "lightable-offset", module->offset_lightable,
+                    "visible-types", 2,
+                    "visible-offset", module->offset_visible,
                     NULL);
 }
 
@@ -318,21 +326,17 @@ crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
   CrankRenderModule *module = (CrankRenderModule*) userdata;
 
   CrankRenderPData *pdata;
-  CrankRenderable *renderable;
-  CrankLightable *lightable;
+  CrankVisible *visible;
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  visible = G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
 
-  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-  lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
-
-  if (renderable != NULL)
-    crank_render_pdata_add_rentity (pdata, entity);
-
-  if (lightable != NULL)
-    crank_render_pdata_add_lentity (pdata, entity);
-
-
+  if (visible != NULL)
+    {
+      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(visible));
+      G_STRUCT_MEMBER (gint, entity, module->offset_visible_tindex) = tindex;
+      crank_render_pdata_add_entity (pdata, entity, tindex);
+    }
 }
 
 
@@ -345,20 +349,33 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
   CrankRenderModule *module = (CrankRenderModule*) userdata;
 
   CrankRenderPData *pdata;
-  CrankRenderable *renderable;
-  CrankLightable *lightable;
+  CrankVisible *visible;
 
   pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  visible = G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
 
-  renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-  lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
-
-  if (renderable != NULL)
-    crank_render_pdata_remove_rentity (pdata, entity);
-
-  if (lightable != NULL)
-    crank_render_pdata_remove_lentity (pdata, entity);
+  if (visible != NULL)
+    {
+      gint tindex = G_STRUCT_MEMBER (gint, entity, module->offset_visible_tindex);
+      crank_render_pdata_remove_entity (pdata, entity, tindex);
+    }
 }
+
+
+//////// Private functions /////////////////////////////////////////////////////
+
+static gint
+crank_render_module_get_tindex (CrankRenderModule *module,
+                                GType              type)
+{
+  if (g_type_is_a (type, CRANK_TYPE_RENDERABLE))
+    return 0;
+  else if (g_type_is_a (type, CRANK_TYPE_LIGHTABLE))
+    return 1;
+
+  else return -1;
+}
+
 
 
 
@@ -387,30 +404,35 @@ crank_render_module_new (CoglContext *cogl_context)
 //////// Entities and places functions /////////////////////////////////////////
 
 /**
- * crank_render_module_set_renderable:
+ * crank_render_module_set_visible:
  * @module: A Module.
  * @entity: A Entity.
- * @renderable: (nullable): A Renderable.
+ * @visible: (nullable): A Visible.
  *
- * Sets a renderable for the entity. The renderable may be %NULL, for non-visible
- * entity. (For example, camera hook, spawn point, etc...)
+ * Sets a visible for the entity. This may have different type for each rendering
+ * objective.
  */
 void
-crank_render_module_set_renderable (CrankRenderModule *module,
-                                    CrankEntityBase   *entity,
-                                    CrankRenderable   *renderable)
+crank_render_module_set_visible (CrankRenderModule *module,
+                                 CrankEntityBase   *entity,
+                                 CrankVisible      *visible)
 {
   CrankPlaceBase *place;
   CrankRenderPData *pdata;
-  CrankRenderable **renderable_ptr;
-  CrankRenderable *renderable_prev;
+  CrankVisible **visible_ptr;
+  CrankVisible *visible_prev;
+  gint         *visible_ptindex_ptr;
+  gint          visible_ptindex;
+  GType         visible_type;
+  gint          visible_tindex;
 
-  renderable_ptr = G_STRUCT_MEMBER_P (entity, module->offset_renderable);
-  renderable_prev = *renderable_ptr;
+  visible_ptr = G_STRUCT_MEMBER_P (entity, module->offset_visible);
+  visible_prev = *visible_ptr;
+  visible_ptindex_ptr = G_STRUCT_MEMBER_P (entity, module->offset_visible_tindex);
+  visible_ptindex = *visible_ptindex_ptr;
 
-  if (! g_set_object (renderable_ptr, renderable))
+  if (! g_set_object (visible_ptr, visible))
     return;
-
 
   place = crank_entity_base_get_place (entity);
 
@@ -418,86 +440,41 @@ crank_render_module_set_renderable (CrankRenderModule *module,
     {
       pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
 
-      if (renderable_prev == NULL)
-          crank_render_pdata_add_rentity (pdata, entity);
+      if (visible != NULL)
+        {
+          visible_type = G_OBJECT_TYPE (visible);
+          visible_tindex = crank_render_module_get_tindex (module, visible_type);
 
-      else if (renderable == NULL)
-        crank_render_pdata_remove_rentity (pdata, entity);
+          if (visible_tindex != visible_ptindex)
+            {
+              crank_render_pdata_remove_entity (pdata, entity, visible_ptindex);
+              crank_render_pdata_add_entity (pdata, entity, visible_tindex);
+              *visible_ptindex_ptr = visible_tindex;
+            }
+        }
+      else
+        {
+          crank_render_pdata_remove_entity (pdata, entity, visible_ptindex);
+          *visible_ptindex_ptr = -1;
+        }
     }
 }
 
 
 /**
- * crank_render_module_get_renderable:
+ * crank_render_module_get_visible:
  * @module: A Module.
  * @entity: A Entity.
  *
- * Gets a renderable from entity. Non-visible entities does not have renderable.
+ * Gets a visible from entity.
  *
- * Returns: (transfer none) (nullable): Renderable, or %NULL if it does not have.
+ * Returns: (transfer none) (nullable): Visible, or %NULL if it does not have.
  */
-CrankRenderable*
-crank_render_module_get_renderable (CrankRenderModule *module,
-                                    CrankEntityBase   *entity)
+CrankVisible*
+crank_render_module_get_visible (CrankRenderModule *module,
+                                 CrankEntityBase   *entity)
 {
-  return G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
-}
-
-/**
- * crank_render_module_set_lightable:
- * @module: A Module.
- * @entity: A Entity.
- * @lightable: (nullable): A Lightable.
- *
- * Sets a lightable for the entity. The lightable may be %NULL, for non-lighting
- * entities like chairs, doors,..
- */
-void
-crank_render_module_set_lightable (CrankRenderModule *module,
-                                   CrankEntityBase   *entity,
-                                   CrankLightable    *lightable)
-{
-  CrankPlaceBase *place;
-  CrankRenderPData *pdata;
-  CrankLightable **lightable_ptr;
-  CrankLightable *lightable_prev;
-
-  lightable_ptr = G_STRUCT_MEMBER_P (entity, module->offset_lightable);
-  lightable_prev = *lightable_ptr;
-
-  if (! g_set_object (lightable_ptr, lightable))
-    return;
-
-
-  place = crank_entity_base_get_place (entity);
-
-  if (place != NULL)
-    {
-      pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-
-      if (lightable_prev == NULL)
-          crank_render_pdata_add_lentity (pdata, entity);
-
-      else if (lightable == NULL)
-        crank_render_pdata_remove_lentity (pdata, entity);
-    }
-}
-
-
-/**
- * crank_render_module_get_lightable:
- * @module: A Module.
- * @entity: A Entity.
- *
- * Gets a lightable from entity.
- *
- * Returns: (transfer none) (nullable): Lightable, or %NULL if it does not have.
- */
-CrankLightable*
-crank_render_module_get_lightable (CrankRenderModule *module,
-                                   CrankEntityBase   *entity)
-{
-  return G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+  return G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
 }
 
 
@@ -740,7 +717,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -781,7 +758,7 @@ crank_render_module_render_color_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -828,7 +805,7 @@ crank_render_module_render_light_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -868,7 +845,7 @@ crank_render_module_render_geom_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -907,7 +884,7 @@ crank_render_module_render_color_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_renderable);
+      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -952,7 +929,7 @@ crank_render_module_render_light_array (CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_lightable);
+      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_visible);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);

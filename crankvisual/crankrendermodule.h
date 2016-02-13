@@ -61,20 +61,12 @@ CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
 
 //////// Place and Entity functions ////////////////////////////////////////////
 
-void              crank_render_module_set_renderable (CrankRenderModule *module,
-                                                      CrankEntityBase   *entity,
-                                                      CrankRenderable   *renderable);
+void              crank_render_module_set_visible (CrankRenderModule *module,
+                                                   CrankEntityBase   *entity,
+                                                   CrankVisible      *visible);
 
-CrankRenderable  *crank_render_module_get_renderable (CrankRenderModule *module,
-                                                      CrankEntityBase   *entity);
-
-
-void              crank_render_module_set_lightable (CrankRenderModule *module,
-                                                     CrankEntityBase   *entity,
-                                                     CrankLightable    *lightable);
-
-CrankLightable   *crank_render_module_get_lightable (CrankRenderModule *module,
-                                                     CrankEntityBase   *entity);
+CrankVisible     *crank_render_module_get_visible (CrankRenderModule *module,
+                                                   CrankEntityBase   *entity);
 
 
 //////// Public functions //////////////////////////////////////////////////////
