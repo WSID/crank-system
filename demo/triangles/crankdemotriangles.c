@@ -313,9 +313,9 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 
   crank_quat_float_unit_self (& pos.mrot);
 
-  crank_render_module_set_renderable (app->rmodule,
-                                      (CrankEntityBase*)entity,
-                                      (CrankRenderable*)app->renderable);
+  crank_render_module_set_visible (app->rmodule,
+                                   (CrankEntityBase*)entity,
+                                   (CrankVisible*)app->renderable);
 
   crank_trans3_copy (&pos, & entity->position);
   crank_place_base_add_entity ((CrankPlaceBase*)app->place,
@@ -340,9 +340,9 @@ crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app)
 
   crank_quat_float_unit_self (& pos.mrot);
 
-  crank_render_module_set_lightable (app->rmodule,
-                                      (CrankEntityBase*)entity,
-                                      (CrankLightable*)app->lightable);
+  crank_render_module_set_visible (app->rmodule,
+                                   (CrankEntityBase*)entity,
+                                   (CrankVisible*)app->lightable);
 
   crank_trans3_copy (&pos, & entity->position);
   crank_place_base_add_entity ((CrankPlaceBase*)app->place,
