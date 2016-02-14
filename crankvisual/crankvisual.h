@@ -38,6 +38,8 @@
 #include "cranklightable.h"
 #include "cranklightablearanged.h"
 
+#include "crankrenderlayer.h"
+
 #include "crankmaterial.h"
 
 #include "crankcamera.h"

@@ -17,6 +17,7 @@ visualinclude_HEADERS = \
 		crankrenderableprimitive.h \
 		cranklightable.h \
 		cranklightablearanged.h \
+		crankrenderlayer.h \
 		crankmaterial.h \
 		crankrendermodule.h \
 		crankcameracontent.h
@@ -51,6 +52,7 @@ libcrankvisual_la_SOURCES= \
 		crankrenderableprimitive.c \
 		cranklightable.c \
 		cranklightablearanged.c \
+		crankrenderlayer.c \
 		crankmaterial.c \
 		crankcamera.c \
 		crankrenderpdata.c \
