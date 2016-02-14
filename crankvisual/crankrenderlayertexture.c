@@ -138,6 +138,7 @@ crank_render_layer_texture_class_init (CrankRenderLayerTextureClass *c)
   pspecs[PROP_HEIGHT] = g_param_spec_uint ("height", "height", "height of texture",
                                            0, G_MAXUINT, 0,
                                            G_PARAM_READWRITE |
+                                           G_PARAM_CONSTRUCT_ONLY |
                                            G_PARAM_STATIC_STRINGS);
 
   /**
@@ -149,6 +150,7 @@ crank_render_layer_texture_class_init (CrankRenderLayerTextureClass *c)
                                                "Pixel components of texture",
                                                0, G_MAXUINT, COGL_TEXTURE_COMPONENTS_RGBA,
                                                G_PARAM_READWRITE |
+                                               G_PARAM_CONSTRUCT_ONLY |
                                                G_PARAM_STATIC_STRINGS );
 
   /**
