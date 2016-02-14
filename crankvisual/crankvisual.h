@@ -41,6 +41,8 @@
 #include "crankrenderlayer.h"
 #include "crankrenderlayertexture.h"
 
+#include "crankrenderstep.h"
+
 #include "crankmaterial.h"
 
 #include "crankcamera.h"
