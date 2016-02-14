@@ -30,6 +30,8 @@
 #include <glib-object.h>
 #include <cogl/cogl2-experimental.h>
 
+#include "crankrenderlayer.h"
+
 //////// Type Declaration //////////////////////////////////////////////////////
 
 #define CRANK_TYPE_FILM (crank_film_get_type())
@@ -46,14 +48,22 @@ G_DECLARE_FINAL_TYPE (CrankFilm,
 
 //////// Constructors //////////////////////////////////////////////////////////
 
-CrankFilm    *crank_film_new (CoglContext  *cogl_context,
-                              const guint   width,
-                              const guint   height,
-                              GError      **error);
+
+CrankFilm    *crank_film_new              (CrankRenderLayer *render_layer, ...)
+  G_GNUC_NULL_TERMINATED;
+
+CrankFilm    *crank_film_new_va           (CrankRenderLayer *render_layer,
+                                           va_list           varargs);
+
+CrankFilm    *crank_film_new_with_layers  (CrankRenderLayer **layers,
+                                           const guint        nlayers);
+
+CrankFilm    *crank_film_new_old (CoglContext  *cogl_context,
+                                  const guint   width,
+                                  const guint   height,
+                                  GError      **error);
 
 //////// Properties ////////////////////////////////////////////////////////////
-
-CoglContext  *crank_film_get_cogl_context (CrankFilm *film);
 
 guint         crank_film_get_width (CrankFilm *film);
 
