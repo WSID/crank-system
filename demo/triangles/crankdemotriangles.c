@@ -206,7 +206,7 @@ crank_demo_triangle_app_build_ui (CrankDemoTriangleApp *app,
   app->stage = (ClutterStage*) gtk_clutter_embed_get_stage (app->embed);
   app->actor = clutter_actor_new ();
 
-  app->film = crank_film_new (cogl_context, 1024, 1024, &error);
+  app->film = crank_film_new_old (cogl_context, 1024, 1024, &error);
 
   if (error != NULL)
     g_error ("Film cannot be initialized: %s", error->message);
