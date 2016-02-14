@@ -20,6 +20,7 @@ visualinclude_HEADERS = \
 		crankrenderlayer.h \
 		crankrenderlayertexture.h \
 		crankrenderstep.h \
+		crankrenderstepsimple.h \
 		crankmaterial.h \
 		crankrendermodule.h \
 		crankcameracontent.h
@@ -57,6 +58,7 @@ libcrankvisual_la_SOURCES= \
 		crankrenderlayer.c \
 		crankrenderlayertexture.c \
 		crankrenderstep.c \
+		crankrenderstepsimple.c \
 		crankmaterial.c \
 		crankcamera.c \
 		crankrenderpdata.c \
