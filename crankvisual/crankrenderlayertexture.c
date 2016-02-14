@@ -283,7 +283,9 @@ crank_render_layer_texture_set_property (GObject    *object,
       break;
 
     case PROP_TEXTURE:
-      self->texture = cogl_object_ref (g_value_get_pointer (value));
+      self->texture = g_value_get_pointer (value);
+      if (self->texture != NULL)
+        cogl_object_ref (self->texture);
       break;
 
     default:
