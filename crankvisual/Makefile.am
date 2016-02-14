@@ -18,6 +18,7 @@ visualinclude_HEADERS = \
 		cranklightable.h \
 		cranklightablearanged.h \
 		crankrenderlayer.h \
+		crankrenderlayertexture.h \
 		crankmaterial.h \
 		crankrendermodule.h \
 		crankcameracontent.h
@@ -53,6 +54,7 @@ libcrankvisual_la_SOURCES= \
 		cranklightable.c \
 		cranklightablearanged.c \
 		crankrenderlayer.c \
+		crankrenderlayertexture.c \
 		crankmaterial.c \
 		crankcamera.c \
 		crankrenderpdata.c \
@@ -89,8 +91,22 @@ CrankVisual_0_0_gir_SCANNERFLAGS= \
 		--symbol-prefix="crank" \
 		--identifier-prefix="Crank"
 
-CrankVisual_0_0_gir_INCLUDES= GObject-2.0 Cogl-2.0 CrankBase-0.0 CrankShape-0.0 CrankCore-0.0
-CrankVisual_0_0_gir_CFLAGS= $(CRANK_BASE_CFLAGS) $(CRANK_VISUAL_CFLAGS) -lm -I$(top_srcdir)/crankbase -I$(top_srcdir)/crankshape -I$(top_srcdir)/crankcore
+CrankVisual_0_0_gir_INCLUDES= \
+	GObject-2.0 \
+	Gio-2.0 \
+	Cogl-2.0 \
+	CrankBase-0.0 \
+	CrankShape-0.0 \
+	CrankCore-0.0
+
+CrankVisual_0_0_gir_CFLAGS= \
+	$(CRANK_BASE_CFLAGS) \
+	$(CRANK_VISUAL_CFLAGS) \
+	-lm \
+	-I$(top_srcdir)/crankbase \
+	-I$(top_srcdir)/crankshape \
+	-I$(top_srcdir)/crankcore
+
 CrankVisual_0_0_gir_LIBS= libcrankvisual.la
 CrankVisual_0_0_gir_FILES= $(libcrankvisual_la_SOURCES) $(visualinclude_HEADERS)
 

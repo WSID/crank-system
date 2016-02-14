@@ -39,6 +39,7 @@
 #include "cranklightablearanged.h"
 
 #include "crankrenderlayer.h"
+#include "crankrenderlayertexture.h"
 
 #include "crankmaterial.h"
 
