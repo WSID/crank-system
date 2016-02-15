@@ -19,6 +19,47 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankrenderstep
+ * @title: CrankRenderStep
+ * @short_description: Rendering step.
+ * @stability: Unstable
+ * @include: crankvisual
+ *
+ * Represents a single step of rendering process.
+ *
+ * This cannot be just a function as this carrys more information, like
+ * requirements for this step to be done, properties about target layers.
+ *
+ * # Requirements.
+ *
+ * Each step can carry different requirements. For example, depth-normal step
+ * requires renderables, while light step requires depth-normal texture and
+ * lightables.
+ *
+ * #CrankRenderStep can carry 2 kind of requirement information.
+ *
+ * ## Item requirements.
+ *
+ *    Some step may require list of 'object's that would be rendered. For that,
+ *    steps may add #GType of the 'object' as requirements.
+ *
+ *    Then, list of #CrnakEntityBase that holds object of #GType will be passed
+ *    by #crankRenderModule, which is culled.
+ *
+ * ## Step requirements.
+ *
+ *    Some step may require list of 'step's that should be done before they
+ *    would be done. For that, steps may add name of 'step's as requirements.
+ *
+ *    Steps are sorted by dependency relationship, so these requirements of
+ *    each steps can be met.
+ *
+ *    UNSTABILITY-DISCLAMER: This may be replaced by advanced type checking
+ *        facility, and input-output box structure.
+ *
+ */
+
 #define _CRANKVISUAL_INSIDE
 
 #include <glib.h>
