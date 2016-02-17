@@ -156,6 +156,7 @@ crank_entity_base_new (CrankSessionModulePlaced *module)
          crank_session_module_placed_get_entity_size (module);
 
   header = g_slice_alloc0 (size);
+  memset (header, 0, size);
 
   header->_refc = 1;
   header->module = g_object_ref (module);
