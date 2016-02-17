@@ -42,6 +42,9 @@ baseinclude_HEADERS = \
 		crankdigraph.h \
 		crankadvgraph.h \
 		\
+		crankcomposite.h \
+		crankcompositable.h \
+		\
 		crankbasetest.h \
 		crankbench.h \
 		crankbenchrun.h \
@@ -87,6 +90,9 @@ libcrankbase_la_SOURCES= \
 		\
 		crankadvgraph.c \
 		crankadvmat.c \
+		\
+		crankcomposite.c \
+		crankcompositable.c \
 		\
 		crankbasetest.c \
 		crankbench.c \

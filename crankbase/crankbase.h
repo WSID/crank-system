@@ -57,6 +57,9 @@
 #include "crankcellspace2.h"
 #include "crankcellspace3.h"
 
+#include "crankcomposite.h"
+#include "crankcompositable.h"
+
 #include "crankbasetest.h"
 #include "crankbench.h"
 #include "crankbenchrun.h"
