@@ -54,8 +54,6 @@
 enum {
   RROP_0,
 
-  PROP_INITIALIZED,
-
   PROP_RUNNING,
   PROP_UPTIME,
 
