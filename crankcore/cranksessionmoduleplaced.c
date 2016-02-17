@@ -28,6 +28,10 @@
  *
  * Represents a session module that adds feature to track entities and places.
  *
+ * # CrankSessionModulePlaced as #CrankCompositable
+ *
+ * Composite Requisition: #CrankSession
+ *
  */
 
 #define CRANKCORE_INSIDE
@@ -131,7 +135,7 @@ typedef struct _CrankSessionModulePlacedPrivate {
 
 G_DEFINE_TYPE_WITH_PRIVATE (CrankSessionModulePlaced,
                             crank_session_module_placed,
-                            CRANK_TYPE_SESSION_MODULE)
+                            CRANK_TYPE_COMPOSITABLE_1N)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////

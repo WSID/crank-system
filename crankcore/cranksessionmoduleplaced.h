@@ -48,7 +48,7 @@ typedef struct _CrankEntityBase CrankEntityBase;
 G_DECLARE_DERIVABLE_TYPE (CrankSessionModulePlaced,
                           crank_session_module_placed,
                           CRANK, SESSION_MODULE_PLACED,
-                          CrankSessionModule)
+                          CrankCompositable1N)
 
 /**
  * CrankSessionModulePlaced:
@@ -70,7 +70,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModulePlaced,
 
 struct _CrankSessionModulePlacedClass {
   /*< private >*/
-  CrankSessionModuleClass _parent;
+  CrankCompositable1NClass _parent;
 
   /*< public >*/
   void    (*place_created) (CrankSessionModulePlaced *module,
