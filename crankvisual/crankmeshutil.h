@@ -35,12 +35,12 @@ G_BEGIN_DECLS
 //////// Publuc functions //////////////////////////////////////////////////////
 
 CoglPrimitive *crank_make_mesh_sphere_uv_p3 (CoglContext *cogl_context,
-                                             const guint  nu,
-                                             const guint  nv);
+                                             const guint  uc,
+                                             const guint  vc);
 
 CoglPrimitive *crank_make_mesh_sphere_uv_p3n3 (CoglContext *cogl_context,
-                                               const guint  nu,
-                                               const guint  nv);
+                                               const guint  uc,
+                                               const guint  vc);
 
 G_END_DECLS
 

@@ -40,14 +40,22 @@ G_DECLARE_DERIVABLE_TYPE(CrankVisible,
                          GObject)
 
 /**
+ * CrankVisible:
+ *
+ * Represents a visible item for rendering.
+ */
+
+/**
  * CrankVisibleClass:
  * @get_visible_radius: Slot for crank_visible_get_visible_radius().
  *
  * Represents virtual function table for #CrankVisible.
  */
 struct _CrankVisibleClass {
+  /*< private >*/
   GObjectClass _parent;
 
+  /*< public >*/
   gfloat  (*get_visible_radius)  (CrankVisible *visible);
 };
 

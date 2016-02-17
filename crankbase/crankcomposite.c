@@ -21,7 +21,7 @@
 
 /**
  * SECTION: crankcomposite
- * @title: CrankComposite.
+ * @title: CrankComposite
  * @short_description: Composite objects that multiple compositable can be added to.
  * @stabilit: Unstable
  * @include: crankbase.h
@@ -57,10 +57,10 @@
  * #CrankComposite, #CrankCompositable may insert checks when adding and
  * removing, by overriding any of,
  *
- * * #CrankComposite.add_compositable()
- * * #CrankComposite.remove_compositable()
- * * #CrankCompositable.adding()
- * * #CrankCompositable.removing()
+ * * #CrankCompositeClass.add_compositable()
+ * * #CrankCompositeClass.remove_compositable()
+ * * #CrankCompositableClass.adding()
+ * * #CrankCompositableClass.removing()
  */
 
 #define _CRANKBASE_INSIDE

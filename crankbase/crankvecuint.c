@@ -36,7 +36,7 @@
 
 /**
  * SECTION: crankvecuint
- * @title: Integer Vectors
+ * @title: Unsigned Integer Vectors
  * @short_description: Vectors that have integer elements.
  * @stability: unstable
  * @include: crankbase.h
@@ -146,7 +146,7 @@
  *                   <entry>Related Functions</entry>
  *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
- *       <row> <entry>From #CrnakVecBoolN</entry>
+ *       <row> <entry>From #CrankVecBoolN</entry>
  *             <entry>crank_vec_uint_n_init_from_vb()</entry>
  *             <entry>GValue Transform</entry> </row>
  *

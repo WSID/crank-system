@@ -145,7 +145,7 @@ crank_gjk2 (CrankShape2Vertexed *a,
  * Gets minimum distance between @a and @b. This is minimum possible distance
  * of points from each @a and @b.
  *
- * Returns: Minimum distance between @a and @b, or 0 if intersects, or #NAN if
+ * Returns: Minimum distance between @a and @b, or 0 if intersects, or %NAN if
  *     GJK cannot be performed.
  */
 gfloat

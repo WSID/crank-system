@@ -19,6 +19,16 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: cranksessionmoduleplaced
+ * @title: CrankSessionModulePlaced
+ * @short_description: Module with place and entity.
+ * @stability: Unstable
+ * @include: crankvisual.h
+ *
+ * Represents a session module that adds feature to track entities and places.
+ *
+ */
 
 #define CRANKCORE_INSIDE
 

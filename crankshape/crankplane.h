@@ -35,6 +35,8 @@ G_BEGIN_DECLS
 
 //////// Type Declarations /////////////////////////////////////////////////////
 
+typedef struct _CrankPlane3 CrankPlane3;
+
 /**
  * CrankPlane3:
  * @dist_origin: Signed distance from origin.
@@ -43,11 +45,11 @@ G_BEGIN_DECLS
  * Represents an infinite plane in 3D Space. Does not include anchor to keep this
  * compact.
  */
-typedef struct _CrankPlane3
+struct _CrankPlane3
 {
   gfloat          dist_origin;
   CrankVecFloat3  normal;
-} CrankPlane3;
+};
 
 #define CRANK_TYPE_PLANE3 (crank_plane3_get_type ())
 GType crank_plane3_get_type(void);

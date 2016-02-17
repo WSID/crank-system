@@ -41,10 +41,25 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderStep,
                           CRANK, RENDER_STEP,
                           GObject)
 
+/**
+ * CrankRenderStep:
+ *
+ * Represents a step to perform rendering opreation.
+ */
+
+/**
+ * CrankRenderStepClass:
+ * @render: Slot for crank_render_step_render()
+ * @create_layer: Slot for crank_render_step_create_layer()
+ *
+ * Virtual function slot for #CrankRenderStep.
+ */
 struct _CrankRenderStepClass
 {
+  /*< private >*/
   GObjectClass parent;
 
+  /*< public >*/
   void (*render)  (CrankRenderStep   *step,
                    GPtrArray        **items,
                    CrankRenderLayer **layers,
@@ -57,6 +72,10 @@ struct _CrankRenderStepClass
                                      const guint       height,
                                      GCancellable     *cancellable,
                                      GError          **error);
+
+  /*< private >*/
+  gpointer _DUMMY2;
+  gpointer _DUMMY3;
 };
 
 

@@ -4,6 +4,7 @@ crank_ran_float_get_type
 crank_ran_ptr_get_type
 
 crank_pair_uint_get_type
+crank_pair_pointer_get_type
 
 crank_permutation_get_type
 
@@ -15,6 +16,12 @@ crank_vec_bool3_get_type
 crank_vec_bool4_get_type
 
 crank_vec_bool_n_get_type
+
+crank_vec_uint2_get_type
+crank_vec_uint3_get_type
+crank_vec_uint4_get_type
+
+crank_vec_uint_n_get_type
 
 crank_vec_int2_get_type
 crank_vec_int3_get_type
@@ -40,6 +47,11 @@ crank_mat_cplx_float_n_get_type
 
 crank_digraph_get_type
 
+crank_cell_space2_get_type
+crank_cell_space3_get_type
+
+crank_composite_get_type
+crank_compositable_get_type
 
 
 
@@ -118,7 +130,16 @@ crank_projection_get_type
 crank_camera_get_type
 crank_material_get_type
 
+crank_visible_get_type
 crank_renderable_get_type
 crank_renderable_primitive_get_type
+crank_lightable_get_type
+crank_lightable_a_ranged_get_type
+
+crank_render_layer_get_type
+crank_render_layer_texture_get_type
+
+crank_render_step_get_type
+crank_render_step_simple_get_type
 
 crank_camera_content_get_type

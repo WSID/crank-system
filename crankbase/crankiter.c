@@ -44,7 +44,7 @@
  * There are some way to define protocol of iterators,
  * <itemizedlist>
  *   <listitem>T? next (): Retrieve value by next () till it returns %NULL
- *             - python, vala (uses next_value () instead)
+ *             - python, vala (uses next_value \() instead)
  *   </listitem>
  *   <listitem>bool next (), T get (): Proceed by next (), get value by get ()
  *             - Java Collection, vala (supports two protocols)

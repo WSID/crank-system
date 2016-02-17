@@ -574,6 +574,7 @@ crank_cell_space3_new (void)
  * crank_cell_space3_new_with_size:
  * @width: Number of elements in a row.
  * @height: Number of elements in a column.
+ * @depth: Number of elements in depth direction.
  *
  * Constructs a sized cell space.
  *

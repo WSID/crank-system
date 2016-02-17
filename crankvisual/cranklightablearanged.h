@@ -47,6 +47,12 @@ G_DECLARE_FINAL_TYPE (CrankLightableARanged,
                       CRANK, LIGHTABLE_A_RANGED,
                       CrankLightable)
 
+/**
+ * CrankLightableARanged:
+ *
+ * Represents Ambient light with limited range.
+ */
+
 
 //////// Constructor ///////////////////////////////////////////////////////////
 

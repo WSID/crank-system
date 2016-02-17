@@ -249,6 +249,7 @@ crank_lightable_a_ranged_class_init (CrankLightableARangedClass *c)
   /**
    * CrankLightableARanged:cogl-context: (type CoglContext)
    *
+   * A #CoglContext to initialize with.
    */
   pspecs[PROP_COGL_CONTEXT] = g_param_spec_pointer ("cogl-context", "CoglContext",
                                                     "A CoglContext to initialize with.",

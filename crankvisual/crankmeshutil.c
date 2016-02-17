@@ -284,8 +284,20 @@ crank_make_indices_sphere_uv (const guint  uc,
 
 //////// Public functions //////////////////////////////////////////////////////
 
+/**
+ * crank_make_mesh_sphere_uv_p3:
+ * @cogl_context: A CoglContext.
+ * @uc: Number of vertices in u-direction.
+ * @vc: Number of vertices in v-direction. This excludes two vertices at bottom
+ *      and top.
+ *
+ * Constructs a #CoglPrimivive for a sphere.
+ * This only contains a position information.
+ *
+ * Returns: (transfer full): A #CoglPrimitive for a sphere.
+ */
 CoglPrimitive*
-crank_make_mesh_sphere_uv_p3 (CoglContext *context,
+crank_make_mesh_sphere_uv_p3 (CoglContext *cogl_context,
                               const guint  uc,
                               const guint  vc)
 {
@@ -302,10 +314,10 @@ crank_make_mesh_sphere_uv_p3 (CoglContext *context,
   vdata = crank_make_v_p3_sphere_uv (uc, vc, &lvdata);
   idata = crank_make_indices_sphere_uv (uc, vc, &lidata);
 
-  indices = cogl_indices_new (context, COGL_INDICES_TYPE_UNSIGNED_SHORT,
+  indices = cogl_indices_new (cogl_context, COGL_INDICES_TYPE_UNSIGNED_SHORT,
                               idata, lidata * 3);
 
-  primitive = cogl_primitive_new_p3 (context,
+  primitive = cogl_primitive_new_p3 (cogl_context,
                                      COGL_VERTICES_MODE_TRIANGLES,
                                      lvdata,
                                      vdata);
@@ -320,8 +332,20 @@ crank_make_mesh_sphere_uv_p3 (CoglContext *context,
   return primitive;
 }
 
+/**
+ * crank_make_mesh_sphere_uv_p3n3:
+ * @cogl_context: A CoglContext.
+ * @uc: Number of vertices in u-direction.
+ * @vc: Number of vertices in v-direction. This excludes two vertices at bottom
+ *      and top.
+ *
+ * Constructs a #CoglPrimivive for a sphere.
+ * This contains position and normal informations.
+ *
+ * Returns: (transfer full): A #CoglPrimitive for a sphere.
+ */
 CoglPrimitive*
-crank_make_mesh_sphere_uv_p3n3 (CoglContext *context,
+crank_make_mesh_sphere_uv_p3n3 (CoglContext *cogl_context,
                                 const guint  uc,
                                 const guint  vc)
 {
@@ -339,10 +363,10 @@ crank_make_mesh_sphere_uv_p3n3 (CoglContext *context,
   idata = crank_make_indices_sphere_uv (uc, vc, &lidata);
 
 
-  indices = cogl_indices_new (context, COGL_INDICES_TYPE_UNSIGNED_SHORT,
+  indices = cogl_indices_new (cogl_context, COGL_INDICES_TYPE_UNSIGNED_SHORT,
                               idata, lidata * 3);
 
-  primitive = crank_cogl_primitive_new_p3n3 (context,
+  primitive = crank_cogl_primitive_new_p3n3 (cogl_context,
                                              COGL_VERTICES_MODE_TRIANGLES,
                                              lvdata,
                                              vdata);

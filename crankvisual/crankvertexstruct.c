@@ -32,7 +32,7 @@
 /**
  * SECTION: crankvertexstruct
  * @title: Vertex Structures
- * @shirt_description: Structure definition for CoglPrimitives
+ * @short_description: Structure definition for CoglPrimitives
  * @stability: Unstable
  * @include: crankvisual.h
  *

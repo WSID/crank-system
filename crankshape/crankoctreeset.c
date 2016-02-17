@@ -806,6 +806,8 @@ crank_octree_set_get_data_list (CrankOctreeSet *set)
  * @culls: (array length=nculls): Culling plane.
  * @nculls: Number of @culls.
  *
+ * Gets Culled #GList of elements in octree.
+ *
  * Returns: (element-type gpointer) (transfer container): List of elements in octree.
  */
 GList*
@@ -845,6 +847,8 @@ crank_octree_set_add_data_array (CrankOctreeSet *set,
  * crank_octree_set_add_culled_array:
  * @set: An octree set.
  * @array: (element-type gpointer) (transfer none): An array.
+ * @culls: (array length=nculls): List of planes to cull items.
+ * @nculls: Length of @culls.
  *
  * Adds items in #GPtrArray in octree. This will help reusing allocated memory
  * block.

@@ -83,7 +83,7 @@ GList  *crank_render_module_get_culled_llist(CrankRenderModule *module,
 
 
 GPtrArray  *crank_render_module_get_culled_rarray(CrankRenderModule *module,
-                                                  GPtrArray         *entites,
+                                                  GPtrArray         *entities,
                                                   CrankPlace3       *place,
                                                   CrankTrans3       *position,
                                                   CrankProjection   *projection);
@@ -159,16 +159,6 @@ void    crank_render_module_render_light_array(CrankRenderModule *module,
                                                CoglTexture       *tex_color,
                                                CoglTexture       *tex_mater,
                                                CoglFramebuffer   *framebuffer);
-
-
-
-
-
-void    crank_render_module_render_pos (CrankRenderModule *module,
-                                        CoglTexture       *geom_tex,
-                                        CrankProjection   *projection,
-                                        CoglFramebuffer   *framebuffer);
-
 
 
 

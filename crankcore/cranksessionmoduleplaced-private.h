@@ -32,6 +32,7 @@
 #include "cranksessionmodule.h"
 #include "cranksessionmoduleplaced.h"
 
+#ifndef __GTK_DOC_IGNORE__
 
 G_GNUC_INTERNAL
 void      crank_session_module_placed_fini_place (CrankSessionModulePlaced *module,
@@ -67,3 +68,4 @@ G_GNUC_INTERNAL
 void      crank_session_module_placed_entity_removed (CrankSessionModulePlaced *module,
                                                       CrankPlaceBase           *place,
                                                       CrankEntityBase          *entity); 
+#endif

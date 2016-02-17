@@ -19,6 +19,18 @@
  * THE SOFTWARE.
  */
 
+/**
+ * SECTION: crankvisible
+ * @title: CrankVisible
+ * @short_description: Represents a visible item.
+ * @stability: Unstable
+ * @include: crankvisual.h
+ *
+ * Represents a visible item that can be rendered. This object only carray
+ * visibility volume information. Positional and projection information come
+ * from #CrankEntityBase.
+ */
+
 #define _CRANKVISUAL_INSIDE
 
 #include <glib.h>
@@ -109,6 +121,15 @@ crank_visible_get_property (GObject    *object,
 
 //////// Properties ////////////////////////////////////////////////////////////
 
+/**
+ * crank_visible_get_visible_radius:
+ * @visible: A visible object.
+ *
+ * Gets visible radius of @visible. This information can be used for culling out
+ * items that cannot affect results.
+ *
+ * Returns: Visible radius.
+ */
 gfloat
 crank_visible_get_visible_radius (CrankVisible *visible)
 {

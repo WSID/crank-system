@@ -37,6 +37,18 @@ G_BEGIN_DECLS
 
 //////// Type Declaration //////////////////////////////////////////////////////
 
+/**
+ * CrankRenderStepFunc:
+ * @step: A Step.
+ * @items: (array) (element-type CrankVisible): A Array of list of #CrankVisibles.
+ * @layers: (array): A Array of #CrankRenderLayer that required for this step.
+ * @position: Position of rendering view.
+ * @projection: Projection of rendering view.
+ * @layer: Rendering target layer.
+ * @userdata: (closure): A Userdata for this function.
+ *
+ * Rendering function for #CrankRenderStepSimple
+ */
 typedef void (*CrankRenderStepFunc) (CrankRenderStep   *step,
                                      GPtrArray        **items,
                                      CrankRenderLayer **layers,
@@ -45,11 +57,23 @@ typedef void (*CrankRenderStepFunc) (CrankRenderStep   *step,
                                      CrankRenderLayer  *layer,
                                      gpointer           userdata);
 
+
+/**
+ * CrankRenderStepLayerFunc:
+ * @step: A Step.
+ * @width: A Width of layer.
+ * @height: A Height of layer.
+ * @cancellable: A Cancellable.
+ * @error: A Error.
+ * @userdata: (closure): A Userdata for this function.
+ *
+ * Layer construction for #CrankRenderStepSimple
+ */
 typedef CrankRenderLayer *(*CrankRenderStepLayerFunc) (CrankRenderStep  *step,
                                                        const guint       width,
                                                        const guint       height,
                                                        GCancellable     *cancellable,
-                                                       GError          **errors,
+                                                       GError          **error,
                                                        gpointer          userdata);
 
 
@@ -59,8 +83,21 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderStepSimple,
                           CRANK, RENDER_STEP_SIMPLE,
                           CrankRenderStep)
 
+/**
+ * CrankRenderStepSimple:
+ *
+ * Represents a render step backed by callback functions.
+ */
+
+/**
+ * CrankRenderStepSimpleClass:
+ *
+ * This class does not hold virtual function. IMplementation may inherit from
+ * this class to add more control over callback functions.
+ */
 struct _CrankRenderStepSimpleClass
 {
+  /*< private >*/
   CrankRenderStepClass parent;
 };
 

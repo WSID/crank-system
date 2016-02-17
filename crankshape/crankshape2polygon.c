@@ -354,7 +354,7 @@ crank_shape2_polygon_get_winding (CrankShape2Polygon *shape)
  * Get normal of edge of given index.
  *
  * Default implementation: Assumes edges are winding counter-clockwise.
- *   Guess edge from crank_shape2_ipolygon_get_edge_vertices() and returns left
+ *   Guess edge from crank_shape2_vertexed_get_edge_vertices() and returns left
  *   orthogonal direction of edge.
  */
 void

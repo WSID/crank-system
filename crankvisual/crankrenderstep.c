@@ -44,7 +44,7 @@
  *    Some step may require list of 'object's that would be rendered. For that,
  *    steps may add #GType of the 'object' as requirements.
  *
- *    Then, list of #CrnakEntityBase that holds object of #GType will be passed
+ *    Then, list of #CrankEntityBase that holds object of #GType will be passed
  *    by #crankRenderModule, which is culled.
  *
  * ## Step requirements.

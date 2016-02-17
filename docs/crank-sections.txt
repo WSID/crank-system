@@ -2095,11 +2095,8 @@ crank_cell_space3_get_type
 
 <SECTION>
 <FILE>crankcomposite</FILE>
-<TITLE>CrankComposite</TITLE>
 CRANK_COMPOSITE_ERROR
-crank_composite_error_quark
-CrankCompositError
-CRANK_TYPE_COMPOSITE
+CrankCompositeError
 CrankCompositeClass
 crank_composite_add_compositable
 crank_composite_remove_compositable
@@ -2110,12 +2107,13 @@ crank_composite_contains_compositable
 crank_composite_foreach_compositable
 CrankCompositable
 CrankComposite
+<SUBSECTION Standard>
+crank_composite_error_quark
+CRANK_TYPE_COMPOSITE
 </SECTION>
 
 <SECTION>
 <FILE>crankcompositable</FILE>
-<TITLE>CrankCompositable</TITLE>
-CRANK_TYPE_COMPOSITABLE
 CrankCompositableClass
 crank_gtype_compositable_add_requisition
 crank_gtype_compositable_is_required
@@ -2125,6 +2123,8 @@ crank_gtype_compositable_get_requisitions
 crank_compositable_adding
 crank_compositable_removing
 CrankCompositable
+<SUBSECTION Standard>
+CRANK_TYPE_COMPOSITABLE
 </SECTION>
 
 
@@ -3066,14 +3066,6 @@ crank_session_module_placed_get_place_alloc_offset
 crank_session_module_placed_get_place_alloc_size
 crank_session_module_placed_get_entity_alloc_offset
 crank_session_module_placed_get_entity_alloc_size
-crank_session_module_placed_entity_added
-crank_session_module_placed_entity_created
-crank_session_module_placed_entity_disposed
-crank_session_module_placed_entity_removed
-crank_session_module_placed_fini_entity
-crank_session_module_placed_fini_place
-crank_session_module_placed_place_created
-crank_session_module_placed_place_disposed
 
 <SUBSECTION Standard>
 CRANK_TYPE_SESSION_MODULE_PLACED
@@ -3112,7 +3104,6 @@ crank_render_module_render_color_at
 crank_render_module_render_geom_at
 crank_render_module_render_light_at
 
-crank_render_module_render_pos
 crank_render_module_render_at
 <SUBSECTION Standard>
 CRANK_TYPE_RENDER_MODULE
@@ -3331,7 +3322,6 @@ CRANK_TYPE_LIGHTABLE_A_RANGED
 <SECTION>
 <FILE>crankrenderstep</FILE>
 <TITLE>CrankRenderStep</TITLE>
-CRANK_TYPE_RENDER_STEP
 CrankRenderStepClass
 crank_render_step_get_name
 crank_render_step_set_name
@@ -3348,6 +3338,8 @@ crank_render_step_get_required_step
 crank_render_step_render
 crank_render_step_create_layer
 CrankRenderStep
+<SUBSECTION Standard>
+CRANK_TYPE_RENDER_STEP
 </SECTION>
 
 <SECTION>
@@ -3355,12 +3347,13 @@ CrankRenderStep
 <TITLE>CrankRenderStepSimple</TITLE>
 CrankRenderStepFunc
 CrankRenderStepLayerFunc
-CRANK_TYPE_RENDER_STEP_SIMPLE
 CrankRenderStepSimpleClass
 crank_render_step_simple_new
 crank_render_step_simple_set_render_func
 crank_render_step_simple_set_layer_func
 CrankRenderStepSimple
+<SUBSECTION Standard>
+CRANK_TYPE_RENDER_STEP_SIMPLE
 </SECTION>
 
 <SECTION>

@@ -24,7 +24,7 @@
 /**
  * SECTION: cranksessionmoduletick
  * @title: CrankSessionModuleTick
- * @short_desciption: Ticking module with interval.
+ * @short_description: Ticking module with interval.
  * @stability: Unstable
  * @include: crankcore.h
  *

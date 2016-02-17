@@ -40,8 +40,20 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderLayer,
                           CRANK, RENDER_LAYER,
                           GObject)
 
+/**
+ * CrankRenderLayer:
+ *
+ * Represents a renderable layer.
+ */
 
+/**
+ * CrankRenderLayerClass:
+ *
+ * This contains no virtual functions. This type just marks it is intermediate
+ * layer that be contained in #CrankFilm.
+ */
 struct _CrankRenderLayerClass {
+  /*< private >*/
   GObjectClass _parent;
 };
 

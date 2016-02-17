@@ -271,7 +271,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   app->lightable = crank_lightable_a_ranged_new (cogl_context,
                                                  crank_vec_float3_static_one,
                                                  10,
-                                                 10);
+                                                 2);
 
   // Add session!
   crank_place_base_add_entity ((CrankPlaceBase*)app->place,
@@ -283,13 +283,14 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   for (int i = 0; i < 400; i++)
     crank_demo_triangle_app_add_triangle (app);
 
-  crank_demo_triangle_app_add_lightable (app);
+  for (int i = 0; i < 3; i++)
+    crank_demo_triangle_app_add_lightable (app);
 
     {
-      CrankTrans3 campos = {{0, 0, 0}, {1, 0, 0, 0}, 1};
+      CrankTrans3 campos = {{0, 0, 0}, {100, 0, 0, 0}, 1};
 
       crank_trans3_init (& app->camera_hook->position);
-      crank_camera_frustum (app->camera, -0.2, 0.2, -0.2, 0.2, 0.2, 1000);
+      crank_camera_frustum (app->camera, -0.2, 0.2, -0.2, 0.2, 2, 1000);
     }
 
   g_signal_connect (app->tmodule, "tick", (GCallback) move_cam_pos, app->camera_hook);
@@ -301,15 +302,15 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
   CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
 
   CrankTrans3 pos = {{
-    g_random_double_range (-100, 100),
-    g_random_double_range (-100, 100),
-    g_random_double_range (-100, 100)
+    g_random_double_range (-40, 40),
+    g_random_double_range (-40, 40),
+    g_random_double_range (-40, 40)
   }, {
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1)
-  }, g_random_double_range (0.2, 10)};
+  }, g_random_double_range (0.2, 1)};
 
   crank_quat_float_unit_self (& pos.mrot);
 
@@ -328,15 +329,15 @@ crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app)
   CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
 
   CrankTrans3 pos = {{
-    g_random_double_range (0, 0),
-    g_random_double_range (0, 0),
-    g_random_double_range (-10, 0)
+    g_random_double_range (-10, 10),
+    g_random_double_range (-10, 10),
+    g_random_double_range (-10, 10)
   }, {
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1),
     g_random_double_range (-1, 1)
-  }, g_random_double_range (0.2, 10)};
+  }, g_random_double_range (1, 5)};
 
   crank_quat_float_unit_self (& pos.mrot);
 

@@ -47,10 +47,25 @@ G_DECLARE_DERIVABLE_TYPE (CrankLightable,
                           CRANK, LIGHTABLE,
                           CrankVisible)
 
+/**
+ * CrankLightable:
+ *
+ * Represents a lightable object.
+ */
+
+
+/**
+ * CrankLightableClass:
+ * @render: Slot for crank_lightable_render()
+ *
+ * Virutal function table for #CrankLightable.
+ */
 struct _CrankLightableClass
 {
+  /*< private >*/
   CrankVisibleClass _parent;
 
+  /*< public >*/
   void    (*render)              (CrankLightable  *lightable,
                                   CrankTrans3     *position,
                                   CrankProjection *projection,
@@ -59,6 +74,12 @@ struct _CrankLightableClass
                                   CoglTexture     *tex_mater,
                                   const gfloat     lscale,
                                   CoglFramebuffer *framebuffer);
+
+  /*< private >*/
+
+  gpointer _DUMMY1;
+  gpointer _DUMMY2;
+  gpointer _DUMMY3;
 };
 
 

@@ -704,11 +704,11 @@ crank_str_read_int64 (const gchar *str,
  * * Symbolic words (Case Insensitive and this results %CRANK_READ_DEC_SYMBOL)
  *   * "inf", "infinity", "nan"
  * * Numeric
- *   * (0 or more numbers) [.(0 or more numbers)] [(e or E)(1 or more numbers)]
+ *   * (0 or more numbers) \[.(0 or more numbers)\] \[(e or E)(1 or more numbers)\]
  *
  *     or
  *
- *     (1 or more numbres) [(e or E)(1 or more numbers)]
+ *     (1 or more numbres) \[(e or E)(1 or more numbers)\]
  *
  * This implementation uses naive implementation but using 18 digits of mantissa.
  * Some precision loss might be expected.

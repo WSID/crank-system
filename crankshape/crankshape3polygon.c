@@ -47,8 +47,8 @@
  *
  * # Abstract Functions
  *
- * * #CrankShape3Polygon.get_winding()
- * * #CrankShape3Polygon.get_vertex_pos2()
+ * * #CrankShape3PolygonClass.get_winding()
+ * * #CrankShape3PolygonClass.get_vertex_pos2()
  *
  * # Abstract Functions left
  *
@@ -58,8 +58,8 @@
  *
  * # Virtual functions
  *
- * * #CrankShape3Polygon.get_edge_normal()
- * * #CrankShape3Polygon.get_normal_edge()
+ * * #CrankShape3PolygonClass.get_edge_normal()
+ * * #CrankShape3PolygonClass.get_normal_edge()
  *
  */
 

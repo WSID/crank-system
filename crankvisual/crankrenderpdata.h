@@ -38,6 +38,7 @@
 #error crankrendermodule.h cannot be included directly: include crankvisual.h
 #endif
 
+#ifndef __GTK_DOC_IGNORE__
 
 //////// Properties of private types ///////////////////////////////////////////
 
@@ -104,5 +105,6 @@ gfloat          crank_render_pdata_get_rad (gpointer data,
                                             gpointer userdata);
 
 
+#endif
 
 #endif

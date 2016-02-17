@@ -44,6 +44,11 @@ G_DECLARE_FINAL_TYPE (CrankRenderLayerTexture,
                       CRANK, RENDER_LAYER_TEXTURE,
                       CrankRenderLayer)
 
+/**
+ * CrankRenderLayerTexture:
+ *
+ * Represents a layer backed with texture.
+ */
 
 //////// Constructors //////////////////////////////////////////////////////////
 

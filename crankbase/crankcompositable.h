@@ -40,10 +40,25 @@ G_DECLARE_DERIVABLE_TYPE (CrankCompositable,
                           CRANK, COMPOSITABLE,
                           GObject)
 
+/**
+ * CrankCompositable:
+ *
+ * Represents a compositable objects that can be added to composite object.
+ */
+
+/**
+ * CrankCompositableClass:
+ * @adding: Slot for crank_compositable_adding()
+ * @removing: Slot for crank_compositable_removing()
+ *
+ * Virtual function table for #CrankCompositable.
+ */
 struct _CrankCompositableClass
 {
+  /*< private >*/
   GObjectClass parent;
 
+  /*< public >*/
   gboolean  (*adding)                 (CrankCompositable  *compositable,
                                        CrankComposite     *composite,
                                        GError            **error);
@@ -52,6 +67,7 @@ struct _CrankCompositableClass
                                        CrankComposite     *composite,
                                        GError            **error);
 
+  /*< private >*/
   gpointer _DUMMY2;
   gpointer _DUMMY3;
 };

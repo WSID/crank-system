@@ -984,12 +984,7 @@ crank_render_module_render_at (CrankRenderModule *module,
                                           crank_film_get_texture (film, 2),
                                           crank_film_get_framebuffer (film, 5));
 
-  /*
-  crank_render_module_render_pos (module,
-                                  crank_film_get_texture (film, 0),
-                                  projection,
-                                  crank_film_get_framebuffer (film, 5));
- * */
+
   // XXX: For now, rendering a color buffer on result buffer.
 
   // TODO: Render to other buffers.

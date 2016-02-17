@@ -59,7 +59,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankShape3Finite,
  * CrankShape3FiniteClass:
  * @is_convex: Slot for crank_shape3_finite_is_convex().
  * @get_bound_radius: Slot for crank_shape3_finite_get_bound_radius().
- * @approximate_vertexed: Slot for crank_shape3_finite_approximate_polyhedreon().
+ * @approximate_vertexed: Slot for crank_shape3_finite_approximate_vertexed().
  *
  * Virtual function table for #CrankShape3Finite
  */

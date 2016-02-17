@@ -47,28 +47,28 @@ GQuark  crank_composite_error_quark (void);
 
 /**
  * CrankCompositeError:
- * @CRANK_COMPOSIT_ERROR_REJECTED:
+ * @CRANK_COMPOSITE_ERROR_REJECTED:
  *   The composite or compositable rejected.
- * @CRANK_COMPOSIT_ERROR_REQ_NOT_MEET:
+ * @CRANK_COMPOSITE_ERROR_REQ_NOT_MEET:
  *   The requisition of compostable, is not met.
- * @CRANK_COMPOSIT_ERROR_NOT_HAVE_COMPOSITABLE:
+ * @CRANK_COMPOSITE_ERROR_NOT_HAVE_COMPOSITABLE:
  *   The compositable is not in the composite.
- * @CRANK_COMPOSIT_ERROR_ALREADY_HAS_COMPOSITE:
+ * @CRANK_COMPOSITE_ERROR_ALREADY_HAS_COMPOSITE:
  *   The compositable accepts one composite, and already has composite.
- * @CRANK_COMPOSIT_ERROR_ALREADY_HAS_COMPOSITABLE:
+ * @CRANK_COMPOSITE_ERROR_ALREADY_HAS_COMPOSITABLE:
  *   The composite already has a type of compositable, and should not be two or
  *   more of them.
  *
- * Represents error codes for #CrenkComposite.
+ * Represents error codes for #CrankComposite.
  */
-typedef enum _CrankCompositError
+typedef enum _CrankCompositeError
 {
   CRANK_COMPOSITE_ERROR_REJECTED,
   CRANK_COMPOSITE_ERROR_REQ_NOT_MEET,
   CRANK_COMPOSITE_ERROR_NOT_HAVE_COMPOSITABLE,
   CRANK_COMPOSITE_ERROR_ALREADY_HAS_COMPOSITE,
   CRANK_COMPOSITE_ERROR_ALREADY_HAS_COMPOSITABLE
-} CrankCompositError;
+} CrankCompositeError;
 
 
 //////// Type Declarations /////////////////////////////////////////////////////
@@ -79,10 +79,25 @@ G_DECLARE_DERIVABLE_TYPE (CrankComposite,
                           CRANK, COMPOSITE,
                           GObject)
 
+/**
+ * CrankComposite:
+ *
+ * Represents a composite object.
+ */
+
+/**
+ * CrankCompositeClass:
+ * @add_compositable: Slot for crank_composite_add_compositable()
+ * @remove_compositable: Slot for crank_composite_remove_compositable()
+ *
+ * Virtual function table for #CrankComposite.
+ */
 struct _CrankCompositeClass
 {
+  /*< private >*/
   GObjectClass parent;
 
+  /*< public >*/
   gboolean  (*add_compositable)       (CrankComposite     *composite,
                                        CrankCompositable  *compositable,
                                        GError            **error);
@@ -90,7 +105,7 @@ struct _CrankCompositeClass
   gboolean  (*remove_compositable)    (CrankComposite     *composite,
                                        CrankCompositable  *compositable,
                                        GError            **error);
-
+  /*< private >*/
   gpointer _DUMMY2;
   gpointer _DUMMY3;
 };

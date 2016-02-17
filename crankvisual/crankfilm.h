@@ -55,8 +55,8 @@ CrankFilm    *crank_film_new              (CrankRenderLayer *render_layer, ...)
 CrankFilm    *crank_film_new_va           (CrankRenderLayer *render_layer,
                                            va_list           varargs);
 
-CrankFilm    *crank_film_new_with_layers  (CrankRenderLayer **layers,
-                                           const guint        nlayers);
+CrankFilm    *crank_film_new_with_layers  (CrankRenderLayer **render_layers,
+                                           const guint        nrender_layers);
 
 CrankFilm    *crank_film_new_old (CoglContext  *cogl_context,
                                   const guint   width,

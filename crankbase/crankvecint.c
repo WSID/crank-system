@@ -146,7 +146,7 @@
  *                   <entry>Related Functions</entry>
  *                   <entry>Remarks</entry> </row> </thead>
  *     <tbody>
- *       <row> <entry>From #CrnakVecBoolN</entry>
+ *       <row> <entry>From #CrankVecBoolN</entry>
  *             <entry>crank_vec_int_n_init_from_vb()</entry>
  *             <entry>GValue Transform</entry> </row>
  *
