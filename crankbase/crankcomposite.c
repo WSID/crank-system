@@ -87,6 +87,11 @@ static void   crank_composite_dispose   (GObject *object);
 
 static void   crank_composite_finalize  (GObject *object);
 
+static void   crank_composite_get_property (GObject    *object,
+                                            guint       prop_id,
+                                            GValue     *value,
+                                            GParamSpec *pspec);
+
 
 //////// CrankComposite ////////////////////////////////////////////////////////
 
@@ -104,6 +109,15 @@ static gboolean crank_composite_def_remove_compositable (CrankComposite     *com
                                                          GError            **error);
 
 //////// Properties and signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_NCOMPOSITABLES,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 
 //////// Type Definition ///////////////////////////////////////////////////////
@@ -137,9 +151,19 @@ crank_composite_class_init (CrankCompositeClass *c)
   c_gobject = G_OBJECT_CLASS (c);
   c_gobject->dispose = crank_composite_dispose;
   c_gobject->finalize = crank_composite_finalize;
+  c_gobject->get_property = crank_composite_get_property;
 
   c->add_compositable = crank_composite_def_add_compositable;
   c->remove_compositable = crank_composite_def_remove_compositable;
+
+  pspecs[PROP_NCOMPOSITABLES] =
+  g_param_spec_uint ("ncompositables", "Number of compositables",
+                     "Number of compositables.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE |
+                     G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
 
@@ -174,6 +198,24 @@ crank_composite_finalize (GObject *object)
   pc->finalize (object);
 }
 
+static void
+crank_composite_get_property (GObject    *object,
+                              guint       prop_id,
+                              GValue     *value,
+                              GParamSpec *pspec)
+{
+  CrankComposite *self = (CrankComposite*) object;
+
+  switch (prop_id)
+    {
+    case PROP_NCOMPOSITABLES:
+      g_value_set_uint (value, crank_composite_get_ncompositables (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
 
 
 
@@ -277,7 +319,12 @@ crank_composite_add_compositable (CrankComposite     *composite,
                                   GError            **error)
 {
   CrankCompositeClass *c = CRANK_COMPOSITE_GET_CLASS (composite);
-  return c->add_compositable (composite, compositable, error);
+  if (c->add_compositable (composite, compositable, error))
+    {
+      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
+      return TRUE;
+    }
+  return FALSE;
 }
 
 
@@ -306,11 +353,18 @@ crank_composite_remove_compositable (CrankComposite     *composite,
                                      GError            **error)
 {
   CrankCompositeClass *c = CRANK_COMPOSITE_GET_CLASS (composite);
-  return c->remove_compositable (composite, compositable, error);
+  if (c->remove_compositable (composite, compositable, error))
+    {
+      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
+      return TRUE;
+    }
+  return FALSE;
 }
 
 
 //////// Compositable getting //////////////////////////////////////////////////
+
+
 
 /**
  * crank_composite_get_compositable:
