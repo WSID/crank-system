@@ -81,6 +81,14 @@ static void crank_session_set_property (GObject      *object,
                                         const GValue *value,
                                         GParamSpec   *psepc);
 
+static gboolean crank_session_add_compositable (CrankComposite     *composite,
+                                                CrankCompositable  *compositable,
+                                                GError            **error);
+
+static gboolean crank_session_remove_compositable (CrankComposite     *composite,
+                                                   CrankCompositable  *compositable,
+                                                   GError            **error);
+
 
 static void crank_session_def_resume (CrankSession *session);
 
@@ -124,6 +132,7 @@ static void
 crank_session_class_init (CrankSessionClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  CrankCompositeClass *c_composite = CRANK_COMPOSITE_CLASS (c);
 
   c_gobject->get_property = crank_session_get_property;
   c_gobject->set_property = crank_session_set_property;
@@ -170,6 +179,9 @@ crank_session_class_init (CrankSessionClass *c)
                              NULL,
                              G_TYPE_NONE,
                              0);
+
+  c_composite->add_compositable = crank_session_add_compositable;
+  c_composite->remove_compositable = crank_session_remove_compositable;
 
 
   c->resume = crank_session_def_resume;
@@ -227,6 +239,63 @@ crank_session_set_property (GObject      *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
+
+
+
+
+//////// CrankComposite ////////////////////////////////////////////////////////
+
+static gboolean
+crank_session_add_compositable (CrankComposite     *composite,
+                                CrankCompositable  *compositable,
+                                GError            **error)
+{
+  CrankCompositeClass *pc = crank_session_parent_class;
+  CrankSession *self = (CrankSession*) composite;
+  CrankSessionPrivate *priv = crank_session_get_instance_private (self);
+
+  if (priv->running)
+    {
+      g_set_error (error,
+                   CRANK_COMPOSITE_ERROR,
+                   CRANK_COMPOSITE_ERROR_REJECTED,
+                   "Attempt to add compositable to running session.\n"
+                   "  %s@%p : %s@%p",
+                   G_OBJECT_TYPE_NAME (self), self,
+                   G_OBJECT_TYPE_NAME (compositable), compositable);
+      return FALSE;
+    }
+
+  return pc->add_compositable (composite, compositable, error);
+}
+
+
+static gboolean
+crank_session_remove_compositable (CrankComposite     *composite,
+                                   CrankCompositable  *compositable,
+                                   GError            **error)
+{
+  CrankCompositeClass *pc = crank_session_parent_class;
+  CrankSession *self = (CrankSession*) composite;
+  CrankSessionPrivate *priv = crank_session_get_instance_private (self);
+
+  if (priv->running)
+    {
+      g_set_error (error,
+                   CRANK_COMPOSITE_ERROR,
+                   CRANK_COMPOSITE_ERROR_REJECTED,
+                   "Attempt to remove compositable from running session.\n"
+                   "  %s@%p : %s@%p",
+                   G_OBJECT_TYPE_NAME (self), self,
+                   G_OBJECT_TYPE_NAME (compositable), compositable);
+      return FALSE;
+    }
+
+  return pc->remove_compositable (composite, compositable, error);
+}
+
+
 
 //////// Default implementations ///////////////////////////////////////////////
 
