@@ -60,9 +60,13 @@ static void       crank_render_module_set_property (GObject      *object,
                                                     const GValue *value,
                                                     GParamSpec   *pspec);
 
-static void       crank_render_module_session_init (CrankSessionModule  *module,
-                                                    CrankSession        *session,
-                                                    GError             **error);
+static gboolean   crank_render_module_adding (CrankCompositable  *compositable,
+                                              CrankComposite     *composite,
+                                              GError            **error);
+
+static gboolean   crank_render_module_removing (CrankCompositable  *compositable,
+                                                CrankComposite     *composite,
+                                                GError            **error);
 
 
 //////// Functions for other modules ///////////////////////////////////////////
@@ -106,7 +110,7 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 struct _CrankRenderModule
 {
-  CrankSessionModule  _parent;
+  CrankCompositable  _parent;
 
   CoglContext *cogl_context;
 
@@ -119,9 +123,22 @@ struct _CrankRenderModule
   GPtrArray   *render_entities;
 };
 
-G_DEFINE_TYPE (CrankRenderModule,
-               crank_render_module,
-               CRANK_TYPE_SESSION_MODULE)
+G_DEFINE_TYPE_WITH_CODE (CrankRenderModule,
+                         crank_render_module,
+                         CRANK_TYPE_COMPOSITABLE_1N,
+                         {
+                          crank_gtype_compositable_add_requisition (
+                              g_define_type_id,
+                              CRANK_TYPE_SESSION);
+
+                          crank_gtype_compositable_add_requisition (
+                              g_define_type_id,
+                              CRANK_TYPE_SESSION_MODULE_PLACED);
+
+                          crank_gtype_compositable_add_requisition (
+                              g_define_type_id,
+                              CRANK_TYPE_SESSION_MODULE_TICK);
+                         })
 
 
 
@@ -140,7 +157,7 @@ static void
 crank_render_module_class_init (CrankRenderModuleClass *c)
 {
   GObjectClass *c_gobject;
-  CrankSessionModuleClass *c_sessionmodule;
+  CrankCompositableClass *c_compositable;
 
   c_gobject = G_OBJECT_CLASS (c);
   c_gobject->get_property = crank_render_module_get_property;
@@ -153,9 +170,9 @@ crank_render_module_class_init (CrankRenderModuleClass *c)
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
-
-  c_sessionmodule = CRANK_SESSION_MODULE_CLASS (c);
-  c_sessionmodule->session_init = crank_render_module_session_init;
+  c_compositable = CRANK_COMPOSITABLE_CLASS (c);
+  c_compositable->adding = crank_render_module_adding;
+  c_compositable->removing = crank_render_module_removing;
 }
 
 
@@ -208,21 +225,25 @@ crank_render_module_set_property (GObject      *object,
 
 //////// CrankSessionModule ////////////////////////////////////////////////////
 
-static void
-crank_render_module_session_init (CrankSessionModule  *module,
-                                  CrankSession        *session,
-                                  GError             **error)
+static gboolean
+crank_render_module_adding (CrankCompositable  *compositable,
+                            CrankComposite     *composite,
+                            GError            **error)
 {
-  CrankRenderModule *rmodule = (CrankRenderModule*)module;
+  CrankCompositableClass *pc = crank_render_module_parent_class;
+  CrankRenderModule *rmodule = (CrankRenderModule*)compositable;
   CrankSessionModulePlaced *pmodule;
   CrankSessionModuleTick *tmodule;
+
+
+  if (! pc->adding (compositable, composite, error))
+    return FALSE;
+
   // Placed Module
-
-  pmodule = CRANK_SESSION_MODULE_PLACED (crank_session_get_module_by_gtype (session,
-                                               CRANK_TYPE_SESSION_MODULE_PLACED));
-
-  if (pmodule == NULL)
-    g_error ("CrankRenderModule: requires CrankSessionModulePlaced.");
+  pmodule = CRANK_SESSION_MODULE_PLACED (
+      crank_composite_get_compositable_by_gtype (
+            composite,
+            CRANK_TYPE_SESSION_MODULE_PLACED));
 
   crank_session_module_placed_attach_place_alloc_object (pmodule,
                                                          & rmodule->offset_pdata);
@@ -246,12 +267,29 @@ crank_render_module_session_init (CrankSessionModule  *module,
 
 
   // Tick Module
-  tmodule = CRANK_SESSION_MODULE_TICK (crank_session_get_module_by_gtype (session, CRANK_TYPE_SESSION_MODULE_TICK));
-
-  if (tmodule == NULL)
-    return;
+  tmodule = CRANK_SESSION_MODULE_TICK (
+      crank_composite_get_compositable_by_gtype (
+          composite,
+          CRANK_TYPE_SESSION_MODULE_TICK));
 
   g_signal_connect (tmodule, "tick", (GCallback)crank_render_module_tick, rmodule);
+  return TRUE;
+}
+
+
+static gboolean
+crank_render_module_removing (CrankCompositable  *compositable,
+                              CrankComposite     *composite,
+                              GError            **error)
+{
+  g_set_error (error,
+               CRANK_COMPOSITE_ERROR,
+               CRANK_COMPOSITE_ERROR_REJECTED,
+               "CrankRenderModule does not support removing.\n"
+               "  %s@%p : %s@%p",
+               G_OBJECT_TYPE_NAME (composite), composite,
+               G_OBJECT_TYPE_NAME (compositable), compositable);
+  return FALSE;
 }
 
 

@@ -45,7 +45,7 @@
 G_DECLARE_FINAL_TYPE (CrankRenderModule,
                       crank_render_module,
                       CRANK, RENDER_MODULE,
-                      CrankSessionModule)
+                      CrankCompositable)
 
 /**
  * CrankRenderModule:
