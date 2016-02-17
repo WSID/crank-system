@@ -242,7 +242,8 @@ static void
 crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
                                        CoglContext          *cogl_context)
 {
-  // Constructs sessions and modules.
+  GError *merr = NULL;
+  // Constructs sessions and modules
   app->session = crank_session_new ();
   app->pmodule = crank_session_module_placed_new (sizeof (CrankPlace3),
                                                   sizeof (CrankEntity3));
@@ -251,16 +252,21 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   app->rmodule = crank_render_module_new (cogl_context);
 
   // Add modules to session.
-  crank_session_add_module (app->session,
-                            (CrankSessionModule*) app->pmodule);
 
-  crank_session_add_module (app->session,
-                            (CrankSessionModule*) app->tmodule);
+  if (! crank_composite_add_compositable ((CrankComposite*)app->session,
+                                          (CrankCompositable*)app->pmodule,
+                                          &merr))
+    g_error ("Error while building session: %s", merr->message);
 
-  crank_session_add_module (app->session,
-                            (CrankSessionModule*) app->rmodule);
+  if (! crank_composite_add_compositable ((CrankComposite*)app->session,
+                                          (CrankCompositable*)app->tmodule,
+                                          &merr))
+    g_error ("Error while building session: %s", merr->message);
 
-  crank_session_init_modules (app->session, NULL);
+  if (! crank_composite_add_compositable ((CrankComposite*)app->session,
+                                          (CrankCompositable*)app->rmodule,
+                                          &merr))
+    g_error ("Error while building session: %s", merr->message);
 
 
   // Make entities.
