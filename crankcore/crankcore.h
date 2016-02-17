@@ -26,6 +26,7 @@
 
 #include "cranksession.h"
 
+#include "crankplace.h"
 #include "crankplaceentity.h"
 
 #include "cranksessionmoduletick.h"
