@@ -180,7 +180,30 @@ crank_composite_dispose (GObject *object)
   CrankComposite *self = (CrankComposite*)object;
   CrankCompositePrivate *priv = crank_composite_get_instance_private (self);
 
-  g_ptr_array_set_size (priv->compositables, 0);
+  guint i;
+
+  for (i = priv->compositables->len; 0 < i;)
+    {
+      CrankCompositable *compositable;
+      GError *merr = NULL;
+      i--;
+
+      compositable = priv->compositables->pdata[i];
+      crank_composite_remove_compositable (self, compositable, &merr);
+
+      if (merr != NULL)
+        {
+          g_warning ("crank_composite_dispose: Error upon removal:\n"
+                     "  %s@%p : %s@%p\n"
+                     "  %s",
+                     G_OBJECT_TYPE_NAME (self), self,
+                     G_OBJECT_TYPE_NAME (compositable), compositable,
+                     merr->message);
+          g_clear_error (&merr);
+        }
+    }
+
+  g_assert (priv->compositables->len == 0);
 
   pc->dispose (object);
 }
