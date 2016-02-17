@@ -111,14 +111,47 @@ static gboolean crank_compositable_def_removing (CrankCompositable  *compositabl
 
 //////// Type Private functions ////////////////////////////////////////////////
 
+typedef gboolean (*TPrivFunc) (GType                   type,
+                               CrankCompositableTPriv *tpriv,
+                               gpointer                userdata);
+
 static CrankCompositableTPriv *get_tpriv (GType type);
 
+static gboolean               foreach_tpriv (GType     type,
+                                             TPrivFunc func,
+                                             gpointer  userdata);
+
+
+static gboolean               tpriv_is_composite_required  (GType                   type,
+                                                            CrankCompositableTPriv *tpriv,
+                                                            gpointer                userdata);
+
+static gboolean               tpriv_is_compositable_required(GType                   type,
+                                                            CrankCompositableTPriv *tpriv,
+                                                            gpointer                userdata);
+
+static gboolean               tpriv_add_req_composite      (GType                   type,
+                                                            CrankCompositableTPriv *tpriv,
+                                                            gpointer                userdata);
+
+static gboolean               tpriv_add_req_compositables  (GType                   type,
+                                                            CrankCompositableTPriv *tpriv,
+                                                            gpointer                userdata);
+
+static gboolean               tpriv_add_requisitions       (GType                   type,
+                                                            CrankCompositableTPriv *tpriv,
+                                                            gpointer                userdata);
 
 //////// Type Definitions //////////////////////////////////////////////////////
 
 G_DEFINE_TYPE (CrankCompositable,
                crank_compositable,
                G_TYPE_INITIALLY_UNOWNED)
+
+
+
+
+
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -134,6 +167,11 @@ crank_compositable_class_init (CrankCompositableClass *c)
   c->adding = crank_compositable_def_adding;
   c->removing = crank_compositable_def_removing;
 }
+
+
+
+
+
 
 
 //////// CrankCompositable /////////////////////////////////////////////////////
@@ -240,6 +278,11 @@ crank_compositable_def_removing (CrankCompositable  *compositable,
 }
 
 
+
+
+
+
+
 //////// Type Private functions ////////////////////////////////////////////////
 
 static CrankCompositableTPriv*
@@ -259,6 +302,124 @@ get_tpriv (GType gtype)
 
   return result;
 }
+
+static gboolean
+foreach_tpriv (GType     gtype,
+               TPrivFunc func,
+               gpointer  userdata)
+{
+  GType mtype;
+  guint i;
+  for (mtype = gtype;
+       mtype != CRANK_TYPE_COMPOSITABLE;
+       mtype = g_type_parent (mtype))
+    {
+      CrankCompositableTPriv *tpriv;
+      GType *itypes;
+
+      tpriv = g_type_get_qdata (mtype, CRANK_COMPOSITABLE_TPRIV_QUARK);
+
+      if ((tpriv != NULL) && (! func (mtype, tpriv, userdata)))
+        return FALSE;
+
+      itypes = g_type_interfaces (mtype, NULL);
+
+      for (i = 0; itypes[i] == 0; i++)
+        {
+          tpriv = g_type_get_qdata (itypes[i], CRANK_COMPOSITABLE_TPRIV_QUARK);
+          if ((tpriv != NULL) && (! func (itypes[i], tpriv, userdata)))
+            return FALSE;
+        }
+    }
+  return TRUE;
+}
+
+
+static gboolean
+tpriv_is_composite_required (GType                   type,
+                             CrankCompositableTPriv *tpriv,
+                             gpointer                userdata)
+{
+  GType mtype = GPOINTER_TO_UINT (userdata);
+  guint i;
+
+  for (i = 0; i < tpriv->req_composite->len; i++)
+    {
+      GType reqtype = g_array_index (tpriv->req_composite, GType, i);
+
+      if (g_type_is_a (mtype, reqtype))
+        return FALSE;
+    }
+  return TRUE;
+}
+
+static gboolean
+tpriv_is_compositable_required (GType                   type,
+                                CrankCompositableTPriv *tpriv,
+                                gpointer                userdata)
+{
+  GType mtype = GPOINTER_TO_UINT (userdata);
+  guint i;
+
+  for (i = 0; i < tpriv->req_composite->len; i++)
+    {
+      GType reqtype = g_array_index (tpriv->req_compositables, GType, i);
+
+      if (g_type_is_a (mtype, reqtype))
+        return FALSE;
+    }
+  return TRUE;
+}
+
+
+static gboolean
+tpriv_add_req_composite (GType                   type,
+                         CrankCompositableTPriv *tpriv,
+                         gpointer                userdata)
+{
+  GArray *array = userdata;
+
+  g_array_append_vals (array,
+                       tpriv->req_composite->data,
+                       tpriv->req_composite->len);
+
+  return TRUE;
+}
+
+static gboolean
+tpriv_add_req_compositables (GType                   type,
+                             CrankCompositableTPriv *tpriv,
+                             gpointer                userdata)
+{
+  GArray *array = userdata;
+
+  g_array_append_vals (array,
+                       tpriv->req_compositables->data,
+                       tpriv->req_compositables->len);
+
+  return TRUE;
+}
+
+static gboolean
+tpriv_add_requisitions (GType                   type,
+                        CrankCompositableTPriv *tpriv,
+                        gpointer                userdata)
+{
+  GArray *array = userdata;
+
+  g_array_append_vals (array,
+                       tpriv->req_composite->data,
+                       tpriv->req_composite->len);
+
+  g_array_append_vals (array,
+                       tpriv->req_compositables->data,
+                       tpriv->req_compositables->len);
+
+  return TRUE;
+}
+
+
+
 
 
 
@@ -301,30 +462,16 @@ gboolean
 crank_gtype_compositable_is_required (GType type,
                                       GType req)
 {
-  CrankCompositableTPriv *tpriv;
-  GArray *array;
+  TPrivFunc func;
   guint i;
 
   g_return_val_if_fail (g_type_is_a (type, CRANK_TYPE_COMPOSITABLE), FALSE);
 
-  while (type != CRANK_TYPE_COMPOSITABLE)
-    {
-      tpriv = get_tpriv(type);
-      array = (g_type_is_a (req, CRANK_TYPE_COMPOSITABLE)) ?
-              tpriv->req_compositables :
-              tpriv->req_composite;
+  func = (g_type_is_a (req, CRANK_TYPE_COMPOSITABLE)) ?
+          tpriv_is_compositable_required :
+          tpriv_is_composite_required ;
 
-      for (i = 0 ; i < array->len; i++)
-        {
-          GType mreq = g_array_index (array, GType, i);
-          if (g_type_is_a (req, mreq))
-            return TRUE;
-        }
-
-      type = g_type_parent (type);
-    }
-
-  return FALSE;
+  return ! foreach_tpriv (type, func, GUINT_TO_POINTER (type));
 }
 
 
@@ -341,12 +488,8 @@ GType*
 crank_gtype_compositable_get_req_composite (GType  type,
                                             guint *nreq)
 {
-  CrankCompositableTPriv *tpriv;
-  GType mtype = type;
-  guint mnreq = 0;
-  guint mindex = 0;
+  GArray *array = g_array_new (FALSE, FALSE, sizeof (GType));
 
-  GType *result;
 
   if (! g_type_is_a (type, CRANK_TYPE_COMPOSITABLE))
     {
@@ -355,31 +498,10 @@ crank_gtype_compositable_get_req_composite (GType  type,
       return NULL;
     }
 
-  // Length pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (mtype);
-      mnreq += tpriv->req_composite->len;
-    }
+  foreach_tpriv (type, tpriv_add_req_composite, array);
 
-  *nreq = mnreq;
-  result = g_new (GType, mnreq);
-
-  // Data pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (type);
-      memcpy (result + mindex,
-              tpriv->req_composite->data,
-              tpriv->req_composite->len * sizeof (GType));
-      mindex += tpriv->req_composite->len;
-    }
-
-  return result;
+  *nreq = array->len;
+  return (GType*) g_array_free (array, FALSE);
 }
 
 
@@ -396,12 +518,8 @@ GType*
 crank_gtype_compositable_get_req_compositable (GType  type,
                                                guint *nreq)
 {
-  CrankCompositableTPriv *tpriv;
-  GType mtype = type;
-  guint mnreq = 0;
-  guint mindex = 0;
+  GArray *array = g_array_new (FALSE, FALSE, sizeof (GType));
 
-  GType *result;
 
   if (! g_type_is_a (type, CRANK_TYPE_COMPOSITABLE))
     {
@@ -410,31 +528,10 @@ crank_gtype_compositable_get_req_compositable (GType  type,
       return NULL;
     }
 
-  // Length pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (mtype);
-      mnreq += tpriv->req_compositables->len;
-    }
+  foreach_tpriv (type, tpriv_add_req_compositables, array);
 
-  *nreq = mnreq;
-  result = g_new (GType, mnreq);
-
-  // Data pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (type);
-      memcpy (result + mindex,
-              tpriv->req_compositables->data,
-              tpriv->req_compositables->len * sizeof (GType));
-      mindex += tpriv->req_compositables->len;
-    }
-
-  return result;
+  *nreq = array->len;
+  return (GType*) g_array_free (array, FALSE);
 }
 
 
@@ -451,12 +548,8 @@ GType*
 crank_gtype_compositable_get_requisitions (GType  type,
                                            guint *nreq)
 {
-  CrankCompositableTPriv *tpriv;
-  GType mtype = type;
-  guint mnreq = 0;
-  guint mindex = 0;
+  GArray *array = g_array_new (FALSE, FALSE, sizeof (GType));
 
-  GType *result;
 
   if (! g_type_is_a (type, CRANK_TYPE_COMPOSITABLE))
     {
@@ -465,37 +558,13 @@ crank_gtype_compositable_get_requisitions (GType  type,
       return NULL;
     }
 
-  // Length pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (mtype);
-      mnreq += tpriv->req_composite->len + tpriv->req_compositables->len;
-    }
+  foreach_tpriv (type, tpriv_add_requisitions, array);
 
-  *nreq = mnreq;
-  result = g_new (GType, mnreq);
-
-  // Data pass.
-  for (mtype = type;
-       mtype != CRANK_TYPE_COMPOSITABLE;
-       mtype = g_type_parent (mtype))
-    {
-      tpriv = get_tpriv (type);
-      memcpy (result + mindex,
-              tpriv->req_composite->data,
-              tpriv->req_composite->len * sizeof (GType));
-      mindex += tpriv->req_composite->len;
-
-      memcpy (result + mindex,
-              tpriv->req_compositables->data,
-              tpriv->req_compositables->len * sizeof (GType));
-      mindex += tpriv->req_compositables->len;
-    }
-
-  return result;
+  *nreq = array->len;
+  return (GType*) g_array_free (array, FALSE);
 }
+
+
 
 
 
