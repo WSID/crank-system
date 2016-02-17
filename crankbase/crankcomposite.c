@@ -267,7 +267,7 @@ crank_composite_def_add_compositable (CrankComposite     *composite,
   // Do adding
   if (crank_compositable_adding (compositable, composite, error))
     {
-      g_ptr_array_add (priv->compositables, compositable);
+      g_ptr_array_add (priv->compositables, g_object_ref_sink (compositable));
       return TRUE;
     }
   else
