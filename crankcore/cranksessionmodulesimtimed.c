@@ -28,6 +28,10 @@
  *
  * This module provides functionality to manage in-game simulated time, for
  * turn-based or real-time sessions.
+ *
+ * # CrankSessionModuleSimTimed as #CrankCompositable
+ *
+ * Composite Requisition: #CrankSession
  */
 
 #define CRANKCORE_INSIDE
@@ -80,9 +84,15 @@ typedef struct _CrankSessionModuleSimTimedPrivate
   guint   sim_steps;
 } CrankSessionModuleSimTimedPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (CrankSessionModuleSimTimed,
-                            crank_session_module_sim_timed,
-                            CRANK_TYPE_SESSION_MODULE)
+G_DEFINE_TYPE_WITH_CODE (CrankSessionModuleSimTimed,
+                         crank_session_module_sim_timed,
+                         CRANK_TYPE_COMPOSITABLE_1N,
+                         {
+                          G_ADD_PRIVATE (CrankSessionModuleSimTimed);
+                          crank_gtype_compositable_add_requisition (
+                            g_define_type_id,
+                            CRANK_TYPE_SESSION);
+                         })
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////

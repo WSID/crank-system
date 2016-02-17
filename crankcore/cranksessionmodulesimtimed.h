@@ -42,7 +42,7 @@
 G_DECLARE_DERIVABLE_TYPE (CrankSessionModuleSimTimed,
                           crank_session_module_sim_timed,
                           CRANK, SESSION_MODULE_SIM_TIMED,
-                          CrankSessionModule)
+                          CrankCompositable1N)
 
 /**
  * CrankSessionModuleSimTimed:
@@ -60,7 +60,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankSessionModuleSimTimed,
 struct _CrankSessionModuleSimTimedClass
 {
   /*< private >*/
-  CrankSessionModuleClass _parent;
+  CrankCompositable1NClass _parent;
 
   /*< public >*/
   void (*flow_time) (CrankSessionModuleSimTimed *module,
