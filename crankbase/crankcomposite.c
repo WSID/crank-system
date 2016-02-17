@@ -362,7 +362,7 @@ crank_composite_get_compositable_by_gtype  (CrankComposite *composite,
 }
 
 /**
- * crank_composite_get_ncompositable:
+ * crank_composite_get_ncompositables:
  * @composite: A Composite.
  *
  * Gets number of compositable that @composite holds.
@@ -370,7 +370,7 @@ crank_composite_get_compositable_by_gtype  (CrankComposite *composite,
  * Returns: Number of compositable.
  */
 guint
-crank_composite_get_ncompositable (CrankComposite *composite)
+crank_composite_get_ncompositables (CrankComposite *composite)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
   return priv->compositables->len;

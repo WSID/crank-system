@@ -210,7 +210,7 @@ crank_compositable_def_removing (CrankCompositable  *compositable,
   // Checks rest compositables' requisitions.
   {
     guint i = 0;
-    guint n = crank_composite_get_ncompositable (composite);
+    guint n = crank_composite_get_ncompositables (composite);
 
     for (i = 0; i < n; i++)
       {

@@ -132,7 +132,7 @@ CrankCompositable *crank_composite_get_compositable           (CrankComposite *c
 CrankCompositable *crank_composite_get_compositable_by_gtype  (CrankComposite *composite,
                                                                const GType     type);
 
-guint              crank_composite_get_ncompositable          (CrankComposite *composite);
+guint              crank_composite_get_ncompositables         (CrankComposite *composite);
 
 
 gboolean    crank_composite_contains_compositable   (CrankComposite    *composite,
