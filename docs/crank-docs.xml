@@ -61,6 +61,7 @@
       <xi:include href="xml/crankveccommon.xml"/>
       <xi:include href="xml/crankmatcommon.xml"/>
       <xi:include href="xml/crankvecbool.xml"/>
+      <xi:include href="xml/crankvecuint.xml"/>
       <xi:include href="xml/crankvecint.xml"/>
       <xi:include href="xml/crankvecfloat.xml"/>
       <xi:include href="xml/crankveccplxfloat.xml"/>
@@ -75,6 +76,20 @@
 
       <xi:include href="xml/crankdigraph.xml"/>
       <xi:include href="xml/crankadvgraph.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Cell Spaces</title>
+
+      <xi:include href="xml/crankcellspace2.xml"/>
+      <xi:include href="xml/crankcellspace3.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Composite Objects</title>
+
+      <xi:include href="xml/crankcomposite.xml"/>
+      <xi:include href="xml/crankcompositable.xml"/>
     </chapter>
 
     <chapter>
@@ -173,9 +188,17 @@
       <xi:include href="xml/crankfilm.xml"/>
       <xi:include href="xml/crankprojection.xml"/>
       <xi:include href="xml/crankcamera.xml"/>
+      <xi:include href="xml/crankmeshutil.xml"/>
       <xi:include href="xml/crankmaterial.xml"/>
+      <xi:include href="xml/crankvisible.xml"/>
       <xi:include href="xml/crankrenderable.xml"/>
       <xi:include href="xml/crankrenderableprimitive.xml"/>
+      <xi:include href="xml/cranklightable.xml"/>
+      <xi:include href="xml/cranklightablearanged.xml"/>
+      <xi:include href="xml/crankrenderlayer.xml"/>
+      <xi:include href="xml/crankrenderlayertexture.xml"/>
+      <xi:include href="xml/crankrenderstep.xml"/>
+      <xi:include href="xml/crankrenderstepsimple.xml"/>
       <xi:include href="xml/crankcameracontent.xml"/>
     </chapter>
   </part>
