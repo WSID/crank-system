@@ -29,6 +29,10 @@
  * @include: crankcore.h
  *
  * This module provides ticking function for other modules.
+ *
+ * # CrankSessionModuleTick as #CrankCompositable
+ *
+ * Composite Requisition: #CrankSession
  */
 
 #include <glib.h>
@@ -57,9 +61,14 @@ static void crank_session_module_tick_set_property (GObject      *object,
 static void crank_session_module_tick_dispose (GObject *object);
 
 
-static void crank_session_module_tick_session_init (CrankSessionModule  *module,
-                                                    CrankSession        *session,
-                                                    GError             **error);
+static gboolean crank_session_module_tick_adding (CrankCompositable  *compositable,
+                                                  CrankComposite     *composite,
+                                                  GError            **error);
+
+static gboolean crank_session_module_tick_removing(CrankCompositable  *compositable,
+                                                   CrankComposite     *composite,
+                                                   GError            **error);
+
 
 
 //////// Private functions /////////////////////////////////////////////////////
@@ -91,7 +100,7 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 //////// Type Definition ///////////////////////////////////////////////////////
 
 struct _CrankSessionModuleTick {
-  CrankSessionModule _parent;
+  CrankCompositable _parent;
 
   GMainContext *tick_context;
   guint         tick_interval;
@@ -99,9 +108,14 @@ struct _CrankSessionModuleTick {
   GSource      *tick_source;
 };
 
-G_DEFINE_TYPE (CrankSessionModuleTick,
-               crank_session_module_tick,
-               CRANK_TYPE_SESSION_MODULE)
+G_DEFINE_TYPE_WITH_CODE (CrankSessionModuleTick,
+                         crank_session_module_tick,
+                         CRANK_TYPE_COMPOSITABLE,
+                         {
+                          crank_gtype_compositable_add_requisition (
+                              g_define_type_id,
+                              CRANK_TYPE_SESSION);
+                         })
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -116,7 +130,7 @@ static void
 crank_session_module_tick_class_init (CrankSessionModuleTickClass *c)
 {
   GObjectClass *c_gobject;
-  CrankSessionModuleClass *c_session_module;
+  CrankCompositableClass *c_compositable;
 
   c_gobject = G_OBJECT_CLASS (c);
   c_gobject->get_property = crank_session_module_tick_get_property;
@@ -136,8 +150,10 @@ crank_session_module_tick_class_init (CrankSessionModuleTickClass *c)
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
 
-  c_session_module = CRANK_SESSION_MODULE_CLASS (c);
-  c_session_module->session_init = crank_session_module_tick_session_init;
+  c_compositable = CRANK_COMPOSITABLE_CLASS (c);
+
+  c_compositable->adding = crank_session_module_tick_adding;
+  c_compositable->removing = crank_session_module_tick_removing;
 
   /**
    * CrankSessionModuleTick::tick:
@@ -225,23 +241,42 @@ crank_session_module_tick_dispose (GObject *object)
 }
 
 
-//////// CrankSessionModule ////////////////////////////////////////////////////
+//////// CrankCompositable /////////////////////////////////////////////////////
 
-static void
-crank_session_module_tick_session_init (CrankSessionModule  *module,
-                                        CrankSession        *session,
-                                        GError             **error)
+static gboolean
+crank_session_module_tick_adding (CrankCompositable  *compositable,
+                                  CrankComposite     *composite,
+                                  GError            **error)
 {
-  CrankSessionModuleClass *pc_sessionmodule;
-  pc_sessionmodule = (CrankSessionModuleClass*) crank_session_module_tick_parent_class;
+  CrankCompositableClass *pc;
+  pc = crank_session_module_tick_parent_class;
 
-  pc_sessionmodule->session_init (module, session, error);
+  if (! pc->adding (compositable, composite, error))
+    return FALSE;
 
-  g_signal_connect_swapped (session, "resume",
-                            (GCallback)crank_session_module_tick_build_source, module);
+  g_signal_connect_swapped (composite, "resume",
+                            (GCallback)crank_session_module_tick_build_source, compositable);
 
-  g_signal_connect_swapped (session, "pause",
-                            (GCallback)crank_session_module_tick_destroy_source, module);
+  g_signal_connect_swapped (composite, "pause",
+                            (GCallback)crank_session_module_tick_destroy_source, compositable);
+
+  return TRUE;
+}
+
+static gboolean
+crank_session_module_tick_removing (CrankCompositable  *compositable,
+                                    CrankComposite     *composite,
+                                    GError            **error)
+{
+  CrankCompositableClass *pc;
+  pc = crank_session_module_tick_parent_class;
+
+  if (! pc->removing (compositable, composite, error))
+    return FALSE;
+
+  g_signal_handlers_disconnect_by_data (composite, compositable);
+
+  return TRUE;
 }
 
 

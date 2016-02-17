@@ -36,6 +36,10 @@
  * @include: crankcore.h
  *
  * A CrankSessionModule represents modulized common logic for #CrankSession.
+ *
+ * # CrankSessionModule as #CrankCompositable.
+ *
+ * Composite Requisition: #CrankSession
  */
 
 

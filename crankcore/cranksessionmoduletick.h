@@ -42,7 +42,7 @@
 G_DECLARE_FINAL_TYPE (CrankSessionModuleTick,
                       crank_session_module_tick,
                       CRANK, SESSION_MODULE_TICK,
-                      CrankSessionModule)
+                      CrankCompositable)
 
 /**
  * CrankSessionModuleTick:
