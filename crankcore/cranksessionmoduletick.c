@@ -42,7 +42,6 @@
 #include "crankshape.h"
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 #include "cranksessionmoduletick.h"
 
 

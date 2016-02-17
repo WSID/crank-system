@@ -40,7 +40,6 @@
 #include <glib-object.h>
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 #include "cranksessionmodulesimtimed.h"
 
 //////// List of virtual functions /////////////////////////////////////////////

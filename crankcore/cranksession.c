@@ -27,7 +27,6 @@
 #include "crankbase.h"
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 
 /**
  * SECTION: cranksession

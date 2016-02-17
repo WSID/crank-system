@@ -25,7 +25,6 @@
 #define CRANKCORE_INSIDE
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 
 #include "crankplaceentity.h"
 

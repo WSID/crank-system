@@ -33,7 +33,6 @@
 #include "crankshape.h"
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 
 //////// Type Declaration //////////////////////////////////////////////////////
 

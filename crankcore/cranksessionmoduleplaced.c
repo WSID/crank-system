@@ -45,7 +45,6 @@
 #include "crankplaceentity.h"
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 #include "cranksessionmoduleplaced.h"
 #include "cranksessionmoduleplaced-private.h"
 

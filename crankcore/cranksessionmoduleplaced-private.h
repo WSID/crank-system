@@ -29,7 +29,6 @@
 #include <glib-object.h>
 
 #include "cranksession.h"
-#include "cranksessionmodule.h"
 #include "cranksessionmoduleplaced.h"
 
 #ifndef __GTK_DOC_IGNORE__
