@@ -30,18 +30,19 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbase.h"
+
 G_BEGIN_DECLS
 
-
-//////// Forward Declarations //////////////////////////////////////////////////
-
-typedef struct _CrankSessionModule CrankSessionModule;
 
 //////// Type Declaration //////////////////////////////////////////////////////
 
 
 #define CRANK_TYPE_SESSION (crank_session_get_type())
-G_DECLARE_DERIVABLE_TYPE (CrankSession, crank_session, CRANK, SESSION, GObject)
+G_DECLARE_DERIVABLE_TYPE (CrankSession,
+                          crank_session,
+                          CRANK, SESSION,
+                          CrankComposite)
 
 /**
  * CrankSession:
@@ -59,7 +60,7 @@ G_DECLARE_DERIVABLE_TYPE (CrankSession, crank_session, CRANK, SESSION, GObject)
 struct _CrankSessionClass
 {
   /*< private >*/
-  GObjectClass parent;
+  CrankCompositeClass parent;
 
   /*< public >*/
   // Signals
@@ -76,9 +77,6 @@ CrankSession   *crank_session_new (void);
 
 //////// Properties ////////////////////////////////////////////////////////////
 
-gboolean        crank_session_is_initialized (CrankSession *session);
-
-
 gboolean        crank_session_is_running (CrankSession *session);
 
 void            crank_session_set_running (CrankSession   *session,
@@ -89,38 +87,6 @@ gfloat          crank_session_get_uptime (CrankSession *session);
 
 void            crank_session_set_uptime (CrankSession *session,
                                           const gfloat  uptime);
-
-//////// Modules ///////////////////////////////////////////////////////////////
-
-void            crank_session_add_module (CrankSession       *session,
-                                          CrankSessionModule *module);
-
-void            crank_session_remove_module (CrankSession       *session,
-                                             CrankSessionModule *module);
-
-guint           crank_session_get_n_modules (CrankSession *session);
-
-CrankSessionModule *crank_session_get_module (CrankSession *session,
-                                              const guint   index);
-
-gint            crank_session_index_of_module (CrankSession       *session,
-                                               CrankSessionModule *module);
-
-CrankSessionModule *crank_session_get_module_by_gtype (CrankSession *session,
-                                                       const GType   gtype);
-
-gint            crank_session_index_of_module_by_gtype (CrankSession *session,
-                                                        const GType   gtype);
-
-
-void            crank_session_foreach_modules (CrankSession *session,
-                                               GFunc         func,
-                                               gpointer      userdata);
-
-void            crank_session_init_modules (CrankSession  *session,
-                                            GError       **error);
-
-
 
 
 //////// Running state /////////////////////////////////////////////////////////

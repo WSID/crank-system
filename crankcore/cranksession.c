@@ -24,6 +24,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbase.h"
+
 #include "cranksession.h"
 #include "cranksessionmodule.h"
 
@@ -35,10 +37,6 @@
  * @include: crankcore.h
  *
  * #CrankSession represents a single game session.
- *
- * # Modules
- *
- *
  *
  * # Uptime
  *
@@ -58,7 +56,6 @@ enum {
   RROP_0,
 
   PROP_INITIALIZED,
-  PROP_N_MODULES,
 
   PROP_RUNNING,
   PROP_UPTIME,
@@ -93,7 +90,6 @@ static void crank_session_def_pause (CrankSession *session);
 //////// Type Definition ///////////////////////////////////////////////////////
 
 typedef struct _CrankSessionPrivate {
-  gboolean      initialized;
   GPtrArray    *modules;
 
   gboolean      running;
@@ -105,7 +101,7 @@ typedef struct _CrankSessionPrivate {
 
 G_DEFINE_TYPE_WITH_CODE (CrankSession,
                          crank_session,
-                         G_TYPE_OBJECT,
+                         CRANK_TYPE_COMPOSITE,
                          {
                           G_ADD_PRIVATE (CrankSession)
                          })
@@ -131,18 +127,6 @@ crank_session_class_init (CrankSessionClass *c)
 
   c_gobject->get_property = crank_session_get_property;
   c_gobject->set_property = crank_session_set_property;
-
-  pspecs[PROP_INITIALIZED] = g_param_spec_boolean ("initialized", "Initialized",
-                                                   "Whether this session is initialized",
-                                                   FALSE,
-                                                   G_PARAM_READABLE |
-                                                   G_PARAM_STATIC_STRINGS );
-
-  pspecs[PROP_N_MODULES] = g_param_spec_uint ("n-modules", "Number of modules",
-                                              "Number of modules.",
-                                              0, G_MAXUINT, 0,
-                                              G_PARAM_READABLE |
-                                              G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_RUNNING] = g_param_spec_boolean ("running", "Running",
                                                "Running",
@@ -205,16 +189,6 @@ crank_session_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_INITIALIZED:
-      g_value_set_boolean (value,
-                           crank_session_is_initialized (session));
-      break;
-
-    case PROP_N_MODULES:
-      g_value_set_uint (value,
-                        crank_session_get_n_modules (session));
-      break;
-
     case PROP_RUNNING:
       g_value_set_boolean (value,
                            crank_session_is_running (session));
@@ -299,23 +273,6 @@ crank_session_new (void)
 //////// Properties ////////////////////////////////////////////////////////////
 
 /**
- * crank_session_is_initialized:
- * @session: A Session.
- *
- * Checks whether it is initialized or not.
- *
- * Returns: Whether it is initialized.
- */
-gboolean
-crank_session_is_initialized (CrankSession *session)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  return priv->initialized;
-}
-
-
-/**
  * crank_session_is_running:
  * @session: A Session.
  *
@@ -348,15 +305,8 @@ crank_session_set_running (CrankSession   *session,
 
   if (! priv->running)
     {
-
-
       if (running)
-        {
-          if (! priv->initialized)
-            g_warning ("crank_session_set_running: Attempt to resume uninitialized session.");
-          else
-            crank_session_resume (session);
-        }
+        crank_session_resume (session);
     }
   else
     {
@@ -409,216 +359,6 @@ crank_session_set_uptime (CrankSession *session,
 }
 
 
-//////// Modules ///////////////////////////////////////////////////////////////
-
-/**
- * crank_session_add_module:
- * @session: Session to add module.
- * @module: (transfer none): A Module.
- *
- * Adds a module to session. Already initialized session cannot add a module.
- */
-void
-crank_session_add_module (CrankSession       *session,
-                          CrankSessionModule *module)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  if (crank_session_module_is_initialized (module))
-    g_warning ("crank_session_add_module: Attempt to add already initialized module.");
-  else if (priv->initialized)
-    g_warning ("crank_session_add_module: Attempt to add module to initialized session.");
-  else
-    g_ptr_array_add (priv->modules, g_object_ref (module));
-}
-
-/**
- * crank_session_remove_module:
- * @session: Session to add module.
- * @module: (transfer none): A Module.
- *
- * Removes a module from session. Already initialized session cannot remove a module.
- */
-void
-crank_session_remove_module (CrankSession       *session,
-                             CrankSessionModule *module)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  if (crank_session_module_is_initialized (module))
-    g_warning ("crank_session_remove_module: Attempt to remove already initialized module.");
-  else if (priv->initialized)
-    g_warning ("crank_session_remove_module: Attempt to remove module to initialized session.");
-  else
-    g_ptr_array_remove (priv->modules, module);
-}
-
-/**
- * crank_session_get_n_modules:
- * @session: A Session.
- *
- * Gets number of modules in session.
- *
- * Returns: Number of modules in session.
- */
-guint
-crank_session_get_n_modules (CrankSession *session)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  return priv->modules->len;
-}
-
-/**
- * crank_session_get_module:
- * @session: A Session.
- * @index: Index of module.
- *
- * Gets module at index.
- *
- * Returns: (transfer none): Module in the session.
- */
-CrankSessionModule*
-crank_session_get_module (CrankSession *session,
-                          const guint   index)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  return (CrankSessionModule*) priv->modules->pdata[index];
-}
-
-/**
- * crank_session_index_of_module:
- * @session: A Session.
- * @module: (transfer none): A Module.
- *
- * Gets index of a module in this session.
- *
- * Returns: index of a module, or -1 if it does not belongs to session.
- */
-gint
-crank_session_index_of_module (CrankSession       *session,
-                               CrankSessionModule *module)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-  guint i;
-
-  for (i = 0; i < priv->modules->len; i++)
-    {
-      if (module == priv->modules->pdata[i])
-        return i;
-    }
-  return -1;
-}
-
-/**
- * crank_session_get_module_by_gtype:
- * @session: A Session.
- * @gtype: GType of module. should be descendant of %CRANK_TYPE_SESSION_MODULE
- *
- * Gets a module with given @gtype or one of its descendants.
- *
- * Returns: (transfer none) (nullable): A Module or %NULL if not found.
- */
-CrankSessionModule*
-crank_session_get_module_by_gtype (CrankSession *session,
-                                   const GType   gtype)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-  guint i;
-
-  for (i = 0; i < priv->modules->len; i++)
-    {
-      if (gtype == G_OBJECT_TYPE (priv->modules->pdata[i]))
-        return priv->modules->pdata[i];
-    }
-  return NULL;
-}
-
-
-/**
- * crank_session_index_of_module_by_gtype:
- * @session: A Session.
- * @gtype: GType of module. should be descendant of %CRANK_TYPE_SESSION_MODULE
- *
- * Gets index of module with given @gtype or one of its descendants.
- *
- * Returns: Index of a module or -1 if not found.
- */
-gint
-crank_session_index_of_module_by_gtype (CrankSession *session,
-                                        const GType   gtype)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-  guint i;
-
-  for (i = 0; i < priv->modules->len; i++)
-    {
-      if (gtype == G_OBJECT_TYPE (priv->modules->pdata[i]))
-        return i;
-    }
-  return -1;
-}
-
-
-/**
- * crank_session_foreach_modules:
- * @session: A Session.
- * @func: (scope call): A Function.
- * @userdata: (closure func): Userdata for @func.
- *
- * Iterates @func over modules in the session.
- */
-void
-crank_session_foreach_modules (CrankSession *session,
-                               GFunc         func,
-                               gpointer      userdata)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  g_ptr_array_foreach (priv->modules, func, userdata);
-}
-
-/**
- * crank_session_init_modules:
- * @session: A Session.
- * @error: Error.
- *
- * Initialize a session with modules.
- */
-void
-crank_session_init_modules (CrankSession  *session,
-                            GError       **error)
-{
-  CrankSessionPrivate *priv = crank_session_get_instance_private (session);
-
-  if (! priv->initialized)
-    {
-      GError *merr = NULL;
-      guint i;
-
-      for (i = 0; i < priv->modules->len; i++)
-        {
-          CrankSessionModule *module;
-          module = (CrankSessionModule*) priv->modules->pdata[i];
-
-          crank_session_module_session_init (module, session, &merr);
-
-          if (merr != NULL)
-            {
-              g_propagate_prefixed_error (error, merr, "crank_session_init_modules: ");
-              // Fini
-            }
-        }
-
-      priv->initialized = TRUE;
-    }
-  else
-    {
-      g_warning ("crank_session_init_module: Attempt to initialize already initialized session.");
-    }
-}
-
 
 //////// Objects ///////////////////////////////////////////////////////////////
 
@@ -633,12 +373,6 @@ crank_session_init_modules (CrankSession  *session,
 void
 crank_session_resume (CrankSession *session)
 {
-  if (! crank_session_is_initialized (session))
-    {
-      g_warning ("crank_session_resume: Attempt to resume uninitialized session.");
-      return;
-    }
-
   g_signal_emit (session, SIG_RESUME, 0, NULL);
 
   if (! G_PRIVATE_FIELD (CrankSession, session, gboolean, running))
