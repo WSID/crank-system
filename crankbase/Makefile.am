@@ -44,6 +44,7 @@ baseinclude_HEADERS = \
 		\
 		crankcomposite.h \
 		crankcompositable.h \
+		crankcompositable1n.h \
 		\
 		crankbasetest.h \
 		crankbench.h \
@@ -93,6 +94,7 @@ libcrankbase_la_SOURCES= \
 		\
 		crankcomposite.c \
 		crankcompositable.c \
+		crankcompositable1n.c \
 		\
 		crankbasetest.c \
 		crankbench.c \

@@ -1,5 +1,5 @@
-#ifndef CRANKBASE_H
-#define CRANKBASE_H
+#ifndef CRANKCOMPOSITABLE1N_H
+#define CRANKCOMPOSITABLE1N_H
 
 /* Copyright (C) 2015, WSID   */
 
@@ -22,51 +22,51 @@
  * THE SOFTWARE.
  */
 
-#define _CRANKBASE_INSIDE
+#ifndef _CRANKBASE_INSIDE
+#error crankcompositable1n.h cannot be included directly.
+#endif
 
-#include "crankbasemacro.h"
-#include "crankbasemisc.h"
-#include "crankstring.h"
-#include "crankvalue.h"
-#include "crankbits.h"
-#include "crank128.h"
-
-#include "crankrange.h"
-#include "crankiter.h"
-#include "crankpair.h"
-
-#include "crankpermutation.h"
-#include "crankcomplex.h"
-#include "crankquaternion.h"
-
-#include "crankveccommon.h"
-#include "crankvecbool.h"
-#include "crankvecuint.h"
-#include "crankvecint.h"
-#include "crankvecfloat.h"
-#include "crankveccplxfloat.h"
-
-#include "crankmatcommon.h"
-#include "crankmatfloat.h"
-#include "crankmatcplxfloat.h"
-#include "crankadvmat.h"
-
-#include "crankdigraph.h"
-#include "crankadvgraph.h"
-
-#include "crankcellspace2.h"
-#include "crankcellspace3.h"
+#include <glib.h>
+#include <glib-object.h>
 
 #include "crankcomposite.h"
 #include "crankcompositable.h"
-#include "crankcompositable1n.h"
 
-#include "crankbasetest.h"
-#include "crankbench.h"
-#include "crankbenchrun.h"
-#include "crankbenchresult.h"
+G_BEGIN_DECLS
+//////// Type Declarations /////////////////////////////////////////////////////
+
+#define CRANK_TYPE_COMPOSITABLE_1N (crank_compositable_1n_get_type())
+G_DECLARE_DERIVABLE_TYPE (CrankCompositable1N,
+                          crank_compositable_1n,
+                          CRANK, COMPOSITABLE_1N,
+                          CrankCompositable)
+
+/**
+ * CrankCompositable1N:
+ *
+ * Represents a compositable objects that can be added to one composite at a
+ * time.
+ */
+
+/**
+ * CrankCompositable1NClass:
+ *
+ * Virtual function table for #CrankCompositable1N.
+ */
+struct _CrankCompositable1NClass
+{
+  /*< private >*/
+  CrankCompositableClass parent;
+};
 
 
-#undef _CRANKBASE_INSIDE
 
-#endif /* CRANKBASE_H */
+
+
+//////// Public Functions //////////////////////////////////////////////////////
+
+CrankComposite  *crank_compositable_1n_get_composite  (CrankCompositable1N  *compositable);
+
+G_END_DECLS
+
+#endif
