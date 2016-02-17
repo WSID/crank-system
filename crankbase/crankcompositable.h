@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE (CrankCompositable,
                           crank_compositable,
                           CRANK, COMPOSITABLE,
-                          GObject)
+                          GInitiallyUnowned)
 
 /**
  * CrankCompositable:

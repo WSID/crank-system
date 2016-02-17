@@ -118,7 +118,7 @@ static CrankCompositableTPriv *get_tpriv (GType type);
 
 G_DEFINE_TYPE (CrankCompositable,
                crank_compositable,
-               G_TYPE_OBJECT)
+               G_TYPE_INITIALLY_UNOWNED)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
