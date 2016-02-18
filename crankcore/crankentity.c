@@ -51,6 +51,12 @@ static void   crank_entity_get_property (GObject    *object,
                                         GValue     *value,
                                         GParamSpec *psepc);
 
+static void   crank_entity_set_property (GObject      *object,
+                                         guint         prop_id,
+                                         const GValue *value,
+                                         GParamSpec   *psepc);
+
+
 static void   crank_entity_dispose (GObject *object);
 
 static void   crank_entity_finalize (GObject *object);
@@ -73,6 +79,7 @@ static gboolean crank_entity_remove_compositable (CrankComposite     *composite,
 
 enum {
   PROP_0,
+  PROP_MODULE,
   PROP_NPLACES,
   PROP_PRIMARY_PLACE,
 
@@ -121,11 +128,19 @@ crank_entity_class_init (CrankEntityClass *c)
   CrankCompositeClass *c_composite = CRANK_COMPOSITE_CLASS (c);
 
   c_gobject->get_property = crank_entity_get_property;
+  c_gobject->set_property = crank_entity_set_property;
   c_gobject->dispose = crank_entity_dispose;
   c_gobject->finalize = crank_entity_finalize;
 
   c_composite->add_compositable = crank_entity_add_compositable;
   c_composite->remove_compositable = crank_entity_remove_compositable;
+
+  pspecs[PROP_MODULE] =
+  g_param_spec_object ("module", "Module of entity",
+                      "Module of entity",
+                      CRANK_TYPE_SESSION_MODULE_PLACED,
+                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+                      G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_NPLACES] =
   g_param_spec_uint ("nplaces", "Number of Places",
@@ -159,12 +174,38 @@ crank_entity_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_MODULE:
+      g_value_set_object (value, crank_entity_get_module (self));
+      break;
+
     case PROP_NPLACES:
       g_value_set_uint (value, crank_entity_get_nplaces(self));
       break;
 
     case PROP_PRIMARY_PLACE:
       g_value_set_object (value, crank_entity_get_primary_place(self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+crank_entity_set_property (GObject      *object,
+                           guint         prop_id,
+                           const GValue *value,
+                           GParamSpec   *pspec)
+{
+  CrankEntity *self = (CrankEntity*) object;
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
+
+  switch (prop_id)
+    {
+    case PROP_MODULE:
+      priv->module = g_value_get_object (value);
+      if (priv->module == NULL)
+        g_error ("Entity: module is NULL!");
       break;
 
     default:
@@ -351,6 +392,21 @@ _crank_entity_place_belongs_to (CrankEntity *entity,
 
 
 //////// Public functions //////////////////////////////////////////////////////
+
+/**
+ * crank_entity_get_module:
+ * @entity: A Entity.
+ *
+ * Gets module that this entity belongs to.
+ *
+ * Returns: (transfer none): A Module.
+ */
+CrankSessionModulePlaced*
+crank_entity_get_module (CrankEntity *entity)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  return priv->module;
+}
 
 /**
  * crank_entity_get_primary_place:

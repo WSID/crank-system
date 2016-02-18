@@ -71,6 +71,8 @@ struct _CrankEntityClass
 
 //////// Public functions //////////////////////////////////////////////////////
 
+CrankSessionModulePlaced *crank_entity_get_module (CrankEntity *entity);
+
 CrankPlace *crank_entity_get_primary_place (CrankEntity *entity);
 
 guint       crank_entity_get_nplaces       (CrankEntity *entity);
