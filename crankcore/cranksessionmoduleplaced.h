@@ -37,8 +37,8 @@
 
 //////// Forward declarations //////////////////////////////////////////////////
 
-typedef struct _CrankPlaceBase CrankPlaceBase;
-typedef struct _CrankEntityBase CrankEntityBase;
+typedef struct _CrankPlace CrankPlace;
+typedef struct _CrankEntity CrankEntity;
 
 
 //////// Type Declaration //////////////////////////////////////////////////////
@@ -72,25 +72,48 @@ struct _CrankSessionModulePlacedClass {
   CrankCompositable1NClass _parent;
 
   /*< public >*/
+
+  // Place and entity construction/destruction
+
   void    (*place_created) (CrankSessionModulePlaced *module,
-                            CrankPlaceBase           *place);
+                            CrankPlace               *place);
 
   void    (*place_disposed)(CrankSessionModulePlaced *module,
-                            CrankPlaceBase           *place);
+                            CrankPlace               *place);
 
   void    (*entity_created)(CrankSessionModulePlaced *module,
-                            CrankEntityBase          *entity);
+                            CrankEntity              *entity);
 
   void    (*entity_disposed)(CrankSessionModulePlaced *module,
-                             CrankEntityBase          *entity);
+                             CrankEntity              *entity);
+
+  // Entity addition/removal to places.
 
   void    (*entity_added)   (CrankSessionModulePlaced *module,
-                             CrankPlaceBase           *place,
-                             CrankEntityBase          *entity);
+                             CrankPlace               *place,
+                             CrankEntity              *entity);
 
   void    (*entity_removed) (CrankSessionModulePlaced *module,
-                             CrankPlaceBase           *place,
-                             CrankEntityBase          *entity);
+                             CrankPlace               *place,
+                             CrankEntity              *entity);
+
+  // Compositable addition/removal
+
+  void    (*place_added_compositable) (CrankSessionModulePlaced *module,
+                                       CrankPlace               *place,
+                                       CrankCompositable        *compositable);
+
+  void    (*place_removed_compositable) (CrankSessionModulePlaced *module,
+                                         CrankPlace               *place,
+                                         CrankCompositable        *compositable);
+
+  void    (*entity_added_compositable) (CrankSessionModulePlaced *module,
+                                        CrankEntity              *entity,
+                                        CrankCompositable        *compositable);
+
+  void    (*entity_removed_compositable) (CrankSessionModulePlaced *module,
+                                          CrankEntity              *entity,
+                                          CrankCompositable        *compositable);
 };
 
 
@@ -102,87 +125,15 @@ CrankSessionModulePlaced*  crank_session_module_placed_new (const gsize place_ba
                                                             const gsize entity_base_size);
 
 
+
+
+
+
 //////// Properties ////////////////////////////////////////////////////////////
 
-gsize       crank_session_module_placed_get_place_base_size (CrankSessionModulePlaced *module);
+GType   crank_session_module_placed_get_place_type  (CrankSessionModulePlaced* module);
 
-gsize       crank_session_module_placed_get_entity_base_size (CrankSessionModulePlaced *module);
-
-
-gsize       crank_session_module_placed_get_place_size (CrankSessionModulePlaced *module);
-
-
-
-gsize       crank_session_module_placed_get_entity_size (CrankSessionModulePlaced* module);
-
-
-
-//////// Attaching allocations /////////////////////////////////////////////////
-
-guint       crank_session_module_placed_attach_place_alloc_full (CrankSessionModulePlaced *module,
-                                                                 const gsize               size,
-                                                                 GFunc                     fini,
-                                                                 gpointer                  fini_userdata,
-                                                                 GDestroyNotify            fini_destroy,
-                                                                 goffset                  *offset);
-
-guint       crank_session_module_placed_attach_place_alloc (CrankSessionModulePlaced *module,
-                                                            const gsize               size,
-                                                            GDestroyNotify            fini,
-                                                            goffset                  *offset);
-
-guint       crank_session_module_placed_attach_place_alloc_pointer (CrankSessionModulePlaced *module,
-                                                                    GDestroyNotify            fini,
-                                                                    goffset                  *offset);
-
-guint       crank_session_module_placed_attach_place_alloc_boxed (CrankSessionModulePlaced *module,
-                                                                  const GType               btype,
-                                                                  goffset                  *offset);
-
-guint       crank_session_module_placed_attach_place_alloc_object (CrankSessionModulePlaced *module,
-                                                                   goffset                  *offset);
-
-
-
-
-
-guint       crank_session_module_placed_attach_entity_alloc_full (CrankSessionModulePlaced *module,
-                                                                  const gsize               size,
-                                                                  GFunc                     fini,
-                                                                  gpointer                  fini_userdata,
-                                                                  GDestroyNotify            fini_destroy,
-                                                                  goffset                  *offset);
-
-guint       crank_session_module_placed_attach_entity_alloc (CrankSessionModulePlaced *module,
-                                                             const gsize               size,
-                                                             GDestroyNotify            fini,
-                                                             goffset                  *offset);
-
-guint       crank_session_module_placed_attach_entity_alloc_pointer (CrankSessionModulePlaced *module,
-                                                                     GDestroyNotify            fini,
-                                                                     goffset                  *offset);
-
-guint       crank_session_module_placed_attach_entity_alloc_boxed (CrankSessionModulePlaced *module,
-                                                                   const GType               btype,
-                                                                   goffset                  *offset);
-
-guint       crank_session_module_placed_attach_entity_alloc_object (CrankSessionModulePlaced *module,
-                                                                    goffset                  *offset);
-
-
-//////// Allocations ///////////////////////////////////////////////////////////
-
-goffset     crank_session_module_placed_get_place_alloc_offset (CrankSessionModulePlaced *module,
-                                                                const guint               ticket);
-
-gsize       crank_session_module_placed_get_place_alloc_size (CrankSessionModulePlaced *module,
-                                                              const guint               ticket);
-
-goffset     crank_session_module_placed_get_entity_alloc_offset (CrankSessionModulePlaced *module,
-                                                                 const guint               ticket);
-
-goffset     crank_session_module_placed_get_entity_alloc_size (CrankSessionModulePlaced *module,
-                                                               const guint               ticket);
+GType   crank_session_module_placed_get_entity_type (CrankSessionModulePlaced* module);
 
 
 #endif
