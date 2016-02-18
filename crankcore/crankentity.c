@@ -165,6 +165,12 @@ crank_entity_class_init (CrankEntityClass *c)
                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
 
+  pspecs[PROP_PLACELESS] =
+  g_param_spec_boolean ("placeless", "Placeless",
+                        "Whether it is placeless",
+                        TRUE,
+                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
@@ -197,12 +203,14 @@ crank_entity_get_property (GObject    *object,
       g_value_set_object (value, crank_entity_get_primary_place(self));
       break;
 
+    case PROP_PLACELESS:
+      g_value_set_boolean (value, crank_entity_is_placeless (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
-
-
 
 
 static void
@@ -500,6 +508,21 @@ crank_entity_get_nplaces (CrankEntity *entity)
 {
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
   return priv->places->len;
+}
+
+/**
+ * crank_entity_is_placeless:
+ * @entity: A Entity.
+ *
+ * Checks whether it is placeless.
+ *
+ * Returns: Whehter it is placeless.
+ */
+gboolean
+crank_entity_is_placeless (CrankEntity *entity)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  return (priv->places->len == 0);
 }
 
 

@@ -77,7 +77,7 @@ CrankPlace *crank_entity_get_primary_place (CrankEntity *entity);
 
 guint       crank_entity_get_nplaces       (CrankEntity *entity);
 
-
+gboolean    crank_entity_is_placeless      (CrankEntity *entity);
 
 
 
