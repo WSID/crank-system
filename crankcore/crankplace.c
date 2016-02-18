@@ -37,8 +37,10 @@
 #include "crankbase.h"
 #include "cranksessionmoduleplaced.h"
 #include "crankplace.h"
+#include "crankentity.h"
 
 #include "crankentity-private.h"
+#include "cranksessionmoduleplaced-private.h"
 
 
 
@@ -55,6 +57,8 @@ static void   crank_place_set_property (GObject      *object,
                                         guint         prop_id,
                                         const GValue *value,
                                         GParamSpec   *psepc);
+
+static void   crank_place_constructed (GObject *object);
 
 static void   crank_place_dispose (GObject *object);
 
@@ -137,6 +141,7 @@ crank_place_class_init (CrankPlaceClass *c)
 
   c_gobject->get_property = crank_place_get_property;
   c_gobject->set_property = crank_place_set_property;
+  c_gobject->constructed = crank_place_constructed;
   c_gobject->dispose = crank_place_dispose;
   c_gobject->finalize = crank_place_finalize;
 
@@ -189,6 +194,8 @@ crank_place_get_property (GObject    *object,
     }
 }
 
+
+
 static void
 crank_place_set_property (GObject      *object,
                           guint         prop_id,
@@ -211,15 +218,30 @@ crank_place_set_property (GObject      *object,
     }
 }
 
+
+static void
+crank_place_constructed (GObject *object)
+{
+  GObjectClass *pc = crank_place_parent_class;
+  CrankPlace *self = (CrankPlace*) object;
+  CrankPlacePrivate *priv = crank_place_get_instance_private (self);
+
+  pc->constructed (object);
+  crank_session_module_placed_place_created (priv->module, self);
+}
+
+
 static void
 crank_place_dispose (GObject *object)
 {
   GObjectClass *pc = crank_place_parent_class;
   CrankPlace *self = (CrankPlace*) object;
   CrankPlacePrivate *priv = crank_place_get_instance_private (self);
-
   guint i;
 
+  crank_session_module_placed_place_disposed (priv->module, self);
+
+  priv->module = NULL;
   for (i = priv->entities->len; 0 < i;)
     {
       CrankEntity *entity;
@@ -233,6 +255,8 @@ crank_place_dispose (GObject *object)
   pc->dispose (object);
 }
 
+
+
 static void
 crank_place_finalize (GObject *object)
 {
@@ -245,16 +269,24 @@ crank_place_finalize (GObject *object)
 }
 
 
+
 static gboolean
 crank_place_add_compositable (CrankComposite    *composite,
                               CrankCompositable *compositable,
                               GError            **error)
 {
   CrankCompositeClass *pc = crank_place_parent_class;
-  return pc->add_compositable (composite, compositable, error);
+  CrankPlace *self = (CrankPlace*)composite;
+  CrankPlacePrivate *priv = crank_place_get_instance_private (self);
 
-  // TODO: Notify
+  if (! pc->add_compositable (composite, compositable, error))
+    return FALSE;
+
+  crank_session_module_placed_place_added_compositable (priv->module, self, compositable);
+  return TRUE;
 }
+
+
 
 static gboolean
 crank_place_remove_compositable (CrankComposite     *composite,
@@ -262,9 +294,14 @@ crank_place_remove_compositable (CrankComposite     *composite,
                                  GError            **error)
 {
   CrankCompositeClass *pc = crank_place_parent_class;
-  return pc->remove_compositable (composite, compositable, error);
+  CrankPlace *self = (CrankPlace*)composite;
+  CrankPlacePrivate *priv = crank_place_get_instance_private (self);
 
-  // TODO: Notify
+  if (! pc->remove_compositable (composite, compositable, error))
+    return FALSE;
+
+  crank_session_module_placed_place_removed_compositable (priv->module, self, compositable);
+  return TRUE;
 }
 
 
@@ -277,8 +314,10 @@ static void
 crank_place__remove_entity (CrankPlace  *place,
                             CrankEntity *entity)
 {
+  CrankPlacePrivate *priv = crank_place_get_instance_private (place);
   _crank_entity_place_remove_place (entity, place);
-  // TODO: Notify and such things...!
+
+  crank_session_module_placed_entity_removed (priv->module, place, entity);
 }
 
 
@@ -337,14 +376,29 @@ crank_place_add_entity (CrankPlace  *place,
 {
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
 
-  // TODO: Check module.
+  if (priv->module != crank_entity_get_module (entity))
+    {
+      CrankSessionModulePlaced *pmod = priv->module;
+      CrankSessionModulePlaced *emod = crank_entity_get_module (entity);
+
+      g_warning ("crank_place_add_entity: Attempt to add entity of differnet module.\n"
+                 "  %s@%p belongs to %s@%p\n"
+                 "  %s@%p belongs to %s@%p",
+                 G_OBJECT_TYPE_NAME (place), place,
+                 G_OBJECT_TYPE_NAME (pmod), pmod,
+                 G_OBJECT_TYPE_NAME (entity), entity,
+                 G_OBJECT_TYPE_NAME (emod), emod);
+      return FALSE;
+    }
 
   if (crank_place_contains_entity (place, entity))
     return FALSE;
 
-
+  _crank_entity_place_add_place (entity, place);
   g_ptr_array_add (priv->entities, g_object_ref (entity));
+
   g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
+  crank_session_module_placed_entity_added (priv->module, place, entity);
 
   return TRUE;
 }
@@ -364,6 +418,21 @@ crank_place_remove_entity (CrankPlace  *place,
                            CrankEntity *entity)
 {
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
+
+  if (priv->module != crank_entity_get_module (entity))
+    {
+      CrankSessionModulePlaced *pmod = priv->module;
+      CrankSessionModulePlaced *emod = crank_entity_get_module (entity);
+
+      g_warning ("crank_place_remove_entity: Attempt to remove entity of differnet module.\n"
+                 "  %s@%p belongs to %s@%p\n"
+                 "  %s@%p belongs to %s@%p",
+                 G_OBJECT_TYPE_NAME (place), place,
+                 G_OBJECT_TYPE_NAME (pmod), pmod,
+                 G_OBJECT_TYPE_NAME (entity), entity,
+                 G_OBJECT_TYPE_NAME (emod), emod);
+      return FALSE;
+    }
 
   if (! crank_place_contains_entity (place, entity))
     return FALSE;
