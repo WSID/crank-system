@@ -100,7 +100,8 @@ enum {
 
 static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
-
+static guint  sig_entity_added;
+static guint  sig_entity_removed;
 
 
 
@@ -162,6 +163,36 @@ crank_place_class_init (CrankPlaceClass *c)
                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+  /**
+   * CrankPlace::entity-added:
+   * @place: A Place.
+   * @entity: A Entity.
+   *
+   * This is emitted when a entity is added to a place.
+   */
+  sig_entity_added =
+  g_signal_new ("entity-added", CRANK_TYPE_PLACE,     // Signal name and owner type
+                G_SIGNAL_RUN_LAST,                  // Signal flags
+                0,                                  // VF offset
+                NULL, NULL,                         // Accumulator
+                NULL,                               // Marshaller
+                G_TYPE_NONE, 1, CRANK_TYPE_ENTITY); // Returns, parameters
+
+  /**
+   * CrankPlace::entity-removed:
+   * @place: A Place.
+   * @entity: A Entity.
+   *
+   * This is emitted when a entity is removed from a place.
+   */
+  sig_entity_removed =
+  g_signal_new ("entity-removed", CRANK_TYPE_PLACE,  // Signal name and owner type
+                G_SIGNAL_RUN_LAST,                  // Signal flags
+                0,                                  // VF offset
+                NULL, NULL,                         // Accumulator
+                NULL,                               // Marshaller
+                G_TYPE_NONE, 1, CRANK_TYPE_ENTITY); // Returns, parameters
 }
 
 
@@ -318,6 +349,7 @@ crank_place__remove_entity (CrankPlace  *place,
   _crank_entity_place_remove_place (entity, place);
 
   crank_session_module_placed_entity_removed (priv->module, place, entity);
+  g_signal_emit (place, sig_entity_removed, 0, entity);
 }
 
 
@@ -398,6 +430,7 @@ crank_place_add_entity (CrankPlace  *place,
   g_ptr_array_add (priv->entities, g_object_ref (entity));
 
   g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
+  g_signal_emit (place, sig_entity_added, 0, entity);
   crank_session_module_placed_entity_added (priv->module, place, entity);
 
   return TRUE;
