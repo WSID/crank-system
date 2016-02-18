@@ -134,6 +134,9 @@ CrankCompositable *crank_composite_get_compositable_by_gtype  (CrankComposite *c
 
 guint              crank_composite_get_ncompositables         (CrankComposite *composite);
 
+gint               crank_composite_index_of_compositable      (CrankComposite    *composite,
+                                                               CrankCompositable *compositable);
+
 
 gboolean    crank_composite_contains_compositable   (CrankComposite    *composite,
                                                      CrankCompositable *compositable);
@@ -142,6 +145,30 @@ gboolean    crank_composite_contains_compositable   (CrankComposite    *composit
 void        crank_composite_foreach_compositable    (CrankComposite    *composite,
                                                      GFunc              func,
                                                      gpointer           userdata);
+
+
+
+
+//////// Per-compositable datas ////////////////////////////////////////////////
+
+void        crank_composite_set_qdata_full   (CrankComposite    *composite,
+                                              CrankCompositable *compositable,
+                                              const GQuark       key,
+                                              gpointer           data,
+                                              GDestroyNotify     destroy);
+
+void        crank_composite_set_qdata (CrankComposite    *composite,
+                                       CrankCompositable *compositable,
+                                       const GQuark       key,
+                                       gpointer           data);
+
+gpointer    crank_composite_get_qdata (CrankComposite    *composite,
+                                       CrankCompositable *compositable,
+                                       const GQuark       key);
+
+gpointer    crank_composite_steal_qdata (CrankComposite    *composite,
+                                         CrankCompositable *compositable,
+                                         const GQuark       key);
 
 
 

@@ -61,6 +61,11 @@
  * * #CrankCompositeClass.remove_compositable()
  * * #CrankCompositableClass.adding()
  * * #CrankCompositableClass.removing()
+ *
+ *
+ * # Per-compositable dictionaries.
+ *
+ * #CrankComposite provides per-compositable dictionaries for use.
  */
 
 #define _CRANKBASE_INSIDE
@@ -78,8 +83,6 @@
 
 G_DEFINE_QUARK (crank-composite-error-quark, crank_composite_error);
 
-
-//////// Private functions /////////////////////////////////////////////////////
 
 //////// GObject ///////////////////////////////////////////////////////////////
 
@@ -108,6 +111,10 @@ static gboolean crank_composite_def_remove_compositable (CrankComposite     *com
                                                          CrankCompositable  *compositable,
                                                          GError            **error);
 
+
+//////// Private functions /////////////////////////////////////////////////////
+
+
 //////// Properties and signals ////////////////////////////////////////////////
 
 enum {
@@ -122,9 +129,16 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
+typedef struct _Percompositable
+{
+  CrankCompositable *compositable;
+  GData             *dictionary;
+} Percompositable;
+
+
 typedef struct _CrankCompositePrivate
 {
-  GPtrArray *compositables;
+  GArray *data;
 } CrankCompositePrivate;
 
 
@@ -139,7 +153,8 @@ static void
 crank_composite_init (CrankComposite *composite)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  priv->compositables = g_ptr_array_new_with_free_func (g_object_unref);
+
+  priv->data = g_array_new (FALSE, FALSE, sizeof (Percompositable));
 }
 
 
@@ -182,13 +197,16 @@ crank_composite_dispose (GObject *object)
 
   guint i;
 
-  for (i = priv->compositables->len; 0 < i;)
+  for (i = priv->data->len; 0 < i;)
     {
+      Percompositable *percompositable;
       CrankCompositable *compositable;
       GError *merr = NULL;
       i--;
 
-      compositable = priv->compositables->pdata[i];
+      percompositable = & g_array_index (priv->data, Percompositable, i);
+      compositable = percompositable->compositable;
+
       crank_composite_remove_compositable (self, compositable, &merr);
 
       if (merr != NULL)
@@ -197,13 +215,13 @@ crank_composite_dispose (GObject *object)
                      "  %s@%p : %s@%p\n"
                      "  %s",
                      G_OBJECT_TYPE_NAME (self), self,
-                     G_OBJECT_TYPE_NAME (compositable), compositable,
+                     G_OBJECT_TYPE_NAME (percompositable), compositable,
                      merr->message);
           g_clear_error (&merr);
         }
     }
 
-  g_assert (priv->compositables->len == 0);
+  g_assert (priv->data->len == 0);
 
   pc->dispose (object);
 }
@@ -216,7 +234,7 @@ crank_composite_finalize (GObject *object)
   CrankComposite *self = (CrankComposite*)object;
   CrankCompositePrivate *priv = crank_composite_get_instance_private (self);
 
-  g_ptr_array_unref (priv->compositables);
+  g_array_unref (priv->data);
 
   pc->finalize (object);
 }
@@ -265,9 +283,15 @@ crank_composite_def_add_compositable (CrankComposite     *composite,
     }
 
   // Do adding
-  if (crank_compositable_adding (compositable, composite, error))
+  else if (crank_compositable_adding (compositable, composite, error))
     {
-      g_ptr_array_add (priv->compositables, g_object_ref_sink (compositable));
+      Percompositable percompositable;
+
+      percompositable.compositable = g_object_ref_sink (compositable);
+      g_datalist_init (& percompositable.dictionary);
+
+      g_array_append_val (priv->data, percompositable);
+      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
       return TRUE;
     }
   else
@@ -282,10 +306,10 @@ crank_composite_def_remove_compositable (CrankComposite     *composite,
                                          GError            **error)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  guint     i;
+  gint i = crank_composite_index_of_compositable (composite, compositable);
 
-  // First check a compositable is already.
-  if (! crank_composite_contains_compositable (composite, compositable))
+  // First check a compositable exists.
+  if (i == -1)
     {
       g_set_error (error, CRANK_COMPOSITE_ERROR,
                    CRANK_COMPOSITE_ERROR_NOT_HAVE_COMPOSITABLE,
@@ -296,16 +320,21 @@ crank_composite_def_remove_compositable (CrankComposite     *composite,
       return FALSE;
     }
 
-  // Do removing
-  if (crank_compositable_removing (compositable, composite, error))
+  // Do adding
+  else if (crank_compositable_removing (compositable, composite, error))
     {
-      g_ptr_array_remove (priv->compositables, compositable);
+      Percompositable *percompositable =
+          & g_array_index (priv->data, Percompositable, i);
+
+      g_datalist_clear (& percompositable->dictionary);
+      g_object_unref (compositable);
+
+      g_array_remove_index (priv->data, i);
+      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
       return TRUE;
     }
-  else
-    {
-      return FALSE;
-    }
+
+  return FALSE;
 }
 
 
@@ -342,12 +371,7 @@ crank_composite_add_compositable (CrankComposite     *composite,
                                   GError            **error)
 {
   CrankCompositeClass *c = CRANK_COMPOSITE_GET_CLASS (composite);
-  if (c->add_compositable (composite, compositable, error))
-    {
-      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
-      return TRUE;
-    }
-  return FALSE;
+  return c->add_compositable (composite, compositable, error);
 }
 
 
@@ -376,12 +400,7 @@ crank_composite_remove_compositable (CrankComposite     *composite,
                                      GError            **error)
 {
   CrankCompositeClass *c = CRANK_COMPOSITE_GET_CLASS (composite);
-  if (c->remove_compositable (composite, compositable, error))
-    {
-      g_object_notify_by_pspec ((GObject*)composite, pspecs[PROP_NCOMPOSITABLES]);
-      return TRUE;
-    }
-  return FALSE;
+  return c->remove_compositable (composite, compositable, error);
 }
 
 
@@ -403,7 +422,8 @@ crank_composite_get_compositable (CrankComposite *composite,
                                   const guint     index)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  return (CrankCompositable*) priv->compositables->pdata[index];
+  Percompositable *percompositable = & g_array_index (priv->data, Percompositable, index);
+  return percompositable->compositable;
 }
 
 /**
@@ -425,15 +445,20 @@ crank_composite_get_compositable_by_gtype  (CrankComposite *composite,
                                             const GType     type)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  guint i;
+  Percompositable *percompositable;
+  Percompositable *end;
 
   g_return_val_if_fail (g_type_is_a (type, CRANK_TYPE_COMPOSITABLE), NULL);
 
-  for (i = 0; i < priv->compositables->len; i++)
+  percompositable = (Percompositable*) priv->data->data;
+  end = percompositable + priv->data->len;
+  while (percompositable < end)
     {
-      CrankCompositable* compositable = priv->compositables->pdata[i];
+      CrankCompositable* compositable = percompositable->compositable;
       if (g_type_is_a (G_OBJECT_TYPE (compositable), type))
         return compositable;
+
+      percompositable++;
     }
   return NULL;
 }
@@ -450,7 +475,35 @@ guint
 crank_composite_get_ncompositables (CrankComposite *composite)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  return priv->compositables->len;
+  return priv->data->len;
+}
+
+
+/**
+ * crank_composite_index_of_compositable:
+ * @composite: A Composite.
+ * @compositable: A compositable.
+ *
+ * Gets index of @compositable in @composite.
+ *
+ * Returns: Index of compositable, or -1 if not found.
+ */
+gint
+crank_composite_index_of_compositable (CrankComposite    *composite,
+                                       CrankCompositable *compositable)
+{
+  CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
+  Percompositable *percompositable;
+  guint i;
+
+  for (i = 0; i < priv->data->len; i++)
+    {
+      percompositable = & g_array_index (priv->data, Percompositable, i);
+
+      if (compositable == percompositable->compositable)
+        return i;
+    }
+  return -1;
 }
 
 
@@ -465,18 +518,10 @@ crank_composite_get_ncompositables (CrankComposite *composite)
  * Returns: Whether @compositable is in @composite.
  */
 gboolean
-crank_composite_contains_compositable   (CrankComposite    *composite,
-                                         CrankCompositable *compositable)
+crank_composite_contains_compositable (CrankComposite    *composite,
+                                       CrankCompositable *compositable)
 {
-  CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
-  guint i;
-
-  for (i = 0; i < priv->compositables->len; i++)
-    {
-      if (compositable == priv->compositables->pdata[i])
-        return TRUE;
-    }
-  return FALSE;
+  return crank_composite_index_of_compositable (composite, compositable) != -1;
 }
 
 
@@ -494,6 +539,151 @@ crank_composite_foreach_compositable (CrankComposite *composite,
                                       gpointer        userdata)
 {
   CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
+  Percompositable *percompositable;
+  Percompositable *end;
 
-  g_ptr_array_foreach (priv->compositables, func, userdata);
+  percompositable = (Percompositable*) priv->data->data;
+  end = percompositable + priv->data->len;
+  while (percompositable < end)
+    {
+      func (percompositable->compositable, userdata);
+      percompositable++;
+    }
 }
+
+
+
+
+
+
+
+//////// Per-compositable datas ////////////////////////////////////////////////
+
+/**
+ * crank_composite_set_qdata_full:
+ * @composite: A Composite.
+ * @compositable: A Compositable.
+ * @key: A Key.
+ * @data: (transfer full): A Data.
+ * @destroy: (destroy data): Destroy function for @data.
+ *
+ * Sets a data for @compositable with @key.
+ */
+void
+crank_composite_set_qdata_full   (CrankComposite    *composite,
+                                  CrankCompositable *compositable,
+                                  const GQuark       key,
+                                  gpointer           data,
+                                  GDestroyNotify     destroy)
+{
+  CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
+  Percompositable *percompositable;
+  gint i = crank_composite_index_of_compositable (composite, compositable);
+
+  if (i == -1)
+    {
+      g_warning ("Composite does not have Compositable.\n"
+                 "  %s@%p : %s@%p",
+                 G_OBJECT_TYPE_NAME (composite), composite,
+                 G_OBJECT_TYPE_NAME (compositable), compositable);
+    }
+
+  else
+    {
+      percompositable = & g_array_index (priv->data, Percompositable, i);
+      g_datalist_id_set_data_full (& percompositable->dictionary, key, data, destroy);
+    }
+}
+
+/**
+ * crank_composite_set_qdata:
+ * @composite: A Composite.
+ * @compositable: A Compositable.
+ * @key: A Key.
+ * @data: (transfer none): A Data.
+ *
+ * Sets a data for @compositable with @key.
+ */
+void
+crank_composite_set_qdata (CrankComposite    *composite,
+                           CrankCompositable *compositable,
+                           const GQuark       key,
+                           gpointer           data)
+{
+  crank_composite_set_qdata_full (composite, compositable, key, data, NULL);
+}
+
+
+/**
+ * crank_composite_get_qdata:
+ * @composite: A Composite.
+ * @compositable: A Compositable.
+ * @key: A Key.
+ *
+ * Gets a data with @key for @compositable.
+ *
+ * Returns: (transfer none): A Data.
+ */
+gpointer
+crank_composite_get_qdata (CrankComposite    *composite,
+                           CrankCompositable *compositable,
+                           const GQuark       key)
+{
+  CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
+  Percompositable *percompositable;
+  gint i = crank_composite_index_of_compositable (composite, compositable);
+
+  if (i == -1)
+    {
+      g_warning ("Composite does not have Compositable.\n"
+                 "  %s@%p : %s@%p",
+                 G_OBJECT_TYPE_NAME (composite), composite,
+                 G_OBJECT_TYPE_NAME (compositable), compositable);
+
+      return NULL;
+    }
+
+  else
+    {
+      percompositable = & g_array_index (priv->data, Percompositable, i);
+      return g_datalist_id_get_data (& percompositable->dictionary, key);
+    }
+}
+
+
+/**
+ * crank_composite_steal_qdata:
+ * @composite: A Composite.
+ * @compositable: A Compositable.
+ * @key: A Key.
+ *
+ * Gets a data with @key for @compositable.
+ *
+ * Returns: (transfer full): A Data.
+ */
+gpointer
+crank_composite_steal_qdata (CrankComposite    *composite,
+                             CrankCompositable *compositable,
+                             const GQuark       key)
+{
+  CrankCompositePrivate *priv = crank_composite_get_instance_private (composite);
+  Percompositable *percompositable;
+  gint i = crank_composite_index_of_compositable (composite, compositable);
+
+  if (i == -1)
+    {
+      g_warning ("Composite does not have Compositable.\n"
+                 "  %s@%p : %s@%p",
+                 G_OBJECT_TYPE_NAME (composite), composite,
+                 G_OBJECT_TYPE_NAME (compositable), compositable);
+
+      return NULL;
+    }
+
+  else
+    {
+      percompositable = & g_array_index (priv->data, Percompositable, i);
+      return g_datalist_id_remove_no_notify (& percompositable->dictionary, key);
+    }
+}
+
