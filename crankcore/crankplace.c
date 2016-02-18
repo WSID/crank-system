@@ -51,6 +51,11 @@ static void   crank_place_get_property (GObject    *object,
                                         GValue     *value,
                                         GParamSpec *psepc);
 
+static void   crank_place_set_property (GObject      *object,
+                                        guint         prop_id,
+                                        const GValue *value,
+                                        GParamSpec   *psepc);
+
 static void   crank_place_dispose (GObject *object);
 
 static void   crank_place_finalize (GObject *object);
@@ -83,6 +88,7 @@ static void   crank_place__remove_entity (CrankPlace  *priv,
 
 enum {
   PROP_0,
+  PROP_MODULE,
   PROP_NENTITIES,
 
   PROP_COUNTS
@@ -130,11 +136,19 @@ crank_place_class_init (CrankPlaceClass *c)
   CrankCompositeClass *c_composite = CRANK_COMPOSITE_CLASS (c);
 
   c_gobject->get_property = crank_place_get_property;
+  c_gobject->set_property = crank_place_set_property;
   c_gobject->dispose = crank_place_dispose;
   c_gobject->finalize = crank_place_finalize;
 
   c_composite->add_compositable = crank_place_add_compositable;
   c_composite->remove_compositable = crank_place_remove_compositable;
+
+  pspecs[PROP_MODULE] =
+  g_param_spec_object ("module", "Module",
+                       "Module",
+                       CRANK_TYPE_SESSION_MODULE_PLACED,
+                       G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+                       G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_NENTITIES] =
   g_param_spec_uint ("nentities", "Number of Entities",
@@ -162,8 +176,34 @@ crank_place_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_MODULE:
+      g_value_set_object (value, crank_place_get_module (self));
+      break;
+
     case PROP_NENTITIES:
       g_value_set_uint (value, crank_place_get_nentities(self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+crank_place_set_property (GObject      *object,
+                          guint         prop_id,
+                          const GValue *value,
+                          GParamSpec   *pspec)
+{
+  CrankPlace *self = (CrankPlace*) object;
+  CrankPlacePrivate *priv = crank_place_get_instance_private (self);
+
+  switch (prop_id)
+    {
+    case PROP_MODULE:
+      priv->module = g_value_get_object (value);
+      if (priv->module == NULL)
+        g_error ("CrankPlace: module is NULL!");
       break;
 
     default:
@@ -245,6 +285,21 @@ crank_place__remove_entity (CrankPlace  *place,
 
 
 //////// Public functions //////////////////////////////////////////////////////
+
+/**
+ * crank_place_get_module:
+ * @place: A Place.
+ *
+ * Gets module of places.
+ *
+ * Returns: (transfer none): Module of place.
+ */
+CrankSessionModulePlaced*
+crank_place_get_module (CrankPlace *place)
+{
+  CrankPlacePrivate *priv = crank_place_get_instance_private (place);
+  return priv->module;
+}
 
 /**
  * crank_place_get_nentities:

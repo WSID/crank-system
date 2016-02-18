@@ -69,6 +69,8 @@ struct _CrankPlaceClass
 
 //////// Public functions //////////////////////////////////////////////////////
 
+CrankSessionModulePlaced *crank_place_get_module (CrankPlace *place);
+
 guint   crank_place_get_nentities (CrankPlace *place);
 
 
