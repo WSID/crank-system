@@ -379,6 +379,7 @@ _crank_entity_place_add_place (CrankEntity *entity,
       crank_entity_on_primary_place_switched (entity);
       crank_session_module_placed_remove_placeless (priv->module, entity);
     }
+  g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_NPLACES]);
 }
 
 /*
