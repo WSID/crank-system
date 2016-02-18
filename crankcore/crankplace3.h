@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (CrankPlace3,
                       crank_place3,
                       CRANK, PLACE3,
-                      CrankComposite)
+                      CrankPlace)
 
 /**
  * CrankPlace3:
