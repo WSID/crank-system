@@ -38,6 +38,7 @@
 #include "cranksessionmoduleplaced.h"
 #include "cranksessionmoduleplaced-private.h"
 #include "crankplace.h"
+#include "crankplace-private.h"
 
 #include "crankentity.h"
 #include "crankentity-private.h"
@@ -72,14 +73,6 @@ static gboolean crank_entity_add_compositable (CrankComposite     *composite,
 static gboolean crank_entity_remove_compositable (CrankComposite     *composite,
                                                  CrankCompositable  *compositable,
                                                  GError            **error);
-
-
-
-
-
-//////// Private Functions /////////////////////////////////////////////////////
-
-static void crank_entity_on_primary_place_switched (CrankEntity *entity);
 
 
 
@@ -274,7 +267,12 @@ crank_entity_dispose (GObject *object)
   guint i;
 
   for (i = 0; i < priv->places->len; i--)
-    {}
+    {
+      CrankPlace *place = priv->places->pdata[i];
+
+      _crank_place_disconnect_entity (place, self);
+      _crank_place_entity_remove_entity (place, self);
+    }
 
   crank_session_module_placed_entity_disposed (priv->module, self);
   pc->dispose (object);
@@ -356,6 +354,8 @@ crank_entity_on_primary_place_switched (CrankEntity *entity)
 
 
 
+
+
 //////// Private Function for CrankPlace ///////////////////////////////////////
 
 /*
@@ -376,7 +376,7 @@ _crank_entity_place_add_place (CrankEntity *entity,
 
   if (! crank_entity_is_placeless (entity))
     {
-      g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+      crank_entity_on_primary_place_switched (entity);
       crank_session_module_placed_remove_placeless (priv->module, entity);
     }
 }
@@ -399,20 +399,25 @@ _crank_entity_place_remove_place (CrankEntity *entity,
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
   guint i;
 
-  // Action
   i = crank_entity_index_of_place (entity, place);
 
+  // Checks for place is exists.
   if (i == -1)
     return FALSE;
 
+  // Remove place
   g_ptr_array_remove_index_fast (priv->places, i);
 
-  // Post action
+  // Notify for primary place switch.
   if (i == 0)
     crank_entity_on_primary_place_switched (entity);
 
+  // Add placeless group if it is placeless.
   if (crank_entity_is_placeless (entity))
     crank_session_module_placed_add_placeless (priv->module, entity);
+
+  // Notify for change of "nplaces"
+  g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_NPLACES]);
 
   return TRUE;
 }
@@ -435,9 +440,6 @@ _crank_entity_place_switch_primary_place (CrankEntity *entity,
 {
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
   guint i;
-
-  if (crank_entity_is_placeless (entity))
-    return FALSE;
 
   i = crank_entity_index_of_place (entity, place);
 
@@ -470,7 +472,6 @@ _crank_entity_place_belongs_to (CrankEntity *entity,
 {
   return crank_entity_index_of_place (entity, place) != -1;
 }
-
 
 
 

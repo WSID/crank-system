@@ -20,6 +20,7 @@ coreinclude_HEADERS = \
 		cranksessionmoduleplaced.h
 
 noinst_HEADERS= \
+		crankplace-private.h \
 		crankentity-private.h \
 		cranksessionmoduleplaced-private.h
 

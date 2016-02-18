@@ -39,6 +39,7 @@
 #include "crankplace.h"
 #include "crankentity.h"
 
+#include "crankplace-private.h"
 #include "crankentity-private.h"
 #include "cranksessionmoduleplaced-private.h"
 
@@ -72,15 +73,6 @@ static gboolean crank_place_add_compositable (CrankComposite     *composite,
 static gboolean crank_place_remove_compositable (CrankComposite     *composite,
                                                  CrankCompositable  *compositable,
                                                  GError            **error);
-
-
-
-
-
-//////// Private Functions /////////////////////////////////////////////////////
-
-static void   crank_place__remove_entity (CrankPlace  *priv,
-                                          CrankEntity *entity);
 
 
 
@@ -279,7 +271,8 @@ crank_place_dispose (GObject *object)
 
       i--;
       entity = priv->entities->pdata[i];
-      crank_place__remove_entity (self, entity);
+      _crank_place_disconnect_entity (self, entity);
+      _crank_entity_place_remove_place (entity, self);
     }
 
   g_ptr_array_set_size (priv->entities, 0);
@@ -300,6 +293,11 @@ crank_place_finalize (GObject *object)
 }
 
 
+
+
+
+
+//////// CrankCompositable /////////////////////////////////////////////////////
 
 static gboolean
 crank_place_add_compositable (CrankComposite    *composite,
@@ -339,18 +337,51 @@ crank_place_remove_compositable (CrankComposite     *composite,
 
 
 
-//////// Private functions /////////////////////////////////////////////////////
+//////// Internal functions /////////////////////////////////////////////////////
 
-static void
-crank_place__remove_entity (CrankPlace  *place,
-                            CrankEntity *entity)
+#ifndef __GTK_DOC_IGNORED__
+
+/*
+ * _crank_place_disconnect_entity:
+ * @place: A Place.
+ * @entity: A Entity.
+ *
+ * Performs notifications operations for modules and signals that connected to
+ * this.
+ */
+G_GNUC_INTERNAL void
+_crank_place_disconnect_entity (CrankPlace  *place,
+                                CrankEntity *entity)
 {
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
-  _crank_entity_place_remove_place (entity, place);
 
   crank_session_module_placed_entity_removed (priv->module, place, entity);
   g_signal_emit (place, sig_entity_removed, 0, entity);
 }
+
+
+/*
+ * _crank_place_entity_remove_entity:
+ * @place: A Place.
+ * @entity: A Entity.
+ *
+ * Performs internal state update for performing remove operation.
+ */
+G_GNUC_INTERNAL void
+_crank_place_entity_remove_entity (CrankPlace  *place,
+                                   CrankEntity *entity)
+{
+  CrankPlacePrivate *priv = crank_place_get_instance_private (place);
+
+  g_ptr_array_remove_fast (priv->entities, entity);
+  g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
+}
+
+
+#endif
+
+
+
 
 
 
@@ -386,6 +417,8 @@ crank_place_get_nentities (CrankPlace *place)
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
   return priv->entities->len;
 }
+
+
 
 
 
@@ -473,8 +506,9 @@ crank_place_remove_entity (CrankPlace  *place,
 
   if (g_ptr_array_remove_fast (priv->entities, entity))
     {
-      crank_place__remove_entity (place, entity);
-      g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
+      _crank_place_disconnect_entity (place, entity);
+      _crank_place_entity_remove_entity (place, entity);
+      _crank_entity_place_remove_place (entity, place);
     }
   return FALSE;
 }
