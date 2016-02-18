@@ -45,8 +45,6 @@
 enum {
   PROP_PRIV_0,
   PROP_PRIV_VISIBLE_TYPES,
-  PROP_PRIV_PLACE,
-  PROP_PRIV_VISIBLE_OFFSET,
 
   PROP_PRIV_COUNTS
 };
@@ -59,11 +57,11 @@ static GParamSpec *pspecs_priv[PROP_PRIV_COUNTS] = {NULL};
 G_DECLARE_FINAL_TYPE (CrankRenderPData,
                       crank_render_pdata,
                       CRANK, RENDER_PDATA,
-                      GObject);
+                      CrankCompositable1N);
 
 struct _CrankRenderPData
 {
-  GObject parent;
+  CrankCompositable1N parent;
 
   CrankOctreeSet **entity_sets;
   guint           nentity_sets;
@@ -73,14 +71,6 @@ struct _CrankRenderPData
 };
 
 //////// Private Type functions ////////////////////////////////////////////////
-
-void crank_render_pdata_add_entity (CrankRenderPData *pdata,
-                                    CrankEntityBase  *entity,
-                                    const guint       tindex);
-
-gboolean crank_render_pdata_remove_entity (CrankRenderPData *pdata,
-                                           CrankEntityBase  *entity,
-                                           const guint       tindex);
 
 //////// Private type vfuncs ///////////////////////////////////////////////////
 
@@ -96,6 +86,16 @@ void crank_render_pdata_dispose (GObject *object);
 void crank_render_pdata_finalize (GObject *object);
 
 
+
+gboolean crank_render_pdata_adding (CrankCompositable  *compositable,
+                                    CrankComposite     *composite,
+                                    GError            **error);
+
+gboolean crank_render_pdata_removing (CrankCompositable  *compositable,
+                                      CrankComposite     *composite,
+                                      GError            **error);
+
+
 //////// Private type callbacks ////////////////////////////////////////////////
 
 CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
@@ -103,6 +103,18 @@ CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
 
 gfloat          crank_render_pdata_get_rad (gpointer data,
                                             gpointer userdata);
+
+
+
+void  crank_render_pdata_add_entity        (CrankRenderPData *pdata,
+                                            CrankEntity      *entity,
+                                            CrankVisible     *visible,
+                                            const guint       tindex);
+
+void  crank_render_pdata_remove_entity     (CrankRenderPData *pdata,
+                                            CrankEntity      *entity,
+                                            CrankVisible     *visible,
+                                            const guint       tindex);
 
 
 #endif

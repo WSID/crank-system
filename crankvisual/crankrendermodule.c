@@ -75,17 +75,17 @@ static void       crank_render_module_tick (CrankSessionModuleTick *module,
                                             gpointer                user_data);
 
 static void       crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
-                                                     CrankPlaceBase           *place,
+                                                     CrankPlace               *place,
                                                      gpointer                  user_data);
 
 static void       crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
-                                                    CrankPlaceBase           *place,
-                                                    CrankEntityBase          *entity,
+                                                    CrankPlace               *place,
+                                                    CrankEntity              *entity,
                                                     gpointer                  userdata);
 
 static void       crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
-                                                      CrankPlaceBase           *place,
-                                                      CrankEntityBase          *entity,
+                                                      CrankPlace               *place,
+                                                      CrankEntity              *entity,
                                                       gpointer                  userdata);
 
 
@@ -113,10 +113,6 @@ struct _CrankRenderModule
   CrankCompositable  _parent;
 
   CoglContext *cogl_context;
-
-  goffset     offset_pdata;
-  goffset     offset_visible;
-  goffset     offset_visible_tindex;
 
   GPtrArray   *cameras;
 
@@ -245,16 +241,24 @@ crank_render_module_adding (CrankCompositable  *compositable,
             composite,
             CRANK_TYPE_SESSION_MODULE_PLACED));
 
-  crank_session_module_placed_attach_place_alloc_object (pmodule,
-                                                         & rmodule->offset_pdata);
+  if ((crank_session_module_placed_get_place_type (pmodule) != CRANK_TYPE_PLACE3) ||
+      (crank_session_module_placed_get_entity_type (pmodule) != CRANK_TYPE_ENTITY3))
+    {
+      GType ptype = crank_session_module_placed_get_place_type (pmodule);
+      GType etype = crank_session_module_placed_get_entity_type (pmodule);
 
-  crank_session_module_placed_attach_entity_alloc_object (pmodule,
-                                                          & rmodule->offset_visible);
+      g_set_error (error,
+                   CRANK_COMPOSITE_ERROR,
+                   CRANK_COMPOSITE_ERROR_REJECTED,
+                   "CrankRenderModule requires CrankPlace3 and CrankEntity3\n"
+                   "  But %s@%p provides %s and %s",
+                   G_OBJECT_TYPE_NAME (pmodule), pmodule,
+                   g_type_name (ptype), g_type_name (etype));
 
-  crank_session_module_placed_attach_entity_alloc (pmodule,
-                                                   sizeof (guint),
-                                                   NULL,
-                                                   & rmodule->offset_visible);
+      return FALSE;
+    }
+
+
 
   g_signal_connect (pmodule, "place-created",
                     (GCallback)crank_render_module_place_created, rmodule);
@@ -320,7 +324,7 @@ crank_render_module_tick (CrankSessionModuleTick *tmodule,
       if (entity == NULL)
         continue;
 
-      place = (CrankPlace3*)crank_entity_base_get_place ((CrankEntityBase*)entity);
+      place = (CrankPlace3*)crank_entity_get_primary_place ((CrankEntity*)entity);
       if (place == NULL)
         continue;
 
@@ -341,61 +345,80 @@ crank_render_module_tick (CrankSessionModuleTick *tmodule,
 
 static void
 crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
-                                   CrankPlaceBase           *place,
+                                   CrankPlace               *place,
                                    gpointer                  userdata)
 {
   CrankRenderModule *module  = (CrankRenderModule*) userdata;
 
-  G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata) =
-      g_object_new (CRANK_TYPE_RENDER_PDATA,
-                    "place", place,
-                    "visible-types", 2,
-                    "visible-offset", module->offset_visible,
-                    NULL);
+  crank_composite_add_compositable (
+      (CrankComposite*) place,
+      (CrankCompositable*) g_object_new (CRANK_TYPE_RENDER_PDATA,
+                                         "visible-types", 2,
+                                         NULL),
+      NULL);
 }
 
 
 static void
 crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
-                                  CrankPlaceBase           *place,
-                                  CrankEntityBase          *entity,
+                                  CrankPlace               *place,
+                                  CrankEntity              *entity,
                                   gpointer                  userdata)
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
-
   CrankRenderPData *pdata;
-  CrankVisible *visible;
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  visible = G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
+  guint i;
+  guint n;
 
-  if (visible != NULL)
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
+  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
+
+  for (i = 0; i < n; i++)
     {
-      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(visible));
-      G_STRUCT_MEMBER (gint, entity, module->offset_visible_tindex) = tindex;
-      crank_render_pdata_add_entity (pdata, entity, tindex);
+      CrankCompositable *compositable =
+          crank_composite_get_compositable ((CrankComposite*)entity, i);
+
+      if (! CRANK_IS_VISIBLE (compositable))
+        continue;
+
+
+      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
+      crank_render_pdata_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
 
 static void
 crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
-                                    CrankPlaceBase           *place,
-                                    CrankEntityBase          *entity,
+                                    CrankPlace               *place,
+                                    CrankEntity              *entity,
                                     gpointer                  userdata)
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
-
   CrankRenderPData *pdata;
-  CrankVisible *visible;
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-  visible = G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
+  guint i;
+  guint n;
 
-  if (visible != NULL)
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
+  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
+
+  for (i = 0; i < n; i++)
     {
-      gint tindex = G_STRUCT_MEMBER (gint, entity, module->offset_visible_tindex);
-      crank_render_pdata_remove_entity (pdata, entity, tindex);
+      CrankCompositable *compositable =
+          crank_composite_get_compositable ((CrankComposite*)entity, i);
+
+      if (! CRANK_IS_VISIBLE (compositable))
+        continue;
+
+
+      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
+      crank_render_pdata_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
@@ -439,81 +462,12 @@ crank_render_module_new (CoglContext *cogl_context)
                                             NULL);
 }
 
-//////// Entities and places functions /////////////////////////////////////////
-
-/**
- * crank_render_module_set_visible:
- * @module: A Module.
- * @entity: A Entity.
- * @visible: (nullable): A Visible.
- *
- * Sets a visible for the entity. This may have different type for each rendering
- * objective.
- */
-void
-crank_render_module_set_visible (CrankRenderModule *module,
-                                 CrankEntityBase   *entity,
-                                 CrankVisible      *visible)
-{
-  CrankPlaceBase *place;
-  CrankRenderPData *pdata;
-  CrankVisible **visible_ptr;
-  CrankVisible *visible_prev;
-  gint         *visible_ptindex_ptr;
-  gint          visible_ptindex;
-  GType         visible_type;
-  gint          visible_tindex;
-
-  visible_ptr = G_STRUCT_MEMBER_P (entity, module->offset_visible);
-  visible_prev = *visible_ptr;
-  visible_ptindex_ptr = G_STRUCT_MEMBER_P (entity, module->offset_visible_tindex);
-  visible_ptindex = *visible_ptindex_ptr;
-
-  if (! g_set_object (visible_ptr, visible))
-    return;
-
-  place = crank_entity_base_get_place (entity);
-
-  if (place != NULL)
-    {
-      pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
-
-      if (visible != NULL)
-        {
-          visible_type = G_OBJECT_TYPE (visible);
-          visible_tindex = crank_render_module_get_tindex (module, visible_type);
-
-          if (visible_tindex != visible_ptindex)
-            {
-              crank_render_pdata_remove_entity (pdata, entity, visible_ptindex);
-              crank_render_pdata_add_entity (pdata, entity, visible_tindex);
-              *visible_ptindex_ptr = visible_tindex;
-            }
-        }
-      else
-        {
-          crank_render_pdata_remove_entity (pdata, entity, visible_ptindex);
-          *visible_ptindex_ptr = -1;
-        }
-    }
-}
 
 
-/**
- * crank_render_module_get_visible:
- * @module: A Module.
- * @entity: A Entity.
- *
- * Gets a visible from entity.
- *
- * Returns: (transfer none) (nullable): Visible, or %NULL if it does not have.
- */
-CrankVisible*
-crank_render_module_get_visible (CrankRenderModule *module,
-                                 CrankEntityBase   *entity)
-{
-  return G_STRUCT_MEMBER (CrankVisible*, entity, module->offset_visible);
-}
+
+
+
+
 
 
 //////// Public functions //////////////////////////////////////////////////////
@@ -543,7 +497,9 @@ crank_render_module_get_culled_rlist (CrankRenderModule *module,
   for (i = 0; i < 6; i++)
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
   return crank_octree_set_get_culled_list (pdata->rentities, cullplane_t, 6);
 }
 
@@ -572,7 +528,10 @@ crank_render_module_get_culled_llist (CrankRenderModule *module,
   for (i = 0; i < 6; i++)
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
   return crank_octree_set_get_culled_list (pdata->lentities, cullplane_t, 6);
 }
 
@@ -605,7 +564,10 @@ crank_render_module_get_culled_rarray (CrankRenderModule *module,
   for (i = 0; i < 6; i++)
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
   return crank_octree_set_add_culled_array (pdata->rentities, entities, cullplane_t, 6);
 }
 
@@ -636,7 +598,10 @@ crank_render_module_get_culled_larray (CrankRenderModule *module,
   for (i = 0; i < 6; i++)
     crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
 
-  pdata = G_STRUCT_MEMBER (CrankRenderPData*, place, module->offset_pdata);
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
   return crank_octree_set_add_culled_array (pdata->lentities, entities, cullplane_t, 6);
 }
 
@@ -755,7 +720,9 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
+      CrankRenderable *renderable = (CrankRenderable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
+
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -796,7 +763,8 @@ crank_render_module_render_color_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
+      CrankRenderable *renderable = (CrankRenderable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -843,7 +811,8 @@ crank_render_module_render_light_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_visible);
+      CrankLightable *lightable = (CrankLightable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_LIGHTABLE);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -883,7 +852,8 @@ crank_render_module_render_geom_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
+      CrankRenderable *renderable = (CrankRenderable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -922,7 +892,8 @@ crank_render_module_render_color_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = G_STRUCT_MEMBER (CrankRenderable*, entity, module->offset_visible);
+      CrankRenderable *renderable = (CrankRenderable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);
@@ -967,7 +938,8 @@ crank_render_module_render_light_array (CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankLightable *lightable = G_STRUCT_MEMBER (CrankLightable*, entity, module->offset_visible);
+      CrankLightable *lightable = (CrankLightable*)
+          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_LIGHTABLE);
       CrankTrans3 rpos;
 
       crank_trans3_compose (&ipos, & entity->position, &rpos);

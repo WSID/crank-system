@@ -59,14 +59,9 @@ G_DECLARE_FINAL_TYPE (CrankRenderModule,
 CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
 
 
-//////// Place and Entity functions ////////////////////////////////////////////
 
-void              crank_render_module_set_visible (CrankRenderModule *module,
-                                                   CrankEntityBase   *entity,
-                                                   CrankVisible      *visible);
 
-CrankVisible     *crank_render_module_get_visible (CrankRenderModule *module,
-                                                   CrankEntityBase   *entity);
+
 
 
 //////// Public functions //////////////////////////////////////////////////////
