@@ -12,6 +12,8 @@ coreinclude_HEADERS = \
 		crankplace.h \
 		crankentity.h \
 		\
+		crankplace3.h \
+		\
 		cranksessionmoduletick.h \
 		cranksessionmodulesimtimed.h \
 		cranksessionmoduleplaced.h
@@ -42,6 +44,8 @@ libcrankcore_la_SOURCES= \
 		\
 		crankplace.c \
 		crankentity.c \
+		\
+		crankplace3.c \
 		\
 		cranksessionmoduletick.c \
 		cranksessionmodulesimtimed.c \
