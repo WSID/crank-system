@@ -33,6 +33,16 @@
 
 #ifndef __GTK_DOC_IGNORE__
 
+
+G_GNUC_INTERNAL
+void      crank_session_module_placed_add_placeless (CrankSessionModulePlaced *module,
+                                                     CrankEntity              *entity);
+
+G_GNUC_INTERNAL
+void      crank_session_module_placed_remove_placeless (CrankSessionModulePlaced *module,
+                                                        CrankEntity              *entity);
+
+
 G_GNUC_INTERNAL
 void      crank_session_module_placed_fini_place (CrankSessionModulePlaced *module,
                                                   CrankPlace               *place);

@@ -438,6 +438,30 @@ crank_session_module_placed_dispose (GObject *object)
 //////// Internal Functions ////////////////////////////////////////////////////
 #ifndef __GTK_DOC_IGNORE__
 
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_add_placeless (CrankSessionModulePlaced *module,
+                                           CrankEntity              *entity)
+{
+  CrankSessionModulePlacedPrivate *priv;
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  g_ptr_array_add (priv->entities_placeless, entity);
+}
+
+G_GNUC_INTERNAL
+void
+crank_session_module_placed_remove_placeless (CrankSessionModulePlaced *module,
+                                              CrankEntity              *entity)
+{
+  CrankSessionModulePlacedPrivate *priv;
+  priv = crank_session_module_placed_get_instance_private (module);
+
+  g_ptr_array_remove_fast (priv->entities_placeless, entity);
+}
+
+
 G_GNUC_INTERNAL
 void
 crank_session_module_placed_place_created (CrankSessionModulePlaced *module,
