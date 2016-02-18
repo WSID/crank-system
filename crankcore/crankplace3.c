@@ -197,7 +197,7 @@ crank_place3_new_with_boundary (CrankSessionModulePlaced *module,
 
 /**
  * crank_place3_get_boundary:
- * @module: A Module that this place belongs to.
+ * @place: A Place.
  * @boundary: (out): A Boundary.
  *
  * Gets boundary of module.
@@ -212,7 +212,7 @@ crank_place3_get_boundary (CrankPlace3 *place,
 
 /**
  * crank_place3_set_boundary:
- * @module: A Module that this place belongs to.
+ * @place: A Place.
  * @boundary: A Boundary.
  *
  * Sets boundary of module.

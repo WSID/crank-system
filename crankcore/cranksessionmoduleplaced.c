@@ -165,6 +165,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::place-created:
+   * @module: A Module.
    * @place: A Newly created place.
    *
    * Emitted when a place is constructed with this module.
@@ -181,6 +182,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::place-disposed:
+   * @module: A Module.
    * @place: A place to be disposed.
    *
    * Emitted when a place is disposed.
@@ -197,6 +199,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-created:
+   * @module: A Module.
    * @entity: A Newly created entity.
    *
    * Emitted when an entity is constructed with this module.
@@ -213,6 +216,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-disposed:
+   * @module: A Module.
    * @entity: A entity to be disposed.
    *
    * Emitted when an entity is disposed.
@@ -229,6 +233,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-added:
+   * @module: A Module.
    * @place: A Place.
    * @entity: A Entity.
    *
@@ -246,6 +251,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-removed:
+   * @module: A Module.
    * @place: A Place.
    * @entity: A Entity.
    *
@@ -263,6 +269,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::place-added-compositable:
+   * @module: A Module.
    * @place: A Place.
    * @compositable: A Compositable.
    *
@@ -278,6 +285,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::place-removed-compositable:
+   * @module: A Module.
    * @place: A Place.
    * @compositable: A Compositable.
    *
@@ -293,6 +301,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-added-compositable:
+   * @module: A Module.
    * @place: A Place.
    * @compositable: A Compositable.
    *
@@ -308,6 +317,7 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 
   /**
    * CrankSessionModulePlaced::entity-removed-compositable:
+   * @module: A Module.
    * @place: A Place.
    * @compositable: A Compositable.
    *

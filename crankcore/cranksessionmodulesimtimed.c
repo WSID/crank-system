@@ -131,6 +131,7 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
 
   /**
    * CrankSessionModuleSimTimed::flow-time:
+   * @module: A Module.
    * @time: Time to flow.
    *
    * Performs flow time to this module. Other modules can connect to this signal

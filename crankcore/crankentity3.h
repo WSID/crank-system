@@ -77,7 +77,7 @@ CrankEntity3     *crank_entity3_new (CrankSessionModulePlaced *module);
 void    crank_entity3_get_position (CrankEntity3 *entity,
                                     CrankTrans3  *position);
 
-void    crank_entity3_set_position (CrankEntity3      *place,
+void    crank_entity3_set_position (CrankEntity3      *entity,
                                     const CrankTrans3 *position);
 
 
