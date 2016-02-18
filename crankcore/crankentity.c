@@ -77,6 +77,16 @@ static gboolean crank_entity_remove_compositable (CrankComposite     *composite,
 
 
 
+//////// Private Functions /////////////////////////////////////////////////////
+
+static void crank_entity_on_primary_place_switched (CrankEntity *entity);
+
+
+
+
+
+
+
 
 //////// Propertites and signals ///////////////////////////////////////////////
 
@@ -85,6 +95,7 @@ enum {
   PROP_MODULE,
   PROP_NPLACES,
   PROP_PRIMARY_PLACE,
+  PROP_PLACELESS,
 
   PROP_COUNTS
 };
@@ -246,8 +257,9 @@ crank_entity_constructed (GObject *object)
   CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
 
   pc->constructed (object);
-  crank_session_module_placed_add_placeless (priv->module, self);
   crank_session_module_placed_entity_created (priv->module, self);
+
+  crank_session_module_placed_add_placeless (priv->module, self);
 }
 
 
@@ -259,10 +271,12 @@ crank_entity_dispose (GObject *object)
   GObjectClass *pc = crank_entity_parent_class;
   CrankEntity *self = (CrankEntity*) object;
   CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
+  guint i;
+
+  for (i = 0; i < priv->places->len; i--)
+    {}
 
   crank_session_module_placed_entity_disposed (priv->module, self);
-
-  g_ptr_array_set_size (priv->places, 0);
   pc->dispose (object);
 }
 
@@ -326,6 +340,20 @@ crank_entity_remove_compositable (CrankComposite     *composite,
 
 
 
+//////// Private Functions /////////////////////////////////////////////////////
+
+static void
+crank_entity_on_primary_place_switched (CrankEntity *entity)
+{
+  g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+
+  // May add extra code if CrankPlace wants keep track "primary entities".
+}
+
+
+
+
+
 
 
 //////// Private Function for CrankPlace ///////////////////////////////////////
@@ -346,7 +374,7 @@ _crank_entity_place_add_place (CrankEntity *entity,
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
   g_ptr_array_add (priv->places, place);
 
-  if (priv->places->len == 1)
+  if (! crank_entity_is_placeless (entity))
     {
       g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
       crank_session_module_placed_remove_placeless (priv->module, entity);
@@ -369,20 +397,21 @@ _crank_entity_place_remove_place (CrankEntity *entity,
                                   CrankPlace  *place)
 {
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
-  gboolean switch_primary_place;
+  guint i;
 
-  if (priv->places->len == 0)
+  // Action
+  i = crank_entity_index_of_place (entity, place);
+
+  if (i == -1)
     return FALSE;
 
-  switch_primary_place = (priv->places->pdata[0] == place);
+  g_ptr_array_remove_index_fast (priv->places, i);
 
-  if (! g_ptr_array_remove_fast (priv->places, place))
-    return FALSE;
+  // Post action
+  if (i == 0)
+    crank_entity_on_primary_place_switched (entity);
 
-  if (switch_primary_place)
-    g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
-
-  if (priv->places->len == 0)
+  if (crank_entity_is_placeless (entity))
     crank_session_module_placed_add_placeless (priv->module, entity);
 
   return TRUE;
@@ -405,31 +434,21 @@ _crank_entity_place_switch_primary_place (CrankEntity *entity,
                                           CrankPlace  *place)
 {
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
-  gpointer primary_curr;
-
   guint i;
 
-  if (priv->places->len <= 1)
+  if (crank_entity_is_placeless (entity))
     return FALSE;
 
-  primary_curr = priv->places->pdata[0];
+  i = crank_entity_index_of_place (entity, place);
 
-  if (primary_curr == place)
+  if (i == 0)
     return TRUE;
-
-  for (i = 1; i < priv->places->len; i++)
-    {
-      if (priv->places->pdata[i] == place)
-          break;
-    }
-
-  if (i == priv->places->len)
+  else if (i == -1)
     return FALSE;
 
-  priv->places->pdata[i] = primary_curr;
+  priv->places->pdata[i] = priv->places->pdata[0];
   priv->places->pdata[0] = place;
-  g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
-
+  crank_entity_on_primary_place_switched (entity);
 
   return TRUE;
 }
@@ -449,15 +468,7 @@ G_GNUC_INTERNAL gboolean
 _crank_entity_place_belongs_to (CrankEntity *entity,
                                 CrankPlace  *place)
 {
-  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
-  guint i;
-
-  for (i = 0; i < priv->places->len; i++)
-    {
-      if (priv->places->pdata[i] == place)
-          return TRUE;
-    }
-  return FALSE;
+  return crank_entity_index_of_place (entity, place) != -1;
 }
 
 
@@ -491,8 +502,7 @@ crank_entity_get_module (CrankEntity *entity)
 CrankPlace*
 crank_entity_get_primary_place (CrankEntity *entity)
 {
-  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
-  return (CrankPlace*) priv->places->pdata[0];
+  return crank_entity_get_place (entity, 0);
 }
 
 /**
