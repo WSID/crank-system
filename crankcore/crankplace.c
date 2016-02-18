@@ -38,6 +38,8 @@
 #include "cranksessionmoduleplaced.h"
 #include "crankplace.h"
 
+#include "crankentity-private.h"
+
 
 
 typedef struct _CrankPlacePrivate CrankPlacePrivate;
@@ -68,8 +70,8 @@ static gboolean crank_place_remove_compositable (CrankComposite     *composite,
 
 //////// Private Functions /////////////////////////////////////////////////////
 
-static void   crank_place__remove_entity (CrankPlacePrivate *priv,
-                                          CrankEntity       *entity);
+static void   crank_place__remove_entity (CrankPlace  *priv,
+                                          CrankEntity *entity)
 
 
 
@@ -184,7 +186,7 @@ crank_place_dispose (GObject *object)
 
       i--;
       entity = priv->entities->pdata[i];
-      crank_place__remove_entity (priv, entity);
+      crank_place__remove_entity (place, entity);
     }
 
   g_ptr_array_set_size (priv->entities, 0);
@@ -232,9 +234,10 @@ crank_place_remove_compositable (CrankComposite     *composite,
 //////// Private functions /////////////////////////////////////////////////////
 
 static void
-crank_place__remove_entity (CrankPlacePrivate *priv,
-                            CrankEntity       *entity)
+crank_place__remove_entity (CrankPlace  *place,
+                            CrankEntity *entity)
 {
+  _crank_entity_place_remove_place (entity, place);
   // TODO: Notify and such things...!
 }
 
@@ -308,6 +311,22 @@ crank_place_remove_entity (CrankPlace  *place,
       crank_place__remove_entity (priv, entity);
       g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
     }
+}
+
+/**
+ * crank_place_contains_entity:
+ * @place: A Place.
+ * @entity: A Entity.
+ *
+ * Checks whether the entity belongs to the place.
+ *
+ * Returns: Whether the entity belongs to the place.
+ */
+gboolean
+crank_place_contains_entity (CrankPlace  *place,
+                             CrankEntity *entity)
+{
+  return _crank_entity_place_belongs_to (entity, place);
 }
 
 

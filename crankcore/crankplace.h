@@ -81,6 +81,9 @@ gboolean  crank_place_add_entity (CrankPlace *place,
 gboolean  crank_place_remove_entity (CrankPlace  *place,
                                      CrankEntity *entity);
 
+gboolean  crank_place_contains_entity (CrankPlace  *place,
+                                       CrankEntity *entity);
+
 void      crank_place_foreach_entity (CrankPlace *place,
                                       GFunc       func,
                                       gpointer    userdata);
