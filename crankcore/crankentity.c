@@ -37,7 +37,9 @@
 #include "crankbase.h"
 #include "cranksessionmoduleplaced.h"
 #include "crankplace.h"
+
 #include "crankentity.h"
+#include "crankentity-private.h"
 
 
 
@@ -215,6 +217,111 @@ crank_entity_remove_compositable (CrankComposite     *composite,
   // TODO: Notify
 }
 
+
+
+
+
+
+//////// Private Function for CrankPlace ///////////////////////////////////////
+
+/*
+ * _crank_entity_place_add_place:
+ * @entity: A Entity.
+ * @place: A Place.
+ *
+ * Friendship: #CrankPlace, for private.
+ *
+ * Adds a @place to place list of @entity.
+ */
+G_GNUC_INTERNAL void
+_crank_entity_place_add_place (CrankEntity *entity,
+                               CrankPlace  *place)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  g_ptr_array_add (priv->places, place);
+
+  if (priv->places->len == 1)
+    g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+}
+
+/*
+ * _crank_entity_place_remove_place:
+ * @entity: A Entity.
+ * @place: A Place.
+ *
+ * Friendship: #CrankPlace, for private.
+ *
+ * Removes a @place from place list of @entity.
+ *
+ * Returns: Whether the removal was succesful.
+ */
+G_GNUC_INTERNAL gboolean
+_crank_entity_place_remove_place (CrankEntity *entity,
+                                  CrankPlace  *place)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  gboolean switch_primary_place;
+
+  if (priv->places->len == 0)
+    return FALSE;
+
+  switch_primary_place = (priv->places->pdata[0] == place);
+
+  if (g_ptr_array_remove_fast (priv->places, place))
+    {
+      if (switch_primary_place)
+        g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+/*
+ * _crank_entity_place_switch_primary_place:
+ * @entity: A Entity.
+ * @place: A Place.
+ *
+ * Friendship: #CrankPlace, for private.
+ *
+ * Switchs primary place. This is used by #CrankPlace for hand over entity to
+ * other #CrankPlace.
+ *
+ * Returns: Whether the primary place is switched.
+ */
+G_GNUC_INTERNAL gboolean
+_crank_entity_place_switch_primary_place (CrankEntity *entity,
+                                          CrankPlace  *place)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  gpointer primary_curr;
+
+  guint i;
+
+  if (priv->places->len <= 1)
+    return FALSE;
+
+  primary_curr = priv->places->pdata[0];
+
+  if (primary_curr == place)
+    return TRUE;
+
+  for (i = 1; i < priv->places->len; i++)
+    {
+      if (priv->places->pdata[i] == place)
+          break;
+    }
+
+  if (i == priv->places->len)
+    return FALSE;
+
+  priv->places->pdata[i] = primary_curr;
+  priv->places->pdata[0] = place;
+  g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+
+
+  return TRUE;
+}
 
 
 
