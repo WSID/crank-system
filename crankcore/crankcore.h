@@ -29,6 +29,9 @@
 #include "crankplace.h"
 #include "crankentity.h"
 
+#include "crankplace3.h"
+#include "crankentity3.h"
+
 #include "cranksessionmoduletick.h"
 #include "cranksessionmodulesimtimed.h"
 #include "cranksessionmoduleplaced.h"
