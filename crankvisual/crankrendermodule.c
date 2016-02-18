@@ -89,6 +89,17 @@ static void       crank_render_module_entity_removed (CrankSessionModulePlaced *
                                                       gpointer                  userdata);
 
 
+static void       crank_render_module_entity_added_compositable (CrankSessionModulePlaced *pmodule,
+                                                                 CrankEntity              *entity,
+                                                                 CrankCompositable        *compositable,
+                                                                 gpointer                  userdata);
+
+static void       crank_render_module_entity_removed_compositable (CrankSessionModulePlaced *pmodule,
+                                                                   CrankEntity              *entity,
+                                                                   CrankCompositable        *compositable,
+                                                                   gpointer                  userdata);
+
+
 //////// Private functions /////////////////////////////////////////////////////
 
 static gint      crank_render_module_get_tindex (CrankRenderModule *module,
@@ -269,6 +280,12 @@ crank_render_module_adding (CrankCompositable  *compositable,
   g_signal_connect (pmodule, "entity-removed",
                     (GCallback)crank_render_module_entity_removed, rmodule);
 
+  g_signal_connect (pmodule, "entity-added-compositable",
+                    (GCallback)crank_render_module_entity_added_compositable, rmodule);
+
+  g_signal_connect (pmodule, "entity-removed-compositable",
+                    (GCallback)crank_render_module_entity_removed_compositable, rmodule);
+
 
   // Tick Module
   tmodule = CRANK_SESSION_MODULE_TICK (
@@ -417,6 +434,59 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
         continue;
 
 
+      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
+      crank_render_pdata_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+    }
+}
+
+
+static void
+crank_render_module_entity_added_compositable (CrankSessionModulePlaced *pmodule,
+                                               CrankEntity              *entity,
+                                               CrankCompositable        *compositable,
+                                               gpointer                  userdata)
+{
+  CrankRenderModule *module = (CrankRenderModule*) userdata;
+  CrankPlace *place;
+  CrankRenderPData *pdata;
+
+  place = crank_entity_get_primary_place (entity);
+
+  if (place == NULL)
+    return;
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
+
+  if (CRANK_IS_VISIBLE (compositable))
+    {
+      gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
+      crank_render_pdata_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+    }
+}
+
+static void
+crank_render_module_entity_removed_compositable (CrankSessionModulePlaced *pmodule,
+                                                 CrankEntity              *entity,
+                                                 CrankCompositable        *compositable,
+                                                 gpointer                  userdata)
+{
+  CrankRenderModule *module = (CrankRenderModule*) userdata;
+  CrankPlace *place;
+  CrankRenderPData *pdata;
+
+  place = crank_entity_get_primary_place (entity);
+
+  if (place == NULL)
+    return;
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
+
+  if (CRANK_IS_VISIBLE (compositable))
+    {
       gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
       crank_render_pdata_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
