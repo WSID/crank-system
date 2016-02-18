@@ -158,6 +158,13 @@ crank_entity_class_init (CrankEntityClass *c)
                        CRANK_TYPE_PLACE,
                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
+  pspecs[PROP_PRIMARY_PLACE] =
+  g_param_spec_object ("primary-place", "Primary place",
+                       "Primary place for this entity.",
+                       CRANK_TYPE_PLACE,
+                       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
