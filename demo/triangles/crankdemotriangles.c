@@ -245,8 +245,8 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   GError *merr = NULL;
   // Constructs sessions and modules
   app->session = crank_session_new ();
-  app->pmodule = crank_session_module_placed_new (sizeof (CrankPlace3),
-                                                  sizeof (CrankEntity3));
+  app->pmodule = crank_session_module_placed_new (CRANK_TYPE_PLACE3,
+                                                  CRANK_TYPE_ENTITY3);
   app->tmodule = crank_session_module_tick_new (17);
 
   app->rmodule = crank_render_module_new (cogl_context);
@@ -270,8 +270,8 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
 
 
   // Make entities.
-  app->place = (CrankPlace3*) crank_place_base_new (app->pmodule);
-  app->camera_hook = (CrankEntity3*) crank_entity_base_new (app->pmodule);
+  app->place = crank_place3_new (app->pmodule);
+  app->camera_hook = crank_entity3_new (app->pmodule);
 
   app->renderable = crank_demo_renderable_triangle_new (cogl_context);
   app->lightable = crank_lightable_a_ranged_new (cogl_context,
@@ -280,8 +280,8 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
                                                  2);
 
   // Add session!
-  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
-                               (CrankEntityBase*)app->camera_hook);
+  crank_place_add_entity ((CrankPlace*)app->place,
+                          (CrankEntity*)app->camera_hook);
   crank_render_module_add_camera (app->rmodule, app->camera);
   crank_camera_set_entity (app->camera, app->camera_hook);
 
@@ -305,7 +305,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
 static void
 crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 {
-  CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
+  CrankEntity3 *entity = crank_entity3_new (app->pmodule);
 
   CrankTrans3 pos = {{
     g_random_double_range (-40, 40),
@@ -320,19 +320,19 @@ crank_demo_triangle_app_add_triangle (CrankDemoTriangleApp *app)
 
   crank_quat_float_unit_self (& pos.mrot);
 
-  crank_render_module_set_visible (app->rmodule,
-                                   (CrankEntityBase*)entity,
-                                   (CrankVisible*)app->renderable);
+  crank_composite_add_compositable ((CrankComposite*)entity,
+                                    (CrankCompositable*)app->renderable,
+                                    NULL);
 
   crank_trans3_copy (&pos, & entity->position);
-  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
-                               (CrankEntityBase*)entity);
+  crank_place_add_entity ((CrankPlace*)app->place,
+                          (CrankEntity*)entity);
 }
 
 static void
 crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app)
 {
-  CrankEntity3 *entity = (CrankEntity3*) crank_entity_base_new (app->pmodule);
+  CrankEntity3 *entity = (CrankEntity3*) crank_entity3_new (app->pmodule);
 
   CrankTrans3 pos = {{
     g_random_double_range (-10, 10),
@@ -347,13 +347,13 @@ crank_demo_triangle_app_add_lightable (CrankDemoTriangleApp *app)
 
   crank_quat_float_unit_self (& pos.mrot);
 
-  crank_render_module_set_visible (app->rmodule,
-                                   (CrankEntityBase*)entity,
-                                   (CrankVisible*)app->lightable);
+  crank_composite_add_compositable ((CrankComposite*)entity,
+                                    (CrankCompositable*)app->lightable,
+                                    NULL);
 
   crank_trans3_copy (&pos, & entity->position);
-  crank_place_base_add_entity ((CrankPlaceBase*)app->place,
-                               (CrankEntityBase*)entity);
+  crank_place_add_entity ((CrankPlace*)app->place,
+                          (CrankEntity*)entity);
 }
 
 static void
