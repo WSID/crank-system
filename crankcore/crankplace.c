@@ -71,7 +71,7 @@ static gboolean crank_place_remove_compositable (CrankComposite     *composite,
 //////// Private Functions /////////////////////////////////////////////////////
 
 static void   crank_place__remove_entity (CrankPlace  *priv,
-                                          CrankEntity *entity)
+                                          CrankEntity *entity);
 
 
 
@@ -186,7 +186,7 @@ crank_place_dispose (GObject *object)
 
       i--;
       entity = priv->entities->pdata[i];
-      crank_place__remove_entity (place, entity);
+      crank_place__remove_entity (self, entity);
     }
 
   g_ptr_array_set_size (priv->entities, 0);
@@ -316,7 +316,7 @@ crank_place_remove_entity (CrankPlace  *place,
 
   if (g_ptr_array_remove_fast (priv->entities, entity))
     {
-      crank_place__remove_entity (priv, entity);
+      crank_place__remove_entity (place, entity);
       g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
     }
   return FALSE;
