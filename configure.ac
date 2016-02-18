@@ -49,8 +49,13 @@ GLIB_TESTS
 
 ######## GTK-Doc ###############################################################
 m4_ifdef([GTK_DOC_CHECK],
-  [GTK_DOC_CHECK([1.14], [--flavour no-tmpl])],
-  [AM_CONDITIONAL([ENABLE_GTK_DOC], false)]    )
+  [
+GTK_DOC_CHECK([1.14], [--flavour no-tmpl])
+  ],
+  [
+AM_CONDITIONAL([ENABLE_GTK_DOC], false)
+  ]
+)
 
 ######## GObject Introspection #################################################
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
