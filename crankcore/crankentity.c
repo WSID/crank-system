@@ -195,6 +195,9 @@ crank_entity_get_property (GObject    *object,
     }
 }
 
+
+
+
 static void
 crank_entity_set_property (GObject      *object,
                            guint         prop_id,
@@ -218,6 +221,8 @@ crank_entity_set_property (GObject      *object,
 }
 
 
+
+
 static void
 crank_entity_constructed (GObject *object)
 {
@@ -228,6 +233,8 @@ crank_entity_constructed (GObject *object)
   pc->constructed (object);
   crank_session_module_placed_entity_created (priv->module, self);
 }
+
+
 
 
 static void
@@ -243,6 +250,8 @@ crank_entity_dispose (GObject *object)
   pc->dispose (object);
 }
 
+
+
 static void
 crank_entity_finalize (GObject *object)
 {
@@ -254,6 +263,13 @@ crank_entity_finalize (GObject *object)
   pc->finalize (object);
 }
 
+
+
+
+
+
+
+//////// CrankCompositable /////////////////////////////////////////////////////
 
 static gboolean
 crank_entity_add_compositable (CrankComposite    *composite,
@@ -271,6 +287,8 @@ crank_entity_add_compositable (CrankComposite    *composite,
   return TRUE;
 }
 
+
+
 static gboolean
 crank_entity_remove_compositable (CrankComposite     *composite,
                                  CrankCompositable  *compositable,
@@ -286,6 +304,10 @@ crank_entity_remove_compositable (CrankComposite     *composite,
   crank_session_module_placed_entity_removed_compositable (priv->module, self, compositable);
   return TRUE;
 }
+
+
+
+
 
 
 
