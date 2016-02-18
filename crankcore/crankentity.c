@@ -557,7 +557,9 @@ crank_entity_get_place (CrankEntity *entity,
                         const guint  index)
 {
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
-  return (CrankPlace*) priv->places->pdata[index];
+  return  (index < priv->places->len) ?
+          ((CrankPlace*) priv->places->pdata[index]) :
+          NULL;
 }
 
 /**
