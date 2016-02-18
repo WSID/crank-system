@@ -282,8 +282,13 @@ crank_place_add_entity (CrankPlace  *place,
 {
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
 
-  // TODO: Check membership of entity.
-  g_ptr_array_add (priv->entities, entity);
+  // TODO: Check module.
+
+  if (crank_place_contains_entity (place, entity))
+    return FALSE;
+
+
+  g_ptr_array_add (priv->entities, g_object_ref (entity));
   g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
 
   return TRUE;
@@ -305,12 +310,16 @@ crank_place_remove_entity (CrankPlace  *place,
 {
   CrankPlacePrivate *priv = crank_place_get_instance_private (place);
 
-  // TODO: Check membership of entity.
+  if (! crank_place_contains_entity (place, entity))
+    return FALSE;
+
+
   if (g_ptr_array_remove_fast (priv->entities, entity))
     {
       crank_place__remove_entity (priv, entity);
       g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
     }
+  return FALSE;
 }
 
 /**
