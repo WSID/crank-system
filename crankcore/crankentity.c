@@ -547,3 +547,28 @@ crank_entity_get_place (CrankEntity *entity,
   CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
   return (CrankPlace*) priv->places->pdata[index];
 }
+
+/**
+ * crank_entity_index_of_place:
+ * @entity: A Entity.
+ * @place: A Place.
+ *
+ * Gets index of given @place. Plaese note that index may be changed, as entity
+ * may be added to place, or removed.
+ *
+ * Returns: Index of place, or -1 if not found.
+ */
+gint
+crank_entity_index_of_place (CrankEntity *entity,
+                             CrankPlace *place)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  guint i;
+
+  for (i = 0; i < priv->places->len; i++)
+    {
+      if (priv->places->pdata[i] == place)
+        return i;
+    }
+  return -1;
+}

@@ -86,6 +86,9 @@ gboolean    crank_entity_is_placeless      (CrankEntity *entity);
 CrankPlace *crank_entity_get_place         (CrankEntity *entity,
                                             const guint  index);
 
+gint        crank_entity_index_of_place    (CrankEntity *entity,
+                                            CrankPlace  *place);
+
 G_END_DECLS
 
 #endif
