@@ -36,6 +36,7 @@
 
 #include "crankbase.h"
 #include "cranksessionmoduleplaced.h"
+#include "cranksessionmoduleplaced-private.h"
 #include "crankplace.h"
 
 #include "crankentity.h"
@@ -56,6 +57,8 @@ static void   crank_entity_set_property (GObject      *object,
                                          const GValue *value,
                                          GParamSpec   *psepc);
 
+
+static void   crank_entity_constructed (GObject *object);
 
 static void   crank_entity_dispose (GObject *object);
 
@@ -129,6 +132,7 @@ crank_entity_class_init (CrankEntityClass *c)
 
   c_gobject->get_property = crank_entity_get_property;
   c_gobject->set_property = crank_entity_set_property;
+  c_gobject->constructed = crank_entity_constructed;
   c_gobject->dispose = crank_entity_dispose;
   c_gobject->finalize = crank_entity_finalize;
 
@@ -213,12 +217,27 @@ crank_entity_set_property (GObject      *object,
     }
 }
 
+
+static void
+crank_entity_constructed (GObject *object)
+{
+  GObjectClass *pc = crank_entity_parent_class;
+  CrankEntity *self = (CrankEntity*) object;
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
+
+  pc->constructed (object);
+  crank_session_module_placed_entity_created (priv->module, self);
+}
+
+
 static void
 crank_entity_dispose (GObject *object)
 {
   GObjectClass *pc = crank_entity_parent_class;
   CrankEntity *self = (CrankEntity*) object;
   CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
+
+  crank_session_module_placed_entity_disposed (priv->module, self);
 
   g_ptr_array_set_size (priv->places, 0);
   pc->dispose (object);
@@ -242,9 +261,14 @@ crank_entity_add_compositable (CrankComposite    *composite,
                               GError            **error)
 {
   CrankCompositeClass *pc = crank_entity_parent_class;
-  return pc->add_compositable (composite, compositable, error);
+  CrankEntity *self = (CrankEntity*) composite;
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
 
-  // TODO: Notify
+  if (! pc->add_compositable (composite, compositable, error))
+    return FALSE;
+
+  crank_session_module_placed_entity_added_compositable (priv->module, self, compositable);
+  return TRUE;
 }
 
 static gboolean
@@ -253,9 +277,14 @@ crank_entity_remove_compositable (CrankComposite     *composite,
                                  GError            **error)
 {
   CrankCompositeClass *pc = crank_entity_parent_class;
-  return pc->remove_compositable (composite, compositable, error);
+  CrankEntity *self = (CrankEntity*) composite;
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
 
-  // TODO: Notify
+  if (! pc->remove_compositable (composite, compositable, error))
+    return FALSE;
+
+  crank_session_module_placed_entity_removed_compositable (priv->module, self, compositable);
+  return TRUE;
 }
 
 
