@@ -265,12 +265,10 @@ crank_place_dispose (GObject *object)
   crank_session_module_placed_place_disposed (priv->module, self);
 
   priv->module = NULL;
-  for (i = priv->entities->len; 0 < i;)
+  for (i = 0; i < priv->entities->len; i++)
     {
-      CrankEntity *entity;
+      CrankEntity *entity = priv->entities->pdata[i];
 
-      i--;
-      entity = priv->entities->pdata[i];
       _crank_place_disconnect_entity (self, entity);
       _crank_entity_place_remove_place (entity, self);
     }
@@ -462,9 +460,9 @@ crank_place_add_entity (CrankPlace  *place,
   _crank_entity_place_add_place (entity, place);
   g_ptr_array_add (priv->entities, g_object_ref (entity));
 
-  g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
-  g_signal_emit (place, sig_entity_added, 0, entity);
   crank_session_module_placed_entity_added (priv->module, place, entity);
+  g_signal_emit (place, sig_entity_added, 0, entity);
+  g_object_notify_by_pspec ((GObject*)place, pspecs[PROP_NENTITIES]);
 
   return TRUE;
 }
@@ -503,14 +501,10 @@ crank_place_remove_entity (CrankPlace  *place,
   if (! crank_place_contains_entity (place, entity))
     return FALSE;
 
-
-  if (g_ptr_array_remove_fast (priv->entities, entity))
-    {
-      _crank_place_disconnect_entity (place, entity);
-      _crank_place_entity_remove_entity (place, entity);
-      _crank_entity_place_remove_place (entity, place);
-    }
-  return FALSE;
+  _crank_place_disconnect_entity (place, entity);
+  _crank_place_entity_remove_entity (place, entity);
+  _crank_entity_place_remove_place (entity, place);
+  return TRUE;
 }
 
 /**
