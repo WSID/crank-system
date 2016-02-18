@@ -570,7 +570,7 @@ crank_render_module_get_culled_rlist (CrankRenderModule *module,
   pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
       (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
 
-  return crank_octree_set_get_culled_list (pdata->rentities, cullplane_t, 6);
+  return crank_octree_set_get_culled_list (pdata->entity_sets[0], cullplane_t, 6);
 }
 
 /**
@@ -602,7 +602,7 @@ crank_render_module_get_culled_llist (CrankRenderModule *module,
   pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
       (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
 
-  return crank_octree_set_get_culled_list (pdata->lentities, cullplane_t, 6);
+  return crank_octree_set_get_culled_list (pdata->entity_sets[1], cullplane_t, 6);
 }
 
 
@@ -638,7 +638,7 @@ crank_render_module_get_culled_rarray (CrankRenderModule *module,
   pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
       (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
 
-  return crank_octree_set_add_culled_array (pdata->rentities, entities, cullplane_t, 6);
+  return crank_octree_set_add_culled_array (pdata->entity_sets[0], entities, cullplane_t, 6);
 }
 
 /**
@@ -672,7 +672,7 @@ crank_render_module_get_culled_larray (CrankRenderModule *module,
   pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
       (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
 
-  return crank_octree_set_add_culled_array (pdata->lentities, entities, cullplane_t, 6);
+  return crank_octree_set_add_culled_array (pdata->entity_sets[1], entities, cullplane_t, 6);
 }
 
 

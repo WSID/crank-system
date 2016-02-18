@@ -31,8 +31,7 @@
 #include "crankshape.h"
 #include "crankcore.h"
 
-#include "crankrenderable.h"
-#include "cranklightable.h"
+#include "crankvisible.h"
 
 #ifndef _CRANKVISUAL_INSIDE
 #error crankrendermodule.h cannot be included directly: include crankvisual.h
@@ -104,6 +103,8 @@ CrankVecFloat3 *crank_render_pdata_get_pos (gpointer data,
 gfloat          crank_render_pdata_get_rad (gpointer data,
                                             gpointer userdata);
 
+
+//////// Private type methods //////////////////////////////////////////////////
 
 
 void  crank_render_pdata_add_entity        (CrankRenderPData *pdata,

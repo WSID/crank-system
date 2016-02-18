@@ -28,8 +28,7 @@
 #include "crankshape.h"
 #include "crankcore.h"
 
-#include "crankrenderable.h"
-#include "cranklightable.h"
+#include "crankvisible.h"
 #include "crankrenderpdata.h"
 
 //////// Private type definition ///////////////////////////////////////////////
@@ -76,6 +75,10 @@ void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 
 
 
+
+
+
+
 //////// Private type: GObject /////////////////////////////////////////////////
 
 void
@@ -86,23 +89,8 @@ crank_render_pdata_constructed (GObject *object)
   guint visible_types = GPOINTER_TO_UINT (g_object_get_data (object, "visible-types"));
   gpointer visible_offset = g_object_get_data (object, "visible-offset");
 
-  CrankBox3 box;
-
-  crank_box3_init_uvec (& box, -1000, -1000, -1000, 1000, 1000, 1000);
-
   pdata->nentity_sets = visible_types;
   pdata->entity_sets = g_new (CrankOctreeSet*, pdata->nentity_sets);
-
-  pdata->rentities = crank_octree_set_new (& box,
-        crank_render_pdata_get_pos, NULL, NULL,
-        crank_render_pdata_get_rad, visible_offset, NULL);
-
-  pdata->lentities = crank_octree_set_new (& box,
-        crank_render_pdata_get_pos, NULL, NULL,
-        crank_render_pdata_get_rad, visible_offset, NULL);
-
-  pdata->entity_sets[0] = pdata->rentities;
-  pdata->entity_sets[1] = pdata->lentities;
 }
 
 void
@@ -152,6 +140,12 @@ crank_render_pdata_finalize (GObject *object)
 
 
 
+
+
+
+
+//////// Private type: CrankCompositable ///////////////////////////////////////
+
 gboolean
 crank_render_pdata_adding (CrankCompositable  *compositable,
                            CrankComposite     *composite,
@@ -160,6 +154,7 @@ crank_render_pdata_adding (CrankCompositable  *compositable,
   CrankCompositableClass *pc = crank_render_pdata_parent_class;
   CrankRenderPData *pdata;
   CrankPlace3 *place;
+  guint i;
 
   if (! pc->adding (compositable, composite, error))
     return FALSE;
@@ -167,17 +162,15 @@ crank_render_pdata_adding (CrankCompositable  *compositable,
   pdata = (CrankRenderPData*) compositable;
   place = (CrankPlace3*)composite;
 
-  pdata->rentities = crank_octree_set_new (& place->boundary,
-        crank_render_pdata_get_pos, NULL, NULL,
-        crank_render_pdata_get_rad, NULL, NULL);
-
-  pdata->lentities = crank_octree_set_new (& place->boundary,
-        crank_render_pdata_get_pos, NULL, NULL,
-        crank_render_pdata_get_rad, NULL, NULL);
-
   pdata->entity_sets = g_new (CrankOctreeSet*, pdata->nentity_sets);
-  pdata->entity_sets[0] = pdata->rentities;
-  pdata->entity_sets[1] = pdata->lentities;
+  for (i = 0; i < pdata->nentity_sets; i++)
+    {
+      pdata->entity_sets[i] = crank_octree_set_new (& place->boundary,
+            crank_render_pdata_get_pos, NULL, NULL,
+            crank_render_pdata_get_rad, NULL, NULL);
+
+      g_message ("Constructing!");
+    }
 
   return TRUE;
 }
@@ -204,11 +197,14 @@ crank_render_pdata_removing (CrankCompositable  *compositable,
   g_free (pdata->entity_sets);
 
   pdata->entity_sets = NULL;
-  pdata->rentities = NULL;
-  pdata->lentities = NULL;
 
   return TRUE;
 }
+
+
+
+
+
 
 
 //////// Private type callbacks ////////////////////////////////////////////////
@@ -235,6 +231,13 @@ crank_render_pdata_get_rad (gpointer data,
          crank_visible_get_visible_radius (visible);
 }
 
+
+
+
+
+
+
+//////// Private type: Methods /////////////////////////////////////////////////
 
 void
 crank_render_pdata_add_entity (CrankRenderPData *pdata,
