@@ -28,6 +28,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "crankbase.h"
 
 G_BEGIN_DECLS
 
@@ -37,7 +38,7 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE(CrankVisible,
                          crank_visible,
                          CRANK, VISIBLE,
-                         GObject)
+                         CrankCompositable)
 
 /**
  * CrankVisible:
@@ -53,7 +54,7 @@ G_DECLARE_DERIVABLE_TYPE(CrankVisible,
  */
 struct _CrankVisibleClass {
   /*< private >*/
-  GObjectClass _parent;
+  CrankCompositableClass _parent;
 
   /*< public >*/
   gfloat  (*get_visible_radius)  (CrankVisible *visible);

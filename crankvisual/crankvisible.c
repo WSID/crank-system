@@ -36,6 +36,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include "crankbase.h"
+#include "crankcore.h"
 #include "crankvisible.h"
 
 
@@ -61,9 +63,13 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
-G_DEFINE_ABSTRACT_TYPE (CrankVisible,
-                        crank_visible,
-                        G_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE_WITH_CODE (CrankVisible,
+                                  crank_visible,
+                                  CRANK_TYPE_COMPOSITABLE,
+                                  {
+                                    crank_gtype_compositable_add_requisition (
+                                        g_define_type_id, CRANK_TYPE_ENTITY3  );
+                                  });
 
 
 
