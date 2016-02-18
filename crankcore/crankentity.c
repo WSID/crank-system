@@ -220,8 +220,6 @@ crank_entity_remove_compositable (CrankComposite     *composite,
 
 
 
-
-
 //////// Private Function for CrankPlace ///////////////////////////////////////
 
 /*
@@ -323,7 +321,31 @@ _crank_entity_place_switch_primary_place (CrankEntity *entity,
   return TRUE;
 }
 
+/*
+ * _crank_entity_place_belongs_to:
+ * @entity: A Entity.
+ * @place: A Place.
+ *
+ * Friendship: #CrankPlace, for private.
+ *
+ * Checks whether entity is belongs to place.
+ *
+ * Returns: Whether the entity is belongs to place.
+ */
+G_GNUC_INTERNAL gboolean
+_crank_entity_place_belongs_to (CrankEntity *entity,
+                                CrankPlace  *place)
+{
+  CrankEntityPrivate *priv = crank_entity_get_instance_private (entity);
+  guint i;
 
+  for (i = 0; i < priv->places->len; i++)
+    {
+      if (priv->places->pdata[i] == place)
+          return TRUE;
+    }
+  return FALSE;
+}
 
 
 

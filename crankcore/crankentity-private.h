@@ -53,4 +53,8 @@ G_GNUC_INTERNAL
 gboolean  _crank_entity_place_switch_primary_place  (CrankEntity *entity,
                                                      CrankPlace  *place);
 
+G_GNUC_INTERNAL
+gboolean  _crank_entity_place_belongs_to            (CrankEntity *entity,
+                                                     CrankPlace  *place);
+
 #endif
