@@ -19,6 +19,7 @@
  * THE SOFTWARE.
  */
 
+
 #define CRANKCORE_INSIDE
 
 
@@ -155,6 +156,14 @@ crank_place3_set_property (GObject      *object,
 
 //////// Constructors //////////////////////////////////////////////////////////
 
+/**
+ * crank_place3_new:
+ * @module: A Module that this place belongs to.
+ *
+ * Constructs a module with boundary of [-1000, 1000]³
+ *
+ * Returns: (transfer full): A Place.
+ */
 CrankPlace3*
 crank_place3_new (CrankSessionModulePlaced *module)
 {
@@ -163,6 +172,16 @@ crank_place3_new (CrankSessionModulePlaced *module)
                                       NULL);
 }
 
+
+/**
+ * crank_place3_new_with_boundary:
+ * @module: A Module that this place belongs to.
+ * @boundary: A Boundary.
+ *
+ * Constructs a module with given boundary.
+ *
+ * Returns: (transfer full): A Place.
+ */
 CrankPlace3*
 crank_place3_new_with_boundary (CrankSessionModulePlaced *module,
                                 const CrankBox3          *boundary)
@@ -176,6 +195,13 @@ crank_place3_new_with_boundary (CrankSessionModulePlaced *module,
 
 //////// Public functions //////////////////////////////////////////////////////
 
+/**
+ * crank_place3_get_boundary:
+ * @module: A Module that this place belongs to.
+ * @boundary: (out): A Boundary.
+ *
+ * Gets boundary of module.
+ */
 void
 crank_place3_get_boundary (CrankPlace3 *place,
                            CrankBox3   *boundary)
@@ -183,6 +209,14 @@ crank_place3_get_boundary (CrankPlace3 *place,
   crank_box3_copy (& place->boundary, boundary);
 }
 
+
+/**
+ * crank_place3_set_boundary:
+ * @module: A Module that this place belongs to.
+ * @boundary: A Boundary.
+ *
+ * Sets boundary of module.
+ */
 void
 crank_place3_set_boundary (CrankPlace3     *place,
                            const CrankBox3 *boundary)
