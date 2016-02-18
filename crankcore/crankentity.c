@@ -231,6 +231,7 @@ crank_entity_constructed (GObject *object)
   CrankEntityPrivate *priv = crank_entity_get_instance_private (self);
 
   pc->constructed (object);
+  crank_session_module_placed_add_placeless (priv->module, self);
   crank_session_module_placed_entity_created (priv->module, self);
 }
 
@@ -331,7 +332,10 @@ _crank_entity_place_add_place (CrankEntity *entity,
   g_ptr_array_add (priv->places, place);
 
   if (priv->places->len == 1)
-    g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+    {
+      g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+      crank_session_module_placed_remove_placeless (priv->module, entity);
+    }
 }
 
 /*
@@ -357,14 +361,16 @@ _crank_entity_place_remove_place (CrankEntity *entity,
 
   switch_primary_place = (priv->places->pdata[0] == place);
 
-  if (g_ptr_array_remove_fast (priv->places, place))
-    {
-      if (switch_primary_place)
-        g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
-      return TRUE;
-    }
+  if (! g_ptr_array_remove_fast (priv->places, place))
+    return FALSE;
 
-  return FALSE;
+  if (switch_primary_place)
+    g_object_notify_by_pspec ((GObject*)entity, pspecs[PROP_PRIMARY_PLACE]);
+
+  if (priv->places->len == 0)
+    crank_session_module_placed_add_placeless (priv->module, entity);
+
+  return TRUE;
 }
 
 /*
