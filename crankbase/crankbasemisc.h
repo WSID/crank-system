@@ -149,6 +149,29 @@ guint            crank_mset_get         (GHashTable *mset,
 void             crank_mset_destroy     (GHashTable     *mset,
                                          GDestroyNotify  destroy);
 
+
+
+
+//////// Multimap manipulation (GHashTable <K, GSList<V>>)
+
+GHashTable      *crank_mmap_new         (GHashFunc  hash_func,
+                                         GEqualFunc equal_func);
+
+void             crank_mmap_add         (GHashTable *mmap,
+                                         gpointer    key,
+                                         gpointer    value);
+
+gboolean         crank_mmap_remove      (GHashTable *mmap,
+                                         gpointer    key,
+                                         gpointer    value);
+
+GSList          *crank_mmap_get         (GHashTable *mmap,
+                                         gpointer    key);
+
+gpointer        *crank_mmap_get_first   (GHashTable *mmap,
+                                         gpointer    key);
+
+
 G_END_DECLS
 
 #endif

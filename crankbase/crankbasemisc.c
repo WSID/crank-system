@@ -530,3 +530,110 @@ crank_mset_destroy (GHashTable     *mset,
     }
 }
 
+
+
+
+
+//////// Multimap manipulation (GHashTable <K, GSList<V>>)
+
+/**
+ * crank_mmap_new: (skip)
+ * @hash_func: (scope call): Hash function.
+ * @equal_func: (scope call): Equal function.
+ *
+ * Constructs a #GHashTable for use as multi-map.
+ *
+ * GHashTable holds #GSList for each keys, and values are stored in lists.
+ *
+ * Returns: (transfer full): A GHashTable, for multi map.
+ */
+GHashTable*
+crank_mmap_new (GHashFunc   hash_func,
+                GEqualFunc  equal_func)
+{
+  return g_hash_table_new_full (hash_func, equal_func,
+                                NULL,
+                                (GDestroyNotify)g_slist_free);
+}
+
+/**
+ * crank_mmap_add: (skip)
+ * @mmap: (element-type gpointer GSList): A GHashTable as multi map.
+ * @key: A Key.
+ * @value: A Value.
+ *
+ * Adds a key to multi map.
+ */
+void
+crank_mmap_add (GHashTable *mmap,
+                gpointer    key,
+                gpointer    value)
+{
+  GSList *list = g_hash_table_lookup (mmap, key);
+  list = g_slist_append (list, value);
+  g_hash_table_steal (mmap, key);
+  g_hash_table_insert (mmap, key, list);
+}
+
+/**
+ * crank_mmap_remove: (skip)
+ * @mmap: (element-type gpointer GSList): A GHashTable as multi map.
+ * @key: A Key.
+ * @value: A Value.
+ *
+ * Removes a pair of (key, value) from multi map. To remove all values with a
+ * specific key, just use g_hash_table_remove().
+ *
+ * Returns: Whether the pair is removed.
+ */
+gboolean
+crank_mmap_remove (GHashTable *mmap,
+                   gpointer    key,
+                   gpointer    value)
+{
+  GSList *list = g_hash_table_lookup (mmap, key);
+  GSList *node = g_slist_find (list, value);
+
+  list = g_slist_remove_link (list, node);
+  g_hash_table_steal (mmap, key);
+
+  if (list != NULL)
+    g_hash_table_insert (mmap, key, list);
+
+  return (node != NULL);
+}
+
+/**
+ * crank_mmap_get: (skip)
+ * @mmap: (element-type gpointer GSList): A GHashTable as multi map.
+ * @key: A Key.
+ *
+ * Gets a list of value.
+ *
+ * Returns: (transfer none): A List of value.
+ */
+GSList*
+crank_mmap_get (GHashTable *mmap,
+                gpointer    key)
+{
+  return (GSList*) g_hash_table_lookup (mmap, key);
+}
+
+/**
+ * crank_mmap_get_first: (skip)
+ * @mmap: (element-type gpointer GSList): A GHashTable as multi map.
+ * @key: A Key.
+ *
+ * Gets first value of a key.
+ *
+ * Returns: (nullable) (transfer none): First value of items.
+ */
+gpointer*
+crank_mmap_get_first (GHashTable *mmap,
+                      gpointer    key)
+{
+  GSList *list = g_hash_table_lookup (mmap, key);
+
+  return (list != NULL) ? list->data : NULL;
+}
+
