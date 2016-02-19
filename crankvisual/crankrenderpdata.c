@@ -162,14 +162,16 @@ crank_render_pdata_adding (CrankCompositable  *compositable,
   pdata = (CrankRenderPData*) compositable;
   place = (CrankPlace3*)composite;
 
+  pdata->entity_counts = g_new (GHashTable*, pdata->nentity_sets);
   pdata->entity_sets = g_new (CrankOctreeSet*, pdata->nentity_sets);
+
   for (i = 0; i < pdata->nentity_sets; i++)
     {
+      pdata->entity_counts[i] = g_hash_table_new (g_direct_hash, g_direct_equal);
+
       pdata->entity_sets[i] = crank_octree_set_new (& place->boundary,
             crank_render_pdata_get_pos, NULL, NULL,
             crank_render_pdata_get_rad, NULL, NULL);
-
-      g_message ("Constructing!");
     }
 
   return TRUE;
@@ -192,7 +194,10 @@ crank_render_pdata_removing (CrankCompositable  *compositable,
     return FALSE;
 
   for (i = 0; i < pdata->nentity_sets; i++)
-    crank_octree_set_remove_all (pdata->entity_sets[i]);
+    {
+      g_hash_table_unref (pdata->entity_counts[i]);
+      crank_octree_set_remove_all (pdata->entity_sets[i]);
+    }
 
   g_free (pdata->entity_sets);
 
@@ -245,8 +250,11 @@ crank_render_pdata_add_entity (CrankRenderPData *pdata,
                                CrankVisible     *visible,
                                const guint       tindex)
 {
-  CrankOctreeSet *octree = pdata->entity_sets[tindex];
-  crank_octree_set_add (octree, entity);
+  GHashTable *entity_count = pdata->entity_counts[tindex];
+  CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
+
+  if (crank_mset_add (entity_count, entity) == 1)
+    crank_octree_set_add (entity_set, entity);
 
 }
 
@@ -256,6 +264,9 @@ crank_render_pdata_remove_entity (CrankRenderPData *pdata,
                                   CrankVisible     *visible,
                                   const guint       tindex)
 {
-  CrankOctreeSet *octree = pdata->entity_sets[tindex];
-  crank_octree_set_remove (octree, entity);
+  GHashTable *entity_count = pdata->entity_counts[tindex];
+  CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
+
+  if (crank_mset_remove (entity_count, entity) == 0)
+    crank_octree_set_remove (entity_set, entity);
 }

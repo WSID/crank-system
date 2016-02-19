@@ -62,11 +62,9 @@ struct _CrankRenderPData
 {
   CrankCompositable1N parent;
 
+  GHashTable     **entity_counts;
   CrankOctreeSet **entity_sets;
   guint           nentity_sets;
-
-  CrankOctreeSet *rentities;
-  CrankOctreeSet *lentities;
 };
 
 //////// Private Type functions ////////////////////////////////////////////////
