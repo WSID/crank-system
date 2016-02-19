@@ -65,6 +65,9 @@ G_BEGIN_DECLS
  */
 #define CRANK_QUARK_FROM_STRING(s) GINT_TO_POINTER(g_quark_from_string(s))
 
+
+
+
 const gchar   **crank_qarray_to_strv    (GQuark         *qarray,
                                          const guint     nqarray);
 
@@ -128,6 +131,23 @@ GHashTable     *crank_set_map_full      (GHashTable     *set,
                                          GDestroyNotify  destroy,
                                          CrankPtrPtrFunc map,
                                          gpointer        userdata);
+
+
+
+
+//////// Multiset manipulation (GHashTable <G, guint>)
+
+guint            crank_mset_add         (GHashTable *mset,
+                                         gpointer    item);
+
+gint             crank_mset_remove      (GHashTable *mset,
+                                         gpointer    item);
+
+guint            crank_mset_get         (GHashTable *mset,
+                                         gpointer    item);
+
+void             crank_mset_destroy     (GHashTable     *mset,
+                                         GDestroyNotify  destroy);
 
 G_END_DECLS
 

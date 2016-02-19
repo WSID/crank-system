@@ -428,3 +428,105 @@ crank_set_map_full (GHashTable      *set,
 
   return nset;
 }
+
+
+
+
+
+
+
+//////// Multiset manipulation (GHashTable <G, guint>)
+
+/**
+ * crank_mset_add: (skip)
+ * @mset: (element-type gpointer guint): A GHashTable which is used as a multi-set.
+ * @item: (transfer full): A Item.
+ *
+ * Adds count of item, from 0.
+ *
+ * Returns: count of item after adding.
+ */
+guint
+crank_mset_add (GHashTable *mset,
+                gpointer    item)
+{
+  guint count = crank_mset_get (mset, item);
+
+  count ++;
+
+  g_hash_table_insert (mset, item, GUINT_TO_POINTER (count));
+  return count;
+}
+
+/**
+ * crank_mset_remove: (skip)
+ * @mset: (element-type gpointer guint): A GHashTable which is used as a multi-set.
+ * @item: (transfer full): A Item.
+ *
+ * Remove count of item.
+ *
+ * Returns: count of item after removing, or -1 if item never existed in mset.
+ */
+gint
+crank_mset_remove (GHashTable *mset,
+                   gpointer    item)
+{
+  gint count = crank_mset_get (mset, item);
+
+  count --;
+
+  if (0 < count)
+    g_hash_table_insert (mset, item, GINT_TO_POINTER (count));
+
+  else if (count == 0)
+    g_hash_table_remove (mset, item);
+
+  return count;
+}
+
+/**
+ * crank_mset_get: (skip)
+ * @mset: (element-type gpointer guint): A GHashTable which is used as a multi-set.
+ * @item: (transfer full): A Item.
+ *
+ * Get count of item.
+ *
+ * Returns: count of item, or 0 if item does not exist.
+ */
+guint
+crank_mset_get (GHashTable *mset,
+                gpointer    item)
+{
+  return GPOINTER_TO_INT (g_hash_table_lookup (mset, item));
+}
+
+/**
+ * crank_mset_set: (skip)
+ * @mset: (element-type gpointer guint): A GHashTable which is used as a multi-set.
+ * @destroy: Destroy function for @mset
+ *
+ * Invokes destroy function for each elements in multiple times for counts.
+ */
+void
+crank_mset_destroy (GHashTable     *mset,
+                    GDestroyNotify  destroy)
+{
+  GHashTableIter i;
+  gpointer ik;
+  gpointer iv;
+  guint j;
+  guint jn;
+
+  g_hash_table_iter_init (&i, mset);
+
+  while (g_hash_table_iter_next (&i, &ik, &iv))
+    {
+      g_hash_table_iter_steal (&i);
+
+      jn = GPOINTER_TO_UINT (iv);
+
+      for (j = 0; j < jn; j++)
+        destroy (ik);
+    }
+}
+
