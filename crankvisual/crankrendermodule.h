@@ -65,6 +65,11 @@ CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
 
 
 //////// Public functions //////////////////////////////////////////////////////
+GList  *crank_render_module_get_culled_list (CrankRenderModule *module,
+                                             CrankPlace3       *place,
+                                             CrankTrans3       *position,
+                                             CrankProjection   *projection,
+                                             const guint        tindex);
 
 GList  *crank_render_module_get_culled_rlist(CrankRenderModule *module,
                                              CrankPlace3       *place,
@@ -76,6 +81,13 @@ GList  *crank_render_module_get_culled_llist(CrankRenderModule *module,
                                              CrankTrans3       *position,
                                              CrankProjection   *projection);
 
+
+GPtrArray  *crank_render_module_get_culled_array (CrankRenderModule *module,
+                                                  GPtrArray         *entities,
+                                                  CrankPlace3       *place,
+                                                  CrankTrans3       *position,
+                                                  CrankProjection   *projection,
+                                                  const guint        tindex);
 
 GPtrArray  *crank_render_module_get_culled_rarray(CrankRenderModule *module,
                                                   GPtrArray         *entities,

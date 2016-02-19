@@ -543,6 +543,40 @@ crank_render_module_new (CoglContext *cogl_context)
 //////// Public functions //////////////////////////////////////////////////////
 
 /**
+ * crank_render_module_get_culled_list:
+ * @module: A Module.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ * @tindex: A Type index.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer container) (element-type CrankEntity3): Entities.
+ */
+GList*
+crank_render_module_get_culled_list (CrankRenderModule *module,
+                                     CrankPlace3       *place,
+                                     CrankTrans3       *position,
+                                     CrankProjection   *projection,
+                                     const guint        tindex)
+{
+  CrankRenderPData *pdata;
+  CrankPlane3 cullplane_t[6];
+
+  guint i;
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+
+  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+
+  return crank_octree_set_get_culled_list (pdata->entity_sets[tindex], cullplane_t, 6);
+}
+
+
+/**
  * crank_render_module_get_culled_rlist:
  * @module: A Module.
  * @place: A Place.
@@ -559,18 +593,7 @@ crank_render_module_get_culled_rlist (CrankRenderModule *module,
                                       CrankTrans3       *position,
                                       CrankProjection   *projection)
 {
-  CrankRenderPData *pdata;
-  CrankPlane3 cullplane_t[6];
-
-  guint i;
-
-  for (i = 0; i < 6; i++)
-    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
-
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
-
-  return crank_octree_set_get_culled_list (pdata->entity_sets[0], cullplane_t, 6);
+  return crank_render_module_get_culled_list (module, place, position, projection, 0);
 }
 
 /**
@@ -590,6 +613,33 @@ crank_render_module_get_culled_llist (CrankRenderModule *module,
                                       CrankTrans3       *position,
                                       CrankProjection   *projection)
 {
+  return crank_render_module_get_culled_list (module, place, position, projection, 1);
+}
+
+
+
+
+/**
+ * crank_render_module_get_culled_array:
+ * @module: A Module.
+ * @entities: (transfer none) (element-type CrankEntity3): Entitiy array.
+ * @place: A Place.
+ * @position: A Position.
+ * @projection: A Projection.
+ * @tindex: A Type index.
+ *
+ * Gets culled list of entities.
+ *
+ * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ */
+GPtrArray*
+crank_render_module_get_culled_array (CrankRenderModule *module,
+                                      GPtrArray         *entities,
+                                      CrankPlace3       *place,
+                                      CrankTrans3       *position,
+                                      CrankProjection   *projection,
+                                      const guint        tindex)
+{
   CrankRenderPData *pdata;
   CrankPlane3 cullplane_t[6];
 
@@ -602,10 +652,8 @@ crank_render_module_get_culled_llist (CrankRenderModule *module,
   pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
       (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
 
-  return crank_octree_set_get_culled_list (pdata->entity_sets[1], cullplane_t, 6);
+  return crank_octree_set_add_culled_array (pdata->entity_sets[tindex], entities, cullplane_t, 6);
 }
-
-
 
 /**
  * crank_render_module_get_culled_rarray:
@@ -626,19 +674,7 @@ crank_render_module_get_culled_rarray (CrankRenderModule *module,
                                        CrankTrans3       *position,
                                        CrankProjection   *projection)
 {
-  CrankRenderPData *pdata;
-  CrankPlane3 cullplane_t[6];
-
-  guint i;
-
-  for (i = 0; i < 6; i++)
-    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
-
-
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
-
-  return crank_octree_set_add_culled_array (pdata->entity_sets[0], entities, cullplane_t, 6);
+  return crank_render_module_get_culled_array (module, entities, place, position, projection, 0);
 }
 
 /**
@@ -660,19 +696,7 @@ crank_render_module_get_culled_larray (CrankRenderModule *module,
                                        CrankTrans3       *position,
                                        CrankProjection   *projection)
 {
-  CrankRenderPData *pdata;
-  CrankPlane3 cullplane_t[6];
-
-  guint i;
-
-  for (i = 0; i < 6; i++)
-    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
-
-
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
-
-  return crank_octree_set_add_culled_array (pdata->entity_sets[1], entities, cullplane_t, 6);
+  return crank_render_module_get_culled_array (module, entities, place, position, projection, 1);
 }
 
 
