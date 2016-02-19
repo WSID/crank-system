@@ -814,14 +814,7 @@ crank_render_module_render_geom_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = (CrankRenderable*)
-          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
-
-      CrankTrans3 rpos;
-
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
-
-      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
+      crank_render_module_render_geom_entity (module, entity, &ipos, projection, framebuffer);
     }
 }
 
@@ -857,13 +850,7 @@ crank_render_module_render_color_list (CrankRenderModule *module,
   for (iter = entities; iter != NULL; iter = iter->next)
     {
       CrankEntity3 *entity = (CrankEntity3*) iter->data;
-      CrankRenderable *renderable = (CrankRenderable*)
-          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
-      CrankTrans3 rpos;
-
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
-
-      crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
+      crank_render_module_render_color_entity (module, entity, &ipos, projection, framebuffer);
     }
 }
 
@@ -946,13 +933,7 @@ crank_render_module_render_geom_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = (CrankRenderable*)
-          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
-      CrankTrans3 rpos;
-
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
-
-      crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
+      crank_render_module_render_geom_entity (module, entity, &ipos, projection, framebuffer);
     }
 }
 
@@ -986,13 +967,7 @@ crank_render_module_render_color_array(CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankRenderable *renderable = (CrankRenderable*)
-          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_RENDERABLE);
-      CrankTrans3 rpos;
-
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
-
-      crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
+      crank_render_module_render_color_entity (module, entity, &ipos, projection, framebuffer);
     }
 }
 
@@ -1032,13 +1007,116 @@ crank_render_module_render_light_array (CrankRenderModule *module,
   for (i = 0; i < entities->len; i++)
     {
       CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      CrankLightable *lightable = (CrankLightable*)
-          crank_composite_get_compositable_by_gtype ((CrankComposite*)entity, CRANK_TYPE_LIGHTABLE);
-      CrankTrans3 rpos;
+      crank_render_module_render_light_entity (module, entity, &ipos, projection, tex_geom, tex_color, tex_mater, framebuffer);
+    }
+}
 
-      crank_trans3_compose (&ipos, & entity->position, &rpos);
 
-      crank_lightable_render (lightable, &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
+/**
+ * crank_render_module_render_geom_entity:
+ * @module: A Module.
+ * @entity: A Entity.
+ * @ipos: Inverse of position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_geom_entity(CrankRenderModule *module,
+                                       CrankEntity3      *entity,
+                                       CrankTrans3       *ipos,
+                                       CrankProjection   *projection,
+                                       CoglFramebuffer   *framebuffer)
+{
+  guint i;
+  guint n;
+  CrankTrans3 rpos;
+  crank_trans3_compose (ipos, & entity->position, &rpos);
+
+  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
+  for (i = 0; i < n; i++)
+    {
+      CrankCompositable *compositable =
+          crank_composite_get_compositable ((CrankComposite*)entity, i);
+
+      if (CRANK_IS_RENDERABLE (compositable))
+        crank_renderable_render_geom ((CrankRenderable*)compositable,
+                                      &rpos, projection, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_color_entity:
+ * @module: A Module.
+ * @entity: A Entity.
+ * @ipos: Inverse of position
+ * @projection: A Projection.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_color_entity(CrankRenderModule *module,
+                                        CrankEntity3      *entity,
+                                        CrankTrans3       *ipos,
+                                        CrankProjection   *projection,
+                                        CoglFramebuffer   *framebuffer)
+{
+  guint i;
+  guint n;
+  CrankTrans3 rpos;
+  crank_trans3_compose (ipos, & entity->position, &rpos);
+
+  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
+  for (i = 0; i < n; i++)
+    {
+      CrankCompositable *compositable =
+          crank_composite_get_compositable ((CrankComposite*)entity, i);
+
+      if (CRANK_IS_RENDERABLE (compositable))
+        crank_renderable_render_color ((CrankRenderable*)compositable,
+                                      &rpos, projection, framebuffer);
+    }
+}
+
+/**
+ * crank_render_module_render_light_entity:
+ * @module: A Module.
+ * @entity: A Entity.
+ * @ipos: Inverse of position
+ * @projection: A Projection.
+ * @tex_geom: Texture that holds geometry info.
+ * @tex_color: Texture that holds color info.
+ * @tex_mater: Texture that holds material info.
+ * @framebuffer: A Framebuffer to render.
+ *
+ * Renders entities in @list which looked at @position, on @framebuffer.
+ */
+void
+crank_render_module_render_light_entity(CrankRenderModule *module,
+                                        CrankEntity3      *entity,
+                                        CrankTrans3       *ipos,
+                                        CrankProjection   *projection,
+                                        CoglTexture       *tex_geom,
+                                        CoglTexture       *tex_color,
+                                        CoglTexture       *tex_mater,
+                                        CoglFramebuffer   *framebuffer)
+{
+  guint i;
+  guint n;
+  CrankTrans3 rpos;
+  crank_trans3_compose (ipos, & entity->position, &rpos);
+
+  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
+  for (i = 0; i < n; i++)
+    {
+      CrankCompositable *compositable =
+          crank_composite_get_compositable ((CrankComposite*)entity, i);
+
+      if (CRANK_IS_LIGHTABLE (compositable))
+        crank_lightable_render ((CrankLightable*) compositable,
+                                &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
     }
 }
 

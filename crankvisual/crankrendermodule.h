@@ -102,6 +102,9 @@ GPtrArray  *crank_render_module_get_culled_larray(CrankRenderModule *module,
                                                   CrankProjection   *projection);
 
 
+
+
+
 void    crank_render_module_render_geom_at (CrankRenderModule *module,
                                             CrankPlace3       *place,
                                             CrankTrans3       *position,
@@ -161,6 +164,28 @@ void    crank_render_module_render_color_array(CrankRenderModule *module,
 void    crank_render_module_render_light_array(CrankRenderModule *module,
                                                GPtrArray         *entities,
                                                CrankTrans3       *position,
+                                               CrankProjection   *projection,
+                                               CoglTexture       *tex_geom,
+                                               CoglTexture       *tex_color,
+                                               CoglTexture       *tex_mater,
+                                               CoglFramebuffer   *framebuffer);
+
+
+void    crank_render_module_render_geom_entity (CrankRenderModule *module,
+                                                CrankEntity3      *entity,
+                                                CrankTrans3       *ipos,
+                                                CrankProjection   *projection,
+                                                CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_color_entity(CrankRenderModule *module,
+                                                CrankEntity3      *entity,
+                                                CrankTrans3       *ipos,
+                                                CrankProjection   *projection,
+                                                CoglFramebuffer   *framebuffer);
+
+void    crank_render_module_render_light_entity(CrankRenderModule *module,
+                                                CrankEntity3      *entity,
+                                                CrankTrans3       *ipos,
                                                CrankProjection   *projection,
                                                CoglTexture       *tex_geom,
                                                CoglTexture       *tex_color,
