@@ -34,6 +34,9 @@
 #include "crankfilm.h"
 #include "crankcamera.h"
 
+#include "crankrendermodule.h"
+#include "crankrenderprocess.h"
+
 /**
  * SECTION: crankcamera
  * @title: CrankCamera
@@ -75,6 +78,7 @@ static void   crank_camera_finalize (GObject *object);
 
 enum {
   PROP_0,
+  PROP_RENDER_PROCESS,
   PROP_FILM,
   PROP_ENTITY,
   PROP_PROJECTION,
@@ -103,10 +107,11 @@ static guint sig_rendered = 0;
 struct _CrankCamera {
   GObject _parent;
 
-  CrankFilm    *film;
-  CrankEntity3 *entity;
+  CrankRenderProcess *render_process;
+  CrankFilm          *film;
+  CrankEntity3       *entity;
 
-  CrankProjection *projection;
+  CrankProjection    *projection;
 };
 G_DEFINE_TYPE (CrankCamera, crank_camera, G_TYPE_OBJECT);
 
@@ -145,6 +150,12 @@ static void crank_camera_class_init (CrankCameraClass *c)
   c_gobject->finalize = crank_camera_finalize;
   c_gobject->get_property = crank_camera_get_property;
   c_gobject->set_property = crank_camera_set_property;
+
+  pspecs[PROP_RENDER_PROCESS] =
+  g_param_spec_object ("render-process", "Rendering process", "Rendering process",
+                       CRANK_TYPE_RENDER_PROCESS,
+                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+
 
   pspecs[PROP_FILM] = g_param_spec_object ("film", "film", "film to render on",
                                            CRANK_TYPE_FILM,
@@ -215,6 +226,10 @@ crank_camera_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_RENDER_PROCESS:
+      g_value_set_object (value, camera->render_process);
+      break;
+
     case PROP_FILM:
       g_value_set_object (value, camera->film);
       break;
@@ -275,6 +290,11 @@ crank_camera_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_RENDER_PROCESS:
+      crank_camera_set_render_process (camera,
+                                       (CrankRenderProcess*)g_value_get_object (value));
+      break;
+
     case PROP_FILM:
       crank_camera_set_film (camera,
                              (CrankFilm*)g_value_get_object (value));
@@ -372,14 +392,40 @@ crank_camera_new (void)
 
 //////// Properties ////////////////////////////////////////////////////////////
 
+/**
+ * crank_camera_get_render_process:
+ * @camera: A Camera.
+ *
+ * Gets render process of @camera.
+ *
+ * Returns: (transfer none) (nullable): Render Process.
+ */
+CrankRenderProcess*
+crank_camera_get_render_process (CrankCamera *camera)
+{
+  return camera->render_process;
+}
 
-
+/**
+ * crank_camera_set_render_process:
+ * @camera: A Camera.
+ * @render_process: (transfer none) (nullable): Render process.
+ *
+ * Sets render process of @camera.
+ */
+void
+crank_camera_set_render_process (CrankCamera        *camera,
+                                 CrankRenderProcess *render_process)
+{
+  if (g_set_object (& camera->render_process, render_process))
+    g_object_notify_by_pspec ((GObject*) camera, pspecs[PROP_RENDER_PROCESS]);
+}
 
 /**
  * crank_camera_get_film:
  * @camera: A Camera.
  *
- * Gets @film of @camera.
+ * Gets film of @camera.
  *
  * Returns: (transfer none) (nullable): A Film.
  */

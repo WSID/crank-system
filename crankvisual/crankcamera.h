@@ -37,6 +37,14 @@
 #include "crankprojection.h"
 #include "crankfilm.h"
 
+//////// Forwar Declarations ///////////////////////////////////////////////////
+
+typedef struct _CrankRenderProcess  CrankRenderProcess;
+
+
+
+
+
 //////// Type Declaration //////////////////////////////////////////////////////
 
 #define CRANK_TYPE_CAMERA (crank_camera_get_type())
@@ -58,6 +66,11 @@ CrankCamera *crank_camera_new (void);
 
 
 //////// Properties ////////////////////////////////////////////////////////////
+
+CrankRenderProcess *crank_camera_get_render_process (CrankCamera *camera);
+
+void                crank_camera_set_render_process (CrankCamera        *camera,
+                                                     CrankRenderProcess *render_process);
 
 CrankFilm *crank_camera_get_film (CrankCamera *camera);
 
