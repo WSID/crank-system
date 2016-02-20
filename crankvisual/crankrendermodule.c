@@ -369,7 +369,7 @@ crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
 
   crank_composite_add_compositable (
       (CrankComposite*) place,
-      (CrankCompositable*) g_object_new (CRANK_TYPE_RENDER_PDATA,
+      (CrankCompositable*) g_object_new (CRANK_TYPE_RENDER_PLACE_DATA,
                                          "visible-types", 2,
                                          NULL),
       NULL);
@@ -383,13 +383,13 @@ crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
                                   gpointer                  userdata)
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
 
   guint i;
   guint n;
 
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
   n = crank_composite_get_ncompositables ((CrankComposite*)entity);
 
@@ -403,7 +403,7 @@ crank_render_module_entity_added (CrankSessionModulePlaced *pmodule,
 
 
       gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
-      crank_render_pdata_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+      crank_render_place_data_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
@@ -415,13 +415,13 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
                                     gpointer                  userdata)
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
 
   guint i;
   guint n;
 
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
   n = crank_composite_get_ncompositables ((CrankComposite*)entity);
 
@@ -435,7 +435,7 @@ crank_render_module_entity_removed (CrankSessionModulePlaced *pmodule,
 
 
       gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
-      crank_render_pdata_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+      crank_render_place_data_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
@@ -448,21 +448,21 @@ crank_render_module_entity_added_compositable (CrankSessionModulePlaced *pmodule
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
   CrankPlace *place;
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
 
   place = crank_entity_get_primary_place (entity);
 
   if (place == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
 
   if (CRANK_IS_VISIBLE (compositable))
     {
       gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
-      crank_render_pdata_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+      crank_render_place_data_add_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
@@ -474,21 +474,21 @@ crank_render_module_entity_removed_compositable (CrankSessionModulePlaced *pmodu
 {
   CrankRenderModule *module = (CrankRenderModule*) userdata;
   CrankPlace *place;
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
 
   place = crank_entity_get_primary_place (entity);
 
   if (place == NULL)
     return;
 
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
 
   if (CRANK_IS_VISIBLE (compositable))
     {
       gint tindex = crank_render_module_get_tindex (module, G_OBJECT_TYPE(compositable));
-      crank_render_pdata_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
+      crank_render_place_data_remove_entity (pdata, entity, (CrankVisible*)compositable, tindex);
     }
 }
 
@@ -561,18 +561,15 @@ crank_render_module_get_culled_list (CrankRenderModule *module,
                                      CrankProjection   *projection,
                                      const guint        tindex)
 {
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
   CrankPlane3 cullplane_t[6];
 
-  guint i;
+  crank_projection_get_cull_plane_transformed (projection, position, cullplane_t);
 
-  for (i = 0; i < 6; i++)
-    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
-
-  return crank_octree_set_get_culled_list (pdata->entity_sets[tindex], cullplane_t, 6);
+  return crank_render_place_data_get_culled_list (pdata, cullplane_t, 6, tindex);
 }
 
 
@@ -640,19 +637,15 @@ crank_render_module_get_culled_array (CrankRenderModule *module,
                                       CrankProjection   *projection,
                                       const guint        tindex)
 {
-  CrankRenderPData *pdata;
+  CrankRenderPlaceData *pdata;
   CrankPlane3 cullplane_t[6];
 
-  guint i;
+  crank_projection_get_cull_plane_transformed (projection, position, cullplane_t);
 
-  for (i = 0; i < 6; i++)
-    crank_trans3_trans_plane (position, projection->cull_plane + i, cullplane_t + i);
+  pdata = (CrankRenderPlaceData*) crank_composite_get_compositable_by_gtype (
+      (CrankComposite*) place, CRANK_TYPE_RENDER_PLACE_DATA);
 
-
-  pdata = (CrankRenderPData*) crank_composite_get_compositable_by_gtype (
-      (CrankComposite*) place, CRANK_TYPE_RENDER_PDATA);
-
-  return crank_octree_set_add_culled_array (pdata->entity_sets[tindex], entities, cullplane_t, 6);
+  return crank_render_place_data_get_culled_array (pdata, entities, cullplane_t, 6, tindex);
 }
 
 /**
