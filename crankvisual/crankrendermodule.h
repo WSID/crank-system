@@ -63,152 +63,22 @@ CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
 
 
 
+//////// Property getter / setters /////////////////////////////////////////////
 
-//////// Public functions //////////////////////////////////////////////////////
-GList  *crank_render_module_get_culled_list (CrankRenderModule *module,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection,
-                                             const guint        tindex);
+guint   crank_render_module_get_n_camera (CrankRenderModule *module);
 
-GList  *crank_render_module_get_culled_rlist(CrankRenderModule *module,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection);
-
-GList  *crank_render_module_get_culled_llist(CrankRenderModule *module,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection);
-
-
-GPtrArray  *crank_render_module_get_culled_array (CrankRenderModule *module,
-                                                  GPtrArray         *entities,
-                                                  CrankPlace3       *place,
-                                                  CrankTrans3       *position,
-                                                  CrankProjection   *projection,
-                                                  const guint        tindex);
-
-GPtrArray  *crank_render_module_get_culled_rarray(CrankRenderModule *module,
-                                                  GPtrArray         *entities,
-                                                  CrankPlace3       *place,
-                                                  CrankTrans3       *position,
-                                                  CrankProjection   *projection);
-
-GPtrArray  *crank_render_module_get_culled_larray(CrankRenderModule *module,
-                                                  GPtrArray         *entities,
-                                                  CrankPlace3       *place,
-                                                  CrankTrans3       *position,
-                                                  CrankProjection   *projection);
 
 
 
 
 
-void    crank_render_module_render_geom_at (CrankRenderModule *module,
-                                            CrankPlace3       *place,
-                                            CrankTrans3       *position,
-                                            CrankProjection   *projection,
-                                            CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_color_at (CrankRenderModule *module,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection,
-                                             CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_light_at (CrankRenderModule *module,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection,
-                                             CoglTexture       *tex_geom,
-                                             CoglTexture       *tex_color,
-                                             CoglTexture       *tex_mater,
-                                             CoglFramebuffer   *framebuffer);
-
-
-void    crank_render_module_render_geom_list (CrankRenderModule *module,
-                                              GList             *entities,
-                                              CrankTrans3       *position,
-                                              CrankProjection   *projection,
-                                              CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_color_list(CrankRenderModule *module,
-                                              GList             *entities,
-                                              CrankTrans3       *position,
-                                              CrankProjection   *projection,
-                                              CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_light_list (CrankRenderModule *module,
-                                               GList             *entities,
-                                               CrankTrans3       *position,
-                                               CrankProjection   *projection,
-                                               CoglTexture       *tex_geom,
-                                               CoglTexture       *tex_color,
-                                               CoglTexture       *tex_mater,
-                                               CoglFramebuffer   *framebuffer);
-
-
-void    crank_render_module_render_geom_array(CrankRenderModule *module,
-                                              GPtrArray         *entities,
-                                              CrankTrans3       *position,
-                                              CrankProjection   *projection,
-                                              CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_color_array(CrankRenderModule *module,
-                                              GPtrArray          *entities,
-                                              CrankTrans3       *position,
-                                              CrankProjection   *projection,
-                                              CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_light_array(CrankRenderModule *module,
-                                               GPtrArray         *entities,
-                                               CrankTrans3       *position,
-                                               CrankProjection   *projection,
-                                               CoglTexture       *tex_geom,
-                                               CoglTexture       *tex_color,
-                                               CoglTexture       *tex_mater,
-                                               CoglFramebuffer   *framebuffer);
-
-
-void    crank_render_module_render_geom_entity (CrankRenderModule *module,
-                                                CrankEntity3      *entity,
-                                                CrankTrans3       *ipos,
-                                                CrankProjection   *projection,
-                                                CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_color_entity(CrankRenderModule *module,
-                                                CrankEntity3      *entity,
-                                                CrankTrans3       *ipos,
-                                                CrankProjection   *projection,
-                                                CoglFramebuffer   *framebuffer);
-
-void    crank_render_module_render_light_entity(CrankRenderModule *module,
-                                                CrankEntity3      *entity,
-                                                CrankTrans3       *ipos,
-                                               CrankProjection   *projection,
-                                               CoglTexture       *tex_geom,
-                                               CoglTexture       *tex_color,
-                                               CoglTexture       *tex_mater,
-                                               CoglFramebuffer   *framebuffer);
-
-
-
-void    crank_render_module_render_at (CrankRenderModule *module,
-                                       CrankPlace3       *place,
-                                       CrankTrans3       *position,
-                                       CrankProjection   *projection,
-                                       CrankFilm         *film);
-
-
+//////// Public functions //////////////////////////////////////////////////////
 
 void    crank_render_module_add_camera (CrankRenderModule *module,
                                         CrankCamera       *camera);
 
 void    crank_render_module_remove_camera (CrankRenderModule *module,
                                            CrankCamera       *camera);
-
-guint   crank_render_module_get_n_camera (CrankRenderModule *module);
 
 
 
