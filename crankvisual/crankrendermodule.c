@@ -112,6 +112,7 @@ static gint      crank_render_module_get_tindex (CrankRenderModule *module,
 enum {
   PROP_0,
   PROP_COGL_CONTEXT,
+  PROP_NCAMERAS,
 
   PROP_COUNTS
 };
@@ -176,10 +177,17 @@ crank_render_module_class_init (CrankRenderModuleClass *c)
   c_gobject->get_property = crank_render_module_get_property;
   c_gobject->set_property = crank_render_module_set_property;
 
-  pspecs[PROP_COGL_CONTEXT] = g_param_spec_pointer ("cogl-context", "CoglContext",
-                                                    "CoglContext to initialize with.",
-                                                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
-                                                    G_PARAM_STATIC_STRINGS );
+  pspecs[PROP_COGL_CONTEXT] =
+  g_param_spec_pointer ("cogl-context", "CoglContext",
+                        "CoglContext to initialize with.",
+                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+                        G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_NCAMERAS] =
+  g_param_spec_uint ("ncameras", "Number of cameras",
+                     "Number of cameras added to this module.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
@@ -207,6 +215,10 @@ crank_render_module_get_property (GObject    *object,
     {
     case PROP_COGL_CONTEXT:
       g_value_set_pointer (value, module->cogl_context);
+      break;
+
+    case PROP_NCAMERAS:
+      g_value_set_uint (value, module->cameras->len);
       break;
 
     default:
@@ -583,6 +595,7 @@ crank_render_module_add_camera (CrankRenderModule *module,
                                 CrankCamera       *camera)
 {
   g_ptr_array_add (module->cameras, g_object_ref (camera));
+  g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_NCAMERAS]);
 }
 
 /**
@@ -597,4 +610,5 @@ crank_render_module_remove_camera (CrankRenderModule *module,
                                    CrankCamera       *camera)
 {
   g_ptr_array_remove (module->cameras, camera);
+  g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_NCAMERAS]);
 }
