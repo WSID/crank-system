@@ -72,8 +72,12 @@ guint   crank_render_module_get_n_camera (CrankRenderModule *module);
 
 CrankRenderProcess* crank_render_module_get_process (CrankRenderModule *module);
 
-void    crank_render_module_set_process (CrankRenderModule  *module,
-                                         CrankRenderProcess *process);
+void                crank_render_module_set_process (CrankRenderModule  *module,
+                                                     CrankRenderProcess *process);
+
+
+
+guint     crank_render_module_get_n_visible_types (CrankRenderModule *module);
 
 
 
@@ -86,6 +90,16 @@ void    crank_render_module_add_camera (CrankRenderModule *module,
 void    crank_render_module_remove_camera (CrankRenderModule *module,
                                            CrankCamera       *camera);
 
+
+
+gint    crank_render_module_add_visible_type (CrankRenderModule *module,
+                                              GType              type);
+
+GType   crank_render_module_get_visible_type (CrankRenderModule *module,
+                                              guint              index);
+
+gint    crank_render_module_index_of_visible_type (CrankRenderModule *module,
+                                                   GType              type);
 
 
 

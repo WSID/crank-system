@@ -112,6 +112,7 @@ static gint      crank_render_module_get_tindex (CrankRenderModule *module,
 enum {
   PROP_0,
   PROP_COGL_CONTEXT,
+  PROP_NVISIBLE_TYPES,
   PROP_NCAMERAS,
 
   PROP_PROCESS,
@@ -128,6 +129,8 @@ struct _CrankRenderModule
   CrankCompositable  _parent;
 
   CoglContext *cogl_context;
+
+  GArray      *visible_types;
 
   GPtrArray   *cameras;
 
@@ -158,7 +161,15 @@ G_DEFINE_TYPE_WITH_CODE (CrankRenderModule,
 static void
 crank_render_module_init (CrankRenderModule *module)
 {
+  GType types[2];
+
+  module->visible_types = g_array_new (FALSE, FALSE, sizeof (GType));
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
+
+  types[0] = CRANK_TYPE_RENDERABLE;
+  types[1] = CRANK_TYPE_LIGHTABLE;
+
+  g_array_append_vals (module->visible_types, types, 2);
 }
 
 
@@ -178,6 +189,12 @@ crank_render_module_class_init (CrankRenderModuleClass *c)
                         "CoglContext to initialize with.",
                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
                         G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_NVISIBLE_TYPES] =
+  g_param_spec_uint ("nvisible-types", "Number of visible types",
+                     "Number of visible types to track.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_NCAMERAS] =
   g_param_spec_uint ("ncameras", "Number of cameras",
@@ -217,6 +234,10 @@ crank_render_module_get_property (GObject    *object,
     {
     case PROP_COGL_CONTEXT:
       g_value_set_pointer (value, module->cogl_context);
+      break;
+
+    case PROP_NVISIBLE_TYPES:
+      g_value_set_uint (value, module->visible_types->len);
       break;
 
     case PROP_NCAMERAS:
@@ -594,6 +615,19 @@ crank_render_module_set_process (CrankRenderModule  *module,
 }
 
 
+/**
+ * crank_render_module_get_n_visible_types:
+ * @module: A Module.
+ *
+ * Gets number of #CrankVisible types to track.
+ *
+ * Returns: Number of visible types.
+ */
+guint
+crank_render_module_get_n_visible_types (CrankRenderModule *module)
+{
+  return module->visible_types->len;
+}
 
 
 
@@ -633,3 +667,84 @@ crank_render_module_remove_camera (CrankRenderModule *module,
   g_ptr_array_remove (module->cameras, camera);
   g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_NCAMERAS]);
 }
+
+
+/**
+ * crank_render_module_add_visible_type:
+ * @module: A Module.
+ * @type: A Type which is subtype of #CrankVisible.
+ *
+ * Adds a visible type to track.
+ *
+ * Returns: index of added @type.
+ */
+gint
+crank_render_module_add_visible_type (CrankRenderModule *module,
+                                      GType              type)
+{
+  gint index;
+
+  if (! g_type_is_a (type, CRANK_TYPE_VISIBLE))
+    {
+      g_warning ("crank_render_module_add_visible_type: Adding non CrankVisible type.\n"
+                 "  %s", g_type_name (type));
+      return -1;
+    }
+
+  index = module->visible_types->len;
+  g_array_append_val (module->visible_types, type);
+
+  g_object_notify_by_pspec ((GObject*) module, pspecs[PROP_NVISIBLE_TYPES]);
+
+  return index;
+}
+
+/**
+ * crank_render_module_get_visible_type:
+ * @module: A Module.
+ * @index: Index of type.
+ *
+ * Gets visible tyoe at the index.
+ *
+ * Returns: Visible type at index.
+ */
+GType
+crank_render_module_get_visible_type (CrankRenderModule *module,
+                                      guint              index)
+{
+  if (module->visible_types->len <= index)
+    {
+      g_warning ("crank_render_module_get_visible_type: Out of bound.\n"
+                 "  %u / %u", index, module->visible_types->len);
+      return G_TYPE_INVALID;
+    }
+
+  return g_array_index (module->visible_types, GType, index);
+}
+
+/**
+ * crank_render_module_index_of_visible_type:
+ * @module: A Module.
+ * @type: A Type which is subtype of #CrankVisible.
+ *
+ * Look up for index of @type.
+ *
+ * Returns: Index of @type, or -1 if not found.
+ */
+gint
+crank_render_module_index_of_visible_type (CrankRenderModule *module,
+                                           GType              type)
+{
+  guint i;
+
+  for (i = 0; i < module->visible_types->len; i++)
+    {
+      // This is not is-a test.
+      // Do equality test.
+      if (type == g_array_index (module->visible_types, GType, i))
+        return i;
+    }
+
+  return -1;
+}
+
