@@ -338,16 +338,38 @@ crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
 //////// Public Functions //////////////////////////////////////////////////////
 
 /**
- * crank_render_place_data_get_culled_array:
+ * crank_render_place_data_get_culled_list:
  * @pdata: A Place Data.
- * @entities: (transfer none): Array of entities.
- * @position: Position of view.
- * @projection: Projection of view.
+ * @culls: (array length=nculls): Array of planes to cull.
+ * @nculls: Number of planes to cull.
  * @tindex: Type index.
  *
  * Adds items to @entities, which is frustum culled.
  *
- * Returns: (transfer none): @entities, with added entities.
+ * Returns: (transfer container) (element-type CrankEntity3): List of entities
+ *     which is culled.
+ */
+GList*
+crank_render_place_data_get_culled_list (CrankRenderPlaceData *pdata,
+                                          const CrankPlane3    *culls,
+                                          const guint           nculls,
+                                          const guint           tindex)
+{
+  return crank_octree_set_get_culled_list (pdata->entity_sets[tindex],
+                                           culls, nculls);
+}
+
+/**
+ * crank_render_place_data_get_culled_array:
+ * @pdata: A Place Data.
+ * @entities: (transfer none) (element-type CrankEntity3): Array of entities.
+ * @culls: (array length=nculls): Array of planes to cull.
+ * @nculls: Number of planes to cull.
+ * @tindex: Type index.
+ *
+ * Adds items to @entities, which is culled.
+ *
+ * Returns: (transfer none) (element-type CrankEntity3): @entities, with added entities.
  */
 GPtrArray*
 crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,

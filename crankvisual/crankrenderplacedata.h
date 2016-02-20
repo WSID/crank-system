@@ -65,7 +65,7 @@ static GParamSpec *pspecs_priv[PROP_PRIV_COUNTS] = {NULL};
 G_DECLARE_FINAL_TYPE (CrankRenderPlaceData,
                       crank_render_place_data,
                       CRANK, RENDER_PLACE_DATA,
-                      CrankCompositable1N);
+                      CrankCompositable1N)
 
 
 
@@ -90,6 +90,11 @@ void  crank_render_place_data_remove_entity     (CrankRenderPlaceData *pdata,
 
 
 //////// Public functions //////////////////////////////////////////////////////
+
+GList       *crank_render_place_data_get_culled_list  (CrankRenderPlaceData *pdata,
+                                                       const CrankPlane3    *culls,
+                                                       const guint           nculls,
+                                                       const guint           tindex);
 
 GPtrArray   *crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,
                                                        GPtrArray            *entities,
