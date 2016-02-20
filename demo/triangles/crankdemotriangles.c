@@ -268,6 +268,11 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
                                           &merr))
     g_error ("Error while building session: %s", merr->message);
 
+  // Adjust modules
+  crank_render_module_set_process (app->rmodule,
+                                   (CrankRenderProcess*)
+                                   g_object_new (CRANK_TYPE_RENDER_PROCESS,
+                                                 NULL));
 
   // Make entities.
   app->place = crank_place3_new (app->pmodule);
