@@ -355,8 +355,16 @@ crank_render_module_tick (CrankSessionModuleTick *tmodule,
 
   for (i = 0; i < rmodule->cameras->len; i++)
     {
-      CrankCamera *camera = rmodule->cameras->pdata[i];
-      if (crank_render_process_render_for (rmodule->process, camera))
+      CrankCamera *camera;
+      CrankRenderProcess *process;
+
+      camera = rmodule->cameras->pdata[i];
+      process = crank_camera_get_render_process (camera);
+
+      process = (process != NULL) ? process : rmodule->process;
+
+      if ((process != NULL) &&
+          crank_render_process_render_for (process, camera))
         crank_camera_rendered (camera);
     }
 }
