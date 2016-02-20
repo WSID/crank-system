@@ -13,6 +13,7 @@ visualinclude_HEADERS = \
 		crankvertexstruct.h \
 		crankmeshutil.h \
 		crankvisible.h \
+		crankmaterial.h \
 		crankrenderable.h \
 		crankrenderableprimitive.h \
 		cranklightable.h \
@@ -21,7 +22,7 @@ visualinclude_HEADERS = \
 		crankrenderlayertexture.h \
 		crankrenderstep.h \
 		crankrenderstepsimple.h \
-		crankmaterial.h \
+		crankrenderplacedata.h \
 		crankrendermodule.h \
 		crankcameracontent.h
 
@@ -61,12 +62,9 @@ libcrankvisual_la_SOURCES= \
 		crankrenderstepsimple.c \
 		crankmaterial.c \
 		crankcamera.c \
-		crankrenderpdata.c \
+		crankrenderplacedata.c \
 		crankrendermodule.c \
 		crankcameracontent.c
-
-noinst_HEADERS= \
-		crankrenderpdata.h
 
 
 

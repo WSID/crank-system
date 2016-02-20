@@ -29,12 +29,69 @@
 #include "crankcore.h"
 
 #include "crankvisible.h"
-#include "crankrenderpdata.h"
+#include "crankprojection.h"
+#include "crankrenderplacedata.h"
+
+
+
+
+
+//////// Private Functions /////////////////////////////////////////////////////
+
+//////// List of virtual functions /////////////////////////////////////////////
+
+void crank_render_place_data_constructed (GObject *object);
+
+void crank_render_place_data_set_property (GObject      *object,
+                                           guint         prop_id,
+                                           const GValue *value,
+                                           GParamSpec   *pspec);
+
+void crank_render_place_data_dispose (GObject *object);
+
+void crank_render_place_data_finalize (GObject *object);
+
+
+
+gboolean crank_render_place_data_adding (CrankCompositable  *compositable,
+                                         CrankComposite     *composite,
+                                         GError            **error);
+
+gboolean crank_render_place_data_removing (CrankCompositable  *compositable,
+                                           CrankComposite     *composite,
+                                           GError            **error);
+
+
+
+
+
+//////// Private function for callback /////////////////////////////////////////
+
+CrankVecFloat3 *crank_render_place_data_get_pos (gpointer data,
+                                                 gpointer userdata);
+
+gfloat          crank_render_place_data_get_rad (gpointer data,
+                                                 gpointer userdata);
+
+
+
+
+
+
 
 //////// Private type definition ///////////////////////////////////////////////
 
-G_DEFINE_TYPE_WITH_CODE (CrankRenderPData,
-                         crank_render_pdata,
+struct _CrankRenderPlaceData
+{
+  CrankCompositable1N parent;
+
+  GHashTable     **entity_counts;
+  CrankOctreeSet **entity_sets;
+  guint           nentity_sets;
+};
+
+G_DEFINE_TYPE_WITH_CODE (CrankRenderPlaceData,
+                         crank_render_place_data,
                          CRANK_TYPE_COMPOSITABLE,
                          {
                            crank_gtype_compositable_add_requisition (g_define_type_id,
@@ -42,24 +99,28 @@ G_DEFINE_TYPE_WITH_CODE (CrankRenderPData,
                          })
 
 
-//////// Private type: GTypeInstance ///////////////////////////////////////////
 
-void crank_render_pdata_init (CrankRenderPData *pdata)
+
+
+
+//////// GTypeInstance /////////////////////////////////////////////////////////
+
+void crank_render_place_data_init (CrankRenderPlaceData *pdata)
 {
 }
 
-void crank_render_pdata_class_init (CrankRenderPDataClass *c)
+void crank_render_place_data_class_init (CrankRenderPlaceDataClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
   CrankCompositableClass *c_compositable = CRANK_COMPOSITABLE_CLASS (c);
 
-  c_gobject->constructed = crank_render_pdata_constructed;
-  c_gobject->set_property = crank_render_pdata_set_property;
-  c_gobject->dispose = crank_render_pdata_dispose;
-  c_gobject->finalize = crank_render_pdata_finalize;
+  c_gobject->constructed = crank_render_place_data_constructed;
+  c_gobject->set_property = crank_render_place_data_set_property;
+  c_gobject->dispose = crank_render_place_data_dispose;
+  c_gobject->finalize = crank_render_place_data_finalize;
 
-  c_compositable->adding = crank_render_pdata_adding;
-  c_compositable->removing = crank_render_pdata_removing;
+  c_compositable->adding = crank_render_place_data_adding;
+  c_compositable->removing = crank_render_place_data_removing;
 
   pspecs_priv[PROP_PRIV_VISIBLE_TYPES] =
       g_param_spec_uint ("visible-types", "Visible types", "Visible types",
@@ -79,12 +140,12 @@ void crank_render_pdata_class_init (CrankRenderPDataClass *c)
 
 
 
-//////// Private type: GObject /////////////////////////////////////////////////
+//////// GObject ///////////////////////////////////////////////////////////////
 
 void
-crank_render_pdata_constructed (GObject *object)
+crank_render_place_data_constructed (GObject *object)
 {
-  CrankRenderPData *pdata = (CrankRenderPData*) object;
+  CrankRenderPlaceData *pdata = (CrankRenderPlaceData*) object;
   CrankPlace3 *place = g_object_get_data (object, "place");
   guint visible_types = GPOINTER_TO_UINT (g_object_get_data (object, "visible-types"));
   gpointer visible_offset = g_object_get_data (object, "visible-offset");
@@ -94,7 +155,7 @@ crank_render_pdata_constructed (GObject *object)
 }
 
 void
-crank_render_pdata_set_property (GObject      *object,
+crank_render_place_data_set_property (GObject      *object,
                                  guint         prop_id,
                                  const GValue *value,
                                  GParamSpec   *pspec)
@@ -112,10 +173,10 @@ crank_render_pdata_set_property (GObject      *object,
 }
 
 void
-crank_render_pdata_dispose (GObject *object)
+crank_render_place_data_dispose (GObject *object)
 {
-  GObjectClass *pc = crank_render_pdata_parent_class;
-  CrankRenderPData *pdata = (CrankRenderPData*) object;
+  GObjectClass *pc = crank_render_place_data_parent_class;
+  CrankRenderPlaceData *pdata = (CrankRenderPlaceData*) object;
   guint i;
 
   for (i = 0; i < pdata->nentity_sets; i++)
@@ -125,10 +186,10 @@ crank_render_pdata_dispose (GObject *object)
 }
 
 void
-crank_render_pdata_finalize (GObject *object)
+crank_render_place_data_finalize (GObject *object)
 {
-  GObjectClass *pc = crank_render_pdata_parent_class;
-  CrankRenderPData *pdata = (CrankRenderPData*) object;
+  GObjectClass *pc = crank_render_place_data_parent_class;
+  CrankRenderPlaceData *pdata = (CrankRenderPlaceData*) object;
   guint i;
 
   for (i = 0; i < pdata->nentity_sets; i++)
@@ -144,22 +205,22 @@ crank_render_pdata_finalize (GObject *object)
 
 
 
-//////// Private type: CrankCompositable ///////////////////////////////////////
+//////// CrankCompositable /////////////////////////////////////////////////////
 
 gboolean
-crank_render_pdata_adding (CrankCompositable  *compositable,
+crank_render_place_data_adding (CrankCompositable  *compositable,
                            CrankComposite     *composite,
                            GError            **error)
 {
-  CrankCompositableClass *pc = crank_render_pdata_parent_class;
-  CrankRenderPData *pdata;
+  CrankCompositableClass *pc = crank_render_place_data_parent_class;
+  CrankRenderPlaceData *pdata;
   CrankPlace3 *place;
   guint i;
 
   if (! pc->adding (compositable, composite, error))
     return FALSE;
 
-  pdata = (CrankRenderPData*) compositable;
+  pdata = (CrankRenderPlaceData*) compositable;
   place = (CrankPlace3*)composite;
 
   pdata->entity_counts = g_new (GHashTable*, pdata->nentity_sets);
@@ -170,24 +231,24 @@ crank_render_pdata_adding (CrankCompositable  *compositable,
       pdata->entity_counts[i] = g_hash_table_new (g_direct_hash, g_direct_equal);
 
       pdata->entity_sets[i] = crank_octree_set_new (& place->boundary,
-            crank_render_pdata_get_pos, NULL, NULL,
-            crank_render_pdata_get_rad, NULL, NULL);
+            crank_render_place_data_get_pos, NULL, NULL,
+            crank_render_place_data_get_rad, NULL, NULL);
     }
 
   return TRUE;
 }
 
 gboolean
-crank_render_pdata_removing (CrankCompositable  *compositable,
+crank_render_place_data_removing (CrankCompositable  *compositable,
                              CrankComposite     *composite,
                              GError            **error)
 {
-  CrankCompositableClass *pc = crank_render_pdata_parent_class;
-  CrankRenderPData *pdata;
+  CrankCompositableClass *pc = crank_render_place_data_parent_class;
+  CrankRenderPlaceData *pdata;
   CrankPlace3 *place;
   guint i;
 
-  pdata = (CrankRenderPData*) compositable;
+  pdata = (CrankRenderPlaceData*) compositable;
   place = (CrankPlace3*)composite;
 
   if (! pc->removing (compositable, composite, error))
@@ -215,7 +276,7 @@ crank_render_pdata_removing (CrankCompositable  *compositable,
 //////// Private type callbacks ////////////////////////////////////////////////
 
 CrankVecFloat3*
-crank_render_pdata_get_pos (gpointer data,
+crank_render_place_data_get_pos (gpointer data,
                            gpointer userdata)
 {
   CrankEntity3 *entity = (CrankEntity3*)data;
@@ -223,7 +284,7 @@ crank_render_pdata_get_pos (gpointer data,
 }
 
 gfloat
-crank_render_pdata_get_rad (gpointer data,
+crank_render_place_data_get_rad (gpointer data,
                             gpointer userdata)
 {
   CrankEntity3 *entity = (CrankEntity3*)data;
@@ -242,13 +303,13 @@ crank_render_pdata_get_rad (gpointer data,
 
 
 
-//////// Private type: Methods /////////////////////////////////////////////////
+//////// Internal Functions ////////////////////////////////////////////////////
 
-void
-crank_render_pdata_add_entity (CrankRenderPData *pdata,
-                               CrankEntity      *entity,
-                               CrankVisible     *visible,
-                               const guint       tindex)
+G_GNUC_INTERNAL void
+crank_render_place_data_add_entity (CrankRenderPlaceData *pdata,
+                                    CrankEntity          *entity,
+                                    CrankVisible         *visible,
+                                    const guint           tindex)
 {
   GHashTable *entity_count = pdata->entity_counts[tindex];
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
@@ -258,15 +319,44 @@ crank_render_pdata_add_entity (CrankRenderPData *pdata,
 
 }
 
-void
-crank_render_pdata_remove_entity (CrankRenderPData *pdata,
-                                  CrankEntity      *entity,
-                                  CrankVisible     *visible,
-                                  const guint       tindex)
+G_GNUC_INTERNAL void
+crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
+                                       CrankEntity          *entity,
+                                       CrankVisible         *visible,
+                                       const guint           tindex)
 {
   GHashTable *entity_count = pdata->entity_counts[tindex];
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
 
   if (crank_mset_remove (entity_count, entity) == 0)
     crank_octree_set_remove (entity_set, entity);
+}
+
+
+
+
+//////// Public Functions //////////////////////////////////////////////////////
+
+/**
+ * crank_render_place_data_get_culled_array:
+ * @pdata: A Place Data.
+ * @entities: (transfer none): Array of entities.
+ * @position: Position of view.
+ * @projection: Projection of view.
+ * @tindex: Type index.
+ *
+ * Adds items to @entities, which is frustum culled.
+ *
+ * Returns: (transfer none): @entities, with added entities.
+ */
+GPtrArray*
+crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,
+                                          GPtrArray            *entities,
+                                          const CrankPlane3    *culls,
+                                          const guint           nculls,
+                                          const guint           tindex)
+{
+  return crank_octree_set_add_culled_array (pdata->entity_sets[tindex],
+                                            entities,
+                                            culls, nculls);
 }

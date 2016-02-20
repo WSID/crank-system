@@ -39,14 +39,19 @@
 #include "cranklightablearanged.h"
 
 #include "crankrenderlayer.h"
+#include "crankrenderlayerarray.h"
 #include "crankrenderlayertexture.h"
 
 #include "crankrenderstep.h"
+#include "crankrenderstepentity.h"
 #include "crankrenderstepsimple.h"
 
 #include "crankmaterial.h"
 
 #include "crankcamera.h"
+#include "crankrenderprocess.h"
+
+#include "crankrenderplacedata.h"
 #include "crankrendermodule.h"
 
 #include "crankcameracontent.h"
