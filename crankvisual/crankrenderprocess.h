@@ -36,6 +36,7 @@
 
 #include "crankprojection.h"
 #include "crankfilm.h"
+#include "crankcamera.h"
 
 
 //////// Type Declarations /////////////////////////////////////////////////////
@@ -202,6 +203,10 @@ void    crank_render_process_render_at (CrankRenderProcess *process,
                                         CrankTrans3        *position,
                                         CrankProjection    *projection,
                                         CrankFilm          *film);
+
+
+gboolean crank_render_process_render_for (CrankRenderProcess *process,
+                                          CrankCamera        *camera);
 
 
 

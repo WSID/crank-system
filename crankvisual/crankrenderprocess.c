@@ -37,6 +37,7 @@
 
 #include "crankrenderplacedata.h"
 #include "crankrenderprocess.h"
+#include "crankcamera.h"
 
 
 
@@ -711,4 +712,50 @@ crank_render_process_render_at (CrankRenderProcess *process,
   // TODO: Render to other buffers.
   //
   //
+}
+
+/**
+ * crank_render_process_render_for:
+ * @process: A Process.
+ * @camera: A Camera.
+ * @film: A Film.
+ *
+ * Renders the scene on the @film for a @camera.
+ *
+ * Sometimes, rendering cannot be happened by various reason. In this case, it
+ * will return %FALSE.
+ *
+ * Returns: Whether the rendering was actually happens.
+ */
+gboolean
+crank_render_process_render_for (CrankRenderProcess *process,
+                                 CrankCamera        *camera)
+{
+  CrankEntity3    *entity;
+  CrankPlace3     *place;
+  CrankTrans3      position;
+  CrankProjection *projection;
+  CrankFilm       *film;
+
+  film = crank_camera_get_film (camera);
+  if (film == NULL)
+    return FALSE;
+
+  entity = crank_camera_get_entity (camera);
+  if (entity == NULL)
+    return FALSE;
+
+  place = (CrankPlace3*)crank_entity_get_primary_place ((CrankEntity*)entity);
+  if (place == NULL)
+    return FALSE;
+
+  projection = crank_camera_get_projection (camera);
+
+  crank_render_process_render_at (process,
+                                  place,
+                                  & entity->position,
+                                  projection,
+                                  film);
+
+  return TRUE;
 }
