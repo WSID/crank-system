@@ -358,37 +358,9 @@ crank_render_module_tick (CrankSessionModuleTick *tmodule,
 
   for (i = 0; i < rmodule->cameras->len; i++)
     {
-      CrankCamera *camera;
-      CrankFilm *film;
-      CrankEntity3 *entity;
-      CrankPlace3 *place;
-
-      camera = rmodule->cameras->pdata[i];
-
-      film = crank_camera_get_film (camera);
-      if (film == NULL)
-        continue;
-
-      entity = crank_camera_get_entity (camera);
-      if (entity == NULL)
-        continue;
-
-      place = (CrankPlace3*)crank_entity_get_primary_place ((CrankEntity*)entity);
-      if (place == NULL)
-        continue;
-
-      CrankTrans3 position;
-      CrankProjection *projection;
-
-      projection = crank_camera_get_projection (camera);
-
-      crank_render_process_render_at (rmodule->process,
-                                      place,
-                                      & entity->position,
-                                      projection,
-                                      film);
-
-      crank_camera_rendered (camera);
+      CrankCamera *camera = rmodule->cameras->pdata[i];
+      if (crank_render_process_render_for (rmodule->process, camera))
+        crank_camera_rendered (camera);
     }
 }
 
