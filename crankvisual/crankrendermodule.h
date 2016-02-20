@@ -39,6 +39,8 @@
 #include "crankfilm.h"
 #include "crankcamera.h"
 
+#include "crankrenderprocess.h"
+
 //////// Type Definition ///////////////////////////////////////////////////////
 
 #define CRANK_TYPE_RENDER_MODULE (crank_render_module_get_type())
@@ -68,6 +70,10 @@ CrankRenderModule *crank_render_module_new (CoglContext *cogl_context);
 guint   crank_render_module_get_n_camera (CrankRenderModule *module);
 
 
+CrankRenderProcess* crank_render_module_get_process (CrankRenderModule *module);
+
+void    crank_render_module_set_process (CrankRenderModule  *module,
+                                         CrankRenderProcess *process);
 
 
 

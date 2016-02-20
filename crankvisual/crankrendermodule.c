@@ -114,6 +114,8 @@ enum {
   PROP_COGL_CONTEXT,
   PROP_NCAMERAS,
 
+  PROP_PROCESS,
+
   PROP_COUNTS
 };
 
@@ -160,9 +162,6 @@ crank_render_module_init (CrankRenderModule *module)
 {
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
   module->render_entities = g_ptr_array_new ();
-
-  module->process = (CrankRenderProcess*)
-      g_object_new (CRANK_TYPE_RENDER_PROCESS, NULL);
 }
 
 
@@ -188,6 +187,12 @@ crank_render_module_class_init (CrankRenderModuleClass *c)
                      "Number of cameras added to this module.",
                      0, G_MAXUINT, 0,
                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  pspecs[PROP_PROCESS] =
+  g_param_spec_object ("process", "Rendering process",
+                       "Rendering process.",
+                       CRANK_TYPE_RENDER_PROCESS,
+                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 
@@ -221,6 +226,10 @@ crank_render_module_get_property (GObject    *object,
       g_value_set_uint (value, module->cameras->len);
       break;
 
+    case PROP_PROCESS:
+      g_value_set_object (value, module->process);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspecs);
     }
@@ -240,6 +249,11 @@ crank_render_module_set_property (GObject      *object,
     {
     case PROP_COGL_CONTEXT:
       module->cogl_context = g_value_get_pointer (value);
+      break;
+
+    case PROP_PROCESS:
+      crank_render_module_set_process (module,
+                                       g_value_get_object (value));
       break;
 
     default:
@@ -570,6 +584,36 @@ guint
 crank_render_module_get_n_camera (CrankRenderModule *module)
 {
   return module->cameras->len;
+}
+
+/**
+ * crank_render_module_get_process:
+ * @module: A Module.
+ *
+ * Gets module-default rendering process in this module. For cameras without
+ * rendering process, this will be used.
+ *
+ * Returns: (transfer none) (nullable): Module-default rendering process.
+ */
+CrankRenderProcess*
+crank_render_module_get_process (CrankRenderModule *module)
+{
+  return module->process;
+}
+
+/**
+ * crank_render_module_set_process:
+ * @module: A Module.
+ * @process: (transfer none) (nullable): A Process.
+ *
+ * Sets module-default rendering process in this module.
+ */
+void
+crank_render_module_set_process (CrankRenderModule  *module,
+                                 CrankRenderProcess *process)
+{
+  if (g_set_object (& module->process, process))
+    g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_PROCESS]);
 }
 
 
