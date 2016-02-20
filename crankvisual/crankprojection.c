@@ -543,6 +543,42 @@ crank_projection_update_cull_plane (CrankProjection *projection)
 
 
 
+
+
+
+
+//////// Culling Planes ////////////////////////////////////////////////////////
+
+/**
+ * crank_projection_get_cull_plane_transformed:
+ * @projection: A Projection.
+ * @transform: A Transformation.
+ * @cull_planes: (out) (array fixed-size=6): Transformed culling planes.
+ *
+ * Stores transformed cull planes. This is used for generating culling planes
+ * for frustum culling.
+ */
+void
+crank_projection_get_cull_plane_transformed (CrankProjection *projection,
+                                             CrankTrans3     *transform,
+                                             CrankPlane3     *cull_planes)
+{
+  guint i;
+
+  for (i = 0; i < 6; i++)
+    crank_trans3_trans_plane (transform,
+                              projection->cull_plane + i,
+                              cull_planes + i);
+}
+
+
+
+
+
+
+
+
+
 //////// Cogl Snippets /////////////////////////////////////////////////////////
 
 /**

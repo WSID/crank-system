@@ -157,6 +157,15 @@ void  crank_projection_update_matrix (CrankProjection *projection);
 void  crank_projection_update_cull_plane (CrankProjection *projection);
 
 
+
+//////// Culling planes ////////////////////////////////////////////////////////
+
+void  crank_projection_get_cull_plane_transformed (CrankProjection *projection,
+                                                   CrankTrans3     *transform,
+                                                   CrankPlane3     *cull_planes);
+
+
+
 //////// GLSL Uniform Declaration //////////////////////////////////////////////
 
 CoglSnippet* crank_projection_get_snippet_def (CoglSnippetHook hook);
