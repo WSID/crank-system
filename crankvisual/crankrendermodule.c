@@ -43,6 +43,7 @@
 #include "crankcamera.h"
 
 #include "crankrenderplacedata.h"
+#include "crankrenderprocess.h"
 #include "crankrendermodule.h"
 
 
@@ -128,6 +129,8 @@ struct _CrankRenderModule
   GPtrArray   *cameras;
 
   GPtrArray   *render_entities;
+
+  CrankRenderProcess *process;
 };
 
 G_DEFINE_TYPE_WITH_CODE (CrankRenderModule,
@@ -156,6 +159,9 @@ crank_render_module_init (CrankRenderModule *module)
 {
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
   module->render_entities = g_ptr_array_new ();
+
+  module->process = (CrankRenderProcess*)
+      g_object_new (CRANK_TYPE_RENDER_PROCESS, NULL);
 }
 
 
@@ -1130,41 +1136,11 @@ crank_render_module_render_at (CrankRenderModule *module,
                                CrankProjection   *projection,
                                CrankFilm         *film)
 {
-  g_ptr_array_set_size (module->render_entities, 0);
-  crank_render_module_get_culled_rarray (module, module->render_entities, place, position, projection);
-
-
-  crank_render_module_render_geom_array (module,
-                                         module->render_entities,
-                                         position,
-                                         projection,
-                                         crank_film_get_framebuffer (film, 0));
-
-  crank_render_module_render_color_array (module,
-                                          module->render_entities,
-                                          position,
-                                          projection,
-                                          crank_film_get_framebuffer (film, 1));
-
-  g_ptr_array_set_size (module->render_entities, 0);
-  crank_render_module_get_culled_larray (module, module->render_entities, place, position, projection);
-
-
-  crank_render_module_render_light_array (module,
-                                          module->render_entities,
-                                          position,
-                                          projection,
-                                          crank_film_get_texture (film, 0),
-                                          crank_film_get_texture (film, 1),
-                                          crank_film_get_texture (film, 2),
-                                          crank_film_get_framebuffer (film, 5));
-
-
-  // XXX: For now, rendering a color buffer on result buffer.
-
-  // TODO: Render to other buffers.
-  //
-  //
+  crank_render_process_render_at (module->process,
+                                  place,
+                                  position,
+                                  projection,
+                                  film);
 }
 
 /**
