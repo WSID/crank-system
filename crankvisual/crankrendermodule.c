@@ -131,8 +131,6 @@ struct _CrankRenderModule
 
   GPtrArray   *cameras;
 
-  GPtrArray   *render_entities;
-
   CrankRenderProcess *process;
 };
 
@@ -161,7 +159,6 @@ static void
 crank_render_module_init (CrankRenderModule *module)
 {
   module->cameras = g_ptr_array_new_with_free_func (g_object_unref);
-  module->render_entities = g_ptr_array_new ();
 }
 
 
