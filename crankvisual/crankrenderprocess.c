@@ -41,12 +41,38 @@
 
 
 
+//////// Private structures ////////////////////////////////////////////////////
+
+typedef struct _LayerDescriptor
+{
+  GQuark  name;
+  GType   type;
+} LayerDescriptor;
+
+
+
+
+
+
+
+//////// Private Functions /////////////////////////////////////////////////////
+
+static LayerDescriptor* crank_render_process_get_ld (CrankRenderProcess *process,
+                                                     const guint         index);
+
+
+
+
+
+
+
 
 //////// Type Definitions //////////////////////////////////////////////////////
 
 typedef struct _CrankRenderProcessPrivate
 {
   GPtrArray *render_entities;
+  GArray    *layer_descriptors;
 }
 CrankRenderProcessPrivate;
 
@@ -78,7 +104,180 @@ crank_render_process_class_init (CrankRenderProcessClass *self)
 
 
 
+
+
+
+//////// Private Functions /////////////////////////////////////////////////////
+
+static LayerDescriptor*
+crank_render_process_get_ld (CrankRenderProcess *process,
+                             const guint         index)
+{
+  CrankRenderProcessPrivate *priv;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  if (priv->layer_descriptors->len <= index)
+    {
+      g_warning ("crank_render_process_get_ld: Out of bound.\n"
+                 "  %u / %u",
+                 index, priv->layer_descriptors->len);
+
+      return NULL;
+    }
+
+  return & g_array_index (priv->layer_descriptors, LayerDescriptor, index);
+}
+
+
+
+
+
 //////// Public Functions //////////////////////////////////////////////////////
+
+//////// Layer Descriptors /////////////////////////////////////////////////////
+
+/**
+ * crank_render_process_get_nlayers:
+ * @process: A Process.
+ *
+ * Gets number of layers that this process uses.
+ *
+ * Returns: Number of layers.
+ */
+guint
+crank_render_process_get_nlayers (CrankRenderProcess *process)
+{
+  CrankRenderProcessPrivate *priv;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  return priv->layer_descriptors->len;
+}
+
+/**
+ * crank_render_process_get_layer_type:
+ * @process: A Process.
+ * @index: A Index.
+ *
+ * Gets required layer type.
+ *
+ * Returns: A Type of layer which is subtype of #CrankRenderLayer.
+ */
+GType
+crank_render_process_get_layer_type (CrankRenderProcess *process,
+                                     const guint         index)
+{
+  LayerDescriptor *ld;
+
+  ld = crank_render_process_get_ld (process, index);
+
+  return (ld != NULL) ? ld->type : G_TYPE_INVALID;
+}
+
+/**
+ * crank_render_process_get_layer_name:
+ * @process: A Process.
+ * @index: A Index.
+ *
+ * Gets required layer's name. This name does not have to match to film's layer
+ * name. Actual layer is passed by map of (process layer index: film layer index)
+ *
+ * Returns: Name of layer in form of GQuark.
+ */
+GQuark
+crank_render_process_get_layer_name (CrankRenderProcess *process,
+                                     const guint         index)
+{
+  LayerDescriptor *ld;
+
+  ld = crank_render_process_get_ld (process, index);
+
+  return (ld != NULL) ? ld->name : 0;
+}
+
+
+/**
+ * crank_render_process_insert_layer:
+ * @process: A Process.
+ * @index: A Index to insert layer requirement..
+ * @name: Name of layer requirement.
+ * @type: GType of layer requirement.
+ *
+ * Inserts layer requirement to the process. Then this may use the layer to
+ * store intermediate or result data.
+ */
+void
+crank_render_process_insert_layer (CrankRenderProcess *process,
+                                   const guint         index,
+                                   const GQuark        name,
+                                   const GType         type)
+{
+  CrankRenderProcessPrivate *priv;
+  LayerDescriptor ld;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  ld.name = name;
+  ld.type = type;
+
+  g_array_insert_val (priv->layer_descriptors, index, ld);
+}
+
+/**
+ * crank_render_process_append_layer:
+ * @process: A Process.
+ * @name: Name of layer requirement.
+ * @type: GType of layer requirement.
+ *
+ * Append layer requirement to the process.
+ */
+void
+crank_render_process_append_layer (CrankRenderProcess *process,
+                                   const GQuark        name,
+                                   const GType         type)
+{
+  CrankRenderProcessPrivate *priv;
+  LayerDescriptor ld;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  ld.name = name;
+  ld.type = type;
+
+  g_array_append_val (priv->layer_descriptors, ld);
+}
+
+/**
+ * crank_render_process_prepend_layer:
+ * @process: A Process.
+ * @name: Name of layer requirement.
+ * @type: GType of layer requirement.
+ *
+ * Prepend layer requirement to the process.
+ */
+void
+crank_render_process_prepend_layer (CrankRenderProcess *process,
+                                    const GQuark        name,
+                                    const GType         type)
+{
+  CrankRenderProcessPrivate *priv;
+  LayerDescriptor ld;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  ld.name = name;
+  ld.type = type;
+
+  g_array_prepend_val (priv->layer_descriptors, ld);
+}
+
+
+
+
+
+
+
 
 //////// Rendering Operations //////////////////////////////////////////////////
 
@@ -759,3 +958,9 @@ crank_render_process_render_for (CrankRenderProcess *process,
 
   return TRUE;
 }
+
+
+
+
+
+

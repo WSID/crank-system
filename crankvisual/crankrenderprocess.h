@@ -26,6 +26,8 @@
 #error crankrenderprocess.h cannot be included directly: include crankvisual.h
 #endif
 
+#include <stdarg.h>
+
 #include <glib.h>
 #include <glib-object.h>
 #include <cogl/cogl2-experimental.h>
@@ -69,6 +71,36 @@ struct _CrankRenderProcessClass
 
 
 //////// Public functions //////////////////////////////////////////////////////
+
+//////// Layer functinos ///////////////////////////////////////////////////////
+
+guint   crank_render_process_get_nlayers    (CrankRenderProcess *process);
+
+GType   crank_render_process_get_layer_type (CrankRenderProcess *process,
+                                             const guint         index);
+
+GQuark  crank_render_process_get_layer_name (CrankRenderProcess *process,
+                                             const guint         index);
+
+
+void    crank_render_process_insert_layer   (CrankRenderProcess *process,
+                                             const guint         index,
+                                             const GQuark        name,
+                                             const GType         type);
+
+void    crank_render_process_append_layer   (CrankRenderProcess *process,
+                                             const GQuark        name,
+                                             const GType         type);
+
+void    crank_render_process_prepend_layer  (CrankRenderProcess *process,
+                                             const GQuark        name,
+                                             const GType         type);
+
+
+
+
+
+
 
 //////// Rendering operations //////////////////////////////////////////////////
 
@@ -207,6 +239,8 @@ void    crank_render_process_render_at (CrankRenderProcess *process,
 
 gboolean crank_render_process_render_for (CrankRenderProcess *process,
                                           CrankCamera        *camera);
+
+
 
 
 
