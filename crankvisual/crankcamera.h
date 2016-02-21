@@ -78,6 +78,14 @@ void       crank_camera_set_film (CrankCamera *camera,
                                   CrankFilm   *film);
 
 
+const gint *crank_camera_get_layer_map (CrankCamera *camera,
+                                        guint       *len);
+
+void        crank_camera_set_layer_map (CrankCamera *camera,
+                                        const gint  *layer_map,
+                                        const guint  nlayer_map);
+
+
 CrankEntity3 *crank_camera_get_entity (CrankCamera *camera);
 
 void          crank_camera_set_entity (CrankCamera  *camera,

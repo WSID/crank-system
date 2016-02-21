@@ -109,6 +109,10 @@ struct _CrankCamera {
 
   CrankRenderProcess *render_process;
   CrankFilm          *film;
+
+  gint               *layer_map;
+  guint               nlayer_map;
+
   CrankEntity3       *entity;
 
   CrankProjection    *projection;
@@ -451,6 +455,41 @@ crank_camera_set_film (CrankCamera *camera,
     g_object_notify_by_pspec ((GObject*)camera, pspecs[PROP_FILM]);
 }
 
+
+/**
+ * crank_camera_get_layer_map:
+ * @camera: A Camera.
+ * @len: Length of result.
+ *
+ * Gets layer mapping of camera.
+ *
+ * Returns: (nullable) (array length=len): Layer mapping.
+ */
+const gint*
+crank_camera_get_layer_map (CrankCamera *camera,
+                            guint       *len)
+{
+  if (len != NULL)
+    *len = camera->nlayer_map;
+  return camera->layer_map;
+}
+
+/**
+ * crank_camera_set_layer_map:
+ * @camera: A Camera.
+ * @layer_map: (transfer none) (array length=nlayer_map): A Layer mapping.
+ * @nlayer_map: Length of layer mapping.
+ *
+ * Sets layer mapping of camera.
+ */
+void
+crank_camera_set_layer_map (CrankCamera *camera,
+                            const gint  *layer_map,
+                            const guint  nlayer_map)
+{
+  camera->layer_map = CRANK_ARRAY_DUP (layer_map, gint, nlayer_map);
+  camera->nlayer_map = (camera->layer_map != NULL) ? nlayer_map : 0;
+}
 
 
 /**
