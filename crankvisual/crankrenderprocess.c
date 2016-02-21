@@ -891,19 +891,33 @@ crank_render_process_render_light_entity(CrankRenderProcess *process,
  * @position: A Position.
  * @projection: A Projection.
  * @film: A Film.
+ * @layer_map: (array) (nullable); Layer mapping.
  *
  * Renders a scene to a film.
  */
 void
 crank_render_process_render_at (CrankRenderProcess *process,
-                               CrankPlace3       *place,
-                               CrankTrans3       *position,
-                               CrankProjection   *projection,
-                               CrankFilm         *film)
+                                CrankPlace3        *place,
+                                CrankTrans3        *position,
+                                CrankProjection    *projection,
+                                CrankFilm          *film,
+                                const gint         *layer_map)
 {
-
   GPtrArray *render_entities = G_PRIVATE_FIELD (CrankRenderProcess, process,
                                                 GPtrArray*, render_entities);
+
+  if (layer_map == NULL)
+    {
+      gint *layer_map_real = g_alloca (6 * sizeof (gint));
+      layer_map_real[0] = 0;
+      layer_map_real[1] = 1;
+      layer_map_real[2] = 2;
+      layer_map_real[3] = 3;
+      layer_map_real[4] = 4;
+      layer_map_real[5] = 5;
+
+      layer_map = layer_map_real;
+    }
 
   g_ptr_array_set_size (render_entities, 0);
   crank_render_process_get_culled_rarray (process, render_entities, place, position, projection);
@@ -913,13 +927,13 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                          render_entities,
                                          position,
                                          projection,
-                                         crank_film_get_framebuffer (film, 0));
+                                         crank_film_get_framebuffer (film, layer_map[0]));
 
   crank_render_process_render_color_array (process,
                                           render_entities,
                                           position,
                                           projection,
-                                          crank_film_get_framebuffer (film, 1));
+                                          crank_film_get_framebuffer (film, layer_map[1]));
 
   g_ptr_array_set_size (render_entities, 0);
   crank_render_process_get_culled_larray (process, render_entities, place, position, projection);
@@ -929,10 +943,10 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                           render_entities,
                                           position,
                                           projection,
-                                          crank_film_get_texture (film, 0),
-                                          crank_film_get_texture (film, 1),
-                                          crank_film_get_texture (film, 2),
-                                          crank_film_get_framebuffer (film, 5));
+                                          crank_film_get_texture (film, layer_map[0]),
+                                          crank_film_get_texture (film, layer_map[1]),
+                                          crank_film_get_texture (film, layer_map[2]),
+                                          crank_film_get_framebuffer (film, layer_map[5]));
 
 
   // XXX: For now, rendering a color buffer on result buffer.
@@ -983,7 +997,8 @@ crank_render_process_render_for (CrankRenderProcess *process,
                                   place,
                                   & entity->position,
                                   projection,
-                                  film);
+                                  film,
+                                  NULL);
 
   return TRUE;
 }

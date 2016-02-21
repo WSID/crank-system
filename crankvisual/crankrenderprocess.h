@@ -237,7 +237,8 @@ void    crank_render_process_render_at (CrankRenderProcess *process,
                                         CrankPlace3        *place,
                                         CrankTrans3        *position,
                                         CrankProjection    *projection,
-                                        CrankFilm          *film);
+                                        CrankFilm          *film,
+                                        const gint         *layer_map);
 
 
 gboolean crank_render_process_render_for (CrankRenderProcess *process,
