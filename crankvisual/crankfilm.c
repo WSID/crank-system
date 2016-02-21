@@ -57,6 +57,7 @@ static void     crank_film_dispose (GObject *object);
 
 enum {
   PROP_0,
+  PROP_NLAYERS,
   PROP_WIDTH,
   PROP_HEIGHT,
 
@@ -100,6 +101,12 @@ crank_film_class_init (CrankFilmClass *c)
   c_gobject->get_property = crank_film_get_property;
   c_gobject->dispose = crank_film_dispose;
 
+  pspecs[PROP_NLAYERS] =
+  g_param_spec_uint ("nlayers", "nlayers",
+                     "Number of layers",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
   pspecs[PROP_WIDTH] =
   g_param_spec_uint ("width", "width",
                      "Width of film",
@@ -135,6 +142,10 @@ crank_film_get_property (GObject    *object,
   CrankFilm *film = (CrankFilm*) object;
   switch (prop_id)
     {
+    case PROP_NLAYERS:
+      g_value_set_uint (value, film->layers->len);
+      break;
+
     case PROP_WIDTH:
       g_value_set_uint (value, film->width);
       break;
@@ -273,6 +284,21 @@ crank_film_new_old (CoglContext  *cogl_context,
 //////// Properties ////////////////////////////////////////////////////////////
 
 /**
+ * crank_film_get_nlayers:
+ * @film: A Film.
+ *
+ * Gets number of layers in the @film.
+ *
+ * Returns: Number of layers.
+ */
+guint
+crank_film_get_nlayers (CrankFilm *film)
+{
+  return film->layers->len;
+}
+
+
+/**
  * crank_film_get_width:
  * @film: A Film.
  *
@@ -299,6 +325,61 @@ crank_film_get_height (CrankFilm *film)
 {
   return film->height;
 }
+
+
+
+
+
+
+
+///////// Layers ///////////////////////////////////////////////////////////////
+
+/**
+ * crank_film_get_layer:
+ * @film: A Film.
+ * @index: A Index.
+ *
+ * Gets layer on @film at @index.
+ *
+ * Returns: (transfer none): A Layer.
+ */
+CrankRenderLayer*
+crank_film_get_layer (CrankFilm   *film,
+                      const guint  index)
+{
+  return film->layers->pdata[index];
+}
+
+/**
+ * crank_film_get_layer_by_qname:
+ * @film: A Film.
+ * @name: Name of layer.
+ *
+ * Gets layer on @film by @name.
+ *
+ * Returns: (transfer none) (nullable): A Layer with @name.
+ */
+CrankRenderLayer*
+crank_film_get_layer_by_qname (CrankFilm    *film,
+                               const GQuark  name)
+{
+  guint i;
+
+  for (i = 0; i < film->layers->len; i++)
+    {
+      CrankRenderLayer *layer = film->layers->pdata[i];
+
+      if (name == crank_render_layer_get_qname (layer))
+        return layer;
+    }
+
+  return NULL;
+}
+
+
+
+
+
 
 
 //////// Textures and Framebuffers /////////////////////////////////////////////

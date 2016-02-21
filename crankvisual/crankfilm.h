@@ -65,9 +65,26 @@ CrankFilm    *crank_film_new_old (CoglContext  *cogl_context,
 
 //////// Properties ////////////////////////////////////////////////////////////
 
-guint         crank_film_get_width (CrankFilm *film);
+guint         crnak_film_get_nlayers(CrankFilm *film);
 
-guint         crank_film_get_height(CrankFilm *film);
+guint         crank_film_get_width  (CrankFilm *film);
+
+guint         crank_film_get_height (CrankFilm *film);
+
+
+
+
+
+
+
+
+//////// Layers ////////////////////////////////////////////////////////////////
+
+CrankRenderLayer   *crank_film_get_layer          (CrankFilm    *film,
+                                                   const guint   index);
+
+CrankRenderLayer   *crank_film_get_layer_by_qname (CrankFilm    *film,
+                                                   const GQuark  name);
 
 
 //////// Retrieve textures and framebuffers ////////////////////////////////////
