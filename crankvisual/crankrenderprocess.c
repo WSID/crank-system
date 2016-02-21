@@ -998,7 +998,7 @@ crank_render_process_render_for (CrankRenderProcess *process,
                                   & entity->position,
                                   projection,
                                   film,
-                                  NULL);
+                                  crank_camera_get_layer_map (camera, NULL));
 
   return TRUE;
 }
