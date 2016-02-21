@@ -400,7 +400,7 @@ crank_render_module_place_created (CrankSessionModulePlaced *pmodule,
   crank_composite_add_compositable (
       (CrankComposite*) place,
       (CrankCompositable*) g_object_new (CRANK_TYPE_RENDER_PLACE_DATA,
-                                         "visible-types", 2,
+                                         "visible-types", module->visible_types->len,
                                          NULL),
       NULL);
 }
@@ -529,12 +529,17 @@ static gint
 crank_render_module_get_tindex (CrankRenderModule *module,
                                 GType              type)
 {
-  if (g_type_is_a (type, CRANK_TYPE_RENDERABLE))
-    return 0;
-  else if (g_type_is_a (type, CRANK_TYPE_LIGHTABLE))
-    return 1;
+  guint i;
 
-  else return -1;
+  for (i = 0; i < module->visible_types->len; i++)
+    {
+      GType vtype = g_array_index (module->visible_types, GType, i);
+
+      if (g_type_is_a (type, vtype))
+        return i;
+    }
+
+  return -1;
 }
 
 
