@@ -272,6 +272,35 @@ crank_render_process_prepend_layer (CrankRenderProcess *process,
   g_array_prepend_val (priv->layer_descriptors, ld);
 }
 
+/**
+ * crank_render_process_index_of_layer:
+ * @procss: A Process.
+ * @name: A Name.
+ *
+ * Gets index of layer by name.
+ *
+ * Returns: Index of layer, or -1 if not found.
+ */
+gint
+crank_render_process_index_of_layer (CrankRenderProcess *process,
+                                     const GQuark        name)
+{
+  CrankRenderProcessPrivate *priv;
+  guint i;
+
+  priv = crank_render_process_get_instance_private (process);
+
+  for (i = 0; i < priv->layer_descriptors->len; i++)
+    {
+      LayerDescriptor *ld = & g_array_index (priv->layer_descriptors, LayerDescriptor, i);
+
+      if (ld->name == name)
+        return i;
+    }
+  return -1;
+}
+
+
 
 
 

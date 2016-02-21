@@ -97,6 +97,9 @@ void    crank_render_process_prepend_layer  (CrankRenderProcess *process,
                                              const GType         type);
 
 
+gint    crank_render_process_index_of_layer (CrankRenderProcess *process,
+                                             const GQuark        name);
+
 
 
 
