@@ -244,6 +244,13 @@ gboolean crank_render_process_render_for (CrankRenderProcess *process,
                                           CrankCamera        *camera);
 
 
+gboolean crank_render_process_check_layer (CrankRenderProcess *process,
+                                           const gint          index,
+                                           CrankRenderLayer   *layer);
+
+gboolean crank_render_process_check_film (CrankRenderProcess *process,
+                                          CrankFilm          *film,
+                                          const gint         *layer_map);
 
 
 

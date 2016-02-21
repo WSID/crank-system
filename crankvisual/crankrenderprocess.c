@@ -993,3 +993,94 @@ crank_render_process_render_for (CrankRenderProcess *process,
 
 
 
+
+//////// Checking //////////////////////////////////////////////////////////////
+
+/**
+ * crank_render_process_check_layer:
+ * @process: A Process.
+ * @index: A index, or negative value to pick by name.
+ * @layer: A Rendering layer.
+ *
+ * Checks whether @layer can be used for @index.
+ *
+ * Returns: whether @layer can be used for @index.
+ */
+gboolean
+crank_render_process_check_layer (CrankRenderProcess *process,
+                                  const gint          index,
+                                  CrankRenderLayer   *layer)
+{
+  LayerDescriptor *ld;
+  GType layer_type;
+  gint r_index;
+
+  // Get index by layer name, if index is negative.
+  if (index < 0)
+    {
+      GQuark name = crank_render_layer_get_qname (layer);
+      r_index = crank_render_process_index_of_layer (process, name);
+    }
+  else
+    {
+      r_index = index;
+    }
+
+  // Layer checking
+  ld = crank_render_process_get_ld (process, r_index);
+
+  // Type check.
+  layer_type = G_OBJECT_TYPE (layer);
+
+  if (! g_type_is_a (layer_type, ld->type))
+    return FALSE;
+
+
+  return TRUE;
+}
+
+
+/**
+ * crank_render_process_check_film:
+ * @process: A Process.
+ * @film: A Film.
+ * @layer_map: (array) (nullable): Layer mapping, or %NULL to use original index.
+ *
+ * Checks whether @film can be used for @process.
+ *
+ * Returns: Whether @film can be used for @process.
+ */
+gboolean
+crank_render_process_check_film (CrankRenderProcess *process,
+                                 CrankFilm          *film,
+                                 const gint         *layer_map)
+{
+  guint nlayer;
+  guint i;
+
+  nlayer = crank_render_process_get_nlayers (process);
+
+  if (layer_map == NULL)
+    {
+      for (i = 0; i < nlayer; i++)
+        {
+          CrankRenderLayer *layer;
+
+          layer = crank_film_get_layer (film, i);
+          if (! crank_render_process_check_layer (process, i, layer))
+            return FALSE;
+        }
+    }
+  else
+    {
+      for (i = 0; i < nlayer; i++)
+        {
+          CrankRenderLayer *layer;
+
+          layer = crank_film_get_layer (film, layer_map[i]);
+          if (! crank_render_process_check_layer (process, i, layer))
+            return FALSE;
+        }
+    }
+  return TRUE;
+}
