@@ -459,7 +459,7 @@ crank_camera_set_film (CrankCamera *camera,
 /**
  * crank_camera_get_layer_map:
  * @camera: A Camera.
- * @len: Length of result.
+ * @len: (optional): Length of result.
  *
  * Gets layer mapping of camera.
  *
