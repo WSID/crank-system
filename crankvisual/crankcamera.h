@@ -39,6 +39,8 @@
 
 //////// Forwar Declarations ///////////////////////////////////////////////////
 
+typedef struct _CrankRenderModule   CrankRenderModule;
+
 typedef struct _CrankRenderProcess  CrankRenderProcess;
 
 
@@ -66,6 +68,9 @@ CrankCamera *crank_camera_new (void);
 
 
 //////// Properties ////////////////////////////////////////////////////////////
+
+CrankRenderModule  *crank_camera_get_module (CrankCamera *camera);
+
 
 CrankRenderProcess *crank_camera_get_render_process (CrankCamera *camera);
 

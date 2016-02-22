@@ -28,6 +28,10 @@ visualinclude_HEADERS = \
 		crankrendermodule.h \
 		crankcameracontent.h
 
+noinst_HEADERS= \
+		crankcamera-private.h
+
+
 # crankvisual.la
 libcrankvisual_la_CFLAGS = \
 		$(CRANK_BASE_CFLAGS) \

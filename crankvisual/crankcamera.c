@@ -78,6 +78,7 @@ static void   crank_camera_finalize (GObject *object);
 
 enum {
   PROP_0,
+  PROP_MODULE,
   PROP_RENDER_PROCESS,
   PROP_FILM,
   PROP_ENTITY,
@@ -107,6 +108,7 @@ static guint sig_rendered = 0;
 struct _CrankCamera {
   GObject _parent;
 
+  CrankRenderModule  *module;
   CrankRenderProcess *render_process;
   CrankFilm          *film;
 
@@ -154,6 +156,11 @@ static void crank_camera_class_init (CrankCameraClass *c)
   c_gobject->finalize = crank_camera_finalize;
   c_gobject->get_property = crank_camera_get_property;
   c_gobject->set_property = crank_camera_set_property;
+
+  pspecs[PROP_MODULE] =
+  g_param_spec_object ("module", "Module", "Module",
+                       CRANK_TYPE_RENDER_MODULE,
+                       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
   pspecs[PROP_RENDER_PROCESS] =
   g_param_spec_object ("render-process", "Rendering process", "Rendering process",
@@ -230,6 +237,10 @@ crank_camera_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_MODULE:
+      g_value_set_object (value, camera->module);
+      break;
+
     case PROP_RENDER_PROCESS:
       g_value_set_object (value, camera->render_process);
       break;
@@ -377,6 +388,35 @@ crank_camera_finalize (GObject *object)
 }
 
 
+
+
+
+
+
+//////// Internal Functions ////////////////////////////////////////////////////
+
+/*
+ * crank_camera_module_set_module:
+ * @camera: A Camera.
+ * @module: A Module.
+ *
+ * Friendship: CrankRenderModule.
+ *
+ * This function lets module to set camera's module as self. Also this will emit
+ * notify for changes.
+ */
+G_GNUC_INTERNAL
+void
+crank_camera_module_set_module (CrankCamera       *camera,
+                                CrankRenderModule *module)
+{
+  if (g_set_object (& camera->module, module))
+    {
+      g_object_notify_by_pspec ((GObject*) camera, pspecs[PROP_MODULE]);
+    }
+}
+
+
 //////// Constructor ///////////////////////////////////////////////////////////
 
 /**
@@ -395,6 +435,21 @@ crank_camera_new (void)
 
 
 //////// Properties ////////////////////////////////////////////////////////////
+
+/**
+ * crank_camera_get_module:
+ * @camera: A Camera.
+ *
+ * Gets render module.
+ *
+ * Returns: (transfer none) (nullable): Render Module.
+ */
+CrankRenderModule*
+crank_camera_get_module (CrankCamera *camera)
+{
+  return camera->module;
+}
+
 
 /**
  * crank_camera_get_render_process:
