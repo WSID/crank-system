@@ -41,6 +41,7 @@
 #include "crankrenderable.h"
 #include "crankfilm.h"
 #include "crankcamera.h"
+#include "crankcamera-private.h"
 
 #include "crankrenderplacedata.h"
 #include "crankrenderprocess.h"
@@ -654,7 +655,20 @@ void
 crank_render_module_add_camera (CrankRenderModule *module,
                                 CrankCamera       *camera)
 {
+  CrankRenderModule *camera_module = crank_camera_get_module (camera);
+
+  if (camera_module != NULL)
+    {
+      g_warning ("crank_render_module_add_camera: Adding camera that belongs to other module.\n"
+                 "  %s@%p <= %s@%p, %s@%p",
+                 G_OBJECT_TYPE_NAME (module), module,
+                 G_OBJECT_TYPE_NAME (camera), camera,
+                 G_OBJECT_TYPE_NAME (camera_module), camera_module);
+      return;
+    }
+
   g_ptr_array_add (module->cameras, g_object_ref (camera));
+  crank_camera_module_set_module (camera, module);
   g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_NCAMERAS]);
 }
 
@@ -669,7 +683,19 @@ void
 crank_render_module_remove_camera (CrankRenderModule *module,
                                    CrankCamera       *camera)
 {
+  CrankRenderModule *camera_module = crank_camera_get_module (camera);
+
+  if (camera_module != module)
+    {
+      g_warning ("crank_render_module_remove_camera: Removing camera that does not belong to this module.\n"
+                 "  %s@%p <= %s@%p, %s@%p",
+                 G_OBJECT_TYPE_NAME (module), module,
+                 G_OBJECT_TYPE_NAME (camera), camera,
+                 G_OBJECT_TYPE_NAME (camera_module), camera_module);
+      return;
+    }
   g_ptr_array_remove (module->cameras, camera);
+  crank_camera_module_set_module (camera, NULL);
   g_object_notify_by_pspec ((GObject*)module, pspecs[PROP_NCAMERAS]);
 }
 
