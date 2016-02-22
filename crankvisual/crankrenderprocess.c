@@ -908,13 +908,15 @@ crank_render_process_render_at (CrankRenderProcess *process,
 
   if (layer_map == NULL)
     {
-      gint *layer_map_real = g_alloca (6 * sizeof (gint));
+      gint *layer_map_real = g_alloca (8 * sizeof (gint));
       layer_map_real[0] = 0;
       layer_map_real[1] = 1;
       layer_map_real[2] = 2;
       layer_map_real[3] = 3;
       layer_map_real[4] = 4;
       layer_map_real[5] = 5;
+      layer_map_real[6] = 6;
+      layer_map_real[7] = 7;
 
       layer_map = layer_map_real;
     }
@@ -927,13 +929,13 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                          render_entities,
                                          position,
                                          projection,
-                                         crank_film_get_framebuffer (film, layer_map[0]));
+                                         crank_film_get_framebuffer (film, layer_map[2]));
 
   crank_render_process_render_color_array (process,
                                           render_entities,
                                           position,
                                           projection,
-                                          crank_film_get_framebuffer (film, layer_map[1]));
+                                          crank_film_get_framebuffer (film, layer_map[3]));
 
   g_ptr_array_set_size (render_entities, 0);
   crank_render_process_get_culled_larray (process, render_entities, place, position, projection);
@@ -943,10 +945,10 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                           render_entities,
                                           position,
                                           projection,
-                                          crank_film_get_texture (film, layer_map[0]),
-                                          crank_film_get_texture (film, layer_map[1]),
                                           crank_film_get_texture (film, layer_map[2]),
-                                          crank_film_get_framebuffer (film, layer_map[5]));
+                                          crank_film_get_texture (film, layer_map[3]),
+                                          crank_film_get_texture (film, layer_map[4]),
+                                          crank_film_get_framebuffer (film, layer_map[7]));
 
 
   // XXX: For now, rendering a color buffer on result buffer.
