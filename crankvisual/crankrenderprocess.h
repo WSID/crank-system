@@ -107,23 +107,6 @@ gint    crank_render_process_index_of_layer (CrankRenderProcess *process,
 
 //////// Rendering operations //////////////////////////////////////////////////
 
-GList  *crank_render_process_get_culled_list (CrankRenderProcess *process,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection,
-                                             const guint        tindex);
-
-GList  *crank_render_process_get_culled_rlist(CrankRenderProcess *process,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection);
-
-GList  *crank_render_process_get_culled_llist(CrankRenderProcess *process,
-                                             CrankPlace3       *place,
-                                             CrankTrans3       *position,
-                                             CrankProjection   *projection);
-
-
 GPtrArray  *crank_render_process_get_culled_array (CrankRenderProcess *process,
                                                   GPtrArray         *entities,
                                                   CrankPlace3       *place,
@@ -142,51 +125,6 @@ GPtrArray  *crank_render_process_get_culled_larray(CrankRenderProcess *process,
                                                   CrankPlace3       *place,
                                                   CrankTrans3       *position,
                                                   CrankProjection   *projection);
-
-
-void    crank_render_process_render_geom_at (CrankRenderProcess *process,
-                                             CrankPlace3        *place,
-                                             CrankTrans3        *position,
-                                             CrankProjection    *projection,
-                                             CoglFramebuffer    *framebuffer);
-
-void    crank_render_process_render_color_at (CrankRenderProcess *process,
-                                              CrankPlace3        *place,
-                                              CrankTrans3        *position,
-                                              CrankProjection    *projection,
-                                              CoglFramebuffer    *framebuffer);
-
-void    crank_render_process_render_light_at (CrankRenderProcess *process,
-                                              CrankPlace3        *place,
-                                              CrankTrans3        *position,
-                                              CrankProjection    *projection,
-                                              CoglTexture        *tex_geom,
-                                              CoglTexture        *tex_color,
-                                              CoglTexture        *tex_mater,
-                                              CoglFramebuffer    *framebuffer);
-
-
-void    crank_render_process_render_geom_list (CrankRenderProcess *process,
-                                               GList              *entities,
-                                               CrankTrans3        *position,
-                                               CrankProjection    *projection,
-                                               CoglFramebuffer    *framebuffer);
-
-void    crank_render_process_render_color_list(CrankRenderProcess *process,
-                                               GList              *entities,
-                                               CrankTrans3        *position,
-                                               CrankProjection    *projection,
-                                               CoglFramebuffer    *framebuffer);
-
-void    crank_render_process_render_light_list (CrankRenderProcess *process,
-                                                GList              *entities,
-                                                CrankTrans3        *position,
-                                                CrankProjection    *projection,
-                                                CoglTexture        *tex_geom,
-                                                CoglTexture        *tex_color,
-                                                CoglTexture        *tex_mater,
-                                                CoglFramebuffer    *framebuffer);
-
 
 void    crank_render_process_render_geom_array(CrankRenderProcess *process,
                                                GPtrArray          *entities,
