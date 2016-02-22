@@ -147,13 +147,6 @@ static void
 crank_film_constructed (GObject *object)
 {
   CrankFilm *film = (CrankFilm*) object;
-
-  if (film->result_index == -1)
-    film->result_index = crank_film_index_of_layer_by_qname (film,
-                                                             g_quark_from_string ("result"));
-
-  if (film->result_index == -1)
-    film->result_index = film->layers->len - 1;
 }
 
 
@@ -264,6 +257,14 @@ crank_film_new_va (CrankRenderLayer *render_layer, va_list varargs)
     {
       g_ptr_array_add (self->layers, g_object_ref (render_layer));
     }
+
+  if (self->result_index == -1)
+    self->result_index = crank_film_index_of_layer_by_qname (self,
+                                                             g_quark_from_string ("result"));
+
+  if (self->result_index == -1)
+    self->result_index = self->layers->len - 1;
+
   return self;
 }
 
@@ -287,6 +288,14 @@ crank_film_new_with_layers (CrankRenderLayer **render_layers,
     {
       g_ptr_array_add (self->layers, g_object_ref (render_layers[i]));
     }
+
+  if (self->result_index == -1)
+    self->result_index = crank_film_index_of_layer_by_qname (self,
+                                                             g_quark_from_string ("result"));
+
+  if (self->result_index == -1)
+    self->result_index = self->layers->len - 1;
+
   return self;
 }
 
