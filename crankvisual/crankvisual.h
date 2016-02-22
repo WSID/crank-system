@@ -50,6 +50,7 @@
 
 #include "crankcamera.h"
 #include "crankrenderprocess.h"
+#include "crankrenderprocessdeferred.h"
 
 #include "crankrenderplacedata.h"
 #include "crankrendermodule.h"
