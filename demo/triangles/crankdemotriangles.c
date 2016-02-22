@@ -271,8 +271,7 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   // Adjust modules
   crank_render_module_set_process (app->rmodule,
                                    (CrankRenderProcess*)
-                                   g_object_new (CRANK_TYPE_RENDER_PROCESS,
-                                                 NULL));
+                                   crank_render_process_deferred_new ());
 
   // Make entities.
   app->place = crank_place3_new (app->pmodule);
