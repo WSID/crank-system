@@ -102,6 +102,9 @@ gint    crank_render_process_index_of_layer (CrankRenderProcess *process,
 
 
 
+guint   crank_render_process_get_result_layer_index (CrankRenderProcess *process);
+
+
 
 
 
@@ -181,6 +184,8 @@ void    crank_render_process_render_at (CrankRenderProcess *process,
 
 gboolean crank_render_process_render_for (CrankRenderProcess *process,
                                           CrankCamera        *camera);
+
+
 
 
 gboolean crank_render_process_check_layer (CrankRenderProcess *process,

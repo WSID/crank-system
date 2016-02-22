@@ -57,10 +57,41 @@ typedef struct _LayerDescriptor
 
 
 
+//////// List of virtual functions /////////////////////////////////////////////
+
+static void   crank_render_process_get_property (GObject    *object,
+                                                 guint       prop_id,
+                                                 GValue     *value,
+                                                 GParamSpec *pspec);
+
+
+
+
+
+
+
 //////// Private Functions /////////////////////////////////////////////////////
 
 static LayerDescriptor* crank_render_process_get_ld (CrankRenderProcess *process,
                                                      const guint         index);
+
+
+
+
+
+
+
+
+//////// Properties and signals ////////////////////////////////////////////////
+
+enum {
+  PROP_0,
+  PROP_RESULT_LAYER_INDEX,
+
+  PROP_COUNTS
+};
+
+static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 
 
@@ -98,9 +129,46 @@ crank_render_process_init (CrankRenderProcess *self)
 }
 
 static void
-crank_render_process_class_init (CrankRenderProcessClass *self)
+crank_render_process_class_init (CrankRenderProcessClass *c)
 {
+  GObjectClass *c_gobject = G_OBJECT_CLASS (c);
 
+  c_gobject->get_property = crank_render_process_get_property;
+
+  pspecs[PROP_RESULT_LAYER_INDEX] =
+  g_param_spec_uint ("result-layer-index", "Result layer index",
+                     "Index of resulting layer for presentation.",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+}
+
+
+
+
+
+
+
+//////// GObject ///////////////////////////////////////////////////////////////
+
+static void
+crank_render_process_get_property (GObject    *object,
+                                   guint       prop_id,
+                                   GValue     *value,
+                                   GParamSpec *pspec)
+{
+  CrankRenderProcess *self = (CrankRenderProcess*) object;
+
+  switch (prop_id)
+    {
+    case PROP_RESULT_LAYER_INDEX:
+      g_value_set_uint (value, crank_render_process_get_result_layer_index (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 
@@ -302,6 +370,13 @@ crank_render_process_index_of_layer (CrankRenderProcess *process,
     }
   return -1;
 }
+
+guint
+crank_render_process_get_result_layer_index (CrankRenderProcess *process)
+{
+  return 7;
+}
+
 
 
 
