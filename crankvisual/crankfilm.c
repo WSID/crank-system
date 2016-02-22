@@ -38,6 +38,7 @@
 #include <gio/gio.h>
 #include <cogl/cogl2-experimental.h>
 
+#include "crankrenderlayerarray.h"
 #include "crankrenderlayertexture.h"
 #include "crankfilm.h"
 
@@ -260,11 +261,16 @@ crank_film_new_old (CoglContext  *cogl_context,
                     const guint   height,
                     GError      **error)
 {
-  CrankRenderLayer *layers[6];
+  CrankRenderLayer *layers[8];
   GError *merr = NULL;
   guint i;
 
-  for (i = 0; i < 6;i++)
+  for (i = 0; i < 2;i++)
+    {
+      layers[i] = (CrankRenderLayer*) crank_render_layer_array_new ();
+    }
+
+  for (i = 2; i < 8;i++)
     {
       layers[i] = (CrankRenderLayer*) crank_render_layer_texture_new (cogl_context,
                                                                       width,
@@ -278,7 +284,18 @@ crank_film_new_old (CoglContext  *cogl_context,
           return NULL;
         }
     }
-  return crank_film_new_with_layers (layers, 6);
+
+  crank_render_layer_set_name (layers[0], "renderables");
+  crank_render_layer_set_name (layers[1], "lightables");
+
+  crank_render_layer_set_name (layers[2], "geom");
+  crank_render_layer_set_name (layers[3], "color");
+  crank_render_layer_set_name (layers[4], "mat");
+  crank_render_layer_set_name (layers[5], "light");
+  crank_render_layer_set_name (layers[6], "light-ex");
+  crank_render_layer_set_name (layers[7], "result");
+
+  return crank_film_new_with_layers (layers, 8);
 }
 
 //////// Properties ////////////////////////////////////////////////////////////
