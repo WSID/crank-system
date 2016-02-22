@@ -109,9 +109,9 @@ typedef struct _CrankRenderProcessPrivate
 CrankRenderProcessPrivate;
 
 
-G_DEFINE_TYPE_WITH_PRIVATE (CrankRenderProcess,
-                            crank_render_process,
-                            G_TYPE_OBJECT)
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (CrankRenderProcess,
+                                     crank_render_process,
+                                     G_TYPE_OBJECT)
 
 
 
@@ -706,65 +706,9 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                 CrankFilm          *film,
                                 const gint         *layer_map)
 {
-  CrankRenderLayerArray *layer_renderable;
-  CrankRenderLayerArray *layer_lightable;
+  CrankRenderProcessClass *c = CRANK_RENDER_PROCESS_GET_CLASS (process);
 
-  if (layer_map == NULL)
-    {
-      gint *layer_map_real = g_alloca (8 * sizeof (gint));
-      layer_map_real[0] = 0;
-      layer_map_real[1] = 1;
-      layer_map_real[2] = 2;
-      layer_map_real[3] = 3;
-      layer_map_real[4] = 4;
-      layer_map_real[5] = 5;
-      layer_map_real[6] = 6;
-      layer_map_real[7] = 7;
-
-      layer_map = layer_map_real;
-    }
-
-  layer_renderable =
-      (CrankRenderLayerArray*) crank_film_get_layer (film, layer_map[0]);
-
-  layer_lightable =
-      (CrankRenderLayerArray*) crank_film_get_layer (film, layer_map[1]);
-
-  g_ptr_array_set_size (layer_renderable->array, 0);
-  crank_render_process_get_culled_rarray (process, layer_renderable->array, place, position, projection);
-
-
-  crank_render_process_render_geom_array (process,
-                                         layer_renderable->array,
-                                         position,
-                                         projection,
-                                         crank_film_get_framebuffer (film, layer_map[2]));
-
-  crank_render_process_render_color_array (process,
-                                          layer_renderable->array,
-                                          position,
-                                          projection,
-                                          crank_film_get_framebuffer (film, layer_map[3]));
-
-  g_ptr_array_set_size (layer_lightable->array, 0);
-  crank_render_process_get_culled_larray (process, layer_lightable->array, place, position, projection);
-
-
-  crank_render_process_render_light_array (process,
-                                          layer_lightable->array,
-                                          position,
-                                          projection,
-                                          crank_film_get_texture (film, layer_map[2]),
-                                          crank_film_get_texture (film, layer_map[3]),
-                                          crank_film_get_texture (film, layer_map[4]),
-                                          crank_film_get_framebuffer (film, layer_map[7]));
-
-
-  // XXX: For now, rendering a color buffer on result buffer.
-
-  // TODO: Render to other buffers.
-  //
-  //
+  return c->render_at (process, place, position, projection, film, layer_map);
 }
 
 /**
@@ -784,34 +728,9 @@ gboolean
 crank_render_process_render_for (CrankRenderProcess *process,
                                  CrankCamera        *camera)
 {
-  CrankEntity3    *entity;
-  CrankPlace3     *place;
-  CrankTrans3      position;
-  CrankProjection *projection;
-  CrankFilm       *film;
+  CrankRenderProcessClass *c = CRANK_RENDER_PROCESS_GET_CLASS (process);
 
-  film = crank_camera_get_film (camera);
-  if (film == NULL)
-    return FALSE;
-
-  entity = crank_camera_get_entity (camera);
-  if (entity == NULL)
-    return FALSE;
-
-  place = (CrankPlace3*)crank_entity_get_primary_place ((CrankEntity*)entity);
-  if (place == NULL)
-    return FALSE;
-
-  projection = crank_camera_get_projection (camera);
-
-  crank_render_process_render_at (process,
-                                  place,
-                                  & entity->position,
-                                  projection,
-                                  film,
-                                  crank_camera_get_layer_map (camera, NULL));
-
-  return TRUE;
+  return c->render_for (process, camera);
 }
 
 

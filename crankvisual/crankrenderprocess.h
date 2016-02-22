@@ -62,7 +62,27 @@ G_DECLARE_DERIVABLE_TYPE (CrankRenderProcess,
  */
 struct _CrankRenderProcessClass
 {
+  /*< private >*/
   GObjectClass  _parent;
+
+
+  /*< public >*/
+  void      (*render_at)  (CrankRenderProcess *process,
+                           CrankPlace3        *place,
+                           CrankTrans3        *position,
+                           CrankProjection    *projection,
+                           CrankFilm          *film,
+                           const gint         *layer_map);
+
+
+  gboolean  (*render_for) (CrankRenderProcess *process,
+                           CrankCamera        *camera);
+
+
+  /*< private >*/
+  gpointer _DUMMY2;
+
+  gpointer _DUMMY3;
 };
 
 
