@@ -91,6 +91,10 @@ G_DEFINE_TYPE_WITH_PRIVATE (CrankRenderProcess,
 static void
 crank_render_process_init (CrankRenderProcess *self)
 {
+  CrankRenderProcessPrivate *priv;
+  priv = crank_render_process_get_instance_private (self);
+
+  priv->layer_descriptors = g_array_new (FALSE, FALSE, sizeof (LayerDescriptor));
 }
 
 static void
