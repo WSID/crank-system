@@ -39,6 +39,8 @@
 #include "crankrenderprocess.h"
 #include "crankcamera.h"
 
+#include "crankrenderlayer.h"
+#include "crankrenderlayerarray.h"
 
 
 //////// Private structures ////////////////////////////////////////////////////
@@ -71,7 +73,6 @@ static LayerDescriptor* crank_render_process_get_ld (CrankRenderProcess *process
 
 typedef struct _CrankRenderProcessPrivate
 {
-  GPtrArray *render_entities;
   GArray    *layer_descriptors;
 }
 CrankRenderProcessPrivate;
@@ -90,8 +91,6 @@ G_DEFINE_TYPE_WITH_PRIVATE (CrankRenderProcess,
 static void
 crank_render_process_init (CrankRenderProcess *self)
 {
-  G_PRIVATE_FIELD (CrankRenderProcess, self,
-                   GPtrArray*, render_entities) = g_ptr_array_new_full (1024, NULL);
 }
 
 static void
@@ -903,8 +902,8 @@ crank_render_process_render_at (CrankRenderProcess *process,
                                 CrankFilm          *film,
                                 const gint         *layer_map)
 {
-  GPtrArray *render_entities = G_PRIVATE_FIELD (CrankRenderProcess, process,
-                                                GPtrArray*, render_entities);
+  CrankRenderLayerArray *layer_renderable;
+  CrankRenderLayerArray *layer_lightable;
 
   if (layer_map == NULL)
     {
@@ -921,28 +920,34 @@ crank_render_process_render_at (CrankRenderProcess *process,
       layer_map = layer_map_real;
     }
 
-  g_ptr_array_set_size (render_entities, 0);
-  crank_render_process_get_culled_rarray (process, render_entities, place, position, projection);
+  layer_renderable =
+      (CrankRenderLayerArray*) crank_film_get_layer (film, layer_map[0]);
+
+  layer_lightable =
+      (CrankRenderLayerArray*) crank_film_get_layer (film, layer_map[1]);
+
+  g_ptr_array_set_size (layer_renderable->array, 0);
+  crank_render_process_get_culled_rarray (process, layer_renderable->array, place, position, projection);
 
 
   crank_render_process_render_geom_array (process,
-                                         render_entities,
+                                         layer_renderable->array,
                                          position,
                                          projection,
                                          crank_film_get_framebuffer (film, layer_map[2]));
 
   crank_render_process_render_color_array (process,
-                                          render_entities,
+                                          layer_renderable->array,
                                           position,
                                           projection,
                                           crank_film_get_framebuffer (film, layer_map[3]));
 
-  g_ptr_array_set_size (render_entities, 0);
-  crank_render_process_get_culled_larray (process, render_entities, place, position, projection);
+  g_ptr_array_set_size (layer_lightable->array, 0);
+  crank_render_process_get_culled_larray (process, layer_lightable->array, place, position, projection);
 
 
   crank_render_process_render_light_array (process,
-                                          render_entities,
+                                          layer_lightable->array,
                                           position,
                                           projection,
                                           crank_film_get_texture (film, layer_map[2]),
