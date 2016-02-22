@@ -31,7 +31,9 @@
 
 #include "crankprojection.h"
 #include "crankfilm.h"
+#include "crankrenderprocess.h"
 #include "crankcamera.h"
+#include "crankrendermodule.h"
 #include "crankcameracontent.h"
 
 /**
@@ -231,9 +233,12 @@ crank_camera_content_paint_content (ClutterContent   *content,
                                     ClutterPaintNode *node)
 {
   CrankCameraContent *ccontent = (CrankCameraContent*) content;
+  CrankRenderProcess *process;
   CrankFilm *film;
   ClutterPaintNode *child_node;
   ClutterActorBox actor_allocation;
+  const gint *layer_map;
+  guint result_layer_index;
 
   if (ccontent->camera == NULL)
     return;
@@ -243,8 +248,21 @@ crank_camera_content_paint_content (ClutterContent   *content,
   if (film == NULL)
     return;
 
+  process = crank_camera_get_render_process (ccontent->camera);
+
+  if (process == NULL)
+    {
+      CrankRenderModule *module = crank_camera_get_module (ccontent->camera);
+      process = crank_render_module_get_process (module);
+    }
+
+  result_layer_index = crank_render_process_get_result_layer_index (process);
+
+  layer_map = crank_camera_get_layer_map (ccontent->camera, NULL);
+  result_layer_index = (layer_map != NULL) ? layer_map[result_layer_index] : result_layer_index;
+
   child_node = clutter_texture_node_new (crank_film_get_texture (film,
-                                                                 crank_film_get_result_index (film)),
+                                                                 result_layer_index),
                                          NULL,
                                          CLUTTER_SCALING_FILTER_LINEAR,
                                          CLUTTER_SCALING_FILTER_LINEAR);
