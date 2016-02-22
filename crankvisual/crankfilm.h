@@ -96,6 +96,14 @@ gint                crank_film_index_of_layer_by_qname (CrankFilm    *film,
 
 
 
+//////// Result layers /////////////////////////////////////////////////////////
+
+guint               crank_film_get_result_index   (CrankFilm    *film);
+
+void                crank_film_set_result_index   (CrankFilm    *film,
+                                                   const guint   result_index);
+
+
 
 //////// Retrieve textures and framebuffers ////////////////////////////////////
 

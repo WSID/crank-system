@@ -51,6 +51,11 @@ static void     crank_film_get_property (GObject    *object,
                                          GValue     *value,
                                          GParamSpec *pspec);
 
+static void     crank_film_set_property (GObject      *object,
+                                         guint         prop_id,
+                                         const GValue *value,
+                                         GParamSpec   *pspec);
+
 static void     crank_film_dispose (GObject *object);
 
 
@@ -61,6 +66,7 @@ enum {
   PROP_NLAYERS,
   PROP_WIDTH,
   PROP_HEIGHT,
+  PROP_RESULT_INDEX,
 
   PROP_COUNTS
 };
@@ -77,6 +83,8 @@ struct _CrankFilm
   guint height;
 
   GPtrArray *layers;
+
+  gint       result_index;
 };
 
 G_DEFINE_TYPE (CrankFilm,
@@ -89,6 +97,7 @@ static void
 crank_film_init (CrankFilm *self)
 {
   self->layers = g_ptr_array_new_with_free_func (g_object_unref);
+  self->result_index = -1;
 }
 
 static void
@@ -100,6 +109,7 @@ crank_film_class_init (CrankFilmClass *c)
 
   c_gobject->constructed = crank_film_constructed;
   c_gobject->get_property = crank_film_get_property;
+  c_gobject->set_property = crank_film_set_property;
   c_gobject->dispose = crank_film_dispose;
 
   pspecs[PROP_NLAYERS] =
@@ -120,6 +130,12 @@ crank_film_class_init (CrankFilmClass *c)
                      0, G_MAXUINT, 0,
                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS );
 
+  pspecs[PROP_RESULT_INDEX] =
+  g_param_spec_uint ("result-index", "result",
+                     "Result index",
+                     0, G_MAXUINT, 0,
+                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS );
+
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
@@ -131,6 +147,13 @@ static void
 crank_film_constructed (GObject *object)
 {
   CrankFilm *film = (CrankFilm*) object;
+
+  if (film->result_index == -1)
+    film->result_index = crank_film_index_of_layer_by_qname (film,
+                                                             g_quark_from_string ("result"));
+
+  if (film->result_index == -1)
+    film->result_index = film->layers->len - 1;
 }
 
 
@@ -155,10 +178,34 @@ crank_film_get_property (GObject    *object,
       g_value_set_uint (value, film->height);
       break;
 
+    case PROP_RESULT_INDEX:
+      g_value_set_uint (value, film->result_index);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
+
+static void
+crank_film_set_property (GObject      *object,
+                         guint         prop_id,
+                         const GValue *value,
+                         GParamSpec   *pspec)
+{
+  CrankFilm *film = (CrankFilm*) object;
+  switch (prop_id)
+    {
+    case PROP_RESULT_INDEX:
+      crank_film_set_result_index (film, g_value_get_uint (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
 
 
 static void
@@ -341,6 +388,38 @@ guint
 crank_film_get_height (CrankFilm *film)
 {
   return film->height;
+}
+
+/**
+ * crank_film_get_result_index:
+ * @film: A Film.
+ *
+ * Gets index of result layer which is supposed to shown to users.
+ *
+ * Returns: Index of result layer.
+ */
+guint
+crank_film_get_result_index (CrankFilm *film)
+{
+  return film->result_index;
+}
+
+/**
+ * crank_film_set_result_index:
+ * @film: A Film.
+ * @result_index: Result layer.
+ *
+ * Sets index of result layer.
+ */
+void
+crank_film_set_result_index (CrankFilm   *film,
+                             const guint  result_index)
+{
+  if (film->result_index != result_index)
+    {
+      film->result_index = result_index;
+      g_object_notify_by_pspec ((GObject*)film, pspecs[PROP_RESULT_INDEX]);
+    }
 }
 
 
