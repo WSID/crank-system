@@ -393,6 +393,52 @@ crank_film_get_layer_by_qname (CrankFilm    *film,
   return NULL;
 }
 
+/**
+ * crank_film_index_of_layer:
+ * @film: A Film.
+ * @layer: A Layer.
+ *
+ * Gets index of layer.
+ *
+ * Returns: index of layer, or -1 if not found.
+ */
+gint
+crank_film_index_of_layer (CrankFilm        *film,
+                           CrankRenderLayer *layer)
+{
+  guint i;
+
+  for (i = 0; i < film->layers->len; i++)
+    {
+      if (film->layers->pdata[i] == layer)
+        return i;
+    }
+  return -1;
+}
+
+/**
+ * crank_film_index_of_layer_by_qname:
+ * @film: A Film.
+ * @name: Name of layer.
+ *
+ * Gets index of layer by its name.
+ *
+ * Returns: index of layer, or -1 if not found.
+ */
+gint
+crank_film_index_of_layer_by_qname (CrankFilm    *film,
+                                    const GQuark  name)
+{
+  guint i;
+
+  for (i = 0; i < film->layers->len; i++)
+    {
+      CrankRenderLayer *layer = film->layers->pdata[i];
+      if (crank_render_layer_get_qname (layer) == name)
+        return i;
+    }
+  return -1;
+}
 
 
 

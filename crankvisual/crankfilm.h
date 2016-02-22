@@ -86,6 +86,16 @@ CrankRenderLayer   *crank_film_get_layer          (CrankFilm    *film,
 CrankRenderLayer   *crank_film_get_layer_by_qname (CrankFilm    *film,
                                                    const GQuark  name);
 
+gint                crank_film_index_of_layer     (CrankFilm        *film,
+                                                   CrankRenderLayer *layer);
+
+gint                crank_film_index_of_layer_by_qname (CrankFilm    *film,
+                                                        const GQuark  name);
+
+
+
+
+
 
 //////// Retrieve textures and framebuffers ////////////////////////////////////
 
