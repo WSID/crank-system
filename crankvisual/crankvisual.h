@@ -30,6 +30,8 @@
 #include "crankvertexstruct.h"
 #include "crankmeshutil.h"
 
+#include "crankshaderhook.h"
+
 #include "crankvisible.h"
 
 #include "crankrenderable.h"
