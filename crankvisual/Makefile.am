@@ -13,8 +13,6 @@ visualinclude_HEADERS = \
 		crankvertexstruct.h \
 		crankmeshutil.h \
 		\
-		crankshaderhook.h \
-		\
 		crankvisible.h \
 		crankmaterial.h \
 		crankrenderable.h \
@@ -24,8 +22,6 @@ visualinclude_HEADERS = \
 		crankrenderlayer.h \
 		crankrenderlayerarray.h \
 		crankrenderlayertexture.h \
-		crankrenderstep.h \
-		crankrenderstepsimple.h \
 		\
 		crankrenderprocess.h \
 		crankrenderprocessdeferred.h \
@@ -64,8 +60,6 @@ libcrankvisual_la_SOURCES= \
 		crankvertexstruct.c \
 		crankmeshutil.c \
 		\
-		crankshaderhook.c \
-		\
 		crankvisible.c \
 		crankrenderable.c \
 		crankrenderableprimitive.c \
@@ -74,8 +68,6 @@ libcrankvisual_la_SOURCES= \
 		crankrenderlayer.c \
 		crankrenderlayerarray.c \
 		crankrenderlayertexture.c \
-		crankrenderstep.c \
-		crankrenderstepsimple.c \
 		crankmaterial.c \
 		crankcamera.c \
 		\
