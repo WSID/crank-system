@@ -40,6 +40,7 @@
 
 #include "crankrenderlayer.h"
 #include "crankrenderlayerarray.h"
+#include "crankrenderlayercluster.h"
 #include "crankrenderlayertexture.h"
 
 #include "crankmaterial.h"
