@@ -150,6 +150,6 @@ endif
 CLEANFILES = $(gir_DATA) $(typelib_DATA) $(vapi_DATA)
 
 # Extra dependency to regenerate crank-shape-0.0.vapi
-crank_shape_0_0.vapi: CrankShape-0.0.gir CrankShape-0.0-custom.vala
+crank-shape-0.0.vapi: CrankShape-0.0.gir CrankShape-0.0-custom.vala
 
 endif
