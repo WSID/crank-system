@@ -41,7 +41,7 @@
 
 #include "crankrenderlayer.h"
 #include "crankrenderlayerarray.h"
-
+#include "crankrenderlayercluster.h"
 
 #include "crankrenderprocessdeferred.h"
 
@@ -160,10 +160,12 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
   CrankRenderProcessDeferred *self;
   CrankRenderLayerArray *layer_renderable;
   CrankRenderLayerArray *layer_lightable;
+  CrankRenderLayerCluster *layer_cr;
+  CrankRenderLayerCluster *layer_cl;
 
   if (layer_map == NULL)
     {
-      gint *layer_map_real = g_alloca (8 * sizeof (gint));
+      gint *layer_map_real = g_alloca (10 * sizeof (gint));
       layer_map_real[0] = 0;
       layer_map_real[1] = 1;
       layer_map_real[2] = 2;
@@ -172,6 +174,8 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
       layer_map_real[5] = 5;
       layer_map_real[6] = 6;
       layer_map_real[7] = 7;
+      layer_map_real[8] = 8;
+      layer_map_real[9] = 9;
 
       layer_map = layer_map_real;
     }
@@ -182,34 +186,62 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
   layer_lightable =
       (CrankRenderLayerArray*) crank_film_get_layer (film, layer_map[1]);
 
+
   g_ptr_array_set_size (layer_renderable->array, 0);
   crank_render_process_deferred_get_culled_rarray (self, layer_renderable->array, place, position, projection);
 
+  g_ptr_array_set_size (layer_lightable->array, 0);
+  crank_render_process_deferred_get_culled_larray (self, layer_lightable->array, place, position, projection);
+
+    {
+      guint i;
+
+      layer_cr = (CrankRenderLayerCluster*) crank_film_get_layer (film, layer_map[2]);
+      layer_cl = (CrankRenderLayerCluster*) crank_film_get_layer (film, layer_map[3]);
+
+      crank_render_layer_cluster_clear (layer_cr);
+      crank_render_layer_cluster_clear (layer_cl);
+
+      for (i = 0; i < layer_renderable->array->len; i++)
+        {
+          CrankComposite *entity = layer_renderable->array->pdata[i];
+          CrankVisible   *visible = (CrankVisible*)
+            crank_composite_get_compositable_by_gtype (entity,
+                                                       CRANK_TYPE_RENDERABLE);
+          crank_render_layer_cluster_add_entity (layer_cr, (CrankEntity3*) entity, visible);
+        }
+
+      for (i = 0; i < layer_lightable->array->len; i++)
+        {
+          CrankComposite *entity = layer_lightable->array->pdata[i];
+          CrankVisible   *visible = (CrankVisible*)
+            crank_composite_get_compositable_by_gtype (entity,
+                                                       CRANK_TYPE_LIGHTABLE);
+          crank_render_layer_cluster_add_entity (layer_cl, (CrankEntity3*) entity, visible);
+        }
+    }
 
   crank_render_process_deferred_render_geom_array (self,
                                          layer_renderable->array,
                                          position,
                                          projection,
-                                         crank_film_get_framebuffer (film, layer_map[2]));
+                                         crank_film_get_framebuffer (film, layer_map[4]));
 
   crank_render_process_deferred_render_color_array (self,
                                           layer_renderable->array,
                                           position,
                                           projection,
-                                          crank_film_get_framebuffer (film, layer_map[3]));
-
-  g_ptr_array_set_size (layer_lightable->array, 0);
-  crank_render_process_deferred_get_culled_larray (self, layer_lightable->array, place, position, projection);
+                                          crank_film_get_framebuffer (film, layer_map[5]));
 
 
   crank_render_process_deferred_render_light_array (self,
                                           layer_lightable->array,
                                           position,
                                           projection,
-                                          crank_film_get_texture (film, layer_map[2]),
-                                          crank_film_get_texture (film, layer_map[3]),
                                           crank_film_get_texture (film, layer_map[4]),
-                                          crank_film_get_framebuffer (film, layer_map[7]));
+                                          crank_film_get_texture (film, layer_map[5]),
+                                          crank_film_get_texture (film, layer_map[6]),
+                                          crank_film_get_framebuffer (film, layer_map[9]));
 
 
   // XXX: For now, rendering a color buffer on result buffer.
