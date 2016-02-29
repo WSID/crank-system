@@ -220,11 +220,29 @@ crank_render_layer_cluster_constructed (GObject *object)
   GObjectClass *pc = crank_render_layer_cluster_parent_class;
   CrankRenderLayerCluster *self = (CrankRenderLayerCluster*) object;
 
+  guint i;
+  guint j;
+  guint k;
+
   pc->constructed (object);
 
   self->cluster = crank_cell_space3_new_with_size (self->width,
                                                    self->height,
                                                    self->depth);
+
+  for (i = 0; i < self->width; i++)
+    {
+      for (j = 0; j < self->height; j++)
+        {
+          for (k = 0; k < self->depth; k++)
+            {
+              crank_cell_space3_set_boxed (self->cluster,
+                                           i, j, k,
+                                           G_TYPE_PTR_ARRAY,
+                                           g_ptr_array_new () );
+            }
+        }
+    }
 
   self->planes_w = g_new (CrankPlane3, self->width);
   self->planes_h = g_new (CrankPlane3, self->height);
