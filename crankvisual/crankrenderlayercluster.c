@@ -144,6 +144,8 @@ crank_render_layer_cluster_class_init (CrankRenderLayerClusterClass *c)
   g_param_spec_uint ("depth", "depth", "Number of cluster cells from front to back.",
                      0, G_MAXUINT, 16,
                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS );
+
+  g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
 }
 
 
