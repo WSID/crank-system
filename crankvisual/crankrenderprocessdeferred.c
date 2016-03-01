@@ -162,6 +162,10 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
   CrankRenderLayerArray *layer_lightable;
   CrankRenderLayerCluster *layer_cr;
   CrankRenderLayerCluster *layer_cl;
+  CoglFramebuffer *fb = crank_film_get_framebuffer (film, 4);
+
+  guint fwidth = cogl_framebuffer_get_width (fb);
+  guint fheight = cogl_framebuffer_get_height (fb);
 
   if (layer_map == NULL)
     {
@@ -202,6 +206,9 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
       crank_render_layer_cluster_clear (layer_cr);
       crank_render_layer_cluster_clear (layer_cl);
 
+      crank_render_layer_cluster_prepare (layer_cr, position, projection);
+      crank_render_layer_cluster_prepare (layer_cl, position, projection);
+
       for (i = 0; i < layer_renderable->array->len; i++)
         {
           CrankComposite *entity = layer_renderable->array->pdata[i];
@@ -221,28 +228,27 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
         }
     }
 
-  crank_render_process_deferred_render_geom_array (self,
-                                         layer_renderable->array,
-                                         position,
-                                         projection,
-                                         crank_film_get_framebuffer (film, layer_map[4]));
+  crank_render_process_deferred_render_geom_cluster (self,
+                                                     layer_cr,
+                                                     position,
+                                                     projection,
+                                                     crank_film_get_framebuffer (film, layer_map[4]));
 
-  crank_render_process_deferred_render_color_array (self,
-                                          layer_renderable->array,
+  crank_render_process_deferred_render_color_cluster (self,
+                                                      layer_cr,
                                           position,
                                           projection,
                                           crank_film_get_framebuffer (film, layer_map[5]));
 
 
-  crank_render_process_deferred_render_light_array (self,
-                                          layer_lightable->array,
-                                          position,
-                                          projection,
-                                          crank_film_get_texture (film, layer_map[4]),
-                                          crank_film_get_texture (film, layer_map[5]),
-                                          crank_film_get_texture (film, layer_map[6]),
-                                          crank_film_get_framebuffer (film, layer_map[9]));
-
+  crank_render_process_deferred_render_light_cluster (self,
+                                                      layer_cl,
+                                                      position,
+                                                      projection,
+                                                      crank_film_get_texture (film, layer_map[4]),
+                                                      crank_film_get_texture (film, layer_map[5]),
+                                                      crank_film_get_texture (film, layer_map[6]),
+                                                      crank_film_get_framebuffer (film, layer_map[9]));
 
   // XXX: For now, rendering a color buffer on result buffer.
 
@@ -402,6 +408,191 @@ crank_render_process_deferred_get_culled_larray (CrankRenderProcessDeferred *pro
 
 
 
+
+
+void
+crank_render_process_deferred_render_geom_cluster (CrankRenderProcessDeferred *process,
+                                                   CrankRenderLayerCluster    *entities,
+                                                   CrankTrans3                *position,
+                                                   CrankProjection            *projection,
+                                                   CoglFramebuffer            *framebuffer)
+{
+  guint ni;
+  guint nj;
+  guint nk;
+  guint i;
+  guint j;
+  guint k;
+
+  guint w;
+  guint h;
+
+  w = cogl_framebuffer_get_width (framebuffer);
+  h = cogl_framebuffer_get_height (framebuffer);
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 1, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  ni = crank_render_layer_cluster_get_width (entities);
+  nj = crank_render_layer_cluster_get_height (entities);
+  nk = crank_render_layer_cluster_get_depth (entities);
+  for (i = 0; i < ni; i++)
+    {
+      guint xs = (w * (i)) / ni;
+      guint xe = (w * (i + 1)) / ni;
+
+      for (j = 0; j < nj; j++)
+        {
+          guint ys = (h * (j)) / nj;
+          guint ye = (h * (j + 1)) / nj;
+
+          //g_message ("%04u %04u    %04u %04u", xs, xe, ys, ye);
+
+          //cogl_framebuffer_push_scissor_clip (framebuffer, 0, w,
+          //                                                 0, h);
+          for (k = 0; k < nk; k++)
+            {
+              GPtrArray *array;
+
+              array = crank_render_layer_cluster_get_array (entities, i, j, k);
+
+              if (array->len != 0)
+              crank_render_process_deferred_render_geom_array (process, array, position, projection, framebuffer);
+
+            }
+          //cogl_framebuffer_pop_clip (framebuffer);
+        }
+    }
+}
+
+void
+crank_render_process_deferred_render_color_cluster(CrankRenderProcessDeferred *process,
+                                                   CrankRenderLayerCluster    *entities,
+                                                   CrankTrans3                *position,
+                                                   CrankProjection            *projection,
+                                                   CoglFramebuffer            *framebuffer)
+{
+  guint ni;
+  guint nj;
+  guint nk;
+  guint i;
+  guint j;
+  guint k;
+
+  guint w;
+  guint h;
+
+  w = cogl_framebuffer_get_width (framebuffer);
+  h = cogl_framebuffer_get_height (framebuffer);
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 1, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  ni = crank_render_layer_cluster_get_width (entities);
+  nj = crank_render_layer_cluster_get_height (entities);
+  nk = crank_render_layer_cluster_get_depth (entities);
+  for (i = 0; i < ni; i++)
+    {
+      guint xs = (w * (i)) / ni;
+      guint xe = (w * (i + 1)) / ni;
+
+      for (j = 0; j < nj; j++)
+        {
+          guint ys = (h * (j)) / nj;
+          guint ye = (h * (j + 1)) / nj;
+
+          //cogl_framebuffer_push_scissor_clip (framebuffer, 0, w, 0, h);
+          for (k = 0; k < nk; k++)
+            {
+              GPtrArray *array;
+
+              array = crank_render_layer_cluster_get_array (entities, i, j, k);
+
+
+              crank_render_process_deferred_render_geom_array (process, array, position, projection, framebuffer);
+
+            }
+          //cogl_framebuffer_pop_clip (framebuffer);
+        }
+    }
+}
+
+
+void
+crank_render_process_deferred_render_light_cluster(CrankRenderProcessDeferred *process,
+                                                   CrankRenderLayerCluster    *entities,
+                                                   CrankTrans3                *position,
+                                                   CrankProjection            *projection,
+                                                   CoglTexture                *tex_geom,
+                                                   CoglTexture                *tex_color,
+                                                   CoglTexture                *tex_mater,
+                                                   CoglFramebuffer            *framebuffer)
+{
+  guint ni;
+  guint nj;
+  guint nk;
+  guint i;
+  guint j;
+  guint k;
+
+  guint w;
+  guint h;
+
+  w = cogl_framebuffer_get_width (framebuffer);
+  h = cogl_framebuffer_get_height (framebuffer);
+
+  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
+                            0, 0, 1, 1);
+  cogl_framebuffer_set_projection_matrix (framebuffer,
+                                          (const CoglMatrix*) & projection->matrix_t);
+
+  ni = crank_render_layer_cluster_get_width (entities);
+  nj = crank_render_layer_cluster_get_height (entities);
+  nk = crank_render_layer_cluster_get_depth (entities);
+  for (i = 0; i < ni; i++)
+    {
+      guint xs = (w * (i)) / ni;
+      guint xe = (w * (i + 1)) / ni;
+
+      for (j = 0; j < nj; j++)
+        {
+          guint ys = (h * (j)) / nj;
+          guint ye = (h * (j + 1)) / nj;
+
+          //cogl_framebuffer_push_scissor_clip (framebuffer, 0, w, 0, h);
+          for (k = 0; k < nk; k++)
+            {
+              GPtrArray *array;
+
+              array = crank_render_layer_cluster_get_array (entities, i, j, k);
+
+
+              crank_render_process_deferred_render_light_array (process,
+                                                                array,
+                                                                position,
+                                                                projection,
+                                                                tex_geom,
+                                                                tex_color,
+                                                                tex_mater,
+                                                                framebuffer);
+
+            }
+          //cogl_framebuffer_pop_clip (framebuffer);
+        }
+    }
+}
+
+
+
+
+
+
+
+
 /**
  * crank_render_process_deferred_render_geom_array:
  * @process: A Module.
@@ -422,8 +613,6 @@ crank_render_process_deferred_render_geom_array(CrankRenderProcessDeferred *proc
   CrankTrans3 ipos;
   guint i;
 
-  cogl_framebuffer_clear4f (framebuffer, COGL_BUFFER_BIT_DEPTH | COGL_BUFFER_BIT_COLOR,
-                            0, 0, 1, 1);
   cogl_framebuffer_set_projection_matrix (framebuffer,
                                           (const CoglMatrix*) & projection->matrix_t);
 

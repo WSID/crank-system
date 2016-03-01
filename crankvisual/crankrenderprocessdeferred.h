@@ -37,6 +37,9 @@
 #include "crankcore.h"
 
 #include "crankprojection.h"
+
+#include "crankrenderlayercluster.h"
+
 #include "crankfilm.h"
 #include "crankcamera.h"
 
@@ -94,6 +97,27 @@ GPtrArray  *crank_render_process_deferred_get_culled_larray(CrankRenderProcessDe
                                                             CrankPlace3                *place,
                                                             CrankTrans3                *position,
                                                             CrankProjection            *projection);
+
+void    crank_render_process_deferred_render_geom_cluster(CrankRenderProcessDeferred *process,
+                                                          CrankRenderLayerCluster    *entities,
+                                                          CrankTrans3                *position,
+                                                          CrankProjection            *projection,
+                                                          CoglFramebuffer            *framebuffer);
+
+void    crank_render_process_deferred_render_color_cluster(CrankRenderProcessDeferred *process,
+                                                           CrankRenderLayerCluster    *entities,
+                                                           CrankTrans3                *position,
+                                                           CrankProjection            *projection,
+                                                           CoglFramebuffer            *framebuffer);
+
+void    crank_render_process_deferred_render_light_cluster(CrankRenderProcessDeferred *process,
+                                                           CrankRenderLayerCluster    *entities,
+                                                           CrankTrans3                *position,
+                                                           CrankProjection            *projection,
+                                                           CoglTexture                *tex_geom,
+                                                           CoglTexture                *tex_color,
+                                                           CoglTexture                *tex_mater,
+                                                           CoglFramebuffer            *framebuffer);
 
 void    crank_render_process_deferred_render_geom_array(CrankRenderProcessDeferred *process,
                                                         GPtrArray                  *entities,
