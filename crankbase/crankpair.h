@@ -88,6 +88,12 @@ void                crank_pair_uint_copy          (const CrankPairUint *pair,
 CrankPairUint      *crank_pair_uint_dup           (const CrankPairUint *pair);
 
 
+guint               crank_pair_uint_hash          (gconstpointer        key);
+
+gboolean            crank_pair_uint_equal         (gconstpointer        a,
+                                                   gconstpointer        b);
+
+
 
 void                crank_pair_uint_swap          (const CrankPairUint *a,
                                                    CrankPairUint       *r);
@@ -109,6 +115,12 @@ void                crank_pair_pointer_copy       (const CrankPairPointer *pair,
                                                    CrankPairPointer       *other);
 
 CrankPairPointer   *crank_pair_pointer_dup        (const CrankPairPointer *pair);
+
+
+guint               crank_pair_pointer_hash       (gconstpointer           key);
+
+gboolean            crank_pair_pointer_equal      (gconstpointer           a,
+                                                   gconstpointer           b);
 
 
 void                crank_pair_pointer_swap       (const CrankPairPointer *a,

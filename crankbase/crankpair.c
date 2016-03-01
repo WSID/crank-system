@@ -116,6 +116,52 @@ crank_pair_uint_dup (const CrankPairUint *pair)
 
 
 /**
+ * crank_pair_uint_hash:
+ * @key: (type CrankPairUint): A Pair.
+ *
+ * Gets hash value of pair.
+ *
+ * Returns: Hash value of pair, by its element values.
+ */
+guint
+crank_pair_uint_hash (gconstpointer key)
+{
+  const CrankPairUint *pair = key;
+
+  if (key == 0)
+    return 0;
+
+  return g_int_hash (& pair->a) * 37 +
+         g_int_hash (& pair->b);
+}
+
+/**
+ * crank_pair_uint_equal:
+ * @a: (type CrankPairUint): A Pair.
+ * @b: (type CrankPairUint): A Pair.
+ *
+ * Checks whether two pairs are equal.
+ *
+ * Returns: Whether two pairs are equal.
+ */
+gboolean
+crank_pair_uint_equal (gconstpointer a,
+                       gconstpointer b)
+{
+  const CrankPairUint *pa = a;
+  const CrankPairUint *pb = b;
+
+  if (a == b)
+    return TRUE;
+
+  if ((a == NULL) || (b == NULL))
+    return FALSE;
+
+  return (pa->a == pb->a) && (pa->b == pb->b);
+}
+
+
+/**
  * crank_pair_uint_swap:
  * @a: A Pair.
  * @r: (out): A Pair with swapped members.
@@ -207,6 +253,52 @@ crank_pair_pointer_dup (const CrankPairPointer *pair)
   CrankPairPointer *res = g_new (CrankPairPointer, 1);
   crank_pair_pointer_copy (pair, res);
   return res;
+}
+
+
+/**
+ * crank_pair_pointer_hash:
+ * @key: (type CrankPairPointer): A Pair.
+ *
+ * Gets hash value of pair. g_direct_hash() will be used for element.
+ *
+ * Returns: Hash value of pair, by its element values.
+ */
+guint
+crank_pair_pointer_hash (gconstpointer key)
+{
+  const CrankPairPointer *pair = key;
+
+  if (key == 0)
+    return 0;
+
+  return g_direct_hash (pair->a) * 37 +
+         g_direct_hash (pair->b);
+}
+
+/**
+ * crank_pair_pointer_equal:
+ * @a: (type CrankPairPointer): A Pair.
+ * @b: (type CrankPairPointer): A Pair.
+ *
+ * Checks whether two pairs are equal. Elements are compared directly.
+ *
+ * Returns: Whether two pairs are equal.
+ */
+gboolean
+crank_pair_pointer_equal (gconstpointer a,
+                          gconstpointer b)
+{
+  const CrankPairPointer *pa = a;
+  const CrankPairPointer *pb = b;
+
+  if (a == b)
+    return TRUE;
+
+  if ((a == NULL) || (b == NULL))
+    return FALSE;
+
+  return (pa->a == pb->a) && (pa->b == pb->b);
 }
 
 
