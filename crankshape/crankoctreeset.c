@@ -578,29 +578,11 @@ crank_octree_set_new (CrankBox3             *boundary,
                       gpointer               rad_func_data,
                       GDestroyNotify         rad_func_destroy)
 {
-  CrankOctreeSet *set = g_slice_new (CrankOctreeSet);
-
-  set->_refc = 1;
-  set->pos_func = pos_func;
-  set->pos_func_data = pos_func_data;
-  set->pos_func_destroy = pos_func_destroy;
-
-  set->rad_func = rad_func;
-  set->rad_func_data = rad_func_data;
-  set->rad_func_destroy = rad_func_destroy;
-
-  set->free_func = NULL;
-
-  set->root = crank_octree_set_node_alloc ();
-  crank_box3_copy (boundary, & set->root->boundary);
-
-  set->map_data_node = g_hash_table_new (g_direct_hash, g_direct_equal);
-
-  set->min_capacity = 5;
-  set->max_capacity = 10;
-  set->max_height = G_MAXUINT;
-
-  return set;
+  return crank_octree_set_new_full (boundary,
+                                    pos_func, pos_func_data, pos_func_destroy,
+                                    rad_func, rad_func_data, rad_func_destroy,
+                                    NULL,
+                                    g_direct_hash, g_direct_equal);
 }
 
 /**
@@ -612,6 +594,7 @@ crank_octree_set_new (CrankBox3             *boundary,
  * @rad_func: (scope notified): Radius function.
  * @rad_func_data: (closure rad_func): Userdata for @rad_func.
  * @rad_func_destroy: (destroy rad_func_destroy): Destroyer for @rad_func_data
+ * @free_func: (scope notified): A Free function.
  *
  * Constructs a octree with a free function.
  *
@@ -626,6 +609,42 @@ crank_octree_set_new_with_free_func (CrankBox3             *boundary,
                                      gpointer               rad_func_data,
                                      GDestroyNotify         rad_func_destroy,
                                      GDestroyNotify         free_func)
+{
+  return crank_octree_set_new_full (boundary,
+                                    pos_func, pos_func_data, pos_func_destroy,
+                                    rad_func, rad_func_data, rad_func_destroy,
+                                    free_func,
+                                    g_direct_hash, g_direct_equal);
+}
+
+/**
+ * crank_octree_set_new_full:
+ * @boundary: Boundary of octree.
+ * @pos_func: (scope notified): Position function.
+ * @pos_func_data: (closure pos_func): Userdata for @pos_func.
+ * @pos_func_destroy: (destroy pos_func_destroy): Destroyer for @pos_func_data
+ * @rad_func: (scope notified): Radius function.
+ * @rad_func_data: (closure rad_func): Userdata for @rad_func.
+ * @rad_func_destroy: (destroy rad_func_destroy): Destroyer for @rad_func_data
+ * @free_func: (scope notified): A Free Function.
+ * @hash_func: (scope notified): A Hash Function.
+ * @equal_func: (scope notified): A Equal Function.
+ *
+ * Constructs a octree with a free function.
+ *
+ * Returns: (transfer full): Newly constructed octree.
+ */
+CrankOctreeSet*
+crank_octree_set_new_full (CrankBox3             *boundary,
+                           CrankOctreePosFunc     pos_func,
+                           gpointer               pos_func_data,
+                           GDestroyNotify         pos_func_destroy,
+                           CrankOctreeRadiusFunc  rad_func,
+                           gpointer               rad_func_data,
+                           GDestroyNotify         rad_func_destroy,
+                           GDestroyNotify         free_func,
+                           GHashFunc              hash_func,
+                           GEqualFunc             equal_func)
 {
   CrankOctreeSet *set = g_slice_new (CrankOctreeSet);
 
@@ -643,7 +662,7 @@ crank_octree_set_new_with_free_func (CrankBox3             *boundary,
   set->root = crank_octree_set_node_alloc ();
   crank_box3_copy (boundary, & set->root->boundary);
 
-  set->map_data_node = g_hash_table_new (g_direct_hash, g_direct_equal);
+  set->map_data_node = g_hash_table_new (hash_func, equal_func);
 
   set->min_capacity = 5;
   set->max_capacity = 10;
@@ -651,6 +670,7 @@ crank_octree_set_new_with_free_func (CrankBox3             *boundary,
 
   return set;
 }
+
 
 /**
  * crank_octree_set_ref:

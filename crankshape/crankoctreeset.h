@@ -99,6 +99,17 @@ CrankOctreeSet *crank_octree_set_new_with_free_func (CrankBox3             *boun
                                                      GDestroyNotify         rad_func_destroy,
                                                      GDestroyNotify         free_func);
 
+CrankOctreeSet *crank_octree_set_new_full (CrankBox3             *boundary,
+                                           CrankOctreePosFunc     pos_func,
+                                           gpointer               pos_func_data,
+                                           GDestroyNotify         pos_func_destroy,
+                                           CrankOctreeRadiusFunc  rad_func,
+                                           gpointer               rad_func_data,
+                                           GDestroyNotify         rad_func_destroy,
+                                           GDestroyNotify         free_func,
+                                           GHashFunc              hash_func,
+                                           GEqualFunc             equal_func);
+
 CrankOctreeSet *crank_octree_set_ref (CrankOctreeSet *set);
 
 void            crank_octree_set_unref (CrankOctreeSet *set);
