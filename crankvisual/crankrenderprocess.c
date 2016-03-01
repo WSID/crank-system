@@ -374,7 +374,7 @@ crank_render_process_index_of_layer (CrankRenderProcess *process,
 guint
 crank_render_process_get_result_layer_index (CrankRenderProcess *process)
 {
-  return 7;
+  return 9;
 }
 
 
