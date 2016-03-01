@@ -38,6 +38,8 @@
 
 #include "crankprojection.h"
 
+#include "crankrenderable.h"
+
 #include "crankrenderlayercluster.h"
 
 #include "crankfilm.h"
@@ -143,18 +145,21 @@ void    crank_render_process_deferred_render_light_array(CrankRenderProcessDefer
 
 void    crank_render_process_deferred_render_geom_entity (CrankRenderProcessDeferred *process,
                                                           CrankEntity3               *entity,
+                                                          CrankRenderable            *renderable,
                                                           CrankTrans3                *ipos,
                                                           CrankProjection            *projection,
                                                           CoglFramebuffer            *framebuffer);
 
 void    crank_render_process_deferred_render_color_entity(CrankRenderProcessDeferred *process,
                                                           CrankEntity3               *entity,
+                                                          CrankRenderable            *renderable,
                                                           CrankTrans3                *ipos,
                                                           CrankProjection            *projection,
                                                           CoglFramebuffer            *framebuffer);
 
 void    crank_render_process_deferred_render_light_entity(CrankRenderProcessDeferred *process,
                                                           CrankEntity3               *entity,
+                                                          CrankLightable             *lightable,
                                                           CrankTrans3                *ipos,
                                                           CrankProjection            *projection,
                                                           CoglTexture                *tex_geom,

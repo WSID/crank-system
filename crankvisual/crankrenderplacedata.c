@@ -65,6 +65,10 @@ gboolean crank_render_place_data_removing (CrankCompositable  *compositable,
 
 
 
+
+
+
+
 //////// Private function for callback /////////////////////////////////////////
 
 CrankVecFloat3 *crank_render_place_data_get_pos (gpointer data,
@@ -72,6 +76,10 @@ CrankVecFloat3 *crank_render_place_data_get_pos (gpointer data,
 
 gfloat          crank_render_place_data_get_rad (gpointer data,
                                                  gpointer userdata);
+
+void            crank_render_place_data_free_pair (gpointer data);
+
+
 
 
 
@@ -97,6 +105,10 @@ G_DEFINE_TYPE_WITH_CODE (CrankRenderPlaceData,
                            crank_gtype_compositable_add_requisition (g_define_type_id,
                                                                      CRANK_TYPE_PLACE3);
                          })
+
+
+
+
 
 
 
@@ -132,6 +144,8 @@ void crank_render_place_data_class_init (CrankRenderPlaceDataClass *c)
 
   g_object_class_install_properties (c_gobject, PROP_PRIV_COUNTS, pspecs_priv);
 }
+
+
 
 
 
@@ -205,6 +219,10 @@ crank_render_place_data_finalize (GObject *object)
 
 
 
+
+
+
+
 //////// CrankCompositable /////////////////////////////////////////////////////
 
 gboolean
@@ -230,9 +248,11 @@ crank_render_place_data_adding (CrankCompositable  *compositable,
     {
       pdata->entity_counts[i] = g_hash_table_new (g_direct_hash, g_direct_equal);
 
-      pdata->entity_sets[i] = crank_octree_set_new (& place->boundary,
+      pdata->entity_sets[i] = crank_octree_set_new_full (& place->boundary,
             crank_render_place_data_get_pos, NULL, NULL,
-            crank_render_place_data_get_rad, NULL, NULL);
+            crank_render_place_data_get_rad, NULL, NULL,
+            crank_render_place_data_free_pair,
+            crank_pair_pointer_hash, crank_pair_pointer_equal);
     }
 
   return TRUE;
@@ -273,13 +293,19 @@ crank_render_place_data_removing (CrankCompositable  *compositable,
 
 
 
+
+
+
+
 //////// Private type callbacks ////////////////////////////////////////////////
 
 CrankVecFloat3*
 crank_render_place_data_get_pos (gpointer data,
-                           gpointer userdata)
+                                 gpointer userdata)
 {
-  CrankEntity3 *entity = (CrankEntity3*)data;
+  CrankPairPointer *pair = (CrankPairPointer*) data;
+  CrankEntity3 *entity = (CrankEntity3*)pair->a;
+
   return & entity->position.mtrans;
 }
 
@@ -287,15 +313,22 @@ gfloat
 crank_render_place_data_get_rad (gpointer data,
                             gpointer userdata)
 {
-  CrankEntity3 *entity = (CrankEntity3*)data;
-  CrankVisible *visible =
-    (CrankVisible*) crank_composite_get_compositable_by_gtype (
-        (CrankComposite*)entity,
-        CRANK_TYPE_VISIBLE  );
+  CrankPairPointer *pair = (CrankPairPointer*) data;
+  CrankEntity3 *entity = (CrankEntity3*)pair->a;
+  CrankVisible *visible = (CrankVisible*)pair->b;
 
   return entity->position.mscl *
          crank_visible_get_visible_radius (visible);
 }
+
+void
+crank_render_place_data_free_pair (gpointer data)
+{
+  g_slice_free (CrankPairPointer, data);
+}
+
+
+
 
 
 
@@ -311,12 +344,13 @@ crank_render_place_data_add_entity (CrankRenderPlaceData *pdata,
                                     CrankVisible         *visible,
                                     const guint           tindex)
 {
-  GHashTable *entity_count = pdata->entity_counts[tindex];
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
+  CrankPairPointer *pair = g_slice_new (CrankPairPointer);
 
-  if (crank_mset_add (entity_count, entity) == 1)
-    crank_octree_set_add (entity_set, entity);
+  pair->a = entity;
+  pair->b = visible;
 
+  crank_octree_set_add (entity_set, pair);
 }
 
 G_GNUC_INTERNAL void
@@ -325,12 +359,17 @@ crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
                                        CrankVisible         *visible,
                                        const guint           tindex)
 {
-  GHashTable *entity_count = pdata->entity_counts[tindex];
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
+  CrankPairPointer pair = {entity, visible};
 
-  if (crank_mset_remove (entity_count, entity) == 0)
-    crank_octree_set_remove (entity_set, entity);
+  crank_octree_set_remove (entity_set, &pair);
 }
+
+
+
+
+
+
 
 
 
@@ -346,7 +385,7 @@ crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
  *
  * Adds items to @entities, which is frustum culled.
  *
- * Returns: (transfer container) (element-type CrankEntity3): List of entities
+ * Returns: (transfer container) (element-type CrankPairPointer): List of entities
  *     which is culled.
  */
 GList*
@@ -369,7 +408,7 @@ crank_render_place_data_get_culled_list (CrankRenderPlaceData *pdata,
  *
  * Adds items to @entities, which is culled.
  *
- * Returns: (transfer none) (element-type CrankEntity3): @entities, with added entities.
+ * Returns: (transfer none) (element-type CrankPairPointer): @entities, with added entities.
  */
 GPtrArray*
 crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,

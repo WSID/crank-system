@@ -41,6 +41,7 @@
 
 #include "crankrenderlayer.h"
 #include "crankrenderlayerarray.h"
+#include "crankrenderlayervisible.h"
 #include "crankrenderlayercluster.h"
 
 #include "crankrenderprocessdeferred.h"
@@ -211,20 +212,14 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
 
       for (i = 0; i < layer_renderable->array->len; i++)
         {
-          CrankComposite *entity = layer_renderable->array->pdata[i];
-          CrankVisible   *visible = (CrankVisible*)
-            crank_composite_get_compositable_by_gtype (entity,
-                                                       CRANK_TYPE_RENDERABLE);
-          crank_render_layer_cluster_add_entity (layer_cr, (CrankEntity3*) entity, visible);
+          CrankPairPointer *pair = layer_renderable->array->pdata[i];
+          crank_render_layer_cluster_add_entity (layer_cr, pair);
         }
 
       for (i = 0; i < layer_lightable->array->len; i++)
         {
-          CrankComposite *entity = layer_lightable->array->pdata[i];
-          CrankVisible   *visible = (CrankVisible*)
-            crank_composite_get_compositable_by_gtype (entity,
-                                                       CRANK_TYPE_LIGHTABLE);
-          crank_render_layer_cluster_add_entity (layer_cl, (CrankEntity3*) entity, visible);
+          CrankPairPointer *pair = layer_lightable->array->pdata[i];
+          crank_render_layer_cluster_add_entity (layer_cl, pair);
         }
     }
 
@@ -241,8 +236,8 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
                                           crank_film_get_framebuffer (film, layer_map[5]));
 
 
-  crank_render_process_deferred_render_light_cluster (self,
-                                                      layer_cl,
+  crank_render_process_deferred_render_light_array (self,
+                                                      layer_lightable->array,
                                                       position,
                                                       projection,
                                                       crank_film_get_texture (film, layer_map[4]),
@@ -329,7 +324,7 @@ crank_render_process_deferred_new (void)
 /**
  * crank_render_process_deferred_get_culled_array:
  * @process: A Module.
- * @entities: (transfer none) (element-type CrankEntity3): Entitiy array.
+ * @entities: (transfer none) (element-type CrankPairPointer): Entitiy array.
  * @place: A Place.
  * @position: A Position.
  * @projection: A Projection.
@@ -337,7 +332,7 @@ crank_render_process_deferred_new (void)
  *
  * Gets culled list of entities.
  *
- * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ * Returns: (transfer none) (element-type CrankPairPointer): @entities.
  */
 GPtrArray*
 crank_render_process_deferred_get_culled_array (CrankRenderProcessDeferred *process,
@@ -361,14 +356,14 @@ crank_render_process_deferred_get_culled_array (CrankRenderProcessDeferred *proc
 /**
  * crank_render_process_deferred_get_culled_rarray:
  * @process: A Module.
- * @entities: (transfer none) (element-type CrankEntity3): Entitiy array.
+ * @entities: (transfer none) (element-type CrankPairPointer): Entitiy array.
  * @place: A Place.
  * @position: A Position.
  * @projection: A Projection.
  *
  * Gets culled list of entities.
  *
- * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ * Returns: (transfer none) (element-type CrankPairPointer): @entities.
  */
 GPtrArray*
 crank_render_process_deferred_get_culled_rarray (CrankRenderProcessDeferred *process,
@@ -383,14 +378,14 @@ crank_render_process_deferred_get_culled_rarray (CrankRenderProcessDeferred *pro
 /**
  * crank_render_process_deferred_get_culled_larray:
  * @process: A Module.
- * @entities: (transfer none) (element-type CrankEntity3): Entity array.
+ * @entities: (transfer none) (element-type CrankPairPointer): Entity array.
  * @place: A Place.
  * @position: A Position.
  * @projection: A Projection.
  *
  * Gets culled list of entities.
  *
- * Returns: (transfer none) (element-type CrankEntity3): @entities.
+ * Returns: (transfer none) (element-type CrankPairPointer): @entities.
  */
 GPtrArray*
 crank_render_process_deferred_get_culled_larray (CrankRenderProcessDeferred *process,
@@ -447,11 +442,6 @@ crank_render_process_deferred_render_geom_cluster (CrankRenderProcessDeferred *p
         {
           guint ys = (h * (j)) / nj;
           guint ye = (h * (j + 1)) / nj;
-
-          //g_message ("%04u %04u    %04u %04u", xs, xe, ys, ye);
-
-          //cogl_framebuffer_push_scissor_clip (framebuffer, 0, w,
-          //                                                 0, h);
           for (k = 0; k < nk; k++)
             {
               GPtrArray *array;
@@ -462,7 +452,6 @@ crank_render_process_deferred_render_geom_cluster (CrankRenderProcessDeferred *p
               crank_render_process_deferred_render_geom_array (process, array, position, projection, framebuffer);
 
             }
-          //cogl_framebuffer_pop_clip (framebuffer);
         }
     }
 }
@@ -505,7 +494,6 @@ crank_render_process_deferred_render_color_cluster(CrankRenderProcessDeferred *p
           guint ys = (h * (j)) / nj;
           guint ye = (h * (j + 1)) / nj;
 
-          //cogl_framebuffer_push_scissor_clip (framebuffer, 0, w, 0, h);
           for (k = 0; k < nk; k++)
             {
               GPtrArray *array;
@@ -516,7 +504,6 @@ crank_render_process_deferred_render_color_cluster(CrankRenderProcessDeferred *p
               crank_render_process_deferred_render_geom_array (process, array, position, projection, framebuffer);
 
             }
-          //cogl_framebuffer_pop_clip (framebuffer);
         }
     }
 }
@@ -596,7 +583,7 @@ crank_render_process_deferred_render_light_cluster(CrankRenderProcessDeferred *p
 /**
  * crank_render_process_deferred_render_geom_array:
  * @process: A Module.
- * @entities: (element-type CrankEntity3): entities.
+ * @entities: (element-type CrankPairPointer): entities.
  * @position: A Position
  * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
@@ -620,15 +607,17 @@ crank_render_process_deferred_render_geom_array(CrankRenderProcessDeferred *proc
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      crank_render_process_deferred_render_geom_entity (process, entity, &ipos, projection, framebuffer);
+      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
+      CrankEntity3 *entity = pair->a;
+      CrankRenderable *renderable = pair->b;
+      crank_render_process_deferred_render_geom_entity (process, entity, renderable, &ipos, projection, framebuffer);
     }
 }
 
 /**
  * crank_render_process_deferred_render_color_array:
  * @process: A Module.
- * @entities: (element-type CrankEntity3): entities.
+ * @entities: (element-type CrankPairPointer): entities.
  * @position: A Position
  * @projection: A Projection.
  * @framebuffer: A Framebuffer to render.
@@ -654,8 +643,10 @@ crank_render_process_deferred_render_color_array(CrankRenderProcessDeferred *pro
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      crank_render_process_deferred_render_color_entity (process, entity, &ipos, projection, framebuffer);
+      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
+      CrankEntity3 *entity = pair->a;
+      CrankRenderable *renderable = pair->b;
+      crank_render_process_deferred_render_color_entity (process, entity, renderable, &ipos, projection, framebuffer);
     }
 }
 
@@ -694,8 +685,10 @@ crank_render_process_deferred_render_light_array (CrankRenderProcessDeferred *pr
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankEntity3 *entity = (CrankEntity3*) entities->pdata[i];
-      crank_render_process_deferred_render_light_entity (process, entity, &ipos, projection, tex_geom, tex_color, tex_mater, framebuffer);
+      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
+      CrankEntity3 *entity = pair->a;
+      CrankLightable *lightable = pair->b;
+      crank_render_process_deferred_render_light_entity (process, entity, lightable, &ipos, projection, tex_geom, tex_color, tex_mater, framebuffer);
     }
 }
 
@@ -713,6 +706,7 @@ crank_render_process_deferred_render_light_array (CrankRenderProcessDeferred *pr
 void
 crank_render_process_deferred_render_geom_entity(CrankRenderProcessDeferred *process,
                                                  CrankEntity3               *entity,
+                                                 CrankRenderable            *renderable,
                                                  CrankTrans3                *ipos,
                                                  CrankProjection            *projection,
                                                  CoglFramebuffer            *framebuffer)
@@ -721,17 +715,7 @@ crank_render_process_deferred_render_geom_entity(CrankRenderProcessDeferred *pro
   guint n;
   CrankTrans3 rpos;
   crank_trans3_compose (ipos, & entity->position, &rpos);
-
-  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
-  for (i = 0; i < n; i++)
-    {
-      CrankCompositable *compositable =
-          crank_composite_get_compositable ((CrankComposite*)entity, i);
-
-      if (CRANK_IS_RENDERABLE (compositable))
-        crank_renderable_render_geom ((CrankRenderable*)compositable,
-                                      &rpos, projection, framebuffer);
-    }
+  crank_renderable_render_geom (renderable, &rpos, projection, framebuffer);
 }
 
 /**
@@ -747,6 +731,7 @@ crank_render_process_deferred_render_geom_entity(CrankRenderProcessDeferred *pro
 void
 crank_render_process_deferred_render_color_entity(CrankRenderProcessDeferred *process,
                                                   CrankEntity3               *entity,
+                                                  CrankRenderable            *renderable,
                                                   CrankTrans3                *ipos,
                                                   CrankProjection            *projection,
                                                   CoglFramebuffer            *framebuffer)
@@ -755,17 +740,7 @@ crank_render_process_deferred_render_color_entity(CrankRenderProcessDeferred *pr
   guint n;
   CrankTrans3 rpos;
   crank_trans3_compose (ipos, & entity->position, &rpos);
-
-  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
-  for (i = 0; i < n; i++)
-    {
-      CrankCompositable *compositable =
-          crank_composite_get_compositable ((CrankComposite*)entity, i);
-
-      if (CRANK_IS_RENDERABLE (compositable))
-        crank_renderable_render_color ((CrankRenderable*)compositable,
-                                      &rpos, projection, framebuffer);
-    }
+  crank_renderable_render_color (renderable, &rpos, projection, framebuffer);
 }
 
 /**
@@ -784,6 +759,7 @@ crank_render_process_deferred_render_color_entity(CrankRenderProcessDeferred *pr
 void
 crank_render_process_deferred_render_light_entity(CrankRenderProcessDeferred *process,
                                                   CrankEntity3               *entity,
+                                                  CrankLightable             *lightable,
                                                   CrankTrans3                *ipos,
                                                   CrankProjection            *projection,
                                                   CoglTexture                *tex_geom,
@@ -795,15 +771,6 @@ crank_render_process_deferred_render_light_entity(CrankRenderProcessDeferred *pr
   guint n;
   CrankTrans3 rpos;
   crank_trans3_compose (ipos, & entity->position, &rpos);
-
-  n = crank_composite_get_ncompositables ((CrankComposite*)entity);
-  for (i = 0; i < n; i++)
-    {
-      CrankCompositable *compositable =
-          crank_composite_get_compositable ((CrankComposite*)entity, i);
-
-      if (CRANK_IS_LIGHTABLE (compositable))
-        crank_lightable_render ((CrankLightable*) compositable,
-                                &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
-    }
+  crank_lightable_render (lightable,
+                          &rpos, projection, tex_geom, tex_color, tex_mater, 1, framebuffer);
 }

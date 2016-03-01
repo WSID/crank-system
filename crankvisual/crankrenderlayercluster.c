@@ -529,9 +529,11 @@ crank_render_layer_cluster_prepare (CrankRenderLayerCluster *layer,
 
 void
 crank_render_layer_cluster_add_entity (CrankRenderLayerCluster *layer,
-                                       CrankEntity3            *entity,
-                                       CrankVisible            *visible)
+                                       CrankPairPointer        *pair)
 {
+  CrankEntity3 *entity = pair->a;
+  CrankVisible *visible = pair->b;
+
   guint wfrom;
   guint wto;
 
@@ -576,7 +578,7 @@ crank_render_layer_cluster_add_entity (CrankRenderLayerCluster *layer,
           for (k = dfrom; k < dto; k++)
             {
               GPtrArray *array = crank_render_layer_cluster_get_array (layer, i, j, k);
-              g_ptr_array_add (array, entity);
+              g_ptr_array_add (array, pair);
             }
         }
     }

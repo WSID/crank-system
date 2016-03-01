@@ -122,8 +122,7 @@ void        crank_render_layer_cluster_prepare      (CrankRenderLayerCluster *la
 //////// Operations ////////////////////////////////////////////////////////////
 
 void        crank_render_layer_cluster_add_entity   (CrankRenderLayerCluster *layer,
-                                                     CrankEntity3            *entity,
-                                                     CrankVisible            *visible);
+                                                     CrankPairPointer        *pair);
 
 GPtrArray*  crank_render_layer_cluster_get_array    (CrankRenderLayerCluster *layer,
                                                      const guint              wi,
