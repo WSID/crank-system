@@ -137,3 +137,9 @@ crank_render_layer_visible_add_visible_at (CrankRenderLayerVisible *layer,
 
   g_array_append_val (layer->array, element);
 }
+
+void
+crank_render_layer_visible_clean (CrankRenderLayerVisible *layer)
+{
+  g_array_set_size (layer->array, 0);
+}

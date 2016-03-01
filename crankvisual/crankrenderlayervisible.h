@@ -90,5 +90,6 @@ crank_render_layer_visible_add_visible_at (CrankRenderLayerVisible *layer,
                                            CrankVisible            *visible,
                                            CrankTrans3             *position);
 
-
+void
+crank_render_layer_visible_clean (CrankRenderLayerVisible *layer);
 #endif
