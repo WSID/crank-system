@@ -98,13 +98,9 @@ struct _CrankRenderPlaceData
   guint           nentity_sets;
 };
 
-G_DEFINE_TYPE_WITH_CODE (CrankRenderPlaceData,
-                         crank_render_place_data,
-                         CRANK_TYPE_COMPOSITABLE,
-                         {
-                           crank_gtype_compositable_add_requisition (g_define_type_id,
-                                                                     CRANK_TYPE_PLACE3);
-                         })
+G_DEFINE_TYPE (CrankRenderPlaceData,
+               crank_render_place_data,
+               CRANK_TYPE_COMPOSITABLE)
 
 
 
@@ -143,6 +139,10 @@ void crank_render_place_data_class_init (CrankRenderPlaceDataClass *c)
                          G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_PRIV_COUNTS, pspecs_priv);
+
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_PLACE3);
 }
 
 

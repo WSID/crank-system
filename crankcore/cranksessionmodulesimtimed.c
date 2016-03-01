@@ -83,15 +83,9 @@ typedef struct _CrankSessionModuleSimTimedPrivate
   guint   sim_steps;
 } CrankSessionModuleSimTimedPrivate;
 
-G_DEFINE_TYPE_WITH_CODE (CrankSessionModuleSimTimed,
-                         crank_session_module_sim_timed,
-                         CRANK_TYPE_COMPOSITABLE_1N,
-                         {
-                          G_ADD_PRIVATE (CrankSessionModuleSimTimed);
-                          crank_gtype_compositable_add_requisition (
-                            g_define_type_id,
-                            CRANK_TYPE_SESSION);
-                         })
+G_DEFINE_TYPE (CrankSessionModuleSimTimed,
+               crank_session_module_sim_timed,
+               CRANK_TYPE_COMPOSITABLE_1N)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -106,6 +100,7 @@ static void
 crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
 {
   GObjectClass *c_gobject;
+  CrankCompositableClass *c_compositable;
 
   c_gobject = G_OBJECT_CLASS (c);
   c_gobject->get_property = crank_session_module_sim_timed_get_property;
@@ -126,6 +121,12 @@ crank_session_module_sim_timed_class_init (CrankSessionModuleSimTimedClass *c)
                                               G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+  c_compositable = CRANK_COMPOSITABLE_CLASS (c);
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION);
 
   c->flow_time = crank_session_module_sim_timed_def_flow_time;
 

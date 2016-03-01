@@ -140,6 +140,7 @@ static void
 crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  CrankCompositableClass *c_compositable = CRANK_COMPOSITABLE_CLASS (c);
 
   c_gobject->constructed =crank_session_module_placed_constructed;
   c_gobject->get_property = crank_session_module_placed_get_property;
@@ -161,6 +162,11 @@ crank_session_module_placed_class_init (CrankSessionModulePlacedClass *c)
                       G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION);
 
 
   /**

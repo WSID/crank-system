@@ -138,22 +138,9 @@ struct _CrankRenderModule
   CrankRenderProcess *process;
 };
 
-G_DEFINE_TYPE_WITH_CODE (CrankRenderModule,
-                         crank_render_module,
-                         CRANK_TYPE_COMPOSITABLE_1N,
-                         {
-                          crank_gtype_compositable_add_requisition (
-                              g_define_type_id,
-                              CRANK_TYPE_SESSION);
-
-                          crank_gtype_compositable_add_requisition (
-                              g_define_type_id,
-                              CRANK_TYPE_SESSION_MODULE_PLACED);
-
-                          crank_gtype_compositable_add_requisition (
-                              g_define_type_id,
-                              CRANK_TYPE_SESSION_MODULE_TICK);
-                         })
+G_DEFINE_TYPE (CrankRenderModule,
+               crank_render_module,
+               CRANK_TYPE_COMPOSITABLE_1N)
 
 
 
@@ -214,6 +201,16 @@ crank_render_module_class_init (CrankRenderModuleClass *c)
   c_compositable = CRANK_COMPOSITABLE_CLASS (c);
   c_compositable->adding = crank_render_module_adding;
   c_compositable->removing = crank_render_module_removing;
+
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION);
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION_MODULE_TICK);
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION_MODULE_PLACED);
 }
 
 

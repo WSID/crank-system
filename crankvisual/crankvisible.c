@@ -63,13 +63,9 @@ static GParamSpec *pspecs[PROP_COUNTS] = {NULL};
 
 //////// Type Definition ///////////////////////////////////////////////////////
 
-G_DEFINE_ABSTRACT_TYPE_WITH_CODE (CrankVisible,
-                                  crank_visible,
-                                  CRANK_TYPE_COMPOSITABLE,
-                                  {
-                                    crank_gtype_compositable_add_requisition (
-                                        g_define_type_id, CRANK_TYPE_ENTITY3  );
-                                  });
+G_DEFINE_ABSTRACT_TYPE (CrankVisible,
+                        crank_visible,
+                        CRANK_TYPE_COMPOSITABLE);
 
 
 
@@ -85,6 +81,7 @@ static void
 crank_visible_class_init (CrankVisibleClass *c)
 {
   GObjectClass *c_gobject = G_OBJECT_CLASS (c);
+  CrankCompositableClass *c_compositable = CRANK_COMPOSITABLE_CLASS (c);
 
   c_gobject->get_property = crank_visible_get_property;
 
@@ -96,6 +93,9 @@ crank_visible_class_init (CrankVisibleClass *c)
                                                     G_PARAM_STATIC_STRINGS );
 
   g_object_class_install_properties (c_gobject, PROP_COUNTS, pspecs);
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_ENTITY3);
 }
 
 

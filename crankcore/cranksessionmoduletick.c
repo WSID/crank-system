@@ -107,14 +107,9 @@ struct _CrankSessionModuleTick {
   GSource      *tick_source;
 };
 
-G_DEFINE_TYPE_WITH_CODE (CrankSessionModuleTick,
-                         crank_session_module_tick,
-                         CRANK_TYPE_COMPOSITABLE,
-                         {
-                          crank_gtype_compositable_add_requisition (
-                              g_define_type_id,
-                              CRANK_TYPE_SESSION);
-                         })
+G_DEFINE_TYPE (CrankSessionModuleTick,
+               crank_session_module_tick,
+               CRANK_TYPE_COMPOSITABLE)
 
 
 //////// GTypeInstance /////////////////////////////////////////////////////////
@@ -153,6 +148,9 @@ crank_session_module_tick_class_init (CrankSessionModuleTickClass *c)
 
   c_compositable->adding = crank_session_module_tick_adding;
   c_compositable->removing = crank_session_module_tick_removing;
+
+  crank_compositable_class_add_requisition (c_compositable,
+                                            CRANK_TYPE_SESSION);
 
   /**
    * CrankSessionModuleTick::tick:

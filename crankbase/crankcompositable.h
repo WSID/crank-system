@@ -73,23 +73,30 @@ struct _CrankCompositableClass
 };
 
 
-//////// Type Functions ////////////////////////////////////////////////////////
-
-void      crank_gtype_compositable_add_requisition        (GType  type,
-                                                           GType  req);
-
-gboolean  crank_gtype_compositable_is_required            (GType  type,
-                                                           GType  req);
 
 
-GType    *crank_gtype_compositable_get_req_composite      (GType  type,
-                                                           guint *nreq);
 
-GType    *crank_gtype_compositable_get_req_compositable   (GType  type,
-                                                           guint *nreq);
 
-GType    *crank_gtype_compositable_get_requisitions       (GType  type,
-                                                           guint *nreq);
+
+
+
+//////// Class Functions ///////////////////////////////////////////////////////
+
+void      crank_compositable_class_add_requisition     (CrankCompositableClass *c,
+                                                        const GType             req);
+
+gboolean  crank_compositable_class_is_required         (CrankCompositableClass *c,
+                                                        const GType             req);
+
+GType    *crank_compositable_class_get_req_composite   (CrankCompositableClass *c,
+                                                        guint                  *nreq);
+
+GType    *crank_compositable_class_get_req_compositable(CrankCompositableClass *c,
+                                                        guint                  *nreq);
+
+GType    *crank_compositable_class_get_requisitions    (CrankCompositableClass *c,
+                                                        guint                  *nreq);
+
 
 
 
