@@ -150,6 +150,8 @@ struct _CrankOctreeSet
   gpointer               rad_func_data;
   GDestroyNotify         rad_func_destroy;
 
+  GDestroyNotify      free_func;
+
   CrankOctreeSetNode  *root;
   GHashTable          *map_data_node;
 
@@ -290,6 +292,7 @@ crank_octree_set_node_remove (CrankOctreeSetNode *node,
   CrankOctreeSetNode *niter;
   CrankOctreeSetNode *join_node;
 
+  if (set->free_func != NULL) set->free_func (data);
   g_hash_table_remove (set->map_data_node, data);
 
   for (niter = node; niter != NULL; niter = niter->parent)
@@ -586,6 +589,57 @@ crank_octree_set_new (CrankBox3             *boundary,
   set->rad_func_data = rad_func_data;
   set->rad_func_destroy = rad_func_destroy;
 
+  set->free_func = NULL;
+
+  set->root = crank_octree_set_node_alloc ();
+  crank_box3_copy (boundary, & set->root->boundary);
+
+  set->map_data_node = g_hash_table_new (g_direct_hash, g_direct_equal);
+
+  set->min_capacity = 5;
+  set->max_capacity = 10;
+  set->max_height = G_MAXUINT;
+
+  return set;
+}
+
+/**
+ * crank_octree_set_new_with_free_func:
+ * @boundary: Boundary of octree.
+ * @pos_func: (scope notified): Position function.
+ * @pos_func_data: (closure pos_func): Userdata for @pos_func.
+ * @pos_func_destroy: (destroy pos_func_destroy): Destroyer for @pos_func_data
+ * @rad_func: (scope notified): Radius function.
+ * @rad_func_data: (closure rad_func): Userdata for @rad_func.
+ * @rad_func_destroy: (destroy rad_func_destroy): Destroyer for @rad_func_data
+ *
+ * Constructs a octree with a free function.
+ *
+ * Returns: (transfer full): Newly constructed octree.
+ */
+CrankOctreeSet*
+crank_octree_set_new_with_free_func (CrankBox3             *boundary,
+                                     CrankOctreePosFunc     pos_func,
+                                     gpointer               pos_func_data,
+                                     GDestroyNotify         pos_func_destroy,
+                                     CrankOctreeRadiusFunc  rad_func,
+                                     gpointer               rad_func_data,
+                                     GDestroyNotify         rad_func_destroy,
+                                     GDestroyNotify         free_func)
+{
+  CrankOctreeSet *set = g_slice_new (CrankOctreeSet);
+
+  set->_refc = 1;
+  set->pos_func = pos_func;
+  set->pos_func_data = pos_func_data;
+  set->pos_func_destroy = pos_func_destroy;
+
+  set->rad_func = rad_func;
+  set->rad_func_data = rad_func_data;
+  set->rad_func_destroy = rad_func_destroy;
+
+  set->free_func = free_func;
+
   set->root = crank_octree_set_node_alloc ();
   crank_box3_copy (boundary, & set->root->boundary);
 
@@ -664,6 +718,20 @@ crank_octree_set_get_boundary (CrankOctreeSet *set,
   crank_box3_copy (& set->root->boundary, boundary);
 }
 
+/**
+ * crank_octree_set_set_free_func:
+ * @set: An Octree set.
+ * @free_func: (scope call): A Free function for each elements.
+ *
+ * Sets Free function for element.
+ */
+void
+crank_octree_set_set_free_func (CrankOctreeSet *set,
+                                GDestroyNotify  free_func)
+{
+  set->free_func = free_func;
+}
+
 
 
 //////// Element Add/Remove ////////////////////////////////////////////////////
@@ -719,6 +787,8 @@ crank_octree_set_remove_all (CrankOctreeSet *set)
 {
   crank_octree_set_node_dealloc_all (set->root);
 
+  if (set->free_func != NULL)
+    g_hash_table_foreach (set->map_data_node, (GHFunc) set->free_func, NULL);
   g_hash_table_remove_all (set->map_data_node);
 
   set->root = crank_octree_set_node_alloc ();

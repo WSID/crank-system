@@ -90,6 +90,15 @@ CrankOctreeSet *crank_octree_set_new (CrankBox3            *boundary,
                                       gpointer              rad_func_data,
                                       GDestroyNotify        rad_func_destroy);
 
+CrankOctreeSet *crank_octree_set_new_with_free_func (CrankBox3             *boundary,
+                                                     CrankOctreePosFunc     pos_func,
+                                                     gpointer               pos_func_data,
+                                                     GDestroyNotify         pos_func_destroy,
+                                                     CrankOctreeRadiusFunc  rad_func,
+                                                     gpointer               rad_func_data,
+                                                     GDestroyNotify         rad_func_destroy,
+                                                     GDestroyNotify         free_func);
+
 CrankOctreeSet *crank_octree_set_ref (CrankOctreeSet *set);
 
 void            crank_octree_set_unref (CrankOctreeSet *set);
@@ -101,6 +110,10 @@ guint       crank_octree_set_get_size (CrankOctreeSet *set);
 
 void        crank_octree_set_get_boundary (CrankOctreeSet *set,
                                            CrankBox3      *boundary);
+
+void        crank_octree_set_set_free_func (CrankOctreeSet *set,
+                                            GDestroyNotify free_func);
+
 
 
 
