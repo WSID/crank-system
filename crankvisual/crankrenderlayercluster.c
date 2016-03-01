@@ -291,7 +291,7 @@ crank_render_layer_cluster_bsweep_plane (CrankPlane3    *planes,
   i = 0;
   j = nplanes;
 
-  while (i == j)
+  while (1 < (j - i))
     {
       guint m = (i + j) / 2;
       gfloat dist = crank_plane3_get_distance (planes + m, pos);
@@ -307,7 +307,7 @@ crank_render_layer_cluster_bsweep_plane (CrankPlane3    *planes,
   i = 0;
   j = nplanes;
 
-  while (i == j)
+  while (1 < (j - i))
     {
       guint m = (i + j) / 2;
       gfloat dist = crank_plane3_get_distance (planes + m, pos);
@@ -317,7 +317,7 @@ crank_render_layer_cluster_bsweep_plane (CrankPlane3    *planes,
       else
         i = m;
     }
-  nto = i;
+  nto = j;
 
   *from = nfrom;
   *to = nto;
@@ -442,7 +442,7 @@ crank_render_layer_cluster_prepare (CrankRenderLayerCluster *layer,
       for (i = 0; i < layer->width; i++)
         {
           float proportion = ((float)i) / (layer->width);
-          normal.x = projection->left  * (1 - proportion) +
+          normal.z = projection->left  * (1 - proportion) +
                      projection->right * proportion;
 
           crank_plane3_init (p_planes_w + i,
@@ -450,12 +450,13 @@ crank_render_layer_cluster_prepare (CrankRenderLayerCluster *layer,
                              &normal);
         }
 
-      normal.z = 0;
+      normal.x = 0;
+      normal.y = projection->near;
 
       for (i = 0; i < layer->height; i++)
         {
           float proportion = ((float)i) / (layer->height);
-          normal.y = projection->bottom * (1 - proportion) +
+          normal.z = projection->bottom * (1 - proportion) +
                      projection->top    * proportion;
 
           crank_plane3_init (p_planes_h + i,
@@ -470,7 +471,7 @@ crank_render_layer_cluster_prepare (CrankRenderLayerCluster *layer,
           p_planes_d[i].dist_origin = - ( projection->near * (1 - proportion) +
                                           projection->far * proportion );
 
-          crank_vec_float3_init (& p_planes_d[i].normal, 0, 0, 1);
+          crank_vec_float3_init (& p_planes_d[i].normal, 0, 0, -1);
         }
     }
 
@@ -500,7 +501,7 @@ crank_render_layer_cluster_prepare (CrankRenderLayerCluster *layer,
           p_planes_d[i].dist_origin = - ( projection->near * (1 - proportion) +
                                           projection->far * proportion );
 
-          crank_vec_float3_init (& p_planes_d[i].normal, 0, 0, 1);
+          crank_vec_float3_init (& p_planes_d[i].normal, 0, 0, -1);
         }
     }
 
