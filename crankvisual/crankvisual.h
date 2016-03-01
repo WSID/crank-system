@@ -40,6 +40,7 @@
 
 #include "crankrenderlayer.h"
 #include "crankrenderlayerarray.h"
+#include "crankrenderlayervisible.h"
 #include "crankrenderlayercluster.h"
 #include "crankrenderlayertexture.h"
 

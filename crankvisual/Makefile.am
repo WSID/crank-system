@@ -21,6 +21,7 @@ visualinclude_HEADERS = \
 		cranklightablearanged.h \
 		crankrenderlayer.h \
 		crankrenderlayerarray.h \
+		crankrenderlayervisible.h \
 		crankrenderlayercluster.h \
 		crankrenderlayertexture.h \
 		\
@@ -68,6 +69,7 @@ libcrankvisual_la_SOURCES= \
 		cranklightablearanged.c \
 		crankrenderlayer.c \
 		crankrenderlayerarray.c \
+		crankrenderlayervisible.c \
 		crankrenderlayercluster.c \
 		crankrenderlayertexture.c \
 		crankmaterial.c \
