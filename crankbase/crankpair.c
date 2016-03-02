@@ -47,6 +47,11 @@ G_DEFINE_BOXED_TYPE (CrankPairPointer,
                      crank_pair_pointer_dup,
                      g_free)
 
+G_DEFINE_BOXED_TYPE (CrankPairObject,
+                     crank_pair_object,
+                     crank_pair_object_dup,
+                     g_free)
+
 //////// Public functions ///////////////////////////////////
 
 /**
@@ -344,6 +349,266 @@ void
 crank_pair_pointer_foreach (CrankPairPointer *pair,
                             GFunc             func,
                             gpointer          userdata)
+{
+  func (pair->a, userdata);
+  func (pair->b, userdata);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * crank_pair_object_init:
+ * @pair: (out): A Pair.
+ * @a: A Object.
+ * @b: An Object.
+ *
+ * Initialize a object pair.
+ */
+void
+crank_pair_object_init (CrankPairObject *pair,
+                        GObject         *a,
+                        GObject         *b)
+{
+  pair->a = a;
+  pair->b = b;
+}
+
+/**
+ * crank_pair_object_init_array:
+ * @pair: (out): A Pair.
+ * @array: (array fixed-size=2): An array of objects.
+ *
+ * Initialize a object pair from an array.
+ */
+void
+crank_pair_object_init_array  (CrankPairObject  *pair,
+                               GObject         **array)
+{
+  pair->a = array[0];
+  pair->b = array[1];
+}
+
+
+/**
+ * crank_pair_object_copy:
+ * @pair: A Pair.
+ * @other: (out): A Pair with same objects.
+ *
+ * Shallow copys a object pair.
+ */
+void
+crank_pair_object_copy (const CrankPairObject *pair,
+                        CrankPairObject       *other)
+{
+  other->a = pair->a;
+  other->b = pair->b;
+}
+
+/**
+ * crank_pair_object_dup:
+ * @pair: A Pair.
+ *
+ * Shallow duplicates an object pair.
+ *
+ * Returns: (transfer full): Duplicated pair.
+ */
+CrankPairObject*
+crank_pair_object_dup (const CrankPairObject *pair)
+{
+  CrankPairObject *result = g_new (CrankPairObject, 1);
+  result->a = pair->a;
+  result->b = pair->b;
+
+  return result;
+}
+
+
+/**
+ * crank_pair_object_copy_ref:
+ * @pair: A Pair.
+ * @other: (out): A Pair.
+ *
+ * Deep copys an object pair. Reference counts of each elements are increased.
+ */
+void
+crank_pair_object_copy_ref (const CrankPairObject *pair,
+                            CrankPairObject       *other)
+{
+  other->a = g_object_ref (pair->a);
+  other->b = g_object_ref (pair->b);
+}
+
+
+/**
+ * crank_pair_object_dup_ref:
+ * @pair: A Pair.
+ *
+ * Deep duplicates an object pair. Reference counts of each elements are
+ * increased.
+ *
+ * Returns: (transfer full): Duplicated pair.
+ */
+CrankPairObject*
+crank_pair_object_dup_ref (const CrankPairObject *pair)
+{
+  CrankPairObject *result = g_new (CrankPairObject, 1);
+  result->a = g_object_ref (pair->a);
+  result->b = g_object_ref (pair->b);
+  return result;
+}
+
+
+/**
+ * crank_pair_object_free_unref:
+ * @pair: (type CrankPairObject): A Pair.
+ *
+ * Decreases reference counts of elements, as well as freeing @pair itself.
+ *
+ * This is useful when freeing pairs duplicated by crank_pair_object_dup_ref().
+ */
+void
+crank_pair_object_free_unref  (gpointer pair)
+{
+  CrankPairObject *p = pair;
+
+  g_object_unref (p->a);
+  g_object_unref (p->b);
+
+  g_free (p);
+}
+
+
+/**
+ * crank_pair_object_element_ref:
+ * @pair: A Pair.
+ *
+ * Increase reference counts of elements.
+ *
+ * Returns: (transfer none): @pair.
+ */
+CrankPairObject*
+crank_pair_object_element_ref (CrankPairObject       *pair)
+{
+  g_object_ref (pair->a);
+  g_object_ref (pair->b);
+
+  return pair;
+}
+
+/**
+ * crank_pair_object_element_unref:
+ * @pair: A Pair.
+ *
+ * Decrease reference counts of elements.
+ */
+void
+crank_pair_object_element_unref(CrankPairObject      *pair)
+{
+  g_object_unref (pair->a);
+  g_object_unref (pair->b);
+}
+
+/**
+ * crank_pair_object_hash:
+ * @key: (type CrankPairObject): A Pair.
+ *
+ * Gets hash value of the pair. g_direct_hash() will be used for getting hash
+ * value of each elements.
+ *
+ * Returns: Hash value of a pair.
+ */
+guint
+crank_pair_object_hash (gconstpointer key)
+{
+  const CrankPairObject *pair = key;
+
+  if (pair == NULL)
+    return 0;
+
+  return g_direct_hash (pair->a) * 37 +
+         g_direct_hash (pair->b);
+}
+
+
+/**
+ * crank_pair_object_equal:
+ * @a: (type CrankPairObject): A Pair.
+ * @b: (type CrankPairObject): A Pair.
+ *
+ * Checks both pairs are equal.
+ *
+ * Returns: Whether the both objects are equal.
+ */
+gboolean
+crank_pair_object_equal (gconstpointer a,
+                         gconstpointer b)
+{
+  const CrankPairObject *pa = a;
+  const CrankPairObject *pb = b;
+
+  if (a == b)
+    return TRUE;
+
+  if ((a == NULL) || (b == NULL))
+    return FALSE;
+
+  return (pa->a == pb->a) && (pa->b == pb->b);
+}
+
+
+/**
+ * crank_pair_object_swap:
+ * @a: A Pair.
+ * @r: (out): A Pair.
+ *
+ * Initialzie a swapped pair.
+ */
+void
+crank_pair_object_swap (const CrankPairObject *a,
+                        CrankPairObject       *r)
+{
+  r->a = a->b;
+  r->b = a->a;
+}
+
+
+/**
+ * crank_pair_object_swap_self:
+ * @a: A Pair.
+ *
+ * Swaps elements in the pair.
+ */
+void
+crank_pair_object_swap_self (CrankPairObject       *a)
+{
+  GObject *temp = a->a;
+  a->a = a->b;
+  a->b = temp;
+}
+
+
+/**
+ * crank_pair_object_foreach:
+ * @pair: A Pair.
+ * @func: (scope call): A Function.
+ * @userdata: (closure func): Userdata for @func.
+ *
+ * Calls @func on both of elements.
+ */
+void
+crank_pair_object_foreach (CrankPairObject *pair,
+                           GFunc            func,
+                           gpointer         userdata)
 {
   func (pair->a, userdata);
   func (pair->b, userdata);

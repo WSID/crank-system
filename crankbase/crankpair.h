@@ -71,6 +71,24 @@ struct _CrankPairPointer {
 
 
 
+#define CRANK_TYPE_PAIR_OBJECT (crank_pair_object_get_type())
+GType   crank_pair_object_get_type(void);
+
+typedef struct _CrankPairObject CrankPairObject;
+
+/**
+ * CrankPairObject:
+ * @a: First element.
+ * @b: Second element.
+ *
+ * Represents a pair of #GObject.
+ */
+struct _CrankPairObject {
+  GObject  *a;
+  GObject  *b;
+};
+
+
 //////// Public Functions //////////////////////////////////////////////////////
 
 void                crank_pair_uint_init          (CrankPairUint       *pair,
@@ -132,6 +150,54 @@ void                crank_pair_pointer_swap_self  (CrankPairPointer       *a);
 void                crank_pair_pointer_foreach    (CrankPairPointer       *pair,
                                                    GFunc                   func,
                                                    gpointer                userdata);
+
+
+
+
+
+void                crank_pair_object_init        (CrankPairObject  *pair,
+                                                   GObject          *a,
+                                                   GObject          *b);
+
+void                crank_pair_object_init_array  (CrankPairObject  *pair,
+                                                   GObject         **array);
+
+void                crank_pair_object_copy        (const CrankPairObject *pair,
+                                                   CrankPairObject       *other);
+
+CrankPairObject    *crank_pair_object_dup         (const CrankPairObject *pair);
+
+
+
+void                crank_pair_object_copy_ref    (const CrankPairObject *pair,
+                                                   CrankPairObject       *other);
+
+CrankPairObject    *crank_pair_object_dup_ref     (const CrankPairObject *pair);
+
+void                crank_pair_object_free_unref  (gpointer               pair);
+
+
+CrankPairObject    *crank_pair_object_element_ref (CrankPairObject       *pair);
+
+void                crank_pair_object_element_unref(CrankPairObject      *pair);
+
+
+
+guint               crank_pair_object_hash        (gconstpointer          key);
+
+gboolean            crank_pair_object_equal       (gconstpointer          a,
+                                                   gconstpointer          b);
+
+
+void                crank_pair_object_swap        (const CrankPairObject *a,
+                                                   CrankPairObject       *r);
+
+void                crank_pair_object_swap_self   (CrankPairObject       *a);
+
+
+void                crank_pair_object_foreach     (CrankPairObject       *pair,
+                                                   GFunc                  func,
+                                                   gpointer               userdata);
 
 G_END_DECLS
 
