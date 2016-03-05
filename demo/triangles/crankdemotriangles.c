@@ -254,12 +254,12 @@ crank_demo_triangle_app_build_session (CrankDemoTriangleApp *app,
   // Add modules to session.
 
   if (! crank_composite_add_compositable ((CrankComposite*)app->session,
-                                          (CrankCompositable*)app->pmodule,
+                                          (CrankCompositable*)app->tmodule,
                                           &merr))
     g_error ("Error while building session: %s", merr->message);
 
   if (! crank_composite_add_compositable ((CrankComposite*)app->session,
-                                          (CrankCompositable*)app->tmodule,
+                                          (CrankCompositable*)app->pmodule,
                                           &merr))
     g_error ("Error while building session: %s", merr->message);
 
@@ -366,7 +366,7 @@ move_cam_pos (CrankSessionModuleTick *tick,
 {
   CrankEntity3* entity = (CrankEntity3*)ptr;
 
-  entity->position.mtrans.z += 0.1;
+  entity->position.mtrans.z += 0.5;
 }
 
 //////// Constructors //////////////////////////////////////////////////////////
