@@ -82,21 +82,64 @@
 
 //////// Type Private datas ////////////////////////////////////////////////////
 
+#define CRANK_COMPOSITABLE_TYPE_PRIVATE_QUARK (crank_compositable_type_private_quark())
+G_DEFINE_QUARK (crank-compositable-type-private, crank_compositable_type_private)
 
-typedef struct _CrankCompositableClassPrivate
+
+typedef struct _CrankCompositableTypePrivate
 {
   // Requisitions.
   GArray  *req_composite;
   GArray  *req_compositables;
 
-} CrankCompositableClassPrivate;
+} CrankCompositableTypePrivate;
 
-static inline CrankCompositableClassPrivate*
+
+static inline CrankCompositableTypePrivate*
+crank_compositable_type_get_private (const GType type)
+{
+  CrankCompositableTypePrivate *tpriv;
+
+  if (type == CRANK_TYPE_COMPOSITABLE)
+    return NULL;
+
+  tpriv = g_type_get_qdata (type, CRANK_COMPOSITABLE_TYPE_PRIVATE_QUARK);
+
+  if (G_UNLIKELY (tpriv == NULL))
+    {
+      GType ptype;
+      CrankCompositableTypePrivate *ptpriv;
+
+      ptype = g_type_parent (type);
+      ptpriv = g_type_get_qdata (ptype, CRANK_COMPOSITABLE_TYPE_PRIVATE_QUARK);
+
+      tpriv = g_new (CrankCompositableTypePrivate, 1);
+      tpriv->req_composite = g_array_new (FALSE, FALSE, sizeof (GType));
+      tpriv->req_compositables = g_array_new (FALSE, FALSE, sizeof (GType));
+
+      if (G_LIKELY (ptpriv != NULL))
+        {
+          g_array_append_vals (tpriv->req_composite,
+                               ptpriv->req_composite->data,
+                               ptpriv->req_composite->len);
+          g_array_append_vals (tpriv->req_compositables,
+                               ptpriv->req_compositables->data,
+                               ptpriv->req_compositables->len);
+        }
+
+      g_type_set_qdata (type, CRANK_COMPOSITABLE_TYPE_PRIVATE_QUARK, tpriv);
+    }
+  return tpriv;
+}
+
+static inline CrankCompositableTypePrivate*
 crank_compositable_class_get_private (CrankCompositableClass *c)
 {
-  return G_TYPE_CLASS_GET_PRIVATE (c,
-                                   CRANK_TYPE_COMPOSITABLE,
-                                   CrankCompositableClassPrivate);
+  CrankCompositableTypePrivate *cpriv;
+  GType type;
+
+  type = G_OBJECT_CLASS_TYPE (c);
+  return crank_compositable_type_get_private (type);
 }
 
 
@@ -135,7 +178,7 @@ G_DEFINE_TYPE_WITH_CODE (CrankCompositable,
                          crank_compositable,
                          G_TYPE_INITIALLY_UNOWNED,
                          g_type_add_class_private (g_define_type_id,
-                                                   sizeof (CrankCompositableClassPrivate)))
+                                                   sizeof (CrankCompositableTypePrivate)))
 
 
 
@@ -153,6 +196,10 @@ crank_compositable_init (CrankCompositable *self)
 static void
 crank_compositable_class_init (CrankCompositableClass *c)
 {
+  CrankCompositableTypePrivate *cpriv;
+
+  cpriv = crank_compositable_class_get_private (c);
+
   c->adding = crank_compositable_def_adding;
   c->removing = crank_compositable_def_removing;
 }
@@ -171,7 +218,7 @@ crank_compositable_def_adding (CrankCompositable  *compositable,
                                GError            **error)
 {
   CrankCompositableClass *c;
-  CrankCompositableClassPrivate *cpriv;
+  CrankCompositableTypePrivate *cpriv;
 
   c = CRANK_COMPOSITABLE_GET_CLASS (compositable);
   cpriv = crank_compositable_class_get_private (c);
@@ -181,6 +228,7 @@ crank_compositable_def_adding (CrankCompositable  *compositable,
     {
       GType type_composite = G_OBJECT_TYPE (composite);
       guint i;
+
       for (i = 0; i < cpriv->req_composite->len; i++)
         {
           GType type_req = g_array_index (cpriv->req_composite, GType, i);
@@ -285,7 +333,7 @@ void
 crank_compositable_class_add_requisition (CrankCompositableClass *c,
                                           const GType             req)
 {
-  CrankCompositableClassPrivate *priv;
+  CrankCompositableTypePrivate *priv;
   GArray *array;
 
   priv = crank_compositable_class_get_private (c);
@@ -309,7 +357,7 @@ gboolean
 crank_compositable_class_is_required (CrankCompositableClass *c,
                                       const GType             req)
 {
-  CrankCompositableClassPrivate *priv;
+  CrankCompositableTypePrivate *priv;
   GArray *array;
   guint i;
 
@@ -341,9 +389,10 @@ GType*
 crank_compositable_class_get_req_composite (CrankCompositableClass *c,
                                             guint                  *nreq)
 {
-  CrankCompositableClassPrivate *priv;
+  CrankCompositableTypePrivate *priv;
   priv = crank_compositable_class_get_private (c);
 
+  *nreq = priv->req_composite->len;
   return g_memdup (priv->req_composite->data,
                    priv->req_composite->len * sizeof (GType));
 }
@@ -362,11 +411,12 @@ GType*
 crank_compositable_class_get_req_compositable(CrankCompositableClass *c,
                                               guint                  *nreq)
 {
-  CrankCompositableClassPrivate *priv;
+  CrankCompositableTypePrivate *priv;
   priv = crank_compositable_class_get_private (c);
 
-  return g_memdup (priv->req_composite->data,
-                   priv->req_composite->len * sizeof (GType));
+  *nreq = priv->req_compositables->len;
+  return g_memdup (priv->req_compositables->data,
+                   priv->req_compositables->len * sizeof (GType));
 }
 
 
@@ -383,13 +433,14 @@ GType*
 crank_compositable_class_get_requisitions (CrankCompositableClass *c,
                                            guint                  *nreq)
 {
-  CrankCompositableClassPrivate *priv;
+  CrankCompositableTypePrivate *priv;
   GType *result;
 
   priv = crank_compositable_class_get_private (c);
 
   result = g_new (GType, priv->req_composite->len + priv->req_compositables->len);
 
+  *nreq = priv->req_composite->len + priv->req_compositables->len;
   memcpy (result + 0,
           priv->req_composite->data,
           priv->req_composite->len * sizeof (GType));
