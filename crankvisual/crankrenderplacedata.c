@@ -252,7 +252,7 @@ crank_render_place_data_adding (CrankCompositable  *compositable,
             crank_render_place_data_get_pos, NULL, NULL,
             crank_render_place_data_get_rad, NULL, NULL,
             crank_render_place_data_free_pair,
-            crank_pair_pointer_hash, crank_pair_pointer_equal);
+            crank_pair_object_hash, crank_pair_object_equal);
     }
 
   return TRUE;
@@ -345,10 +345,10 @@ crank_render_place_data_add_entity (CrankRenderPlaceData *pdata,
                                     const guint           tindex)
 {
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
-  CrankPairPointer *pair = g_slice_new (CrankPairPointer);
+  CrankPairObject *pair = g_slice_new (CrankPairObject);
 
-  pair->a = entity;
-  pair->b = visible;
+  pair->a = (GObject*) entity;
+  pair->b = (GObject*) visible;
 
   crank_octree_set_add (entity_set, pair);
 }
@@ -360,7 +360,7 @@ crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
                                        const guint           tindex)
 {
   CrankOctreeSet *entity_set = pdata->entity_sets[tindex];
-  CrankPairPointer pair = {entity, visible};
+  CrankPairObject pair = {(GObject*)entity, (GObject*)visible};
 
   crank_octree_set_remove (entity_set, &pair);
 }

@@ -607,9 +607,9 @@ crank_render_process_deferred_render_geom_array(CrankRenderProcessDeferred *proc
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
-      CrankEntity3 *entity = pair->a;
-      CrankRenderable *renderable = pair->b;
+      CrankPairObject *pair = (CrankPairObject*) entities->pdata[i];
+      CrankEntity3 *entity = (CrankEntity3*) pair->a;
+      CrankRenderable *renderable = (CrankRenderable*) pair->b;
       crank_render_process_deferred_render_geom_entity (process, entity, renderable, &ipos, projection, framebuffer);
     }
 }
@@ -643,9 +643,9 @@ crank_render_process_deferred_render_color_array(CrankRenderProcessDeferred *pro
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
-      CrankEntity3 *entity = pair->a;
-      CrankRenderable *renderable = pair->b;
+      CrankPairObject *pair = (CrankPairObject*) entities->pdata[i];
+      CrankEntity3 *entity = (CrankEntity3*) pair->a;
+      CrankRenderable *renderable = (CrankRenderable*) pair->b;
       crank_render_process_deferred_render_color_entity (process, entity, renderable, &ipos, projection, framebuffer);
     }
 }
@@ -685,9 +685,9 @@ crank_render_process_deferred_render_light_array (CrankRenderProcessDeferred *pr
 
   for (i = 0; i < entities->len; i++)
     {
-      CrankPairPointer *pair = (CrankPairPointer*) entities->pdata[i];
-      CrankEntity3 *entity = pair->a;
-      CrankLightable *lightable = pair->b;
+      CrankPairObject *pair = (CrankPairObject*) entities->pdata[i];
+      CrankEntity3 *entity = (CrankEntity3*) pair->a;
+      CrankLightable *lightable = (CrankLightable*) pair->b;
       crank_render_process_deferred_render_light_entity (process, entity, lightable, &ipos, projection, tex_geom, tex_color, tex_mater, framebuffer);
     }
 }
