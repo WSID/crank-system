@@ -223,27 +223,27 @@ crank_render_process_deferred_render_at (CrankRenderProcess *process,
         }
     }
 
-  crank_render_process_deferred_render_geom_cluster (self,
-                                                     layer_cr,
-                                                     position,
-                                                     projection,
-                                                     crank_film_get_framebuffer (film, layer_map[4]));
+  crank_render_process_deferred_render_geom_array (self,
+                                                   layer_renderable->array,
+                                                   position,
+                                                   projection,
+                                                   crank_film_get_framebuffer (film, layer_map[4]));
 
-  crank_render_process_deferred_render_color_cluster (self,
-                                                      layer_cr,
-                                          position,
-                                          projection,
-                                          crank_film_get_framebuffer (film, layer_map[5]));
+  crank_render_process_deferred_render_color_array (self,
+                                                    layer_renderable->array,
+                                                    position,
+                                                    projection,
+                                                    crank_film_get_framebuffer (film, layer_map[5]));
 
 
   crank_render_process_deferred_render_light_array (self,
-                                                      layer_lightable->array,
-                                                      position,
-                                                      projection,
-                                                      crank_film_get_texture (film, layer_map[4]),
-                                                      crank_film_get_texture (film, layer_map[5]),
-                                                      crank_film_get_texture (film, layer_map[6]),
-                                                      crank_film_get_framebuffer (film, layer_map[9]));
+                                                    layer_lightable->array,
+                                                    position,
+                                                    projection,
+                                                    crank_film_get_texture (film, layer_map[4]),
+                                                    crank_film_get_texture (film, layer_map[5]),
+                                                    crank_film_get_texture (film, layer_map[6]),
+                                                    crank_film_get_framebuffer (film, layer_map[9]));
 
   // XXX: For now, rendering a color buffer on result buffer.
 
