@@ -102,6 +102,12 @@ GPtrArray   *crank_render_place_data_get_culled_array (CrankRenderPlaceData *pda
                                                        const guint           nculls,
                                                        const guint           tindex);
 
+void        crank_render_place_data_foreach_culled    (CrankRenderPlaceData *pdata,
+                                                       const CrankPlane3    *entities,
+                                                       const guint           nculls,
+                                                       const guint           tindex,
+                                                       GFunc                 func,
+                                                       gpointer              userdata);
 
 
 #endif

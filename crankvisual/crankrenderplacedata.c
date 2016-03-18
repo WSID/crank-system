@@ -421,3 +421,30 @@ crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,
                                             entities,
                                             culls, nculls);
 }
+
+
+
+
+/**
+ * crank_render_place_data_foreach_culled:
+ * @pdata: A Place Data.
+ * @culls: (array length=nculls): Array of planes to cull.
+ * @nculls: Number of planes to cull.
+ * @tindex: Type index.
+ * @func: (scope call): A Function to call for each pair of (CrankEntity3,
+ *                      CrankVisible).
+ * @userdata: (closure func): Userdata for @func.
+ *
+ * Call @func for each pair in place.
+ */
+void
+crank_render_place_data_foreach_culled (CrankRenderPlaceData *pdata,
+                                        const CrankPlane3    *culls,
+                                        const guint           nculls,
+                                        const guint           tindex,
+                                        GFunc                 func,
+                                        gpointer              userdata)
+{
+  return crank_octree_set_cull_foreach (pdata->entity_sets[tindex],
+                                            culls, nculls, func, userdata);
+}
