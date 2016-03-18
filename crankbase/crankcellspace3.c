@@ -1410,12 +1410,11 @@ crank_cell_space3_get_boxed (const CrankCellSpace3 *cs,
                              GType                 *type)
 {
   GValue *vcell = CELL_VALUE (cs, wi, hi, di);
-  gboolean holds_value = G_VALUE_HOLDS_BOXED (vcell);
 
   if (type != NULL)
-    *type = holds_value ? G_VALUE_TYPE (type) : G_TYPE_INVALID;
+    *type = G_VALUE_TYPE (type);
 
-  return holds_value ? g_value_get_boxed (vcell) : NULL;
+  return g_value_get_boxed (vcell);
 }
 
 
