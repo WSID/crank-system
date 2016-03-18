@@ -1602,3 +1602,26 @@ crank_cell_space3_take_object (CrankCellSpace3 *cs,
   crank_value_overwrite_init (vcell, G_TYPE_OBJECT);
   g_value_take_object (vcell, (GObject*) value);
 }
+
+
+/**
+ * crank_cell_space3_peek_pointer:
+ * @cs: A Cell Space.
+ * @wi: Width-side index.
+ * @hi: Height-side index.
+ * @di: Depth-side index
+ *
+ * Peeks pointer value of cell.
+ *
+ * Returns: (transfer none): The pointer value of cell.
+ */
+gpointer
+crank_cell_space3_peek_pointer (CrankCellSpace3 *cs,
+                                const guint      wi,
+                                const guint      hi,
+                                const guint      di)
+{
+  GValue *vcell = CELL_VALUE (cs, wi, hi, di);
+
+  return g_value_peek_pointer (vcell);
+}

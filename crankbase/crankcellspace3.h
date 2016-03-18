@@ -268,6 +268,12 @@ void              crank_cell_space3_take_object    (CrankCellSpace3       *cs,
                                                     gpointer               value);
 
 
+gpointer          crank_cell_space3_peek_pointer   (CrankCellSpace3       *cs,
+                                                    const guint            wi,
+                                                    const guint            hi,
+                                                    const guint            di);
+
+
 
 
 G_END_DECLS
