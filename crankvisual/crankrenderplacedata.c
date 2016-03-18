@@ -385,7 +385,7 @@ crank_render_place_data_remove_entity (CrankRenderPlaceData *pdata,
  *
  * Adds items to @entities, which is frustum culled.
  *
- * Returns: (transfer container) (element-type CrankPairPointer): List of entities
+ * Returns: (transfer container) (element-type CrankPairObject): List of entities
  *     which is culled.
  */
 GList*
@@ -401,14 +401,14 @@ crank_render_place_data_get_culled_list (CrankRenderPlaceData *pdata,
 /**
  * crank_render_place_data_get_culled_array:
  * @pdata: A Place Data.
- * @entities: (transfer none) (element-type CrankEntity3): Array of entities.
+ * @entities: (transfer none) (element-type CrankPairObject): Array of entities.
  * @culls: (array length=nculls): Array of planes to cull.
  * @nculls: Number of planes to cull.
  * @tindex: Type index.
  *
  * Adds items to @entities, which is culled.
  *
- * Returns: (transfer none) (element-type CrankPairPointer): @entities, with added entities.
+ * Returns: (transfer none) (element-type CrankPairObject): @entities, with added entities.
  */
 GPtrArray*
 crank_render_place_data_get_culled_array (CrankRenderPlaceData *pdata,
